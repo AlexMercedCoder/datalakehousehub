@@ -1,93 +1,54 @@
 ---
 banner:
-  title: Let us solve your critical website development challenges
-  content: Lorem ipsum dolor sit amet consectetur adipisicing elit. Quam nihil enim maxime corporis cumque <br/> totam aliquid nam sint inventore optio modi neque laborum officiis necessitatibus
-  image: /images/banner-art.png
+  title: Learn about the data lakehouse and be part of the data lakehouse community.
+  content: Find resources for learning about the data lakehouse, networking within the community, and community events.
+  image: /images/lakehouseengineers.webp
   button:
-    label: "Contact Us"
-    link: "/contact"
+    label: "Join the Community"
+    link: "https://join.slack.com/t/thedatalakehousehub/shared_invite/zt-274yc8sza-mI2zhCW8LGkOh1uxuf8T5Q"
     enable: true
 
 # feature
 feature: 
-  title: Something You Need To Know
+  title: Benefits of the Data Lakehouse
   features:
-  - name: "Clean Code"
+  - name: "Reduce Code"
     icon: "/images/code.svg"
-    content: "Lorem ipsum dolor sit amet consectetur adipisicing elit quam nihil"
-  - name: "Object Oriented"
+    content: "Less Data Movement means writing less data pipelines"
+  - name: "Scalable"
     icon: "/images/oop.svg"
-    content: "Lorem ipsum dolor sit amet consectetur adipisicing elit quam nihil"
-  - name: "24h Service"
+    content: "Scale compute and storage seperately in any environment"
+  - name: "Better Time to Insight"
     icon: "/images/user-clock.svg"
-    content: "Lorem ipsum dolor sit amet consectetur adipisicing elit quam nihil"
-  - name: "Value for Money"
-    icon: "/images/love.svg"
-    content: "Lorem ipsum dolor sit amet consectetur adipisicing elit quam nihil"
-  - name: "Faster Response"
-    icon: "/images/speedometer.svg"
-    content: "Lorem ipsum dolor sit amet consectetur adipisicing elit quam nihil"
-  - name: "Cloud Support"
-    icon: "/images/cloud.svg"
-    content: "Lorem ipsum dolor sit amet consectetur adipisicing elit quam nihil"
+    content: "Less Data Movement Means Data is Delivered Faster"
+
 
 # services
 services:
-  - title: "It is the most advanced digital marketing and it company."
-    content: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Consequat tristique eget amet, tempus eu at consecttur. Leo facilisi nunc viverra tellus. Ac laoreet sit vel consquat. consectetur adipiscing elit. Consequat tristique eget amet, tempus eu at consecttur. Leo facilisi nunc viverra tellus. Ac laoreet sit vel consquat."
+  - title: "Get Hands-on with the Data Lakehouse on your Laptop"
+    content: "Use tools like Apache Iceberg, Dremio, Apache Spark and Apache Superset to recreate an end-to-end data engineering experience on your laptop."
     images:
       - "/images/service-slide-1.png"
       - "/images/service-slide-2.png"
       - "/images/service-slide-3.png"
     button:
       enable: true
-      label: Check it out
-      link: /contact
-
-  - title: "It is a privately owned Information and cyber security company"
-    content: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Consequat tristique eget amet, tempus eu at consecttur. Leo facilisi nunc viverra tellus. Ac laoreet sit vel consquat. consectetur adipiscing elit. Consequat tristique eget amet, tempus eu at consecttur. Leo facilisi nunc viverra tellus. Ac laoreet sit vel consquat."
-    images: 
-      - "/images/service-slide-1.png"
-    button:
-      enable: true
-      label: Check it out
-      link: /contact
-  
-  - title: "It’s a team of experienced and skilled people with distributions"
-    content: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Consequat tristique eget amet, tempus eu at consecttur. Leo facilisi nunc viverra tellus. Ac laoreet sit vel consquat. consectetur adipiscing elit. Consequat tristique eget amet, tempus eu at consecttur. Leo facilisi nunc viverra tellus. Ac laoreet sit vel consquat."
-    images:
-      - "/images/service-slide-1.png"
-      - "/images/service-slide-2.png"
-      - "/images/service-slide-3.png"
-    button:
-      enable: true
-      label: Check it out
-      link: /contact
-
-  - title: "A company standing different from others"
-    content: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Consequat tristique eget amet, tempus eu at consecttur. Leo facilisi nunc viverra tellus. Ac laoreet sit vel consquat. consectetur adipiscing elit. Consequat tristique eget amet, tempus eu at consecttur. Leo facilisi nunc viverra tellus. Ac laoreet sit vel consquat."
-    images:
-      - "/images/service-slide-1.png"
-      - "/images/service-slide-2.png"
-      - "/images/service-slide-3.png"
-    button:
-      enable: true
-      label: Check it out
-      link: /contact
+      label: Try it Out
+      link: /blog/2024-04-end-to-end-data-engineering-tutorial-ingest-dashboards
 
 # workflow
 workflow: 
-  title: "Experience the best workflow with us"
+  title: "Experience the Data Lakehouse"
   image: "/images/banner.png"
-  description: ""
+  description: "By exploring the data lakehouse hub you can learn and meet others in the data lakehouse community."
 
 # call_to_action
 call_to_action:
   title: Ready to get started?
-  content: Lorem ipsum dolor sit amet, consectetur adipiscing elit. Consequat tristique eget amet, tempus eu at consecttur.
+  content: Subscribe to our event calendar so you never miss an event in your area.
   image: '/images/cta.png'
   button:
     enable: true
     label: "Contact Us"
-    link: "/contact"
+    link: "https://lu.ma/Lakehouselinkups"
 ---

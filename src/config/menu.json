@@ -9,67 +9,59 @@
       "url": "/blog"
     },
     {
-      "name": "Pricing",
-      "url": "/pricing"
+      "name": "Community",
+      "url": "https://join.slack.com/t/thedatalakehousehub/shared_invite/zt-274yc8sza-mI2zhCW8LGkOh1uxuf8T5Q"
     },
     {
-      "name": "Contact",
-      "url": "/contact"
+      "name": "Events",
+      "url": "https://lu.ma/Lakehouselinkups"
     },
     {
-      "name": "FAQ",
-      "url": "/faq"
-    },
-    {
-      "name": "Elements",
-      "url": "/elements"
+      "name": "Videos",
+      "url": "https://www.youtube.com/@alexmerceddata"
     }
   ],
   "footer": [
     {
-      "name": "Company",
+      "name": "Community",
       "menu": [
         {
-          "text": "Pricing",
-          "url": "/pricing"
+          "text": "Slack",
+          "url": "https://join.slack.com/t/thedatalakehousehub/shared_invite/zt-274yc8sza-mI2zhCW8LGkOh1uxuf8T5Q"
         },
         {
-          "text": "Quick Start",
-          "url": "#"
+          "text": "Events",
+          "url": "https://lu.ma/Lakehouselinkups"
         }
       ]
     },
     {
-      "name": "Product",
+      "name": "Learning",
       "menu": [
         {
-          "text": "Features",
-          "url": "#"
+          "text": "Data 101",
+          "url": "https://www.youtube.com/playlist?list=PLsLAVBjQJO0p_4Nqz99tIjeoDYE97L0xY"
         },
         {
-          "text": "Platform",
-          "url": "#"
-        },
-        {
-          "text": "Pricing",
-          "url": "/pricing"
+          "text": "Lakehouse Engineering",
+          "url": "https://www.youtube.com/playlist?list=PLsLAVBjQJO0qVfGet6FEQw-nZ6ygLtYuH"
         }
       ]
     },
     {
-      "name": "Support",
+      "name": "Lakehouse Tech",
       "menu": [
         {
-          "text": "FAQ",
-          "url": "/faq"
+          "text": "Dremio",
+          "url": "https://www.dremio.com"
         },
         {
-          "text": "Privacy Policy",
-          "url": "/privacy-policy"
+          "text": "Nessie",
+          "url": "https://www.projectnessie.org"
         },
         {
-          "text": "Terms & Conditions",
-          "url": "/terms-conditions"
+          "text": "Apache Iceberg",
+          "url": "https://iceberg.apache.org"
         }
       ]
     }

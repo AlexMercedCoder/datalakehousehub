@@ -1,4 +1,4 @@
 ---
-title: "Latest news"
-description: "this is meta description"
+title: "Latest Articles"
+description: "List of blogs at the Data Lakehouse Hub"
 ---

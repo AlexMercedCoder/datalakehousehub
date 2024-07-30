@@ -1,13 +1,13 @@
 {
   "site": {
-    "title": "Bigspring Light Astro",
+    "title": "The Data Lakehouse Hub",
     "base_url": "https://bigspring-light-astro.vercel.app",
     "base_path": "/",
     "trailing_slash": false,
-    "favicon": "/images/favicon.png",
-    "logo": "/images/logo.png",
-    "logo_width": "200",
-    "logo_height": "38",
+    "favicon": "/images/logosquare.png",
+    "logo": "/images/logobanner.jpg",
+    "logo_width": "400",
+    "logo_height": "76",
     "logo_text": "Astroplate"
   },
 
@@ -19,14 +19,14 @@
 
   "nav_button": {
     "enable": true,
-    "label": "Get Started",
-    "link": "/contact"
+    "label": "Like the Page",
+    "link": "https://www.linkedin.com/company/data-lakehouse-hub"
   },
 
   "params": {
     "contact_form_action": "",
     "tag_manager_id": "",
-    "footer_content": "Lorem ipsum dolor sit amet, consectetur elit. Consjat tristique eget amet, tempus eu at cttur.",
+    "footer_content": "The Data Lakehouse Hub delivers resources for learning about the data lakehouse and fosters community.",
     "copyright": "Designed and Developed By [Themefisher](https://themefisher.com/)"
   },
 
