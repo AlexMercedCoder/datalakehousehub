@@ -15,17 +15,17 @@ tags:
 
 Managing vast amounts of data efficiently and effectively is crucial for any organization aiming to leverage its data for strategic decisions. The key to unlocking this potential lies in advanced data management practices, particularly in versioning and catalog management. This is where the combined power of Dremio’s Lakehouse Management features and Project Nessie's catalog-level versioning comes into play.
 
-> [Blog: Try Dremio and Nessie on your laptop](https://www.dremio.com/blog/intro-to-dremio-nessie-and-apache-iceberg-on-your-laptop/)
+> [Blog: Try Dremio and Nessie on your laptop](https://www.dremio.com/blog/intro-to-dremio-nessie-and-apache-iceberg-on-your-laptop/?utm_source=alexmerced&utm_medium=external_blog&utm_campaign=legacy_post)
 
 Imagine managing your data with the same flexibility and ease as code versioning in Git. That's the revolutionary idea behind Project Nessie. It brings Git-like semantics to data, enabling data teams to handle versioning at the catalog level with unprecedented ease. This approach to data versioning not only enhances data reliability and reproducibility but also opens up new possibilities for data experimentation and rollback, without the risk of data corruption or loss.
 
-> [Blog: BI Dashboard Acceleration with Dremio's Reflections](https://www.dremio.com/blog/bi-dashboard-acceleration-cubes-extracts-and-dremios-reflections/)
+> [Blog: BI Dashboard Acceleration with Dremio's Reflections](https://www.dremio.com/blog/bi-dashboard-acceleration-cubes-extracts-and-dremios-reflections/?utm_source=alexmerced&utm_medium=external_blog&utm_campaign=legacy_post)
 
-[Dremio’s Lakehouse Management features](https://docs.dremio.com/cloud/arctic/) build upon Nessie's capabilities, offering a user-friendly interface that simplifies monitoring and managing the data catalog. The seamless integration with Project Nessie means that Dremio users can enjoy all the benefits of catalog versioning while leveraging a platform that is intuitive and easy to navigate.
+[Dremio’s Lakehouse Management features](https://docs.dremio.com/cloud/arctic/?utm_source=alexmerced&utm_medium=external_blog&utm_campaign=legacy_post) build upon Nessie's capabilities, offering a user-friendly interface that simplifies monitoring and managing the data catalog. The seamless integration with Project Nessie means that Dremio users can enjoy all the benefits of catalog versioning while leveraging a platform that is intuitive and easy to navigate.
 
 > [Video: ZeroETL & Virtual Data Marts - Cutting Edge Data Lakehouse Engineering](https://www.youtube.com/watch?v=mDwpsg8btto)
 
-One of the standout features of Dremio's Lakehouse Management is its [automated maintenance and cleanup of Apache Iceberg tables](https://docs.dremio.com/cloud/arctic/automatic-optimization). This automation not only reduces the manual workload for data teams but also ensures that the data lakehouse remains efficient, organized, and free from redundant or obsolete data.
+One of the standout features of Dremio's Lakehouse Management is its [automated maintenance and cleanup of Apache Iceberg tables](https://docs.dremio.com/cloud/arctic/automatic-optimization?utm_source=alexmerced&utm_medium=external_blog&utm_campaign=legacy_post). This automation not only reduces the manual workload for data teams but also ensures that the data lakehouse remains efficient, organized, and free from redundant or obsolete data.
 
 ### Catalog Versioning on the Dremio Lakehouse Platform
 

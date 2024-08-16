@@ -37,7 +37,7 @@ Project Nessie is an innovative open-source technology that revolutionizes the w
 ## Why Nessie Stands Out
 Nessie is not just another catalog; it's a solution crafted with the complexities and challenges of modern data architectures in mind. Here's why Nessie is rapidly becoming the go-to choice for managing Apache Iceberg catalogs:
 
-- **Open-Source and Self-Managed**: Nessie is an open-source project, making it accessible and modifiable according to specific organizational needs. This aspect is particularly appealing for teams looking to implement a self-managed infrastructure, providing them the flexibility to tailor the catalog to their regulatory and security requirements. Although, cloud managed Nessie-based catalogs are offered by [Dremio](https://www.dremio.com/get-started), which also include automated table maintenance and cleanup.
+- **Open-Source and Self-Managed**: Nessie is an open-source project, making it accessible and modifiable according to specific organizational needs. This aspect is particularly appealing for teams looking to implement a self-managed infrastructure, providing them the flexibility to tailor the catalog to their regulatory and security requirements. Although, cloud managed Nessie-based catalogs are offered by [Dremio](https://www.dremio.com/get-started?utm_source=alexmerced&utm_medium=external_blog&utm_campaign=legacy_post), which also include automated table maintenance and cleanup.
 
 - **Compatibility with Leading Data Tools**: One of Nessie's significant advantages is its compatibility with a wide range of data processing tools. It seamlessly integrates with popular engines like Dremio, Apache Spark, Apache Flink, Presto and Trino. This compatibility ensures that organizations can continue using their preferred tools without worrying about catalog compatibility issues.
 
@@ -51,7 +51,7 @@ Nessie is not just another catalog; it's a solution crafted with the complexitie
 
 Here are many articles for getting hands on with Nessie locally on your laptop so you can see its power in action:
 
-- [BLOG: Intro to Dremio, Nessie, and Apache Iceberg on Your Laptop](https://www.dremio.com/blog/intro-to-dremio-nessie-and-apache-iceberg-on-your-laptop/)
+- [BLOG: Intro to Dremio, Nessie, and Apache Iceberg on Your Laptop](https://www.dremio.com/blog/intro-to-dremio-nessie-and-apache-iceberg-on-your-laptop/?utm_source=alexmerced&utm_medium=external_blog&utm_campaign=legacy_post)
 - [BLOG: Data Engineering: Create a Apache Iceberg based Data Lakehouse on your Laptop](https://dev.to/alexmercedcoder/data-engineering-create-a-apache-iceberg-based-data-lakehouse-on-your-laptop-41a8)
 - [Video: Setting up a Dremio/Nessie Lakehouse on your Laptop for Evaluation in less than 10 minutes](https://www.youtube.com/watch?v=JIrjkEWhgNE)
 - [Video: Playlist - Apache Iceberg Lakehouse Engineering](https://www.youtube.com/watch?v=SIriNcVIGJQ&list=PLsLAVBjQJO0p0Yq1fLkoHvt2lEJj5pcYe)
