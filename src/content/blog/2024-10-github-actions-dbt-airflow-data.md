@@ -9,7 +9,7 @@ tags:
   - devOps
   - Continuous Integration
   - Continuous Deployment
-slug: 2024-10-intro-to-github-actions
+slug: 2024-10-github-actions-dbt-airflow-data
 draft: false
 image: "/images/blog.png"
 ---
