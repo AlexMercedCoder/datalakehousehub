@@ -15,8 +15,10 @@ export async function GET(context) {
     // See "Generating items" section for examples using content collections and glob imports
     items: blog.map((post) => ({
       title: post.data.title,
-      pubDate: post.data.pubDate,
+      pubDate: post.data.date,
       description: post.data.description,
+      author: post.data.author,
+      category: post.data.category,
       // Compute RSS link from post `slug`
       // This example assumes all posts are rendered as `/blog/[slug]` routes
       link: `/blog/${post.slug}/`,
