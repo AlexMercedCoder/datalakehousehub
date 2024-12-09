@@ -141,7 +141,7 @@ CALL rewrite_data_files(table => `geom_table`, sort_order => `hilbert(geom)`);
 - **Improved Query Optimization**: Partition transforms and spatial sorting will enhance filtering and reduce data scan overhead.
 - **Broad Ecosystem Integration**: With Spark integration and compatibility with geospatial standards like GeoParquet, Iceberg becomes a powerful tool for geospatial data management.
 
-[GeoSpatial Proposal](https://github.com/apache/iceberg/issues/10260)
+[GeoSpatial Proposal]y(https://github.com/apache/iceberg/issues/10260)
 
 
 ## 6. Apache Polaris Federated Catalogs
