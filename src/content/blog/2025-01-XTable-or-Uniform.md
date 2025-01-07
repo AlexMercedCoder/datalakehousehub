@@ -1,6 +1,6 @@
 ---
 title: When to use Apache Xtable or Delta Lake Uniform for Data Lakehouse Interoperability
-date: 2025-07-09T09:00:00Z
+date: 2025-01-07T09:00:00Z
 description: "A Guide on when to use Apache Xtable or Delta Lake Uniform for Data Lakehouse Interoperability"
 author: "Alex Merced"
 category: "Data Lakehouse"
