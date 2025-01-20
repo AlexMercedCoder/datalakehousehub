@@ -8,7 +8,7 @@ bannerImage: "https://i.imgur.com/cpoMZQ8.png"
 tags:
   - data lakehouse
   - apache iceberg
-slug: 2025-01-xtable-or-uniform
+slug: 2025-01-2025-comprehensive-apache-iceberg-guide
 draft: false
 image: "/images/blog.png"
 ---
