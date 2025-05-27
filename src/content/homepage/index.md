@@ -7,6 +7,10 @@ banner:
     label: "Join the Community"
     link: "https://join.slack.com/t/thedatalakehousehub/shared_invite/zt-274yc8sza-mI2zhCW8LGkOh1uxuf8T5Q"
     enable: true
+  button:
+    label: "Listen to Podcast"
+    link: "https://open.spotify.com/show/3KHzqR9eFW6bJ1Tqoh2juM?si=6a5702d2478740dd"
+    enable: true
 
 # feature
 feature: 
