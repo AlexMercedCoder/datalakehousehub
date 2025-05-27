@@ -5,8 +5,8 @@
       "url": "/"
     },
     {
-      "name": "Lakehouse 101",
-      "url": "https://www.dremio.com/blog/why-lakehouse-why-now-what-is-a-data-lakehouse-and-how-to-get-started/?utm_source=alexmerced&utm_medium=dl_hub&utm_campaign=lakehouse101"
+      "name": "Podcast",
+      "url": "https://open.spotify.com/show/3KHzqR9eFW6bJ1Tqoh2juM?si=1c0ca805765a4436"
     },
     {
       "name": "Blog",
@@ -49,6 +49,14 @@
         {
           "text": "Lakehouse Engineering",
           "url": "https://www.youtube.com/playlist?list=PLsLAVBjQJO0qVfGet6FEQw-nZ6ygLtYuH"
+        },
+        {
+          "text": "Free Iceberg Book",
+          "url": "https://drmevn.fyi/dlhubiceberg"
+        },
+        {
+          "text": "Free Polaris Book",
+          "url": "https://drmevn.fyi/dlhubpolaris"
         }
       ]
     },
@@ -57,7 +65,7 @@
       "menu": [
         {
           "text": "Dremio",
-          "url": "https://www.dremio.com?utm_source=alexmerced&utm_medium=dl_hub&utm_campaign=dremiocom"
+          "url": "https://www.dremio.com?utm_source=dlhub&utm_medium=influencer&utm_campaign=datalakehousehub&utm_term=dlhub&utm_content=alexmerced"
         },
         {
           "text": "Nessie",
