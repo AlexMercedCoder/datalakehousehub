@@ -3,14 +3,14 @@ title: How to Discover or Organize Lakehouse & Apache Iceberg Meetups
 date: 2025-07-03T09:00:00Z
 description: "Guide on How to Be Part of the Lakehouse Community"
 author: "Alex Merced"
-category: "Data Engineering"
-bannerImage: "https://i.imgur.com/cpoMZQ8.png"
 tags:
   - Data Lakehouse
   - Data Engineering
 slug: 2025-07-discovering-or-organizing-lakehouse-iceberg-meetups
 draft: false
 image: "/images/blog.png"
+category: "Data Engineering"
+bannerImage: "https://i.imgur.com/cpoMZQ8.png"
 ---
 
 ## Free Resources  
