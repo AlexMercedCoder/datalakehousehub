@@ -1,6 +1,6 @@
 ---
 title: Composable Analytics with Agents - Leveraging Virtual Datasets and the Semantic Layer
-date: 2025-09-017T09:00:00Z
+date: 2025-09-17T09:00:00Z
 description: "The power of Dremio's Semantic Layer for Agentic AI"
 author: "Alex Merced"
 category: "Data Engineering"
