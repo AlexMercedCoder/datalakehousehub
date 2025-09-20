@@ -13,12 +13,16 @@
       "url": "/blog"
     },
     {
+      "name": "OSS Blogroll",
+      "url": "https://lakehouseblogs.com"
+    },
+    {
       "name": "Community",
       "url": "https://join.slack.com/t/thedatalakehousehub/shared_invite/zt-274yc8sza-mI2zhCW8LGkOh1uxuf8T5Q"
     },
     {
       "name": "Events",
-      "url": "https://lu.ma/Lakehouselinkups"
+      "url": "https://luma.com/DataLakehouseHub"
     },
     {
       "name": "Videos",
@@ -35,8 +39,12 @@
         },
         {
           "text": "Events",
-          "url": "https://lu.ma/Lakehouselinkups"
-        }
+          "url": "https://luma.com/DataLakehouseHub"
+        },
+        {
+          "text": "OSS Blog Role",
+          "url": "https://lakehouseblogs.com"
+        },
       ]
     },
     {
@@ -68,12 +76,20 @@
           "url": "https://www.dremio.com?utm_source=dlhub&utm_medium=influencer&utm_campaign=datalakehousehub&utm_term=dlhub&utm_content=alexmerced"
         },
         {
+          "text": "Apache Polaris",
+          "url": "https://polaris.apache.org"
+        },
+        {
           "text": "Nessie",
           "url": "https://www.projectnessie.org"
         },
         {
           "text": "Apache Iceberg",
           "url": "https://iceberg.apache.org"
+        },
+        {
+          "text": "Apache Arrow",
+          "url": "https://arrow.apache.org"
         }
       ]
     }
