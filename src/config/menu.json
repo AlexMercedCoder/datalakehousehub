@@ -17,12 +17,8 @@
       "url": "https://lakehouseblogs.com"
     },
     {
-      "name": "Community",
-      "url": "https://join.slack.com/t/thedatalakehousehub/shared_invite/zt-274yc8sza-mI2zhCW8LGkOh1uxuf8T5Q"
-    },
-    {
-      "name": "Events",
-      "url": "https://luma.com/DataLakehouseHub"
+      "name": "Books, Community and Events",
+      "url": "https://github.dev/AlexMercedCoder/datalakehousehub"
     },
     {
       "name": "Videos",
@@ -44,7 +40,12 @@
         {
           "text": "OSS Blog Role",
           "url": "https://lakehouseblogs.com"
+        },
+        {
+          "text": "Dremio Lakehouse Developer Community",
+          "url": "https://developer.dremio.com"
         }
+
       ]
     },
     {
@@ -65,6 +66,14 @@
         {
           "text": "Free Polaris Book",
           "url": "https://drmevn.fyi/dlhubpolaris"
+        },
+                {
+          "text": "Apache Iceberg Digest: Vol 1",
+          "url": "https://www.puppygraph.com/ebooks/apache-iceberg-digest-vol-1"
+        },
+                        {
+          "text": "Architecting an Apache Iceberg Lakehouse",
+          "url": "https://hubs.la/Q03GfY4f0"
         }
       ]
     },
