@@ -1,22 +1,14 @@
 ---
-import { Image } from "astro:assets";
 import config from "@/config/config.json";
-import { plainify } from "@/lib/utils/textConverter";
 
-const { post, index } = Astro.props;
-const { blog_folder, summary_length } = config.settings;
+const { post } = Astro.props;
+const { blog_folder } = config.settings;
 ---
 
-<div class="post bg-white dark:bg-theme-dark p-8 rounded-2xl shadow-sm hover:shadow-md transition-shadow duration-300 border border-border dark:border-dark h-full flex flex-col">
-  <h2 class="h4 mb-4 font-bold">
-    <a href={`/${blog_folder}/${post.slug}`} class="block hover:text-primary transition-colors">
+<a href={`/${blog_folder}/${post.slug}`} class="block group h-full">
+  <div class="bg-white dark:bg-theme-dark p-6 rounded-xl border border-border dark:border-dark transition-all duration-300 hover:shadow-lg hover:border-primary/50 group-hover:-translate-y-1 h-full flex items-center">
+    <h2 class="h5 font-bold text-text dark:text-white group-hover:text-primary transition-colors w-full text-center">
       {post.data.title}
-    </a>
-  </h2>
-  <p class="mb-6 flex-grow text-text dark:text-light" set:html={plainify(post.body.slice(0, summary_length))} />
-  <div class="mt-auto">
-    <a class="btn btn-outline-primary btn-sm" href={`/${blog_folder}/${post.slug}`} rel="">
-      Read More
-    </a>
+    </h2>
   </div>
-</div>
+</a>

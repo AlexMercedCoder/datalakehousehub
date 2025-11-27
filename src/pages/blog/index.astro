@@ -23,49 +23,30 @@ const currentPosts = sortedPosts.slice(0, config.settings.pagination);
 ---
 
 <Base title={postIndex?.data.title}>
-  <section class="section">
+  <section class="section pt-16">
     <div class="container">
       <h1
-        class="text-center font-normal lg:text-[56px]"
+        class="text-center font-bold text-4xl lg:text-5xl mb-12"
         set:html={markdownify(postIndex?.data.title)}
       />
-      <div class="row pb-12">
-        <div class="row col-12 pb-24 pt-16">
-          <div class="col-12 text-center">
-            <h2 class="h1 mb-4">
-              <a
-                href={`/${blog_folder}/${currentPosts[0].slug}`}
-                class="block hover:text-primary transition-colors duration-300"
-              >
-                {currentPosts[0].data.title}
-              </a>
-            </h2>
-            <p
-              class="text-lg text-text dark:text-light mb-6 max-w-3xl mx-auto"
-              set:html={plainify(currentPosts[0].body.slice(0, summary_length))}
-            />
-            <a
-              class="btn btn-primary mt-4 px-8 py-3 shadow-md hover:shadow-lg transition-all"
-              href={`/${blog_folder}/${currentPosts[0].slug}`}
-              rel=""
-            >
-              Read More
-            </a>
-          </div>
-        </div>
+      
+      <div class="row g-4">
         {
-          currentPosts.slice(1).map((post) => (
-            <div class="col-12 mb-8 sm:col-6 lg:col-4">
+          currentPosts.map((post) => (
+            <div class="col-12 md:col-6 lg:col-4 mb-4">
               <Post post={post} />
             </div>
           ))
         }
       </div>
-      <Pagination
-        section={blog_folder}
-        currentPage={1}
-        totalPages={totalPages}
-      />
+      
+      <div class="mt-12">
+        <Pagination
+            section={blog_folder}
+            currentPage={1}
+            totalPages={totalPages}
+        />
+      </div>
     </div>
   </section>
 </Base>

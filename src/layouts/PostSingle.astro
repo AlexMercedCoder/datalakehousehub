@@ -1,44 +1,26 @@
 ---
 import { markdownify } from "@/lib/utils/textConverter";
-import { Image } from "astro:assets";
 
 const { post } = Astro.props;
 const { Content } = await post.render();
-const { title, image } =
-  post.data;
+const { title } = post.data;
 ---
 
-<section class="section">
+<section class="section pt-12">
   <div class="container">
     <div class="row justify-center">
-      <div class="col-12 md:col-8">
-        <article class="text-center">
-          <div class="mb-10">
-            <h1 set:html={markdownify(title)} class="h1 mb-6 text-4xl lg:text-6xl font-bold leading-tight" />
+      <div class="col-12 md:col-10 lg:col-8">
+        <article>
+          <div class="mb-12 text-center">
+            <h1 set:html={markdownify(title)} class="h2 lg:h1 mb-4 font-extrabold text-dark dark:text-white tracking-tight" />
+            <hr class="w-24 h-1 mx-auto bg-primary rounded border-0">
           </div>
-          
-          {
-            image && (
-              <div class="mb-12">
-                <Image
-                  src={image}
-                  height={500}
-                  width={1000}
-                  alt={title}
-                  class="rounded-xl shadow-lg mx-auto"
-                />
-              </div>
-            )
-          }
     
-          <div class="content mb-16 text-left max-w-4xl mx-auto prose prose-lg dark:prose-invert">
+          <div class="content prose prose-lg dark:prose-invert max-w-none prose-headings:font-bold prose-headings:tracking-tight prose-a:text-primary hover:prose-a:text-primary/80 prose-img:rounded-xl prose-img:shadow-lg">
             <Content />
-            <!-- <Markdown content={post.body} components={shortcodes} /> -->
           </div>
-          
         </article>
       </div>
     </div>
   </div>
 </section>
-
