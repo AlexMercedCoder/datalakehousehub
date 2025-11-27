@@ -1,7 +1,7 @@
 ---
 banner:
-  title: Learn about the data lakehouse and be part of the data lakehouse community.
-  content: Find resources for learning about the data lakehouse, networking within the community, and community events.
+  title: The Ultimate Hub for Data Lakehouse Engineering
+  content: Master the open data lakehouse architecture with Apache Iceberg, Dremio, and Nessie. Join a community of data engineers building the future of unified analytics.
   image: /images/lakehouseengineers.webp
   button:
     label: "Join the Community"
@@ -10,45 +10,44 @@ banner:
 
 # feature
 feature: 
-  title: Benefits of the Data Lakehouse
+  title: Why Build a Data Lakehouse?
   features:
-  - name: "Reduce Code"
+  - name: "Unified Access"
     icon: "/images/code.svg"
-    content: "Less Data Movement means writing less data pipelines"
-  - name: "Scalable"
+    content: "Eliminate data silos. Query your data where it lives—in S3, ADLS, or GCS—without moving it."
+  - name: "Open Standards"
     icon: "/images/oop.svg"
-    content: "Scale compute and storage seperately in any environment"
-  - name: "Better Time to Insight"
+    content: "Avoid vendor lock-in. Use open formats like Apache Iceberg and open catalogs to keep your data accessible to any engine."
+  - name: "High Performance"
     icon: "/images/user-clock.svg"
-    content: "Less Data Movement Means Data is Delivered Faster"
-
+    content: "Achieve sub-second query performance on data lake scale datasets using engines like Dremio."
 
 # services
 services:
-  - title: "Get Hands-on with the Data Lakehouse on your Laptop"
-    content: "Use tools like Apache Iceberg, Dremio, Apache Spark and Apache Superset to recreate an end-to-end data engineering experience on your laptop."
+  - title: "Start Your Lakehouse Journey Locally"
+    content: "Don't wait for cloud permissions. Spin up a full-stack data lakehouse on your laptop in minutes using Docker. Learn how to integrate Apache Iceberg, Dremio, and Nessie to build a production-ready architecture today."
     images:
       - "/images/service-slide-1.png"
       - "/images/service-slide-2.png"
       - "/images/service-slide-3.png"
     button:
       enable: true
-      label: Try it Out
+      label: Start the Tutorial
       link: /blog/2024-04-end-to-end-data-engineering-tutorial-ingest-dashboards
 
 # workflow
 workflow: 
-  title: "Experience the Data Lakehouse"
+  title: "The Modern Data Stack is Open"
   image: "/images/banner.png"
-  description: "By exploring the data lakehouse hub you can learn and meet others in the data lakehouse community."
+  description: "The Data Lakehouse Hub is your central resource for tutorials, architectural guides, and community support. Whether you're migrating from a warehouse or building from scratch, we have the resources to help you succeed with open data standards."
 
 # call_to_action
 call_to_action:
-  title: Ready to get started?
-  content: Subscribe to our event calendar so you never miss an event in your area.
+  title: Stay Ahead of the Curve
+  content: Subscribe to our newsletter and event calendar to get the latest tutorials, webinars, and meetups delivered to your inbox.
   image: '/images/cta.png'
   button:
     enable: true
-    label: "Contact Us"
+    label: "Find an Event"
     link: "https://lu.ma/Lakehouselinkups"
 ---

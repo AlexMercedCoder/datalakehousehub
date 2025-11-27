@@ -16,7 +16,7 @@ This project is a static site generated using **Astro**, styled with **Tailwind 
 - **`pages/`**: Defines the routes of the application.
     - `index.astro`: The homepage.
     - `blog/`: Contains blog-related routes.
-        - `index.astro`: The main blog gallery/listing page.
+        - `index.astro`: The main blog gallery/listing page (text-only grid).
         - `[single].astro`: Dynamic route for individual blog posts.
 - **`layouts/`**: Reusable layout components.
     - `Base.astro`: The main HTML shell (head, body, header, footer).
