@@ -11,20 +11,20 @@ const { banner, feature, services, workflow, call_to_action } = homepage.data;
 
 <Base>
   <!-- banner -->
-  <section class="section pb-[50px]">
+  <section class="section pt-[70px] pb-[70px] bg-gradient-to-br from-white to-theme-light dark:from-dark dark:to-theme-dark">
     <div class="container">
       <div class="row text-center">
         <div class="mx-auto lg:col-10">
-          <h1 class="font-primary font-bold">{banner?.title}</h1>
+          <h1 class="font-primary font-bold text-4xl lg:text-6xl tracking-tight mb-6 text-dark dark:text-white">{banner?.title}</h1>
           {
             banner?.content && (
-              <p class="mt-4" set:html={markdownify(banner.content)} />
+              <p class="mt-4 text-lg lg:text-xl text-text dark:text-light opacity-90 max-w-2xl mx-auto" set:html={markdownify(banner.content)} />
             )
           }
 
           {
             banner?.button?.enable && (
-              <a class="btn btn-primary mt-4" href={banner.button.link}>
+              <a class="btn btn-primary mt-8 px-8 py-3 text-lg shadow-lg hover:shadow-xl transition-shadow duration-300" href={banner.button.link}>
                 {banner.button.label}
               </a>
             )
@@ -33,10 +33,10 @@ const { banner, feature, services, workflow, call_to_action } = homepage.data;
           {
             banner?.image && (
               <Image
-                class="mx-auto mt-12"
+                class="mx-auto mt-16 shadow-2xl rounded-lg border border-border dark:border-dark"
                 src={banner?.image}
-                width={750}
-                height={390}
+                width={850}
+                height={442}
                 alt="banner image"
               />
             )
@@ -47,34 +47,29 @@ const { banner, feature, services, workflow, call_to_action } = homepage.data;
   </section>
 
   <!-- Features -->
-  <section class="section bg-theme-light">
+  <section class="section bg-theme-light dark:bg-dark">
     <div class="container">
-      <div class="text-center">
-        <h2>{markdownify(feature!.title)}</h2>
+      <div class="text-center mb-12">
+        <h2 class="text-3xl lg:text-4xl font-bold">{markdownify(feature!.title)}</h2>
       </div>
       <div class="mt-8 grid gap-x-8 gap-y-6 sm:grid-cols-2 lg:grid-cols-3">
         {
           feature!.features.map((item: any, i: number) => (
-            <div class="feature-card rounded-xl bg-white p-5 pb-8 text-center">
+            <div class="feature-card rounded-2xl bg-white dark:bg-theme-dark p-8 text-center shadow-md hover:shadow-xl hover:-translate-y-1 transition-all duration-300 border border-transparent hover:border-primary/20">
               {item.icon && (
-                // <Image
-                //   class="mx-auto"
-                //   src={item.icon}
-                //   width={30}
-                //   height={30}
-                //   alt=""
-                // />
-                <img
-                  class="mx-auto"
-                  alt={item.icon}
-                  src={item.icon}
-                  width={30}
-                  height={30}
-                />
+                <div class="mb-6 inline-flex h-16 w-16 items-center justify-center rounded-full bg-primary/10 text-primary">
+                   <img
+                    class="mx-auto"
+                    alt={item.icon}
+                    src={item.icon}
+                    width={32}
+                    height={32}
+                  />
+                </div>
               )}
-              <div class="mt-4">
-                <p class="h5" set:html={markdownify(item!.name)} />
-                <p class="mt-3">{item.content}</p>
+              <div class="mt-2">
+                <p class="h5 font-bold mb-3" set:html={markdownify(item!.name)} />
+                <p class="text-text dark:text-light leading-relaxed">{item.content}</p>
               </div>
             </div>
           ))

@@ -31,33 +31,21 @@ const currentPosts = sortedPosts.slice(0, config.settings.pagination);
       />
       <div class="row pb-12">
         <div class="row col-12 pb-24 pt-16">
-          <div class="md:col-6">
-            {
-              currentPosts[0].data.image && (
-                <Image
-                  class="rounded-lg"
-                  src={currentPosts[0].data.image}
-                  alt={currentPosts[0].data.title}
-                  width={925}
-                  height={475}
-                />
-              )
-            }
-          </div>
-          <div class="md:col-6">
-            <h2 class="h3 mb-2 mt-4">
+          <div class="col-12 text-center">
+            <h2 class="h1 mb-4">
               <a
                 href={`/${blog_folder}/${currentPosts[0].slug}`}
-                class="block hover:text-primary"
+                class="block hover:text-primary transition-colors duration-300"
               >
                 {currentPosts[0].data.title}
               </a>
             </h2>
             <p
+              class="text-lg text-text dark:text-light mb-6 max-w-3xl mx-auto"
               set:html={plainify(currentPosts[0].body.slice(0, summary_length))}
             />
             <a
-              class="btn btn-primary mt-4"
+              class="btn btn-primary mt-4 px-8 py-3 shadow-md hover:shadow-lg transition-all"
               href={`/${blog_folder}/${currentPosts[0].slug}`}
               rel=""
             >

@@ -7,25 +7,16 @@ const { post, index } = Astro.props;
 const { blog_folder, summary_length } = config.settings;
 ---
 
-<div class="post">
-  {
-    post.data.image && (
-      <Image
-        class="rounded-lg"
-        src={post.data.image}
-        alt={post.data.title}
-        width={index === 0 ? 925 : 445}
-        height={index === 0 ? 475 : 230}
-      />
-    )
-  }
-  <h2 class="h3 mb-2 mt-4">
-    <a href={`/${blog_folder}/${post.slug}`} class="block hover:text-primary">
+<div class="post bg-white dark:bg-theme-dark p-8 rounded-2xl shadow-sm hover:shadow-md transition-shadow duration-300 border border-border dark:border-dark h-full flex flex-col">
+  <h2 class="h4 mb-4 font-bold">
+    <a href={`/${blog_folder}/${post.slug}`} class="block hover:text-primary transition-colors">
       {post.data.title}
     </a>
   </h2>
-  <p set:html={plainify(post.body.slice(0, summary_length))} />
-  <a class="btn btn-primary mt-4" href={`/${blog_folder}/${post.slug}`} rel="">
-    Read More
-  </a>
+  <p class="mb-6 flex-grow text-text dark:text-light" set:html={plainify(post.body.slice(0, summary_length))} />
+  <div class="mt-auto">
+    <a class="btn btn-outline-primary btn-sm" href={`/${blog_folder}/${post.slug}`} rel="">
+      Read More
+    </a>
+  </div>
 </div>
