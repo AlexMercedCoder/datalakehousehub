@@ -1,7 +1,7 @@
 {
   "site": {
     "title": "The Data Lakehouse Hub",
-    "base_url": "https://bigspring-light-astro.vercel.app",
+    "base_url": "https://datalakehousehub.com",
     "base_path": "/",
     "trailing_slash": false,
     "favicon": "/images/logosquare.png",

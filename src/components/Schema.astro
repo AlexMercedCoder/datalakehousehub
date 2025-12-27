@@ -1,0 +1,43 @@
+---
+import config from "@/config/config.json";
+
+const { title, description, author, pubDate, image } = Astro.props;
+
+const siteUrl = config.site.base_url;
+
+let schema = JSON.stringify({
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "name": config.site.title,
+  "url": siteUrl,
+});
+
+if (Astro.url.pathname.includes('/blog/') && title) {
+     schema = JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "BlogPosting",
+      "mainEntityOfPage": {
+        "@type": "WebPage",
+        "@id": new URL(Astro.url.pathname, siteUrl).href
+      },
+      "headline": title,
+      "description": description,
+      "image": image ? new URL(image, siteUrl).href : new URL(config.metadata.meta_image, siteUrl).href,
+      "author": {
+        "@type": "Person",
+        "name": author || config.metadata.meta_author
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": config.site.title,
+        "logo": {
+          "@type": "ImageObject",
+          "url": new URL(config.site.logo, siteUrl).href
+        }
+      },
+      "datePublished": pubDate
+    });
+}
+---
+
+<script type="application/ld+json" set:html={schema}></script>

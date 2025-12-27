@@ -1,0 +1,11 @@
+---
+const { src, alt } = Astro.props;
+---
+
+<img 
+  src={src} 
+  alt={alt} 
+  loading="lazy"
+  decoding="async"
+  class="rounded-xl shadow-lg my-6 mx-auto w-full h-auto max-w-[850px] border border-border dark:border-dark"
+/>

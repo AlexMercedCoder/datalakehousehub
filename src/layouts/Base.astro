@@ -1,5 +1,6 @@
 ---
 import TwSizeIndicator from "@/components/TwSizeIndicator.astro";
+import Schema from "@/components/Schema.astro";
 import config from "@/config/config.json";
 import theme from "@/config/theme.json";
 import { plainify } from "@/lib/utils/textConverter";
@@ -27,10 +28,13 @@ export interface Props {
   image?: string;
   noindex?: boolean;
   canonical?: string;
+  author?: string;
+  pubDate?: Date;
+  type?: string;
 }
 
 // distructure frontmatters
-const { title, meta_title, description, image, noindex, canonical } =
+const { title, meta_title, description, image, noindex, canonical, author, pubDate, type } =
   Astro.props;
 ---
 
@@ -124,7 +128,7 @@ const { title, meta_title, description, image, noindex, canonical } =
         description ? description : config.metadata.meta_description,
       )}
     />
-    <meta property="og:type" content="website" />
+    <meta property="og:type" content={type ? type : "website"} />
     <meta
       property="og:url"
       content={`${config.site.base_url}/${Astro.url.pathname.replace("/", "")}`}
@@ -162,6 +166,13 @@ const { title, meta_title, description, image, noindex, canonical } =
       }`}
     />
     <meta name="twitter:card" content="summary_large_image" />
+    <Schema
+      title={meta_title ? meta_title : title ? title : config.site.title}
+      description={description ? description : config.metadata.meta_description}
+      image={image}
+      author={author}
+      pubDate={pubDate}
+    />
   </head>
 
   <body>

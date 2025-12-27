@@ -9,15 +9,15 @@ export async function GET(context) {
   }
 
   return rss({
-    title: 'AThe Data Lakehouse Hub',
+    title: 'The Data Lakehouse Hub',
     description: 'Data Lakehouse Community and Content',
     site: context.site,
     items: blog.map((post) => ({
       title: post.data.title,
-      pubDate: post.data.pubDatetime,
+      pubDate: post.data.date,
       description: generateSummary(post.body, 150),
-      author: post.data.author,
-      category: post.data.category,
+      author: post.data.authors[0],
+      category: post.data.categories[0],
       link: `/blog/${post.slug}/`,
       content: post.body,
     })),
