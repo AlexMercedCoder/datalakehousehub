@@ -2,19 +2,76 @@
 import Base from "@/layouts/Base.astro";
 import { markdownify } from "@/lib/utils/textConverter";
 import { getEntryBySlug } from "astro:content";
+import { getCollection } from "astro:content";
+import Search from "@/layouts/Search";
+import { Image } from "astro:assets";
+import { FaRegClock } from "react-icons/fa";
+import readingTime from "@/lib/utils/readingTime";
+
 const entry = await getEntryBySlug("pages", "404");
 const { Content } = await entry.render();
+
+const posts = await getCollection("blog");
+const recentPosts = posts
+  .filter((post) => !post.data.draft && post.data.date)
+  .sort((a, b) => (b.data.date?.valueOf() || 0) - (a.data.date?.valueOf() || 0))
+  .slice(0, 3);
 ---
 
 <Base title={entry.data.title}>
   <section class="section">
     <div class="container">
       <div class="flex h-[40vh] items-center justify-center">
-        <div class="text-center">
+        <div class="text-center w-full max-w-2xl">
           <h1 class="mb-4" set:html={markdownify(entry.data.title)} />
           <Content />
+          
+          <div class="mt-8 mb-12">
+            <h3 class="h5 mb-4">Search for what you need:</h3>
+            <Search client:load searchList={posts} />
+          </div>
         </div>
       </div>
+
+       <div class="mt-12">
+          <h2 class="h3 text-center mb-8">Or check out our recent posts</h2>
+          <div class="row justify-center">
+            {recentPosts.map((post) => (
+              <div class="col-12 mb-8 sm:col-6 lg:col-4">
+                 <div class="bg-white dark:bg-darkmode-theme-light rounded-lg shadow p-4 h-full">
+                    {post.data.image && (
+                    <a
+                        href={`/blog/${post.slug}`}
+                        class="block hover:text-primary transition duration-300"
+                    >
+                        <Image
+                        src={post.data.image}
+                        alt={post.data.title}
+                        width={445}
+                        height={230}
+                        class="w-full rounded-lg"
+                        />
+                    </a>
+                    )}
+                    <div class="mt-4">
+                        <div class="flex items-center gap-2 text-xs text-text dark:text-light mb-2">
+                             <span class="flex items-center gap-1"><FaRegClock /> {readingTime(post.body)}</span>
+                        </div>
+                        <h3 class="h4 mb-2">
+                            <a
+                            href={`/blog/${post.slug}`}
+                            class="block hover:text-primary transition duration-300"
+                            >
+                            {post.data.title}
+                            </a>
+                        </h3>
+                    </div>
+                </div>
+              </div>
+            ))}
+          </div>
+       </div>
+
     </div>
   </section>
 </Base>

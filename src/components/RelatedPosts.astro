@@ -1,0 +1,56 @@
+---
+import { Image } from "astro:assets";
+import { getCollection } from "astro:content";
+import config from "@/config/config.json";
+import similerItems from "@/lib/utils/similarItems";
+import { plainify } from "@/lib/utils/textConverter";
+
+const { post } = Astro.props;
+const { summary_length } = config.settings;
+
+const posts = await getCollection("blog");
+const similarPosts = similerItems(post, posts, post.slug);
+---
+
+{
+  similarPosts.length > 0 && (
+    <div class="section pb-0">
+      <h2 class="mb-8 text-center h3">Related Posts</h2>
+      <div class="row justify-center">
+        {similarPosts.slice(0, 3).map((post) => (
+          <div class="col-12 mb-8 sm:col-6 lg:col-4">
+             <div class="bg-white dark:bg-darkmode-theme-light rounded-lg shadow p-4 h-full">
+                {post.data.image && (
+                <a
+                    href={`/blog/${post.slug}`}
+                    class="block hover:text-primary transition duration-300"
+                >
+                    <Image
+                    src={post.data.image}
+                    alt={post.data.title}
+                    width={445}
+                    height={230}
+                    class="w-full rounded-lg"
+                    />
+                </a>
+                )}
+                <div class="mt-4">
+                    <h3 class="h4 mb-2">
+                        <a
+                        href={`/blog/${post.slug}`}
+                        class="block hover:text-primary transition duration-300"
+                        >
+                        {post.data.title}
+                        </a>
+                    </h3>
+                    <p class="text-text dark:text-light mb-4 text-sm">
+                        {plainify(post.body?.slice(0, Number(summary_length)))}...
+                    </p>
+                </div>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  )
+}

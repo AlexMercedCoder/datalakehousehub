@@ -1,0 +1,50 @@
+---
+import { humanize } from "@/lib/utils/textConverter";
+
+const { className } = Astro.props;
+
+const paths = Astro.url.pathname.split("/").filter((x) => x);
+let parts = [
+  {
+    label: "Home",
+    href: "/",
+    ariaLabel: "home",
+  },
+];
+
+paths.forEach((name, i) => {
+  const href = `/${paths.slice(0, i + 1).join("/")}`;
+  parts.push({
+    label: humanize(name.replace(".html", "")),
+    href,
+    ariaLabel: name,
+  });
+});
+---
+
+<nav aria-label="Breadcrumb" class={className}>
+  <ol class="inline-flex items-center space-x-1 md:space-x-3" role="list">
+    {
+      parts.map(({ label, href, ariaLabel }, index) => (
+        <li class="inline-flex items-center">
+          {index > 0 && (
+            <span class="mx-2 text-gray-400">/</span>
+          )}
+          {index === parts.length - 1 ? (
+            <span class="text-gray-500" aria-current="page">
+              {label}
+            </span>
+          ) : (
+            <a
+              href={href}
+              aria-label={ariaLabel}
+              class="text-primary hover:text-primary/80 transition-colors"
+            >
+              {label}
+            </a>
+          )}
+        </li>
+      ))
+    }
+  </ol>
+</nav>
