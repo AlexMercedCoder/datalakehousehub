@@ -5,24 +5,31 @@
       "url": "/"
     },
     {
-      "name": "Podcast",
-      "url": "https://open.spotify.com/show/3KHzqR9eFW6bJ1Tqoh2juM?si=1c0ca805765a4436"
-    },
-    {
       "name": "Blog",
       "url": "/blog"
     },
     {
-      "name": "OSS Blogroll",
-      "url": "https://lakehouseblogs.com"
-    },
-    {
-      "name": "Books, Community and Events",
-      "url": "https://github.com/AlexMercedCoder/link-markdowns/blob/main/data/iceberg-links.md"
-    },
-    {
-      "name": "Videos",
-      "url": "https://www.youtube.com/@alexmerceddata"
+      "name": "Resources",
+      "url": "#",
+      "hasChildren": true,
+      "children": [
+        {
+          "name": "Podcast",
+          "url": "https://open.spotify.com/show/3KHzqR9eFW6bJ1Tqoh2juM?si=1c0ca805765a4436"
+        },
+        {
+          "name": "Videos",
+          "url": "https://www.youtube.com/@alexmerceddata"
+        },
+        {
+          "name": "OSS Blogroll",
+          "url": "https://lakehouseblogs.com"
+        },
+        {
+          "name": "Books, Community and Events",
+          "url": "https://github.com/AlexMercedCoder/link-markdowns/blob/main/data/iceberg-links.md"
+        }
+      ]
     }
   ],
   "footer": [
