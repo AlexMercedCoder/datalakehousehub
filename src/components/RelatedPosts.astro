@@ -9,7 +9,13 @@ const { post } = Astro.props;
 const { summary_length } = config.settings;
 
 const posts = await getCollection("blog");
-const similarPosts = similerItems(post, posts, post.slug);
+let similarPosts = [];
+
+if (post.data.relatedPosts && post.data.relatedPosts.length > 0) {
+  similarPosts = posts.filter((p) => post.data.relatedPosts.includes(p.slug));
+} else {
+  similarPosts = similerItems(post, posts, post.slug);
+}
 ---
 
 {

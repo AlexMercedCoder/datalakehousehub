@@ -23,6 +23,11 @@ export async function GET(context) {
       category: post.data.categories[0],
       link: `/blog/${post.slug}/`,
       content: marked.parse(post.body || ""),
+      enclosure: {
+        url: new URL(`/open-graph/${post.slug}.png`, context.site).href,
+        length: 0,
+        type: 'image/png'
+      }
     })),
   });
 }
