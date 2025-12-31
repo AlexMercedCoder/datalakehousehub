@@ -31,10 +31,11 @@ export interface Props {
   author?: string;
   pubDate?: Date;
   type?: string;
+  slug?: string;
 }
 
 // distructure frontmatters
-const { title, meta_title, description, image, noindex, canonical, author, pubDate, type } =
+const { title, meta_title, description, image, noindex, canonical, author, pubDate, type, slug } =
   Astro.props;
 ---
 
@@ -170,7 +171,7 @@ const { title, meta_title, description, image, noindex, canonical, author, pubDa
     <meta
       property="og:image"
       content={`${config.site.base_url}${
-        image ? image : config.metadata.meta_image
+        slug ? `/open-graph/${slug}.png` : image ? image : config.metadata.meta_image
       }`}
     />
 
@@ -178,9 +179,10 @@ const { title, meta_title, description, image, noindex, canonical, author, pubDa
     <meta
       name="twitter:image"
       content={`${config.site.base_url}${
-        image ? image : config.metadata.meta_image
+        slug ? `/open-graph/${slug}.png` : image ? image : config.metadata.meta_image
       }`}
     />
+
     <meta name="twitter:card" content="summary_large_image" />
     <Schema
       title={meta_title ? meta_title : title ? title : config.site.title}

@@ -15,6 +15,8 @@
     "@astrojs/rss": "^4.0.14",
     "@astrojs/sitemap": "^3.6.0",
     "@astrojs/tailwind": "^6.0.2",
+    "@fontsource/roboto": "^5.2.9",
+    "@resvg/resvg-js": "^2.6.2",
     "@types/react-dom": "^19.2.3",
     "astro": "^5.16.6",
     "astro-auto-import": "^0.4.2",
@@ -29,6 +31,8 @@
     "react-lite-youtube-embed": "2.4.0",
     "remark-collapse": "^0.1.2",
     "remark-toc": "^9.0.0",
+    "satori": "^0.18.3",
+    "satori-html": "^0.3.2",
     "sharp": "0.33.1",
     "swiper": "^11.0.5"
   },

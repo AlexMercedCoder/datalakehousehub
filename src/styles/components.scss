@@ -1,3 +1,5 @@
+@tailwind components;
+@layer components {
 // section style
 .section {
   @apply pt-[70px] pb-[70px];
@@ -242,4 +244,5 @@
   @apply prose-thead:border-border prose-thead:bg-theme-light prose-th:py-4 prose-th:px-4 prose-th:text-dark;
   @apply prose-tr:border-border;
   @apply prose-td:px-3 prose-td:py-4;
+}
 }

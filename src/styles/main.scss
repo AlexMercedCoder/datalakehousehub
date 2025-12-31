@@ -1,18 +1,10 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
 
-@layer base {
-  @import "base";
-}
+@use "base";
+@use "components";
+@use "navigation";
+@use "buttons";
+@use "utilities";
 
 @layer components {
-  @import "components";
-  @import "navigation";
-  @import "buttons";
   @import '../../node_modules/swiper/swiper.scss';
-}
-
-@layer utilities {
-  @import "utilities";
 }

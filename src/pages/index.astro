@@ -18,7 +18,7 @@ const { banner, feature, services, workflow, call_to_action } = homepage.data;
           <h1 class="font-primary font-bold text-4xl lg:text-6xl tracking-tight mb-6 text-dark dark:text-white">{banner?.title}</h1>
           {
             banner?.content && (
-              <p class="mt-4 text-lg lg:text-xl text-text dark:text-light opacity-90 max-w-2xl mx-auto" set:html={markdownify(banner.content)} />
+              <p class="mt-4 text-lg lg:text-xl text-text dark:text-gray-100 opacity-90 max-w-2xl mx-auto" set:html={markdownify(banner.content)} />
             )
           }
 

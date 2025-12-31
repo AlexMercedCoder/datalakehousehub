@@ -1,3 +1,4 @@
+@layer components {
 .btn {
   @apply inline-block font-primary font-bold border px-7 py-[17px] leading-[18px] transition;
 }
@@ -22,4 +23,5 @@
   &:hover::after {
     @apply w-[110%] h-[110%];
   }
+}
 }

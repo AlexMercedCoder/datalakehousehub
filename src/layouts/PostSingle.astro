@@ -8,12 +8,14 @@ import RelatedPosts from "@/components/RelatedPosts.astro";
 import CopyLink from "@/components/CopyLink";
 import readingTime from "@/lib/utils/readingTime";
 import TableOfContents from "@/components/TableOfContents.astro";
+import CodeBlock from "@/components/CodeBlock.astro";
 import { FaRegClock } from "react-icons/fa";
 
 const { post } = Astro.props;
 const { Content, headings } = await post.render();
-const { title, description, image } = post.data;
+const { title, description } = post.data;
 const readTime = readingTime(post.body);
+const generatedImage = `/open-graph/${post.slug}.png`;
 ---
 
 <section class="section pt-12">
@@ -42,23 +44,21 @@ const readTime = readingTime(post.body);
             <hr class="w-24 h-1 mx-auto bg-primary rounded border-0">
           </div>
             
-            {image && (
             <div class="mb-10 text-center">
-              <Image
-                src={image}
+              <img
+                src={generatedImage}
                 alt={title}
                 height={500}
                 width={1000}
-                class="rounded-lg w-full"
+                class="rounded-lg w-full shadow-2xl border border-gray-100 dark:border-gray-800"
               />
             </div>
-          )}
 
           <div class="content prose prose-lg dark:prose-invert max-w-none prose-headings:font-bold prose-headings:tracking-tight prose-a:text-primary hover:prose-a:text-primary/80 prose-img:rounded-xl prose-img:shadow-lg">
             <div class="lg:hidden mb-8">
                 <TableOfContents headings={headings} />
             </div>
-            <Content components={{img: MDXImage}} />
+            <Content components={{img: MDXImage, pre: CodeBlock}} />
           </div>
           
           <div class="mt-12 flex justify-between items-center border-t border-border py-6">

@@ -1,3 +1,4 @@
+@layer components {
 #hide-button {
   @apply hidden;
 }
@@ -52,4 +53,5 @@
   &-active {
     @apply text-primary;
   }
+}
 }

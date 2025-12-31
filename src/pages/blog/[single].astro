@@ -29,6 +29,7 @@ const { title, meta_title, description, image, date, authors } = post.data;
   author={authors ? authors[0] : ""}
   pubDate={date}
   type="article"
+  slug={post.slug}
 >
   <PostSingle post={post} />
 </Base>

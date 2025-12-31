@@ -1,0 +1,10 @@
+---
+import CopyCode from "./CopyCode";
+
+const props = Astro.props;
+---
+
+<div class="relative group">
+  <CopyCode client:visible />
+  <pre {...props} class="!mt-0 !mb-0 rounded-lg"><slot /></pre>
+</div>
