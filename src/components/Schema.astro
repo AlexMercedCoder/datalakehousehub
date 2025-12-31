@@ -22,7 +22,7 @@ let schema = JSON.stringify({
       },
       "headline": title,
       "description": description,
-      "image": image ? new URL(image, siteUrl).href : new URL(config.metadata.meta_image, siteUrl).href,
+      "image": new URL(`/open-graph/${Astro.url.pathname.split('/').filter(Boolean).pop()}.png`, siteUrl).href,
       "author": {
         "@type": "Person",
         "name": author || config.metadata.meta_author

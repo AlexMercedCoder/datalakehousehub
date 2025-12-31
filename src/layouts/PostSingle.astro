@@ -9,6 +9,7 @@ import CopyLink from "@/components/CopyLink";
 import readingTime from "@/lib/utils/readingTime";
 import TableOfContents from "@/components/TableOfContents.astro";
 import CodeBlock from "@/components/CodeBlock.astro";
+import ScrollProgress from "@/components/ScrollProgress";
 import { FaRegClock } from "react-icons/fa";
 
 const { post } = Astro.props;
@@ -19,6 +20,7 @@ const generatedImage = `/open-graph/${post.slug}.png`;
 ---
 
 <section class="section pt-12">
+  <ScrollProgress client:load />
   <div class="container relative">
     <div class="row">
       <div class="hidden lg:block lg:col-3">

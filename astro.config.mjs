@@ -50,4 +50,11 @@ export default defineConfig({
     },
     extendDefaultPlugins: true,
   },
+  vite: {
+    build: {
+      rollupOptions: {
+        external: ["/pagefind/pagefind.js"],
+      },
+    },
+  },
 });
