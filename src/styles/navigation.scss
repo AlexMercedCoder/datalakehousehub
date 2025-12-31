@@ -54,4 +54,18 @@
     @apply text-primary;
   }
 }
+
+.nav-dropdown {
+  &-list {
+    @apply z-10 min-w-[180px] rounded-lg bg-white shadow-lg dark:bg-gray-800 p-4;
+  }
+  
+  &-item {
+     @apply mb-2 last:mb-0;
+  }
+
+  &-link {
+    @apply block py-1 font-primary text-sm font-semibold text-dark transition hover:text-primary dark:text-white;
+  }
+}
 }
