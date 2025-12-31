@@ -1,0 +1,26 @@
+---
+import { IoMoon, IoSunny } from "react-icons/io5";
+---
+
+<button id="theme-switcher" class="text-dark dark:text-white hover:text-primary transition-colors duration-200">
+    <span class="sr-only">Toggle Theme</span>
+    <span id="theme-moon" class="hidden dark:inline"><IoMoon /></span>
+    <span id="theme-sun" class="dark:hidden"><IoSunny /></span>
+</button>
+
+<script is:inline>
+    const themeSwitcher = document.getElementById("theme-switcher");
+    
+    const toggleTheme = () => {
+        const element = document.documentElement;
+        if (element.classList.contains("dark")) {
+            element.classList.remove("dark");
+            localStorage.setItem("theme", "light");
+        } else {
+            element.classList.add("dark");
+            localStorage.setItem("theme", "dark");
+        }
+    }
+
+    themeSwitcher?.addEventListener("click", toggleTheme);
+</script>

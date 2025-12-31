@@ -19,8 +19,8 @@
 
   "nav_button": {
     "enable": true,
-    "label": "Like the Page",
-    "link": "https://www.linkedin.com/company/data-lakehouse-hub"
+    "label": "Subscribe",
+    "link": "https://amdatalakehouse.substack.com/"
   },
 
   "params": {

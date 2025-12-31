@@ -1,0 +1,19 @@
+---
+const { headings } = Astro.props;
+---
+
+<nav class="toc sticky top-24 max-h-[calc(100vh-100px)] overflow-y-auto hidden lg:block">
+  <h2 class="text-lg font-bold mb-4">Table of Contents</h2>
+  <ul class="space-y-2 text-sm">
+    {headings.map((heading) => (
+      <li class={`${heading.depth === 2 ? 'pl-0' : heading.depth === 3 ? 'pl-4' : 'pl-8'}`}>
+        <a
+          href={`#${heading.slug}`}
+          class="text-text dark:text-light hover:text-primary transition-colors block border-l-2 border-transparent hover:border-primary pl-2"
+        >
+          {heading.text}
+        </a>
+      </li>
+    ))}
+  </ul>
+</nav>
