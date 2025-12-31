@@ -1,4 +1,5 @@
 ---
+import { Image } from "astro:assets";
 import { markdownify } from "@/lib/utils/textConverter";
 import MDXImage from "@/components/MDXImage.astro";
 import Giscus from "@/components/Giscus.astro";
@@ -6,18 +7,25 @@ import Share from "@/components/Share.astro";
 import RelatedPosts from "@/components/RelatedPosts.astro";
 import CopyLink from "@/components/CopyLink";
 import readingTime from "@/lib/utils/readingTime";
+import TableOfContents from "@/components/TableOfContents.astro";
 import { FaRegClock } from "react-icons/fa";
 
 const { post } = Astro.props;
-const { Content } = await post.render();
+const { Content, headings } = await post.render();
 const { title, description, image } = post.data;
 const readTime = readingTime(post.body);
 ---
 
 <section class="section pt-12">
-  <div class="container">
-    <div class="row justify-center">
-      <div class="col-12 md:col-10 lg:col-8">
+  <div class="container relative">
+    <div class="row">
+      <div class="hidden lg:block lg:col-3">
+         <div class="sticky top-24">
+             <TableOfContents headings={headings} />
+         </div>
+      </div>
+
+      <div class="col-12 lg:col-9">
         <article>
           <div class="mb-12 text-center">
              <div class="flex items-center justify-center gap-3 mb-4">
@@ -36,7 +44,7 @@ const readTime = readingTime(post.body);
             
             {image && (
             <div class="mb-10 text-center">
-              <img
+              <Image
                 src={image}
                 alt={title}
                 height={500}
@@ -47,6 +55,9 @@ const readTime = readingTime(post.body);
           )}
 
           <div class="content prose prose-lg dark:prose-invert max-w-none prose-headings:font-bold prose-headings:tracking-tight prose-a:text-primary hover:prose-a:text-primary/80 prose-img:rounded-xl prose-img:shadow-lg">
+            <div class="lg:hidden mb-8">
+                <TableOfContents headings={headings} />
+            </div>
             <Content components={{img: MDXImage}} />
           </div>
           

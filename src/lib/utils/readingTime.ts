@@ -1,5 +1,6 @@
 // content reading
 const readingTime = (content: string) => {
+  if (!content) return "0 Min read";
   const WPS = 275 / 60;
 
   let images = 0;

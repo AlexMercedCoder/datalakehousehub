@@ -7,6 +7,7 @@ export async function GET(context) {
     .sort((a, b) => b.data.date - a.data.date);
 
   function generateSummary(content, length = 150) {
+    if (!content) return "";
     return content.length > length ? content.slice(0, length) + '...' : content;
   }
 
@@ -21,7 +22,7 @@ export async function GET(context) {
       author: post.data.author || post.data.authors[0],
       category: post.data.categories[0],
       link: `/blog/${post.slug}/`,
-      content: marked.parse(post.body),
+      content: marked.parse(post.body || ""),
     })),
   });
 }

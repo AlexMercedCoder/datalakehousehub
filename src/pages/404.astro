@@ -1,14 +1,14 @@
 ---
 import Base from "@/layouts/Base.astro";
 import { markdownify } from "@/lib/utils/textConverter";
-import { getEntryBySlug } from "astro:content";
+import { getEntry } from "astro:content";
 import { getCollection } from "astro:content";
 import Search from "@/layouts/Search";
 import { Image } from "astro:assets";
 import { FaRegClock } from "react-icons/fa";
 import readingTime from "@/lib/utils/readingTime";
 
-const entry = await getEntryBySlug("pages", "404");
+const entry = await getEntry("pages", "404");
 const { Content } = await entry.render();
 
 const posts = await getCollection("blog");
