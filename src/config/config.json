@@ -5,9 +5,9 @@
     "base_path": "/",
     "trailing_slash": false,
     "favicon": "/images/logosquare.png",
-    "logo": "/images/logobanner.jpg",
-    "logo_width": "400",
-    "logo_height": "76",
+    "logo": "/images/logo_v2.png",
+    "logo_width": "300",
+    "logo_height": "57",
     "logo_text": "Astroplate"
   },
 

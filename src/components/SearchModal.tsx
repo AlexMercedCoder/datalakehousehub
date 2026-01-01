@@ -54,13 +54,21 @@ export default function SearchModal() {
     setLoading(true);
     try {
         // @ts-ignore
-      const pagefind = await window.pagefind; 
+      // @ts-ignore
+      let pagefind = window.pagefind;
       if (!pagefind) {
-        // dynamic load if not present (should be loaded by script in layout or auto)
-        // for Astro static, we rely on pagefind.js being available at /pagefind/pagefind.js
-        const imported = await import(/* @vite-ignore */ "/pagefind/pagefind.js");
-        // @ts-ignore
-        window.pagefind = imported;
+        try {
+          // Use variable to bypass Vite static analysis
+          const pagefindUrl = "/pagefind/pagefind.js?url";
+          // @ts-ignore
+          pagefind = await import(/* @vite-ignore */ pagefindUrl.replace("?url", ""));
+          // @ts-ignore
+          window.pagefind = pagefind;
+        } catch (e) {
+            console.warn("Pagefind not found (dev mode). Search is disabled.");
+            setLoading(false);
+            return;
+        }
       }
       // @ts-ignore
       const search = await window.pagefind.search(val);

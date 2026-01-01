@@ -1,8 +1,8 @@
 ---
 banner:
   title: The Ultimate Hub for Data Lakehouse Engineering
-  content: Master the open data lakehouse architecture with Apache Iceberg, Dremio, and Nessie. Join a community of data engineers building the future of unified analytics.
-  image: /images/lakehouseengineers.webp
+  content: Build a unified, high-performance analytics platform with the open data lakehouse architecture. Combine the flexibility of a data lake with the reliability of a warehouse using open standards.
+  image: /images/hero-v2.png
   button:
     label: "Join the Community"
     link: "https://join.slack.com/t/thedatalakehousehub/shared_invite/zt-274yc8sza-mI2zhCW8LGkOh1uxuf8T5Q"
@@ -23,22 +23,24 @@ feature:
     content: "Achieve sub-second query performance on data lake scale datasets using engines like Dremio."
 
 # services
-services:
-  - title: "Start Your Lakehouse Journey Locally"
-    content: "Don't wait for cloud permissions. Spin up a full-stack data lakehouse on your laptop in minutes using Docker. Learn how to integrate Apache Iceberg, Dremio, and Nessie to build a production-ready architecture today."
-    images:
-      - "/images/service-slide-1.png"
-      - "/images/service-slide-2.png"
-      - "/images/service-slide-3.png"
-    button:
-      enable: true
-      label: Start the Tutorial
-      link: /blog/2024-04-end-to-end-data-engineering-tutorial-ingest-dashboards
+# reading_list
+reading_list:
+  title: "Data Lakehouse Reading"
+  books:
+    - title: "Apache Iceberg: The Definitive Guide"
+      image: "/images/Apache_Iceberg_The_Definitive_Guide.jpg"
+      link: "https://drmevn.fyi/tableformatblog"
+    - title: "Apache Polaris: The Definitive Guide"
+      image: "/images/Apache_Polaris_The_Definitive_Guide.jpg"
+      link: "https://drmevn.fyi/tableformatblog-62P6t"
+    - title: "Architecting an Apache Iceberg Lakehouse"
+      image: "/images/Architecting_An_Apache_Iceberg_Lakehouse.png"
+      link: "https://hubs.la/Q03GfY4f0"
 
 # workflow
 workflow: 
   title: "The Modern Data Stack is Open"
-  image: "/images/banner.png"
+  image: "/images/workflow-v2.png.png"
   description: "The Data Lakehouse Hub is your central resource for tutorials, architectural guides, and community support. Whether you're migrating from a warehouse or building from scratch, we have the resources to help you succeed with open data standards."
 
 # call_to_action
