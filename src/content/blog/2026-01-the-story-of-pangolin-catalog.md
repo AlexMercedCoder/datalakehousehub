@@ -1,6 +1,6 @@
 ---
 title: Building Pangolin - My Holiday Break, an AI IDE, and a Lakehouse Catalog for the Curious
-date: 2025-12-05T09:00:00Z
+date: 2026-01-02T09:00:00Z
 description: "A personal story of how I built Pangolin Catalog over a holiday break using an AI-powered IDE."
 author: "Alex Merced"
 category: "Data Engineering"
