@@ -3,7 +3,7 @@ title: RAG Isn’t a Modeling Problem. It’s a Data Engineering Problem.
 date: 2026-01-06T09:00:00Z
 description: "Why retrieval-augmented generation systems fail in enterprises—and what to do about it."
 author: "Alex Merced"
-category: "Data Engineering"
+category: "AI"
 bannerImage: "https://i.imgur.com/cpoMZQ8.png"
 tags:
   - data engineering
