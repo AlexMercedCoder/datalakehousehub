@@ -1,6 +1,7 @@
 ---
 title: "Data Virtualization and the Semantic Layer: Query Without Copying"
 date: 2026-02-18T13:20:00Z
+pubDatetime: 2026-02-18T13:20:00Z
 description: "Data virtualization and the semantic layer — query without copying. How virtual datasets and Reflections eliminate unnecessary data movement."
 author: "Alex Merced"
 category: "Semantic Layer"

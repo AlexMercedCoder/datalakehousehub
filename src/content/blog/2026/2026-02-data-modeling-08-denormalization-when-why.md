@@ -1,6 +1,7 @@
 ---
 title: "Denormalization: When and Why to Flatten Your Data"
 date: 2026-02-18T10:10:00Z
+pubDatetime: 2026-02-18T10:10:00Z
 description: "When and why to flatten your data — denormalization techniques, trade-offs, and how virtual denormalization via views avoids physical data duplication."
 author: "Alex Merced"
 category: "Data Modeling"

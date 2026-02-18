@@ -1,6 +1,7 @@
 ---
 title: "How to Design Reliable Data Pipelines"
 date: 2026-02-18T10:50:00Z
+pubDatetime: 2026-02-18T10:50:00Z
 description: "How to design reliable data pipelines — four architectural layers, failure handling patterns, and the composable pipeline approach."
 author: "Alex Merced"
 category: "Data Engineering"

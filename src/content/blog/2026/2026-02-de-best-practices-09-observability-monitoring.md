@@ -1,6 +1,7 @@
 ---
 title: "Pipeline Observability: Know When Things Break"
 date: 2026-02-18T12:00:00Z
+pubDatetime: 2026-02-18T12:00:00Z
 description: "Pipeline observability — the three pillars (metrics, logs, lineage), alerting strategies, and building dashboards that catch failures before users do."
 author: "Alex Merced"
 category: "Data Engineering"

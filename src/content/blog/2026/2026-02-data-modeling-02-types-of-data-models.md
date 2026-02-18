@@ -1,6 +1,7 @@
 ---
 title: "Conceptual, Logical, and Physical Data Models Explained"
 date: 2026-02-18T09:10:00Z
+pubDatetime: 2026-02-18T09:10:00Z
 description: "Understand conceptual, logical, and physical data models — what each level contains, who owns it, and how they connect from business requirements to database implementation."
 author: "Alex Merced"
 category: "Data Modeling"

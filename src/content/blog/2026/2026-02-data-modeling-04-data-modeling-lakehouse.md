@@ -1,6 +1,7 @@
 ---
 title: "Data Modeling for the Lakehouse: What Changes"
 date: 2026-02-18T09:30:00Z
+pubDatetime: 2026-02-18T09:30:00Z
 description: "How data modeling changes in a lakehouse architecture — schema-on-read, partition evolution, and building virtual semantic layers with Medallion Architecture."
 author: "Alex Merced"
 category: "Data Modeling"

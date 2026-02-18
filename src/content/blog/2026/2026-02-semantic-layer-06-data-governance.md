@@ -1,6 +1,7 @@
 ---
 title: "The Role of the Semantic Layer in Data Governance"
 date: 2026-02-18T13:10:00Z
+pubDatetime: 2026-02-18T13:10:00Z
 description: "The role of the semantic layer in data governance — centralized definitions, row-level security, column masking, and compliance traceability."
 author: "Alex Merced"
 category: "Semantic Layer"

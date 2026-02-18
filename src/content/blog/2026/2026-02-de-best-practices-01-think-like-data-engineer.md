@@ -1,6 +1,7 @@
 ---
 title: "How to Think Like a Data Engineer"
 date: 2026-02-18T10:40:00Z
+pubDatetime: 2026-02-18T10:40:00Z
 description: "How to think like a data engineer — principles over tools, the Five Questions Framework, systems thinking, and designing for failure first."
 author: "Alex Merced"
 category: "Data Engineering"

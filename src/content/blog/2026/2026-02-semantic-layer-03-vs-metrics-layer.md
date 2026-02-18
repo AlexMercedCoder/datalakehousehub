@@ -1,6 +1,7 @@
 ---
 title: "Semantic Layer vs. Metrics Layer: What's the Difference?"
 date: 2026-02-18T12:40:00Z
+pubDatetime: 2026-02-18T12:40:00Z
 description: "Semantic layer vs. metrics layer — how they overlap, where they differ, and when you need one, the other, or both."
 author: "Alex Merced"
 category: "Semantic Layer"

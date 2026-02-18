@@ -1,6 +1,7 @@
 ---
 title: "Star Schema vs. Snowflake Schema: When to Use Each"
 date: 2026-02-18T09:20:00Z
+pubDatetime: 2026-02-18T09:20:00Z
 description: "Compare star schema and snowflake schema designs — when to denormalize for speed vs. normalize for storage, with practical examples and decision criteria."
 author: "Alex Merced"
 category: "Data Modeling"

@@ -1,6 +1,7 @@
 ---
 title: "Idempotent Pipelines: Build Once, Run Safely Forever"
 date: 2026-02-18T11:10:00Z
+pubDatetime: 2026-02-18T11:10:00Z
 description: "Build idempotent pipelines that produce the same result regardless of how many times they run — MERGE patterns, deduplication, and anti-patterns to avoid."
 author: "Alex Merced"
 category: "Data Engineering"

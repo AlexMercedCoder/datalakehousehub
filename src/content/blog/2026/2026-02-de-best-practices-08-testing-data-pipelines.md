@@ -1,6 +1,7 @@
 ---
 title: "Testing Data Pipelines: What to Validate and When"
 date: 2026-02-18T11:50:00Z
+pubDatetime: 2026-02-18T11:50:00Z
 description: "What to validate and when — the data testing pyramid, schema tests, row-level assertions, regression testing, and integration with CI/CD pipelines."
 author: "Alex Merced"
 category: "Data Engineering"

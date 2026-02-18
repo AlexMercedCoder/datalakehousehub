@@ -1,6 +1,7 @@
 ---
 title: "Slowly Changing Dimensions: Types 1-3 with Examples"
 date: 2026-02-18T09:50:00Z
+pubDatetime: 2026-02-18T09:50:00Z
 description: "Learn Slowly Changing Dimension types 1-3 with concrete examples and a decision guide for choosing the right SCD type for your use case."
 author: "Alex Merced"
 category: "Data Modeling"

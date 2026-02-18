@@ -1,6 +1,7 @@
 ---
 title: "Dimensional Modeling: Facts, Dimensions, and Grains"
 date: 2026-02-18T09:40:00Z
+pubDatetime: 2026-02-18T09:40:00Z
 description: "Master dimensional modeling with facts, dimensions, and grains — the foundation of analytical data warehousing and lakehouse design."
 author: "Alex Merced"
 category: "Data Modeling"

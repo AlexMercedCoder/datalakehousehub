@@ -1,6 +1,7 @@
 ---
 title: "Headless BI: How a Universal Semantic Layer Replaces Tool-Specific Models"
 date: 2026-02-18T13:30:00Z
+pubDatetime: 2026-02-18T13:30:00Z
 description: "Headless BI explained — how a universal semantic layer replaces tool-specific models and enables composable, tool-agnostic analytics."
 author: "Alex Merced"
 category: "Semantic Layer"

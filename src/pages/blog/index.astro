@@ -30,10 +30,10 @@ const currentPosts = sortedPosts.slice(0, config.settings.pagination);
         set:html={markdownify(postIndex?.data.title)}
       />
       
-      <div class="row g-4">
+      <div class="row">
         {
           currentPosts.map((post) => (
-            <div class="col-12 md:col-6 lg:col-4 mb-4">
+            <div class="col-12 mb-8 sm:col-6">
               <Post post={post} />
             </div>
           ))

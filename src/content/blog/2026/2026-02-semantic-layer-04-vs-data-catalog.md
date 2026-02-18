@@ -1,6 +1,7 @@
 ---
 title: "Semantic Layer vs. Data Catalog: Complementary, Not Competing"
 date: 2026-02-18T12:50:00Z
+pubDatetime: 2026-02-18T12:50:00Z
 description: "Semantic layer vs. data catalog — complementary tools explained. One defines what data means, the other inventories what data exists."
 author: "Alex Merced"
 category: "Semantic Layer"

@@ -1,6 +1,7 @@
 ---
 title: A 2026 Introduction to Apache Iceberg
 date: 2026-02-13T09:00:00Z
+pubDatetime: 2026-02-13T09:00:00Z
 description: "An updated introduction to Apache Iceberg"
 author: "Alex Merced"
 category: "Data Engineering"

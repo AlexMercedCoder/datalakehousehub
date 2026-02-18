@@ -1,6 +1,7 @@
 ---
 title: "What Is Data Modeling? A Complete Guide"
 date: 2026-02-18T09:00:00Z
+pubDatetime: 2026-02-18T09:00:00Z
 description: "A complete guide to data modeling — what it is, the three levels of abstraction, common techniques, and why it matters more than ever for AI, analytics, and governance."
 author: "Alex Merced"
 category: "Data Modeling"

@@ -1,6 +1,7 @@
 ---
 title: "Partition and Organize Data for Performance"
 date: 2026-02-18T11:40:00Z
+pubDatetime: 2026-02-18T11:40:00Z
 description: "How to partition and organize data for query performance — partition strategies, sort orders, Z-ordering, and common mistakes that kill performance."
 author: "Alex Merced"
 category: "Data Engineering"

@@ -1,6 +1,7 @@
 ---
 title: "What Is a Semantic Layer? A Complete Guide"
 date: 2026-02-18T12:20:00Z
+pubDatetime: 2026-02-18T12:20:00Z
 description: "A complete guide to semantic layers — what they are, what they contain, how they work in practice, and why AI agents and self-service analytics depend on them."
 author: "Alex Merced"
 category: "Semantic Layer"

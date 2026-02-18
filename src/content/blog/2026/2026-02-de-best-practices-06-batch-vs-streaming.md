@@ -1,6 +1,7 @@
 ---
 title: "Batch vs. Streaming: Choose the Right Processing Model"
 date: 2026-02-18T11:30:00Z
+pubDatetime: 2026-02-18T11:30:00Z
 description: "Choose the right processing model — batch, micro-batch, or streaming. Decision framework based on latency requirements, cost, and operational complexity."
 author: "Alex Merced"
 category: "Data Engineering"

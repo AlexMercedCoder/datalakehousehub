@@ -1,6 +1,7 @@
 ---
 title: "Data Quality Is a Pipeline Problem, Not a Dashboard Problem"
 date: 2026-02-18T11:00:00Z
+pubDatetime: 2026-02-18T11:00:00Z
 description: "Why data quality is a pipeline problem, not a dashboard problem — six dimensions of quality, validation strategies, and monitoring patterns."
 author: "Alex Merced"
 category: "Data Engineering"
