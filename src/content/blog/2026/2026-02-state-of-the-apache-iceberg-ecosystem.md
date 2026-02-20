@@ -99,7 +99,7 @@ Traditional SaaS ELT platforms show minimal representation. The ecosystem remain
 
 ![Feature Priorities: Governance and Optimization](https://imgur.com/SsRTTYz.png)
 
-Interest in Iceberg v3 features centers on schema and deletion improvements. Default column values lead at 33.3%. Deletion vectors follow at 25.9%. Row-level lineage registers at 22.2%. Other features such as geo types and variant types trail behind.
+Interest in Iceberg v3 features centers on schema and deletion improvements. Row Level Lineage values lead at 33.3%. Deletion vectors follow at 25.9%. Variant Datatype registers at 22.2%. Other features such as geo types and variant types trail behind.
 
 Deletion vectors address update efficiency. Lineage addresses governance visibility. These are production-driven concerns.
 
@@ -117,11 +117,7 @@ This distribution underscores that Iceberg adoption is mediated primarily throug
 
 ## Core Value Proposition
 
-![Core Value Proposition](https://imgur.com/pyCGZpc.png)
-
-When asked which value proposition resonates most, interoperability among lakehouse tooling and reduced cost through less duplicative storage each register at 35.7%. ACID transactions register at 14.3%. Faster transactions over Hive or Parquet also register at 14.3%.
-
-ACID is no longer the differentiator. Interoperability and cost efficiency define Iceberg’s narrative strength.
+When asked which value proposition resonates most, interoperability among lakehouse tooling and ACID Transaction through less duplicative storage each register at 35.7%. Cost Reductions register at 14.3%. Faster transactions over Hive or Parquet also register at 14.3%.
 
 ## Satisfaction and Contribution
 
@@ -237,15 +233,16 @@ To follow how these trends develop and to participate in the next survey cycle, 
 - Confluent: 9.1%
 - Apache Spark (explicit listing): 9.1%
 - Other tools (Flink, dlt, RisingWave, etc.): 4.5% each
-- Fivetran / Airbyte / Estuary: 0%
+- Other: 0%
 
 ## Most Interesting v3 Feature
-- Default Column Values: 33.3%
+
+- Row-Level Lineage: 33.3%
 - Deletion Vectors: 25.9%
-- Row-Level Lineage: 22.2%
 - Variant Datatype: 22.2%
-- Geo Datatypes: 22.2%
-- Implicit Maintenance / Equality Delete Deprecation: Smaller %
+- Default Column Types: 7.4%
+- Geo Datatypes: 3.7%
+- Implicit Maintenance / Equality Delete Deprecation: 3.7 %
 
 ## Most Exciting Potential v4 Feature
 - Materialized Views: 37.0%
@@ -263,9 +260,9 @@ To follow how these trends develop and to participate in the next survey cycle, 
 - Graphical UI: Small %
 
 ## Most Appealing Iceberg Value Proposition
-- Interoperability Among Lakehouse Tooling: 35.7%
+- ACID Transactions: 35.7%
 - Reduced Cost (Less Duplicative Storage / ETL): 35.7%
-- ACID Transactions: 14.3%
+- Interoperability Among Lakehouse Tooling: 14.3%
 - Faster Transactions vs Hive/Parquet: 14.3%
 
 ## Performance & Reliability Satisfaction
