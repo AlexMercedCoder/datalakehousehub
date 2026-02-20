@@ -15,7 +15,7 @@ draft: false
 image: "/images/blog.png"
 ---
 
-![2025 Survey](https://imgur.com/eSwOYfd)
+![2025 Survey](https://imgur.com/eSwOYfd.png)
 
 **Raw Results at Bottom of Post**
 
@@ -35,7 +35,7 @@ The results reflect active builders. They offer a snapshot of where Iceberg stan
 
 ## Practitioner Profile
 
-![Practicioner Profile](https://imgur.com/XdsIJF4)
+![Practicioner Profile](https://imgur.com/XdsIJF4.png)
 
 The audience skews heavily toward technical roles. Data Engineers represent 29.6% of respondents. Software Engineers account for 25.9%. Architects represent another 25.9%. The remainder spans data scientists, managers, and executives. The concentration among engineers and architects suggests that responses are grounded in hands-on implementation experience rather than surface familiarity.
 
@@ -45,7 +45,7 @@ Familiarity with Iceberg is strong. 60.7% describe themselves as moderately expe
 
 ## Engine Usage: Spark Dominates, Commercial Engines Compete
 
-![Engine Usage](https://imgur.com/V7bAAiD)
+![Engine Usage](https://imgur.com/V7bAAiD.png)
 
 Apache Spark remains the dominant engine in the Iceberg ecosystem. 96.4% of respondents report using Spark with Iceberg. This near-universal adoption reinforces Spark’s central role in ingestion, transformation, and metadata operations.
 
@@ -55,7 +55,7 @@ The data does not indicate a single engine winner beyond Spark’s foundational 
 
 ## Cloud and Infrastructure Patterns
 
-![Cloud and Infrastructure Patterns](https://imgur.com/fmZ6nV7)
+![Cloud and Infrastructure Patterns](https://imgur.com/fmZ6nV7.png)
 
 AWS is the primary deployment environment, with 64.3% reporting AWS usage. On-premises deployments account for 28.6%. Azure and GCP each appear at 17.9%. Multi-cloud configurations register at 21.4%. Local development and testing environments are common at 42.9%.
 
@@ -71,7 +71,7 @@ The overlap with Delta is strategically relevant. Many teams operate in mixed ec
 
 ## Catalog Landscape: Competitive and Fragmented
 
-![Catalog Landscape: Competitive and Fragmented](https://imgur.com/LIkrrSu)
+![Catalog Landscape: Competitive and Fragmented](https://imgur.com/LIkrrSu.png)
 
 Catalog usage reflects a fragmented market. AWS Glue leads at 39.3%. Nessie follows at 28.6%. Amazon S3 Tables registers at 25%. Apache Polaris and Lakekeeper each register at 21.4%. Hadoop and Hive Metastore implementations appear at 17.9%.
 
@@ -81,7 +81,7 @@ The catalog market remains unsettled. Governance, federation, and metadata stand
 
 ## Table Scale: Production Reality
 
-![Table Scale: Production Reality](https://imgur.com/3FfGy3J)
+![Table Scale: Production Reality](https://imgur.com/3FfGy3J.png)
 
 Iceberg workloads are not confined to small datasets. 28.6% report managing tables between 10 and 100 TB. 21.4% report less than 1 TB. 17.9% report 1–10 TB. Another 17.9% report 100 TB to 1 PB. 10.7% report managing tables larger than 1 PB.
 
@@ -97,7 +97,7 @@ Traditional SaaS ELT platforms show minimal representation. The ecosystem remain
 
 ## Feature Priorities: Governance and Optimization
 
-![Feature Priorities: Governance and Optimization](https://imgur.com/SsRTTYz)
+![Feature Priorities: Governance and Optimization](https://imgur.com/SsRTTYz.png)
 
 Interest in Iceberg v3 features centers on schema and deletion improvements. Default column values lead at 33.3%. Deletion vectors follow at 25.9%. Row-level lineage registers at 22.2%. Other features such as geo types and variant types trail behind.
 
@@ -109,7 +109,7 @@ The direction is clear. The ecosystem wants performance acceleration and metadat
 
 ## Interface Preferences: SQL at the Center
 
-![Interface Preferences: SQL at the Center](https://imgur.com/6HQgidX)
+![Interface Preferences: SQL at the Center](https://imgur.com/6HQgidX.png)
 
 SQL is the dominant interface at 46.4%. Python and Java or Scala each register at 25%. Rust, Go, and graphical no-code interfaces represent only marginal usage.
 
@@ -117,7 +117,7 @@ This distribution underscores that Iceberg adoption is mediated primarily throug
 
 ## Core Value Proposition
 
-![Core Value Proposition](https://imgur.com/pyCGZpc)
+![Core Value Proposition](https://imgur.com/pyCGZpc.png)
 
 When asked which value proposition resonates most, interoperability among lakehouse tooling and reduced cost through less duplicative storage each register at 35.7%. ACID transactions register at 14.3%. Faster transactions over Hive or Parquet also register at 14.3%.
 
