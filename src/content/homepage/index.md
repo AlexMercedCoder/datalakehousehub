@@ -36,6 +36,12 @@ reading_list:
     - title: "Architecting an Apache Iceberg Lakehouse"
       image: "/images/Architecting_An_Apache_Iceberg_Lakehouse.png"
       link: "https://hubs.la/Q03GfY4f0"
+    - title: "The 2026 Guide to Lakehouses, Apache Iceberg and Agentic AI"
+      image: "/images/2026_Guide_Lakehouses_Iceberg_Agentic_AI.jpg"
+      link: "https://www.amazon.com/dp/B0GQNY21TD"
+    - title: "The Book on Using Apache Iceberg with Python"
+      image: "/images/Book_Using_Apache_Iceberg_Python.jpg"
+      link: "https://www.amazon.com/dp/B0GNZ454FF"
 
 # workflow
 workflow: 
