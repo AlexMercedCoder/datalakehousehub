@@ -1,12 +1,12 @@
 ---
 title: "Semantic Layer"
 meta_title: "What is Semantic Layer? | Data Lakehouse & AI Glossary"
-description: "A carefully structured Dremio framework presenting business oriented logical connections explicitly simplifying universally understandable corporate accessibility."
+description: "A mapping process that translates complex data into familiar business terms to ensure consistent analytics."
 ---
 
 ## What is Semantic Layer?
 
-A carefully structured Dremio framework presenting business oriented logical connections explicitly simplifying universally understandable corporate accessibility. This capability serves as a critical enabler in modern data ecosystems, explicitly guiding architecture toward absolute efficiency and scale. When correctly implemented, Semantic Layer dynamically drives analytical workloads and structurally limits administrative technical debt.
+A mapping process that translates complex data into familiar business terms to ensure consistent analytics. This capability serves as a critical enabler in modern data ecosystems, explicitly guiding architecture toward absolute efficiency and scale. When correctly implemented, Semantic Layer dynamically drives analytical workloads and structurally limits administrative technical debt.
 
 ### Core Architecture and Mechanics
 

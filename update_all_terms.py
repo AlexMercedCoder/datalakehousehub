@@ -28,7 +28,6 @@ terms = {
         ("Business Glossary", "A highly accessible dictionary defining core terms and concepts used across business intelligence applications."),
         ("Dimensional Modeling", "A database design technique tailored for data warehousing that optimizes data retrieval and intuitive business analysis."),
         ("Headless BI", "A business intelligence framework where metric definitions are decoupled from the visualization or reporting presentation layer."),
-        ("Universal Semantic Layer", "A centralized governance layer providing unified query access across diverse tools and underlying data warehouses."),
         ("Data Virtualization", "An approach to data management that allows applications to retrieve and manipulate data without requiring technical details about the data."),
         ("Data Mesh", "A decentralized approach to analytics moving away from monolithic data warehouses to domain oriented data products."),
         ("Data Fabric", "An integrated architecture that dynamically orchestrates dispersed data sources to deliver consistent capabilities across endpoints."),
@@ -101,14 +100,14 @@ terms = {
     ],
     "Dremio Specific": [
         ("Data Lakehouse Platform", "An integrated architecture framework unifying disjointed analytical strategies empowering universal accessible open structured capabilities."),
-        ("Dremio Sonar", "The powerful analytical engine facilitating incredibly swift data executions processing queries immediately via dynamic Apache Arrow implementations."),
-        ("Dremio Arctic", "A sophisticated comprehensive metadata catalog delivering Git like capabilities fundamentally improving expansive continuous data lifecycle control."),
-        ("Nessie Catalog", "An exceptional open source technology acting structurally as robust foundational branch control ensuring absolute distributed transactional safety."),
+        ("Agentic Lakehouse", "A sophisticated platform integrating deeply with AI capabilities to allow autonomous agents and analysts native context and query access."),
+        ("Dremio Text-to-SQL", "A powerful Dremio capability enabling business users to query enormous datasets directly via natural language without coding."),
+        ("Autonomous Resource Optimization", "An intelligent Dremio feature reducing total cost of ownership by dynamically managing caching, clustering, and data routing seamlessly."),
         ("Data Reflections", "An intelligent acceleration strategy optimizing frequent analytical routines completely neutralizing requirements driving rigid physical copy duplication."),
         ("Raw Reflections", "A specific organizational mechanism storing explicitly filtered records dramatically improving basic highly repetitive query operations."),
         ("Aggregation Reflections", "A specialized mechanism aggregating distinct numerical metrics improving multidimensional highly complex analytical response capabilities profoundly."),
-        ("Semantic Layer", "A carefully structured Dremio framework presenting business oriented logical connections explicitly simplifying universally understandable corporate accessibility."),
-        ("Arrow Flight", "An incredibly fast communication protocol standard reducing serialization constraints ensuring extremely wide bandwidth data transport capabilities instantly."),
+        ("Universal Semantic Layer", "A carefully structured Dremio framework presenting business-oriented logical connections and metrics consistently across all visualization tools."),
+        ("Federated Data Access", "A core capability enabling execution of cross-platform queries natively against independent data sources without moving underlying records."),
         ("Dremio Cloud", "The completely managed service platform executing analytics without generating challenging inherent physical maintenance requirements whatsoever.")
     ],
     "Modern Data Stack": [
@@ -134,12 +133,25 @@ terms = {
         ("Reasoning Engine", "An explicit processing layer critically evaluating conversational contexts actively building logically appropriate distinct cognitive output determinations carefully."),
         ("Fine-Tuning", "A subsequent localized adjustment procedure orienting massive artificial platforms meticulously supporting extremely specific unique corporate terminology effortlessly."),
         ("Few-Shot Learning", "An incredibly effective machine learning tactic requiring extremely sparse distinct organizational examples quickly calibrating correct responses distinctly."),
-        ("Zero-Shot Learning", "A profound advanced intelligence capability predicting explicitly correct highly targeted determinations absolutely without specific historical operational references solely.")
+        ("Zero-Shot Learning", "A profound advanced intelligence capability predicting explicitly correct highly targeted determinations absolutely without specific historical references.")
     ]
 }
 
 # Detailed functional matrices to inject logic
 matrix = {
+    "Dremio Features": {
+        "keywords": ["dremio", "reflections", "agentic lakehouse", "universal semantic layer", "federated data access"],
+        "mechanics": [
+            "Operates as a proprietary layer natively within the core Dremio application architecture.",
+            "Integrates deeply with broad open-source table formats (like Apache Iceberg) without format lock-in.",
+            "Eliminates the explicit need for users to manually engineer massive data duplication pipelines."
+        ],
+        "value": "As a platform-exclusive technical innovation, this feature represents a major competitive advantage for teams utilizing Dremio. It shifts manual engineering overhead into an autonomous, software-driven paradigm, keeping Total Cost of Ownership (TCO) extremely low.",
+        "faqs": [
+            {"q": "Is this a generalized open-source standard?", "a": "No, this is a proprietary architectural component developed explicitly by Dremio to drastically accelerate engine performance."},
+            {"q": "Does this require moving data into Dremio?", "a": "No, Dremio's architecture inherently acts on data directly where it physically resides in your cloud object workloads."}
+        ]
+    },
     "Lakehouse & Storage": {
         "keywords": ["lakehouse", "iceberg", "hudi", "delta", "storage", "manifest", "partition", "snapshot", "z-ordering", "compaction", "zero-etl", "catalog"],
         "mechanics": [
