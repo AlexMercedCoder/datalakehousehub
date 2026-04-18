@@ -3,4 +3,4 @@ Allow: /
 
 Disallow: /api/*
 
-Sitemap: https://bigspring-light-astro.vercel.app/sitemap-index.xml
+Sitemap: https://datalakehousehub.com/sitemap-index.xml

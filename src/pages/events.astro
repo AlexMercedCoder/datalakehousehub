@@ -1,0 +1,46 @@
+---
+import Base from "@/layouts/Base.astro";
+---
+
+<Base title="Data Lakehouse Hub Events" description="Join upcoming webinars, podcasts, and community meetups focused on Apache Iceberg, Data Lakehouses, and Agentic AI.">
+  <script type="application/ld+json" set:html={JSON.stringify({
+    "@context": "https://schema.org",
+    "@type": "EventSeries",
+    "name": "Data Lakehouse Hub Community Events",
+    "description": "Virtual educational events, podcasts, and meetups centered around Data Lakehouse architecture.",
+    "organizer": {
+      "@type": "Organization",
+      "name": "Alex Merced",
+      "url": "https://datalakehousehub.com"
+    },
+    "url": "https://datalakehousehub.com/events"
+  })} />
+  
+  <section class="section pt-16">
+    <div class="container text-center">
+      <h1 class="text-4xl lg:text-5xl font-bold mb-6">Upcoming Events</h1>
+      <p class="text-lg lg:text-xl text-text dark:text-gray-300 max-w-2xl mx-auto mb-12">
+        Join our community for deep-dives into Agentic Analytics, Apache Iceberg, and Modern Data Engineering. All of our events are hosted via Luma.
+      </p>
+
+      <div class="mx-auto" style="max-width: 800px;">
+        <iframe
+          src="https://lu.ma/embed/calendar/usr-B8L08K5Vf2oQ0M4/events"
+          width="100%"
+          height="600"
+          frameborder="0"
+          style="border: 1px solid #bfcbda88; border-radius: 8px; background-color: transparent;"
+          allowfullscreen=""
+          aria-hidden="false"
+          tabindex="0"
+        ></iframe>
+      </div>
+
+      <div class="mt-12">
+        <a class="btn btn-primary" href="https://luma.com/DataLakehouseHub" target="_blank" rel="noopener noreferrer">
+          View on Luma directly
+        </a>
+      </div>
+    </div>
+  </section>
+</Base>

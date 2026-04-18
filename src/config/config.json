@@ -27,12 +27,12 @@
     "contact_form_action": "",
     "tag_manager_id": "",
     "footer_content": "The Data Lakehouse Hub delivers resources for learning about the data lakehouse and fosters community.",
-    "copyright": "Designed and Developed By [Themefisher](https://themefisher.com/)"
+    "copyright": "Designed and Developed By [Themefisher](https://themefisher.com/). Edited by Alex Merced"
   },
 
   "metadata": {
-    "meta_author": "Themefisher",
-    "meta_image": "/images/og-image.png",
-    "meta_description": "astro boilerplate"
+    "meta_author": "Alex Merced",
+    "meta_image": "/images/logo_v2.png",
+    "meta_description": "An educational hub and knowledge base for Data Lakehouse architecture, Apache Iceberg, and Agentic Analytics."
   }
 }
