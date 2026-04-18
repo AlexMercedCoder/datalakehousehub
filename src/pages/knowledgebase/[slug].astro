@@ -1,0 +1,36 @@
+---
+import Base from "@/layouts/Base.astro";
+import Default from "@/layouts/Default.astro";
+import { getSinglePage } from "@/lib/contentParser.astro";
+
+export async function getStaticPaths() {
+  const pages = await getSinglePage("knowledgebase");
+
+  const paths = pages.map((page) => ({
+    params: {
+      slug: page.slug,
+    },
+    props: { page },
+  }));
+  return paths;
+}
+
+const { page } = Astro.props;
+const { title, meta_title, description, image } = page.data;
+---
+
+<Base
+  title={title}
+  meta_title={meta_title}
+  description={description}
+  image={image}
+>
+  <script type="application/ld+json" set:html={JSON.stringify({
+    "@context": "https://schema.org",
+    "@type": "DefinedTerm",
+    "name": title,
+    "description": description,
+    "inDefinedTermSet": "https://datalakehousehub.com/knowledgebase"
+  })} />
+  <Default data={page} />
+</Base>

@@ -9,6 +9,10 @@
       "url": "/blog"
     },
     {
+      "name": "Knowledge Base",
+      "url": "/knowledgebase"
+    },
+    {
       "name": "Resources",
       "url": "#",
       "hasChildren": true,

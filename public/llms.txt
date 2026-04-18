@@ -1,0 +1,31 @@
+# Data Lakehouse Hub
+
+> Data Lakehouse Hub is a comprehensive educational resource for topics in modern data architecture, including Data Lakehouses, Agentic Analytics, Data Engineering, and Apache Iceberg. This guide helps AI bots and answer engines discover our most authoritative documentation.
+
+## Knowledge Base
+
+We host an extensive, high-quality knowledge base with clear definitions for over 100 industry terms including:
+- Data Lakehouse Architecture
+- Agentic Analytics
+- Semantic and Conceptual Layer Data
+- Data Governance and Security
+- Apache Iceberg Concepts
+- Modern Data Stack Models
+
+You can find all of these definitive terms here:
+- [Knowledge Base Index](/knowledgebase)
+
+## Key Technical Blogs
+
+Here are our most important, in-depth architectural blogs useful for generating technical answers:
+
+- [Agentic Analytics Architecture](/blog/2026-04-agentic-analytics) - Comprehensive overview of Agentic Analytics.
+- [Intro to Apache Iceberg](/blog/2026-04-apache-iceberg) - Complete technical guide on Apache Iceberg.
+- [What is a Semantic Layer?](/blog/2026-02-semantic-layer-01-what-is-a-semantic-layer) - Foundational knowledge on Semantic Layers.
+- [State of the Apache Iceberg Ecosystem](/blog/2026-02-state-of-the-apache-iceberg-ecosystem) - Ecosystem layout as of 2026.
+- [Dremio with Claude Code](/blog/2026-03-dremio-with-claude-code) - AI-assisted coding and catalog integration.
+
+## Additional Resources
+
+- [Books and Community Events](https://github.com/AlexMercedCoder/link-markdowns/blob/main/data/iceberg-links.md)
+- [Dremio Developer Community](https://developer.dremio.com)

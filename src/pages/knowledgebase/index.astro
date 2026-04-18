@@ -1,0 +1,34 @@
+---
+import Base from "@/layouts/Base.astro";
+import { getSinglePage } from "@/lib/contentParser.astro";
+
+const posts = await getSinglePage("knowledgebase");
+---
+
+<Base title="Knowledge Base">
+  <section class="section pt-16">
+    <div class="container">
+      <h1 class="text-center font-bold text-4xl lg:text-5xl mb-12">
+        Knowledge Base
+      </h1>
+      
+      <div class="row">
+        {
+          posts.map((post) => (
+            <div class="col-12 mb-8 sm:col-6">
+              <div class="bg-theme-light dark:bg-darkmode-theme-light p-8 rounded-lg h-full">
+                <h3 class="mb-4">
+                  <a href={`/knowledgebase/${post.slug}`} class="text-dark dark:text-light transition hover:text-primary">
+                    {post.data.title}
+                  </a>
+                </h3>
+                <p>{post.data.description}</p>
+                <a href={`/knowledgebase/${post.slug}`} class="btn btn-outline-primary mt-4">Read Full Definition</a>
+              </div>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+</Base>

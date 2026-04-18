@@ -1,5 +1,16 @@
 import { defineCollection, z } from "astro:content";
 
+// Knowledgebase collection schema
+const knowledgebaseCollection = defineCollection({
+  schema: z.object({
+    title: z.string(),
+    meta_title: z.string().optional(),
+    description: z.string().optional(),
+    image: z.string().optional(),
+    draft: z.boolean().optional(),
+  }),
+});
+
 // Homepage schema
 const homepage = defineCollection({
   schema: z.object({
@@ -149,6 +160,7 @@ export interface PageData {
 export const collections = {
   blog: postsCollection,
   pages: pagesCollection,
+  knowledgebase: knowledgebaseCollection,
   // homepage: homepage,
   // contact: contact_page,
   // faq: faq_page,
