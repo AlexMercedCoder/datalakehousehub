@@ -1,7 +1,7 @@
 ---
 title: "Concurrency, Isolation, and MVCC: How Engines Handle Contention"
-date: 2026-04-29T09:00:00Z
-pubDatetime: 2026-04-29T09:00:00Z
+date: 2026-04-29T09:10:00Z
+pubDatetime: 2026-04-29T09:10:00Z
 description: "Databases handle concurrent access using locks, MVCC, or optimistic concurrency control. Here is how each approach works and what tradeoffs each creates."
 author: "Alex Merced"
 category: "Data Engineering"
@@ -18,6 +18,17 @@ image: "/images/blog/query-engine-optimization/10-concurrency-control-locking-vs
 <!-- Primary Keyword: database concurrency control -->
 <!-- Secondary Keywords: MVCC database, isolation levels, optimistic concurrency control -->
 
+*Read the complete Query Engine Optimization series:*
+* [Part 1: How Query Engines Think: The Tradeoffs Behind Every Data System](/blog/2026-04-29-query-engine-optimization-01-overview)
+* [Part 2: Row vs. Column: How Storage Layout Shapes Everything](/blog/2026-04-29-query-engine-optimization-02-row-vs-column-storage)
+* [Part 3: How Databases Organize Data on Disk: Pages, Blocks, and File Formats](/blog/2026-04-29-query-engine-optimization-03-data-organization-on-disk)
+* [Part 4: B-Trees, LSM Trees, and the Indexing Tradeoff Spectrum](/blog/2026-04-29-query-engine-optimization-04-indexing-strategies)
+* [Part 5: Inside the Query Optimizer: How Engines Pick a Plan](/blog/2026-04-29-query-engine-optimization-05-query-optimizer)
+* [Part 6: Volcano, Vectorized, Compiled: How Engines Execute Your Query](/blog/2026-04-29-query-engine-optimization-06-execution-models)
+* [Part 7: Buffer Pools, Caches, and the Memory Hierarchy](/blog/2026-04-29-query-engine-optimization-07-memory-and-caching)
+* [Part 8: Partitioning, Sharding, and Data Distribution Strategies](/blog/2026-04-29-query-engine-optimization-08-partitioning)
+* [Part 9: Hash, Sort-Merge, Broadcast: How Distributed Joins Work](/blog/2026-04-29-query-engine-optimization-09-distributed-joins)
+* [Part 10: Concurrency, Isolation, and MVCC: How Engines Handle Contention](/blog/2026-04-29-query-engine-optimization-10-concurrency-control)
 This is Part 10 of a 10-part series on query engine design. [Part 9](/blog/2026-04-29-query-engine-optimization-09-distributed-joins) covered distributed joins. This final article covers how engines handle the inevitable conflict when multiple users read and write the same data simultaneously.
 
 Every production database serves multiple concurrent users. Without concurrency control, simultaneous reads and writes produce corrupted data, inconsistent query results, or both. The question is not whether to control concurrency, but how much control to impose and what performance to sacrifice for it.

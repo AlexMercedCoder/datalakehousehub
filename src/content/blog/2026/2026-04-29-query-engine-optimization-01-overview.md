@@ -1,7 +1,7 @@
 ---
 title: "How Query Engines Think: The Tradeoffs Behind Every Data System"
-date: 2026-04-29T09:00:00Z
-pubDatetime: 2026-04-29T09:00:00Z
+date: 2026-04-29T09:01:00Z
+pubDatetime: 2026-04-29T09:01:00Z
 description: "Every database is a collection of engineering tradeoffs. Learn the 9 design decisions that shape how query engines store, index, and process your data."
 author: "Alex Merced"
 category: "Data Engineering"
@@ -18,6 +18,17 @@ image: "/images/blog/query-engine-optimization/01-overview-query-engine-decision
 <!-- Primary Keyword: query engine design -->
 <!-- Secondary Keywords: database tradeoffs, query optimization, OLTP vs OLAP -->
 
+*Read the complete Query Engine Optimization series:*
+* [Part 1: How Query Engines Think: The Tradeoffs Behind Every Data System](/blog/2026-04-29-query-engine-optimization-01-overview)
+* [Part 2: Row vs. Column: How Storage Layout Shapes Everything](/blog/2026-04-29-query-engine-optimization-02-row-vs-column-storage)
+* [Part 3: How Databases Organize Data on Disk: Pages, Blocks, and File Formats](/blog/2026-04-29-query-engine-optimization-03-data-organization-on-disk)
+* [Part 4: B-Trees, LSM Trees, and the Indexing Tradeoff Spectrum](/blog/2026-04-29-query-engine-optimization-04-indexing-strategies)
+* [Part 5: Inside the Query Optimizer: How Engines Pick a Plan](/blog/2026-04-29-query-engine-optimization-05-query-optimizer)
+* [Part 6: Volcano, Vectorized, Compiled: How Engines Execute Your Query](/blog/2026-04-29-query-engine-optimization-06-execution-models)
+* [Part 7: Buffer Pools, Caches, and the Memory Hierarchy](/blog/2026-04-29-query-engine-optimization-07-memory-and-caching)
+* [Part 8: Partitioning, Sharding, and Data Distribution Strategies](/blog/2026-04-29-query-engine-optimization-08-partitioning)
+* [Part 9: Hash, Sort-Merge, Broadcast: How Distributed Joins Work](/blog/2026-04-29-query-engine-optimization-09-distributed-joins)
+* [Part 10: Concurrency, Isolation, and MVCC: How Engines Handle Contention](/blog/2026-04-29-query-engine-optimization-10-concurrency-control)
 Every database you have ever used is a collection of deliberate engineering tradeoffs. PostgreSQL is fast at looking up a single customer record but slow at scanning a billion rows for an aggregate. ClickHouse is the opposite. DuckDB runs analytical queries on your laptop at speeds that embarrass some cloud data warehouses, but it is not designed to handle 10,000 concurrent transactional writes per second. Dremio accelerates analytical queries on lakehouse data using Apache Arrow and Iceberg, but it is not a replacement for a transactional OLTP database.
 
 None of these systems are broken. They are each optimized for a specific set of problems, and that optimization comes at the cost of other problems. Understanding *why* they behave differently requires looking at the nine design decisions that every query engine must make.

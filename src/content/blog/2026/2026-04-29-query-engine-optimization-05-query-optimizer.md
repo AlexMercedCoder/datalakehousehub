@@ -1,7 +1,7 @@
 ---
 title: "Inside the Query Optimizer: How Engines Pick a Plan"
-date: 2026-04-29T09:00:00Z
-pubDatetime: 2026-04-29T09:00:00Z
+date: 2026-04-29T09:05:00Z
+pubDatetime: 2026-04-29T09:05:00Z
 description: "Query optimizers transform SQL into execution plans using rule-based rewrites, cost-based search, and adaptive runtime adjustments. Here is how each approach works."
 author: "Alex Merced"
 category: "Data Engineering"
@@ -18,6 +18,17 @@ image: "/images/blog/query-engine-optimization/05-query-optimizer-sql-to-executi
 <!-- Primary Keyword: query optimizer -->
 <!-- Secondary Keywords: cost-based optimization, query planning, adaptive query execution -->
 
+*Read the complete Query Engine Optimization series:*
+* [Part 1: How Query Engines Think: The Tradeoffs Behind Every Data System](/blog/2026-04-29-query-engine-optimization-01-overview)
+* [Part 2: Row vs. Column: How Storage Layout Shapes Everything](/blog/2026-04-29-query-engine-optimization-02-row-vs-column-storage)
+* [Part 3: How Databases Organize Data on Disk: Pages, Blocks, and File Formats](/blog/2026-04-29-query-engine-optimization-03-data-organization-on-disk)
+* [Part 4: B-Trees, LSM Trees, and the Indexing Tradeoff Spectrum](/blog/2026-04-29-query-engine-optimization-04-indexing-strategies)
+* [Part 5: Inside the Query Optimizer: How Engines Pick a Plan](/blog/2026-04-29-query-engine-optimization-05-query-optimizer)
+* [Part 6: Volcano, Vectorized, Compiled: How Engines Execute Your Query](/blog/2026-04-29-query-engine-optimization-06-execution-models)
+* [Part 7: Buffer Pools, Caches, and the Memory Hierarchy](/blog/2026-04-29-query-engine-optimization-07-memory-and-caching)
+* [Part 8: Partitioning, Sharding, and Data Distribution Strategies](/blog/2026-04-29-query-engine-optimization-08-partitioning)
+* [Part 9: Hash, Sort-Merge, Broadcast: How Distributed Joins Work](/blog/2026-04-29-query-engine-optimization-09-distributed-joins)
+* [Part 10: Concurrency, Isolation, and MVCC: How Engines Handle Contention](/blog/2026-04-29-query-engine-optimization-10-concurrency-control)
 This is Part 5 of a 10-part series on query engine design. [Part 4](/blog/2026-04-29-query-engine-optimization-04-indexing-strategies) covered indexing strategies. This article covers what happens after the engine parses your SQL: how the optimizer decides the fastest way to execute it.
 
 The same SQL query can be executed in hundreds of different ways. The tables can be joined in different orders. Filters can be applied early or late. Indexes can be used or ignored. The optimizer's job is to find a plan that finishes quickly without spending too much time searching for it.

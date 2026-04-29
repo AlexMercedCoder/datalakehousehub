@@ -1,7 +1,7 @@
 ---
 title: "Hash, Sort-Merge, Broadcast: How Distributed Joins Work"
-date: 2026-04-29T09:00:00Z
-pubDatetime: 2026-04-29T09:00:00Z
+date: 2026-04-29T09:09:00Z
+pubDatetime: 2026-04-29T09:09:00Z
 description: "Distributed joins move data across the network using shuffle, broadcast, or co-location strategies. Here is how each works and when engines choose which."
 author: "Alex Merced"
 category: "Data Engineering"
@@ -18,6 +18,17 @@ image: "/images/blog/query-engine-optimization/09-distributed-joins-shuffle-join
 <!-- Primary Keyword: distributed join algorithms -->
 <!-- Secondary Keywords: shuffle join, broadcast join, hash join database -->
 
+*Read the complete Query Engine Optimization series:*
+* [Part 1: How Query Engines Think: The Tradeoffs Behind Every Data System](/blog/2026-04-29-query-engine-optimization-01-overview)
+* [Part 2: Row vs. Column: How Storage Layout Shapes Everything](/blog/2026-04-29-query-engine-optimization-02-row-vs-column-storage)
+* [Part 3: How Databases Organize Data on Disk: Pages, Blocks, and File Formats](/blog/2026-04-29-query-engine-optimization-03-data-organization-on-disk)
+* [Part 4: B-Trees, LSM Trees, and the Indexing Tradeoff Spectrum](/blog/2026-04-29-query-engine-optimization-04-indexing-strategies)
+* [Part 5: Inside the Query Optimizer: How Engines Pick a Plan](/blog/2026-04-29-query-engine-optimization-05-query-optimizer)
+* [Part 6: Volcano, Vectorized, Compiled: How Engines Execute Your Query](/blog/2026-04-29-query-engine-optimization-06-execution-models)
+* [Part 7: Buffer Pools, Caches, and the Memory Hierarchy](/blog/2026-04-29-query-engine-optimization-07-memory-and-caching)
+* [Part 8: Partitioning, Sharding, and Data Distribution Strategies](/blog/2026-04-29-query-engine-optimization-08-partitioning)
+* [Part 9: Hash, Sort-Merge, Broadcast: How Distributed Joins Work](/blog/2026-04-29-query-engine-optimization-09-distributed-joins)
+* [Part 10: Concurrency, Isolation, and MVCC: How Engines Handle Contention](/blog/2026-04-29-query-engine-optimization-10-concurrency-control)
 This is Part 9 of a 10-part series on query engine design. [Part 8](/blog/2026-04-29-query-engine-optimization-08-partitioning) covered partitioning. This article covers the most expensive operation in distributed query processing: joining two tables whose data lives on different nodes.
 
 In a single-node database, a join is a CPU-bound operation. In a distributed engine, it becomes a network-bound operation because the data for matching rows may live on different machines. The choice of join strategy determines how much data moves across the network, and network I/O is typically the bottleneck in distributed query execution.

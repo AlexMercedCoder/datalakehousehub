@@ -1,7 +1,7 @@
 ---
 title: "Partitioning, Sharding, and Data Distribution Strategies"
-date: 2026-04-29T09:00:00Z
-pubDatetime: 2026-04-29T09:00:00Z
+date: 2026-04-29T09:08:00Z
+pubDatetime: 2026-04-29T09:08:00Z
 description: "Hash partitioning distributes data evenly. Range partitioning enables fast range scans. Both create tradeoffs. Here is how databases divide data across storage and nodes."
 author: "Alex Merced"
 category: "Data Engineering"
@@ -18,6 +18,17 @@ image: "/images/blog/query-engine-optimization/08-partitioning-partition-types.p
 <!-- Primary Keyword: data partitioning -->
 <!-- Secondary Keywords: database sharding, partition pruning, data distribution -->
 
+*Read the complete Query Engine Optimization series:*
+* [Part 1: How Query Engines Think: The Tradeoffs Behind Every Data System](/blog/2026-04-29-query-engine-optimization-01-overview)
+* [Part 2: Row vs. Column: How Storage Layout Shapes Everything](/blog/2026-04-29-query-engine-optimization-02-row-vs-column-storage)
+* [Part 3: How Databases Organize Data on Disk: Pages, Blocks, and File Formats](/blog/2026-04-29-query-engine-optimization-03-data-organization-on-disk)
+* [Part 4: B-Trees, LSM Trees, and the Indexing Tradeoff Spectrum](/blog/2026-04-29-query-engine-optimization-04-indexing-strategies)
+* [Part 5: Inside the Query Optimizer: How Engines Pick a Plan](/blog/2026-04-29-query-engine-optimization-05-query-optimizer)
+* [Part 6: Volcano, Vectorized, Compiled: How Engines Execute Your Query](/blog/2026-04-29-query-engine-optimization-06-execution-models)
+* [Part 7: Buffer Pools, Caches, and the Memory Hierarchy](/blog/2026-04-29-query-engine-optimization-07-memory-and-caching)
+* [Part 8: Partitioning, Sharding, and Data Distribution Strategies](/blog/2026-04-29-query-engine-optimization-08-partitioning)
+* [Part 9: Hash, Sort-Merge, Broadcast: How Distributed Joins Work](/blog/2026-04-29-query-engine-optimization-09-distributed-joins)
+* [Part 10: Concurrency, Isolation, and MVCC: How Engines Handle Contention](/blog/2026-04-29-query-engine-optimization-10-concurrency-control)
 This is Part 8 of a 10-part series on query engine design. [Part 7](/blog/2026-04-29-query-engine-optimization-07-memory-and-caching) covered memory management. This article covers how engines divide data across files, disks, or cluster nodes to enable parallel processing and reduce the amount of data each query must touch.
 
 Partitioning answers a simple question: when a table has billions of rows, how do you avoid scanning all of them for every query? The answer is to divide the data into smaller, independent chunks and skip the chunks that cannot contain relevant data.

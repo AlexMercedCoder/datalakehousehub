@@ -1,7 +1,7 @@
 ---
 title: "Writing to an Apache Iceberg Table: How Commits and ACID Actually Work"
-date: 2026-04-29T09:00:00Z
-pubDatetime: 2026-04-29T09:00:00Z
+date: 2026-04-29T09:06:00Z
+pubDatetime: 2026-04-29T09:06:00Z
 description: "Here is exactly how an engine writes to an Iceberg table, step by step, from data files through the atomic commit that makes ACID guarantees possible."
 author: "Alex Merced"
 category: "Data Lakehouse"
@@ -18,27 +18,25 @@ image: "/images/blog/apache-iceberg-masterclass/06-writing-to-iceberg-write-proc
 <!-- Primary Keyword: writing to Apache Iceberg -->
 <!-- Secondary Keywords: Iceberg ACID transactions, atomic commit, optimistic concurrency -->
 
+*Read the complete Apache Iceberg Masterclass series:*
+* [Part 1: What Are Table Formats and Why Were They Needed?](/blog/2026-04-29-apache-iceberg-masterclass-01-table-formats)
+* [Part 2: The Metadata Structure of Modern Table Formats](/blog/2026-04-29-apache-iceberg-masterclass-02-metadata-structures)
+* [Part 3: Performance and Apache Iceberg's Metadata](/blog/2026-04-29-apache-iceberg-masterclass-03-iceberg-metadata-performance)
+* [Part 4: Partition Evolution: Change Your Partitioning Without Rewriting Data](/blog/2026-04-29-apache-iceberg-masterclass-04-partition-evolution)
+* [Part 5: Hidden Partitioning: How Iceberg Eliminates Accidental Full Table Scans](/blog/2026-04-29-apache-iceberg-masterclass-05-hidden-partitioning)
+* [Part 6: Writing to an Apache Iceberg Table: How Commits and ACID Actually Work](/blog/2026-04-29-apache-iceberg-masterclass-06-writing-to-iceberg)
+* [Part 7: What Are Lakehouse Catalogs? The Role of Catalogs in Apache Iceberg](/blog/2026-04-29-apache-iceberg-masterclass-07-lakehouse-catalogs)
+* [Part 8: When Catalogs Are Embedded in Storage](/blog/2026-04-29-apache-iceberg-masterclass-08-embedded-catalogs)
+* [Part 9: How Data Lake Table Storage Degrades Over Time](/blog/2026-04-29-apache-iceberg-masterclass-09-storage-degradation)
+* [Part 10: Maintaining Apache Iceberg Tables: Compaction, Expiry, and Cleanup](/blog/2026-04-29-apache-iceberg-masterclass-10-maintaining-iceberg)
+* [Part 11: Apache Iceberg Metadata Tables: Querying the Internals](/blog/2026-04-29-apache-iceberg-masterclass-11-metadata-tables)
+* [Part 12: Using Apache Iceberg with Python and MPP Query Engines](/blog/2026-04-29-apache-iceberg-masterclass-12-python-and-mpp)
+* [Part 13: Approaches to Streaming Data into Apache Iceberg Tables](/blog/2026-04-29-apache-iceberg-masterclass-13-streaming-to-iceberg)
+* [Part 14: Hands-On with Apache Iceberg Using Dremio Cloud](/blog/2026-04-29-apache-iceberg-masterclass-14-hands-on-dremio-cloud)
+* [Part 15: Migrating to Apache Iceberg: Strategies for Every Source System](/blog/2026-04-29-apache-iceberg-masterclass-15-migrating-to-iceberg)
 This is Part 6 of a 15-part [Apache Iceberg Masterclass](/blog/2026-04-29-apache-iceberg-masterclass-01-table-formats). [Part 5](/blog/2026-04-29-apache-iceberg-masterclass-05-hidden-partitioning) covered hidden partitioning. This article walks through the exact steps an engine takes when writing data to an Iceberg table, when the write becomes visible, and how concurrent writers are handled.
 
 Understanding the write process is critical because it explains why Iceberg can provide ACID guarantees on top of object storage, something that seems impossible when you consider that S3, ADLS, and GCS have no built-in transaction support. The answer is that ACID lives entirely in the metadata layer, not in storage.
-
-## Table of Contents
-
-1. [What Are Table Formats and Why Were They Needed?](/blog/2026-04-29-apache-iceberg-masterclass-01-table-formats)
-2. [The Metadata Structure of Current Table Formats](/blog/2026-04-29-apache-iceberg-masterclass-02-metadata-structures)
-3. [Performance and Apache Iceberg's Metadata](/blog/2026-04-29-apache-iceberg-masterclass-03-iceberg-metadata-performance)
-4. [Technical Deep Dive on Partition Evolution](/blog/2026-04-29-apache-iceberg-masterclass-04-partition-evolution)
-5. [Technical Deep Dive on Hidden Partitioning](/blog/2026-04-29-apache-iceberg-masterclass-05-hidden-partitioning)
-6. [Writing to an Apache Iceberg Table](/blog/2026-04-29-apache-iceberg-masterclass-06-writing-to-iceberg)
-7. [What Are Lakehouse Catalogs?](/blog/2026-04-29-apache-iceberg-masterclass-07-lakehouse-catalogs)
-8. [Embedded Catalogs: S3 Tables and MinIO AI Stor](/blog/2026-04-29-apache-iceberg-masterclass-08-embedded-catalogs)
-9. [How Iceberg Table Storage Degrades Over Time](/blog/2026-04-29-apache-iceberg-masterclass-09-storage-degradation)
-10. [Maintaining Apache Iceberg Tables](/blog/2026-04-29-apache-iceberg-masterclass-10-maintaining-iceberg)
-11. [Apache Iceberg Metadata Tables](/blog/2026-04-29-apache-iceberg-masterclass-11-metadata-tables)
-12. [Using Iceberg with Python and MPP Engines](/blog/2026-04-29-apache-iceberg-masterclass-12-python-and-mpp)
-13. [Streaming Data into Apache Iceberg Tables](/blog/2026-04-29-apache-iceberg-masterclass-13-streaming-to-iceberg)
-14. [Hands-On with Iceberg Using Dremio Cloud](/blog/2026-04-29-apache-iceberg-masterclass-14-hands-on-dremio-cloud)
-15. [Migrating to Apache Iceberg](/blog/2026-04-29-apache-iceberg-masterclass-15-migrating-to-iceberg)
 
 ## The Six Steps of a Write
 

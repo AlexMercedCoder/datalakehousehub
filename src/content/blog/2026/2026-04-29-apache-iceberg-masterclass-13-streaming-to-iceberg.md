@@ -1,7 +1,7 @@
 ---
 title: "Approaches to Streaming Data into Apache Iceberg Tables"
-date: 2026-04-29T09:00:00Z
-pubDatetime: 2026-04-29T09:00:00Z
+date: 2026-04-29T09:13:00Z
+pubDatetime: 2026-04-29T09:13:00Z
 description: "Stream data into Iceberg with Spark Structured Streaming, Flink, or Kafka Connect. Here is how each works and the trade-offs between latency and maintenance."
 author: "Alex Merced"
 category: "Data Lakehouse"
@@ -18,27 +18,25 @@ image: "/images/blog/apache-iceberg-masterclass/13-streaming-to-iceberg-streamin
 <!-- Primary Keyword: streaming to Apache Iceberg -->
 <!-- Secondary Keywords: Spark Structured Streaming Iceberg, Flink Iceberg sink, Kafka Connect Iceberg -->
 
+*Read the complete Apache Iceberg Masterclass series:*
+* [Part 1: What Are Table Formats and Why Were They Needed?](/blog/2026-04-29-apache-iceberg-masterclass-01-table-formats)
+* [Part 2: The Metadata Structure of Modern Table Formats](/blog/2026-04-29-apache-iceberg-masterclass-02-metadata-structures)
+* [Part 3: Performance and Apache Iceberg's Metadata](/blog/2026-04-29-apache-iceberg-masterclass-03-iceberg-metadata-performance)
+* [Part 4: Partition Evolution: Change Your Partitioning Without Rewriting Data](/blog/2026-04-29-apache-iceberg-masterclass-04-partition-evolution)
+* [Part 5: Hidden Partitioning: How Iceberg Eliminates Accidental Full Table Scans](/blog/2026-04-29-apache-iceberg-masterclass-05-hidden-partitioning)
+* [Part 6: Writing to an Apache Iceberg Table: How Commits and ACID Actually Work](/blog/2026-04-29-apache-iceberg-masterclass-06-writing-to-iceberg)
+* [Part 7: What Are Lakehouse Catalogs? The Role of Catalogs in Apache Iceberg](/blog/2026-04-29-apache-iceberg-masterclass-07-lakehouse-catalogs)
+* [Part 8: When Catalogs Are Embedded in Storage](/blog/2026-04-29-apache-iceberg-masterclass-08-embedded-catalogs)
+* [Part 9: How Data Lake Table Storage Degrades Over Time](/blog/2026-04-29-apache-iceberg-masterclass-09-storage-degradation)
+* [Part 10: Maintaining Apache Iceberg Tables: Compaction, Expiry, and Cleanup](/blog/2026-04-29-apache-iceberg-masterclass-10-maintaining-iceberg)
+* [Part 11: Apache Iceberg Metadata Tables: Querying the Internals](/blog/2026-04-29-apache-iceberg-masterclass-11-metadata-tables)
+* [Part 12: Using Apache Iceberg with Python and MPP Query Engines](/blog/2026-04-29-apache-iceberg-masterclass-12-python-and-mpp)
+* [Part 13: Approaches to Streaming Data into Apache Iceberg Tables](/blog/2026-04-29-apache-iceberg-masterclass-13-streaming-to-iceberg)
+* [Part 14: Hands-On with Apache Iceberg Using Dremio Cloud](/blog/2026-04-29-apache-iceberg-masterclass-14-hands-on-dremio-cloud)
+* [Part 15: Migrating to Apache Iceberg: Strategies for Every Source System](/blog/2026-04-29-apache-iceberg-masterclass-15-migrating-to-iceberg)
 This is Part 13 of a 15-part [Apache Iceberg Masterclass](/blog/2026-04-29-apache-iceberg-masterclass-01-table-formats). [Part 12](/blog/2026-04-29-apache-iceberg-masterclass-12-python-and-mpp) covered Python and MPP engines. This article covers the three primary approaches to streaming data into Iceberg tables and the operational trade-offs each creates.
 
 Iceberg was designed for batch analytics, but most production data arrives continuously. Streaming ingestion bridges this gap by committing data to Iceberg tables at regular intervals. The challenge is that frequent commits create the [small file problem](/blog/2026-04-29-apache-iceberg-masterclass-09-storage-degradation), and managing that trade-off between data freshness and table health is the central concern of streaming to Iceberg.
-
-## Table of Contents
-
-1. [What Are Table Formats and Why Were They Needed?](/blog/2026-04-29-apache-iceberg-masterclass-01-table-formats)
-2. [The Metadata Structure of Current Table Formats](/blog/2026-04-29-apache-iceberg-masterclass-02-metadata-structures)
-3. [Performance and Apache Iceberg's Metadata](/blog/2026-04-29-apache-iceberg-masterclass-03-iceberg-metadata-performance)
-4. [Technical Deep Dive on Partition Evolution](/blog/2026-04-29-apache-iceberg-masterclass-04-partition-evolution)
-5. [Technical Deep Dive on Hidden Partitioning](/blog/2026-04-29-apache-iceberg-masterclass-05-hidden-partitioning)
-6. [Writing to an Apache Iceberg Table](/blog/2026-04-29-apache-iceberg-masterclass-06-writing-to-iceberg)
-7. [What Are Lakehouse Catalogs?](/blog/2026-04-29-apache-iceberg-masterclass-07-lakehouse-catalogs)
-8. [Embedded Catalogs: S3 Tables and MinIO AI Stor](/blog/2026-04-29-apache-iceberg-masterclass-08-embedded-catalogs)
-9. [How Iceberg Table Storage Degrades Over Time](/blog/2026-04-29-apache-iceberg-masterclass-09-storage-degradation)
-10. [Maintaining Apache Iceberg Tables](/blog/2026-04-29-apache-iceberg-masterclass-10-maintaining-iceberg)
-11. [Apache Iceberg Metadata Tables](/blog/2026-04-29-apache-iceberg-masterclass-11-metadata-tables)
-12. [Using Iceberg with Python and MPP Engines](/blog/2026-04-29-apache-iceberg-masterclass-12-python-and-mpp)
-13. [Streaming Data into Apache Iceberg Tables](/blog/2026-04-29-apache-iceberg-masterclass-13-streaming-to-iceberg)
-14. [Hands-On with Iceberg Using Dremio Cloud](/blog/2026-04-29-apache-iceberg-masterclass-14-hands-on-dremio-cloud)
-15. [Migrating to Apache Iceberg](/blog/2026-04-29-apache-iceberg-masterclass-15-migrating-to-iceberg)
 
 ## Three Streaming Architectures
 
