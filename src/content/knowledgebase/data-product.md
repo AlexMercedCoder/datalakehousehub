@@ -1,16 +1,16 @@
 ---
-title: "Dimensional Modeling"
-meta_title: "What is Dimensional Modeling? | Data Lakehouse & AI Glossary"
-description: "A database design technique tailored for data warehousing that optimizes data retrieval and intuitive business analysis."
+title: "Data Product"
+meta_title: "What is Data Product? | Data Lakehouse & AI Glossary"
+description: "The core concept treating reliable, maintained datasets as formalized products with guaranteed service level agreements."
 ---
 
-## What is Dimensional Modeling?
+## What is Data Product?
 
-A database design technique tailored for data warehousing that optimizes data retrieval and intuitive business analysis. This capability serves as a critical enabler in modern data ecosystems, explicitly guiding architecture toward absolute efficiency and scale. When correctly implemented, Dimensional Modeling dynamically drives analytical workloads and structurally limits administrative technical debt.
+The core concept treating reliable, maintained datasets as formalized products with guaranteed service level agreements. This capability serves as a critical enabler in modern data ecosystems, explicitly guiding architecture toward absolute efficiency and scale. When correctly implemented, Data Product dynamically drives analytical workloads and structurally limits administrative technical debt.
 
 ### Core Architecture and Mechanics
 
-To understand the practical application of Dimensional Modeling, it helps to systematically examine its fundamental operational behaviors:
+To understand the practical application of Data Product, it helps to systematically examine its fundamental operational behaviors:
 
 * **Structures logical pipelines into independent execution blocks with clear dependencies.**
 * **Optimizes network overhead by applying constraints and filters exceptionally close to the data source.**
@@ -22,7 +22,7 @@ Operating through these principles enables seamless horizontal expansion across 
 
 Optimized execution reduces the necessary computational overhead drastically. This enables analytic scaling that easily grows alongside exponential increases in data creation without proportional cost scaling.
 
-For modern enterprises managing decentralized teams, the implementation of Dimensional Modeling eliminates significant friction. Teams are explicitly empowered to operate autonomously against reliable technical foundations without dynamically disrupting other isolated workflows.
+For modern enterprises managing decentralized teams, the implementation of Data Product eliminates significant friction. Teams are explicitly empowered to operate autonomously against reliable technical foundations without dynamically disrupting other isolated workflows.
 
 ### Frequently Asked Questions
 
@@ -32,7 +32,7 @@ It minimizes I/O bottlenecks and data movement, prioritizing pure transformation
 **Does it support real-time data environments?**
 Yes, it is routinely implemented in streaming architecture to enable near-instant analytical capabilities.
 
-**How does Dimensional Modeling impact data governance?**
+**How does Data Product impact data governance?**
 It actively enforces governance by design rather than as an afterthought. Native logging and structured access pathways provide immediate visibility into security boundaries and regulatory compliance.
 
 ---
