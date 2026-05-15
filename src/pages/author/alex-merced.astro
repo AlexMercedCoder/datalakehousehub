@@ -1,0 +1,67 @@
+---
+import Base from "@/layouts/Base.astro";
+---
+
+<Base title="Alex Merced - Author Profile" description="Developer Advocate, Data Engineer, and Author of 'Lakehouse for Everyone'.">
+  <section class="section pt-16">
+    <div class="container max-w-4xl mx-auto">
+      <div class="row items-center mb-12">
+        <div class="col-12 sm:col-4 mb-8 sm:mb-0 text-center sm:text-left">
+          <img
+            src="/images/alex-merced.jpg"
+            alt="Alex Merced"
+            class="rounded-full w-48 h-48 object-cover mx-auto sm:mx-0 shadow-lg border-4 border-white"
+            onerror="this.src='https://ui-avatars.com/api/?name=Alex+Merced&size=256&background=0D8ABC&color=fff'"
+          />
+        </div>
+        <div class="col-12 sm:col-8">
+          <h1 class="text-4xl font-bold mb-4">Alex Merced</h1>
+          <p class="text-xl text-gray-600 dark:text-gray-300 mb-6">
+            Developer Advocate, Data Engineer & Author
+          </p>
+          <div class="flex flex-wrap gap-4 justify-center sm:justify-start">
+            <a href="https://twitter.com/alexmercedcoder" target="_blank" rel="noopener noreferrer" class="btn btn-outline-primary">Twitter</a>
+            <a href="https://www.linkedin.com/in/alexmerced" target="_blank" rel="noopener noreferrer" class="btn btn-outline-primary">LinkedIn</a>
+            <a href="https://books.alexmerced.com" target="_blank" rel="noopener noreferrer" class="btn btn-primary">My Books</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="prose dark:prose-invert max-w-none">
+        <h2>About Me</h2>
+        <p>
+          I am a passionate Developer Advocate and Data Engineer focused on the modern Data Lakehouse architecture, Apache Iceberg, and the emerging field of Agentic Analytics. With years of experience bridging the gap between complex software engineering and educational outreach, my goal is to make massive-scale data architecture accessible to everyone.
+        </p>
+
+        <h2>Publications</h2>
+        <p>
+          I am the author of several foundational books in the modern data ecosystem, including:
+        </p>
+        <ul>
+          <li><strong>Lakehouse for Everyone:</strong> A definitive guide to understanding and deploying the Open Data Lakehouse.</li>
+          <li><strong>Agentic Analytics:</strong> How autonomous AI agents are reshaping business intelligence.</li>
+          <li><strong>Apache Iceberg The Definitive Guide:</strong> Co-authored insights into the world's leading open table format.</li>
+        </ul>
+        <p>
+          You can find all of my publications at <a href="https://books.alexmerced.com" target="_blank" rel="noopener noreferrer">books.alexmerced.com</a>.
+        </p>
+
+        <h2>Technical Focus</h2>
+        <p>
+          My technical research and writings focus on:
+        </p>
+        <ul>
+          <li><strong>Open Table Formats:</strong> Apache Iceberg, Delta Lake, Apache Hudi.</li>
+          <li><strong>Agentic Architecture:</strong> The Model Context Protocol (MCP), Semantic Layers, and LLM Orchestration.</li>
+          <li><strong>Distributed Query Engines:</strong> Dremio, Trino, Apache Spark, and Apache DataFusion.</li>
+          <li><strong>Metadata Federation:</strong> Apache Polaris, REST Catalogs, and Apache Gravitino.</li>
+        </ul>
+
+        <h2>Experience & Expertise (E-E-A-T)</h2>
+        <p>
+          The content published on this site is grounded in direct, first-hand practitioner experience building and evangelizing data infrastructure at enterprise scale. Every architectural guide, technical deep-dive, and code example is rigorously researched and tested against modern deployment realities to ensure absolute technical accuracy and safety.
+        </p>
+      </div>
+    </div>
+  </section>
+</Base>

@@ -4,67 +4,114 @@ import config from "@/config/config.json";
 const { title, description, author, pubDate, image } = Astro.props;
 
 const siteUrl = config.site.base_url;
+const pathname = Astro.url.pathname;
 
-let schema = JSON.stringify({
-  "@context": "https://schema.org",
-  "@type": "WebSite",
-  "name": config.site.title,
-  "url": siteUrl,
-});
+let schemas = [];
 
-  if (Astro.url.pathname.includes('/blog/') && title) {
-     schema = JSON.stringify({
-      "@context": "https://schema.org",
-      "@type": "BlogPosting",
-      "mainEntityOfPage": {
-        "@type": "WebPage",
-        "@id": new URL(Astro.url.pathname, siteUrl).href
-      },
-      "headline": title,
-      "description": description,
-      "image": new URL(`/open-graph/${Astro.url.pathname.split('/').filter(Boolean).pop()}.png`, siteUrl).href,
-      "author": {
-        "@type": "Person",
-        "name": author || config.metadata.meta_author
-      },
-      "publisher": {
-        "@type": "Organization",
-        "name": config.site.title,
-        "logo": {
-          "@type": "ImageObject",
-          "url": new URL(config.site.logo, siteUrl).href
-        }
-      },
-      "datePublished": pubDate
-    });
+// Base WebSite Schema for homepage
+if (pathname === '/' || pathname === '') {
+  schemas.push({
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "name": config.site.title,
+    "url": siteUrl,
+  });
+}
 
-    const breadcrumbs = JSON.stringify({
-        "@context": "https://schema.org",
-        "@type": "BreadcrumbList",
-        "itemListElement": [
-            {
-                "@type": "ListItem",
-                "position": 1,
-                "name": "Home",
-                "item": siteUrl
-            },
-            {
-                "@type": "ListItem",
-                "position": 2,
-                "name": "Blog",
-                "item": new URL("/blog", siteUrl).href
-            },
-            {
-                "@type": "ListItem",
-                "position": 3,
-                "name": title,
-                "item": new URL(Astro.url.pathname, siteUrl).href
-            }
-        ]
-    });
+// Global Breadcrumb Builder
+const pathSegments = pathname.split('/').filter(Boolean);
+if (pathSegments.length > 0) {
+  const breadcrumbItems = [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "Home",
+      "item": siteUrl
+    }
+  ];
+  
+  let currentPath = "";
+  pathSegments.forEach((segment, index) => {
+    currentPath += `/${segment}`;
+    let name = segment.replace(/-/g, ' ');
+    name = name.charAt(0).toUpperCase() + name.slice(1);
     
-    schema = `[${schema}, ${breadcrumbs}]`;
-  }
+    // For the last item, use the actual page title if available
+    if (index === pathSegments.length - 1 && title) {
+        name = title;
+    }
+
+    breadcrumbItems.push({
+      "@type": "ListItem",
+      "position": index + 2,
+      "name": name,
+      "item": new URL(currentPath, siteUrl).href
+    });
+  });
+
+  schemas.push({
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": breadcrumbItems
+  });
+}
+
+// Blog Posts and Knowledge Base and Pillars (Articles / TechArticles)
+const isArticle = pathname.includes('/blog/') || pathname.includes('/knowledgebase/') || 
+                  pathname.includes('/apache-iceberg') || pathname.includes('/data-lakehouse') || 
+                  pathname.includes('/agentic-lakehouse') || pathname.includes('/open-table-formats');
+
+if (isArticle && !pathname.endsWith('/') && pathSegments.length > 0 && title) {
+  const isPillar = pathname.includes('/apache-iceberg') || pathname.includes('/data-lakehouse') || pathname.includes('/agentic-lakehouse');
+  
+  schemas.push({
+    "@context": "https://schema.org",
+    "@type": isPillar ? ["TechArticle", "Article"] : "Article",
+    "mainEntityOfPage": {
+      "@type": "WebPage",
+      "@id": new URL(pathname, siteUrl).href
+    },
+    "headline": title,
+    "description": description || config.metadata.meta_description,
+    "image": image ? new URL(image, siteUrl).href : new URL(`/open-graph/${pathSegments[pathSegments.length - 1]}.png`, siteUrl).href,
+    "author": {
+      "@type": "Person",
+      "name": author || config.metadata.meta_author,
+      "url": new URL("/author/alex-merced", siteUrl).href
+    },
+    "publisher": {
+      "@type": "Organization",
+      "name": config.site.title,
+      "logo": {
+        "@type": "ImageObject",
+        "url": new URL(config.site.logo, siteUrl).href
+      }
+    },
+    "datePublished": pubDate || "2026-01-01T00:00:00Z"
+  });
+}
+
+// Author Profile Page
+if (pathname.includes('/author/alex-merced')) {
+  schemas.push({
+    "@context": "https://schema.org",
+    "@type": "ProfilePage",
+    "mainEntity": {
+      "@type": "Person",
+      "name": "Alex Merced",
+      "alternateName": "Alexander Merced",
+      "description": "Developer Advocate, Data Engineer, and Author of 'Lakehouse for Everyone'.",
+      "url": new URL("/author/alex-merced", siteUrl).href,
+      "sameAs": [
+        "https://twitter.com/alexmercedcoder",
+        "https://www.linkedin.com/in/alexmerced",
+        "https://books.alexmerced.com"
+      ]
+    }
+  });
+}
+
+const schemaJson = schemas.length > 0 ? JSON.stringify(schemas.length === 1 ? schemas[0] : schemas) : null;
 ---
 
-<script type="application/ld+json" set:html={schema}></script>
+{schemaJson && <script type="application/ld+json" set:html={schemaJson}></script>}
