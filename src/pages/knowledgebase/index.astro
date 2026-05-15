@@ -46,28 +46,26 @@ const posts = await getSinglePage("knowledgebase");
   </section>
 
   <script>
-    document.addEventListener('DOMContentLoaded', () => {
-      const searchInput = document.getElementById('kb-search-input');
-      const cards = document.querySelectorAll('.kb-card');
+    const searchInput = document.getElementById('kb-search-input');
+    const cards = document.querySelectorAll('.kb-card');
 
-      if (searchInput) {
-        searchInput.addEventListener('input', (e) => {
-          const target = e.target as HTMLInputElement;
-          const query = target.value.toLowerCase();
+    if (searchInput) {
+      searchInput.addEventListener('input', (e) => {
+        const target = e.target as HTMLInputElement;
+        const query = target.value.toLowerCase();
+        
+        cards.forEach((card) => {
+          const htmlCard = card as HTMLElement;
+          const title = htmlCard.getAttribute('data-title') || '';
+          const desc = htmlCard.getAttribute('data-desc') || '';
           
-          cards.forEach((card) => {
-            const htmlCard = card as HTMLElement;
-            const title = htmlCard.getAttribute('data-title') || '';
-            const desc = htmlCard.getAttribute('data-desc') || '';
-            
-            if (title.includes(query) || desc.includes(query)) {
-              htmlCard.style.display = 'block';
-            } else {
-              htmlCard.style.display = 'none';
-            }
-          });
+          if (title.includes(query) || desc.includes(query)) {
+            htmlCard.style.display = 'block';
+          } else {
+            htmlCard.style.display = 'none';
+          }
         });
-      }
-    });
+      });
+    }
   </script>
 </Base>
