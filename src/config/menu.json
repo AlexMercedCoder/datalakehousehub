@@ -22,14 +22,30 @@
           "url": "/data-lakehouse"
         },
         {
+          "name": "Lakehouse vs Data Lake vs Warehouse",
+          "url": "/data-lakehouse-vs-data-lake-vs-data-warehouse"
+        },
+        {
           "name": "Apache Iceberg Hub",
           "url": "/apache-iceberg"
+        },
+        {
+          "name": "Apache Iceberg Architecture",
+          "url": "/apache-iceberg-architecture"
+        },
+        {
+          "name": "Iceberg vs Delta Lake vs Hudi",
+          "url": "/apache-iceberg-vs-delta-lake-vs-hudi"
         },
         {
           "name": "Agentic Lakehouse Hub",
           "url": "/agentic-lakehouse"
         }
       ]
+    },
+    {
+      "name": "Author",
+      "url": "/author/alex-merced"
     },
     {
       "name": "Resources",
