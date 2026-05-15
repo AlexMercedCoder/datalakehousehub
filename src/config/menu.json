@@ -13,6 +13,25 @@
       "url": "/knowledgebase"
     },
     {
+      "name": "Hubs",
+      "url": "#",
+      "hasChildren": true,
+      "children": [
+        {
+          "name": "Data Lakehouse Hub",
+          "url": "/data-lakehouse"
+        },
+        {
+          "name": "Apache Iceberg Hub",
+          "url": "/apache-iceberg"
+        },
+        {
+          "name": "Agentic Lakehouse Hub",
+          "url": "/agentic-lakehouse"
+        }
+      ]
+    },
+    {
       "name": "Resources",
       "url": "#",
       "hasChildren": true,
