@@ -1,16 +1,16 @@
 ---
-title: "Multi-Agent Orchestration"
-meta_title: "What is Multi-Agent Orchestration? | Data Lakehouse & AI Glossary"
-description: "A structural paradigm where separate interconnected autonomous agents interact, pass data, and resolve logical goals collaboratively."
+title: "OpenLineage"
+meta_title: "What is OpenLineage? | Data Lakehouse & AI Glossary"
+description: "An open standard for metadata and lineage collection designed to instrument data pipelines regardless of the specific tool."
 ---
 
-## What is Multi-Agent Orchestration?
+## What is OpenLineage?
 
-A structural paradigm where separate interconnected autonomous agents interact, pass data, and resolve logical goals collaboratively. This capability serves as a critical enabler in modern data ecosystems, explicitly guiding architecture toward absolute efficiency and scale. When correctly implemented, Multi-Agent Orchestration dynamically drives analytical workloads and structurally limits administrative technical debt.
+An open standard for metadata and lineage collection designed to instrument data pipelines regardless of the specific tool. This capability serves as a critical enabler in modern data ecosystems, explicitly guiding architecture toward absolute efficiency and scale. When correctly implemented, OpenLineage dynamically drives analytical workloads and structurally limits administrative technical debt.
 
 ### Core Architecture and Mechanics
 
-To understand the practical application of Multi-Agent Orchestration, it helps to systematically examine its fundamental operational behaviors:
+To understand the practical application of OpenLineage, it helps to systematically examine its fundamental operational behaviors:
 
 * **Decouples storage from compute, allowing independent scaling of resources.**
 * **Utilizes open table formats to maintain ACID compliance on massive raw datasets.**
@@ -22,7 +22,7 @@ Operating through these principles enables seamless horizontal expansion across 
 
 By relying on open standards and decoupled architecture, organizations significantly reduce total cost of ownership. It prevents vendor lock-in while preserving data integrity during parallel execution processes.
 
-For modern enterprises managing decentralized teams, the implementation of Multi-Agent Orchestration eliminates significant friction. Teams are explicitly empowered to operate autonomously against reliable technical foundations without dynamically disrupting other isolated workflows.
+For modern enterprises managing decentralized teams, the implementation of OpenLineage eliminates significant friction. Teams are explicitly empowered to operate autonomously against reliable technical foundations without dynamically disrupting other isolated workflows.
 
 ### Frequently Asked Questions
 
@@ -32,7 +32,7 @@ It provides similar data management capabilities and atomicity but operates dire
 **Is this approach compatible with open-source systems?**
 Yes, a fundamental principle of this design is seamless interoperability with tools like Apache Spark, Apache Flink, and Dremio.
 
-**How does Multi-Agent Orchestration impact data governance?**
+**How does OpenLineage impact data governance?**
 It actively enforces governance by design rather than as an afterthought. Native logging and structured access pathways provide immediate visibility into security boundaries and regulatory compliance.
 
 ---
