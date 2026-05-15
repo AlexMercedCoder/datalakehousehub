@@ -1,5 +1,5 @@
 ---
-title: "What is Bloom Filters? The Definitive Guide"
+title: "What is Bloom Filters?"
 meta_title: "What is Bloom Filters? | Expert Data Lakehouse & AI Glossary"
 description: "Space-efficient probabilistic data structures used to test whether an element is a member of a set, massively speeding up search exclusion. Learn the architecture, mechanics, and real-world value of Bloom Filters in the modern data stack."
 ---

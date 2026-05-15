@@ -1,5 +1,5 @@
 ---
-title: "What is Directed Acyclic Graph? The Definitive Guide"
+title: "What is Directed Acyclic Graph?"
 meta_title: "What is Directed Acyclic Graph? | Expert Data Lakehouse & AI Glossary"
 description: "A structural modeling concept used heavily in workflow scheduling where operations have clear directional dependencies without loops. Learn the architecture, mechanics, and real-world value of Directed Acyclic Graph in the modern data stack."
 ---

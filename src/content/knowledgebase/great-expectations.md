@@ -1,5 +1,5 @@
 ---
-title: "What is Great Expectations? The Definitive Guide"
+title: "What is Great Expectations?"
 meta_title: "What is Great Expectations? | Expert Data Lakehouse & AI Glossary"
 description: "A shared, open standard for data quality that helps data teams profile, test, and document their data. Learn the architecture, mechanics, and real-world value of Great Expectations in the modern data stack."
 ---

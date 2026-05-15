@@ -1,5 +1,5 @@
 ---
-title: "What is ETL? The Definitive Guide"
+title: "What is ETL?"
 meta_title: "What is ETL? | Expert Data Lakehouse & AI Glossary"
 description: "Extract Transform and Load is the traditional data integration process converting raw data into analyzable storage structures. Learn the architecture, mechanics, and real-world value of ETL in the modern data stack."
 ---

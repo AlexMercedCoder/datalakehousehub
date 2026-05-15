@@ -1,5 +1,5 @@
 ---
-title: "What is Tool Calling? The Definitive Guide"
+title: "What is Tool Calling?"
 meta_title: "What is Tool Calling? | Expert Data Lakehouse & AI Glossary"
 description: "A specific AI capability where models autonomously interact with external programmatic functions or databases to execute deterministic tasks. Learn the architecture, mechanics, and real-world value of Tool Calling in the modern data stack."
 ---

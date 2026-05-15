@@ -1,5 +1,5 @@
 ---
-title: "What is Hive Metastore? The Definitive Guide"
+title: "What is Hive Metastore?"
 meta_title: "What is Hive Metastore? | Expert Data Lakehouse & AI Glossary"
 description: "The traditional central repository of metadata for Hadoop and modern data lakes, mapping file paths to table structures. Learn the architecture, mechanics, and real-world value of Hive Metastore in the modern data stack."
 ---

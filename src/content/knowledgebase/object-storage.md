@@ -1,5 +1,5 @@
 ---
-title: "What is Object Storage? The Definitive Guide"
+title: "What is Object Storage?"
 meta_title: "What is Object Storage? | Expert Data Lakehouse & AI Glossary"
 description: "A highly scalable cloud storage architecture where data is managed as distinct objects rather than files or blocks. Learn the architecture, mechanics, and real-world value of Object Storage in the modern data stack."
 ---

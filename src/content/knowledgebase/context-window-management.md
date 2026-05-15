@@ -1,5 +1,5 @@
 ---
-title: "What is Context Window Management? The Definitive Guide"
+title: "What is Context Window Management?"
 meta_title: "What is Context Window Management? | Expert Data Lakehouse & AI Glossary"
 description: "The engineering practice of chunking, filtering, and prioritizing information to fit within a language model's memory limits. Learn the architecture, mechanics, and real-world value of Context Window Management in the modern data stack."
 ---

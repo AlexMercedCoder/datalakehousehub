@@ -1,5 +1,5 @@
 ---
-title: "What is Data Lakehouse Platform? The Definitive Guide"
+title: "What is Data Lakehouse Platform?"
 meta_title: "What is Data Lakehouse Platform? | Expert Data Lakehouse & AI Glossary"
 description: "An integrated architecture framework unifying disjointed analytical strategies empowering universal accessible open structured capabilities. Learn the architecture, mechanics, and real-world value of Data Lakehouse Platform in the modern data stack."
 ---

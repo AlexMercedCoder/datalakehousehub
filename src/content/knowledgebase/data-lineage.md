@@ -1,5 +1,5 @@
 ---
-title: "What is Data Lineage? The Definitive Guide"
+title: "What is Data Lineage?"
 meta_title: "What is Data Lineage? | Expert Data Lakehouse & AI Glossary"
 description: "A historical record tracking data origins and transformations as it moves through various analytical infrastructure layers. Learn the architecture, mechanics, and real-world value of Data Lineage in the modern data stack."
 ---

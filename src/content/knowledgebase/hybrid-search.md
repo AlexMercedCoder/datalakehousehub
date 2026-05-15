@@ -1,5 +1,5 @@
 ---
-title: "What is Hybrid Search? The Definitive Guide"
+title: "What is Hybrid Search?"
 meta_title: "What is Hybrid Search? | Expert Data Lakehouse & AI Glossary"
 description: "The combination of Semantic vector search logic and traditional Keyword search indexing to optimize total retrieval accuracy. Learn the architecture, mechanics, and real-world value of Hybrid Search in the modern data stack."
 ---

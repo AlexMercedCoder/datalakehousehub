@@ -1,5 +1,5 @@
 ---
-title: "What is dbt? The Definitive Guide"
+title: "What is dbt?"
 meta_title: "What is dbt? | Expert Data Lakehouse & AI Glossary"
 description: "Data Build Tool, a popular transformation workflow that enables data analysts and engineers to execute SQL-based ELT. Learn the architecture, mechanics, and real-world value of dbt in the modern data stack."
 ---

@@ -1,5 +1,5 @@
 ---
-title: "What is Optimistic Concurrency Control? The Definitive Guide"
+title: "What is Optimistic Concurrency Control?"
 meta_title: "What is Optimistic Concurrency Control? | Expert Data Lakehouse & AI Glossary"
 description: "A transaction strategy assuming conflicts are exceptionally rare verifying integrity completely only during final commit operations. Learn the architecture, mechanics, and real-world value of Optimistic Concurrency Control in the modern data stack."
 ---

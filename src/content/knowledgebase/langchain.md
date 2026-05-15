@@ -1,5 +1,5 @@
 ---
-title: "What is LangChain? The Definitive Guide"
+title: "What is LangChain?"
 meta_title: "What is LangChain? | Expert Data Lakehouse & AI Glossary"
 description: "A framework for developing applications powered by language models, heavily used in agentic and RAG architectures. Learn the architecture, mechanics, and real-world value of LangChain in the modern data stack."
 ---

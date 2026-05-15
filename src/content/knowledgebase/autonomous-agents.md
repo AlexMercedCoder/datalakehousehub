@@ -1,5 +1,5 @@
 ---
-title: "What is Autonomous Agents? The Definitive Guide"
+title: "What is Autonomous Agents?"
 meta_title: "What is Autonomous Agents? | Expert Data Lakehouse & AI Glossary"
 description: "Software entities designed to operate independently to achieve complex tasks through continuous environmental observation and action. Learn the architecture, mechanics, and real-world value of Autonomous Agents in the modern data stack."
 ---

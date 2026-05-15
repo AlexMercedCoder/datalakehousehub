@@ -1,5 +1,5 @@
 ---
-title: "What is Apache Avro? The Definitive Guide"
+title: "What is Apache Avro?"
 meta_title: "What is Apache Avro? | Expert Data Lakehouse & AI Glossary"
 description: "A data serialization system providing rich data structures and a compact, fast, binary data format. Learn the architecture, mechanics, and real-world value of Apache Avro in the modern data stack."
 ---

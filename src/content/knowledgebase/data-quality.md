@@ -1,5 +1,5 @@
 ---
-title: "What is Data Quality? The Definitive Guide"
+title: "What is Data Quality?"
 meta_title: "What is Data Quality? | Expert Data Lakehouse & AI Glossary"
 description: "The holistic measurement of data accuracy and completeness necessary to ensure validity during analytical execution processes. Learn the architecture, mechanics, and real-world value of Data Quality in the modern data stack."
 ---

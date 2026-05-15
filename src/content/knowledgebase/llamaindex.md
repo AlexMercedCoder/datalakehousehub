@@ -1,5 +1,5 @@
 ---
-title: "What is LlamaIndex? The Definitive Guide"
+title: "What is LlamaIndex?"
 meta_title: "What is LlamaIndex? | Expert Data Lakehouse & AI Glossary"
 description: "A flexible data framework connecting custom data sources to large language models for advanced retrieval and routing. Learn the architecture, mechanics, and real-world value of LlamaIndex in the modern data stack."
 ---

@@ -1,5 +1,5 @@
 ---
-title: "What is Apache Paimon? The Definitive Guide"
+title: "What is Apache Paimon?"
 meta_title: "What is Apache Paimon? | Expert Data Lakehouse & AI Glossary"
 description: "A streaming data lake platform supporting high-speed data ingestion, change data capture, and real-time analytics. Learn the architecture, mechanics, and real-world value of Apache Paimon in the modern data stack."
 ---

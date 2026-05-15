@@ -1,5 +1,5 @@
 ---
-title: "What is Apache ORC? The Definitive Guide"
+title: "What is Apache ORC?"
 meta_title: "What is Apache ORC? | Expert Data Lakehouse & AI Glossary"
 description: "Optimized Row Columnar, a highly efficient columnar data storage format often used alongside Hive and Spark. Learn the architecture, mechanics, and real-world value of Apache ORC in the modern data stack."
 ---

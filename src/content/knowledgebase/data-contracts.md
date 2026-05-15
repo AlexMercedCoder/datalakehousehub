@@ -1,5 +1,5 @@
 ---
-title: "What is Data Contracts? The Definitive Guide"
+title: "What is Data Contracts?"
 meta_title: "What is Data Contracts? | Expert Data Lakehouse & AI Glossary"
 description: "An organizational commitment clearly specifying structured data responsibilities fundamentally preventing downstream analytical application breakdown absolutely. Learn the architecture, mechanics, and real-world value of Data Contracts in the modern data stack."
 ---

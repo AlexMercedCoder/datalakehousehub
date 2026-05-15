@@ -1,5 +1,5 @@
 ---
-title: "What is Apache Doris? The Definitive Guide"
+title: "What is Apache Doris?"
 meta_title: "What is Apache Doris? | Expert Data Lakehouse & AI Glossary"
 description: "A modern MPP analytical database known for its extreme speed and ease of use in real-time analytics. Learn the architecture, mechanics, and real-world value of Apache Doris in the modern data stack."
 ---

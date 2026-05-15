@@ -1,5 +1,5 @@
 ---
-title: "What is DuckDB? The Definitive Guide"
+title: "What is DuckDB?"
 meta_title: "What is DuckDB? | Expert Data Lakehouse & AI Glossary"
 description: "An incredibly fast, in-process analytical SQL database designed specifically for local data analysis and processing. Learn the architecture, mechanics, and real-world value of DuckDB in the modern data stack."
 ---

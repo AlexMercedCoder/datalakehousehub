@@ -1,10 +1,10 @@
 ---
-title: "What is Apache Iceberg? The Definitive Guide"
+title: "What is Apache Iceberg?"
 meta_title: "What is Apache Iceberg? | Expert Data Lakehouse Architecture Guide"
 description: "A comprehensive guide to Apache Iceberg. Learn about its hidden partitioning, time travel capabilities, open REST catalog architecture, and modern data lakehouse integration."
 ---
 
-# What is Apache Iceberg? The Definitive Guide
+# What is Apache Iceberg?
 
 Apache Iceberg is an open table format originally developed by Netflix for massive analytic datasets. It brings the reliability and performance of traditional SQL database tables to open data lakes. Organizations storing petabytes of data on Amazon S3, Google Cloud Storage, or Azure Data Lake Storage use Iceberg to execute transactions, enforce schemas, and track data modifications without locking their architecture into a single vendor ecosystem. 
 

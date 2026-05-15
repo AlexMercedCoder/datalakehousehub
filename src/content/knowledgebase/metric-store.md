@@ -1,5 +1,5 @@
 ---
-title: "What is Metric Store? The Definitive Guide"
+title: "What is Metric Store?"
 meta_title: "What is Metric Store? | Expert Data Lakehouse & AI Glossary"
 description: "A centralized repository defining and storing key performance indicators logic independently from downstream BI tools. Learn the architecture, mechanics, and real-world value of Metric Store in the modern data stack."
 ---

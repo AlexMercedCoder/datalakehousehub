@@ -1,5 +1,5 @@
 ---
-title: "What is Ontology? The Definitive Guide"
+title: "What is Ontology?"
 meta_title: "What is Ontology? | Expert Data Lakehouse & AI Glossary"
 description: "A formal framework for representing domain knowledge through a set of concepts and the categories spanning their relations. Learn the architecture, mechanics, and real-world value of Ontology in the modern data stack."
 ---

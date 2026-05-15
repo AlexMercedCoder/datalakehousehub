@@ -1,5 +1,5 @@
 ---
-title: "What is Milvus? The Definitive Guide"
+title: "What is Milvus?"
 meta_title: "What is Milvus? | Expert Data Lakehouse & AI Glossary"
 description: "An open-source vector database built to power embedding similarity search and AI applications. Learn the architecture, mechanics, and real-world value of Milvus in the modern data stack."
 ---

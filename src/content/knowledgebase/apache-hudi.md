@@ -1,10 +1,10 @@
 ---
-title: "What is Apache Hudi? The Definitive Guide"
+title: "What is Apache Hudi?"
 meta_title: "What is Apache Hudi? | Expert Data Lakehouse Architecture Guide"
 description: "A comprehensive guide to Apache Hudi. Learn about its incremental data processing, upset capabilities, merge-on-read architecture, and streaming data lakehouse integrations."
 ---
 
-# What is Apache Hudi? The Definitive Guide
+# What is Apache Hudi?
 
 Apache Hudi (Hadoop Upserts Deletes and Incrementals) is an open-source data management framework designed to dramatically simplify incremental data processing and pipeline development on massive cloud data lakes. While traditional data lakes functioned as append-only storage systems, Hudi introduced the foundational capabilities required to treat a data lake like a transactional database. Organizations use Hudi to manage data ingestion, apply continuous updates, and handle complex streaming workloads natively on top of highly scalable cloud object storage (like Amazon S3, Google Cloud Storage, or Azure Data Lake Storage).
 

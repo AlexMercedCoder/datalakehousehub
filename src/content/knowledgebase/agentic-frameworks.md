@@ -1,5 +1,5 @@
 ---
-title: "What is Agentic Frameworks? The Definitive Guide"
+title: "What is Agentic Frameworks?"
 meta_title: "What is Agentic Frameworks? | Expert Data Lakehouse & AI Glossary"
 description: "The structural coding conventions strictly controlling autonomous routines enabling exceptionally advanced complex intelligent operational sequences seamlessly. Learn the architecture, mechanics, and real-world value of Agentic Frameworks in the modern data stack."
 ---

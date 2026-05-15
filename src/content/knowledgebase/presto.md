@@ -1,5 +1,5 @@
 ---
-title: "What is Presto? The Definitive Guide"
+title: "What is Presto?"
 meta_title: "What is Presto? | Expert Data Lakehouse & AI Glossary"
 description: "An open-source distributed SQL query engine for running interactive analytic queries against data sources of all sizes. Learn the architecture, mechanics, and real-world value of Presto in the modern data stack."
 ---

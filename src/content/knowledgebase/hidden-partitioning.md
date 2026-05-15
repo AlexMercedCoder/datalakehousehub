@@ -1,5 +1,5 @@
 ---
-title: "What is Hidden Partitioning? The Definitive Guide"
+title: "What is Hidden Partitioning?"
 meta_title: "What is Hidden Partitioning? | Expert Data Lakehouse & AI Glossary"
 description: "An Iceberg implementation generating partition values automatically based on source columns to eliminate manual physical path routing. Learn the architecture, mechanics, and real-world value of Hidden Partitioning in the modern data stack."
 ---

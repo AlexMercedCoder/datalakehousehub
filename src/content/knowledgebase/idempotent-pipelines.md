@@ -1,5 +1,5 @@
 ---
-title: "What is Idempotent Pipelines? The Definitive Guide"
+title: "What is Idempotent Pipelines?"
 meta_title: "What is Idempotent Pipelines? | Expert Data Lakehouse & AI Glossary"
 description: "Data processing workflows producing the exact same result no matter how many times redundant executions take place. Learn the architecture, mechanics, and real-world value of Idempotent Pipelines in the modern data stack."
 ---

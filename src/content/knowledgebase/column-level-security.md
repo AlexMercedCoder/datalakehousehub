@@ -1,5 +1,5 @@
 ---
-title: "What is Column-Level Security? The Definitive Guide"
+title: "What is Column-Level Security?"
 meta_title: "What is Column-Level Security? | Expert Data Lakehouse & AI Glossary"
 description: "A defense mechanism preventing unauthorized users from accessing sensitive individual fields within a shared data table. Learn the architecture, mechanics, and real-world value of Column-Level Security in the modern data stack."
 ---

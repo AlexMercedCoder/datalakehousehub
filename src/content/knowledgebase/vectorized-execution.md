@@ -1,5 +1,5 @@
 ---
-title: "What is Vectorized Execution? The Definitive Guide"
+title: "What is Vectorized Execution?"
 meta_title: "What is Vectorized Execution? | Expert Data Lakehouse & AI Glossary"
 description: "An engineering optimization shifting data processing from separate single rows toward vast tightly grouped memory columns. Learn the architecture, mechanics, and real-world value of Vectorized Execution in the modern data stack."
 ---

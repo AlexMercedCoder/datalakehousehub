@@ -1,5 +1,5 @@
 ---
-title: "What is Apache Kudu? The Definitive Guide"
+title: "What is Apache Kudu?"
 meta_title: "What is Apache Kudu? | Expert Data Lakehouse & AI Glossary"
 description: "A columnar storage manager developed for the Hadoop platform, built to enable fast analytics on fast data. Learn the architecture, mechanics, and real-world value of Apache Kudu in the modern data stack."
 ---

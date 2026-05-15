@@ -1,5 +1,5 @@
 ---
-title: "What is Apache Arrow? The Definitive Guide"
+title: "What is Apache Arrow?"
 meta_title: "What is Apache Arrow? | Expert Data Lakehouse & AI Glossary"
 description: "A cross language platform providing completely specified columnar memory standards prioritizing supreme processing execution speeds. Learn the architecture, mechanics, and real-world value of Apache Arrow in the modern data stack."
 ---

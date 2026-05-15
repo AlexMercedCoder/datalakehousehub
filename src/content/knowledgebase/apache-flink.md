@@ -1,5 +1,5 @@
 ---
-title: "What is Apache Flink? The Definitive Guide"
+title: "What is Apache Flink?"
 meta_title: "What is Apache Flink? | Expert Data Lakehouse & AI Glossary"
 description: "An incredibly powerful open-source stream processing framework engineered for stateful computations over unbounded data streams. Learn the architecture, mechanics, and real-world value of Apache Flink in the modern data stack."
 ---

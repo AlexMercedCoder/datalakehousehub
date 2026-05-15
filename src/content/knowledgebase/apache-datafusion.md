@@ -1,5 +1,5 @@
 ---
-title: "What is Apache DataFusion? The Definitive Guide"
+title: "What is Apache DataFusion?"
 meta_title: "What is Apache DataFusion? | Expert Data Lakehouse & AI Glossary"
 description: "An extensible query execution framework written in Rust that uses Apache Arrow as its in-memory format for building high-performance data systems. Learn the architecture, mechanics, and real-world value of Apache DataFusion in the modern data stack."
 ---

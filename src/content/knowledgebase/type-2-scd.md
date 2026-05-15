@@ -1,5 +1,5 @@
 ---
-title: "What is Type 2 SCD? The Definitive Guide"
+title: "What is Type 2 SCD?"
 meta_title: "What is Type 2 SCD? | Expert Data Lakehouse & AI Glossary"
 description: "A Slowly Changing Dimension methodology preserving unlimited history by inserting a new record for every distinct change over time. Learn the architecture, mechanics, and real-world value of Type 2 SCD in the modern data stack."
 ---

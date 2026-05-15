@@ -1,5 +1,5 @@
 ---
-title: "What is Data Ingestion? The Definitive Guide"
+title: "What is Data Ingestion?"
 meta_title: "What is Data Ingestion? | Expert Data Lakehouse & AI Glossary"
 description: "The process of moving data from diverse source systems into a unified storage architecture for downstream analysis. Learn the architecture, mechanics, and real-world value of Data Ingestion in the modern data stack."
 ---

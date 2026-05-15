@@ -1,5 +1,5 @@
 ---
-title: "What is Data Observability? The Definitive Guide"
+title: "What is Data Observability?"
 meta_title: "What is Data Observability? | Expert Data Lakehouse & AI Glossary"
 description: "The systematic application enabling automated deep discovery resolving profound informational anomalies actively within complex interconnected pipelines instantly. Learn the architecture, mechanics, and real-world value of Data Observability in the modern data stack."
 ---

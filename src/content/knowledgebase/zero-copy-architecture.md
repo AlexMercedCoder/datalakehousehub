@@ -1,5 +1,5 @@
 ---
-title: "What is Zero-Copy Architecture? The Definitive Guide"
+title: "What is Zero-Copy Architecture?"
 meta_title: "What is Zero-Copy Architecture? | Expert Data Lakehouse & AI Glossary"
 description: "A fundamental analytical strategy strictly eliminating physical duplications operating queries definitively referencing central master storage instantly. Learn the architecture, mechanics, and real-world value of Zero-Copy Architecture in the modern data stack."
 ---

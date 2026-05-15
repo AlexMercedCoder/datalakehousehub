@@ -1,5 +1,5 @@
 ---
-title: "What is Chain of Thought? The Definitive Guide"
+title: "What is Chain of Thought?"
 meta_title: "What is Chain of Thought? | Expert Data Lakehouse & AI Glossary"
 description: "An AI prompting methodology requiring models to explicitly generate step-by-step reasoning before providing a final answer. Learn the architecture, mechanics, and real-world value of Chain of Thought in the modern data stack."
 ---

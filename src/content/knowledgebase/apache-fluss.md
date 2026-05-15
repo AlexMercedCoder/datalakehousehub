@@ -1,5 +1,5 @@
 ---
-title: "What is Apache Fluss? The Definitive Guide"
+title: "What is Apache Fluss?"
 meta_title: "What is Apache Fluss? | Expert Data Lakehouse & AI Glossary"
 description: "A streaming storage engine that is optimized for real-time analytics and continuous streaming workloads. Learn the architecture, mechanics, and real-world value of Apache Fluss in the modern data stack."
 ---

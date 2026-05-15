@@ -1,5 +1,5 @@
 ---
-title: "What is Apache Gravitino? The Definitive Guide"
+title: "What is Apache Gravitino?"
 meta_title: "What is Apache Gravitino? | Expert Data Lakehouse & AI Glossary"
 description: "A high-performance, geo-distributed, and federated metadata lake designed to unify and manage data across hybrid environments. Learn the architecture, mechanics, and real-world value of Apache Gravitino in the modern data stack."
 ---

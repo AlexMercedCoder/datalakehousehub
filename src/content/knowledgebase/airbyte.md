@@ -1,5 +1,5 @@
 ---
-title: "What is Airbyte? The Definitive Guide"
+title: "What is Airbyte?"
 meta_title: "What is Airbyte? | Expert Data Lakehouse & AI Glossary"
 description: "An open-source data integration platform allowing you to sync data from applications, APIs, and databases to data warehouses. Learn the architecture, mechanics, and real-world value of Airbyte in the modern data stack."
 ---

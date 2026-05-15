@@ -1,5 +1,5 @@
 ---
-title: "What is Micro-batching? The Definitive Guide"
+title: "What is Micro-batching?"
 meta_title: "What is Micro-batching? | Expert Data Lakehouse & AI Glossary"
 description: "A processing architecture executing data streams as frequent, small batches to simulate near real-time analytics. Learn the architecture, mechanics, and real-world value of Micro-batching in the modern data stack."
 ---

@@ -1,5 +1,5 @@
 ---
-title: "What is Data Catalog? The Definitive Guide"
+title: "What is Data Catalog?"
 meta_title: "What is Data Catalog? | Expert Data Lakehouse & AI Glossary"
 description: "A fully detailed inventory of corporate data assets utilizing metadata to help organizations manage and govern information. Learn the architecture, mechanics, and real-world value of Data Catalog in the modern data stack."
 ---

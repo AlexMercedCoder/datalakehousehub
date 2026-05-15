@@ -1,5 +1,5 @@
 ---
-title: "What is Active Data Governance? The Definitive Guide"
+title: "What is Active Data Governance?"
 meta_title: "What is Active Data Governance? | Expert Data Lakehouse & AI Glossary"
 description: "A dynamic methodology implementing real time automated controls rather than relying entirely on manual periodic policy reviews. Learn the architecture, mechanics, and real-world value of Active Data Governance in the modern data stack."
 ---

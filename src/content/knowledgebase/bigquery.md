@@ -1,5 +1,5 @@
 ---
-title: "What is BigQuery? The Definitive Guide"
+title: "What is BigQuery?"
 meta_title: "What is BigQuery? | Expert Data Lakehouse & AI Glossary"
 description: "Google Cloud's fully managed, serverless enterprise data warehouse designed to ingest, store, and analyze large datasets. Learn the architecture, mechanics, and real-world value of BigQuery in the modern data stack."
 ---

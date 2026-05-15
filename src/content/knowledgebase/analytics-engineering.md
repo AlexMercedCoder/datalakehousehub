@@ -1,5 +1,5 @@
 ---
-title: "What is Analytics Engineering? The Definitive Guide"
+title: "What is Analytics Engineering?"
 meta_title: "What is Analytics Engineering? | Expert Data Lakehouse & AI Glossary"
 description: "The discipline bridging data engineering and data analysis, focusing on transforming data into clean, ready-to-use datasets. Learn the architecture, mechanics, and real-world value of Analytics Engineering in the modern data stack."
 ---

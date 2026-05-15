@@ -1,5 +1,5 @@
 ---
-title: "What is Data Compaction? The Definitive Guide"
+title: "What is Data Compaction?"
 meta_title: "What is Data Compaction? | Expert Data Lakehouse & AI Glossary"
 description: "The automated or scheduled maintenance routine required to optimize file sizes and keep open lakehouses operating efficiently. Learn the architecture, mechanics, and real-world value of Data Compaction in the modern data stack."
 ---

@@ -1,5 +1,5 @@
 ---
-title: "What is Dagster? The Definitive Guide"
+title: "What is Dagster?"
 meta_title: "What is Dagster? | Expert Data Lakehouse & AI Glossary"
 description: "A modern data orchestrator designed for machine learning, analytics, and ETL pipelines. Learn the architecture, mechanics, and real-world value of Dagster in the modern data stack."
 ---

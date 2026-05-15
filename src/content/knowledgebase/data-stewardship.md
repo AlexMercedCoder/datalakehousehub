@@ -1,5 +1,5 @@
 ---
-title: "What is Data Stewardship? The Definitive Guide"
+title: "What is Data Stewardship?"
 meta_title: "What is Data Stewardship? | Expert Data Lakehouse & AI Glossary"
 description: "The formal accountability for the management and oversight of organizational data assets to ensure quality and compliance. Learn the architecture, mechanics, and real-world value of Data Stewardship in the modern data stack."
 ---

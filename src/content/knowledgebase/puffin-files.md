@@ -1,5 +1,5 @@
 ---
-title: "What is Puffin Files? The Definitive Guide"
+title: "What is Puffin Files?"
 meta_title: "What is Puffin Files? | Expert Data Lakehouse & AI Glossary"
 description: "A specialized file format within Apache Iceberg used to store detailed statistics and indexes to accelerate query planning. Learn the architecture, mechanics, and real-world value of Puffin Files in the modern data stack."
 ---

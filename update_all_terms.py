@@ -461,7 +461,7 @@ def generate_markdown(title, description):
     cat_data = determine_category(title)
     
     content = f"""---
-title: "What is {title}? The Definitive Guide"
+title: "What is {title}?"
 meta_title: "What is {title}? | Expert Data Lakehouse & AI Glossary"
 description: "{description} Learn the architecture, mechanics, and real-world value of {title} in the modern data stack."
 ---

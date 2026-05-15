@@ -1,5 +1,5 @@
 ---
-title: "What is Soda? The Definitive Guide"
+title: "What is Soda?"
 meta_title: "What is Soda? | Expert Data Lakehouse & AI Glossary"
 description: "An open-source data quality and observability platform that allows teams to detect data issues early in the pipeline. Learn the architecture, mechanics, and real-world value of Soda in the modern data stack."
 ---

@@ -1,5 +1,5 @@
 ---
-title: "What is Bronze Layer? The Definitive Guide"
+title: "What is Bronze Layer?"
 meta_title: "What is Bronze Layer? | Expert Data Lakehouse & AI Glossary"
 description: "The foundational layer of a medallion architecture containing raw, unprocessed data exactly as it was ingested from source systems. Learn the architecture, mechanics, and real-world value of Bronze Layer in the modern data stack."
 ---

@@ -1,5 +1,5 @@
 ---
-title: "What is MotherDuck? The Definitive Guide"
+title: "What is MotherDuck?"
 meta_title: "What is MotherDuck? | Expert Data Lakehouse & AI Glossary"
 description: "A collaborative, serverless cloud analytics platform built explicitly around the high-performance DuckDB query engine. Learn the architecture, mechanics, and real-world value of MotherDuck in the modern data stack."
 ---

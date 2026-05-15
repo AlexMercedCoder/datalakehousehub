@@ -1,5 +1,5 @@
 ---
-title: "What is Slowly Changing Dimensions? The Definitive Guide"
+title: "What is Slowly Changing Dimensions?"
 meta_title: "What is Slowly Changing Dimensions? | Expert Data Lakehouse & AI Glossary"
 description: "Techniques used in data warehousing to manage and track historical data modifications over time. Learn the architecture, mechanics, and real-world value of Slowly Changing Dimensions in the modern data stack."
 ---

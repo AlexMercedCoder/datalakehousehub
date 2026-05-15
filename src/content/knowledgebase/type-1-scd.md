@@ -1,5 +1,5 @@
 ---
-title: "What is Type 1 SCD? The Definitive Guide"
+title: "What is Type 1 SCD?"
 meta_title: "What is Type 1 SCD? | Expert Data Lakehouse & AI Glossary"
 description: "A Slowly Changing Dimension methodology where old data is simply overwritten with new data, losing historical tracking entirely. Learn the architecture, mechanics, and real-world value of Type 1 SCD in the modern data stack."
 ---

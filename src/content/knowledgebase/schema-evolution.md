@@ -1,5 +1,5 @@
 ---
-title: "What is Schema Evolution? The Definitive Guide"
+title: "What is Schema Evolution?"
 meta_title: "What is Schema Evolution? | Expert Data Lakehouse & AI Glossary"
 description: "The capability allowing data structures to modify organically over time without fundamentally disrupting historic operational integrity. Learn the architecture, mechanics, and real-world value of Schema Evolution in the modern data stack."
 ---

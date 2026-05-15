@@ -1,5 +1,5 @@
 ---
-title: "What is Autonomous Workflows? The Definitive Guide"
+title: "What is Autonomous Workflows?"
 meta_title: "What is Autonomous Workflows? | Expert Data Lakehouse & AI Glossary"
 description: "A sequence of processes executing independently based on predefined goals without requiring manual continuous management. Learn the architecture, mechanics, and real-world value of Autonomous Workflows in the modern data stack."
 ---

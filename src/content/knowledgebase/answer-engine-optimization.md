@@ -1,5 +1,5 @@
 ---
-title: "What is Answer Engine Optimization? The Definitive Guide"
+title: "What is Answer Engine Optimization?"
 meta_title: "What is Answer Engine Optimization? | Expert Data Lakehouse & AI Glossary"
 description: "A strategy focusing content creation on providing immediate direct answers rather than click through link generation. Learn the architecture, mechanics, and real-world value of Answer Engine Optimization in the modern data stack."
 ---

@@ -1,5 +1,5 @@
 ---
-title: "What is Gold Layer? The Definitive Guide"
+title: "What is Gold Layer?"
 meta_title: "What is Gold Layer? | Expert Data Lakehouse & AI Glossary"
 description: "The final presentation layer of a medallion architecture featuring highly refined, aggregated data optimized for business intelligence. Learn the architecture, mechanics, and real-world value of Gold Layer in the modern data stack."
 ---

@@ -1,5 +1,5 @@
 ---
-title: "What is ELT? The Definitive Guide"
+title: "What is ELT?"
 meta_title: "What is ELT? | Expert Data Lakehouse & AI Glossary"
 description: "Extract Load and Transform is an integration process pushing analytical transformations directly against the destination platform. Learn the architecture, mechanics, and real-world value of ELT in the modern data stack."
 ---

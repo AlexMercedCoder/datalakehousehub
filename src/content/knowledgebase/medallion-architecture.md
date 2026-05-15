@@ -1,5 +1,5 @@
 ---
-title: "What is Medallion Architecture? The Definitive Guide"
+title: "What is Medallion Architecture?"
 meta_title: "What is Medallion Architecture? | Expert Data Lakehouse & AI Glossary"
 description: "A data design pattern used to logically organize data in a lakehouse into Bronze, Silver, and Gold layers. Learn the architecture, mechanics, and real-world value of Medallion Architecture in the modern data stack."
 ---

@@ -1,5 +1,5 @@
 ---
-title: "What is Apache Spark? The Definitive Guide"
+title: "What is Apache Spark?"
 meta_title: "What is Apache Spark? | Expert Data Lakehouse & AI Glossary"
 description: "A unified analytics engine for large-scale data processing, with built-in modules for streaming, SQL, machine learning, and graph processing. Learn the architecture, mechanics, and real-world value of Apache Spark in the modern data stack."
 ---

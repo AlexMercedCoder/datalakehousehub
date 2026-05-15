@@ -1,5 +1,5 @@
 ---
-title: "What is Semantic Search? The Definitive Guide"
+title: "What is Semantic Search?"
 meta_title: "What is Semantic Search? | Expert Data Lakehouse & AI Glossary"
 description: "An information retrieval approach interpreting user intent through meaning rather than exact lexical keyword matches. Learn the architecture, mechanics, and real-world value of Semantic Search in the modern data stack."
 ---

@@ -1,5 +1,5 @@
 ---
-title: "What is DataHub? The Definitive Guide"
+title: "What is DataHub?"
 meta_title: "What is DataHub? | Expert Data Lakehouse & AI Glossary"
 description: "An extensible metadata platform for modern data stacks that facilitates data discovery, observability, and federated governance. Learn the architecture, mechanics, and real-world value of DataHub in the modern data stack."
 ---

@@ -1,5 +1,5 @@
 ---
-title: "What is Storage Layer? The Definitive Guide"
+title: "What is Storage Layer?"
 meta_title: "What is Storage Layer? | Expert Data Lakehouse & AI Glossary"
 description: "The foundational tier in a data architecture responsible for the physical retention of raw data files and objects. Learn the architecture, mechanics, and real-world value of Storage Layer in the modern data stack."
 ---

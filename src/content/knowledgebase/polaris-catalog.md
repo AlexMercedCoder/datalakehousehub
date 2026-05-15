@@ -1,5 +1,5 @@
 ---
-title: "What is Polaris Catalog? The Definitive Guide"
+title: "What is Polaris Catalog?"
 meta_title: "What is Polaris Catalog? | Expert Data Lakehouse & AI Glossary"
 description: "An open-source catalog framework offering broad ecosystem compatibility for Apache Iceberg tabular metadata. Learn the architecture, mechanics, and real-world value of Polaris Catalog in the modern data stack."
 ---

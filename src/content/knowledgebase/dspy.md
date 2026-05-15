@@ -1,5 +1,5 @@
 ---
-title: "What is DSPy? The Definitive Guide"
+title: "What is DSPy?"
 meta_title: "What is DSPy? | Expert Data Lakehouse & AI Glossary"
 description: "A framework for algorithmically optimizing language model prompts and weights rather than relying on manual prompt engineering. Learn the architecture, mechanics, and real-world value of DSPy in the modern data stack."
 ---

@@ -1,5 +1,5 @@
 ---
-title: "What is Apache Superset? The Definitive Guide"
+title: "What is Apache Superset?"
 meta_title: "What is Apache Superset? | Expert Data Lakehouse & AI Glossary"
 description: "An enterprise-ready business intelligence web application designed to visually explore and present massive data volumes. Learn the architecture, mechanics, and real-world value of Apache Superset in the modern data stack."
 ---

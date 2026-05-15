@@ -1,5 +1,5 @@
 ---
-title: "What is Lambda Architecture? The Definitive Guide"
+title: "What is Lambda Architecture?"
 meta_title: "What is Lambda Architecture? | Expert Data Lakehouse & AI Glossary"
 description: "A data processing architecture designed to handle massive quantities of data by taking advantage of both batch and stream processing. Learn the architecture, mechanics, and real-world value of Lambda Architecture in the modern data stack."
 ---

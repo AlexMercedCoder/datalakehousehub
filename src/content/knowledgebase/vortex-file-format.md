@@ -1,5 +1,5 @@
 ---
-title: "What is Vortex File Format? The Definitive Guide"
+title: "What is Vortex File Format?"
 meta_title: "What is Vortex File Format? | Expert Data Lakehouse & AI Glossary"
 description: "A modern, highly-compressed, and extremely fast columnar file format specifically optimized for analytical queries and vector processing. Learn the architecture, mechanics, and real-world value of Vortex File Format in the modern data stack."
 ---

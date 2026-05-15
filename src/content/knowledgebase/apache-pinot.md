@@ -1,5 +1,5 @@
 ---
-title: "What is Apache Pinot? The Definitive Guide"
+title: "What is Apache Pinot?"
 meta_title: "What is Apache Pinot? | Expert Data Lakehouse & AI Glossary"
 description: "A real-time distributed OLAP datastore purpose-built to provide ultra-low latency analytics. Learn the architecture, mechanics, and real-world value of Apache Pinot in the modern data stack."
 ---

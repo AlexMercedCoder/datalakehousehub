@@ -1,5 +1,5 @@
 ---
-title: "What is Lance File Format? The Definitive Guide"
+title: "What is Lance File Format?"
 meta_title: "What is Lance File Format? | Expert Data Lakehouse & AI Glossary"
 description: "A columnar data format optimized for machine learning and AI, offering much faster vector search capabilities compared to traditional formats like Parquet. Learn the architecture, mechanics, and real-world value of Lance File Format in the modern data stack."
 ---

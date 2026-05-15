@@ -1,5 +1,5 @@
 ---
-title: "What is Vector Database? The Definitive Guide"
+title: "What is Vector Database?"
 meta_title: "What is Vector Database? | Expert Data Lakehouse & AI Glossary"
 description: "A uniquely optimized storage structure searching incredibly complex abstract numerical embeddings generating intelligent analytical interpretations simultaneously. Learn the architecture, mechanics, and real-world value of Vector Database in the modern data stack."
 ---

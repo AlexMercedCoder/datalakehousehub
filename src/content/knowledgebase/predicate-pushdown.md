@@ -1,5 +1,5 @@
 ---
-title: "What is Predicate Pushdown? The Definitive Guide"
+title: "What is Predicate Pushdown?"
 meta_title: "What is Predicate Pushdown? | Expert Data Lakehouse & AI Glossary"
 description: "A generalized term reflecting engine architectures skipping significant file chunks applying constraints prior against storage layers directly. Learn the architecture, mechanics, and real-world value of Predicate Pushdown in the modern data stack."
 ---

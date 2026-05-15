@@ -1,5 +1,5 @@
 ---
-title: "What is Debezium? The Definitive Guide"
+title: "What is Debezium?"
 meta_title: "What is Debezium? | Expert Data Lakehouse & AI Glossary"
 description: "An open-source distributed platform for change data capture that points to your databases and converts transactions into event streams. Learn the architecture, mechanics, and real-world value of Debezium in the modern data stack."
 ---

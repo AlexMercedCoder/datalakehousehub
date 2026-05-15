@@ -1,5 +1,5 @@
 ---
-title: "What is Marquez? The Definitive Guide"
+title: "What is Marquez?"
 meta_title: "What is Marquez? | Expert Data Lakehouse & AI Glossary"
 description: "An open-source metadata service for the collection, aggregation, and visualization of a data ecosystem's lineage. Learn the architecture, mechanics, and real-world value of Marquez in the modern data stack."
 ---

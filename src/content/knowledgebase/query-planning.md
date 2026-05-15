@@ -1,5 +1,5 @@
 ---
-title: "What is Query Planning? The Definitive Guide"
+title: "What is Query Planning?"
 meta_title: "What is Query Planning? | Expert Data Lakehouse & AI Glossary"
 description: "The systematic process where execution engines evaluate complex SQL submissions preparing ideal logical sequential instruction trees. Learn the architecture, mechanics, and real-world value of Query Planning in the modern data stack."
 ---

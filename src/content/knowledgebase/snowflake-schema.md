@@ -1,5 +1,5 @@
 ---
-title: "What is Snowflake Schema? The Definitive Guide"
+title: "What is Snowflake Schema?"
 meta_title: "What is Snowflake Schema? | Expert Data Lakehouse & AI Glossary"
 description: "An extension of the star schema where dimension tables are highly normalized into multiple related tables. Learn the architecture, mechanics, and real-world value of Snowflake Schema in the modern data stack."
 ---

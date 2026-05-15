@@ -1,5 +1,5 @@
 ---
-title: "What is Amundsen? The Definitive Guide"
+title: "What is Amundsen?"
 meta_title: "What is Amundsen? | Expert Data Lakehouse & AI Glossary"
 description: "A data discovery and metadata engine developed originally by Lyft to improve the productivity of data analysts. Learn the architecture, mechanics, and real-world value of Amundsen in the modern data stack."
 ---

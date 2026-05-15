@@ -1,5 +1,5 @@
 ---
-title: "What is Multi-Agent Orchestration? The Definitive Guide"
+title: "What is Multi-Agent Orchestration?"
 meta_title: "What is Multi-Agent Orchestration? | Expert Data Lakehouse & AI Glossary"
 description: "A structural paradigm where separate interconnected autonomous agents interact, pass data, and resolve logical goals collaboratively. Learn the architecture, mechanics, and real-world value of Multi-Agent Orchestration in the modern data stack."
 ---

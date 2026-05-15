@@ -1,5 +1,5 @@
 ---
-title: "What is Star Schema? The Definitive Guide"
+title: "What is Star Schema?"
 meta_title: "What is Star Schema? | Expert Data Lakehouse & AI Glossary"
 description: "A dimensional modeling structure where a central fact table is connected directly to multiple normalized dimension tables. Learn the architecture, mechanics, and real-world value of Star Schema in the modern data stack."
 ---

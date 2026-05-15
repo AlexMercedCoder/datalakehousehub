@@ -1,5 +1,5 @@
 ---
-title: "What is Apache Druid? The Definitive Guide"
+title: "What is Apache Druid?"
 meta_title: "What is Apache Druid? | Expert Data Lakehouse & AI Glossary"
 description: "A real-time analytics database designed for fast slice-and-dice analytics on large data sets. Learn the architecture, mechanics, and real-world value of Apache Druid in the modern data stack."
 ---

@@ -1,5 +1,5 @@
 ---
-title: "What is Unity Catalog? The Definitive Guide"
+title: "What is Unity Catalog?"
 meta_title: "What is Unity Catalog? | Expert Data Lakehouse & AI Glossary"
 description: "A unified data governance and management catalog now available as an open-source project for modern data environments. Learn the architecture, mechanics, and real-world value of Unity Catalog in the modern data stack."
 ---

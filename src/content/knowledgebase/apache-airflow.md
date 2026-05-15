@@ -1,5 +1,5 @@
 ---
-title: "What is Apache Airflow? The Definitive Guide"
+title: "What is Apache Airflow?"
 meta_title: "What is Apache Airflow? | Expert Data Lakehouse & AI Glossary"
 description: "An open-source platform to programmatically author, schedule, and monitor data engineering workflows. Learn the architecture, mechanics, and real-world value of Apache Airflow in the modern data stack."
 ---

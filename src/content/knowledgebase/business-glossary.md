@@ -1,5 +1,5 @@
 ---
-title: "What is Business Glossary? The Definitive Guide"
+title: "What is Business Glossary?"
 meta_title: "What is Business Glossary? | Expert Data Lakehouse & AI Glossary"
 description: "A highly accessible dictionary defining core terms and concepts used across business intelligence applications. Learn the architecture, mechanics, and real-world value of Business Glossary in the modern data stack."
 ---

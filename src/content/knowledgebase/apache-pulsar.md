@@ -1,5 +1,5 @@
 ---
-title: "What is Apache Pulsar? The Definitive Guide"
+title: "What is Apache Pulsar?"
 meta_title: "What is Apache Pulsar? | Expert Data Lakehouse & AI Glossary"
 description: "A cloud-native, distributed messaging and streaming platform designed for massive scale and multi-tenancy. Learn the architecture, mechanics, and real-world value of Apache Pulsar in the modern data stack."
 ---

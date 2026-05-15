@@ -1,5 +1,5 @@
 ---
-title: "What is Data Product? The Definitive Guide"
+title: "What is Data Product?"
 meta_title: "What is Data Product? | Expert Data Lakehouse & AI Glossary"
 description: "The core concept treating reliable, maintained datasets as formalized products with guaranteed service level agreements. Learn the architecture, mechanics, and real-world value of Data Product in the modern data stack."
 ---

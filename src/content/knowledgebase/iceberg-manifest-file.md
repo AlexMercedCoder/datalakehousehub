@@ -1,5 +1,5 @@
 ---
-title: "What is Iceberg Manifest File? The Definitive Guide"
+title: "What is Iceberg Manifest File?"
 meta_title: "What is Iceberg Manifest File? | Expert Data Lakehouse & AI Glossary"
 description: "A component tracking individual data files along with their localized metrics bounds and partitioned assignment metadata. Learn the architecture, mechanics, and real-world value of Iceberg Manifest File in the modern data stack."
 ---

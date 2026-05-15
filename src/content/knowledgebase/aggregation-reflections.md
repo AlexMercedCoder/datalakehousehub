@@ -1,5 +1,5 @@
 ---
-title: "What is Aggregation Reflections? The Definitive Guide"
+title: "What is Aggregation Reflections?"
 meta_title: "What is Aggregation Reflections? | Expert Data Lakehouse & AI Glossary"
 description: "A specialized mechanism aggregating distinct numerical metrics improving multidimensional highly complex analytical response capabilities profoundly. Learn the architecture, mechanics, and real-world value of Aggregation Reflections in the modern data stack."
 ---

@@ -1,5 +1,5 @@
 ---
-title: "What is Qdrant? The Definitive Guide"
+title: "What is Qdrant?"
 meta_title: "What is Qdrant? | Expert Data Lakehouse & AI Glossary"
 description: "A vector similarity search engine and database offering production-ready APIs for advanced AI search applications. Learn the architecture, mechanics, and real-world value of Qdrant in the modern data stack."
 ---

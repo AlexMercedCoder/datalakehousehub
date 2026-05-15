@@ -1,5 +1,5 @@
 ---
-title: "What is Semantic Layer? The Definitive Guide"
+title: "What is Semantic Layer?"
 meta_title: "What is Semantic Layer? | Expert Data Lakehouse & AI Glossary"
 description: "A mapping process that translates complex data into familiar business terms to ensure consistent analytics. Learn the architecture, mechanics, and real-world value of Semantic Layer in the modern data stack."
 ---

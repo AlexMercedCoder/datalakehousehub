@@ -1,5 +1,5 @@
 ---
-title: "What is Arrow Flight SQL? The Definitive Guide"
+title: "What is Arrow Flight SQL?"
 meta_title: "What is Arrow Flight SQL? | Expert Data Lakehouse & AI Glossary"
 description: "A high-performance protocol leveraging Apache Arrow to vastly accelerate data transfer between engines and client applications. Learn the architecture, mechanics, and real-world value of Arrow Flight SQL in the modern data stack."
 ---

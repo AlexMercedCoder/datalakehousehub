@@ -1,5 +1,5 @@
 ---
-title: "What is Alation? The Definitive Guide"
+title: "What is Alation?"
 meta_title: "What is Alation? | Expert Data Lakehouse & AI Glossary"
 description: "A premier enterprise data catalog platform designed to foster a data culture and optimize data discovery. Learn the architecture, mechanics, and real-world value of Alation in the modern data stack."
 ---

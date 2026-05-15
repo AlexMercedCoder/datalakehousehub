@@ -1,5 +1,5 @@
 ---
-title: "What is Reasoning Engine? The Definitive Guide"
+title: "What is Reasoning Engine?"
 meta_title: "What is Reasoning Engine? | Expert Data Lakehouse & AI Glossary"
 description: "An explicit processing layer critically evaluating conversational contexts actively building logically appropriate distinct cognitive output determinations carefully. Learn the architecture, mechanics, and real-world value of Reasoning Engine in the modern data stack."
 ---

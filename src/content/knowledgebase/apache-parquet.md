@@ -1,5 +1,5 @@
 ---
-title: "What is Apache Parquet? The Definitive Guide"
+title: "What is Apache Parquet?"
 meta_title: "What is Apache Parquet? | Expert Data Lakehouse & AI Glossary"
 description: "An open source storage format providing exceptionally compressed data representations optimized naturally regarding complex analytical workflows. Learn the architecture, mechanics, and real-world value of Apache Parquet in the modern data stack."
 ---

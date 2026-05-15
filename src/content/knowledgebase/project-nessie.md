@@ -1,5 +1,5 @@
 ---
-title: "What is Project Nessie? The Definitive Guide"
+title: "What is Project Nessie?"
 meta_title: "What is Project Nessie? | Expert Data Lakehouse & AI Glossary"
 description: "A catalog for data lakes offering Git-like version control, branching, and merging capabilities for tables. Learn the architecture, mechanics, and real-world value of Project Nessie in the modern data stack."
 ---

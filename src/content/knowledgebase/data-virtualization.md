@@ -1,5 +1,5 @@
 ---
-title: "What is Data Virtualization? The Definitive Guide"
+title: "What is Data Virtualization?"
 meta_title: "What is Data Virtualization? | Expert Data Lakehouse & AI Glossary"
 description: "An approach to data management that allows applications to retrieve and manipulate data without requiring technical details about the data. Learn the architecture, mechanics, and real-world value of Data Virtualization in the modern data stack."
 ---

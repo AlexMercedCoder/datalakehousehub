@@ -1,5 +1,5 @@
 ---
-title: "What is Apache XTable? The Definitive Guide"
+title: "What is Apache XTable?"
 meta_title: "What is Apache XTable? | Expert Data Lakehouse & AI Glossary"
 description: "An Apache Incubator project allowing users to omni-directionally translate metadata between Iceberg, Delta, and Hudi without rewriting files. Learn the architecture, mechanics, and real-world value of Apache XTable in the modern data stack."
 ---

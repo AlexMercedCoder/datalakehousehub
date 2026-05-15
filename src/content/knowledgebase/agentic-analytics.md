@@ -1,5 +1,5 @@
 ---
-title: "What is Agentic Analytics? The Definitive Guide"
+title: "What is Agentic Analytics?"
 meta_title: "What is Agentic Analytics? | Expert Data Lakehouse & AI Glossary"
 description: "The application of autonomous AI agents to execute multi-step analytical tasks rather than relying purely on user driven querying. Learn the architecture, mechanics, and real-world value of Agentic Analytics in the modern data stack."
 ---

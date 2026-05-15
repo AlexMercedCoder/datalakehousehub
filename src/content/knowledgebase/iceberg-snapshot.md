@@ -1,5 +1,5 @@
 ---
-title: "What is Iceberg Snapshot? The Definitive Guide"
+title: "What is Iceberg Snapshot?"
 meta_title: "What is Iceberg Snapshot? | Expert Data Lakehouse & AI Glossary"
 description: "A complete recorded state of an Apache Iceberg table mapping exact data files available at a specific specific point in time. Learn the architecture, mechanics, and real-world value of Iceberg Snapshot in the modern data stack."
 ---

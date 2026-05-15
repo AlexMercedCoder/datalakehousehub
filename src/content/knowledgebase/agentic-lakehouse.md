@@ -1,5 +1,5 @@
 ---
-title: "What is Agentic Lakehouse? The Definitive Guide"
+title: "What is Agentic Lakehouse?"
 meta_title: "What is Agentic Lakehouse? | Expert Data Lakehouse & AI Glossary"
 description: "A sophisticated platform integrating deeply with AI capabilities to allow autonomous agents and analysts native context and query access. Learn the architecture, mechanics, and real-world value of Agentic Lakehouse in the modern data stack."
 ---

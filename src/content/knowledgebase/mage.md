@@ -1,5 +1,5 @@
 ---
-title: "What is Mage? The Definitive Guide"
+title: "What is Mage?"
 meta_title: "What is Mage? | Expert Data Lakehouse & AI Glossary"
 description: "An open-source data pipeline tool for integrating and transforming data, designed as a modern alternative to Airflow. Learn the architecture, mechanics, and real-world value of Mage in the modern data stack."
 ---

@@ -1,5 +1,5 @@
 ---
-title: "What is Retrieval-Augmented Generation? The Definitive Guide"
+title: "What is Retrieval-Augmented Generation?"
 meta_title: "What is Retrieval-Augmented Generation? | Expert Data Lakehouse & AI Glossary"
 description: "The methodology enhancing AI responses by securely providing external verifiable facts into the base model context. Learn the architecture, mechanics, and real-world value of Retrieval-Augmented Generation in the modern data stack."
 ---

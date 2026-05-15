@@ -1,5 +1,5 @@
 ---
-title: "What is Audit Logs? The Definitive Guide"
+title: "What is Audit Logs?"
 meta_title: "What is Audit Logs? | Expert Data Lakehouse & AI Glossary"
 description: "Chronological records logging all user actions and system events designed to ensure transparency and retrospective security analysis. Learn the architecture, mechanics, and real-world value of Audit Logs in the modern data stack."
 ---

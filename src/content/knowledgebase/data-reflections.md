@@ -1,5 +1,5 @@
 ---
-title: "What is Data Reflections? The Definitive Guide"
+title: "What is Data Reflections?"
 meta_title: "What is Data Reflections? | Expert Data Lakehouse & AI Glossary"
 description: "An intelligent acceleration strategy optimizing frequent analytical routines completely neutralizing requirements driving rigid physical copy duplication. Learn the architecture, mechanics, and real-world value of Data Reflections in the modern data stack."
 ---

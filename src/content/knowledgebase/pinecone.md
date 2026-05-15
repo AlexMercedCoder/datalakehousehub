@@ -1,5 +1,5 @@
 ---
-title: "What is Pinecone? The Definitive Guide"
+title: "What is Pinecone?"
 meta_title: "What is Pinecone? | Expert Data Lakehouse & AI Glossary"
 description: "A fully managed vector database designed for building highly scalable vector search into machine learning applications. Learn the architecture, mechanics, and real-world value of Pinecone in the modern data stack."
 ---

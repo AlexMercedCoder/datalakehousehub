@@ -1,5 +1,5 @@
 ---
-title: "What is Data Fabric? The Definitive Guide"
+title: "What is Data Fabric?"
 meta_title: "What is Data Fabric? | Expert Data Lakehouse & AI Glossary"
 description: "An integrated architecture that dynamically orchestrates dispersed data sources to deliver consistent capabilities across endpoints. Learn the architecture, mechanics, and real-world value of Data Fabric in the modern data stack."
 ---

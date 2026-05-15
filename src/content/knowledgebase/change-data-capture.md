@@ -1,5 +1,5 @@
 ---
-title: "What is Change Data Capture? The Definitive Guide"
+title: "What is Change Data Capture?"
 meta_title: "What is Change Data Capture? | Expert Data Lakehouse & AI Glossary"
 description: "A software design pattern identifying and tracking altered data so that immediate actions can respond using the updated information. Learn the architecture, mechanics, and real-world value of Change Data Capture in the modern data stack."
 ---

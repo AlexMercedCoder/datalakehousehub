@@ -1,5 +1,5 @@
 ---
-title: "What is Data Lake? The Definitive Guide"
+title: "What is Data Lake?"
 meta_title: "What is Data Lake? | Expert Data Lakehouse & AI Glossary"
 description: "A highly diverse unstructured foundational storage area securing vast informational volumes allowing analytical processing subsequently without limits. Learn the architecture, mechanics, and real-world value of Data Lake in the modern data stack."
 ---

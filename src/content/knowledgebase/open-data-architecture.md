@@ -1,5 +1,5 @@
 ---
-title: "What is Open Data Architecture? The Definitive Guide"
+title: "What is Open Data Architecture?"
 meta_title: "What is Open Data Architecture? | Expert Data Lakehouse & AI Glossary"
 description: "A philosophical and infrastructural pursuit ensuring technical tooling functions interchangeably upon un-siloed, accessible community file standards. Learn the architecture, mechanics, and real-world value of Open Data Architecture in the modern data stack."
 ---

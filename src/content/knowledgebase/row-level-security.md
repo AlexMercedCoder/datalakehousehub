@@ -1,5 +1,5 @@
 ---
-title: "What is Row-Level Security? The Definitive Guide"
+title: "What is Row-Level Security?"
 meta_title: "What is Row-Level Security? | Expert Data Lakehouse & AI Glossary"
 description: "A database protocol restricting access to specific records based on the attributes and authorization levels of the querying user. Learn the architecture, mechanics, and real-world value of Row-Level Security in the modern data stack."
 ---

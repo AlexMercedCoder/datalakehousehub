@@ -1,5 +1,5 @@
 ---
-title: "What is MinIO? The Definitive Guide"
+title: "What is MinIO?"
 meta_title: "What is MinIO? | Expert Data Lakehouse & AI Glossary"
 description: "A high-performance, S3-compatible object storage server designed for large-scale AI/ML and data lake applications. Learn the architecture, mechanics, and real-world value of MinIO in the modern data stack."
 ---

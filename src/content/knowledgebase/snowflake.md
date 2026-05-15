@@ -1,5 +1,5 @@
 ---
-title: "What is Snowflake? The Definitive Guide"
+title: "What is Snowflake?"
 meta_title: "What is Snowflake? | Expert Data Lakehouse & AI Glossary"
 description: "A fully managed cloud data platform that provides a unified architecture for data warehousing, data lakes, and data application development. Learn the architecture, mechanics, and real-world value of Snowflake in the modern data stack."
 ---

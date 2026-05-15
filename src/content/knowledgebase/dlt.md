@@ -1,5 +1,5 @@
 ---
-title: "What is dlt? The Definitive Guide"
+title: "What is dlt?"
 meta_title: "What is dlt? | Expert Data Lakehouse & AI Glossary"
 description: "Data Load Tool, an open-source Python library that simplifies building data pipelines to load data into lakes and warehouses. Learn the architecture, mechanics, and real-world value of dlt in the modern data stack."
 ---

@@ -1,5 +1,5 @@
 ---
-title: "What is Trino? The Definitive Guide"
+title: "What is Trino?"
 meta_title: "What is Trino? | Expert Data Lakehouse & AI Glossary"
 description: "A highly scalable distributed SQL query engine designed to query massive datasets across varied data sources. Learn the architecture, mechanics, and real-world value of Trino in the modern data stack."
 ---

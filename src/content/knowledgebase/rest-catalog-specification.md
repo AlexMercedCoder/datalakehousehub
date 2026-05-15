@@ -1,5 +1,5 @@
 ---
-title: "What is REST Catalog Specification? The Definitive Guide"
+title: "What is REST Catalog Specification?"
 meta_title: "What is REST Catalog Specification? | Expert Data Lakehouse & AI Glossary"
 description: "An open standard API defining how compute engines communicate consistently with Apache Iceberg catalogs. Learn the architecture, mechanics, and real-world value of REST Catalog Specification in the modern data stack."
 ---

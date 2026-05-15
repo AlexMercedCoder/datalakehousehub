@@ -1,5 +1,5 @@
 ---
-title: "What is Operational Analytics? The Definitive Guide"
+title: "What is Operational Analytics?"
 meta_title: "What is Operational Analytics? | Expert Data Lakehouse & AI Glossary"
 description: "The seamless integration driving real time informational analysis precisely supporting immediate frontline customer interactive business capabilities directly. Learn the architecture, mechanics, and real-world value of Operational Analytics in the modern data stack."
 ---

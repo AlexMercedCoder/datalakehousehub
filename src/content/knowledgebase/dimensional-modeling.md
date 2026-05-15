@@ -1,5 +1,5 @@
 ---
-title: "What is Dimensional Modeling? The Definitive Guide"
+title: "What is Dimensional Modeling?"
 meta_title: "What is Dimensional Modeling? | Expert Data Lakehouse & AI Glossary"
 description: "A database design technique tailored for data warehousing that optimizes data retrieval and intuitive business analysis. Learn the architecture, mechanics, and real-world value of Dimensional Modeling in the modern data stack."
 ---

@@ -1,5 +1,5 @@
 ---
-title: "What is AI Context Window? The Definitive Guide"
+title: "What is AI Context Window?"
 meta_title: "What is AI Context Window? | Expert Data Lakehouse & AI Glossary"
 description: "The maximum amount of text an artificial intelligence model can process and retain during a continuous evaluation sequence. Learn the architecture, mechanics, and real-world value of AI Context Window in the modern data stack."
 ---

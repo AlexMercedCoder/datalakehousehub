@@ -1,5 +1,5 @@
 ---
-title: "What is Kappa Architecture? The Definitive Guide"
+title: "What is Kappa Architecture?"
 meta_title: "What is Kappa Architecture? | Expert Data Lakehouse & AI Glossary"
 description: "A simplified data processing architecture where all data flows exclusively through a single streaming pipeline rather than separate batch and stream layers. Learn the architecture, mechanics, and real-world value of Kappa Architecture in the modern data stack."
 ---

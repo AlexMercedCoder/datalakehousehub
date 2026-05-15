@@ -1,5 +1,5 @@
 ---
-title: "What is Federated Data Access? The Definitive Guide"
+title: "What is Federated Data Access?"
 meta_title: "What is Federated Data Access? | Expert Data Lakehouse & AI Glossary"
 description: "A core capability enabling execution of cross-platform queries natively against independent data sources without moving underlying records. Learn the architecture, mechanics, and real-world value of Federated Data Access in the modern data stack."
 ---

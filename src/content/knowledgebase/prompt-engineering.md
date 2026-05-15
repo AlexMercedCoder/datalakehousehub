@@ -1,5 +1,5 @@
 ---
-title: "What is Prompt Engineering? The Definitive Guide"
+title: "What is Prompt Engineering?"
 meta_title: "What is Prompt Engineering? | Expert Data Lakehouse & AI Glossary"
 description: "The careful strategic preparation refining input requests explicitly directing generative artificial models delivering precisely required specific responses. Learn the architecture, mechanics, and real-world value of Prompt Engineering in the modern data stack."
 ---

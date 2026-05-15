@@ -1,5 +1,5 @@
 ---
-title: "What is MPP Architecture? The Definitive Guide"
+title: "What is MPP Architecture?"
 meta_title: "What is MPP Architecture? | Expert Data Lakehouse & AI Glossary"
 description: "Massively Parallel Processing distributes analytic operations across multiple servers communicating distinctly separated components simultaneously. Learn the architecture, mechanics, and real-world value of MPP Architecture in the modern data stack."
 ---

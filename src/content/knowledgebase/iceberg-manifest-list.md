@@ -1,5 +1,5 @@
 ---
-title: "What is Iceberg Manifest List? The Definitive Guide"
+title: "What is Iceberg Manifest List?"
 meta_title: "What is Iceberg Manifest List? | Expert Data Lakehouse & AI Glossary"
 description: "The hierarchical root component referencing all manifest files required for reconstructing a distinct snapshot interval. Learn the architecture, mechanics, and real-world value of Iceberg Manifest List in the modern data stack."
 ---

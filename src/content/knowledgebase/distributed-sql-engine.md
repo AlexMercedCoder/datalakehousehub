@@ -1,5 +1,5 @@
 ---
-title: "What is Distributed SQL Engine? The Definitive Guide"
+title: "What is Distributed SQL Engine?"
 meta_title: "What is Distributed SQL Engine? | Expert Data Lakehouse & AI Glossary"
 description: "A computation framework executing relational queries synchronously across an extensive cluster of interconnected computing nodes. Learn the architecture, mechanics, and real-world value of Distributed SQL Engine in the modern data stack."
 ---

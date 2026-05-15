@@ -1,5 +1,5 @@
 ---
-title: "What is Merge-On-Read? The Definitive Guide"
+title: "What is Merge-On-Read?"
 meta_title: "What is Merge-On-Read? | Expert Data Lakehouse & AI Glossary"
 description: "A table design storing modifications separately alongside original files resolving differences during output query compilation. Learn the architecture, mechanics, and real-world value of Merge-On-Read in the modern data stack."
 ---

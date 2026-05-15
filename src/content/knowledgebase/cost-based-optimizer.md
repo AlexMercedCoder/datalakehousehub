@@ -1,5 +1,5 @@
 ---
-title: "What is Cost-Based Optimizer? The Definitive Guide"
+title: "What is Cost-Based Optimizer?"
 meta_title: "What is Cost-Based Optimizer? | Expert Data Lakehouse & AI Glossary"
 description: "A mechanism evaluating multiple strategic execution plans attempting minimal resource utilization utilizing explicit statistical metadata. Learn the architecture, mechanics, and real-world value of Cost-Based Optimizer in the modern data stack."
 ---

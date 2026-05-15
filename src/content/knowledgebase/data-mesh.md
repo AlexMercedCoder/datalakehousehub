@@ -1,5 +1,5 @@
 ---
-title: "What is Data Mesh? The Definitive Guide"
+title: "What is Data Mesh?"
 meta_title: "What is Data Mesh? | Expert Data Lakehouse & AI Glossary"
 description: "A decentralized approach to analytics moving away from monolithic data warehouses to domain oriented data products. Learn the architecture, mechanics, and real-world value of Data Mesh in the modern data stack."
 ---

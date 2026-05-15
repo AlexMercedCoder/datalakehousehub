@@ -1,5 +1,5 @@
 ---
-title: "What is Streaming Analytics? The Definitive Guide"
+title: "What is Streaming Analytics?"
 meta_title: "What is Streaming Analytics? | Expert Data Lakehouse & AI Glossary"
 description: "An advanced structural implementation computing continuous changing occurrences instantly generating rapid proactive intelligent organizational decisions directly. Learn the architecture, mechanics, and real-world value of Streaming Analytics in the modern data stack."
 ---

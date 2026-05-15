@@ -1,5 +1,5 @@
 ---
-title: "What is Dictionary Encoding? The Definitive Guide"
+title: "What is Dictionary Encoding?"
 meta_title: "What is Dictionary Encoding? | Expert Data Lakehouse & AI Glossary"
 description: "A compression technique replacing repetitive high-cardinality values with small integer keys referencing a lookup dictionary. Learn the architecture, mechanics, and real-world value of Dictionary Encoding in the modern data stack."
 ---

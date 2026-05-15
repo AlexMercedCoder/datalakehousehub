@@ -1,5 +1,5 @@
 ---
-title: "What is Weaviate? The Definitive Guide"
+title: "What is Weaviate?"
 meta_title: "What is Weaviate? | Expert Data Lakehouse & AI Glossary"
 description: "An open-source vector database that stores both objects and vectors, allowing for combining vector search with structured filtering. Learn the architecture, mechanics, and real-world value of Weaviate in the modern data stack."
 ---

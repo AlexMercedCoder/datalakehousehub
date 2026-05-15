@@ -1,5 +1,5 @@
 ---
-title: "What is Z-Ordering? The Definitive Guide"
+title: "What is Z-Ordering?"
 meta_title: "What is Z-Ordering? | Expert Data Lakehouse & AI Glossary"
 description: "A technique used to cluster multidimensional data to significantly improve the performance of read operations. Learn the architecture, mechanics, and real-world value of Z-Ordering in the modern data stack."
 ---

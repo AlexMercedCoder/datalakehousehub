@@ -1,5 +1,5 @@
 ---
-title: "What is Delta Lake? The Definitive Guide"
+title: "What is Delta Lake?"
 meta_title: "What is Delta Lake? | Expert Data Lakehouse & AI Glossary"
 description: "An open source storage layer that brings ACID transactions and scalable metadata handling to Apache Spark and other engines. Learn the architecture, mechanics, and real-world value of Delta Lake in the modern data stack."
 ---

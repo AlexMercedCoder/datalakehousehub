@@ -1,5 +1,5 @@
 ---
-title: "What is Write-Audit-Publish? The Definitive Guide"
+title: "What is Write-Audit-Publish?"
 meta_title: "What is Write-Audit-Publish? | Expert Data Lakehouse & AI Glossary"
 description: "A data engineering pattern where data is written to a hidden branch, validated, and then published to production. Learn the architecture, mechanics, and real-world value of Write-Audit-Publish in the modern data stack."
 ---

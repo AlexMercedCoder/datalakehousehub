@@ -1,5 +1,5 @@
 ---
-title: "What is Role-Based Access Control? The Definitive Guide"
+title: "What is Role-Based Access Control?"
 meta_title: "What is Role-Based Access Control? | Expert Data Lakehouse & AI Glossary"
 description: "An approach to security restricting system access based on the specialized responsibilities assigned to individual users. Learn the architecture, mechanics, and real-world value of Role-Based Access Control in the modern data stack."
 ---

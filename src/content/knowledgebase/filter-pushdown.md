@@ -1,5 +1,5 @@
 ---
-title: "What is Filter Pushdown? The Definitive Guide"
+title: "What is Filter Pushdown?"
 meta_title: "What is Filter Pushdown? | Expert Data Lakehouse & AI Glossary"
 description: "A performance enhancement moving preliminary filtering processes extremely close toward original data files minimizing computational network loads. Learn the architecture, mechanics, and real-world value of Filter Pushdown in the modern data stack."
 ---

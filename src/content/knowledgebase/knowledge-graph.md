@@ -1,5 +1,5 @@
 ---
-title: "What is Knowledge Graph? The Definitive Guide"
+title: "What is Knowledge Graph?"
 meta_title: "What is Knowledge Graph? | Expert Data Lakehouse & AI Glossary"
 description: "A semantic network representing relationships and entities to provide structured and robust contexts for data algorithms. Learn the architecture, mechanics, and real-world value of Knowledge Graph in the modern data stack."
 ---

@@ -1,5 +1,5 @@
 ---
-title: "What is Fivetran? The Definitive Guide"
+title: "What is Fivetran?"
 meta_title: "What is Fivetran? | Expert Data Lakehouse & AI Glossary"
 description: "A fully managed automated data movement platform designed to securely centralize data from disparate sources. Learn the architecture, mechanics, and real-world value of Fivetran in the modern data stack."
 ---

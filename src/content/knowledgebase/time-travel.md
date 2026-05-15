@@ -1,5 +1,5 @@
 ---
-title: "What is Time Travel? The Definitive Guide"
+title: "What is Time Travel?"
 meta_title: "What is Time Travel? | Expert Data Lakehouse & AI Glossary"
 description: "An analytical capability allowing structured queries to access table versions matching distinct historic operational timestamps. Learn the architecture, mechanics, and real-world value of Time Travel in the modern data stack."
 ---
