@@ -12,25 +12,25 @@ An Apache Incubator project allowing users to omni-directionally translate metad
 
 To understand the practical application of Apache XTable, it helps to systematically examine its fundamental operational behaviors:
 
-* **Utilizes open table formats to provide complete ACID transactional compliance directly on top of massive, raw cloud object storage.**
-* **Maintains an explicit hierarchical tree of metadata manifests to track exact file states and enable precise time-travel querying.**
-* **Decouples the physical storage layout from the logical table structure using techniques like hidden partitioning.**
+* **Acts as a lightweight metadata translation layer without duplicating or rewriting underlying data files.**
+* **Enables bi-directional or omni-directional synchronization between different table formats.**
+* **Supports both incremental and full sync modes for flexible performance tuning.**
 
 Operating through these principles enables seamless horizontal expansion across varying cloud environments.
 
 ### Why It Matters
 
-The open lakehouse structure eliminates vendor lock-in and drastically reduces storage costs by allowing any compatible distributed engine to query the exact same massive datasets without requiring duplication.
+Eliminates vendor lock-in and reduces storage costs by allowing data to be written once and queried everywhere across disparate analytics engines.
 
 For modern enterprises managing decentralized teams, the implementation of Apache XTable eliminates significant friction. Teams are explicitly empowered to operate autonomously against reliable technical foundations without dynamically disrupting other isolated workflows.
 
 ### Frequently Asked Questions
 
-**What makes a Lakehouse different from a Data Lake?**
-A standard data lake is just a collection of files. A lakehouse adds a metadata layer that provides warehouse-like features (transactions, schema enforcement) directly to those files.
+**Does this require rewriting the actual data files?**
+No, it exclusively translates the metadata layer (e.g., schemas, partitioning) while leaving the massive Parquet data files untouched.
 
-**Why use an Open Table Format?**
-Open formats like Apache Iceberg ensure that your data is not trapped inside a proprietary database ecosystem; it remains universally accessible.
+**Which formats are typically supported?**
+Currently, the major formats supported include Apache Iceberg, Apache Hudi, and Delta Lake, with extensible modular designs for future formats.
 
 **How does Apache XTable impact data governance?**
 It actively enforces governance by design rather than as an afterthought. Native logging and structured access pathways provide immediate visibility into security boundaries and regulatory compliance.

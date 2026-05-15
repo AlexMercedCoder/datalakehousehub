@@ -12,25 +12,25 @@ Data processing workflows producing the exact same result no matter how many tim
 
 To understand the practical application of Idempotent Pipelines, it helps to systematically examine its fundamental operational behaviors:
 
-* **Abstracts complicated physical data into logical organizational representations.**
-* **Establishes a single source of truth across the operational infrastructure.**
-* **Implements programmatic interfaces designed specifically for diverse endpoint integrations.**
+* **Provides a centralized control plane to define, schedule, and monitor complex computational workflows.**
+* **Structures tasks as Directed Acyclic Graphs (DAGs) to ensure explicit execution dependencies.**
+* **Integrates natively with alerting systems to manage retries and isolate failure states automatically.**
 
 Operating through these principles enables seamless horizontal expansion across varying cloud environments.
 
 ### Why It Matters
 
-Implementing a standard across the architecture ensures compliance, scalability, and simplified onboarding for new components. It actively prevents redundant data silos from accumulating over time.
+By decoupling workflow scheduling from the actual computation engines, orchestration tools allow data engineering teams to scale pipeline complexity reliably without losing observability.
 
 For modern enterprises managing decentralized teams, the implementation of Idempotent Pipelines eliminates significant friction. Teams are explicitly empowered to operate autonomously against reliable technical foundations without dynamically disrupting other isolated workflows.
 
 ### Frequently Asked Questions
 
-**How difficult is implementation?**
-Implementation complexity depends directly on existing infrastructure debt, but generally follows an incremental adoption pattern to mitigate risk.
+**Does an orchestrator process data directly?**
+Typically no. Orchestrators trigger and monitor jobs that run on external computation engines like Spark or Snowflake.
 
-**Is it required for modern analytics?**
-While not strictly required for basic reporting, it is considered fundamentally necessary for advanced operations like machine learning.
+**Why use an orchestrator instead of chron jobs?**
+Orchestrators provide essential features like dependency mapping, backfilling, state management, and visual monitoring that simple chron schedulers lack.
 
 **How does Idempotent Pipelines impact data governance?**
 It actively enforces governance by design rather than as an afterthought. Native logging and structured access pathways provide immediate visibility into security boundaries and regulatory compliance.

@@ -13,21 +13,21 @@ An open standard for metadata and lineage collection designed to instrument data
 To understand the practical application of OpenLineage, it helps to systematically examine its fundamental operational behaviors:
 
 * **Centralizes metadata to construct a comprehensive map of all corporate data assets and their hierarchical relationships.**
-* **Tracks explicit data lineage to show exactly how datasets evolve through complex transformation pipelines.**
+* **Applies granular access controls dynamically, masking or restricting data based on user identity or geographical constraints.**
 * **Implements automated profiling and assertions to block bad data before it impacts downstream dashboards.**
 
 Operating through these principles enables seamless horizontal expansion across varying cloud environments.
 
 ### Why It Matters
 
-Robust governance protects the business from compliance violations while simultaneously increasing internal trust in the data, ensuring analysts aren't querying broken or inaccurate tables.
+Robust governance protects the business from compliance violations and internal breaches while simultaneously increasing internal trust in the data.
 
 For modern enterprises managing decentralized teams, the implementation of OpenLineage eliminates significant friction. Teams are explicitly empowered to operate autonomously against reliable technical foundations without dynamically disrupting other isolated workflows.
 
 ### Frequently Asked Questions
 
-**Why is data lineage important?**
-Lineage allows engineers to perform root-cause analysis when a dashboard breaks by tracing the error back to the specific upstream pipeline that failed.
+**What is Row-Level Security (RLS)?**
+RLS is a database policy that automatically filters out rows (e.g., regional sales data) that the querying user is not authorized to see, without requiring separate views.
 
 **What is active data governance?**
 Active governance uses programmatic controls (like blocking a PR if data tests fail) rather than relying on manual, periodic audits.

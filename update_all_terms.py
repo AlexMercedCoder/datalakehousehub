@@ -276,7 +276,7 @@ matrix = {
         ]
     },
     "Interoperability & Translation": {
-        "keywords": ["onetable", "interoperability", "translation", "omni-directional"],
+        "keywords": ["onetable", "xtable", "interoperability", "translation", "omni-directional"],
         "mechanics": [
             "Acts as a lightweight metadata translation layer without duplicating or rewriting underlying data files.",
             "Enables bi-directional or omni-directional synchronization between different table formats.",
@@ -289,7 +289,7 @@ matrix = {
         ]
     },
     "Data Orchestration": {
-        "keywords": ["airflow", "dagster", "prefect", "mage", "pipeline orchestration", "dag"],
+        "keywords": ["airflow", "dagster", "prefect", "mage", "pipeline orchestration", "dag", "directed acyclic graph", "workflow", "idempotent"],
         "mechanics": [
             "Provides a centralized control plane to define, schedule, and monitor complex computational workflows.",
             "Structures tasks as Directed Acyclic Graphs (DAGs) to ensure explicit execution dependencies.",
@@ -302,7 +302,7 @@ matrix = {
         ]
     },
     "Distributed Query Engines": {
-        "keywords": ["spark", "trino", "presto", "snowflake", "bigquery", "clickhouse", "duckdb", "doris", "starrocks", "druid", "pinot", "datafusion", "sql", "vectorized", "pushdown", "query planning"],
+        "keywords": ["spark", "trino", "presto", "snowflake", "bigquery", "clickhouse", "duckdb", "motherduck", "doris", "starrocks", "druid", "pinot", "datafusion", "sql", "vectorized", "pushdown", "query planning", "mpp", "optimizer", "zero-copy", "compute layer"],
         "mechanics": [
             "Distributes incoming query execution plans synchronously across extensive clusters of interconnected computing nodes.",
             "Utilizes vectorized execution to process entire columns of memory rather than iterating row-by-row.",
@@ -314,8 +314,21 @@ matrix = {
             {"q": "What is vectorized execution?", "a": "It is an engineering optimization that groups data into CPU cache-friendly blocks, immensely speeding up analytical operations."}
         ]
     },
+    "Semantic Layer & Analytics": {
+        "keywords": ["semantic layer", "metric", "glossary", "headless", "virtualization", "ontology", "superset", "dashboard", "bi", "analytics engineering", "dbt", "operational analytics"],
+        "mechanics": [
+            "Abstracts complex, underlying physical tables into intuitive, business-friendly terms and dimensional models.",
+            "Ensures calculation consistency (like 'Annual Recurring Revenue') across all downstream dashboarding and AI tools.",
+            "Caches common aggregations to massively accelerate analytical dashboard load times."
+        ],
+        "value": "By introducing a semantic layer, organizations establish a single source of truth. It prevents different departments from arriving at conflicting numbers simply because they queried different tables or wrote different SQL logic.",
+        "faqs": [
+            {"q": "How does this differ from traditional BI?", "a": "Traditional BI locks the business logic inside the specific dashboard tool (like Tableau). A semantic layer sits *before* the BI tool, allowing any application to access the same logic."},
+            {"q": "Is dbt considered a semantic layer?", "a": "dbt is primarily a transformation tool, but it includes robust semantic layer features to define metrics and entities directly alongside the transformation code."}
+        ]
+    },
     "Streaming Architecture": {
-        "keywords": ["kafka", "pulsar", "redpanda", "confluent", "flink", "paimon", "fluss", "streaming", "event sourcing", "cdc", "debezium", "continuous", "micro-batching"],
+        "keywords": ["kafka", "pulsar", "redpanda", "confluent", "flink", "paimon", "fluss", "streaming", "event sourcing", "cdc", "change data capture", "debezium", "continuous", "micro-batching"],
         "mechanics": [
             "Ingests and processes data continuously in an unbounded stream rather than waiting for discrete batch intervals.",
             "Maintains exactly-once or at-least-once processing guarantees through distributed commit logs and offset tracking.",
@@ -340,21 +353,21 @@ matrix = {
             {"q": "What is Reverse ETL?", "a": "Reverse ETL is the process of extracting calculated insights from the data warehouse and syncing them back out into operational tools like Salesforce or Hubspot."}
         ]
     },
-    "Data Governance & Quality": {
-        "keywords": ["soda", "great expectations", "collibra", "alation", "amundsen", "datahub", "metastore", "openlineage", "marquez", "gravitino", "lineage", "rbac", "cls", "rls", "stewardship", "audit"],
+    "Data Governance, Security & Quality": {
+        "keywords": ["soda", "great expectations", "collibra", "alation", "amundsen", "datahub", "metastore", "openlineage", "marquez", "gravitino", "lineage", "rbac", "role-based", "cls", "column-level", "rls", "row-level", "stewardship", "audit", "governance", "observability", "contract", "federated identity", "compliance"],
         "mechanics": [
             "Centralizes metadata to construct a comprehensive map of all corporate data assets and their hierarchical relationships.",
-            "Tracks explicit data lineage to show exactly how datasets evolve through complex transformation pipelines.",
+            "Applies granular access controls dynamically, masking or restricting data based on user identity or geographical constraints.",
             "Implements automated profiling and assertions to block bad data before it impacts downstream dashboards."
         ],
-        "value": "Robust governance protects the business from compliance violations while simultaneously increasing internal trust in the data, ensuring analysts aren't querying broken or inaccurate tables.",
+        "value": "Robust governance protects the business from compliance violations and internal breaches while simultaneously increasing internal trust in the data.",
         "faqs": [
-            {"q": "Why is data lineage important?", "a": "Lineage allows engineers to perform root-cause analysis when a dashboard breaks by tracing the error back to the specific upstream pipeline that failed."},
+            {"q": "What is Row-Level Security (RLS)?", "a": "RLS is a database policy that automatically filters out rows (e.g., regional sales data) that the querying user is not authorized to see, without requiring separate views."},
             {"q": "What is active data governance?", "a": "Active governance uses programmatic controls (like blocking a PR if data tests fail) rather than relying on manual, periodic audits."}
         ]
     },
     "Architectural Data Patterns": {
-        "keywords": ["medallion", "bronze", "silver", "gold", "lambda", "kappa", "scd", "dimension", "fact", "schema", "data product", "mesh", "fabric", "vault"],
+        "keywords": ["medallion", "bronze", "silver", "gold", "lambda", "kappa", "scd", "dimension", "fact", "schema", "data product", "mesh", "fabric", "vault", "gravity", "open data", "data warehouse"],
         "mechanics": [
             "Organizes data logically into distinct tiers of refinement, from raw ingestion to pristine business presentation.",
             "Applies structural methodologies (like Star Schemas or Data Vaults) to ensure tables are optimized for specific types of BI querying.",
@@ -380,7 +393,7 @@ matrix = {
         ]
     },
     "Agentic AI Frameworks": {
-        "keywords": ["langchain", "llamaindex", "dspy", "agentic", "llm", "reasoning", "tool calling", "prompt", "zero-shot", "few-shot", "react", "thought", "caching", "window"],
+        "keywords": ["langchain", "llamaindex", "dspy", "agentic", "llm", "reasoning", "tool calling", "prompt", "zero-shot", "few-shot", "react", "thought", "caching", "window", "language model", "retrieval-augmented", "engine optimization", "knowledge graph", "autonomous", "fine-tuning"],
         "mechanics": [
             "Orchestrates complex cognitive loops where an AI determines steps, calls external tools, and evaluates results autonomously.",
             "Manages and compresses vast amounts of historical context to fit within the strict memory constraints of the model's context window.",
@@ -392,8 +405,21 @@ matrix = {
             {"q": "What is the ReAct framework?", "a": "ReAct stands for Reason and Act; it is a prompting paradigm that forces the model to articulate its thought process before taking an external action."}
         ]
     },
+    "System Concepts & Optimizations": {
+        "keywords": ["materialized view", "views", "cqrs", "locality", "spill", "bloom", "run-length", "dictionary encoding", "late materialization", "columnar format", "arrow"],
+        "mechanics": [
+            "Pre-computes or intelligently caches data to avoid redundant processing on recurrent queries.",
+            "Re-organizes data deeply at the memory level (e.g., Apache Arrow) to fit CPU caches perfectly.",
+            "Maintains aggressive probabilistic structures (like Bloom Filters) to immediately skip reading irrelevant data partitions."
+        ],
+        "value": "These highly technical optimizations ensure that systems can handle multi-terabyte queries within seconds. Without them, even the most robust architectures would collapse under I/O bottlenecks.",
+        "faqs": [
+            {"q": "Why is Columnar Format superior for analytics?", "a": "Unlike row-based formats (like CSV or JSON), columnar formats store all values of a single column contiguously. This allows queries calculating averages or sums to read *only* the specific column they need, rather than loading the entire table."},
+            {"q": "What is Late Materialization?", "a": "It is an optimization where the engine delays fetching full record details from storage until *after* all heavy filters and joins are complete, drastically reducing memory overhead."}
+        ]
+    },
     "Lakehouse & Open Storage": {
-        "keywords": ["lakehouse", "iceberg", "hudi", "delta", "storage", "manifest", "partition", "snapshot", "z-ordering", "compaction", "catalog", "nessie", "wap", "deletes", "puffin", "orc", "avro", "parquet", "xtable", "minio"],
+        "keywords": ["lakehouse", "data lake", "iceberg", "hudi", "delta", "storage", "manifest", "partition", "snapshot", "z-ordering", "compaction", "catalog", "nessie", "wap", "deletes", "puffin", "orc", "avro", "parquet", "minio", "time travel", "copy-on", "merge-on", "concurrency", "open table format", "transactional layer", "kudu", "vortex", "lance"],
         "mechanics": [
             "Utilizes open table formats to provide complete ACID transactional compliance directly on top of massive, raw cloud object storage.",
             "Maintains an explicit hierarchical tree of metadata manifests to track exact file states and enable precise time-travel querying.",
