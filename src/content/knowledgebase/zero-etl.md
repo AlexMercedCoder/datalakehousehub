@@ -12,25 +12,25 @@ An architectural goal seeking to connect operational databases directly to analy
 
 To understand the practical application of Zero-ETL, it helps to systematically examine its fundamental operational behaviors:
 
-* **Decouples storage from compute, allowing independent scaling of resources.**
-* **Utilizes open table formats to maintain ACID compliance on massive raw datasets.**
-* **Maintains metadata locally or in integrated catalogs to manage point-in-time access.**
+* **Automates the extraction of raw data from myriad SaaS applications, databases, and third-party APIs.**
+* **Standardizes and normalizes extracted data before loading it into a centralized warehouse or lakehouse.**
+* **Relies on idempotent operations so that repeated syncs do not result in duplicated records.**
 
 Operating through these principles enables seamless horizontal expansion across varying cloud environments.
 
 ### Why It Matters
 
-By relying on open standards and decoupled architecture, organizations significantly reduce total cost of ownership. It prevents vendor lock-in while preserving data integrity during parallel execution processes.
+Automated integration removes the heavy burden of manually writing and maintaining fragile API extraction scripts, allowing teams to focus on analytical engineering.
 
 For modern enterprises managing decentralized teams, the implementation of Zero-ETL eliminates significant friction. Teams are explicitly empowered to operate autonomously against reliable technical foundations without dynamically disrupting other isolated workflows.
 
 ### Frequently Asked Questions
 
-**How does it compare to a traditional data warehouse?**
-It provides similar data management capabilities and atomicity but operates directly on accessible, low-cost cloud object storage.
+**What is the shift from ETL to ELT?**
+Modern cloud warehouses are powerful enough to handle transformations natively. Thus, data is Extracted and Loaded first, then Transformed in place (ELT).
 
-**Is this approach compatible with open-source systems?**
-Yes, a fundamental principle of this design is seamless interoperability with tools like Apache Spark, Apache Flink, and Dremio.
+**What is Reverse ETL?**
+Reverse ETL is the process of extracting calculated insights from the data warehouse and syncing them back out into operational tools like Salesforce or Hubspot.
 
 **How does Zero-ETL impact data governance?**
 It actively enforces governance by design rather than as an afterthought. Native logging and structured access pathways provide immediate visibility into security boundaries and regulatory compliance.

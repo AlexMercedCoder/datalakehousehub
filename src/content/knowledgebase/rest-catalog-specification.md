@@ -12,25 +12,25 @@ An open standard API defining how compute engines communicate consistently with 
 
 To understand the practical application of REST Catalog Specification, it helps to systematically examine its fundamental operational behaviors:
 
-* **Decouples storage from compute, allowing independent scaling of resources.**
-* **Utilizes open table formats to maintain ACID compliance on massive raw datasets.**
-* **Maintains metadata locally or in integrated catalogs to manage point-in-time access.**
+* **Utilizes open table formats to provide complete ACID transactional compliance directly on top of massive, raw cloud object storage.**
+* **Maintains an explicit hierarchical tree of metadata manifests to track exact file states and enable precise time-travel querying.**
+* **Decouples the physical storage layout from the logical table structure using techniques like hidden partitioning.**
 
 Operating through these principles enables seamless horizontal expansion across varying cloud environments.
 
 ### Why It Matters
 
-By relying on open standards and decoupled architecture, organizations significantly reduce total cost of ownership. It prevents vendor lock-in while preserving data integrity during parallel execution processes.
+The open lakehouse structure eliminates vendor lock-in and drastically reduces storage costs by allowing any compatible distributed engine to query the exact same massive datasets without requiring duplication.
 
 For modern enterprises managing decentralized teams, the implementation of REST Catalog Specification eliminates significant friction. Teams are explicitly empowered to operate autonomously against reliable technical foundations without dynamically disrupting other isolated workflows.
 
 ### Frequently Asked Questions
 
-**How does it compare to a traditional data warehouse?**
-It provides similar data management capabilities and atomicity but operates directly on accessible, low-cost cloud object storage.
+**What makes a Lakehouse different from a Data Lake?**
+A standard data lake is just a collection of files. A lakehouse adds a metadata layer that provides warehouse-like features (transactions, schema enforcement) directly to those files.
 
-**Is this approach compatible with open-source systems?**
-Yes, a fundamental principle of this design is seamless interoperability with tools like Apache Spark, Apache Flink, and Dremio.
+**Why use an Open Table Format?**
+Open formats like Apache Iceberg ensure that your data is not trapped inside a proprietary database ecosystem; it remains universally accessible.
 
 **How does REST Catalog Specification impact data governance?**
 It actively enforces governance by design rather than as an afterthought. Native logging and structured access pathways provide immediate visibility into security boundaries and regulatory compliance.

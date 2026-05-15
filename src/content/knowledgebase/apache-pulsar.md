@@ -12,25 +12,25 @@ A cloud-native, distributed messaging and streaming platform designed for massiv
 
 To understand the practical application of Apache Pulsar, it helps to systematically examine its fundamental operational behaviors:
 
-* **Structures logical pipelines into independent execution blocks with clear dependencies.**
-* **Optimizes network overhead by applying constraints and filters exceptionally close to the data source.**
-* **Pre-allocates computational memory efficiently utilizing column-oriented structural designs.**
+* **Ingests and processes data continuously in an unbounded stream rather than waiting for discrete batch intervals.**
+* **Maintains exactly-once or at-least-once processing guarantees through distributed commit logs and offset tracking.**
+* **Captures row-level modifications instantaneously from source databases using Change Data Capture (CDC).**
 
 Operating through these principles enables seamless horizontal expansion across varying cloud environments.
 
 ### Why It Matters
 
-Optimized execution reduces the necessary computational overhead drastically. This enables analytic scaling that easily grows alongside exponential increases in data creation without proportional cost scaling.
+Streaming architecture enables near real-time operational analytics and responsive event-driven applications, allowing organizations to act on data the moment it is generated.
 
 For modern enterprises managing decentralized teams, the implementation of Apache Pulsar eliminates significant friction. Teams are explicitly empowered to operate autonomously against reliable technical foundations without dynamically disrupting other isolated workflows.
 
 ### Frequently Asked Questions
 
-**What is the primary benefit of this processing methodology?**
-It minimizes I/O bottlenecks and data movement, prioritizing pure transformation and retrieval speeds.
+**What is the difference between batch and stream processing?**
+Batch processing runs on historical, bounded datasets on a schedule, whereas stream processing acts on infinite, continuous data as it arrives.
 
-**Does it support real-time data environments?**
-Yes, it is routinely implemented in streaming architecture to enable near-instant analytical capabilities.
+**Does streaming replace batch analytics entirely?**
+Not usually. Many architectures use streaming for immediate operational insights while relying on batch processes for massive historical aggregations.
 
 **How does Apache Pulsar impact data governance?**
 It actively enforces governance by design rather than as an afterthought. Native logging and structured access pathways provide immediate visibility into security boundaries and regulatory compliance.

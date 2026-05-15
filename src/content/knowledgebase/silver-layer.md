@@ -12,25 +12,25 @@ The intermediate layer of a medallion architecture where raw data is filtered, c
 
 To understand the practical application of Silver Layer, it helps to systematically examine its fundamental operational behaviors:
 
-* **Structures logical pipelines into independent execution blocks with clear dependencies.**
-* **Optimizes network overhead by applying constraints and filters exceptionally close to the data source.**
-* **Pre-allocates computational memory efficiently utilizing column-oriented structural designs.**
+* **Organizes data logically into distinct tiers of refinement, from raw ingestion to pristine business presentation.**
+* **Applies structural methodologies (like Star Schemas or Data Vaults) to ensure tables are optimized for specific types of BI querying.**
+* **Manages historical modifications gracefully using established paradigms like Slowly Changing Dimensions (SCD).**
 
 Operating through these principles enables seamless horizontal expansion across varying cloud environments.
 
 ### Why It Matters
 
-Optimized execution reduces the necessary computational overhead drastically. This enables analytic scaling that easily grows alongside exponential increases in data creation without proportional cost scaling.
+Establishing strict architectural patterns prevents the data lake from devolving into a 'data swamp', guaranteeing that users know exactly where to find reliable, validated information.
 
 For modern enterprises managing decentralized teams, the implementation of Silver Layer eliminates significant friction. Teams are explicitly empowered to operate autonomously against reliable technical foundations without dynamically disrupting other isolated workflows.
 
 ### Frequently Asked Questions
 
-**What is the primary benefit of this processing methodology?**
-It minimizes I/O bottlenecks and data movement, prioritizing pure transformation and retrieval speeds.
+**What is the Medallion Architecture?**
+It is a logical layout dividing the lakehouse into Bronze (raw), Silver (cleansed), and Gold (business-ready) tables.
 
-**Does it support real-time data environments?**
-Yes, it is routinely implemented in streaming architecture to enable near-instant analytical capabilities.
+**What are Slowly Changing Dimensions?**
+SCDs are structural techniques used to retain historical states of a record (like tracking an employee's previous job titles) rather than simply overwriting old data.
 
 **How does Silver Layer impact data governance?**
 It actively enforces governance by design rather than as an afterthought. Native logging and structured access pathways provide immediate visibility into security boundaries and regulatory compliance.

@@ -12,25 +12,25 @@ An open-source data quality and observability platform that allows teams to dete
 
 To understand the practical application of Soda, it helps to systematically examine its fundamental operational behaviors:
 
-* **Structures logical pipelines into independent execution blocks with clear dependencies.**
-* **Optimizes network overhead by applying constraints and filters exceptionally close to the data source.**
-* **Pre-allocates computational memory efficiently utilizing column-oriented structural designs.**
+* **Centralizes metadata to construct a comprehensive map of all corporate data assets and their hierarchical relationships.**
+* **Tracks explicit data lineage to show exactly how datasets evolve through complex transformation pipelines.**
+* **Implements automated profiling and assertions to block bad data before it impacts downstream dashboards.**
 
 Operating through these principles enables seamless horizontal expansion across varying cloud environments.
 
 ### Why It Matters
 
-Optimized execution reduces the necessary computational overhead drastically. This enables analytic scaling that easily grows alongside exponential increases in data creation without proportional cost scaling.
+Robust governance protects the business from compliance violations while simultaneously increasing internal trust in the data, ensuring analysts aren't querying broken or inaccurate tables.
 
 For modern enterprises managing decentralized teams, the implementation of Soda eliminates significant friction. Teams are explicitly empowered to operate autonomously against reliable technical foundations without dynamically disrupting other isolated workflows.
 
 ### Frequently Asked Questions
 
-**What is the primary benefit of this processing methodology?**
-It minimizes I/O bottlenecks and data movement, prioritizing pure transformation and retrieval speeds.
+**Why is data lineage important?**
+Lineage allows engineers to perform root-cause analysis when a dashboard breaks by tracing the error back to the specific upstream pipeline that failed.
 
-**Does it support real-time data environments?**
-Yes, it is routinely implemented in streaming architecture to enable near-instant analytical capabilities.
+**What is active data governance?**
+Active governance uses programmatic controls (like blocking a PR if data tests fail) rather than relying on manual, periodic audits.
 
 **How does Soda impact data governance?**
 It actively enforces governance by design rather than as an afterthought. Native logging and structured access pathways provide immediate visibility into security boundaries and regulatory compliance.
