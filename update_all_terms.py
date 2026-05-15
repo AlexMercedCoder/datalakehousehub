@@ -161,6 +161,15 @@ terms = {
         ("Apache Flink", "An incredibly powerful open-source stream processing framework engineered for stateful computations over unbounded data streams."),
         ("dbt", "Data Build Tool, a popular transformation workflow that enables data analysts and engineers to execute SQL-based ELT."),
         ("Apache Superset", "An enterprise-ready business intelligence web application designed to visually explore and present massive data volumes.")
+    ],
+    "Emerging Data Ecosystems": [
+        ("Apache DataFusion", "An extensible query execution framework written in Rust that uses Apache Arrow as its in-memory format for building high-performance data systems."),
+        ("Apache Paimon", "A streaming data lake platform supporting high-speed data ingestion, change data capture, and real-time analytics."),
+        ("Apache Fluss", "A streaming storage engine that is optimized for real-time analytics and continuous streaming workloads.")
+    ],
+    "Advanced File Formats": [
+        ("Vortex File Format", "A modern, highly-compressed, and extremely fast columnar file format specifically optimized for analytical queries and vector processing."),
+        ("Lance File Format", "A columnar data format optimized for machine learning and AI, offering much faster vector search capabilities compared to traditional formats like Parquet.")
     ]
 }
 
@@ -206,7 +215,7 @@ matrix = {
         ]
     },
     "Data Engineering & Query": {
-        "keywords": ["etl", "elt", "pipeline", "dag", "schema", "cdc", "query", "sql", "vectorized", "arrow", "parquet", "pushdown", "dbt", "batch", "product", "analytics", "dimension"],
+        "keywords": ["etl", "elt", "pipeline", "dag", "schema", "cdc", "query", "sql", "vectorized", "arrow", "parquet", "pushdown", "dbt", "batch", "product", "analytics", "dimension", "datafusion", "paimon", "fluss", "vortex", "lance"],
         "mechanics": [
             "Structures logical pipelines into independent execution blocks with clear dependencies.",
             "Optimizes network overhead by applying constraints and filters exceptionally close to the data source.",
