@@ -28,11 +28,11 @@ The economic model of serverless computing is revolutionary. Organizations do no
 
 Serverless computing has aggressively expanded beyond simple Python scripts into massive analytical engines. 
 
-Platforms like Amazon Athena, Google BigQuery, and Dremio Cloud operate as fully Serverless Query Engines. A business analyst connects their dashboard to the platform and executes a massively complex SQL query against petabytes of Apache Iceberg data. The serverless engine analyzes the query, instantly provisions a massive, invisible distributed compute cluster in the background, executes the `JOIN` in three seconds, returns the data, and evaporates the cluster. The analyst experiences infinite, instant compute power without ever configuring a single node.
+Platforms like Amazon Athena, Google BigQuery, and Dremio Cloud operate as fully Serverless Query Engines. A business analyst connects their dashboard to the platform and executes a massively complex SQL query against petabytes of [Apache Iceberg](/apache-iceberg) data. The serverless engine analyzes the query, instantly provisions a massive, invisible distributed compute cluster in the background, executes the `JOIN` in three seconds, returns the data, and evaporates the cluster. The analyst experiences infinite, instant compute power without ever configuring a single node.
 
 ## Summary of Technical Value
 
 Serverless Computing represents the ultimate optimization of engineering resources. By completely abstracting the physical infrastructure layer, it allows data engineers to focus 100% of their time on writing business logic and optimizing data pipelines. It guarantees infinite, instant scalability to handle massive traffic spikes, and provides a ruthlessly efficient economic model that entirely eliminates the cost of idle servers.
 
 ## Learn More
-To learn more about the Data Lakehouse, read the book "Lakehouse for Everyone" by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).
+To learn more about the [Data Lakehouse](/data-lakehouse), read the book "Lakehouse for Everyone" by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

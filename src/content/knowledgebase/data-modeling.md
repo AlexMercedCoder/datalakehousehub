@@ -6,7 +6,7 @@ description: "A comprehensive guide to Data Modeling. Learn how conceptual, logi
 
 # What is Data Modeling?
 
-Data Modeling is the highly rigorous architectural discipline of visualizing, defining, and structuring the complex mathematical relationships between different entities of data within an enterprise. It is the absolute foundational blueprint of data engineering. Just as a civil engineer would never attempt to build a skyscraper by blindly pouring concrete without a detailed architectural schematic, a data engineer must never attempt to build a Data Lakehouse without a strict, highly validated Data Model.
+Data Modeling is the highly rigorous architectural discipline of visualizing, defining, and structuring the complex mathematical relationships between different entities of data within an enterprise. It is the absolute foundational blueprint of data engineering. Just as a civil engineer would never attempt to build a skyscraper by blindly pouring concrete without a detailed architectural schematic, a data engineer must never attempt to build a [Data Lakehouse](/data-lakehouse) without a strict, highly validated Data Model.
 
 Raw data extracted from operational systems (like a massive dump of JSON logs from a web server) is structurally chaotic and completely useless to a business executive. Data Modeling is the process of translating that chaos into organized, business-readable entities. It explicitly defines exactly what a "Customer" is, exactly how a "Customer" relates to a "Purchase", and exactly what data types (e.g., String, Integer, Timestamp) are permitted to represent those interactions. 
 

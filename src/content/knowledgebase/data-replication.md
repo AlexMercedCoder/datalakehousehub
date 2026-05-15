@@ -38,4 +38,4 @@ Data engineers architect replication networks based on the specific traffic need
 Data Replication is the ultimate architectural mechanism for global scale and survival. By seamlessly synchronizing petabytes of data across geographically isolated server clusters, Data Replication mathematically guarantees High Availability, drastically accelerates global read performance by routing users to their closest local server, and provides the absolute, indestructible foundation required to survive catastrophic hardware and data center destruction.
 
 ## Learn More
-To learn more about the Data Lakehouse, read the book "Lakehouse for Everyone" by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).
+To learn more about the [Data Lakehouse](/data-lakehouse), read the book "Lakehouse for Everyone" by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

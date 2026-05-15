@@ -10,7 +10,7 @@ ACID is a fundamental acronym in computer science that defines the four absolute
 
 For decades, strict ACID compliance was the exclusive domain of highly rigid operational databases (like Oracle and PostgreSQL) and expensive monolithic Data Warehouses (like Teradata). The original Hadoop Data Lakes and raw cloud object storage (Amazon S3) completely sacrificed ACID guarantees in exchange for infinite scalability and ultra-low storage costs. This compromise meant that executing a simple `UPDATE` or `DELETE` statement on a raw data lake often resulted in catastrophic data corruption. 
 
-The invention of the modern Open Data Lakehouse (powered by Apache Iceberg, Apache Hudi, and Delta Lake) fundamentally solved this crisis by engineering strict, mathematically verifiable ACID guarantees directly on top of raw cloud object storage.
+The invention of the modern Open [Data Lakehouse](/data-lakehouse) (powered by [Apache Iceberg](/apache-iceberg), Apache Hudi, and Delta Lake) fundamentally solved this crisis by engineering strict, mathematically verifiable ACID guarantees directly on top of raw cloud object storage.
 
 ## The Four Pillars of ACID
 

@@ -6,7 +6,7 @@ description: "A comprehensive guide to the Medallion Architecture. Learn about o
 
 # What is the Medallion Architecture?
 
-The Medallion Architecture is a highly structured, logical design pattern used to logically organize data within a Data Lakehouse. Coined originally by Databricks, it provides a simple but profoundly effective framework for managing the flow of data as it is ingested, cleaned, and refined for business consumption.
+The Medallion Architecture is a highly structured, logical design pattern used to logically organize data within a [Data Lakehouse](/data-lakehouse). Coined originally by Databricks, it provides a simple but profoundly effective framework for managing the flow of data as it is ingested, cleaned, and refined for business consumption.
 
 In the early days of big data, organizations simply dumped petabytes of raw, chaotic JSON and CSV files into a massive cloud bucket. Because there was no logical separation between the raw, messy data and the clean, analytical data, business analysts queried the wrong files, dashboards crashed, and the data lake inevitably devolved into an unmanageable "data swamp." The Medallion Architecture completely solves this by strictly separating the data lifecycle into three distinct, progressively refined tiers: Bronze, Silver, and Gold.
 
@@ -31,7 +31,7 @@ While the Silver layer contains millions of highly granular individual transacti
 
 ## Implementing with Open Table Formats
 
-The Medallion Architecture is an abstract logical concept, but it is physically implemented using Open Table Formats like Apache Iceberg, Apache Hudi, or Delta Lake.
+The Medallion Architecture is an abstract logical concept, but it is physically implemented using Open Table Formats like [Apache Iceberg](/apache-iceberg), Apache Hudi, or Delta Lake.
 
 These formats are absolutely critical because they provide the ACID transactional guarantees required to move data safely between the tiers. When a micro-batch streaming pipeline processes 10,000 new raw events in the Bronze tier and updates the aggregated Gold table, the open table format guarantees that the transaction is atomic. If the pipeline crashes halfway through the Gold update, the transaction rolls back instantly, ensuring that a CEO never opens a dashboard to see partial, corrupted metrics.
 

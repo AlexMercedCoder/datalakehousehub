@@ -31,9 +31,9 @@ If a new data pipeline ingests a raw record stating "Warehouse A is located in P
 
 ## Ontologies in the Data Lakehouse
 
-Historically, Ontologies were confined to academic research and massive government intelligence agencies. Today, they are actively deployed over the Data Lakehouse to power the Semantic Layer.
+Historically, Ontologies were confined to academic research and massive government intelligence agencies. Today, they are actively deployed over the [Data Lakehouse](/data-lakehouse) to power the Semantic Layer.
 
-When an organization builds a massive Knowledge Graph on top of their petabyte-scale Apache Iceberg tables, the Ontology serves as the strict architectural schema for that graph. It guarantees that as millions of chaotic, unstructured documents are processed by AI agents, the extracted entities are rigidly mapped to the official corporate ontology. This prevents the database from accidentally creating 50 different chaotic classifications for a single product, ensuring absolute structural integrity across the entire enterprise data network.
+When an organization builds a massive Knowledge Graph on top of their petabyte-scale [Apache Iceberg](/apache-iceberg) tables, the Ontology serves as the strict architectural schema for that graph. It guarantees that as millions of chaotic, unstructured documents are processed by AI agents, the extracted entities are rigidly mapped to the official corporate ontology. This prevents the database from accidentally creating 50 different chaotic classifications for a single product, ensuring absolute structural integrity across the entire enterprise data network.
 
 ## Summary of Technical Value
 

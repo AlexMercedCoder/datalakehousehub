@@ -6,7 +6,7 @@ description: "A comprehensive guide to Bloom Filters. Learn how probabilistic da
 
 # What is a Bloom Filter?
 
-A Bloom Filter is a highly space-efficient, probabilistic data structure used explicitly to test whether a specific element is a member of a massive set. In the context of a modern Data Lakehouse and Cloud Data Warehouses, Bloom Filters are embedded directly into file formats (like Apache Parquet and ORC) to drastically accelerate analytical queries by allowing the execution engine to completely skip reading massive data blocks without ever decompressing them.
+A Bloom Filter is a highly space-efficient, probabilistic data structure used explicitly to test whether a specific element is a member of a massive set. In the context of a modern [Data Lakehouse](/data-lakehouse) and Cloud Data Warehouses, Bloom Filters are embedded directly into file formats (like Apache Parquet and ORC) to drastically accelerate analytical queries by allowing the execution engine to completely skip reading massive data blocks without ever decompressing them.
 
 While Predicate Pushdown utilizing Min/Max statistics is incredibly powerful for sequential data (like dates or sorted integers), it is completely useless for highly random, high-cardinality data. If a massive Parquet file contains one million unique, randomly generated UUIDs, the Min value might start with 'A' and the Max value might start with 'Z'. When a user searches for a specific UUID, the query engine evaluates the Min/Max range, realizes the target UUID falls within the massive 'A-Z' range, and is forced to physically read the entire gigabyte file, only to discover the UUID does not actually exist inside it. Bloom Filters entirely resolve this random-read bottleneck.
 

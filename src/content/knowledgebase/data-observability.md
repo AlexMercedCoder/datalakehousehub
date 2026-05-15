@@ -37,7 +37,7 @@ In a massive enterprise containing 50,000 distinct tables, a data engineering te
 
 ## Summary of Technical Value
 
-Data Observability transitioned data engineering from a reactive, firefighting culture into a proactive, highly reliable software discipline. By completely automating the continuous monitoring of freshness, volume, distribution, schema, and lineage, it eliminates silent data corruption entirely. It is the absolute foundational requirement for establishing trust and eliminating data downtime within a modern, massive-scale Open Data Lakehouse.
+Data Observability transitioned data engineering from a reactive, firefighting culture into a proactive, highly reliable software discipline. By completely automating the continuous monitoring of freshness, volume, distribution, schema, and lineage, it eliminates silent data corruption entirely. It is the absolute foundational requirement for establishing trust and eliminating data downtime within a modern, massive-scale Open [Data Lakehouse](/data-lakehouse).
 
 
 ## Learn More

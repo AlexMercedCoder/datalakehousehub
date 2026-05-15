@@ -34,9 +34,9 @@ Crucially, these policies are not enforced by manual audits. They are embedded c
 
 ## Implementing Data Mesh on the Lakehouse
 
-While the Data Mesh is primarily an organizational philosophy, it relies heavily on modern technology to execute successfully. The Open Data Lakehouse is the premier foundational architecture for supporting a Data Mesh.
+While the Data Mesh is primarily an organizational philosophy, it relies heavily on modern technology to execute successfully. The Open [Data Lakehouse](/data-lakehouse) is the premier foundational architecture for supporting a Data Mesh.
 
-Because a Lakehouse completely decouples storage from compute, it effortlessly supports domain isolation. The Logistics team can write their Data Product into an Amazon S3 bucket using Apache Iceberg format. The Marketing team can query that exact Iceberg table securely using their own isolated compute engine (like Trino or Snowflake) without interfering with the Logistics team’s operations. 
+Because a Lakehouse completely decouples storage from compute, it effortlessly supports domain isolation. The Logistics team can write their Data Product into an Amazon S3 bucket using [Apache Iceberg](/apache-iceberg) format. The Marketing team can query that exact Iceberg table securely using their own isolated compute engine (like Trino or Snowflake) without interfering with the Logistics team’s operations. 
 
 Furthermore, engines like Dremio provide a critical universal semantic layer that sits above the fragmented domains. Dremio allows users to execute federated queries that seamlessly join a Data Product managed by Logistics with a Data Product managed by Marketing, entirely abstracting the decentralized infrastructure away from the final business analyst.
 

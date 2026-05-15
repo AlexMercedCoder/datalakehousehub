@@ -29,7 +29,7 @@ Because Block Storage allows for surgical, sub-millisecond updates, it is the ab
 ### The Scaling Limitation
 The primary limitation of Block Storage is its severe physical coupling. A block storage volume must be physically "attached" to a specific server. It cannot be accessed over the internet via a REST API like Object Storage. 
 
-If an operational database fills up its 1-Terabyte block storage drive, the system will crash. The engineering team must manually provision a larger drive, detach the old one, and attach the new one. This physical rigidity makes Block Storage fundamentally incompatible with the infinitely elastic, massive-scale requirements of a Data Lakehouse, which is why Lakehouses rely exclusively on Object Storage.
+If an operational database fills up its 1-Terabyte block storage drive, the system will crash. The engineering team must manually provision a larger drive, detach the old one, and attach the new one. This physical rigidity makes Block Storage fundamentally incompatible with the infinitely elastic, massive-scale requirements of a [Data Lakehouse](/data-lakehouse), which is why Lakehouses rely exclusively on Object Storage.
 
 ## Summary of Technical Value
 

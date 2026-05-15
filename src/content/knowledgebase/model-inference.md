@@ -26,7 +26,7 @@ Batch Inference is utilized when the business needs to generate millions of pred
 
 For example, a marketing team wants to send targeted promotional emails at 8:00 AM predicting which users are highly likely to churn. It would be incredibly inefficient to hit a live API endpoint 5 million separate times. 
 
-Instead, the data engineering team utilizes the massive compute power of the Data Lakehouse (often via Apache Spark). A massive nightly batch job spins up, loads the entire 5-million row `Active_Customers` table into memory, and feeds it completely through the trained ML model in parallel. The model generates all 5 million churn predictions simultaneously and writes them directly into a Gold-tier Apache Iceberg table. The marketing software simply reads that pre-calculated table in the morning.
+Instead, the data engineering team utilizes the massive compute power of the [Data Lakehouse](/data-lakehouse) (often via Apache Spark). A massive nightly batch job spins up, loads the entire 5-million row `Active_Customers` table into memory, and feeds it completely through the trained ML model in parallel. The model generates all 5 million churn predictions simultaneously and writes them directly into a Gold-tier [Apache Iceberg](/apache-iceberg) table. The marketing software simply reads that pre-calculated table in the morning.
 
 ## Hardware Optimization for Inference
 

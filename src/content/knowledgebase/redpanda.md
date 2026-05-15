@@ -18,7 +18,7 @@ To understand the practical application of Redpanda, it is crucial to systematic
 * **Maintains exactly-once or at-least-once processing guarantees through distributed commit logs and offset tracking.** By adopting this mechanic, engineers can bypass traditional processing constraints and deliver substantially faster time-to-insight.
 * **Captures row-level modifications instantaneously from source databases using Change Data Capture (CDC).** This allows the overarching architecture to remain highly resilient while serving concurrent workloads natively.
 
-Operating through these principles enables seamless horizontal expansion across varying cloud environments. It integrates effortlessly with adjacent technologies like Apache Iceberg, dbt, and advanced vector search algorithms.
+Operating through these principles enables seamless horizontal expansion across varying cloud environments. It integrates effortlessly with adjacent technologies like [Apache Iceberg](/apache-iceberg), dbt, and advanced vector search algorithms.
 
 ## Why Redpanda Matters in the Modern Data Stack
 

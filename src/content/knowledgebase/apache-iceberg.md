@@ -6,7 +6,7 @@ description: "A comprehensive guide to Apache Iceberg. Learn about its hidden pa
 
 # What is Apache Iceberg?
 
-Apache Iceberg is an open table format originally developed by Netflix for massive analytic datasets. It brings the reliability and performance of traditional SQL database tables to open data lakes. Organizations storing petabytes of data on Amazon S3, Google Cloud Storage, or Azure Data Lake Storage use Iceberg to execute transactions, enforce schemas, and track data modifications without locking their architecture into a single vendor ecosystem. 
+[Apache Iceberg](/apache-iceberg) is an open table format originally developed by Netflix for massive analytic datasets. It brings the reliability and performance of traditional SQL database tables to open data lakes. Organizations storing petabytes of data on Amazon S3, Google Cloud Storage, or Azure Data Lake Storage use Iceberg to execute transactions, enforce schemas, and track data modifications without locking their architecture into a single vendor ecosystem. 
 
 Before Iceberg, the industry relied heavily on the Apache Hive metastore. Hive mapped database tables to physical directories in a file system. This directory-based approach broke down at scale. Query engines had to list thousands of physical files before they could even begin executing a query. This file-listing bottleneck destroyed performance and made atomic transactions virtually impossible. Iceberg solves this by tracking data at the file level through a sophisticated metadata tree, completely decoupling the logical table structure from the physical storage layout.
 
@@ -73,7 +73,7 @@ To ensure all these engines interpret the table state identically, the community
 
 ## Iceberg in the Agentic Lakehouse
 
-Modern platforms utilize Apache Iceberg as the structural foundation for advanced AI operations. In an Agentic Lakehouse architecture, Iceberg provides the deterministic, verifiable data required to prevent AI hallucinations. 
+Modern platforms utilize Apache Iceberg as the structural foundation for advanced AI operations. In an [Agentic Lakehouse](/agentic-lakehouse) architecture, Iceberg provides the deterministic, verifiable data required to prevent AI hallucinations. 
 
 When an autonomous AI agent needs to evaluate historical sales trends, it does not query an isolated, outdated extract. It utilizes secure Agent Skills to execute SQL queries directly against the live Iceberg table. Iceberg's metadata manifests provide the agent with deep structural context, allowing language models to understand data distributions, null constraints, and column statistics before they even generate the SQL syntax. The integration of Iceberg's transactional reliability with agentic reasoning represents the forefront of modern data engineering.
 

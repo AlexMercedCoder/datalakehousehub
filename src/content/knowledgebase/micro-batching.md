@@ -14,7 +14,7 @@ In traditional data engineering, batch processing handled massive datasets (e.g.
 
 In a micro-batching architecture, the query engine does not process events individually. Instead, it aggressively collects incoming events over a highly specific, predefined time interval (e.g., every 500 milliseconds or every 2 seconds).
 
-When the interval triggers, the engine takes all the events accumulated during that specific window and bundles them into a discrete, immutable batch (in Spark, this is an RDD or a DataFrame). The engine then dispatches this tiny batch to the distributed cluster, executes the SQL transformations or mathematical aggregations exactly as it would for a massive batch job, and writes the output directly to the destination Data Lakehouse or dashboard. Once complete, the engine immediately begins processing the next accumulated batch.
+When the interval triggers, the engine takes all the events accumulated during that specific window and bundles them into a discrete, immutable batch (in Spark, this is an RDD or a DataFrame). The engine then dispatches this tiny batch to the distributed cluster, executes the SQL transformations or mathematical aggregations exactly as it would for a massive batch job, and writes the output directly to the destination [Data Lakehouse](/data-lakehouse) or dashboard. Once complete, the engine immediately begins processing the next accumulated batch.
 
 ## Exactly-Once Fault Tolerance
 
@@ -28,7 +28,7 @@ Micro-batching solves this cleanly through strict state management and checkpoin
 
 Micro-batching is the absolute standard ingestion pattern for the modern Data Lakehouse. 
 
-Because Open Table Formats like Apache Iceberg and Delta Lake rely on writing physical Apache Parquet files and generating new metadata manifests (commits), attempting to write a new Parquet file for every single streaming event would instantly collapse the lakehouse under millions of tiny files.
+Because Open Table Formats like [Apache Iceberg](/apache-iceberg) and Delta Lake rely on writing physical Apache Parquet files and generating new metadata manifests (commits), attempting to write a new Parquet file for every single streaming event would instantly collapse the lakehouse under millions of tiny files.
 
 Instead, organizations configure micro-batch pipelines to trigger every few minutes. The pipeline consumes millions of events from Kafka, bundles them in memory, and executes a single, highly optimized, atomic `MERGE INTO` or `APPEND` operation against the Iceberg table. This architecture guarantees the data lakehouse receives fresh data continuously without compromising query performance or destroying the underlying file structure.
 

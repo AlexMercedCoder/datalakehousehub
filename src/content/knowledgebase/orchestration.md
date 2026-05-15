@@ -6,7 +6,7 @@ description: "A comprehensive guide to Data Orchestration. Learn how tools like 
 
 # What is Data Orchestration?
 
-Data Orchestration is the centralized, highly complex architectural control layer responsible for precisely scheduling, actively monitoring, and strictly managing the execution order of thousands of highly interdependent data pipelines across a massive enterprise infrastructure. It is the absolute "Air Traffic Controller" of the modern Data Lakehouse.
+Data Orchestration is the centralized, highly complex architectural control layer responsible for precisely scheduling, actively monitoring, and strictly managing the execution order of thousands of highly interdependent data pipelines across a massive enterprise infrastructure. It is the absolute "Air Traffic Controller" of the modern [Data Lakehouse](/data-lakehouse).
 
 In the early days of data engineering, teams simply used basic Linux `cron` jobs to schedule scripts. They would schedule the Salesforce extraction script to run at 2:00 AM, and the Tableau dashboard update script to run at 3:00 AM, blindly hoping the extraction finished before the update began. 
 

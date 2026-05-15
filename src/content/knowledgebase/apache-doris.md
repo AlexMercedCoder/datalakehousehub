@@ -44,7 +44,7 @@ Organizations heavily utilize tools like Apache Kafka or Apache Flink to stream 
 
 Recognizing the industry shift toward decoupled storage, modern versions of Apache Doris introduced the Multi-Catalog feature. Instead of strictly requiring organizations to ingest data into Doris’s internal storage nodes, Doris can now reach out externally.
 
-An engineer can configure Doris to connect seamlessly to an Open Data Lakehouse (querying Apache Iceberg, Hudi, or Delta Lake tables directly) or to an external database (like Elasticsearch or MySQL). This capability allows Doris to serve as an exceptionally fast, unified query layer that accelerates critical dashboards using internal storage, while seamlessly federating slower, historical queries directly against the broader cloud data lake.
+An engineer can configure Doris to connect seamlessly to an Open [Data Lakehouse](/data-lakehouse) (querying [Apache Iceberg](/apache-iceberg), Hudi, or Delta Lake tables directly) or to an external database (like Elasticsearch or MySQL). This capability allows Doris to serve as an exceptionally fast, unified query layer that accelerates critical dashboards using internal storage, while seamlessly federating slower, historical queries directly against the broader cloud data lake.
 
 ## Summary of Technical Value
 

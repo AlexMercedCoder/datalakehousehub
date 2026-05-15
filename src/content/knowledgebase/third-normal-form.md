@@ -41,4 +41,4 @@ Enforcing 3NF eliminates the three catastrophic operational anomalies:
 Third Normal Form (3NF) is the foundational architectural defense mechanism of the modern software industry. By aggressively fragmenting data across dozens of isolated tables to completely eliminate duplication, it guarantees that massive, highly concurrent operational systems can execute millions of sub-second transactional writes with absolute mathematical perfection, completely eliminating the risk of data corruption.
 
 ## Learn More
-To learn more about the Data Lakehouse, read the book "Lakehouse for Everyone" by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).
+To learn more about the [Data Lakehouse](/data-lakehouse), read the book "Lakehouse for Everyone" by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

@@ -20,7 +20,7 @@ The VCS takes an absolute snapshot of the exact state of the files. It calculate
 
 ### Branching and Isolation
 The most powerful architectural feature of modern version control is Branching.
-If a data engineering team of 50 people is working on a massive Open Data Lakehouse simultaneously, they cannot all edit the live production code at the same time. 
+If a data engineering team of 50 people is working on a massive Open [Data Lakehouse](/data-lakehouse) simultaneously, they cannot all edit the live production code at the same time. 
 Version control allows an engineer to create a "Branch." This is an isolated, parallel universe. The engineer can completely rewrite the Apache Spark pipeline in their branch, test it, and accidentally break everything, with absolutely zero impact on the live production environment.
 
 ## The Pull Request and Code Review

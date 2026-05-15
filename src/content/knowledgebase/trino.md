@@ -6,9 +6,9 @@ description: "A comprehensive guide to Trino. Learn how this massive distributed
 
 # What is Trino?
 
-Trino is a highly advanced, massively distributed, open-source SQL query engine designed to execute blistering fast analytical queries against petabyte-scale data lakes and federated databases. Originally developed at Facebook as "PrestoSQL" (before officially rebranding to Trino in 2020 following a structural split from the Presto project), Trino has become one of the absolute foundational computing engines of the modern Open Data Lakehouse ecosystem.
+Trino is a highly advanced, massively distributed, open-source SQL query engine designed to execute blistering fast analytical queries against petabyte-scale data lakes and federated databases. Originally developed at Facebook as "PrestoSQL" (before officially rebranding to Trino in 2020 following a structural split from the Presto project), Trino has become one of the absolute foundational computing engines of the modern Open [Data Lakehouse](/data-lakehouse) ecosystem.
 
-Unlike traditional relational databases (like PostgreSQL or Oracle), Trino is explicitly a Query Engine, not a database. It completely decouples compute from storage. Trino possesses absolutely no physical storage of its own. It cannot "store" data. Instead, it acts as a massive, intelligent mathematical brain that connects to external storage systems—primarily cloud object storage containing Apache Parquet and Apache Iceberg files—and executes highly complex SQL aggregations entirely in active memory.
+Unlike traditional relational databases (like PostgreSQL or Oracle), Trino is explicitly a Query Engine, not a database. It completely decouples compute from storage. Trino possesses absolutely no physical storage of its own. It cannot "store" data. Instead, it acts as a massive, intelligent mathematical brain that connects to external storage systems—primarily cloud object storage containing Apache Parquet and [Apache Iceberg](/apache-iceberg) files—and executes highly complex SQL aggregations entirely in active memory.
 
 ## The Architecture of Distributed Execution
 

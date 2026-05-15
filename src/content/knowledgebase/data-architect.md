@@ -17,7 +17,7 @@ A modern Data Architect is constantly balancing the infinite desires of the busi
 ### 1. Platform Selection and Paradigm Design
 When a massive enterprise decides to modernize its infrastructure, the Data Architect dictates the path. 
 * Should we abandon our legacy Hadoop cluster and build a highly structured Cloud Data Warehouse (Snowflake)? 
-* Or should we implement an Open Data Lakehouse architecture, heavily utilizing Apache Iceberg and Dremio to ensure we completely avoid proprietary vendor lock-in?
+* Or should we implement an Open [Data Lakehouse](/data-lakehouse) architecture, heavily utilizing [Apache Iceberg](/apache-iceberg) and Dremio to ensure we completely avoid proprietary vendor lock-in?
 The Architect runs the massive mathematical proofs to determine which architecture will provide the lowest latency for the BI tools while maintaining the cheapest possible Amazon S3 storage costs over the next decade.
 
 ### 2. Structural Data Modeling

@@ -62,7 +62,7 @@ Spark includes MLlib, a comprehensive distributed machine learning library. Beca
 
 ## Spark and the Open Lakehouse
 
-Apache Spark is deeply integrated into the modern Open Data Lakehouse architecture. It is the primary processing engine used to write and optimize data within open table formats like Apache Iceberg, Apache Hudi, and Delta Lake. 
+Apache Spark is deeply integrated into the modern Open [Data Lakehouse](/data-lakehouse) architecture. It is the primary processing engine used to write and optimize data within open table formats like [Apache Iceberg](/apache-iceberg), Apache Hudi, and Delta Lake. 
 
 When executing workloads against these formats, Spark utilizes their advanced metadata tracking to skip irrelevant files entirely, dramatically accelerating query times. In a mature architecture, Spark serves as the heavy-duty data engineering engine—running complex ELT (Extract, Load, Transform) pipelines to refine raw data into structured, high-quality Bronze, Silver, and Gold tables—while engines like Dremio or Trino connect to those identical tables to serve fast, high-concurrency business intelligence dashboards.
 

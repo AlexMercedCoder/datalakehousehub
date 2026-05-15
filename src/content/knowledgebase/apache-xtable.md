@@ -6,9 +6,9 @@ description: "A comprehensive guide to Apache XTable. Learn about omnidirectiona
 
 # What is Apache XTable?
 
-Apache XTable (formerly known as OneTable) is an open-source, omnidirectional metadata translation layer designed to eliminate vendor lock-in across modern data lakehouses. It provides seamless interoperability between the three dominant open table formats: Apache Iceberg, Apache Hudi, and Delta Lake.
+Apache XTable (formerly known as OneTable) is an open-source, omnidirectional metadata translation layer designed to eliminate vendor lock-in across modern data lakehouses. It provides seamless interoperability between the three dominant open table formats: [Apache Iceberg](/apache-iceberg), Apache Hudi, and Delta Lake.
 
-Historically, organizations building a data lakehouse were forced to choose a single table format. If an engineering team chose Apache Hudi to handle massive streaming ingestions, they were locked out of utilizing the vast ecosystem of business intelligence tools heavily optimized for Apache Iceberg. If they wanted to support both, they had to physically copy the petabytes of data, maintaining two separate massive storage architectures. XTable completely resolves this issue by translating the lightweight metadata layer instantly, allowing any query engine to read the exact same physical data files.
+Historically, organizations building a [data lakehouse](/data-lakehouse) were forced to choose a single table format. If an engineering team chose Apache Hudi to handle massive streaming ingestions, they were locked out of utilizing the vast ecosystem of business intelligence tools heavily optimized for Apache Iceberg. If they wanted to support both, they had to physically copy the petabytes of data, maintaining two separate massive storage architectures. XTable completely resolves this issue by translating the lightweight metadata layer instantly, allowing any query engine to read the exact same physical data files.
 
 ## The Architecture of Omnidirectional Translation
 

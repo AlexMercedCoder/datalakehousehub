@@ -25,7 +25,7 @@ Embeddings are the core engine powering the Retrieval-Augmented Generation (RAG)
 When an enterprise wants to build a custom AI chatbot that understands their proprietary HR manuals, they cannot simply dump 10,000 PDF files into the LLM. 
 1. Data engineers extract the text from the PDFs.
 2. They run the text through an Embedding Model, translating millions of sentences into Vector Embeddings.
-3. They store these massive numerical arrays in a specialized Vector Database (or an Open Data Lakehouse engine that supports vector indexing).
+3. They store these massive numerical arrays in a specialized Vector Database (or an Open [Data Lakehouse](/data-lakehouse) engine that supports vector indexing).
 
 When an employee asks the chatbot, "What is the maternity leave policy?", the system translates that specific question into its own Vector Embedding. The database then performs a blazing-fast mathematical search (Cosine Similarity), finding the specific HR paragraphs whose vectors are physically closest to the question's vector in multi-dimensional space. It returns those specific paragraphs to the LLM to generate the final answer.
 

@@ -8,7 +8,7 @@ description: "A comprehensive guide to the Key Management Service (KMS). Learn h
 
 A Key Management Service (KMS) is a profoundly secure, highly isolated, centralized architectural infrastructure designed exclusively to generate, store, manage, and distribute the complex mathematical Cryptographic Keys used to encrypt and decrypt massive volumes of enterprise data. It serves as the absolute "Vault of Vaults" within a modern cloud ecosystem.
 
-If a massive enterprise successfully deploys military-grade Encryption at Rest across its entire Data Lakehouse, but a data engineer accidentally stores the decryption key in a plain text file on a public GitHub repository, the entire encryption effort is rendered completely useless. Cryptography is mathematically unbreakable; therefore, hackers do not attack the cryptography. They attack the key. A KMS exists solely to ensure that human beings, application code, and hackers can never physically access the raw, underlying cryptographic keys that protect the enterprise.
+If a massive enterprise successfully deploys military-grade Encryption at Rest across its entire [Data Lakehouse](/data-lakehouse), but a data engineer accidentally stores the decryption key in a plain text file on a public GitHub repository, the entire encryption effort is rendered completely useless. Cryptography is mathematically unbreakable; therefore, hackers do not attack the cryptography. They attack the key. A KMS exists solely to ensure that human beings, application code, and hackers can never physically access the raw, underlying cryptographic keys that protect the enterprise.
 
 ## The Architecture of the Hardware Security Module
 

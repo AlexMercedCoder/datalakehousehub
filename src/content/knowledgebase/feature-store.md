@@ -17,7 +17,7 @@ The Feature Store entirely eliminates this catastrophic friction.
 A modern Feature Store (like Feast, Tecton, or Hopsworks) is not a single database. It is a highly advanced architectural framework that automatically manages data synchronization across two completely distinct storage layers.
 
 ### 1. The Offline Store (For Training)
-Data scientists require massive amounts of historical data to train algorithms. The Feature Store maintains an Offline Store, which is typically integrated directly into the massive Open Data Lakehouse (storing data as Apache Parquet/Iceberg). The data scientists query this Offline Store to pull millions of rows of historical features. Because it utilizes the lakehouse, it provides infinite scale and natively supports Time Travel, guaranteeing perfect historical reproducibility.
+Data scientists require massive amounts of historical data to train algorithms. The Feature Store maintains an Offline Store, which is typically integrated directly into the massive Open [Data Lakehouse](/data-lakehouse) (storing data as Apache Parquet/Iceberg). The data scientists query this Offline Store to pull millions of rows of historical features. Because it utilizes the lakehouse, it provides infinite scale and natively supports Time Travel, guaranteeing perfect historical reproducibility.
 
 ### 2. The Online Store (For Inference)
 When the model is deployed to the live website, the website cannot wait three seconds for the Data Lakehouse to run a massive analytical query. The website needs the feature in 5 milliseconds. 

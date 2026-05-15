@@ -25,7 +25,7 @@ When Debezium detects a modification, it constructs a highly detailed JSON or Av
 
 Traditional batch polling pipelines struggle immensely with database deletions. If a record is deleted from the source database, a polling script (`SELECT * WHERE updated_at > X`) simply will not see it, because the record no longer exists. This leads to "ghost records" persisting forever in the downstream data warehouse.
 
-Because Debezium reads the physical transaction log, it captures explicit `DELETE` operations natively. It generates a specific deletion event and pushes it to Kafka. Downstream streaming engines (like Apache Flink) or open table formats (like Apache Hudi and Apache Iceberg) consume this exact event and issue an immediate physical `DELETE` or `TOMBSTONE` against the lakehouse storage, ensuring the analytical environment remains a perfect, exact replica of the operational database.
+Because Debezium reads the physical transaction log, it captures explicit `DELETE` operations natively. It generates a specific deletion event and pushes it to Kafka. Downstream streaming engines (like Apache Flink) or open table formats (like Apache Hudi and [Apache Iceberg](/apache-iceberg)) consume this exact event and issue an immediate physical `DELETE` or `TOMBSTONE` against the lakehouse storage, ensuring the analytical environment remains a perfect, exact replica of the operational database.
 
 ## Distributed Reliability and Snapshotting
 
@@ -41,4 +41,4 @@ Debezium radically shifted the paradigm of data ingestion. By completely abandon
 
 
 ## Learn More
-To learn more about the Data Lakehouse, read the book "Lakehouse for Everyone" by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).
+To learn more about the [Data Lakehouse](/data-lakehouse), read the book "Lakehouse for Everyone" by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

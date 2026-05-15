@@ -36,7 +36,7 @@ Because the RDBMS guarantees Atomicity (All or Nothing), when the server reboots
 ## The Scaling Limitation
 
 The massive rigidity of the RDBMS is its greatest strength, but also its fatal flaw in the Big Data era.
-Because the RDBMS must lock tables to guarantee ACID perfection, it is incredibly difficult to distribute a single relational database across fifty different physical servers (Horizontal Scaling). As a result, when an RDBMS hits its capacity, the only solution is to buy a massively expensive, single supercomputer (Vertical Scaling), making it fundamentally incompatible with the cheap, distributed elasticity of the modern Data Lakehouse.
+Because the RDBMS must lock tables to guarantee ACID perfection, it is incredibly difficult to distribute a single relational database across fifty different physical servers (Horizontal Scaling). As a result, when an RDBMS hits its capacity, the only solution is to buy a massively expensive, single supercomputer (Vertical Scaling), making it fundamentally incompatible with the cheap, distributed elasticity of the modern [Data Lakehouse](/data-lakehouse).
 
 ## Summary of Technical Value
 

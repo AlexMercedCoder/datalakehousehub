@@ -6,7 +6,7 @@ description: "A comprehensive guide to Alation. Learn how this massive Enterpris
 
 # What is Alation?
 
-Alation is a massive, industry-leading Enterprise Data Catalog and robust Data Governance platform explicitly designed to solve the catastrophic discoverability and trust issues inherent in petabyte-scale data infrastructure. In an era where large corporations possess thousands of disparate databases, millions of Apache Iceberg tables, and highly chaotic data lakes, finding the exact, verified, correct data table is nearly impossible. Alation operates as the centralized, highly intelligent "Google Search" for the entire corporate data ecosystem, allowing analysts to instantly locate, understand, and safely query massive enterprise assets.
+Alation is a massive, industry-leading Enterprise Data Catalog and robust Data Governance platform explicitly designed to solve the catastrophic discoverability and trust issues inherent in petabyte-scale data infrastructure. In an era where large corporations possess thousands of disparate databases, millions of [Apache Iceberg](/apache-iceberg) tables, and highly chaotic data lakes, finding the exact, verified, correct data table is nearly impossible. Alation operates as the centralized, highly intelligent "Google Search" for the entire corporate data ecosystem, allowing analysts to instantly locate, understand, and safely query massive enterprise assets.
 
 Unlike legacy, passive data dictionaries (which required a human Data Steward to manually type descriptions into a spreadsheet), Alation fundamentally disrupted the market by introducing "Active, Behavioral Metadata." It does not simply scan the database schemas; it actively integrates directly into the network traffic of the query engines (like Snowflake or Dremio), aggressively reading the raw SQL query logs of every analyst in the company to mathematically map exactly how data is being used in the real world.
 
@@ -15,7 +15,7 @@ Unlike legacy, passive data dictionaries (which required a human Data Steward to
 Alation achieves its massive value by automating the extraction of both Structural and Behavioral metadata.
 
 ### 1. Structural Metadata Extraction
-When Alation connects to a Data Lakehouse, its automated crawlers instantly extract the massive structural schema. It maps every database, schema, table, and column name. It mathematically identifies Primary and Foreign Keys, automatically drawing complex Entity-Relationship (ER) diagrams to visually show analysts exactly how the `Sales` table mathematically links to the `Marketing` table.
+When Alation connects to a [Data Lakehouse](/data-lakehouse), its automated crawlers instantly extract the massive structural schema. It maps every database, schema, table, and column name. It mathematically identifies Primary and Foreign Keys, automatically drawing complex Entity-Relationship (ER) diagrams to visually show analysts exactly how the `Sales` table mathematically links to the `Marketing` table.
 
 ### 2. The Behavioral Machine Learning Engine
 This is Alation’s supreme architectural advantage. 

@@ -39,7 +39,7 @@ Pinecone natively supports Sparse-Dense Hybrid Search. It allows developers to s
 
 Pinecone is deeply integrated into the modern LLM ecosystem. It serves as the primary retrieval engine for frameworks like LangChain, LlamaIndex, and DSPy.
 
-In a typical production architecture, a data engineering pipeline extracts unstructured text from the Open Data Lakehouse, chunks the text, generates embeddings via a provider like OpenAI or Cohere, and streams those vectors directly into a Pinecone Index. During application execution, an autonomous agent converts the user's natural language question into an embedding, queries Pinecone for the closest semantic matches, and feeds those highly relevant text chunks into the LLM to generate an accurate, grounded response.
+In a typical production architecture, a data engineering pipeline extracts unstructured text from the Open [Data Lakehouse](/data-lakehouse), chunks the text, generates embeddings via a provider like OpenAI or Cohere, and streams those vectors directly into a Pinecone Index. During application execution, an autonomous agent converts the user's natural language question into an embedding, queries Pinecone for the closest semantic matches, and feeds those highly relevant text chunks into the LLM to generate an accurate, grounded response.
 
 ## Summary of Technical Value
 

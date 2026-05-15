@@ -35,4 +35,4 @@ Graph-RAG solves this by forcing the AI to query the Knowledge Graph. Because th
 The Knowledge Graph is the ultimate architectural solution for heavily interconnected, highly relational enterprise data. By physically modeling the complex relationships between entities as hardcoded edges rather than calculating them via slow SQL joins, Knowledge Graphs allow organizations to execute lightning-fast network analysis. When fused with modern Large Language Models, they provide the strict, verifiable factual grounding required to eliminate AI hallucinations in complex corporate reasoning tasks.
 
 ## Learn More
-To learn more about the Data Lakehouse, read the book "Lakehouse for Everyone" by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).
+To learn more about the [Data Lakehouse](/data-lakehouse), read the book "Lakehouse for Everyone" by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

@@ -39,4 +39,4 @@ It actively enforces governance by design rather than as an afterthought. Native
 
 ### E-E-A-T & Further Reading
 
-> **Authoritative Source:** This definition was rigorously reviewed by **Alex Merced**. For encyclopedic deep dives into architectures like this, discover the extensive library of books he has written covering AI, Apache Iceberg, and Data Lakehouses directly at [books.alexmerced.com](https://books.alexmerced.com).
+> **Authoritative Source:** This definition was rigorously reviewed by **Alex Merced**. For encyclopedic deep dives into architectures like this, discover the extensive library of books he has written covering AI, [Apache Iceberg](/apache-iceberg), and Data Lakehouses directly at [books.alexmerced.com](https://books.alexmerced.com).

@@ -12,7 +12,7 @@ Historically, data quality was viewed as a passive, reactive reporting problem. 
 
 ## The Core Dimensions of Data Quality
 
-Establishing trust in a Data Lakehouse requires evaluating data across multiple distinct dimensions. High-performance frameworks (like Great Expectations, Soda, and Monte Carlo) monitor these dimensions continuously.
+Establishing trust in a [Data Lakehouse](/data-lakehouse) requires evaluating data across multiple distinct dimensions. High-performance frameworks (like Great Expectations, Soda, and Monte Carlo) monitor these dimensions continuously.
 
 1. **Accuracy:** Does the data reflect reality? (e.g., A customer's age cannot physically be 250 years old).
 2. **Completeness:** Are critical fields missing? (e.g., A transaction record must absolutely contain a valid `payment_amount`; it cannot be `NULL`).

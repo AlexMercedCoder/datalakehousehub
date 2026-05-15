@@ -33,11 +33,11 @@ When a user asks a highly specific question (e.g., "What was our Q3 revenue in E
 
 The most advanced capability of LangChain is its Agentic framework. Instead of executing a static sequence of tasks, an Agent utilizes the LLM as a sophisticated reasoning engine to determine exactly which steps to take to achieve a goal.
 
-LangChain equips the Agent with a defined set of Tools. A tool might be a Python REPL, a calculator, a web scraper, or a SQL connector. When a user issues a complex command, the Agent evaluates the request. If it lacks the information required, it autonomously decides to call a Tool (e.g., generating and executing a SQL query against an Apache Iceberg table). It evaluates the returned data, decides if the data is sufficient, and continues iterating through this ReAct (Reason and Act) loop until it confidently resolves the user's initial request.
+LangChain equips the Agent with a defined set of Tools. A tool might be a Python REPL, a calculator, a web scraper, or a SQL connector. When a user issues a complex command, the Agent evaluates the request. If it lacks the information required, it autonomously decides to call a Tool (e.g., generating and executing a SQL query against an [Apache Iceberg](/apache-iceberg) table). It evaluates the returned data, decides if the data is sufficient, and continues iterating through this ReAct (Reason and Act) loop until it confidently resolves the user's initial request.
 
 ## Integration with the Data Lakehouse
 
-In modern data architectures, LangChain operates as the intelligence layer directly above the Open Data Lakehouse. Organizations deploy LangChain Agents to interact securely with massive analytical engines like Dremio or Trino. 
+In modern data architectures, LangChain operates as the intelligence layer directly above the Open [Data Lakehouse](/data-lakehouse). Organizations deploy LangChain Agents to interact securely with massive analytical engines like Dremio or Trino. 
 
 By providing the Agent with explicit tools that interact with the Semantic Layer, organizations allow business users to execute deep analytical workloads using natural language. The Agent interrogates the metadata catalogs, generates highly optimized SQL, pushes the query to the execution engine, and interprets the aggregated results, fundamentally bridging the gap between artificial intelligence and massive enterprise data.
 

@@ -42,4 +42,4 @@ If a company fine-tunes a model on their 2026 Employee Handbook, the model will 
 Fine-Tuning is the ultimate mechanism for customizing Generative AI. By leveraging optimized techniques like LoRA to permanently alter the internal neural weights of an open-source model, organizations can transform a generic, generalized LLM into a highly surgical, incredibly accurate software component capable of executing complex, highly proprietary enterprise tasks with absolute architectural reliability.
 
 ## Learn More
-To learn more about the Data Lakehouse, read the book "Lakehouse for Everyone" by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).
+To learn more about the [Data Lakehouse](/data-lakehouse), read the book "Lakehouse for Everyone" by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

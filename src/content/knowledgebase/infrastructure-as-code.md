@@ -6,7 +6,7 @@ description: "A comprehensive guide to Infrastructure as Code (IaC). Learn how d
 
 # What is Infrastructure as Code (IaC)?
 
-Infrastructure as Code (IaC) is a massive, industry-defining IT methodology that fundamentally shifted the provisioning, configuration, and management of massive physical and cloud infrastructure away from manual human intervention and toward highly automated, version-controlled software programming. It is the absolute foundational capability that enables Cloud Computing, Data Lakehouse architecture, and modern DevOps.
+Infrastructure as Code (IaC) is a massive, industry-defining IT methodology that fundamentally shifted the provisioning, configuration, and management of massive physical and cloud infrastructure away from manual human intervention and toward highly automated, version-controlled software programming. It is the absolute foundational capability that enables Cloud Computing, [Data Lakehouse](/data-lakehouse) architecture, and modern DevOps.
 
 Historically, if a company needed a new database server, a System Administrator would literally walk into a freezing data center, screw a physical server into a rack, plug in ethernet cables, insert a CD-ROM to install Linux, and manually type commands for three hours to configure the database. 
 When the cloud (AWS/Azure) was invented, the administrator didn't walk into a room; they clicked 50 different buttons in the AWS web browser console to deploy a server. However, human clicking is catastrophically prone to error. If they forget to click the "Encrypt Hard Drive" button, the company is vulnerable.

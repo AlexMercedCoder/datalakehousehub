@@ -33,7 +33,7 @@ The Metastore established the standard paradigm of directory-based partitioning.
 
 However, as data lakes grew to petabyte scale, the Hive Metastore became a massive architectural bottleneck. Because it tracked data at the *directory* level rather than the *file* level, query engines were physically forced to execute slow "file-listing" operations against Amazon S3 or HDFS just to figure out which specific files existed inside a partition directory before they could even begin executing a query. 
 
-This specific bottleneck directly drove the creation of modern Open Table Formats like Apache Iceberg and Delta Lake, which abandon the Hive Metastore's directory-based approach entirely in favor of explicit file-level tracking via metadata manifests.
+This specific bottleneck directly drove the creation of modern Open Table Formats like [Apache Iceberg](/apache-iceberg) and Delta Lake, which abandon the Hive Metastore's directory-based approach entirely in favor of explicit file-level tracking via metadata manifests.
 
 ## Summary of Technical Value
 
@@ -41,4 +41,4 @@ Apache Hive holds a permanent, foundational place in the history of data enginee
 
 
 ## Learn More
-To learn more about the Data Lakehouse, read the book "Lakehouse for Everyone" by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).
+To learn more about the [Data Lakehouse](/data-lakehouse), read the book "Lakehouse for Everyone" by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

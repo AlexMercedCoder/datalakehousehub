@@ -32,7 +32,7 @@ For an entire decade, Apache ZooKeeper was an absolute, non-negotiable dependenc
 However, running a separate, highly complex ZooKeeper ensemble strictly to manage another cluster introduced massive operational overhead. Managing ZooKeeper security, scaling it, and debugging consensus timeouts became a notorious nightmare for DevOps engineers.
 
 ### The Shift Away from ZooKeeper
-As the industry evolved, modern systems aggressively re-engineered their architectures specifically to eliminate ZooKeeper. Apache Kafka spent years developing KRaft (Kafka Raft metadata mode), explicitly replacing external ZooKeeper coordination with a highly optimized, internal consensus algorithm. Modern cloud data lakehouse architectures (like Trino or Snowflake) rely entirely on massive cloud-native control planes, bypassing the need to manage distributed consensus daemons locally entirely.
+As the industry evolved, modern systems aggressively re-engineered their architectures specifically to eliminate ZooKeeper. Apache Kafka spent years developing KRaft (Kafka Raft metadata mode), explicitly replacing external ZooKeeper coordination with a highly optimized, internal consensus algorithm. Modern cloud [data lakehouse](/data-lakehouse) architectures (like Trino or Snowflake) rely entirely on massive cloud-native control planes, bypassing the need to manage distributed consensus daemons locally entirely.
 
 ## Summary of Technical Value
 

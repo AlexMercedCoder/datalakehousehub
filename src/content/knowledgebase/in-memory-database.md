@@ -13,7 +13,7 @@ Retrieving data directly from active RAM completely bypasses the physical disk c
 
 ## The Architecture of Extreme Speed
 
-Because IMDBs are designed exclusively for absolute maximum velocity, they are frequently utilized as a massive "Caching Layer" sitting directly in front of the primary Data Lakehouse or Relational Database.
+Because IMDBs are designed exclusively for absolute maximum velocity, they are frequently utilized as a massive "Caching Layer" sitting directly in front of the primary [Data Lakehouse](/data-lakehouse) or Relational Database.
 
 ### Sub-Millisecond Caching
 Consider a massive e-commerce website on Black Friday. The homepage features the "Top 10 Bestselling Items." 

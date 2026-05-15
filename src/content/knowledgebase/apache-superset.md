@@ -28,7 +28,7 @@ Because Superset was built for massive tech organizations, it is explicitly desi
 
 Superset is stateless. It relies on a central metadata database (like PostgreSQL) to store dashboard definitions and connection strings, and it relies on a message queue (like Celery/Redis) to manage asynchronous queries. Because the web servers themselves are stateless, an organization can instantly deploy fifty instances of Superset behind a load balancer using Kubernetes to handle a massive spike in dashboard traffic from thousands of concurrent users.
 
-To protect the underlying analytical database from being crushed by thousands of identical dashboard loads, Superset implements aggressive, granular caching. Using Redis or Memcached, Superset caches the exact data results of complex visualizations. When a second user opens the same dashboard, Superset serves the result from the high-speed Redis cache instantly, entirely bypassing the need to execute the expensive SQL query against the data lakehouse.
+To protect the underlying analytical database from being crushed by thousands of identical dashboard loads, Superset implements aggressive, granular caching. Using Redis or Memcached, Superset caches the exact data results of complex visualizations. When a second user opens the same dashboard, Superset serves the result from the high-speed Redis cache instantly, entirely bypassing the need to execute the expensive SQL query against the [data lakehouse](/data-lakehouse).
 
 ## Integration with the Semantic Layer
 

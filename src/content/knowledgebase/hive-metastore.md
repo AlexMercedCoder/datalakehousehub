@@ -25,7 +25,7 @@ When an analyst opens an SQL editor and types `SELECT * FROM prod_sales_table`, 
 
 ## The Scaling Crisis and The Lakehouse
 
-While the Hive Metastore birthed the modern Big Data industry, it is fundamentally a massive bottleneck and is rapidly being replaced by modern Open Table Formats (like Apache Iceberg) and modern catalogs (like Apache Polaris or Dremio Arctic).
+While the Hive Metastore birthed the modern Big Data industry, it is fundamentally a massive bottleneck and is rapidly being replaced by modern Open Table Formats (like [Apache Iceberg](/apache-iceberg)) and modern catalogs (like Apache Polaris or Dremio Arctic).
 
 Because the HMS relies on a centralized, single-node relational database (MySQL), it cannot scale to handle modern, hyperscale cloud data lakes.
 If an organization generates a massive data table with millions of distinct physical partitions, the Hive Metastore simply crashes. When a query engine asks for the location of the files, the massive MySQL database locks up trying to read millions of rows of partition data. Furthermore, the Hive Metastore provides absolutely zero ACID transactional guarantees. If two Spark clusters try to update a table simultaneously, the HMS frequently corrupts the data.
@@ -34,7 +34,7 @@ Apache Iceberg entirely solved this by moving the metadata out of the centralize
 
 ## Summary of Technical Value
 
-The Hive Metastore is one of the most critical foundational milestones in data architecture. By overlaying strict relational schemas and physical directory mapping on top of chaotic, unstructured cloud storage, it provided the essential translation layer that allowed SQL query engines to execute massive analytics against the first generation of Data Lakes. While its monolithic architecture makes it inadequate for the modern ACID-compliant Data Lakehouse, it permanently defined the concept of the decoupled Data Catalog.
+The Hive Metastore is one of the most critical foundational milestones in data architecture. By overlaying strict relational schemas and physical directory mapping on top of chaotic, unstructured cloud storage, it provided the essential translation layer that allowed SQL query engines to execute massive analytics against the first generation of Data Lakes. While its monolithic architecture makes it inadequate for the modern ACID-compliant [Data Lakehouse](/data-lakehouse), it permanently defined the concept of the decoupled Data Catalog.
 
 ## Learn More
 To learn more about the Data Lakehouse, read the book "Lakehouse for Everyone" by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

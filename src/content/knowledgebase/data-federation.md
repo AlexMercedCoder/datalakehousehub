@@ -15,7 +15,7 @@ In a traditional architecture, a database engine (like PostgreSQL) can only join
 A federated query engine (such as Trino or Dremio) acts as a massive distributed coordinator. It does not own any local storage; it exists entirely to connect to external systems.
 
 ### The Connector Ecosystem
-Federated engines utilize a highly robust plugin architecture. An engineer configures the engine with specific Connectors. They install a Snowflake Connector, an Amazon S3 (Apache Iceberg) Connector, and a MySQL Connector. 
+Federated engines utilize a highly robust plugin architecture. An engineer configures the engine with specific Connectors. They install a Snowflake Connector, an Amazon S3 ([Apache Iceberg](/apache-iceberg)) Connector, and a MySQL Connector. 
 
 Once configured, an analyst can write a single, standardized SQL query spanning all three systems:
 ```sql
@@ -40,7 +40,7 @@ If an organization attempts to execute a federated join between a massive 10-bil
 ### Intelligent Materialization
 To solve this, advanced data teams use federation selectively. They use federated queries for rapid prototyping, ad-hoc discovery, and joining massive historical tables with tiny, live operational tables. 
 
-However, for heavy, repetitive executive dashboards, they materialize the federated results. They use the federated engine to execute the complex cross-database join once in the background, and write the final, merged dataset natively into the Open Data Lakehouse (as heavily optimized Parquet files). The dashboards then query the centralized Lakehouse files directly.
+However, for heavy, repetitive executive dashboards, they materialize the federated results. They use the federated engine to execute the complex cross-database join once in the background, and write the final, merged dataset natively into the Open [Data Lakehouse](/data-lakehouse) (as heavily optimized Parquet files). The dashboards then query the centralized Lakehouse files directly.
 
 ## Summary of Technical Value
 

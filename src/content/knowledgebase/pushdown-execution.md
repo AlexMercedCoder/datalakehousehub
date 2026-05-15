@@ -36,7 +36,7 @@ Different underlying databases have wildly different capabilities and proprietar
 
 ## Pushdown in the Open Lakehouse
 
-Pushdown Execution is also critical when querying raw files in the Data Lakehouse. When an engine queries Apache Iceberg tables, it executes Predicate Pushdown directly into the Iceberg Metadata Manifests (to skip files) and into the Parquet footers (to skip Row Groups). Because Parquet files cannot "compute" math, Computational Pushdown does not apply to files; the query engine itself must execute the aggregations.
+Pushdown Execution is also critical when querying raw files in the [Data Lakehouse](/data-lakehouse). When an engine queries [Apache Iceberg](/apache-iceberg) tables, it executes Predicate Pushdown directly into the Iceberg Metadata Manifests (to skip files) and into the Parquet footers (to skip Row Groups). Because Parquet files cannot "compute" math, Computational Pushdown does not apply to files; the query engine itself must execute the aggregations.
 
 ## Summary of Technical Value
 

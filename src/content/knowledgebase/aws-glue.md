@@ -28,7 +28,7 @@ While the Catalog manages the metadata, the AWS Glue Jobs infrastructure manages
 AWS Glue utilizes Apache Spark heavily under the hood. When an engineer defines an ETL job in Glue, AWS dynamically provisions an ephemeral, highly optimized Spark cluster, executes the PySpark or Scala code, and immediately spins the cluster down when the job completes. The organization pays strictly for the exact seconds the job was executing, entirely eliminating the massive costs associated with maintaining an idle, 24/7 EMR cluster.
 
 ### Glue Studio and Code Generation
-To democratize data engineering, AWS provides Glue Studio, a visual drag-and-drop interface. Analysts can visually define an ETL pipeline—extracting data from Amazon RDS, joining it with log files in S3, dropping sensitive PII columns, and writing the result to an Apache Iceberg table. AWS Glue automatically generates the highly optimized PySpark code behind the visual interface. Experienced engineers can then intercept this auto-generated code, inject complex custom transformations, and deploy it via standard CI/CD pipelines.
+To democratize data engineering, AWS provides Glue Studio, a visual drag-and-drop interface. Analysts can visually define an ETL pipeline—extracting data from Amazon RDS, joining it with log files in S3, dropping sensitive PII columns, and writing the result to an [Apache Iceberg](/apache-iceberg) table. AWS Glue automatically generates the highly optimized PySpark code behind the visual interface. Experienced engineers can then intercept this auto-generated code, inject complex custom transformations, and deploy it via standard CI/CD pipelines.
 
 ## Modern Lakehouse Integrations
 
@@ -42,4 +42,4 @@ AWS Glue fundamentally accelerated the adoption of the cloud data lake by elimin
 
 
 ## Learn More
-To learn more about the Data Lakehouse, read the book "Lakehouse for Everyone" by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).
+To learn more about the [Data Lakehouse](/data-lakehouse), read the book "Lakehouse for Everyone" by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

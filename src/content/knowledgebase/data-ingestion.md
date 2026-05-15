@@ -6,7 +6,7 @@ description: "A comprehensive guide to Data Ingestion. Learn how enterprises sec
 
 # What is Data Ingestion?
 
-Data Ingestion is the critical, foundational first phase of the massive data engineering lifecycle. It is the specific architectural process of extracting massive volumes of raw, chaotic data from highly disparate external systems (such as operational databases, third-party SaaS APIs, and live web server logs) and securely transporting that data into a centralized storage environment, typically the raw Bronze layer of an Open Data Lakehouse or Cloud Data Warehouse.
+Data Ingestion is the critical, foundational first phase of the massive data engineering lifecycle. It is the specific architectural process of extracting massive volumes of raw, chaotic data from highly disparate external systems (such as operational databases, third-party SaaS APIs, and live web server logs) and securely transporting that data into a centralized storage environment, typically the raw Bronze layer of an Open [Data Lakehouse](/data-lakehouse) or Cloud Data Warehouse.
 
 Without highly robust, bulletproof data ingestion architecture, the entire downstream data ecosystem collapses. An incredibly complex machine learning model or a beautiful executive dashboard is mathematically useless if the ingestion pipeline drops 5% of the transactional data or suffers a massive latency delay. The primary challenge of Data Ingestion is managing the intense physical friction of interacting with external, fragile source systems across the public internet.
 

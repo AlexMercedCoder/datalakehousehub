@@ -6,7 +6,7 @@ description: "A comprehensive guide to Fivetran. Learn about automated data inte
 
 # What is Fivetran?
 
-Fivetran is a fully managed, cloud-native automated data integration platform. It fundamentally simplifies the process of extracting data from hundreds of disparate operational systems (like Salesforce, Zendesk, PostgreSQL, or Stripe) and loading it reliably into a central cloud data warehouse or open data lakehouse.
+Fivetran is a fully managed, cloud-native automated data integration platform. It fundamentally simplifies the process of extracting data from hundreds of disparate operational systems (like Salesforce, Zendesk, PostgreSQL, or Stripe) and loading it reliably into a central cloud data warehouse or open [data lakehouse](/data-lakehouse).
 
 Historically, organizations employed massive teams of data engineers strictly to write custom API polling scripts. If an API endpoint changed, or if a database schema updated unexpectedly, the fragile custom scripts crashed, destroying the downstream analytical dashboards. Fivetran resolves this profound operational burden by providing pre-built, deeply maintained connectors that extract, normalize, and load data completely automatically, allowing data engineering teams to focus entirely on analytical transformations rather than pipeline maintenance.
 

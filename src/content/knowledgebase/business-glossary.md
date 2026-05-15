@@ -15,7 +15,7 @@ The data is not broken; the semantics are broken. The Sales team defines an "Act
 
 ## The Anatomy of the Glossary
 
-A robust Business Glossary does not live in a static PDF document; it is typically housed inside an interactive Enterprise Data Catalog (like Collibra or DataGalaxy) and integrated directly into the Data Lakehouse analytics workflow.
+A robust Business Glossary does not live in a static PDF document; it is typically housed inside an interactive Enterprise Data Catalog (like Collibra or DataGalaxy) and integrated directly into the [Data Lakehouse](/data-lakehouse) analytics workflow.
 
 ### Strict Semantic Definitions
 For every critical term (e.g., `Net Revenue`, `Churn Rate`, `Active User`), the Glossary mandates:
@@ -25,7 +25,7 @@ For every critical term (e.g., `Net Revenue`, `Churn Rate`, `Active User`), the 
 
 ### Linkage to Physical Assets
 A modern Business Glossary is heavily mapped to the underlying physical data.
-When an analyst looks up the definition of `Net_Revenue` in the Glossary, the system provides a direct, clickable link to the exact highly verified, Gold-tier Apache Iceberg table in the Data Lakehouse (and the exact SQL column) that physically holds that data. This guarantees that analysts are not guessing which tables to query when building executive dashboards.
+When an analyst looks up the definition of `Net_Revenue` in the Glossary, the system provides a direct, clickable link to the exact highly verified, Gold-tier [Apache Iceberg](/apache-iceberg) table in the Data Lakehouse (and the exact SQL column) that physically holds that data. This guarantees that analysts are not guessing which tables to query when building executive dashboards.
 
 ## Governance and The Semantic Layer
 

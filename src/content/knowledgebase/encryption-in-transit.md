@@ -19,7 +19,7 @@ The absolute global standard for Encryption in Transit is Transport Layer Securi
 
 ### The Cryptographic Handshake
 Establishing a TLS connection is a highly complex mathematical negotiation that occurs in milliseconds:
-1. **Verification:** When a data pipeline attempts to connect to the massive Data Lakehouse server, the server presents a Digital Certificate (issued by a trusted global Certificate Authority). The pipeline mathematically verifies this certificate to guarantee the server is legitimate, entirely preventing "Man-in-the-Middle" attacks where a hacker pretends to be the database.
+1. **Verification:** When a data pipeline attempts to connect to the massive [Data Lakehouse](/data-lakehouse) server, the server presents a Digital Certificate (issued by a trusted global Certificate Authority). The pipeline mathematically verifies this certificate to guarantee the server is legitimate, entirely preventing "Man-in-the-Middle" attacks where a hacker pretends to be the database.
 2. **Asymmetric Encryption (The Key Exchange):** The pipeline and the server use complex, heavy Asymmetric Cryptography (like RSA) to securely generate and exchange a shared, temporary secret key over the open, unsecured network.
 3. **Symmetric Encryption (The Tunnel):** Once both sides possess the shared secret key, they abandon the heavy Asymmetric math. They use the shared key to spin up an ultra-fast Symmetric Encryption tunnel (typically AES-256). All the massive, multi-terabyte data streams are then pumped through this high-speed encrypted tunnel.
 

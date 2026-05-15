@@ -6,7 +6,7 @@ description: "A comprehensive guide to Data Lakehouse Platforms. Learn how open 
 
 # What is a Data Lakehouse Platform?
 
-A Data Lakehouse Platform is a modern data architecture that fundamentally unifies the immense scalability and low-cost storage of a data lake with the robust transactional reliability and performance of an enterprise data warehouse. 
+A [Data Lakehouse](/data-lakehouse) Platform is a modern data architecture that fundamentally unifies the immense scalability and low-cost storage of a data lake with the robust transactional reliability and performance of an enterprise data warehouse. 
 
 Historically, organizations were forced into a chaotic, two-tier architecture. They dumped massive volumes of raw, unstructured data into a cheap data lake (like Amazon S3 or Hadoop) because traditional databases were too expensive to hold it. Then, they built massive, fragile ETL pipelines to extract subsets of that data, heavily process it, and load it into a highly rigid, expensive data warehouse (like Snowflake or Teradata) just to allow business analysts to query it quickly. 
 
@@ -20,7 +20,7 @@ To understand the practical application of a Data Lakehouse Platform, it is cruc
 Unlike traditional data warehouses that force organizations to ingest data into proprietary, locked-down formats, a Lakehouse relies explicitly on open storage. Data is stored in raw cloud buckets using highly optimized, open-source columnar formats like Apache Parquet. This provides limitless scalability at a fraction of traditional enterprise storage costs.
 
 ### 2. The Transactional Metadata Layer
-The core innovation of the Lakehouse is the implementation of an Open Table Format, such as Apache Iceberg, Apache Hudi, or Delta Lake. These frameworks sit directly on top of the raw Parquet files. They provide a strict, ACID-compliant transaction log. This metadata layer ensures that if multiple pipelines write to the lake simultaneously, the data is never corrupted. It brings warehouse features—like Schema Enforcement, Time Travel, and Row-Level Deletes—directly to the data lake.
+The core innovation of the Lakehouse is the implementation of an Open Table Format, such as [Apache Iceberg](/apache-iceberg), Apache Hudi, or Delta Lake. These frameworks sit directly on top of the raw Parquet files. They provide a strict, ACID-compliant transaction log. This metadata layer ensures that if multiple pipelines write to the lake simultaneously, the data is never corrupted. It brings warehouse features—like Schema Enforcement, Time Travel, and Row-Level Deletes—directly to the data lake.
 
 ### 3. The Decoupled Compute Engine
 Because the data and the metadata are entirely open, an organization is never locked into a single vendor's compute engine. A Lakehouse Platform utilizes massive, distributed SQL engines (like Dremio, Trino, or Apache Spark) to query the storage. These engines can be scaled up instantly to handle massive end-of-month financial aggregations, and scaled down to zero when idle, completely separating the cost of storage from the cost of computing.

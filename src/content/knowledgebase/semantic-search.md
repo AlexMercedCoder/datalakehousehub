@@ -14,7 +14,7 @@ For decades, databases relied entirely on Lexical Search (Keyword Search). If an
 
 Semantic Search operates exclusively in mathematical Vector Space rather than text space.
 
-When the HR documents are originally ingested into the Data Lakehouse, they are passed through an Embedding Model. The sentence "To be reimbursed for your computer hardware" is converted into a 1,536-dimension array of numbers (a Vector) and stored in the database.
+When the HR documents are originally ingested into the [Data Lakehouse](/data-lakehouse), they are passed through an Embedding Model. The sentence "To be reimbursed for your computer hardware" is converted into a 1,536-dimension array of numbers (a Vector) and stored in the database.
 
 When the employee types, "How to get a refund for my laptop," that search query is not run against the database text. The query itself is sent to the Embedding Model and converted into a Vector.
 

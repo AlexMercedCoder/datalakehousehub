@@ -22,7 +22,7 @@ In a Kappa system, all incoming data—whether it is a live clickstream event oc
 ### 2. The Single Computation Engine
 The organization deploys a single, highly robust continuous streaming engine (such as Apache Flink or Spark Structured Streaming). The data engineers write the complex SQL transformations and business logic exactly once.
 
-When the system operates normally, the streaming engine consumes the live events from Kafka, processes the math in milliseconds, and pushes the clean data into the serving layer (like an Apache Iceberg table) for the business dashboards to query.
+When the system operates normally, the streaming engine consumes the live events from Kafka, processes the math in milliseconds, and pushes the clean data into the serving layer (like an [Apache Iceberg](/apache-iceberg) table) for the business dashboards to query.
 
 ## Managing Historical Backfills and Reprocessing
 
@@ -45,4 +45,4 @@ The Kappa Architecture is the ultimate rationalization of the real-time data sta
 
 
 ## Learn More
-To learn more about the Data Lakehouse, read the book "Lakehouse for Everyone" by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).
+To learn more about the [Data Lakehouse](/data-lakehouse), read the book "Lakehouse for Everyone" by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

@@ -6,9 +6,9 @@ description: "A comprehensive guide to Apache Polaris. Learn about the open-sour
 
 # What is Apache Polaris?
 
-Apache Polaris (incubating) is an enterprise-grade, open-source catalog architecture designed explicitly for Apache Iceberg. Developed initially by Snowflake and subsequently donated to the Apache Software Foundation, Polaris provides a vendor-neutral, highly scalable implementation of the Iceberg REST Catalog specification. 
+Apache Polaris (incubating) is an enterprise-grade, open-source catalog architecture designed explicitly for [Apache Iceberg](/apache-iceberg). Developed initially by Snowflake and subsequently donated to the Apache Software Foundation, Polaris provides a vendor-neutral, highly scalable implementation of the Iceberg REST Catalog specification. 
 
-As organizations adopted the Open Data Lakehouse, they quickly realized that while storing data in open Apache Parquet files eliminated storage lock-in, they were still heavily locked into proprietary catalogs. If an organization used a specific vendor’s proprietary catalog to manage their Iceberg tables, it was often incredibly difficult to allow a competing query engine to read that data seamlessly. Polaris entirely resolves this friction by establishing a universal, open standard for catalog management, centralized security, and cross-engine interoperability.
+As organizations adopted the Open [Data Lakehouse](/data-lakehouse), they quickly realized that while storing data in open Apache Parquet files eliminated storage lock-in, they were still heavily locked into proprietary catalogs. If an organization used a specific vendor’s proprietary catalog to manage their Iceberg tables, it was often incredibly difficult to allow a competing query engine to read that data seamlessly. Polaris entirely resolves this friction by establishing a universal, open standard for catalog management, centralized security, and cross-engine interoperability.
 
 ## The Architecture of Polaris
 
@@ -32,7 +32,7 @@ Because Polaris is open-source, organizations can run it locally in Docker for t
 
 ## Integration in the AI Era
 
-In the context of the Agentic Lakehouse, a standardized catalog is absolutely critical. Autonomous AI agents require highly deterministic, rigidly defined data structures to prevent hallucinations.
+In the context of the [Agentic Lakehouse](/agentic-lakehouse), a standardized catalog is absolutely critical. Autonomous AI agents require highly deterministic, rigidly defined data structures to prevent hallucinations.
 
 When an AI agent (built on LangChain or DSPy) executes a workflow, it interacts directly with Polaris to discover the available datasets. Polaris provides the agent with pristine, reliable schema definitions and strongly enforces the agent's specific security roles. This ensures that an AI agent deployed for the HR department cannot accidentally query sensitive financial Iceberg tables managed under a completely different Polaris namespace.
 

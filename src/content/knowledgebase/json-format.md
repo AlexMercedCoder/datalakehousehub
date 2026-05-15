@@ -33,7 +33,7 @@ Furthermore, JSON natively enforces basic data types. It differentiates between 
 
 ## The Analytical Limitations of JSON
 
-While JSON is the supreme, flawless format for software engineering and API transmission, it is a catastrophic format for large-scale analytical storage in a Data Lakehouse.
+While JSON is the supreme, flawless format for software engineering and API transmission, it is a catastrophic format for large-scale analytical storage in a [Data Lakehouse](/data-lakehouse).
 
 ### 1. Massive Storage Bloat
 Because JSON is self-describing, it physically repeats the Key for every single record. If an API transmits a million customer records, the exact string `"customer_id"` is written to the hard drive one million distinct times. This creates massive textual bloat, completely destroying storage efficiency and wildly inflating cloud storage costs.

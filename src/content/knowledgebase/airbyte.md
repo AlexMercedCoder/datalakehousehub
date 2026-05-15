@@ -29,13 +29,13 @@ Airbyte supports a distinct separation of the Control Plane from the Data Plane.
 
 Modern data architectures are rarely limited to a single rigid data warehouse. Airbyte supports a massive array of destinations. 
 
-It can extract data from a PostgreSQL database and write it simultaneously to a Snowflake warehouse, an Amazon S3 bucket (formatted as raw Parquet files), and an Apache Iceberg table. 
+It can extract data from a PostgreSQL database and write it simultaneously to a Snowflake warehouse, an Amazon S3 bucket (formatted as raw Parquet files), and an [Apache Iceberg](/apache-iceberg) table. 
 
 Crucially, Airbyte aggressively expanded into the Generative AI ecosystem. It provides native destination connectors for Vector Databases (like Pinecone, Milvus, and Weaviate). An organization can configure Airbyte to extract massive volumes of unstructured text from Zendesk support tickets, automatically chunk the text, pass it through an embedding model (like OpenAI), and stream the resulting vectors directly into a vector database to power an enterprise Retrieval-Augmented Generation (RAG) agent.
 
 ## Summary of Technical Value
 
-Airbyte commoditized data ingestion by combining the reliability of a modern orchestration platform with the massive flexibility of an open-source, containerized architecture. By providing an explicit Connector Development Kit and allowing organizations to execute pipelines entirely within their own secure networks, Airbyte ensures that data teams can integrate absolutely any API or obscure database into their modern open data lakehouse effortlessly.
+Airbyte commoditized data ingestion by combining the reliability of a modern orchestration platform with the massive flexibility of an open-source, containerized architecture. By providing an explicit Connector Development Kit and allowing organizations to execute pipelines entirely within their own secure networks, Airbyte ensures that data teams can integrate absolutely any API or obscure database into their modern open [data lakehouse](/data-lakehouse) effortlessly.
 
 
 ## Learn More

@@ -6,7 +6,7 @@ description: "A comprehensive guide to the Iceberg Manifest File. Learn how this
 
 # What is an Iceberg Manifest File?
 
-An Iceberg Manifest File is the absolute foundational building block of the Apache Iceberg metadata architecture. Operating at the lowest tier of the Iceberg metadata tree, the Manifest File is a highly specialized, binary Avro file explicitly designed to track the exact physical locations, statuses, and complex mathematical statistics of individual data files (typically Apache Parquet files) resting in the Data Lakehouse.
+An Iceberg Manifest File is the absolute foundational building block of the [Apache Iceberg](/apache-iceberg) metadata architecture. Operating at the lowest tier of the Iceberg metadata tree, the Manifest File is a highly specialized, binary Avro file explicitly designed to track the exact physical locations, statuses, and complex mathematical statistics of individual data files (typically Apache Parquet files) resting in the [Data Lakehouse](/data-lakehouse).
 
 In legacy Big Data architectures (like Apache Hive), the centralized Hive Metastore tracked partitions strictly by maintaining a massive directory tree of folders. The query engine was forced to physically execute an `ls` (list) command against Amazon S3 to discover which files actually existed inside those folders. Because S3 is an object store, not a true file system, executing `ls` against a folder containing 10,000 files is catastrophically slow, completely destroying query performance.
 Apache Iceberg completely abandoned folder-based tracking. Instead, it utilizes Manifest Files to track data at the absolute, granular *file* level, completely eliminating the need for slow S3 directory listings.

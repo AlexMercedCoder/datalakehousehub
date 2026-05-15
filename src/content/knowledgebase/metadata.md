@@ -6,7 +6,7 @@ description: "A comprehensive guide to Metadata. Learn how data about data power
 
 # What is Metadata?
 
-Metadata is, fundamentally, "data about data." While the raw data itself (e.g., the number `150.00` or the string `John Doe`) holds the intrinsic business value, Metadata is the absolute critical contextual and structural framework that makes the raw data actually usable, discoverable, and computationally highly performant. In a massive, petabyte-scale Data Lakehouse, if data lacks accurate metadata, it is not an asset; it is a completely unmanageable liability.
+Metadata is, fundamentally, "data about data." While the raw data itself (e.g., the number `150.00` or the string `John Doe`) holds the intrinsic business value, Metadata is the absolute critical contextual and structural framework that makes the raw data actually usable, discoverable, and computationally highly performant. In a massive, petabyte-scale [Data Lakehouse](/data-lakehouse), if data lacks accurate metadata, it is not an asset; it is a completely unmanageable liability.
 
 If you possess a massive library containing a million books (the data), the Metadata is the sophisticated card catalog system. The card catalog tells you the exact title of the book, the author, the publication date, and the precise physical shelf where it resides. Without the card catalog, finding a specific sentence requires physically reading every single book in the building. In a massive Data Lake, finding a specific transaction without metadata requires a query engine to physically scan billions of Parquet files, crippling the system.
 
@@ -22,7 +22,7 @@ This is the low-level, bare-metal metadata utilized entirely by query engines (l
 
 ### 2. Logical (Schema) Metadata
 This is the metadata that defines the strict mathematical blueprint of the data. 
-It dictates that the `customer_id` column is strictly an `Integer`, the `revenue` column is a `Decimal`, and the `email` column is a `String`. Logical metadata is managed by Open Table Formats (like Apache Iceberg). If a pipeline attempts to write a string of text into the integer `customer_id` column, the Logical Metadata constraints instantly block the write, preventing database corruption.
+It dictates that the `customer_id` column is strictly an `Integer`, the `revenue` column is a `Decimal`, and the `email` column is a `String`. Logical metadata is managed by Open Table Formats (like [Apache Iceberg](/apache-iceberg)). If a pipeline attempts to write a string of text into the integer `customer_id` column, the Logical Metadata constraints instantly block the write, preventing database corruption.
 
 ### 3. Business (Semantic) Metadata
 This is the highest level of metadata, utilized strictly by human beings. It is housed in an Enterprise Data Catalog (like Collibra or Alation).

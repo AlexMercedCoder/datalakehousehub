@@ -16,7 +16,7 @@ A production-grade RAG pipeline consists of two distinct, decoupled phases: the 
 
 ### Phase 1: The Ingestion Pipeline
 To allow an AI to search proprietary data, the data must first be converted into a format the AI understands.
-1. **Extraction:** A data pipeline extracts raw unstructured data (PDFs, Confluence pages, Slack messages) from the corporate data lakehouse.
+1. **Extraction:** A data pipeline extracts raw unstructured data (PDFs, Confluence pages, Slack messages) from the corporate [data lakehouse](/data-lakehouse).
 2. **Chunking:** LLMs have strict context window limits. The pipeline slices the massive documents into small, logical chunks (e.g., 500-word paragraphs).
 3. **Embedding:** The pipeline passes every single chunk through an Embedding Model (like OpenAI's `text-embedding-ada-002`). The model converts the text chunk into a high-dimensional mathematical vector representing its exact semantic meaning.
 4. **Storage:** The pipeline stores the vectors, alongside the original raw text and critical metadata (like the `document_id` and `access_level`), securely into a Vector Database (like Pinecone or Milvus).

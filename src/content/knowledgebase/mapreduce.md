@@ -30,7 +30,7 @@ One specific Reduce server receives all the pieces of paper regarding the word "
 
 ## The Fall of MapReduce and the Rise of Spark
 
-While mathematically revolutionary, MapReduce is functionally obsolete in the modern Open Data Lakehouse.
+While mathematically revolutionary, MapReduce is functionally obsolete in the modern Open [Data Lakehouse](/data-lakehouse).
 
 MapReduce was engineered in an era where RAM was incredibly expensive. Therefore, the MapReduce algorithm was designed to be hyper-conservative with memory. After the Map phase, the algorithm violently forces all 1,000 servers to physically write their intermediate results directly to the spinning hard drives (Disk I/O). Then, the Reduce phase must physically read that data back off the hard drives. 
 Writing to disk is the slowest possible operation in computing. This made MapReduce incredibly resilient, but catastrophically slow. A massive query could take 14 hours to execute.

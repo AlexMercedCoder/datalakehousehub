@@ -16,7 +16,7 @@ This unrestricted era was violently terminated by the introduction of massive, p
 Modern data engineering pipelines must be explicitly designed from the ground up (Privacy by Design) to enforce strict legal mandates.
 
 ### 1. Consent Management
-An organization cannot legally ingest data into its Data Lakehouse without explicit, mathematically verifiable human consent. 
+An organization cannot legally ingest data into its [Data Lakehouse](/data-lakehouse) without explicit, mathematically verifiable human consent. 
 When a user clicks "Accept Cookies" on a website, that action generates a Consent Event. This event flows into the architecture. The data engineering team must build automated logic into the ETL pipelines: if a row of user data arrives *without* a linked, active Consent Event, the pipeline must automatically quarantine or delete that specific row before it enters the analytical Data Lakehouse, ensuring zero illegal processing.
 
 ### 2. Purpose Limitation
@@ -28,7 +28,7 @@ The data was legally collected, but the *purpose* of the processing was violated
 Under modern privacy laws, a consumer has the absolute right to demand that an organization mathematically obliterate all traces of their existence from the corporate servers within 30 days.
 
 Historically, this was impossible. A user's data might be scattered across thousands of nested JSON log files in a massive S3 data lake. Deleting a single user required rewriting petabytes of files, a computationally catastrophic task. 
-The invention of Open Table Formats (like Apache Iceberg) solved this. By utilizing deep metadata tracking and instantaneous row-level `DELETE` commands, data engineers can surgically identify and obliterate a specific user's historical footprint across a petabyte-scale lakehouse in milliseconds, guaranteeing absolute legal compliance without crashing the cluster.
+The invention of Open Table Formats (like [Apache Iceberg](/apache-iceberg)) solved this. By utilizing deep metadata tracking and instantaneous row-level `DELETE` commands, data engineers can surgically identify and obliterate a specific user's historical footprint across a petabyte-scale lakehouse in milliseconds, guaranteeing absolute legal compliance without crashing the cluster.
 
 ## Summary of Technical Value
 

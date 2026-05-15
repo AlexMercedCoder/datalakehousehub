@@ -42,4 +42,4 @@ Graph Databases have become the absolute standard for two massive enterprise dom
 Graph Databases fundamentally redefine the limits of relational analytics. By physically hardcoding the explicit connections between entities via Index-Free Adjacency, Graph Databases completely eliminate the massive computational friction of traditional SQL joins. They provide the lightning-fast, infinitely scalable network traversal required to power real-time fraud detection, complex recommendation engines, and highly advanced Enterprise Artificial Intelligence.
 
 ## Learn More
-To learn more about the Data Lakehouse, read the book "Lakehouse for Everyone" by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).
+To learn more about the [Data Lakehouse](/data-lakehouse), read the book "Lakehouse for Everyone" by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

@@ -31,7 +31,7 @@ While Microservices solve massive scaling problems for software engineers, they 
 The foundational rule of Microservices is that *every service must own its own isolated database*. The `User_Service` uses a PostgreSQL database, while the `Inventory_Service` uses a MongoDB database. 
 If the CEO asks for a single dashboard showing "Users who bought Inventory," the query engine cannot simply write a `JOIN` across the two databases, because they are physically isolated and completely incompatible.
 
-This exact nightmare is why the modern Data Lakehouse was invented. Data engineers must build complex Event Streaming pipelines (like Apache Kafka) to constantly extract the chaotic, fragmented data from the hundreds of isolated Microservice databases, streaming it all into a single, centralized Amazon S3 Data Lake, and resolving it into unified Apache Iceberg tables so the business can actually execute unified analytical queries.
+This exact nightmare is why the modern [Data Lakehouse](/data-lakehouse) was invented. Data engineers must build complex Event Streaming pipelines (like Apache Kafka) to constantly extract the chaotic, fragmented data from the hundreds of isolated Microservice databases, streaming it all into a single, centralized Amazon S3 Data Lake, and resolving it into unified [Apache Iceberg](/apache-iceberg) tables so the business can actually execute unified analytical queries.
 
 ## Summary of Technical Value
 

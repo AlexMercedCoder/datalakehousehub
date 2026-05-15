@@ -42,7 +42,7 @@ If an analyst executes a query filtering for `event_date = '2026-05-14'`, the qu
 
 ## Parquet in the Data Lakehouse
 
-Apache Parquet is the foundational storage primitive for the entire modern Open Data Lakehouse. Advanced open table formats like Apache Iceberg, Apache Hudi, and Delta Lake do not replace Parquet; they rely on it. These formats provide the transactional metadata layer (the ACID guarantees and Time Travel), but they universally rely on Parquet files to provide the actual physical storage and optimized columnar execution. 
+Apache Parquet is the foundational storage primitive for the entire modern Open [Data Lakehouse](/data-lakehouse). Advanced open table formats like [Apache Iceberg](/apache-iceberg), Apache Hudi, and Delta Lake do not replace Parquet; they rely on it. These formats provide the transactional metadata layer (the ACID guarantees and Time Travel), but they universally rely on Parquet files to provide the actual physical storage and optimized columnar execution. 
 
 ## Summary of Technical Value
 

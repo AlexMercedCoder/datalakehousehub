@@ -12,7 +12,7 @@ Historically, organizations operated in severe silos. Data Engineers (who wrote 
 
 ## The Domain of the Analytics Engineer
 
-An Analytics Engineer does not build complex Python ingestion scripts to extract data from APIs, and they do not build the final Tableau dashboards for the executives. Their entire domain resides exclusively inside the Data Lakehouse or Cloud Data Warehouse.
+An Analytics Engineer does not build complex Python ingestion scripts to extract data from APIs, and they do not build the final Tableau dashboards for the executives. Their entire domain resides exclusively inside the [Data Lakehouse](/data-lakehouse) or Cloud Data Warehouse.
 
 ### Curating the Semantic Layer
 They take the raw, messy data safely landed in the warehouse by the data engineers, and they write highly optimized SQL to transform it into clean, verifiable business entities. 

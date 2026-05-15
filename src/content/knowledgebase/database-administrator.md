@@ -29,7 +29,7 @@ The DBA is the absolute guardian of PII (Personally Identifiable Information). T
 The advent of massive, fully managed Cloud Data Warehouses (like Snowflake) and Serverless Open Data Lakehouses fundamentally disrupted the traditional DBA role. 
 
 Because Snowflake automatically provisions its own hard drives, automatically scales its own compute, and automatically builds its own indexes, the traditional, manual bare-metal tasks of the DBA have been entirely abstracted away by the cloud provider.
-Consequently, modern DBAs have aggressively evolved into highly advanced Cloud Data Architects or Database Reliability Engineers (DBREs). Instead of manually tuning Oracle indexes, they now write massive Infrastructure as Code (Terraform) scripts to autonomously deploy and govern petabyte-scale, federated Data Lakehouse clusters across multiple cloud providers.
+Consequently, modern DBAs have aggressively evolved into highly advanced Cloud Data Architects or Database Reliability Engineers (DBREs). Instead of manually tuning Oracle indexes, they now write massive Infrastructure as Code (Terraform) scripts to autonomously deploy and govern petabyte-scale, federated [Data Lakehouse](/data-lakehouse) clusters across multiple cloud providers.
 
 ## Summary of Technical Value
 

@@ -42,4 +42,4 @@ This effectively transforms the LLM from a guessing engine into a highly constra
 AI Hallucinations represent the inherent danger of relying on probabilistic text generators for factual accuracy. By acknowledging that LLMs are next-token prediction engines rather than databases of truth, data engineers can deploy strict architectural guardrails—specifically Retrieval-Augmented Generation (RAG) and high-quality Vector Databases—to completely eliminate fabrications and safely deploy generative AI into mission-critical enterprise workflows.
 
 ## Learn More
-To learn more about the Data Lakehouse, read the book "Lakehouse for Everyone" by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).
+To learn more about the [Data Lakehouse](/data-lakehouse), read the book "Lakehouse for Everyone" by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

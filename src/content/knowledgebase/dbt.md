@@ -8,7 +8,7 @@ description: "A comprehensive guide to dbt (Data Build Tool). Learn about analyt
 
 dbt (Data Build Tool) is an open-source command-line tool and deployment framework that revolutionizes how data teams execute the "Transform" step in the ELT (Extract, Load, Transform) pipeline. Rather than relying on fragile, monolithic Python scripts or complex drag-and-drop GUI tools, dbt allows data analysts and engineers to write modular, reusable data transformations using standard SQL combined with Jinja templating.
 
-By applying software engineering best practices—such as version control, automated testing, and CI/CD workflows—to analytical SQL, dbt effectively created the modern discipline known as Analytics Engineering. It empowers analysts who know SQL to build complex, production-grade data pipelines directly within the cloud data warehouse or data lakehouse, without requiring extensive knowledge of distributed systems programming.
+By applying software engineering best practices—such as version control, automated testing, and CI/CD workflows—to analytical SQL, dbt effectively created the modern discipline known as Analytics Engineering. It empowers analysts who know SQL to build complex, production-grade data pipelines directly within the cloud data warehouse or [data lakehouse](/data-lakehouse), without requiring extensive knowledge of distributed systems programming.
 
 ## The Shift from ETL to ELT
 

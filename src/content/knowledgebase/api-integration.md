@@ -6,7 +6,7 @@ description: "A comprehensive guide to API Integration. Learn how data pipelines
 
 # What is API Integration?
 
-API Integration is the highly programmatic, strictly standardized architectural mechanism that allows completely disparate software systems to securely communicate, authenticate, and exchange massive volumes of data over the internet. In the specific context of Data Engineering and the Data Lakehouse, API Integration represents the absolute primary method for extracting critical business data locked inside external, third-party SaaS platforms (such as Salesforce, Stripe, Zendesk, or Google Analytics).
+API Integration is the highly programmatic, strictly standardized architectural mechanism that allows completely disparate software systems to securely communicate, authenticate, and exchange massive volumes of data over the internet. In the specific context of Data Engineering and the [Data Lakehouse](/data-lakehouse), API Integration represents the absolute primary method for extracting critical business data locked inside external, third-party SaaS platforms (such as Salesforce, Stripe, Zendesk, or Google Analytics).
 
 Unlike extracting data from an internal PostgreSQL database—where a data engineer has full administrative control and can directly query the underlying tables—a data engineer has zero access to the underlying databases powering Salesforce. Salesforce protects its servers heavily. The only physical way to extract that data is to build a complex data pipeline that speaks directly to the official Salesforce API (Application Programming Interface), adhering perfectly to their strict rules of engagement.
 

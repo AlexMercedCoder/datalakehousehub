@@ -6,7 +6,7 @@ description: "A comprehensive guide to Webhooks. Learn how event-driven reverse 
 
 # What is a Webhook?
 
-A Webhook is a highly efficient, event-driven architectural mechanism that allows a software application to automatically send a real-time data payload to another application the exact millisecond a specific event occurs. Often referred to as a "Reverse API," Webhooks completely eliminate the massive computational waste and severe latency associated with traditional API polling, forming a critical ingestion strategy for the real-time Data Lakehouse.
+A Webhook is a highly efficient, event-driven architectural mechanism that allows a software application to automatically send a real-time data payload to another application the exact millisecond a specific event occurs. Often referred to as a "Reverse API," Webhooks completely eliminate the massive computational waste and severe latency associated with traditional API polling, forming a critical ingestion strategy for the real-time [Data Lakehouse](/data-lakehouse).
 
 To understand the immense value of a Webhook, one must understand the absolute inefficiency of traditional API Polling. 
 If an e-commerce company wants to update their dashboard the moment a customer processes a refund in Stripe, a traditional pipeline must use a script that "polls" (asks) the Stripe API every single minute: "Did a refund happen? Did a refund happen? Did a refund happen?" 

@@ -16,7 +16,7 @@ For example, the string `0 2 * * * python3 /scripts/extract_sales.py` instructs 
 
 While Cron is incredibly reliable and lightweight for simple administrative tasks, using it to manage massive, highly complex modern data engineering pipelines is universally considered a catastrophic architectural anti-pattern. 
 
-Cron suffers from three severe limitations that make it fundamentally incompatible with the modern Data Lakehouse:
+Cron suffers from three severe limitations that make it fundamentally incompatible with the modern [Data Lakehouse](/data-lakehouse):
 
 ### 1. Absolute Blindness (No Dependency Management)
 Cron is entirely time-bound; it has absolutely zero situational awareness. If a data engineer schedules an extraction script at 2:00 AM and a data transformation script at 3:00 AM, Cron blindly assumes the extraction takes less than an hour. 

@@ -39,7 +39,7 @@ Data engineers implement Encryption at Rest via two distinct paradigms:
 
 ## Summary of Technical Value
 
-Encryption at Rest is the absolute bedrock of physical data security. By cryptographically scrambling petabytes of information resting on servers and entirely decoupling the cryptographic keys from the underlying storage media, it mathematically guarantees that even if the physical infrastructure of the Data Lakehouse is stolen or compromised, the enterprise data remains absolutely impenetrable.
+Encryption at Rest is the absolute bedrock of physical data security. By cryptographically scrambling petabytes of information resting on servers and entirely decoupling the cryptographic keys from the underlying storage media, it mathematically guarantees that even if the physical infrastructure of the [Data Lakehouse](/data-lakehouse) is stolen or compromised, the enterprise data remains absolutely impenetrable.
 
 ## Learn More
 To learn more about the Data Lakehouse, read the book "Lakehouse for Everyone" by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

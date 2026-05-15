@@ -29,7 +29,7 @@ Great Expectations solves this onboarding bottleneck via Automated Data Profilin
 
 ## Integration in the Lakehouse and WAP
 
-Great Expectations is a critical foundational component of modern Data Lakehouse governance, specifically within the Write-Audit-Publish (WAP) architectural pattern.
+Great Expectations is a critical foundational component of modern [Data Lakehouse](/data-lakehouse) governance, specifically within the Write-Audit-Publish (WAP) architectural pattern.
 
 When data pipelines run, they write data into a hidden branch or an isolated staging table. An orchestrator (like Apache Airflow or Dagster) immediately triggers a Great Expectations Checkpoint. The framework validates the isolated data against the entire Expectation Suite. 
 

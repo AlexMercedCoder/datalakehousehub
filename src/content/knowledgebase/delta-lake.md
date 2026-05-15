@@ -57,7 +57,7 @@ TIMESTAMP AS OF '2026-05-10 14:00:00';
 
 ## Delta Universal Format (UniForm)
 
-As the open table format ecosystem matured, a massive fragmentation occurred between organizations adopting Apache Iceberg, Apache Hudi, and Delta Lake. To solve this interoperability challenge, the Delta Lake community introduced Delta Universal Format (UniForm).
+As the open table format ecosystem matured, a massive fragmentation occurred between organizations adopting [Apache Iceberg](/apache-iceberg), Apache Hudi, and Delta Lake. To solve this interoperability challenge, the Delta Lake community introduced Delta Universal Format (UniForm).
 
 UniForm allows a Delta Lake table to be queried natively by Iceberg or Hudi clients. When data is written to a Delta table, UniForm asynchronously generates the necessary metadata files required by the Iceberg and Hudi specifications. This means an organization can write data exclusively using Delta Lake's high-performance Spark integrations, but allow a separate team using Dremio or Trino to query the exact same data using the Iceberg REST catalog protocol. UniForm actively eliminates vendor lock-in and bridges the gap between competing open standards.
 

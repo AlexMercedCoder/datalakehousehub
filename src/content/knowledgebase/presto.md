@@ -8,7 +8,7 @@ description: "A comprehensive guide to Apache Presto. Learn how Facebook invente
 
 Apache Presto is a massive, open-source, distributed SQL query engine initially developed by Facebook in 2012 to solve a critical architectural crisis: their internal data analysts could no longer execute interactive queries. At the time, Facebook possessed a 300-Petabyte data lake running on Apache Hive and MapReduce. Executing a simple SQL query to discover how many users clicked a button took hours to complete because MapReduce constantly wrote intermediate data to slow physical hard drives.
 
-Presto was explicitly invented to replace Hive for interactive analytics. It abandoned the slow disk-writing mechanisms of MapReduce and executed the entire SQL query exclusively in active Random Access Memory (RAM) distributed across thousands of massive servers. Presto reduced query times from 14 hours down to 3 seconds, entirely redefining the speed limit of Big Data and laying the absolute foundation for the modern Open Data Lakehouse.
+Presto was explicitly invented to replace Hive for interactive analytics. It abandoned the slow disk-writing mechanisms of MapReduce and executed the entire SQL query exclusively in active Random Access Memory (RAM) distributed across thousands of massive servers. Presto reduced query times from 14 hours down to 3 seconds, entirely redefining the speed limit of Big Data and laying the absolute foundation for the modern Open [Data Lakehouse](/data-lakehouse).
 
 ## The Architectural Split: Presto vs. Trino
 
@@ -17,7 +17,7 @@ In the modern data engineering ecosystem, there is frequent confusion regarding 
 They are essentially the same underlying architectural invention, but they represent a massive organizational fork. In 2018, the original creators of Presto (Martin Traverso, Dain Sundstrom, and David Phillips) left Facebook due to deep disagreements over the open-source governance of the project. 
 
 * **Presto (PrestoDB):** This is the original codebase, which remains heavily governed by the Linux Foundation and heavily utilized internally by massive web-scale companies like Facebook (Meta) and Uber. 
-* **Trino (Formerly PrestoSQL):** This is the fork created by the original inventors. It has become the dominant, community-driven standard for the broader enterprise market and the Open Data Lakehouse ecosystem, boasting massive integrations with Apache Iceberg and cloud-native architectures.
+* **Trino (Formerly PrestoSQL):** This is the fork created by the original inventors. It has become the dominant, community-driven standard for the broader enterprise market and the Open Data Lakehouse ecosystem, boasting massive integrations with [Apache Iceberg](/apache-iceberg) and cloud-native architectures.
 
 ## In-Memory Processing and Pipelined Execution
 

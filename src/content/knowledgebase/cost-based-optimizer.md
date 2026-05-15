@@ -14,7 +14,7 @@ The CBO is responsible for taking that abstract SQL query and mathematically gen
 
 A Rule-Based Optimizer (an older, inferior technology) simply follows static rules (e.g., "Always filter before joining"). A Cost-Based Optimizer is exponentially smarter because it relies heavily on evaluating the exact statistical reality of the data.
 
-To function, the CBO must possess deep integration with the Enterprise Catalog (like the Hive Metastore or Apache Iceberg). Before executing the query, the CBO evaluates the metadata statistics for every table involved:
+To function, the CBO must possess deep integration with the Enterprise Catalog (like the Hive Metastore or [Apache Iceberg](/apache-iceberg)). Before executing the query, the CBO evaluates the metadata statistics for every table involved:
 * The total row count of the table.
 * The absolute file size in bytes.
 * The cardinality (number of distinct values) of specific columns.
@@ -48,4 +48,4 @@ The Cost-Based Optimizer is the translation layer between human intent and bare-
 
 
 ## Learn More
-To learn more about the Data Lakehouse, read the book "Lakehouse for Everyone" by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).
+To learn more about the [Data Lakehouse](/data-lakehouse), read the book "Lakehouse for Everyone" by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

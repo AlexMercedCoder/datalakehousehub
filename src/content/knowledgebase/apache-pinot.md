@@ -38,4 +38,4 @@ Pinot does not rely on a single indexing strategy. It provides data engineers wi
 Apache Pinot is the absolute definitive architecture for user-facing analytics. By utilizing aggressive pre-aggregation structures like the Star-Tree Index and physically isolating real-time stream ingestion from massive historical querying, Pinot guarantees that organizations can safely expose highly complex, multi-terabyte analytical dashboards directly to millions of concurrent public consumers with flawless, guaranteed sub-second latency.
 
 ## Learn More
-To learn more about the Data Lakehouse, read the book "Lakehouse for Everyone" by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).
+To learn more about the [Data Lakehouse](/data-lakehouse), read the book "Lakehouse for Everyone" by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

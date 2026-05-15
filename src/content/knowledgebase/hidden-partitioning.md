@@ -6,7 +6,7 @@ description: "A comprehensive guide to Hidden Partitioning. Learn how Apache Ice
 
 # What is Hidden Partitioning?
 
-Hidden Partitioning is a highly advanced storage management feature introduced natively by Apache Iceberg. It was explicitly engineered to solve the catastrophic usability flaws, performance bottlenecks, and frequent data corruption issues inherent in the legacy Apache Hive partitioning model that dominated the original Big Data era.
+Hidden Partitioning is a highly advanced storage management feature introduced natively by [Apache Iceberg](/apache-iceberg). It was explicitly engineered to solve the catastrophic usability flaws, performance bottlenecks, and frequent data corruption issues inherent in the legacy Apache Hive partitioning model that dominated the original Big Data era.
 
 Partitioning is the fundamental strategy used to organize massive datasets to accelerate queries. If a company generates petabytes of server logs, dumping them all into a single massive folder makes querying them impossible. Instead, data engineers partition the data (typically by Date). When an analyst queries the logs for a specific day, the query engine uses the partitions to instantly skip 99% of the irrelevant data, drastically reducing I/O operations. However, how the system physically tracks and manages these partitions dictates the entire usability of the data lake.
 
@@ -45,7 +45,7 @@ If the engineering team decides to change the partition strategy from `daily` to
 
 ## Summary of Technical Value
 
-Hidden Partitioning fundamentally decoupled the logical querying of data from the physical layout of the hard drive. By handling complex partition pruning via internal metadata transforms, Apache Iceberg allows business analysts to write highly intuitive SQL without causing catastrophic full-table scans. Furthermore, it empowers data engineers to evolve massive multi-terabyte storage strategies instantly, providing unparalleled agility to the modern Open Data Lakehouse.
+Hidden Partitioning fundamentally decoupled the logical querying of data from the physical layout of the hard drive. By handling complex partition pruning via internal metadata transforms, Apache Iceberg allows business analysts to write highly intuitive SQL without causing catastrophic full-table scans. Furthermore, it empowers data engineers to evolve massive multi-terabyte storage strategies instantly, providing unparalleled agility to the modern Open [Data Lakehouse](/data-lakehouse).
 
 
 ## Learn More

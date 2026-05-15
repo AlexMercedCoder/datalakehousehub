@@ -6,7 +6,7 @@ description: "A comprehensive guide to Slowly Changing Dimensions (SCD). Learn h
 
 # What are Slowly Changing Dimensions (SCD)?
 
-Slowly Changing Dimensions (SCD) are a foundational concept in dimensional data modeling used to manage how a Data Warehouse or Data Lakehouse handles updates to historical records over time.
+Slowly Changing Dimensions (SCD) are a foundational concept in dimensional data modeling used to manage how a Data Warehouse or [Data Lakehouse](/data-lakehouse) handles updates to historical records over time.
 
 In operational databases, if a customer gets married and changes their last name, or if an employee gets promoted from "Analyst" to "Manager", the application simply issues a SQL `UPDATE` statement, overwriting the old value. The operational database only cares about the absolute present state.
 
@@ -45,7 +45,7 @@ If a customer changes their state of residence from "New York" to "California", 
 
 Historically, implementing SCD Type 2 in a raw Apache Hadoop data lake was virtually impossible because raw HDFS files did not support `UPDATE` statements to close out the old records. Engineers had to execute massive, complex directory rewrites to track history.
 
-The modern Open Data Lakehouse entirely solved this. Open table formats like Apache Iceberg and Apache Hudi provide strict ACID transactions and native `MERGE INTO` SQL commands directly on cloud object storage. Data engineers now utilize tools like dbt to automatically execute massive, complex SCD Type 2 merge logic natively against Iceberg tables, preserving perfect historical lineage without moving data into a proprietary warehouse.
+The modern Open Data Lakehouse entirely solved this. Open table formats like [Apache Iceberg](/apache-iceberg) and Apache Hudi provide strict ACID transactions and native `MERGE INTO` SQL commands directly on cloud object storage. Data engineers now utilize tools like dbt to automatically execute massive, complex SCD Type 2 merge logic natively against Iceberg tables, preserving perfect historical lineage without moving data into a proprietary warehouse.
 
 ## Summary of Technical Value
 

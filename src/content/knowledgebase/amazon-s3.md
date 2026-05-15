@@ -30,7 +30,7 @@ Today, almost every single massive data engine in the world (Apache Spark, Snowf
 To manage petabyte-scale Data Lakehouses affordably, data teams rely heavily on S3's sophisticated Intelligent Tiering lifecycle policies.
 
 Storing data that is accessed every single day (like recent sales data) requires high-performance, expensive flash storage (S3 Standard). However, storing ten-year-old financial data that auditors only query once a year on expensive flash storage is a massive waste of money.
-S3 allows data engineers to set automated lifecycle rules. If a Parquet file hasn't been queried by the Data Lakehouse in 90 days, S3 automatically and invisibly moves that file down to "S3 Glacier" (cold, magnetic tape storage), drastically reducing the monthly storage cost by up to 90%, while keeping the metadata entirely intact for future retrieval.
+S3 allows data engineers to set automated lifecycle rules. If a Parquet file hasn't been queried by the [Data Lakehouse](/data-lakehouse) in 90 days, S3 automatically and invisibly moves that file down to "S3 Glacier" (cold, magnetic tape storage), drastically reducing the monthly storage cost by up to 90%, while keeping the metadata entirely intact for future retrieval.
 
 ## Summary of Technical Value
 

@@ -17,7 +17,7 @@ When the database pushes the data through the JDBC connection, the JDBC driver m
 Arrow Flight SQL completely obliterates this serialization penalty by utilizing the Apache Arrow in-memory columnar format as the absolute universal standard.
 
 ### 1. The Universal Memory Format
-In a modern Data Lakehouse ecosystem (like Dremio or Snowflake), the query engine physically calculates the 10 million rows directly in active RAM using the Arrow columnar format. 
+In a modern [Data Lakehouse](/data-lakehouse) ecosystem (like Dremio or Snowflake), the query engine physically calculates the 10 million rows directly in active RAM using the Arrow columnar format. 
 The Python Pandas script on the analyst's laptop also uses the Arrow columnar format in its active RAM. 
 
 ### 2. The gRPC Network Tunnel

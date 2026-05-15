@@ -35,9 +35,9 @@ Modern Data Virtualization relies heavily on Advanced Pushdown Execution. If an 
 
 ## Virtualization vs Data Lakehouses
 
-Data Virtualization is frequently integrated directly into the modern Open Data Lakehouse architecture.
+Data Virtualization is frequently integrated directly into the modern Open [Data Lakehouse](/data-lakehouse) architecture.
 
-Organizations use the Data Lakehouse (storing Apache Iceberg files on Amazon S3) to store 90% of their massive, historical analytical data because it is incredibly cheap and highly performant. However, they use Data Virtualization engines (like Dremio) to seamlessly federate queries joining that massive S3 historical data with live operational data residing in a fast PostgreSQL database. This hybrid approach guarantees the lowest possible storage costs while maintaining the absolute agility to query edge operational systems instantly.
+Organizations use the Data Lakehouse (storing [Apache Iceberg](/apache-iceberg) files on Amazon S3) to store 90% of their massive, historical analytical data because it is incredibly cheap and highly performant. However, they use Data Virtualization engines (like Dremio) to seamlessly federate queries joining that massive S3 historical data with live operational data residing in a fast PostgreSQL database. This hybrid approach guarantees the lowest possible storage costs while maintaining the absolute agility to query edge operational systems instantly.
 
 ## Summary of Technical Value
 

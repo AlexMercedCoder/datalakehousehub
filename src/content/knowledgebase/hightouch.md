@@ -6,7 +6,7 @@ description: "A comprehensive guide to Hightouch. Learn about data activation, R
 
 # What is Hightouch?
 
-Hightouch is a premier, highly scalable Reverse ETL and Data Activation platform. It empowers data teams to sync refined, calculated analytical data directly from their central cloud data warehouse or data lakehouse into hundreds of downstream operational systems, such as Salesforce, HubSpot, Marketo, and Facebook Ads.
+Hightouch is a premier, highly scalable Reverse ETL and Data Activation platform. It empowers data teams to sync refined, calculated analytical data directly from their central cloud data warehouse or [data lakehouse](/data-lakehouse) into hundreds of downstream operational systems, such as Salesforce, HubSpot, Marketo, and Facebook Ads.
 
 As the industry consolidated around the modern data stack, organizations successfully centralized their data into platforms like Snowflake, BigQuery, or Dremio. They used tools like dbt to calculate highly valuable, complex metrics (such as Product Qualified Leads, Churn Risk, and Lifetime Value). However, operational teams (Sales, Support, Marketing) do not log into Snowflake to do their jobs; they live in their SaaS applications. Hightouch serves as the critical bridge, extracting these deep analytical insights and pushing them directly into the frontline tools where the business actually operates.
 

@@ -39,4 +39,4 @@ In a Data Mesh, centralized data engineering is abandoned. Instead, the specific
 Data Stewardship is the essential human element of Data Governance. By assigning strict accountability, domain expertise, and legal responsibility to specific individuals, organizations ensure that massive technological investments in Data Lakehouses and analytical infrastructure do not degrade into chaotic, undocumented, and highly insecure data swamps.
 
 ## Learn More
-To learn more about the Data Lakehouse, read the book "Lakehouse for Everyone" by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).
+To learn more about the [Data Lakehouse](/data-lakehouse), read the book "Lakehouse for Everyone" by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

@@ -33,7 +33,7 @@ The MDM system does not simply hoard this perfect record. It actively pushes the
 
 ## MDM in the Data Lakehouse Era
 
-Historically, MDM was handled exclusively by massive, monolithic on-premises software. In the modern era, data engineers are increasingly shifting MDM logic directly into the Data Lakehouse.
+Historically, MDM was handled exclusively by massive, monolithic on-premises software. In the modern era, data engineers are increasingly shifting MDM logic directly into the [Data Lakehouse](/data-lakehouse).
 
 By dumping all raw CRM, ERP, and Support data into the Bronze layer of the Lakehouse, data teams can utilize the massive distributed compute of Apache Spark and modern dbt SQL modeling to execute complex fuzzy-matching algorithms in the cloud. They construct the massive Master Customer Table directly in the Gold layer, ensuring that all downstream business intelligence dashboards and AI predictive models are trained exclusively on perfectly resolved Golden Records.
 

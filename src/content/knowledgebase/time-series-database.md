@@ -36,4 +36,4 @@ An engineer does not write a standard SQL query. They write specific time-window
 The Time-Series Database is the absolute foundational engine of the IoT and observability ecosystem. By aggressively abandoning traditional database constraints in favor of hyper-optimized append-only ingestion, massive algorithmic data compression, and automated historical downsampling, a TSDB provides the extreme high-frequency performance required to monitor, analyze, and predict the physical reality of massive, real-time digital and industrial infrastructures.
 
 ## Learn More
-To learn more about the Data Lakehouse, read the book "Lakehouse for Everyone" by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).
+To learn more about the [Data Lakehouse](/data-lakehouse), read the book "Lakehouse for Everyone" by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

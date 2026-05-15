@@ -6,7 +6,7 @@ description: "A comprehensive guide to Change Data Capture (CDC). Learn about lo
 
 # What is Change Data Capture (CDC)?
 
-Change Data Capture (CDC) is a highly efficient architectural methodology used to instantly detect, extract, and replicate data modifications (INSERTs, UPDATEs, and DELETEs) from an operational database into a downstream system, such as a Data Lakehouse, a Cloud Data Warehouse, or an Event Streaming platform like Apache Kafka.
+Change Data Capture (CDC) is a highly efficient architectural methodology used to instantly detect, extract, and replicate data modifications (INSERTs, UPDATEs, and DELETEs) from an operational database into a downstream system, such as a [Data Lakehouse](/data-lakehouse), a Cloud Data Warehouse, or an Event Streaming platform like Apache Kafka.
 
 In modern business environments, analytical dashboards require the absolute most current data. Historically, data engineers extracted data using slow, batch-oriented methods. They would execute a massive SQL query against the production database every night: `SELECT * FROM orders WHERE updated_at >= YESTERDAY`. This approach was catastrophic for two reasons: it placed an immense computational burden on the critical operational database (slowing down the live application for users), and it meant the analytical dashboards were always 24 hours out of date. CDC completely eradicates this polling architecture by providing near real-time, zero-impact extraction.
 
@@ -30,7 +30,7 @@ Log-based CDC tools attach directly to this replication log. As the database eng
 
 Log-based CDC resolves the fatal flaws of query polling completely. 
 
-Because it reads the raw transaction log, it captures explicit `DELETE` operations natively. It generates a specific deletion event containing the exact Primary Key of the deleted row. When the downstream Data Lakehouse (utilizing Apache Iceberg or Delta Lake) consumes this event, it natively executes a physical `DELETE` against the cloud storage files, ensuring the analytical environment remains a mathematically perfect, exact replica of the operational source.
+Because it reads the raw transaction log, it captures explicit `DELETE` operations natively. It generates a specific deletion event containing the exact Primary Key of the deleted row. When the downstream Data Lakehouse (utilizing [Apache Iceberg](/apache-iceberg) or Delta Lake) consumes this event, it natively executes a physical `DELETE` against the cloud storage files, ensuring the analytical environment remains a mathematically perfect, exact replica of the operational source.
 
 Furthermore, advanced log-based CDC tools capture explicit DDL (Data Definition Language) changes. If an upstream software engineer executes an `ALTER TABLE ADD COLUMN` command on the operational database, the CDC tool captures the structural change in the log and automatically propagates the schema evolution downstream, preventing the integration pipeline from crashing due to unexpected schema drift.
 

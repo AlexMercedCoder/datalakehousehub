@@ -28,7 +28,7 @@ This strict hierarchy enforces Mutually Exclusive and Collectively Exhaustive (M
 
 Taxonomies are the primary organizational weapon utilized by Data Stewards to govern the Enterprise Data Catalog (like Alation or Collibra).
 
-When a massive new Apache Iceberg table is created in the Data Lakehouse, the Data Steward does not simply type random keywords into the description. They explicitly tag the table using the formal Corporate Taxonomy. 
+When a massive new [Apache Iceberg](/apache-iceberg) table is created in the [Data Lakehouse](/data-lakehouse), the Data Steward does not simply type random keywords into the description. They explicitly tag the table using the formal Corporate Taxonomy. 
 
 ### Security and Access Control
 Because the Taxonomy is strictly hierarchical, data engineers use it to automate complex Role-Based Access Control (RBAC). 

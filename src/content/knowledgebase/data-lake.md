@@ -30,9 +30,9 @@ If two data engineering pipelines attempted to write to the exact same S3 bucket
 
 ## The Rise of the Data Lakehouse
 
-The industry explicitly resolved the catastrophic limitations of the raw Data Lake by inventing the Open Data Lakehouse.
+The industry explicitly resolved the catastrophic limitations of the raw Data Lake by inventing the Open [Data Lakehouse](/data-lakehouse).
 
-The Lakehouse architecture does not replace the Data Lake; it enhances it. It injects a highly sophisticated, transactional metadata layer (utilizing open table formats like Apache Iceberg, Apache Hudi, or Delta Lake) directly on top of the raw Parquet files resting in the cloud object storage bucket. This completely restores all the critical features of traditional data warehouses—guaranteed atomic transactions, instant schema evolution, and row-level deletes—while fiercely maintaining the infinitely scalable, low-cost foundations of the Data Lake.
+The Lakehouse architecture does not replace the Data Lake; it enhances it. It injects a highly sophisticated, transactional metadata layer (utilizing open table formats like [Apache Iceberg](/apache-iceberg), Apache Hudi, or Delta Lake) directly on top of the raw Parquet files resting in the cloud object storage bucket. This completely restores all the critical features of traditional data warehouses—guaranteed atomic transactions, instant schema evolution, and row-level deletes—while fiercely maintaining the infinitely scalable, low-cost foundations of the Data Lake.
 
 ## Summary of Technical Value
 

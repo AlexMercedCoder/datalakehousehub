@@ -26,7 +26,7 @@ The database now contains two distinct rows for May 14th. When the CEO opens the
 Data engineers build idempotent pipelines by replacing naive `INSERT` operations with highly deterministic state-management techniques.
 
 ### MERGE INTO (Upserts)
-The most common implementation of idempotency in the Open Data Lakehouse is the `MERGE INTO` statement (often referred to as an Upsert). 
+The most common implementation of idempotency in the Open [Data Lakehouse](/data-lakehouse) is the `MERGE INTO` statement (often referred to as an Upsert). 
 
 Instead of blindly appending rows, the data engineer explicitly defines a Primary Key (e.g., the `transaction_id`). The pipeline executes logic stating: "If this transaction ID already exists in the table, strictly update it. If it does not exist, insert it." 
 

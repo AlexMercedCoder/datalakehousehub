@@ -16,7 +16,7 @@ Apache Kudu was explicitly invented to perfectly bridge this gap, providing the 
 
 ## The Architecture of the Hybrid Engine
 
-Kudu achieves this impossible dual-performance by strictly avoiding the massive, chaotic, decoupled architecture of the Data Lakehouse (where compute and storage are totally separate). Kudu is a deeply integrated storage engine that takes absolute physical control of the hard drives across the cluster.
+Kudu achieves this impossible dual-performance by strictly avoiding the massive, chaotic, decoupled architecture of the [Data Lakehouse](/data-lakehouse) (where compute and storage are totally separate). Kudu is a deeply integrated storage engine that takes absolute physical control of the hard drives across the cluster.
 
 ### 1. The Columnar Architecture
 Like Parquet, Kudu stores data in a strictly columnar format. If a data analyst executes a massive SQL aggregation via Apache Impala (`SELECT SUM(revenue)`), Kudu bypasses all irrelevant columns on the hard drive, streaming only the specific numerical data into the CPU, providing the massive analytical read speeds expected of a true data warehouse.
@@ -32,7 +32,7 @@ Because Kudu manages its own hard drives, it is entirely responsible for its own
 
 While Kudu is an absolute engineering marvel, its strict requirement to physically control its own dedicated hardware cluster puts it at a massive disadvantage in the modern Cloud era. 
 
-Modern architectures highly prefer the Open Data Lakehouse model, where incredibly cheap Amazon S3 object storage holds massive Apache Iceberg files, completely decoupled from the compute engine. Iceberg eventually solved the "Parquet Update Problem" using advanced Merge-on-Read mechanisms, allowing the decoupled Lakehouse to execute the exact same fast analytics and row-level updates as Kudu, but without requiring the massive, expensive, dedicated hardware cluster that Kudu demands.
+Modern architectures highly prefer the Open Data Lakehouse model, where incredibly cheap Amazon S3 object storage holds massive [Apache Iceberg](/apache-iceberg) files, completely decoupled from the compute engine. Iceberg eventually solved the "Parquet Update Problem" using advanced Merge-on-Read mechanisms, allowing the decoupled Lakehouse to execute the exact same fast analytics and row-level updates as Kudu, but without requiring the massive, expensive, dedicated hardware cluster that Kudu demands.
 
 ## Summary of Technical Value
 

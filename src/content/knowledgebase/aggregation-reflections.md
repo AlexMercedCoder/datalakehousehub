@@ -6,7 +6,7 @@ description: "A comprehensive guide to Aggregation Reflections. Learn how Dremio
 
 # What are Aggregation Reflections?
 
-Aggregation Reflections are a highly advanced, proprietary performance acceleration architecture completely unique to the Dremio query engine. They operate as massively intelligent, entirely invisible caching mechanisms that physically pre-compute and store heavily aggregated mathematical results (like `SUM`, `COUNT`, and `AVERAGE` grouped by specific dimensions) as highly optimized, columnar Apache Iceberg or Parquet files deep within the Data Lakehouse.
+Aggregation Reflections are a highly advanced, proprietary performance acceleration architecture completely unique to the Dremio query engine. They operate as massively intelligent, entirely invisible caching mechanisms that physically pre-compute and store heavily aggregated mathematical results (like `SUM`, `COUNT`, and `AVERAGE` grouped by specific dimensions) as highly optimized, columnar [Apache Iceberg](/apache-iceberg) or Parquet files deep within the [Data Lakehouse](/data-lakehouse).
 
 In traditional relational databases, data engineers frequently use Materialized Views to speed up executive dashboards. If the CEO wants to see "Total Global Sales by Region," the engineer writes the exact SQL query, executes it, and saves the final result as a Materialized View. 
 However, Materialized Views are incredibly rigid and fragile. If the CEO slightly modifies their question to ask for "Total Global Sales by *Country*" instead of *Region*, the traditional Materialized View is mathematically useless. The database abandons the view, hits the massive raw data lake, and takes five minutes to execute the new query. 

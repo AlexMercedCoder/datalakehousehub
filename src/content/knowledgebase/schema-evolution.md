@@ -6,11 +6,11 @@ description: "A comprehensive guide to Schema Evolution. Learn how Apache Iceber
 
 # What is Schema Evolution?
 
-Schema Evolution is the architectural capability of a database or data lakehouse to safely and instantly alter its structural definition (adding, dropping, renaming, or changing the data type of columns) without corrupting existing data or requiring massive, expensive table rewrites.
+Schema Evolution is the architectural capability of a database or [data lakehouse](/data-lakehouse) to safely and instantly alter its structural definition (adding, dropping, renaming, or changing the data type of columns) without corrupting existing data or requiring massive, expensive table rewrites.
 
 In legacy Apache Hadoop environments built around the Hive Metastore, altering a schema was incredibly dangerous. The Hive Metastore mapped columns based on their absolute physical position in the file. If an engineer decided to drop the third column (`middle_name`), the fourth column (`last_name`) suddenly shifted into the third position. When an analyst queried the data, the engine would attempt to read the `last_name` data using the `middle_name` logic, instantly returning chaotic, corrupted gibberish. To safely change a schema in Hive, organizations were physically forced to execute massive Spark jobs to completely rewrite petabytes of Parquet files, a process that cost tens of thousands of dollars and caused massive system downtime.
 
-Modern Open Table Formats (specifically Apache Iceberg) were engineered explicitly to eliminate this nightmare.
+Modern Open Table Formats (specifically [Apache Iceberg](/apache-iceberg)) were engineered explicitly to eliminate this nightmare.
 
 ## The Architecture of ID-Based Tracking
 

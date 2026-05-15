@@ -49,4 +49,4 @@ Data engineers set up automated alerts (PagerDuty) connected to the DLQ. When a 
 The Dead Letter Queue is the ultimate architectural fail-safe for high-speed asynchronous data systems. By automatically detecting and physically quarantining catastrophically corrupted "Poison Pill" messages, the DLQ completely prevents infinite crash loops. It guarantees that the massive enterprise data pipeline remains flawlessly unblocked and operational, while preserving the corrupted data in an isolated vault for forensic engineering remediation.
 
 ## Learn More
-To learn more about the Data Lakehouse, read the book "Lakehouse for Everyone" by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).
+To learn more about the [Data Lakehouse](/data-lakehouse), read the book "Lakehouse for Everyone" by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

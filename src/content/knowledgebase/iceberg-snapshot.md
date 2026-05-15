@@ -6,7 +6,7 @@ description: "A complete recorded state of an Apache Iceberg table mapping exact
 
 ## What is Iceberg Snapshot?
 
-A complete recorded state of an Apache Iceberg table mapping exact data files available at a specific specific point in time. 
+A complete recorded state of an [Apache Iceberg](/apache-iceberg) table mapping exact data files available at a specific specific point in time. 
 
 In the rapidly evolving landscape of data engineering and artificial intelligence, **Iceberg Snapshot** has emerged as a critical foundational component. As organizations transition from legacy, monolithic architectures to decoupled, scalable environments, understanding the role of Iceberg Snapshot is essential for building future-proof infrastructure. This capability serves as a critical enabler in modern data ecosystems, explicitly guiding architecture toward absolute efficiency and scale. When correctly implemented, Iceberg Snapshot dynamically drives analytical workloads and structurally limits administrative technical debt.
 

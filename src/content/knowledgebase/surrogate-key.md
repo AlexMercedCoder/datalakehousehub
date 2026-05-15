@@ -6,7 +6,7 @@ description: "A comprehensive guide to Surrogate Keys. Learn why data warehouses
 
 # What is a Surrogate Key?
 
-A Surrogate Key is a unique, artificially generated identifier—typically a simple, auto-incrementing integer (e.g., `1, 2, 3...`) or a mathematically generated UUID—used exclusively within a Data Warehouse or Data Lakehouse to act as the absolute Primary Key for a Dimension table. It is entirely devoid of any business meaning and exists solely to provide perfect structural stability for analytical data pipelines.
+A Surrogate Key is a unique, artificially generated identifier—typically a simple, auto-incrementing integer (e.g., `1, 2, 3...`) or a mathematically generated UUID—used exclusively within a Data Warehouse or [Data Lakehouse](/data-lakehouse) to act as the absolute Primary Key for a Dimension table. It is entirely devoid of any business meaning and exists solely to provide perfect structural stability for analytical data pipelines.
 
 In the chaotic world of operational databases (like the PostgreSQL database running the live website), software engineers rely on Natural Keys. A Natural Key is an identifier that physically exists in the real world, such as a customer's Email Address, a Social Security Number, or a product's SKU barcode. 
 

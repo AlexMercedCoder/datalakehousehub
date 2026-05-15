@@ -18,7 +18,7 @@ Kafka does not function like a traditional database. It operates on a highly dec
 The architecture relies on three primary components:
 1. **Producers:** These are the upstream systems generating the data. A web server generating user click events, or a PostgreSQL database streaming Change Data Capture (CDC) logs, acts as a Producer. It blindly pushes the events into Kafka and immediately forgets about them.
 2. **Brokers (The Cluster):** The actual Kafka infrastructure consists of dozens or hundreds of distributed servers called Brokers. These Brokers receive the events from the Producers and write them sequentially to massive, highly fault-tolerant hard drives.
-3. **Consumers:** These are the downstream analytical engines or microservices. An Apache Spark cluster reading the data to write it into the Data Lakehouse acts as a Consumer. It pulls the data from Kafka at its own specific computational pace.
+3. **Consumers:** These are the downstream analytical engines or microservices. An Apache Spark cluster reading the data to write it into the [Data Lakehouse](/data-lakehouse) acts as a Consumer. It pulls the data from Kafka at its own specific computational pace.
 
 ### Topics and Partitions
 Kafka organizes the massive stream of events into specific categories called Topics (e.g., `User_Clicks_Topic`). 

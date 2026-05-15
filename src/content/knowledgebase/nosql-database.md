@@ -39,4 +39,4 @@ This is perfectly acceptable for social media posts or shopping carts, but it ma
 NoSQL databases represent the architectural necessity of internet scale. By intentionally shattering the rigid schemas and complex relational constraints of traditional SQL, NoSQL architectures unlock the ability to seamlessly distribute massive datasets across global server clusters, providing the extreme high-speed performance and infinite horizontal elasticity required to power the modern, real-time digital economy.
 
 ## Learn More
-To learn more about the Data Lakehouse, read the book "Lakehouse for Everyone" by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).
+To learn more about the [Data Lakehouse](/data-lakehouse), read the book "Lakehouse for Everyone" by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

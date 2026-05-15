@@ -37,4 +37,4 @@ To prevent critical context from being lost between the borders of two chunks, e
 Chunking is the foundational data engineering step required to make unstructured data mathematically searchable. By intelligently shattering massive documents into coherent, contextually rich segments before embedding them, data teams ensure that Vector Databases can retrieve highly granular, perfectly accurate information to fuel enterprise Large Language Models, entirely preventing AI hallucinations caused by diluted semantic context.
 
 ## Learn More
-To learn more about the Data Lakehouse, read the book "Lakehouse for Everyone" by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).
+To learn more about the [Data Lakehouse](/data-lakehouse), read the book "Lakehouse for Everyone" by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

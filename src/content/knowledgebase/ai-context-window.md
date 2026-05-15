@@ -17,7 +17,7 @@ The Context Window limit is not an arbitrary choice made by developers; it is a 
 To understand a paragraph, the AI must mathematically calculate the relationship between every single word and every other word in the prompt. 
 If the prompt has 1,000 tokens, the AI executes 1,000 x 1,000 (1 Million) mathematical operations. 
 If the prompt has 100,000 tokens, the AI executes 100,000 x 100,000 (10 Billion) mathematical operations. 
-This is known as Quadratic Scaling. As the Context Window grows linearly, the required GPU memory and computational processing power explode exponentially. Attempting to force an LLM to read a billion-token Data Lakehouse directly would instantly melt every GPU cluster on earth.
+This is known as Quadratic Scaling. As the Context Window grows linearly, the required GPU memory and computational processing power explode exponentially. Attempting to force an LLM to read a billion-token [Data Lakehouse](/data-lakehouse) directly would instantly melt every GPU cluster on earth.
 
 ## Why the Context Window Birthed RAG
 

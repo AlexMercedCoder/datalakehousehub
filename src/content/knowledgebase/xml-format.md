@@ -45,7 +45,7 @@ Extracting data from a massive XML file requires computationally heavy algorithm
 
 ## Modern Ingestion Strategies
 
-Modern Data Lakehouse query engines (like Apache Spark or Dremio) despise XML. 
+Modern [Data Lakehouse](/data-lakehouse) query engines (like Apache Spark or Dremio) despise XML. 
 When data engineers are forced to ingest XML from legacy mainframe FTP servers, they never leave the data in XML format. They utilize powerful ETL pipelines to instantly shred the XML, rip out the underlying data values, flatten the hierarchical structure, and permanently convert the data into the highly compressed, binary Apache Parquet format.
 
 ## Summary of Technical Value

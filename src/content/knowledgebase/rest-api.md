@@ -37,7 +37,7 @@ If an engineer only needs the `email` column from the `Customers` table, they hi
 
 ## Summary of Technical Value
 
-The REST API is the universal connective tissue of the modern digital economy. By enforcing strict statelessness, utilizing lightweight JSON payloads, and standardizing communication through universal HTTP verbs, it completely democratized software integration. It provides the highly structured, reliable pathways that modern data pipelines rely upon to extract massive volumes of operational data into the central Data Lakehouse.
+The REST API is the universal connective tissue of the modern digital economy. By enforcing strict statelessness, utilizing lightweight JSON payloads, and standardizing communication through universal HTTP verbs, it completely democratized software integration. It provides the highly structured, reliable pathways that modern data pipelines rely upon to extract massive volumes of operational data into the central [Data Lakehouse](/data-lakehouse).
 
 ## Learn More
 To learn more about the Data Lakehouse, read the book "Lakehouse for Everyone" by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

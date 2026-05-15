@@ -17,7 +17,7 @@ A production-grade MLOps architecture (utilizing platforms like MLflow, Kubeflow
 ### 1. Versioning and Reproducibility
 In traditional software, code is the only variable; if the code is exactly the same, the software behaves exactly the same. In Machine Learning, the model is dependent on three distinct, constantly shifting variables: The Code, The Hyperparameters, and The Data.
 
-If a model fails in production, the data scientist must be able to reproduce the exact state of the environment. MLOps platforms meticulously track every single experiment. They log the exact version of the Python script used, the specific mathematical hyperparameters (e.g., `learning_rate=0.01`), and explicitly link to the exact cryptographic snapshot of the training data in the Data Lakehouse (via Apache Iceberg). If an audit occurs, the MLOps platform guarantees perfect historical reproducibility.
+If a model fails in production, the data scientist must be able to reproduce the exact state of the environment. MLOps platforms meticulously track every single experiment. They log the exact version of the Python script used, the specific mathematical hyperparameters (e.g., `learning_rate=0.01`), and explicitly link to the exact cryptographic snapshot of the training data in the [Data Lakehouse](/data-lakehouse) (via [Apache Iceberg](/apache-iceberg)). If an audit occurs, the MLOps platform guarantees perfect historical reproducibility.
 
 ### 2. Automated Pipelines (CI/CD)
 MLOps entirely eliminates the manual handover of Jupyter Notebooks. 

@@ -6,7 +6,7 @@ description: "A comprehensive guide to the Iceberg Manifest List. Learn how this
 
 # What is an Iceberg Manifest List?
 
-The Iceberg Manifest List is a highly advanced, mission-critical architectural component that sits directly at the top of the Apache Iceberg metadata hierarchy (just below the Snapshot pointer). While a Manifest File is responsible for tracking individual Data Files (Parquet files), the Manifest List is the supreme orchestrator that explicitly tracks the *Manifest Files themselves*. 
+The Iceberg Manifest List is a highly advanced, mission-critical architectural component that sits directly at the top of the [Apache Iceberg](/apache-iceberg) metadata hierarchy (just below the Snapshot pointer). While a Manifest File is responsible for tracking individual Data Files (Parquet files), the Manifest List is the supreme orchestrator that explicitly tracks the *Manifest Files themselves*. 
 
 Every single time a new "Snapshot" of an Iceberg table is created (representing a specific state of the table at a specific point in time), a single, brand-new Manifest List is generated. This file acts as the absolute, definitive index for that specific Snapshot. When a query engine (like Trino or Dremio) attempts to query a massive petabyte-scale Iceberg table, it never touches the data files first. It reads the Snapshot, opens the single Manifest List, and uses the dense mathematical intelligence inside to instantly discard 99% of the underlying architecture.
 
@@ -33,7 +33,7 @@ If an analyst wants to query the exact state of the table from last Tuesday, the
 
 ## Summary of Technical Value
 
-The Iceberg Manifest List is the ultimate accelerant for Data Lakehouse query planning. By acting as the definitive index for a specific Snapshot and storing highly aggregated partition boundaries for the underlying Manifest Files, the Manifest List allows massive distributed query engines to execute ruthless Metadata Pruning. It completely shields the compute engine from opening irrelevant metadata files, drastically reducing query planning latency and ensuring that petabyte-scale Data Lakehouses can be queried interactively in sub-seconds.
+The Iceberg Manifest List is the ultimate accelerant for [Data Lakehouse](/data-lakehouse) query planning. By acting as the definitive index for a specific Snapshot and storing highly aggregated partition boundaries for the underlying Manifest Files, the Manifest List allows massive distributed query engines to execute ruthless Metadata Pruning. It completely shields the compute engine from opening irrelevant metadata files, drastically reducing query planning latency and ensuring that petabyte-scale Data Lakehouses can be queried interactively in sub-seconds.
 
 ## Learn More
 To learn more about the Data Lakehouse, read the book "Lakehouse for Everyone" by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

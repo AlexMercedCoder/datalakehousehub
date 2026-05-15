@@ -6,7 +6,7 @@ description: "A comprehensive guide to Continuous Integration. Learn how automat
 
 # What is Continuous Integration (CI)?
 
-Continuous Integration (CI) is a highly rigorous, automated software engineering practice explicitly designed to violently reject broken or corrupted code before it can ever reach a live production environment. In the context of modern data architecture, CI is the heavily automated robotic gatekeeper that stands between a data engineer's laptop and the massive, mission-critical Open Data Lakehouse.
+Continuous Integration (CI) is a highly rigorous, automated software engineering practice explicitly designed to violently reject broken or corrupted code before it can ever reach a live production environment. In the context of modern data architecture, CI is the heavily automated robotic gatekeeper that stands between a data engineer's laptop and the massive, mission-critical Open [Data Lakehouse](/data-lakehouse).
 
 In legacy environments, a data engineer would write a complex SQL transformation script on their laptop, assume it worked, and manually copy-paste it directly into the production database server. If the engineer made a single typographical error, the script would crash the entire executive dashboard, causing massive corporate panic. Continuous Integration completely eliminates this human vulnerability by entirely removing the human's ability to deploy code directly.
 

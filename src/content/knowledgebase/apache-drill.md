@@ -25,7 +25,7 @@ The analyst queried the raw, unstructured S3 bucket exactly as if it were a high
 
 ## The Foundation of the Modern Data Lakehouse
 
-While Apache Drill is incredibly powerful for ad-hoc data discovery and forensic log analysis, its most profound contribution was serving as the architectural genesis for the massive, enterprise-grade federated engines that dominate the modern Data Lakehouse.
+While Apache Drill is incredibly powerful for ad-hoc data discovery and forensic log analysis, its most profound contribution was serving as the architectural genesis for the massive, enterprise-grade federated engines that dominate the modern [Data Lakehouse](/data-lakehouse).
 
 Drill proved that massive distributed query engines could physically decouple from rigid centralized storage. It proved that a single engine could simultaneously query a MongoDB NoSQL database, a massive Amazon S3 bucket of JSON, and a local PostgreSQL database, joining them all together in a single SQL statement in active memory.
 

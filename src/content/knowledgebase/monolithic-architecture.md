@@ -36,4 +36,4 @@ If the Marketing team wants to fix a minor typo on the homepage, they cannot sim
 Monolithic Architecture is the highly efficient, robust, and beautifully simple foundation of enterprise software. While its tight physical coupling and massive, singular codebase create catastrophic deployment bottlenecks and inefficient resource scaling at the absolute highest levels of global internet traffic, a well-architected Monolith remains the absolute most practical, mathematically secure, and highly functional architecture for the vast majority of standard business applications.
 
 ## Learn More
-To learn more about the Data Lakehouse, read the book "Lakehouse for Everyone" by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).
+To learn more about the [Data Lakehouse](/data-lakehouse), read the book "Lakehouse for Everyone" by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

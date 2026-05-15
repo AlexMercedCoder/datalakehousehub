@@ -29,7 +29,7 @@ If the Producer service starts streaming data with the new `phone_number` column
 ## Avro vs. Parquet (Row vs. Column)
 
 It is critical for data architects to utilize Avro and Parquet correctly.
-* **Apache Parquet is Columnar:** It is heavily optimized for scanning massive datasets to calculate a single column (e.g., "Find the average Revenue"). It is used strictly for the Storage and Analytical layer of the Data Lakehouse.
+* **Apache Parquet is Columnar:** It is heavily optimized for scanning massive datasets to calculate a single column (e.g., "Find the average Revenue"). It is used strictly for the Storage and Analytical layer of the [Data Lakehouse](/data-lakehouse).
 * **Apache Avro is Row-Oriented:** It is heavily optimized for writing an entire, single complex record (all the data for User 123) as fast as physically possible. It is used strictly for the Ingestion and Streaming layer.
 
 ## Summary of Technical Value

@@ -8,7 +8,7 @@ description: "A comprehensive guide to Monte Carlo. Learn about data observabili
 
 Monte Carlo is an enterprise-grade Data Observability platform designed to completely eradicate "Data Downtime." Unlike open-source testing libraries (like Great Expectations or dlt) that require data engineers to explicitly write and deploy hundreds of manual unit tests, Monte Carlo operates as an entirely automated, passive monitoring layer spanning the entire data infrastructure.
 
-In modern architectures, a silent data failure—such as an API unexpectedly dropping 20% of its payload or a critical column suddenly containing negative values—can propagate rapidly from the ingestion pipeline through the data lakehouse directly into executive dashboards. Monte Carlo connects to the entire data stack (the orchestrators, the data warehouses, and the BI tools), continuously tracking data health to instantly alert data teams before business stakeholders even realize a problem exists.
+In modern architectures, a silent data failure—such as an API unexpectedly dropping 20% of its payload or a critical column suddenly containing negative values—can propagate rapidly from the ingestion pipeline through the [data lakehouse](/data-lakehouse) directly into executive dashboards. Monte Carlo connects to the entire data stack (the orchestrators, the data warehouses, and the BI tools), continuously tracking data health to instantly alert data teams before business stakeholders even realize a problem exists.
 
 ## The Five Pillars of Data Observability
 

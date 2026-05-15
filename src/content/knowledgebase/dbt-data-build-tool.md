@@ -12,7 +12,7 @@ Historically, data analysts built complex Data Warehouses by writing massive, 5,
 
 ## The Architecture of Modular SQL
 
-dbt operates entirely inside the database or Data Lakehouse query engine (like Snowflake, Dremio, or Trino). It does not extract data or hold data itself; it simply orchestrates the execution of SQL.
+dbt operates entirely inside the database or [Data Lakehouse](/data-lakehouse) query engine (like Snowflake, Dremio, or Trino). It does not extract data or hold data itself; it simply orchestrates the execution of SQL.
 
 ### 1. Modularity (The DAG)
 Instead of writing one massive 5,000-line script, an Analytics Engineer using dbt writes 50 tiny, highly focused SQL files (called "Models"). 

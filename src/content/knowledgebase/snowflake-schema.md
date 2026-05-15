@@ -27,7 +27,7 @@ While the Snowflake Schema is mathematically elegant, it introduces severe compu
 
 Because the descriptive context is heavily fragmented, answering a simple question like "What were the total sales in Germany?" forces the database engine to execute a massive chain of relational jumps. It must `JOIN` the Fact table to the Store table, `JOIN` the Store to the City, `JOIN` the City to the State, and `JOIN` the State to the Country. 
 
-Every single SQL `JOIN` adds latency to the query. In the era of the modern Cloud Data Warehouse and Data Lakehouse, where object storage (like Amazon S3) costs mere pennies per gigabyte, optimizing for storage space is considered an architectural anti-pattern. CPU compute time is exponentially more expensive than hard drive space.
+Every single SQL `JOIN` adds latency to the query. In the era of the modern Cloud Data Warehouse and [Data Lakehouse](/data-lakehouse), where object storage (like Amazon S3) costs mere pennies per gigabyte, optimizing for storage space is considered an architectural anti-pattern. CPU compute time is exponentially more expensive than hard drive space.
 
 ## When to Use the Snowflake Schema
 

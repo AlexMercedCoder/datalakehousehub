@@ -6,7 +6,7 @@ description: "A comprehensive guide to Data Tokenization. Learn how removing sen
 
 # What is Data Tokenization?
 
-Data Tokenization is the absolute highest, most mathematically impenetrable tier of data security available in modern enterprise architecture. While Data Masking simply hides sensitive data from unauthorized users (but leaves the true data sitting on the hard drive), Tokenization completely, physically removes the highly sensitive data (like a 16-digit Credit Card Number) from the Data Lakehouse or operational database entirely, replacing it with a mathematically meaningless, randomly generated string called a "Token."
+Data Tokenization is the absolute highest, most mathematically impenetrable tier of data security available in modern enterprise architecture. While Data Masking simply hides sensitive data from unauthorized users (but leaves the true data sitting on the hard drive), Tokenization completely, physically removes the highly sensitive data (like a 16-digit Credit Card Number) from the [Data Lakehouse](/data-lakehouse) or operational database entirely, replacing it with a mathematically meaningless, randomly generated string called a "Token."
 
 Tokenization was heavily pioneered by the Payment Card Industry (PCI) to solve a massive architectural nightmare. If an e-commerce company stores real credit card numbers in its massive database, that entire massive database must undergo grueling, incredibly expensive PCI compliance audits every year. If a hacker breaches the database, the company is destroyed. 
 Tokenization solves this by ensuring the company literally never possesses the true data. 

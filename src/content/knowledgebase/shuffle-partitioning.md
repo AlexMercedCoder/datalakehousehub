@@ -6,7 +6,7 @@ description: "A comprehensive guide to Shuffle Partitioning. Learn why shuffling
 
 # What is Shuffle Partitioning?
 
-Shuffle Partitioning is the highly complex, computationally intensive mechanism used by distributed data processing engines (like Apache Spark) to physically reorganize data across a massive cluster of servers during execution. It is universally considered the most expensive and dangerous operation in Big Data, and mismanaging it causes the vast majority of pipeline failures and out-of-memory errors in the Data Lakehouse.
+Shuffle Partitioning is the highly complex, computationally intensive mechanism used by distributed data processing engines (like Apache Spark) to physically reorganize data across a massive cluster of servers during execution. It is universally considered the most expensive and dangerous operation in Big Data, and mismanaging it causes the vast majority of pipeline failures and out-of-memory errors in the [Data Lakehouse](/data-lakehouse).
 
 In a distributed environment, data is naturally scattered. If a massive 500-gigabyte table is stored across 50 different worker nodes, those nodes can easily execute simple operations (like `SELECT` or `FILTER`) entirely independently. Worker Node 1 does not care what Worker Node 2 is doing. 
 

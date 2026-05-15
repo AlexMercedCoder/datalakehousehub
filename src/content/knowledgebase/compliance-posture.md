@@ -18,7 +18,7 @@ To understand the practical application of Compliance Posture, it is crucial to 
 * **Applies granular access controls dynamically, masking or restricting data based on user identity or geographical constraints.** By adopting this mechanic, engineers can bypass traditional processing constraints and deliver substantially faster time-to-insight.
 * **Implements automated profiling and assertions to block bad data before it impacts downstream dashboards.** This allows the overarching architecture to remain highly resilient while serving concurrent workloads natively.
 
-Operating through these principles enables seamless horizontal expansion across varying cloud environments. It integrates effortlessly with adjacent technologies like Apache Iceberg, dbt, and advanced vector search algorithms.
+Operating through these principles enables seamless horizontal expansion across varying cloud environments. It integrates effortlessly with adjacent technologies like [Apache Iceberg](/apache-iceberg), dbt, and advanced vector search algorithms.
 
 ## Why Compliance Posture Matters in the Modern Data Stack
 

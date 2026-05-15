@@ -15,7 +15,7 @@ In the rapidly evolving landscape of data engineering and artificial intelligenc
 To understand the practical application of Universal Semantic Layer, it is crucial to systematically examine its fundamental operational behaviors and structural design:
 
 * **Operates as a proprietary layer natively within the core Dremio application architecture.** This principle ensures that systems can scale horizontally without facing artificial limitations or bottlenecks.
-* **Integrates deeply with broad open-source table formats (like Apache Iceberg) without format lock-in.** By adopting this mechanic, engineers can bypass traditional processing constraints and deliver substantially faster time-to-insight.
+* **Integrates deeply with broad open-source table formats (like [Apache Iceberg](/apache-iceberg)) without format lock-in.** By adopting this mechanic, engineers can bypass traditional processing constraints and deliver substantially faster time-to-insight.
 * **Eliminates the explicit need for users to manually engineer massive data duplication pipelines.** This allows the overarching architecture to remain highly resilient while serving concurrent workloads natively.
 
 Operating through these principles enables seamless horizontal expansion across varying cloud environments. It integrates effortlessly with adjacent technologies like Apache Iceberg, dbt, and advanced vector search algorithms.

@@ -6,7 +6,7 @@ description: "A comprehensive guide to the Semantic Layer. Learn about headless 
 
 # What is a Semantic Layer?
 
-A Semantic Layer is an architectural framework that translates complex, underlying physical database structures into intuitive, standardized business terminology. It acts as a strict, centralized bridge between the raw computational data stored in a data lakehouse (or warehouse) and the various downstream consumers (Business Intelligence dashboards, AI Agents, and analysts writing SQL).
+A Semantic Layer is an architectural framework that translates complex, underlying physical database structures into intuitive, standardized business terminology. It acts as a strict, centralized bridge between the raw computational data stored in a [data lakehouse](/data-lakehouse) (or warehouse) and the various downstream consumers (Business Intelligence dashboards, AI Agents, and analysts writing SQL).
 
 Historically, the business logic required to calculate complex metrics—such as "Annual Recurring Revenue" (ARR) or "Customer Acquisition Cost" (CAC)—was buried directly inside proprietary reporting tools like Tableau or Looker. This created a massive architectural bottleneck. If a company decided to switch BI platforms, or if a data scientist needed to calculate ARR in a Python script, they had to manually reverse-engineer and rewrite the complex SQL logic from scratch. This inevitably led to massive inconsistencies where different departments reported completely different numbers simply because they joined tables differently. The Semantic Layer definitively solves this crisis.
 

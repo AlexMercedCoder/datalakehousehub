@@ -34,7 +34,7 @@ However, highly complex mathematical studies have proven that if you possess a p
 Because PII is so dangerous, modern Data Lakehouses utilize highly automated, multi-layered architectural defenses.
 
 ### 1. Automated Discovery and Tagging
-When terabytes of raw data stream into the Data Lakehouse from external APIs, human engineers cannot possibly read it all. Organizations deploy automated Machine Learning crawlers (like Macie in AWS). These crawlers scan the raw Apache Parquet files in the background. If they detect a string of numbers formatted like a Social Security Number (`XXX-XX-XXXX`), the crawler instantly tags that column as `HIGH_RISK_PII` in the Enterprise Data Catalog.
+When terabytes of raw data stream into the [Data Lakehouse](/data-lakehouse) from external APIs, human engineers cannot possibly read it all. Organizations deploy automated Machine Learning crawlers (like Macie in AWS). These crawlers scan the raw Apache Parquet files in the background. If they detect a string of numbers formatted like a Social Security Number (`XXX-XX-XXXX`), the crawler instantly tags that column as `HIGH_RISK_PII` in the Enterprise Data Catalog.
 
 ### 2. Column-Level Security and Masking
 Once tagged, the Data Lakehouse enforces strict Column-Level Security. 

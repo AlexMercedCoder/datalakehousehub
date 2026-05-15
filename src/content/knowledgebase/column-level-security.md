@@ -34,7 +34,7 @@ Instead, the administrator applies a Regex (Regular Expression) masking policy. 
 
 ## Centralized Policy Enforcement
 
-In a multi-engine Data Lakehouse, deploying Column-Level Security manually across every single database is a massive security risk. If a policy is applied in Dremio but accidentally forgotten in Apache Spark, a massive data breach will occur.
+In a multi-engine [Data Lakehouse](/data-lakehouse), deploying Column-Level Security manually across every single database is a massive security risk. If a policy is applied in Dremio but accidentally forgotten in Apache Spark, a massive data breach will occur.
 
 Modern architectures enforce Column-Level Security centrally via Governance Catalogs (like Apache Polaris or Unity Catalog). The data steward defines the `Mask_PII` policy globally inside the catalog. Any engine attempting to read the Iceberg table must evaluate the catalog policy first. This guarantees that whether a user queries the data via a Business Intelligence dashboard or a Python script, the dynamic masking triggers flawlessly across the entire enterprise.
 

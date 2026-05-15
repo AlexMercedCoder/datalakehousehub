@@ -6,7 +6,7 @@ description: "A comprehensive guide to Project Nessie. Learn about Git-like vers
 
 # What is Project Nessie?
 
-Project Nessie is an open-source catalog architecture designed to bring Git-like version control directly to the data lakehouse. It allows organizations to manage their massive analytical datasets identically to how software engineering teams manage application source code. 
+Project Nessie is an open-source catalog architecture designed to bring Git-like version control directly to the [data lakehouse](/data-lakehouse). It allows organizations to manage their massive analytical datasets identically to how software engineering teams manage application source code. 
 
 Before Nessie, data engineers struggling to update a massive data lake safely had to rely on complex, fragile staging environments. If an engineer wanted to test a massive ETL logic change, they had to physically copy terabytes of production data into an isolated bucket, run their test, verify the results, and then painstakingly overwrite the production tables. Nessie fundamentally resolves this by abstracting the catalog state into an immutable commit graph, enabling seamless branching, zero-copy staging, and instant atomic rollbacks across thousands of open table format datasets.
 

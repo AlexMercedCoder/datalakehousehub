@@ -25,7 +25,7 @@ Every 5 seconds, the Load Balancer aggressively pings every single server in the
 
 ## Load Balancing the Data Lakehouse
 
-Load Balancing is an absolute architectural requirement for the modern Open Data Lakehouse.
+Load Balancing is an absolute architectural requirement for the modern Open [Data Lakehouse](/data-lakehouse).
 
 When a massive enterprise deploys a distributed SQL query engine (like Trino or Dremio) via Kubernetes, they deploy a massive Load Balancer in front of the Coordinator nodes. When hundreds of business analysts open their Tableau dashboards simultaneously, the Load Balancer flawlessly distributes the barrage of incoming SQL queries across the multiple Coordinator nodes. This ensures that the analytical control plane never locks up, guaranteeing sub-second dashboard rendering for the entire executive suite regardless of concurrent traffic.
 

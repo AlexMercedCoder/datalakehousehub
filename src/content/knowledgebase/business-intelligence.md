@@ -6,7 +6,7 @@ description: "A comprehensive guide to Business Intelligence. Learn how BI platf
 
 # What is Business Intelligence (BI)?
 
-Business Intelligence (BI) is the massive, highly specialized ecosystem of software applications, visualization methodologies, and analytical practices designed exclusively to translate billions of rows of raw, chaotic corporate data into highly intuitive, actionable human insights. If the Data Lakehouse is the massive engine room of a ship generating the power, the Business Intelligence platform is the steering wheel and the radar screen used by the CEO to actually navigate the company.
+Business Intelligence (BI) is the massive, highly specialized ecosystem of software applications, visualization methodologies, and analytical practices designed exclusively to translate billions of rows of raw, chaotic corporate data into highly intuitive, actionable human insights. If the [Data Lakehouse](/data-lakehouse) is the massive engine room of a ship generating the power, the Business Intelligence platform is the steering wheel and the radar screen used by the CEO to actually navigate the company.
 
 For decades, business executives made massive, multi-million dollar strategic decisions based purely on human intuition, gut feeling, or wildly outdated monthly spreadsheets. Business Intelligence completely eradicated this methodology. By connecting massive visual platforms (like Tableau, PowerBI, or Apache Superset) directly to high-speed analytical databases, BI ensures that every single corporate decision—from supply chain logistics to marketing spend—is grounded entirely in absolute, mathematically verified factual reality.
 
@@ -16,7 +16,7 @@ A modern enterprise Business Intelligence deployment relies on a highly integrat
 
 ### 1. The Data Source (The Semantic Layer)
 BI tools are fundamentally stupid. They do not know what "Gross Margin" means. They simply execute SQL. 
-Therefore, modern BI architecture heavily relies on a Semantic Layer (like dbt or Dremio). The Semantic Layer physically houses the complex mathematical logic. When the BI tool asks for "Gross Margin," the Semantic Layer intercepts the request, executes the massive, predefined `JOIN` statements against the Apache Iceberg tables in the Lakehouse, calculates the exact math, and passes the perfectly aggregated number back to the BI tool.
+Therefore, modern BI architecture heavily relies on a Semantic Layer (like dbt or Dremio). The Semantic Layer physically houses the complex mathematical logic. When the BI tool asks for "Gross Margin," the Semantic Layer intercepts the request, executes the massive, predefined `JOIN` statements against the [Apache Iceberg](/apache-iceberg) tables in the Lakehouse, calculates the exact math, and passes the perfectly aggregated number back to the BI tool.
 
 ### 2. The Analytical Engine (OLAP)
 BI tools demand extreme speed. If an executive clicks a filter on a dashboard and the dashboard takes three minutes to load, the executive will abandon the tool entirely. 

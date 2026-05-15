@@ -21,7 +21,7 @@ This is the physical web application utilized by the human data analysts. Built 
 To guarantee sub-second search performance across millions of metadata tags, Amundsen physically offloads the raw search execution to a highly optimized search engine, typically Elasticsearch. The Search Service maintains a massive, inverted index of all table names, column descriptions, and user-generated tags, ensuring that even the most complex, fuzzy search queries return instantaneous, highly relevant results.
 
 ### 3. The Metadata Service (Neo4j / Apache Atlas)
-The absolute architectural brain of Amundsen. The Metadata Service physically stores the complex web of relationships between tables, dashboards, and human users. By default, Amundsen originally utilized Neo4j (a highly advanced Graph Database) to explicitly map these relationships as Nodes and Edges. This Graph Architecture is critical; it allows the system to instantly traverse complex Data Lineage, mathematically showing an analyst exactly which downstream Tableau dashboard will physically break if they alter a specific column in the raw Data Lakehouse table.
+The absolute architectural brain of Amundsen. The Metadata Service physically stores the complex web of relationships between tables, dashboards, and human users. By default, Amundsen originally utilized Neo4j (a highly advanced Graph Database) to explicitly map these relationships as Nodes and Edges. This Graph Architecture is critical; it allows the system to instantly traverse complex Data Lineage, mathematically showing an analyst exactly which downstream Tableau dashboard will physically break if they alter a specific column in the raw [Data Lakehouse](/data-lakehouse) table.
 
 ## Automated Extraction (The Databuilder)
 

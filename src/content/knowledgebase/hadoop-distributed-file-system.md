@@ -44,4 +44,4 @@ Because HDFS strictly couples storage and compute, scaling a Hadoop cluster is i
 HDFS is one of the most critical foundational milestones in data engineering history. By proving that massive, fault-tolerant analytical storage could be achieved by fusing hundreds of cheap commodity servers together through highly advanced replication software, HDFS broke the monopoly of expensive legacy hardware appliances and permanently birthed the modern era of distributed Big Data processing.
 
 ## Learn More
-To learn more about the Data Lakehouse, read the book "Lakehouse for Everyone" by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).
+To learn more about the [Data Lakehouse](/data-lakehouse), read the book "Lakehouse for Everyone" by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

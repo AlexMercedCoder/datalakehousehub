@@ -32,7 +32,7 @@ If the IDs match, it outputs the joined row. If the `Sales` ID is lower than the
 The Sort-Merge Join is reliable, but it is exceptionally slow due to the massive initial network Shuffle and the physical sorting process on local hard drives.
 
 Advanced data engineering teams optimize this by eliminating the need to Sort and Shuffle at runtime. 
-If the `Sales` and `Refunds` tables are permanently stored in the Open Data Lakehouse, engineers configure the ingestion pipeline to physically pre-sort the Apache Parquet files by `transaction_id` and utilize Z-Ordering or specific Partitioning algorithms. 
+If the `Sales` and `Refunds` tables are permanently stored in the Open [Data Lakehouse](/data-lakehouse), engineers configure the ingestion pipeline to physically pre-sort the Apache Parquet files by `transaction_id` and utilize Z-Ordering or specific Partitioning algorithms. 
 
 If the data is pre-sorted and heavily clustered on disk, the query engine can skip Phase 1 and Phase 2 entirely, launching directly into Phase 3 (the Merge). This transforms a grueling hour-long distributed join into a query that executes in seconds.
 

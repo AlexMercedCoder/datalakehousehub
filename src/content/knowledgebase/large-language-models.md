@@ -32,7 +32,7 @@ Because an LLM is fundamentally a probability engine trying to predict the next 
 To deploy LLMs safely in the enterprise, data engineers absolutely must wrap the LLMs in Retrieval-Augmented Generation (RAG) architectures. RAG forces the LLM to read specific, verified internal corporate documents (stored securely in a Vector Database) before generating its response, completely anchoring the model’s probability calculations in absolute corporate truth.
 
 ### Context Windows
-LLMs cannot read an entire multi-terabyte database at once. They are strictly limited by their Context Window (the amount of text they can hold in short-term memory during a single interaction). While modern context windows have expanded dramatically, processing massive analytics still requires the underlying computational power of the Data Lakehouse to aggregate the data *before* feeding the summary to the LLM.
+LLMs cannot read an entire multi-terabyte database at once. They are strictly limited by their Context Window (the amount of text they can hold in short-term memory during a single interaction). While modern context windows have expanded dramatically, processing massive analytics still requires the underlying computational power of the [Data Lakehouse](/data-lakehouse) to aggregate the data *before* feeding the summary to the LLM.
 
 ## Summary of Technical Value
 

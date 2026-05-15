@@ -31,7 +31,7 @@ Reinforcement Learning trains algorithms through a complex system of rewards and
 
 The efficacy of Machine Learning is entirely dependent on the volume and quality of the underlying data. A brilliant algorithm trained on garbage data will confidently produce garbage predictions.
 
-The modern Data Lakehouse is explicitly designed to accelerate Machine Learning. By utilizing Open Table Formats (like Apache Iceberg), data scientists can execute Time Travel queries to perfectly reproduce historical training environments. They can leverage the massive, distributed compute power of Apache Spark (via Spark MLlib) to train highly complex algorithms directly against multi-terabyte datasets in parallel, completely bypassing the extreme latency of pulling data down to local Python environments.
+The modern [Data Lakehouse](/data-lakehouse) is explicitly designed to accelerate Machine Learning. By utilizing Open Table Formats (like [Apache Iceberg](/apache-iceberg)), data scientists can execute Time Travel queries to perfectly reproduce historical training environments. They can leverage the massive, distributed compute power of Apache Spark (via Spark MLlib) to train highly complex algorithms directly against multi-terabyte datasets in parallel, completely bypassing the extreme latency of pulling data down to local Python environments.
 
 ## Summary of Technical Value
 

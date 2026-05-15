@@ -30,7 +30,7 @@ Flink handles this chaos flawlessly through strict Event Time processing and Wat
 
 Historically, managing Flink required writing incredibly complex Java or Scala code. Today, Flink heavily integrates standard SQL. 
 
-A data engineer can write a simple standard SQL query: `SELECT user_id, count(*) FROM kafka_clicks GROUP BY user_id`. Flink compiles this SQL into a massive, continuously running distributed job. Furthermore, Flink is increasingly utilized as the real-time ingestion engine for the Open Data Lakehouse, capable of executing complex streaming transformations on Kafka data and writing the results instantly into Apache Iceberg tables in massive, atomic commits.
+A data engineer can write a simple standard SQL query: `SELECT user_id, count(*) FROM kafka_clicks GROUP BY user_id`. Flink compiles this SQL into a massive, continuously running distributed job. Furthermore, Flink is increasingly utilized as the real-time ingestion engine for the Open [Data Lakehouse](/data-lakehouse), capable of executing complex streaming transformations on Kafka data and writing the results instantly into [Apache Iceberg](/apache-iceberg) tables in massive, atomic commits.
 
 ## Summary of Technical Value
 

@@ -6,7 +6,7 @@ description: "A comprehensive guide to Star Schemas. Learn about Fact tables, Di
 
 # What is a Star Schema?
 
-A Star Schema is the definitive structural foundation of modern dimensional data modeling. Originally popularized by Ralph Kimball in the 1990s, the Star Schema is an architectural design pattern used explicitly to organize data within a Data Warehouse or the Gold layer of a Data Lakehouse. 
+A Star Schema is the definitive structural foundation of modern dimensional data modeling. Originally popularized by Ralph Kimball in the 1990s, the Star Schema is an architectural design pattern used explicitly to organize data within a Data Warehouse or the Gold layer of a [Data Lakehouse](/data-lakehouse). 
 
 Operational databases (like PostgreSQL) use highly complex, deeply normalized schemas (like the Third Normal Form). Normalization eliminates data redundancy, making it incredibly fast for an application to insert a single new record. However, normalization forces analysts to write incredibly complex SQL queries containing dozens of `JOIN` statements just to generate a simple report, causing massive performance bottlenecks. 
 

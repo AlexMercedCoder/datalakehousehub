@@ -6,7 +6,7 @@ description: "A specialized file format within Apache Iceberg used to store deta
 
 ## What is Puffin Files?
 
-A specialized file format within Apache Iceberg used to store detailed statistics and indexes to accelerate query planning. 
+A specialized file format within [Apache Iceberg](/apache-iceberg) used to store detailed statistics and indexes to accelerate query planning. 
 
 In the rapidly evolving landscape of data engineering and artificial intelligence, **Puffin Files** has emerged as a critical foundational component. As organizations transition from legacy, monolithic architectures to decoupled, scalable environments, understanding the role of Puffin Files is essential for building future-proof infrastructure. This capability serves as a critical enabler in modern data ecosystems, explicitly guiding architecture toward absolute efficiency and scale. When correctly implemented, Puffin Files dynamically drives analytical workloads and structurally limits administrative technical debt.
 

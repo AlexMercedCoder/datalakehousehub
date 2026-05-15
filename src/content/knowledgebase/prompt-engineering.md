@@ -36,4 +36,4 @@ This System Prompt mathematically shifts the entire neural network into a highly
 Prompt Engineering is the critical programming interface for generative artificial intelligence. By utilizing advanced structural techniques like Few-Shot examples, Chain-of-Thought reasoning, and strict System constraints, engineers can mathematically steer the immense probability engines of Large Language Models, entirely preventing hallucinations and ensuring the AI generates highly accurate, perfectly formatted outputs for automated enterprise pipelines.
 
 ## Learn More
-To learn more about the Data Lakehouse, read the book "Lakehouse for Everyone" by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).
+To learn more about the [Data Lakehouse](/data-lakehouse), read the book "Lakehouse for Everyone" by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

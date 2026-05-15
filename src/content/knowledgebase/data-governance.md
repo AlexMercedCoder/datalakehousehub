@@ -21,7 +21,7 @@ A Data Owner is typically a senior business leader accountable for the quality a
 ### 2. The Business Glossary and Metadata Management
 An organization cannot govern data if it does not know what the data actually means. Different departments frequently use the exact same word to mean entirely different things (e.g., Marketing defines "Customer" as anyone who created an account; Finance defines "Customer" as someone who processed a paid transaction).
 
-Governance frameworks utilize a centralized Business Glossary to explicitly define these terms universally. Furthermore, they implement comprehensive Metadata Management. Metadata catalogs scan the entire massive data lakehouse, automatically tagging tables that contain Personally Identifiable Information (PII), tracking data lineage (showing exactly how data flowed from a raw S3 bucket into an executive dashboard), and exposing this information to auditors seamlessly.
+Governance frameworks utilize a centralized Business Glossary to explicitly define these terms universally. Furthermore, they implement comprehensive Metadata Management. Metadata catalogs scan the entire massive [data lakehouse](/data-lakehouse), automatically tagging tables that contain Personally Identifiable Information (PII), tracking data lineage (showing exactly how data flowed from a raw S3 bucket into an executive dashboard), and exposing this information to auditors seamlessly.
 
 ## Technological Enforcement: Security and Compliance
 

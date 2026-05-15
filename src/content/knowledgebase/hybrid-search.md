@@ -18,7 +18,7 @@ To understand the practical application of Hybrid Search, it is crucial to syste
 * **Executes similarity searches using specialized indexing algorithms like HNSW to find mathematically closest vectors instantly.** By adopting this mechanic, engineers can bypass traditional processing constraints and deliver substantially faster time-to-insight.
 * **Combines dense vector retrieval with traditional sparse keyword indexing to achieve highly accurate 'Hybrid Search'.** This allows the overarching architecture to remain highly resilient while serving concurrent workloads natively.
 
-Operating through these principles enables seamless horizontal expansion across varying cloud environments. It integrates effortlessly with adjacent technologies like Apache Iceberg, dbt, and advanced vector search algorithms.
+Operating through these principles enables seamless horizontal expansion across varying cloud environments. It integrates effortlessly with adjacent technologies like [Apache Iceberg](/apache-iceberg), dbt, and advanced vector search algorithms.
 
 ## Why Hybrid Search Matters in the Modern Data Stack
 

@@ -31,7 +31,7 @@ In legacy Hadoop architectures utilizing the Hive Metastore, data is physically 
 
 ## Predicate Pushdown in the Open Lakehouse
 
-Modern Open Table Formats like Apache Iceberg completely redefine how Partition Pruning and Predicate Pushdown operate.
+Modern Open Table Formats like [Apache Iceberg](/apache-iceberg) completely redefine how Partition Pruning and Predicate Pushdown operate.
 
 The legacy Hive Metastore required query engines to execute slow, expensive "file-listing" operations against cloud storage (like Amazon S3) just to figure out what files existed inside a directory. 
 
@@ -43,4 +43,4 @@ Predicate Pushdown is the fundamental optimization technique preventing modern q
 
 
 ## Learn More
-To learn more about the Data Lakehouse, read the book "Lakehouse for Everyone" by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).
+To learn more about the [Data Lakehouse](/data-lakehouse), read the book "Lakehouse for Everyone" by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

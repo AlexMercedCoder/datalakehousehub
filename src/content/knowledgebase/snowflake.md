@@ -43,7 +43,7 @@ Because of Snowflake's centralized storage architecture, it introduced zero-copy
 
 While Snowflake was originally built as a walled-garden data warehouse utilizing proprietary storage formats, the industry's shift toward Open Data Lakehouses forced architectural evolution. 
 
-Snowflake introduced "External Tables" and native integrations with Apache Iceberg. This allows organizations to keep their massive datasets stored in open formats directly in their own cloud buckets. Snowflake acts as the high-performance compute engine, reaching out to query the Iceberg files externally, allowing enterprises to utilize Snowflake's exceptional query optimization without locking their data into a proprietary storage layer.
+Snowflake introduced "External Tables" and native integrations with [Apache Iceberg](/apache-iceberg). This allows organizations to keep their massive datasets stored in open formats directly in their own cloud buckets. Snowflake acts as the high-performance compute engine, reaching out to query the Iceberg files externally, allowing enterprises to utilize Snowflake's exceptional query optimization without locking their data into a proprietary storage layer.
 
 ## Summary of Technical Value
 
@@ -51,4 +51,4 @@ Snowflake transformed enterprise analytics by providing a platform that scales i
 
 
 ## Learn More
-To learn more about the Data Lakehouse, read the book "Lakehouse for Everyone" by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).
+To learn more about the [Data Lakehouse](/data-lakehouse), read the book "Lakehouse for Everyone" by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

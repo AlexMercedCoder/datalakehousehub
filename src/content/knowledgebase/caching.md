@@ -35,7 +35,7 @@ To prevent infinite staleness, data engineers assign a strict Time-To-Live (TTL)
 
 ## Advanced Data Lakehouse Caching
 
-Modern Open Data Lakehouse architectures implement caching at the absolute deepest levels of the engine.
+Modern Open [Data Lakehouse](/data-lakehouse) architectures implement caching at the absolute deepest levels of the engine.
 Platforms like Dremio utilize a highly advanced caching paradigm called Data Reflections. Instead of caching the final dashboard number, Dremio caches highly optimized, pre-aggregated physical columnar subsets of the raw data. When an analyst writes a completely new, ad-hoc SQL query, the engine's query optimizer mathematically recognizes that it can fulfill the new query using the cached Reflection rather than the raw data lake, drastically accelerating ad-hoc data discovery without requiring explicit dashboard caching.
 
 ## Summary of Technical Value

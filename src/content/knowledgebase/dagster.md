@@ -14,7 +14,7 @@ In modern data engineering, pipelines have become increasingly complex, often st
 
 Traditional orchestrators like Apache Airflow structure workflows as Directed Acyclic Graphs (DAGs) of arbitrary tasks. A task might be "Run SQL Script A" followed by "Run Python Script B." The orchestrator has no awareness of what "Script A" actually does or what data it modifies. If the pipeline fails, the engineer must manually investigate which tables are corrupted.
 
-Dagster fundamentally redesigns orchestration around Software-Defined Assets. An asset is a physical manifestation of data—such as a specific Snowflake table, an Apache Iceberg partition, or a trained machine learning model. Instead of telling Dagster to "run a task," an engineer writes a Python function that explicitly returns an asset. 
+Dagster fundamentally redesigns orchestration around Software-Defined Assets. An asset is a physical manifestation of data—such as a specific Snowflake table, an [Apache Iceberg](/apache-iceberg) partition, or a trained machine learning model. Instead of telling Dagster to "run a task," an engineer writes a Python function that explicitly returns an asset. 
 
 Because Dagster natively understands the assets, the dependency graph is entirely data-aware. If an engineer needs to update the `monthly_revenue` table, they simply ask Dagster to materialize that specific asset. Dagster automatically calculates the dependency chain, traverses upstream, and executes only the precise calculations required to produce that final table, drastically reducing unnecessary compute costs.
 
@@ -46,4 +46,4 @@ Dagster represents the natural evolution of data orchestration. By transitioning
 
 
 ## Learn More
-To learn more about the Data Lakehouse, read the book "Lakehouse for Everyone" by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).
+To learn more about the [Data Lakehouse](/data-lakehouse), read the book "Lakehouse for Everyone" by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

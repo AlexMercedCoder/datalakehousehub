@@ -6,7 +6,7 @@ description: "A comprehensive guide to Active Data Governance. Learn how real-ti
 
 # What is Active Data Governance?
 
-Active Data Governance is a highly aggressive, modern architectural paradigm that completely replaces traditional, static compliance policies with real-time, highly automated, and heavily integrated software controls explicitly embedded within the Data Lakehouse infrastructure. It is the philosophy that data governance cannot merely be a legal document sitting in an HR folder; it must be an active, living mechanism that mathematically intercepts, evaluates, and controls data access at the exact millisecond a user attempts to run a query.
+Active Data Governance is a highly aggressive, modern architectural paradigm that completely replaces traditional, static compliance policies with real-time, highly automated, and heavily integrated software controls explicitly embedded within the [Data Lakehouse](/data-lakehouse) infrastructure. It is the philosophy that data governance cannot merely be a legal document sitting in an HR folder; it must be an active, living mechanism that mathematically intercepts, evaluates, and controls data access at the exact millisecond a user attempts to run a query.
 
 Historically, "Passive Data Governance" relied on humans. A Data Steward would create a massive spreadsheet listing which employees were allowed to view the Payroll table. If an unauthorized analyst requested access, it triggered a manual IT ticketing process that took three weeks to resolve. Active Data Governance destroys this friction by treating governance as software code, enabling massive agility while guaranteeing absolute mathematical compliance.
 
@@ -25,7 +25,7 @@ If a data scientist queries a massive production table containing unencrypted cr
 
 ### 3. Continuous Discovery and Tagging
 The absolute foundation of Active Governance is knowing what data exists. 
-When a new massive dataset is dropped into an Amazon S3 bucket, active governance bots instantly crawl the data. They utilize Machine Learning to mathematically recognize Social Security Numbers. They automatically tag the new Apache Iceberg table with the `Highly_Confidential` metadata tag. This tag instantly triggers the dynamic access controls, locking down the new table before a human Data Steward even realizes the file was uploaded.
+When a new massive dataset is dropped into an Amazon S3 bucket, active governance bots instantly crawl the data. They utilize Machine Learning to mathematically recognize Social Security Numbers. They automatically tag the new [Apache Iceberg](/apache-iceberg) table with the `Highly_Confidential` metadata tag. This tag instantly triggers the dynamic access controls, locking down the new table before a human Data Steward even realizes the file was uploaded.
 
 ## Summary of Technical Value
 

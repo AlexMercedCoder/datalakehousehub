@@ -31,7 +31,7 @@ The CD engine executes the physical deployment across the global infrastructure:
 
 In the enterprise data ecosystem, there is a critical, high-risk distinction between Continuous *Delivery* and Continuous *Deployment*.
 
-* **Continuous Delivery:** The automation does everything up to the final step. It compiles the code, tests it, and packages it into a perfect deployment bundle. However, it stops and waits. A human executive or release manager must physically click the final "Approve" button to push it to the live Data Lakehouse. This is highly common for mission-critical financial databases.
+* **Continuous Delivery:** The automation does everything up to the final step. It compiles the code, tests it, and packages it into a perfect deployment bundle. However, it stops and waits. A human executive or release manager must physically click the final "Approve" button to push it to the live [Data Lakehouse](/data-lakehouse). This is highly common for mission-critical financial databases.
 * **Continuous Deployment:** The absolute purest form of automation. There is no human approval button. The millisecond the code passes the automated CI tests, it is violently pushed directly into the live production environment. 
 
 ## The Requirement for Observability

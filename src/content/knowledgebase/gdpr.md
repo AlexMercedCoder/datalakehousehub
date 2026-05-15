@@ -24,7 +24,7 @@ Data architects were forced to build Federated Data Architectures (like Data Mes
 GDPR Article 17 grants consumers the "Right to be Forgotten." If a user requests deletion, the company must obliterate their data completely. 
 
 In 2018, the industry standard for analytical data was Apache Hive. Hive partitioned data using massive physical directories. If a company needed to delete a single user, they had to write a massive Apache Spark script to open millions of Parquet files, find the user, delete the row, and rewrite all the files. It cost tens of thousands of dollars in cloud compute just to delete one user. 
-This specific GDPR nightmare was the primary catalyst for the invention of Open Table Formats (Apache Iceberg, Delta Lake). These modern formats use advanced metadata tracking to allow lightning-fast, row-level SQL `DELETE` commands, making GDPR compliance cheap and instantaneous.
+This specific GDPR nightmare was the primary catalyst for the invention of Open Table Formats ([Apache Iceberg](/apache-iceberg), Delta Lake). These modern formats use advanced metadata tracking to allow lightning-fast, row-level SQL `DELETE` commands, making GDPR compliance cheap and instantaneous.
 
 ### 3. Privacy by Design (Article 25)
 GDPR mandates that security cannot be an afterthought; it must be hardcoded into the architecture. 
@@ -33,7 +33,7 @@ Data engineers must build pipelines that automatically execute Data Masking or T
 
 ## Summary of Technical Value
 
-GDPR is the most profound external force to ever shape the data engineering discipline. By replacing the chaotic, unregulated hoarding of Big Data with strict legal requirements for data sovereignty, explicit user consent, and instant cryptographic deletion, GDPR forced the architectural evolution of the modern, highly governed, federated Open Data Lakehouse.
+GDPR is the most profound external force to ever shape the data engineering discipline. By replacing the chaotic, unregulated hoarding of Big Data with strict legal requirements for data sovereignty, explicit user consent, and instant cryptographic deletion, GDPR forced the architectural evolution of the modern, highly governed, federated Open [Data Lakehouse](/data-lakehouse).
 
 ## Learn More
 To learn more about the Data Lakehouse, read the book "Lakehouse for Everyone" by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

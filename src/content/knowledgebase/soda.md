@@ -42,7 +42,7 @@ Soda natively integrates into the software deployment CI/CD pipeline (like GitHu
 
 ## Summary of Technical Value
 
-Soda significantly streamlined the implementation of enterprise data quality. By introducing a highly accessible YAML syntax, powerful anomaly detection, and deep integration into software CI/CD pipelines, Soda empowers both technical and non-technical users to collaboratively guarantee data reliability. It is a fundamental framework for maintaining strict data contracts and ensuring absolute trust in the modern Open Data Lakehouse.
+Soda significantly streamlined the implementation of enterprise data quality. By introducing a highly accessible YAML syntax, powerful anomaly detection, and deep integration into software CI/CD pipelines, Soda empowers both technical and non-technical users to collaboratively guarantee data reliability. It is a fundamental framework for maintaining strict data contracts and ensuring absolute trust in the modern Open [Data Lakehouse](/data-lakehouse).
 
 
 ## Learn More

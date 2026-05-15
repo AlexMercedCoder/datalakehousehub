@@ -53,7 +53,7 @@ By executing the machine learning algorithms directly alongside the massive comp
 
 ## Integration with Open Formats
 
-As the industry shifted toward Open Lakehouse architectures, BigQuery adapted through its BigQuery Omni and BigLake capabilities. Instead of requiring organizations to physically load data into the proprietary Capacitor storage format, BigQuery can establish external connections directly to open table formats (like Apache Iceberg) residing in Google Cloud Storage, Amazon S3, or Azure. This allows BigQuery to serve as a unified compute engine over a distributed, multi-cloud data lakehouse.
+As the industry shifted toward Open Lakehouse architectures, BigQuery adapted through its BigQuery Omni and BigLake capabilities. Instead of requiring organizations to physically load data into the proprietary Capacitor storage format, BigQuery can establish external connections directly to open table formats (like [Apache Iceberg](/apache-iceberg)) residing in Google Cloud Storage, Amazon S3, or Azure. This allows BigQuery to serve as a unified compute engine over a distributed, multi-cloud [data lakehouse](/data-lakehouse).
 
 ## Summary of Technical Value
 

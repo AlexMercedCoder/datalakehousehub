@@ -18,7 +18,7 @@ Kafka Connect operates strictly on a dual-connector paradigm, standardizing the 
 A Source Connector is responsible for extracting data from an external system and pushing it into a Kafka topic. For instance, a JDBC Source Connector can connect to a legacy Oracle database, execute a polling query every five seconds to identify new rows, and stream those records instantly into a Kafka topic. Highly advanced Source Connectors (like Debezium) bypass polling entirely, attaching directly to the database’s Write-Ahead Log (WAL) to provide true, real-time Change Data Capture (CDC).
 
 ### Sink Connectors
-A Sink Connector performs the exact opposite function. It subscribes to a specific Kafka topic, continuously reads the massive stream of events, and writes them reliably to an external destination. An organization can utilize an Amazon S3 Sink Connector to read millions of JSON events from Kafka, batch them into highly compressed Apache Parquet files in memory, and flush them directly to the cloud data lakehouse every 15 minutes. 
+A Sink Connector performs the exact opposite function. It subscribes to a specific Kafka topic, continuously reads the massive stream of events, and writes them reliably to an external destination. An organization can utilize an Amazon S3 Sink Connector to read millions of JSON events from Kafka, batch them into highly compressed Apache Parquet files in memory, and flush them directly to the cloud [data lakehouse](/data-lakehouse) every 15 minutes. 
 
 ## The Distributed Execution Model
 

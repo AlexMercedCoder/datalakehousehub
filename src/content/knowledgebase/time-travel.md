@@ -6,7 +6,7 @@ description: "A comprehensive guide to Time Travel. Learn how Open Table Formats
 
 # What is Time Travel?
 
-Time Travel is an immensely powerful architectural feature introduced by modern Open Table Formats (like Apache Iceberg, Apache Hudi, and Delta Lake). It allows a data engineer, data scientist, or business analyst to execute a standard SQL query against a massive data lakehouse table and view the exact, mathematically perfect state of that table as it existed at a specific microsecond in the past.
+Time Travel is an immensely powerful architectural feature introduced by modern Open Table Formats (like [Apache Iceberg](/apache-iceberg), Apache Hudi, and Delta Lake). It allows a data engineer, data scientist, or business analyst to execute a standard SQL query against a massive [data lakehouse](/data-lakehouse) table and view the exact, mathematically perfect state of that table as it existed at a specific microsecond in the past.
 
 Before the invention of Open Table Formats, data lakes were built directly on raw cloud object storage (Amazon S3) or HDFS. If an automated pipeline accidentally executed a massive `DELETE` script that erased 500,000 legitimate customer records, the data was permanently gone. Recovering from this catastrophe required the data engineering team to manually restore massive storage backups from magnetic tape or distant cold-storage archives, a process that frequently took days and resulted in massive organizational downtime. Time Travel completely mitigates this risk by providing instant, localized historical recovery.
 

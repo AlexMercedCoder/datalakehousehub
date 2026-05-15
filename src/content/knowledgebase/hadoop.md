@@ -36,7 +36,7 @@ While Hadoop defined an entire decade of data engineering, its dominance rapidly
 
 Hadoop tightly coupled storage and compute. An organization had to buy physical servers containing both hard drives and CPUs. If the organization needed to store petabytes of cold data but rarely queried it, they were still forced to buy and maintain hundreds of physical servers just for the disk space, severely wasting CPU power.
 
-The modern Data Lakehouse completely decoupled this architecture. Organizations now store data on infinitely scalable cloud object storage (like Amazon S3) for pennies, and spin up ephemeral, serverless compute engines (like Snowflake or Trino) exclusively when they need to run a query, instantly scaling them back down to zero. 
+The modern [Data Lakehouse](/data-lakehouse) completely decoupled this architecture. Organizations now store data on infinitely scalable cloud object storage (like Amazon S3) for pennies, and spin up ephemeral, serverless compute engines (like Snowflake or Trino) exclusively when they need to run a query, instantly scaling them back down to zero. 
 
 ## Summary of Technical Value
 

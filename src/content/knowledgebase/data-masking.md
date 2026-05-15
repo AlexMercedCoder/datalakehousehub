@@ -6,7 +6,7 @@ description: "A comprehensive guide to Data Masking. Learn how Dynamic and Stati
 
 # What is Data Masking?
 
-Data Masking is a highly critical architectural security mechanism designed to intentionally obfuscate, hide, or scramble highly sensitive Personally Identifiable Information (PII) within a database or Data Lakehouse. Its primary objective is to allow data analysts, software developers, and external vendors to safely query and interact with massive enterprise datasets without ever seeing the true, legally protected information (like full Social Security Numbers or clear-text credit card details).
+Data Masking is a highly critical architectural security mechanism designed to intentionally obfuscate, hide, or scramble highly sensitive Personally Identifiable Information (PII) within a database or [Data Lakehouse](/data-lakehouse). Its primary objective is to allow data analysts, software developers, and external vendors to safely query and interact with massive enterprise datasets without ever seeing the true, legally protected information (like full Social Security Numbers or clear-text credit card details).
 
 If a company needs to hire an external data science consultant to build a churn prediction model, handing them a raw database containing the names and home addresses of ten million customers is a catastrophic security violation. However, if the company simply deletes all the columns, the data scientist has no data to build the model with. Data Masking solves this by intelligently altering the data—replacing a real name like "John Doe" with a masked string like "J*** D**"—preserving the structure of the database while destroying the sensitive payload.
 

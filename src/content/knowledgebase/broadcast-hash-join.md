@@ -35,11 +35,11 @@ While it is the fastest possible join strategy, it carries a severe architectura
 
 The engine must accurately estimate the size of the smaller table. If the engine's statistics are outdated, it might falsely believe a 50-gigabyte table is actually 50 megabytes. The coordinator node will attempt to broadcast 50 gigabytes of data into the memory of every worker node. The worker nodes will instantly run out of RAM, throwing a catastrophic `OutOfMemoryError (OOM)` and violently crashing the entire distributed query.
 
-To prevent this, engineers often apply explicit hints (like `/*+ BROADCAST(stores) */` in Spark SQL) to manually control the behavior, or rely on highly accurate metadata catalogs (like Apache Iceberg) to provide the Cost-Based Optimizer with exact file sizes.
+To prevent this, engineers often apply explicit hints (like `/*+ BROADCAST(stores) */` in Spark SQL) to manually control the behavior, or rely on highly accurate metadata catalogs (like [Apache Iceberg](/apache-iceberg)) to provide the Cost-Based Optimizer with exact file sizes.
 
 ## Summary of Technical Value
 
-The Broadcast Hash Join is the execution engine's ultimate weapon for querying Star Schemas efficiently. By broadcasting tiny dimension tables directly into the memory of every worker node, the engine completely bypasses the catastrophic network latency of a distributed shuffle. It allows petabyte-scale fact tables to be joined locally and instantly, serving as the core computational mechanism powering high-speed Data Lakehouse analytics.
+The Broadcast Hash Join is the execution engine's ultimate weapon for querying Star Schemas efficiently. By broadcasting tiny dimension tables directly into the memory of every worker node, the engine completely bypasses the catastrophic network latency of a distributed shuffle. It allows petabyte-scale fact tables to be joined locally and instantly, serving as the core computational mechanism powering high-speed [Data Lakehouse](/data-lakehouse) analytics.
 
 
 ## Learn More

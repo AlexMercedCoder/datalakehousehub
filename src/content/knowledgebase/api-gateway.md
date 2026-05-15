@@ -21,7 +21,7 @@ The API Gateway handles Authentication globally. When a request hits the Gateway
 
 ### 2. Aggressive Rate Limiting (DDoS Protection)
 If a malicious hacker launches a massive DDoS (Distributed Denial of Service) attack, blasting a specific microservice with 10 million requests a second, the internal server will instantly melt down. 
-The API Gateway sits at the edge of the network. It tracks every single IP address. If it detects a single user executing more than 100 requests per second, the Gateway instantly triggers a strict Rate Limit. It blocks the IP address, dropping the traffic into the void, perfectly shielding the internal Data Lakehouse and operational databases from catastrophic failure.
+The API Gateway sits at the edge of the network. It tracks every single IP address. If it detects a single user executing more than 100 requests per second, the Gateway instantly triggers a strict Rate Limit. It blocks the IP address, dropping the traffic into the void, perfectly shielding the internal [Data Lakehouse](/data-lakehouse) and operational databases from catastrophic failure.
 
 ### 3. Load Balancing and Routing
 The API Gateway is intimately aware of the internal network topology. If the `Payment_Service` is currently scaled out across 50 internal Kubernetes containers, the API Gateway acts as a highly intelligent Load Balancer, mathematically distributing the incoming requests across the 50 containers to ensure perfect CPU utilization.

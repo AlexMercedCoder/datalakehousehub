@@ -8,7 +8,7 @@ description: "A comprehensive guide to Natural Keys. Learn the dangers of using 
 
 A Natural Key (sometimes referred to as a Business Key) is a specific column (or combination of columns) within a database table that uniquely identifies a specific row using information that physically exists and has inherent meaning in the real business world. Common examples of Natural Keys include a person's Social Security Number, a vehicle's VIN (Vehicle Identification Number), an ISBN on a book, or a customer's Email Address.
 
-In the highly normalized world of operational software engineering (OLTP), developers frequently use Natural Keys as the official Primary Key of a table. Because the data has inherent meaning, it is intuitive for humans to read and understand. However, when that operational data is extracted and loaded into a massive Data Lakehouse or Cloud Data Warehouse for advanced analytics (OLAP), relying on Natural Keys as the structural skeleton of the architecture introduces massive, potentially catastrophic fragility into the data pipelines.
+In the highly normalized world of operational software engineering (OLTP), developers frequently use Natural Keys as the official Primary Key of a table. Because the data has inherent meaning, it is intuitive for humans to read and understand. However, when that operational data is extracted and loaded into a massive [Data Lakehouse](/data-lakehouse) or Cloud Data Warehouse for advanced analytics (OLAP), relying on Natural Keys as the structural skeleton of the architecture introduces massive, potentially catastrophic fragility into the data pipelines.
 
 ## The Fragility of the Real World
 

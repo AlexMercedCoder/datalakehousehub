@@ -30,7 +30,7 @@ Crucially, if the `Email_Server` can only process 10 emails a second, it simply 
 In modern data architecture, there is a strict distinction between a Message Queue (RabbitMQ) and an Event Streaming platform (Apache Kafka).
 
 * **Message Queues** are designed for explicit action commands (e.g., "Send this specific email"). Once the Consumer successfully reads the message, the Queue explicitly and permanently deletes it.
-* **Event Streams** are designed as immutable, historical ledgers (e.g., "A user clicked a button"). Multiple different analytical Data Lakehouse pipelines can read the exact same event hours or days later, and the Event Stream explicitly does *not* delete the data after it is read.
+* **Event Streams** are designed as immutable, historical ledgers (e.g., "A user clicked a button"). Multiple different analytical [Data Lakehouse](/data-lakehouse) pipelines can read the exact same event hours or days later, and the Event Stream explicitly does *not* delete the data after it is read.
 
 ## Summary of Technical Value
 

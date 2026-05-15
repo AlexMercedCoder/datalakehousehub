@@ -37,7 +37,7 @@ Today, Apache ORC and Apache Parquet share nearly identical use cases. Both are 
 
 The choice between them historically depended entirely on the computation engine. Organizations deeply entrenched in the Apache Hive and Hortonworks ecosystem standardized on ORC, as Hive was heavily optimized to read it natively. Conversely, organizations standardizing on Apache Spark heavily favored Parquet, as Spark’s Catalyst Optimizer and Tungsten Engine were explicitly engineered around Parquet’s structure.
 
-In the modern Open Data Lakehouse era, the ecosystem has largely consolidated around Parquet, primarily because dominant open table formats like Delta Lake and Apache Iceberg adopted Parquet as their default underlying storage standard. However, Iceberg fully supports ORC as a valid physical data file format, ensuring that legacy Hadoop organizations migrating to modern architectures can leverage their existing ORC datasets without forcing massive data rewrites.
+In the modern Open [Data Lakehouse](/data-lakehouse) era, the ecosystem has largely consolidated around Parquet, primarily because dominant open table formats like Delta Lake and [Apache Iceberg](/apache-iceberg) adopted Parquet as their default underlying storage standard. However, Iceberg fully supports ORC as a valid physical data file format, ensuring that legacy Hadoop organizations migrating to modern architectures can leverage their existing ORC datasets without forcing massive data rewrites.
 
 ## Summary of Technical Value
 

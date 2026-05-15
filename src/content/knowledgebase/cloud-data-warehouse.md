@@ -27,7 +27,7 @@ While Cloud Data Warehouses achieved incredible performance and usability, they 
 
 When an organization loads data into a CDW like Snowflake, the data is heavily transformed into Snowflake's proprietary, closed storage format. The organization cannot simply point Apache Spark or a custom Python script at the underlying storage to train a machine learning model; they must pull the data back *out* of Snowflake, paying massive computational and egress fees. 
 
-This strict proprietary lock-in is the exact reason massive enterprises are heavily migrating away from the closed Cloud Data Warehouse model and moving aggressively toward the Open Data Lakehouse model (utilizing Apache Iceberg), which provides the exact same elastic cloud performance but guarantees permanent, open ownership of the underlying data files.
+This strict proprietary lock-in is the exact reason massive enterprises are heavily migrating away from the closed Cloud Data Warehouse model and moving aggressively toward the Open [Data Lakehouse](/data-lakehouse) model (utilizing [Apache Iceberg](/apache-iceberg)), which provides the exact same elastic cloud performance but guarantees permanent, open ownership of the underlying data files.
 
 ## Summary of Technical Value
 

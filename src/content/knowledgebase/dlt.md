@@ -20,7 +20,7 @@ When a developer uses the `requests` library to pull a complex, deeply nested JS
 dlt automatically unpacks deeply nested JSON arrays and flattens them into a relational structure. It assigns explicit mathematical data types to the columns based on the values it observes (e.g., recognizing that a string containing "2026-05-14" should be explicitly typed as a `TIMESTAMP` in the destination database). 
 
 ### Automated DDL Generation
-Once dlt understands the shape of the data, it automatically connects to the destination database (such as BigQuery, DuckDB, or an Apache Iceberg catalog). It generates the precise `CREATE TABLE` and `ALTER TABLE` SQL commands natively required by that specific database dialect. If the external API introduces a completely new field tomorrow, dlt detects the schema drift instantly and dynamically issues the `ALTER TABLE ADD COLUMN` command before loading the new data, entirely preventing the pipeline from crashing.
+Once dlt understands the shape of the data, it automatically connects to the destination database (such as BigQuery, DuckDB, or an [Apache Iceberg](/apache-iceberg) catalog). It generates the precise `CREATE TABLE` and `ALTER TABLE` SQL commands natively required by that specific database dialect. If the external API introduces a completely new field tomorrow, dlt detects the schema drift instantly and dynamically issues the `ALTER TABLE ADD COLUMN` command before loading the new data, entirely preventing the pipeline from crashing.
 
 ## Incremental Loading and State Management
 
@@ -42,4 +42,4 @@ dlt represents a massive shift toward "Data Engineering as Code." By condensing 
 
 
 ## Learn More
-To learn more about the Data Lakehouse, read the book "Lakehouse for Everyone" by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).
+To learn more about the [Data Lakehouse](/data-lakehouse), read the book "Lakehouse for Everyone" by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

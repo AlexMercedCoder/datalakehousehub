@@ -8,7 +8,7 @@ description: "A comprehensive guide to CSV. Learn why the ubiquitous text format
 
 A CSV (Comma-Separated Values) file is the oldest, simplest, and most universally ubiquitous open text format for storing and exchanging tabular data in the world. Invented decades before the modern internet, a CSV file represents data exactly as it sounds: it is a raw, unformatted, plain text document where every new line represents a row of data, and the specific columns within that row are separated strictly by a comma.
 
-Because a CSV contains absolutely zero proprietary formatting, complex metadata, or hidden binary code, it can be seamlessly opened and read by virtually any software application on earth—from a high-end Python data science script to a basic Microsoft Excel spreadsheet to a raw terminal text editor (like Vim). While its incredible simplicity makes it the universal language for basic human data exchange, its severe architectural limitations make it catastrophically dangerous when utilized as a storage mechanism for a massive Open Data Lakehouse.
+Because a CSV contains absolutely zero proprietary formatting, complex metadata, or hidden binary code, it can be seamlessly opened and read by virtually any software application on earth—from a high-end Python data science script to a basic Microsoft Excel spreadsheet to a raw terminal text editor (like Vim). While its incredible simplicity makes it the universal language for basic human data exchange, its severe architectural limitations make it catastrophically dangerous when utilized as a storage mechanism for a massive Open [Data Lakehouse](/data-lakehouse).
 
 ## The Architectural Flaws of CSV in Big Data
 

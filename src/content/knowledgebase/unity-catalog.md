@@ -6,7 +6,7 @@ description: "A comprehensive guide to Databricks Unity Catalog. Learn about cen
 
 # What is Unity Catalog?
 
-Unity Catalog is a unified, centralized governance solution explicitly designed for the modern data lakehouse. Developed by Databricks, it provides a single, cohesive control plane to manage access permissions, audit logs, and data lineage across massive, multi-cloud architectures.
+Unity Catalog is a unified, centralized governance solution explicitly designed for the modern [data lakehouse](/data-lakehouse). Developed by Databricks, it provides a single, cohesive control plane to manage access permissions, audit logs, and data lineage across massive, multi-cloud architectures.
 
 Historically, organizations struggled with deeply fragmented security models. They managed data access policies inside their cloud data warehouse, completely separate policies for their cloud storage buckets (via AWS IAM or Azure Role-Based Access Control), and yet another set of rules for their dashboards. This disjointed approach led to massive security vulnerabilities and massive compliance violations. Unity Catalog solves this by applying a single, unified security model to all data assets—including files, tables, machine learning models, and dashboards—regardless of which cloud provider they reside on.
 
@@ -34,7 +34,7 @@ Furthermore, Unity Catalog incorporates Delta Sharing, an open protocol for secu
 
 In 2024, Databricks announced the open-sourcing of Unity Catalog, a massive shift in the data ecosystem designed to directly combat the perception of vendor lock-in and compete with Apache Polaris.
 
-By open-sourcing the core catalog functionality, Databricks established a universal, REST-based interoperability standard. This allows independent query engines (like Trino, Dremio, or DuckDB) to connect to an open-source Unity Catalog server, read the Delta Lake or Apache Iceberg tables natively, and respect the centralized access permissions without requiring the organization to pay for Databricks compute resources.
+By open-sourcing the core catalog functionality, Databricks established a universal, REST-based interoperability standard. This allows independent query engines (like Trino, Dremio, or DuckDB) to connect to an open-source Unity Catalog server, read the Delta Lake or [Apache Iceberg](/apache-iceberg) tables natively, and respect the centralized access permissions without requiring the organization to pay for Databricks compute resources.
 
 ## Summary of Technical Value
 

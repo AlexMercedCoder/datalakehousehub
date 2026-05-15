@@ -44,7 +44,7 @@ In a cloud data warehouse, data is stored on infinitely scalable, incredibly che
 
 While the Cloud Data Warehouse solved the hardware scaling problem, it still forced organizations to lock their data into a single vendor's proprietary storage format. 
 
-Today, the industry is aggressively moving toward the Open Data Lakehouse. The Lakehouse provides the exact same high-speed OLAP analytical performance and strict transactional guarantees of the Data Warehouse, but executes those queries directly against raw, open-source file formats (like Apache Parquet) stored in the organization's own open cloud buckets, entirely eliminating vendor lock-in.
+Today, the industry is aggressively moving toward the Open [Data Lakehouse](/data-lakehouse). The Lakehouse provides the exact same high-speed OLAP analytical performance and strict transactional guarantees of the Data Warehouse, but executes those queries directly against raw, open-source file formats (like Apache Parquet) stored in the organization's own open cloud buckets, entirely eliminating vendor lock-in.
 
 ## Summary of Technical Value
 

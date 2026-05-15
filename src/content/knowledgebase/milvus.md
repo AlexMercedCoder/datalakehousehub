@@ -45,7 +45,7 @@ Milvus natively supports Hybrid Search. It stores traditional scalar data (like 
 
 ## Integration with the Data Lakehouse and RAG
 
-Milvus is the primary retrieval engine powering massive Retrieval-Augmented Generation (RAG) pipelines. When integrated with an Open Data Lakehouse, organizations use engines like Apache Spark to process petabytes of raw text or imagery, pass the data through embedding models (like OpenAI or HuggingFace), and bulk-load the resulting vectors directly into Milvus.
+Milvus is the primary retrieval engine powering massive Retrieval-Augmented Generation (RAG) pipelines. When integrated with an Open [Data Lakehouse](/data-lakehouse), organizations use engines like Apache Spark to process petabytes of raw text or imagery, pass the data through embedding models (like OpenAI or HuggingFace), and bulk-load the resulting vectors directly into Milvus.
 
 During inference, AI agents built with LangChain or LlamaIndex query Milvus instantly to retrieve the exact semantic context required to ground the LLM, entirely eliminating hallucinations.
 

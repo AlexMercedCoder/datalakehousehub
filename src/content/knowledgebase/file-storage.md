@@ -8,7 +8,7 @@ description: "A comprehensive guide to File Storage. Learn about hierarchical di
 
 File Storage is the oldest, most universally understood data storage architecture in computing. It organizes data into a rigid, highly structured hierarchy of nested directories and folders. If you have ever saved a Word document to a "Desktop" folder on a laptop, you have utilized File Storage. In the context of enterprise infrastructure, File Storage refers to Network Attached Storage (NAS) systems (like Amazon EFS or Azure Files) that allow multiple distributed servers to actively mount and share the exact same hierarchical file system simultaneously over a local network.
 
-While Object Storage dominates the massive Data Lakehouse, and Block Storage powers high-speed databases, File Storage fills a very specific architectural gap: human readability and legacy software compatibility.
+While Object Storage dominates the massive [Data Lakehouse](/data-lakehouse), and Block Storage powers high-speed databases, File Storage fills a very specific architectural gap: human readability and legacy software compatibility.
 
 ## The Architecture of the Hierarchy
 

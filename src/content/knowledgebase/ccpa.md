@@ -19,7 +19,7 @@ In the modern digital economy, a single consumer's data does not stay within a s
 If a user clicks the "Do Not Sell" button on a website, the company is legally required to instantly halt all of these downstream external data flows. This presents a massive, incredibly complex engineering challenge.
 
 ### Complex Data Lineage and Orchestration
-To comply with CCPA, an organization's Data Lakehouse must possess flawless Data Lineage mapping. 
+To comply with CCPA, an organization's [Data Lakehouse](/data-lakehouse) must possess flawless Data Lineage mapping. 
 
 The data engineering team must know exactly which internal pipelines are pushing data outward. When the "Do Not Sell" event is triggered, it must flow into a centralized orchestration platform (like Apache Airflow). The orchestrator must instantly execute a complex web of API calls across the internet. It must automatically hit the Facebook API, the Mailchimp API, and the Data Broker API, explicitly demanding that those external platforms mathematically suppress or delete that specific user's data, ensuring the web of data syndication is completely severed.
 

@@ -47,4 +47,4 @@ Furthermore, unlike REST, which natively utilizes standard HTTP caching mechanis
 GraphQL represents the surgical evolution of the API. By completely eliminating the catastrophic network inefficiencies of Over-fetching and Under-fetching inherent in REST architectures, it allows data engineering pipelines and front-end applications to extract highly complex, deeply relational datasets over the internet with absolute mathematical precision and maximum network efficiency.
 
 ## Learn More
-To learn more about the Data Lakehouse, read the book "Lakehouse for Everyone" by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).
+To learn more about the [Data Lakehouse](/data-lakehouse), read the book "Lakehouse for Everyone" by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

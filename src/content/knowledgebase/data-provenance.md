@@ -20,7 +20,7 @@ When a critical operational system (like a clinical trial database) generates a 
 * **The Chronology:** The exact, unalterable millisecond timestamp of creation.
 * **The Initial State:** The exact raw JSON payload before any downstream data engineering pipelines executed even a single transformation.
 
-This origin metadata is securely appended to the data and ingested into the Open Data Lakehouse. Because the Data Lakehouse utilizes immutable formats (like Apache Iceberg) resting on secure Object Storage, the origin record physically cannot be altered or overwritten without leaving a massive, highly visible audit trail.
+This origin metadata is securely appended to the data and ingested into the Open [Data Lakehouse](/data-lakehouse). Because the Data Lakehouse utilizes immutable formats (like [Apache Iceberg](/apache-iceberg)) resting on secure Object Storage, the origin record physically cannot be altered or overwritten without leaving a massive, highly visible audit trail.
 
 ### Cryptographic Signatures (Data Watermarking)
 In highly secure environments (like government intelligence or advanced finance), provenance is enforced via cryptography. 

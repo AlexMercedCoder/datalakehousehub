@@ -19,7 +19,7 @@ The pattern dictates that data must sequentially pass through three distinct pha
 ### 1. Write (The Isolated Staging Phase)
 When the ingestion pipeline runs, it does NOT write data to the production table. Instead, it writes the data to a completely isolated, invisible environment. 
 
-In a traditional database, this might involve writing to a temporary table (`staging_sales_fact`). In a modern Data Lakehouse utilizing Project Nessie (or the Dremio Open Catalog), this is achieved exponentially faster through zero-copy Branching. The orchestrator creates an isolated Git-like branch off the main catalog, and the pipeline executes its massive multi-terabyte write operations directly onto that invisible branch. The production `main` branch remains entirely untouched and perfectly stable for business users.
+In a traditional database, this might involve writing to a temporary table (`staging_sales_fact`). In a modern [Data Lakehouse](/data-lakehouse) utilizing Project Nessie (or the Dremio Open Catalog), this is achieved exponentially faster through zero-copy Branching. The orchestrator creates an isolated Git-like branch off the main catalog, and the pipeline executes its massive multi-terabyte write operations directly onto that invisible branch. The production `main` branch remains entirely untouched and perfectly stable for business users.
 
 ### 2. Audit (The Quality Gate)
 Once the massive write is complete, the data sits quietly in isolation. The orchestrator triggers the Audit phase.
@@ -40,7 +40,7 @@ In a legacy environment, the orchestrator executes a massive SQL `INSERT` statem
 
 While the logic of WAP is simple, implementing it historically required immense storage duplication (copying terabytes of data into staging tables). 
 
-The modern Open Data Lakehouse entirely removes this friction. Because table formats like Apache Iceberg manage data through metadata manifests rather than physical directories, writing data to an isolated branch only requires generating a few kilobytes of text files. The physical Parquet data files are written to S3 exactly once. When the branch is published, the Iceberg catalog simply points the production manifest at the new Parquet files. This zero-copy architecture allows organizations to implement the highly rigorous WAP pattern across petabyte-scale workloads without incurring any additional cloud storage or computational transfer costs.
+The modern Open Data Lakehouse entirely removes this friction. Because table formats like [Apache Iceberg](/apache-iceberg) manage data through metadata manifests rather than physical directories, writing data to an isolated branch only requires generating a few kilobytes of text files. The physical Parquet data files are written to S3 exactly once. When the branch is published, the Iceberg catalog simply points the production manifest at the new Parquet files. This zero-copy architecture allows organizations to implement the highly rigorous WAP pattern across petabyte-scale workloads without incurring any additional cloud storage or computational transfer costs.
 
 ## Summary of Technical Value
 

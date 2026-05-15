@@ -38,4 +38,4 @@ Data engineers utilize features like Amazon S3 Object Lock. When the daily backu
 Disaster Recovery is the ultimate insurance policy for enterprise architecture. By rigorously defining exact thresholds for acceptable data loss (RPO) and absolute downtime (RTO), and deploying indestructible, air-gapped immutable backups combined with automated infrastructure resurrection scripts (Terraform), a robust DR architecture guarantees that an organization can survive catastrophic physical or cyber destruction and rapidly restore its mission-critical data ecosystem to full operational capacity.
 
 ## Learn More
-To learn more about the Data Lakehouse, read the book "Lakehouse for Everyone" by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).
+To learn more about the [Data Lakehouse](/data-lakehouse), read the book "Lakehouse for Everyone" by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

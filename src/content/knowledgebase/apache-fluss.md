@@ -6,7 +6,7 @@ description: "A comprehensive guide to Apache Fluss. Learn how this innovative s
 
 # What is Apache Fluss?
 
-Apache Fluss is a highly advanced, modern open-source streaming storage architecture explicitly engineered to serve as the unified, high-performance storage foundation for Apache Flink. In the massive, chaotic ecosystem of real-time data streaming, the industry has historically relied on Apache Kafka or Apache Pulsar to hold the data, while using Flink strictly as the computational engine to process it. While this separation works, it introduces massive network latency, complex serialization overhead, and significant architectural friction when attempting to merge real-time streaming data directly with the massive historical batch data sitting in an Open Data Lakehouse.
+Apache Fluss is a highly advanced, modern open-source streaming storage architecture explicitly engineered to serve as the unified, high-performance storage foundation for Apache Flink. In the massive, chaotic ecosystem of real-time data streaming, the industry has historically relied on Apache Kafka or Apache Pulsar to hold the data, while using Flink strictly as the computational engine to process it. While this separation works, it introduces massive network latency, complex serialization overhead, and significant architectural friction when attempting to merge real-time streaming data directly with the massive historical batch data sitting in an Open [Data Lakehouse](/data-lakehouse).
 
 Apache Fluss fundamentally disrupts this paradigm by providing a streaming storage engine that is architecturally native to Flink’s internal logic. It is specifically designed to eliminate the massive impedance mismatch between continuous event streaming and columnar batch storage, acting as the ultimate bridge that allows real-time operational streams to seamlessly merge into the analytical Data Lakehouse.
 
@@ -20,7 +20,7 @@ When high-velocity streaming data enters Fluss, it is immediately written to a h
 ### 2. The Lakehouse Tier (Columnar Archiving)
 This is where Fluss completely diverges from traditional message queues. 
 Kafka was never designed to store petabytes of data forever; retaining massive data in Kafka is catastrophically expensive. 
-Apache Fluss possesses a native, automated tiering mechanism. As the data in the Real-Time Log ages, Fluss autonomously and continuously transforms the raw stream into highly compressed, columnar Apache Parquet or Apache Iceberg format. It physically flushes this columnar data directly down into the cheap, massive Amazon S3 Data Lakehouse.
+Apache Fluss possesses a native, automated tiering mechanism. As the data in the Real-Time Log ages, Fluss autonomously and continuously transforms the raw stream into highly compressed, columnar Apache Parquet or [Apache Iceberg](/apache-iceberg) format. It physically flushes this columnar data directly down into the cheap, massive Amazon S3 Data Lakehouse.
 
 ## The Unified Flink Experience
 

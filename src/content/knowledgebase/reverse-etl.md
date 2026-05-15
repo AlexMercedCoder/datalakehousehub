@@ -6,7 +6,7 @@ description: "A comprehensive guide to Reverse ETL. Learn how data activation pi
 
 # What is Reverse ETL?
 
-Reverse ETL is a modern data engineering pipeline architecture designed to execute "Data Activation." It explicitly reverses the traditional data flow by extracting highly refined, aggregated analytical data from the central Cloud Data Warehouse (or Data Lakehouse) and pushing it directly back into frontline operational SaaS applications (like Salesforce, Zendesk, Marketo, or HubSpot).
+Reverse ETL is a modern data engineering pipeline architecture designed to execute "Data Activation." It explicitly reverses the traditional data flow by extracting highly refined, aggregated analytical data from the central Cloud Data Warehouse (or [Data Lakehouse](/data-lakehouse)) and pushing it directly back into frontline operational SaaS applications (like Salesforce, Zendesk, Marketo, or HubSpot).
 
 Historically, the data warehouse was a massive, isolated dead-end. Organizations spent millions of dollars building pipelines to extract raw data from Salesforce and Zendesk, load it into Snowflake, and use dbt to calculate a highly complex, predictive "Customer Churn Risk" score. However, that incredibly valuable score simply sat on a static Tableau dashboard. If a customer success representative was working inside Zendesk and talking to a client, they had absolutely no idea the client was a massive churn risk because that data was locked in the warehouse. Reverse ETL entirely solves this operational disconnect.
 

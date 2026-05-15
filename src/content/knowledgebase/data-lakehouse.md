@@ -8,7 +8,7 @@ description: "A modern data architecture combining the flexibility of a data lak
 
 A modern data architecture combining the flexibility of a data lake with the management features of a data warehouse. 
 
-In the rapidly evolving landscape of data engineering and artificial intelligence, **Data Lakehouse** has emerged as a critical foundational component. As organizations transition from legacy, monolithic architectures to decoupled, scalable environments, understanding the role of Data Lakehouse is essential for building future-proof infrastructure. This capability serves as a critical enabler in modern data ecosystems, explicitly guiding architecture toward absolute efficiency and scale. When correctly implemented, Data Lakehouse dynamically drives analytical workloads and structurally limits administrative technical debt.
+In the rapidly evolving landscape of data engineering and artificial intelligence, **[Data Lakehouse](/data-lakehouse)** has emerged as a critical foundational component. As organizations transition from legacy, monolithic architectures to decoupled, scalable environments, understanding the role of Data Lakehouse is essential for building future-proof infrastructure. This capability serves as a critical enabler in modern data ecosystems, explicitly guiding architecture toward absolute efficiency and scale. When correctly implemented, Data Lakehouse dynamically drives analytical workloads and structurally limits administrative technical debt.
 
 ## Core Architecture and Mechanics
 
@@ -18,7 +18,7 @@ To understand the practical application of Data Lakehouse, it is crucial to syst
 * **Maintains an explicit hierarchical tree of metadata manifests to track exact file states and enable precise time-travel querying.** By adopting this mechanic, engineers can bypass traditional processing constraints and deliver substantially faster time-to-insight.
 * **Decouples the physical storage layout from the logical table structure using techniques like hidden partitioning.** This allows the overarching architecture to remain highly resilient while serving concurrent workloads natively.
 
-Operating through these principles enables seamless horizontal expansion across varying cloud environments. It integrates effortlessly with adjacent technologies like Apache Iceberg, dbt, and advanced vector search algorithms.
+Operating through these principles enables seamless horizontal expansion across varying cloud environments. It integrates effortlessly with adjacent technologies like [Apache Iceberg](/apache-iceberg), dbt, and advanced vector search algorithms.
 
 ## Why Data Lakehouse Matters in the Modern Data Stack
 

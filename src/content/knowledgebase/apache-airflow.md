@@ -8,7 +8,7 @@ description: "A comprehensive guide to Apache Airflow. Learn about workflow orch
 
 Apache Airflow is a highly scalable, open-source platform used to programmatically author, schedule, and monitor complex computational workflows. Originally created by Airbnb in 2014 to manage their increasingly chaotic data engineering pipelines, Airflow quickly became the industry standard for workflow orchestration.
 
-In modern data architecture, data rarely sits still. It must be extracted from operational databases via APIs, transformed by massive computation engines like Apache Spark, and tested for quality before being loaded into a Data Lakehouse. Airflow acts as the central control plane for this entire process. It does not process the data itself; rather, it triggers, monitors, and manages the execution sequence of the systems that do process the data.
+In modern data architecture, data rarely sits still. It must be extracted from operational databases via APIs, transformed by massive computation engines like Apache Spark, and tested for quality before being loaded into a [Data Lakehouse](/data-lakehouse). Airflow acts as the central control plane for this entire process. It does not process the data itself; rather, it triggers, monitors, and manages the execution sequence of the systems that do process the data.
 
 ## The Architecture of Directed Acyclic Graphs (DAGs)
 

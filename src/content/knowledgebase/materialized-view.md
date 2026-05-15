@@ -19,7 +19,7 @@ While a Materialized View solves the latency problem, it introduces a severe dat
 If a massive streaming pipeline adds 10,000 new transactions to the raw source tables every hour, the Materialized View must be updated to reflect the new data. Historically, databases managed this via a "Full Refresh." The engine would completely drop the old Materialized View, re-scan the entire billion-row source table, and recalculate everything from scratch. This was incredibly computationally expensive and often took hours.
 
 ### Micro-Batching and Incremental Updates
-Modern Cloud Data Warehouses (like Snowflake) and Data Lakehouse engines utilize Incremental Refreshes. 
+Modern Cloud Data Warehouses (like Snowflake) and [Data Lakehouse](/data-lakehouse) engines utilize Incremental Refreshes. 
 
 When a Materialized View is built incrementally, the engine strictly tracks the transaction logs (Change Data Capture) of the underlying source tables. If 10,000 new rows are appended to the source, the engine isolates those specific 10,000 rows. It applies the complex SQL aggregation strictly to the delta, and mathematically merges the resulting change into the existing Materialized View. This drastically reduces the computational overhead, ensuring the Materialized View remains accurate in near real-time without executing massive full table scans.
 

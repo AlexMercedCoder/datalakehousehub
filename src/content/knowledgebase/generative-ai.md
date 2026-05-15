@@ -26,7 +26,7 @@ When a user prompts the AI to "Generate a picture of a futuristic data center," 
 
 Generative AI is fundamentally altering how organizations interact with their data infrastructure. 
 
-Historically, extracting insights from a Data Lakehouse required a highly skilled data analyst who understood complex SQL. Today, modern Data Lakehouses (like Dremio) integrate Generative AI directly into the execution engine through Text-to-SQL capabilities. A business executive can simply type, "Show me the top five performing sales regions from last quarter compared to the previous year," and the Generative AI agent instantly translates that English sentence into a massively complex, perfectly optimized SQL query, executes it against the petabyte-scale lakehouse, and generates a visual chart, entirely removing the technical bottleneck.
+Historically, extracting insights from a [Data Lakehouse](/data-lakehouse) required a highly skilled data analyst who understood complex SQL. Today, modern Data Lakehouses (like Dremio) integrate Generative AI directly into the execution engine through Text-to-SQL capabilities. A business executive can simply type, "Show me the top five performing sales regions from last quarter compared to the previous year," and the Generative AI agent instantly translates that English sentence into a massively complex, perfectly optimized SQL query, executes it against the petabyte-scale lakehouse, and generates a visual chart, entirely removing the technical bottleneck.
 
 ## Security and Governance
 

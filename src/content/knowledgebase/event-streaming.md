@@ -24,7 +24,7 @@ Because events are strictly immutable (they cannot be updated or deleted, only a
 
 ## The Nervous System of the Enterprise
 
-Event Streaming architectures function as the central nervous system for decoupled microservices and the modern Data Lakehouse.
+Event Streaming architectures function as the central nervous system for decoupled microservices and the modern [Data Lakehouse](/data-lakehouse).
 
 ### Decoupling Microservices
 If an e-commerce website uses a monolithic architecture, the Checkout Service must talk directly to the Inventory Service to update the stock, and directly to the Shipping Service to trigger the delivery. If the Shipping Service crashes, the entire website crashes, and customers cannot buy products. 
@@ -32,7 +32,7 @@ If an e-commerce website uses a monolithic architecture, the Checkout Service mu
 In an Event Streaming architecture, the Checkout Service simply drops an `Order_Placed` event into the central Kafka stream and immediately moves on. The Inventory Service and the Shipping Service read that stream at their own independent pace. If the Shipping Service crashes, the website stays up. When the Shipping Service reboots, it simply reads the backlog of events from the stream and processes them safely.
 
 ### Real-Time Analytics
-Event Streaming is the sole mechanism that allows organizations to move beyond reporting the past and start reacting to the present. By utilizing streaming engines like Apache Flink or Spark Structured Streaming, data teams consume the raw Kafka events continuously. They execute highly complex aggregations on the fly (e.g., detecting if a specific credit card is used in two different countries within ten minutes) and generate real-time alerts or write the refined data instantly into an Apache Iceberg table for immediate analytical querying.
+Event Streaming is the sole mechanism that allows organizations to move beyond reporting the past and start reacting to the present. By utilizing streaming engines like Apache Flink or Spark Structured Streaming, data teams consume the raw Kafka events continuously. They execute highly complex aggregations on the fly (e.g., detecting if a specific credit card is used in two different countries within ten minutes) and generate real-time alerts or write the refined data instantly into an [Apache Iceberg](/apache-iceberg) table for immediate analytical querying.
 
 ## Summary of Technical Value
 

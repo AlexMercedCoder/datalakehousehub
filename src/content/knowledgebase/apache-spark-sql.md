@@ -32,7 +32,7 @@ Furthermore, Tungsten implements Whole-Stage Code Generation. Instead of calling
 
 ## Integration in the Lakehouse
 
-Spark SQL serves as the primary computational engine for the modern Data Lakehouse. Because it deeply understands columnar formats (like Apache Parquet and ORC) and natively integrates with Open Table Formats (like Apache Iceberg, Hudi, and Delta Lake), engineers rely on Spark SQL to execute massive, transactional ELT pipelines. It effortlessly reads terabytes of raw JSON from S3, applies complex data quality constraints via Catalyst, and writes the output atomically as heavily optimized Parquet files back to the lakehouse.
+Spark SQL serves as the primary computational engine for the modern [Data Lakehouse](/data-lakehouse). Because it deeply understands columnar formats (like Apache Parquet and ORC) and natively integrates with Open Table Formats (like [Apache Iceberg](/apache-iceberg), Hudi, and Delta Lake), engineers rely on Spark SQL to execute massive, transactional ELT pipelines. It effortlessly reads terabytes of raw JSON from S3, applies complex data quality constraints via Catalyst, and writes the output atomically as heavily optimized Parquet files back to the lakehouse.
 
 ## Summary of Technical Value
 

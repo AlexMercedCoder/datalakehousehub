@@ -6,7 +6,7 @@ description: "A comprehensive guide to Dimensional Modeling. Learn how Ralph Kim
 
 # What is Dimensional Modeling?
 
-Dimensional Modeling is a foundational data architecture methodology explicitly invented by Ralph Kimball in the 1990s to optimize database structures for massive analytical queries and business intelligence. Unlike Third Normal Form (3NF) modeling, which is designed strictly to optimize fast writes in live operational databases (OLTP), Dimensional Modeling optimizes entirely for incredibly fast reads and highly intuitive human comprehension within a Data Warehouse or the Gold layer of a Data Lakehouse (OLAP).
+Dimensional Modeling is a foundational data architecture methodology explicitly invented by Ralph Kimball in the 1990s to optimize database structures for massive analytical queries and business intelligence. Unlike Third Normal Form (3NF) modeling, which is designed strictly to optimize fast writes in live operational databases (OLTP), Dimensional Modeling optimizes entirely for incredibly fast reads and highly intuitive human comprehension within a Data Warehouse or the Gold layer of a [Data Lakehouse](/data-lakehouse) (OLAP).
 
 In a highly normalized operational database, answering a simple business question like "What was the total revenue of blue shoes sold in Germany last month?" requires an analyst to write a catastrophically complex SQL query joining fifteen completely different tables together. This destroys both human productivity and CPU performance. Dimensional Modeling completely solves this by intentionally denormalizing the data, organizing the entire enterprise into exactly two distinct concepts: Facts (the measurable numbers) and Dimensions (the descriptive context).
 

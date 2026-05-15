@@ -6,7 +6,7 @@ description: "A comprehensive guide to ELT (Extract, Load, Transform). Learn how
 
 # What is ELT?
 
-ELT stands for Extract, Load, and Transform. It is the modern architectural standard for data integration, completely reversing the traditional ETL (Extract, Transform, Load) paradigm. Driven by the immense compute power and decoupled storage of cloud platforms, ELT allows organizations to load raw, entirely untransformed data directly into their central Data Lakehouse or Cloud Data Warehouse, executing the complex mathematical transformations only *after* the data is safely secured in the target destination.
+ELT stands for Extract, Load, and Transform. It is the modern architectural standard for data integration, completely reversing the traditional ETL (Extract, Transform, Load) paradigm. Driven by the immense compute power and decoupled storage of cloud platforms, ELT allows organizations to load raw, entirely untransformed data directly into their central [Data Lakehouse](/data-lakehouse) or Cloud Data Warehouse, executing the complex mathematical transformations only *after* the data is safely secured in the target destination.
 
 In the legacy ETL model, data was forced through an intermediate, highly constrained transformation server. If the pipeline failed during transformation, the raw data was lost, and the entire extraction process had to be restarted from the source database. ELT completely destroys this bottleneck. By pushing the raw data immediately to the highly scalable cloud storage layer, it guarantees data preservation and leverages the infinite, elastic compute power of the modern data stack to handle the transformations.
 
@@ -17,7 +17,7 @@ The ELT architecture relies entirely on the separation of storage and compute, c
 ### 1. Extract and Load (The Ingestion Phase)
 Modern ingestion platforms (like Fivetran, Airbyte, or dlt) handle the first two steps almost entirely automatically. 
 
-The pipeline extracts raw data from hundreds of disparate operational systems (Salesforce, Zendesk, PostgreSQL) and loads it exactly as it is—raw, messy, and deeply nested—directly into the Bronze layer of the Data Lakehouse (often as Apache Iceberg or Delta Lake tables) or raw schema schemas in Snowflake. There is no intermediate processing, no complex structural mapping, and no quarantine layers during the transit phase. The absolute priority is to securely land the data in the cloud as quickly as possible.
+The pipeline extracts raw data from hundreds of disparate operational systems (Salesforce, Zendesk, PostgreSQL) and loads it exactly as it is—raw, messy, and deeply nested—directly into the Bronze layer of the Data Lakehouse (often as [Apache Iceberg](/apache-iceberg) or Delta Lake tables) or raw schema schemas in Snowflake. There is no intermediate processing, no complex structural mapping, and no quarantine layers during the transit phase. The absolute priority is to securely land the data in the cloud as quickly as possible.
 
 ### 2. Transform (The In-Database Processing Phase)
 Once the raw data rests securely in the cloud platform, the transformation phase begins natively inside the destination database.

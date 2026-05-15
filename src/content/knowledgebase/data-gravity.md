@@ -18,7 +18,7 @@ To understand the practical application of Data Gravity, it is crucial to system
 * **Applies structural methodologies (like Star Schemas or Data Vaults) to ensure tables are optimized for specific types of BI querying.** By adopting this mechanic, engineers can bypass traditional processing constraints and deliver substantially faster time-to-insight.
 * **Manages historical modifications gracefully using established paradigms like Slowly Changing Dimensions (SCD).** This allows the overarching architecture to remain highly resilient while serving concurrent workloads natively.
 
-Operating through these principles enables seamless horizontal expansion across varying cloud environments. It integrates effortlessly with adjacent technologies like Apache Iceberg, dbt, and advanced vector search algorithms.
+Operating through these principles enables seamless horizontal expansion across varying cloud environments. It integrates effortlessly with adjacent technologies like [Apache Iceberg](/apache-iceberg), dbt, and advanced vector search algorithms.
 
 ## Why Data Gravity Matters in the Modern Data Stack
 
