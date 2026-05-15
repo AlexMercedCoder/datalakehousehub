@@ -15,55 +15,36 @@ The Agentic Lakehouse completely solves this catastrophic failure by wrapping th
 
 To transition a standard Lakehouse into an Agentic Lakehouse, architects must implement four highly specific architectural layers explicitly designed for machine consumption.
 
-```mermaid
-graph TD
-    subgraph Autonomous Agent Layer
-        A[LangChain / AutoGen AI Agent]
-    end
-    
-    subgraph Integration Layer
-        B[Model Context Protocol / Tool Registry]
-    end
-    
-    subgraph Semantic & Governance Layer
-        C[Universal Semantic Graph]
-        D[Role-Based Access Control]
-    end
-    
-    subgraph Open Storage Foundation
-        E[Apache Iceberg Catalog]
-        F[Vector Embeddings]
-        G[Raw Object Storage]
-    end
-
-    A --> B
-    B --> C
-    B --> D
-    C --> E
-    D --> E
-    E --> F
-    E --> G
-```
+![Agentic Lakehouse Architecture](/images/diagrams/agentic_lakehouse_layers.png)
 
 ### 1. The Contextual Semantic Layer
 The absolute core of the Agentic Lakehouse. Data engineers explicitly define complex business logic (e.g., the exact mathematical formula for `Gross_Margin` or `Churn_Rate`) directly inside the engine's Semantic Layer. 
-When the AI Agent connects to the Lakehouse, it does not see raw files. It sees pristine, logically verified virtual datasets. The Semantic Layer provides the Agent with an explicit Data Dictionary and API definitions, preventing the Agent from having to guess the relationships between primary and foreign keys.
+When the AI Agent connects to the Lakehouse, it does not see raw files. It sees pristine, logically verified virtual datasets. The Semantic Layer provides the Agent with an explicit Data Dictionary and API definitions, preventing the Agent from having to guess the relationships between primary and foreign keys. This logically isolates the AI from the chaos of the raw data.
 
 ### 2. Governed Execution and Trust
-Deploying autonomous AI with write-access to corporate data is an existential security threat. 
-The Agentic Lakehouse enforces absolute isolation. It utilizes highly aggressive, attribute-based access control (ABAC). The Agent is strictly bound to a limited Service Account. If the Agent attempts an unauthorized action (like dropping a production table or reading restricted PII data), the Lakehouse engine intercepts the request and instantly terminates the query, mathematically guaranteeing that an AI hallucination cannot destroy the enterprise.
+Deploying autonomous AI with write-access to corporate data is an existential security threat. If an Agent enters an infinite loop, it could autonomously execute a trillion queries or drop a production table.
+The Agentic Lakehouse enforces absolute isolation. It utilizes highly aggressive, attribute-based access control (ABAC). The Agent is strictly bound to a limited Service Account. If the Agent attempts an unauthorized action (like dropping a production table or reading restricted PII data), the Lakehouse engine intercepts the request and instantly terminates the query. It mathematically guarantees that an AI hallucination cannot destroy the enterprise. Furthermore, every single query the AI executes is cryptographically logged in an immutable Audit Log for forensic review.
 
 ### 3. Integrated Vector and Structured Search
-A true Agentic Lakehouse does not force the AI to utilize two completely different databases (a traditional SQL database for numbers and a separate Vector Database for text). 
-The Agentic Lakehouse natively supports multimodal operations. The AI Agent can write a single, complex SQL query that mathematically joins structured financial data (Apache Iceberg) with unstructured semantic vectors, executing highly complex RAG (Retrieval-Augmented Generation) entirely within the massive, unified Lakehouse architecture.
+A true Agentic Lakehouse does not force the AI to utilize two completely different databases (a traditional SQL database for numbers and a separate isolated Vector Database for text). 
+The Agentic Lakehouse natively supports multimodal operations. The AI Agent can write a single, complex SQL query that mathematically joins structured financial data (Apache Iceberg) with unstructured semantic vectors, executing highly complex RAG (Retrieval-Augmented Generation) entirely within the massive, unified Lakehouse architecture. This eliminates the catastrophic pipeline fragility of synchronizing a lakehouse with an external vector store.
 
 ### 4. Open API Tooling (Model Context Protocol)
 AI Agents cannot type on a keyboard. They communicate via explicit JSON function calls. 
-The Agentic Lakehouse provides native, highly robust API endpoints (such as those defined by the open-source Model Context Protocol) that allow the AI to safely execute queries, read schema definitions, and poll asynchronous analytical jobs with absolute, deterministic reliability.
+The Agentic Lakehouse provides native, highly robust API endpoints (such as those defined by the open-source Model Context Protocol) that allow the AI to safely execute queries, read schema definitions, and poll asynchronous analytical jobs with absolute, deterministic reliability. The API serves as a strict mathematical contract; if the AI formats a request incorrectly, the API returns a structured error, triggering the AI's autonomous self-correction loop.
+
+## The Agentic Workflow Example
+
+To understand the value of this architecture, consider a standard corporate workflow:
+
+1. **The Request:** An executive asks the corporate Agent, "Why did our supply chain costs spike in Europe last quarter?"
+2. **The Translation:** The Agent connects to the Semantic Layer via the Model Context Protocol. It reads the definition for `supply_chain_costs` and realizes it needs to query the `logistics` and `fuel_surcharges` virtual datasets.
+3. **The Execution:** The Agent autonomously writes the SQL. The Lakehouse Governance Engine verifies the Agent has permission to read the European region and dynamically masks any driver PII data.
+4. **The Synthesis:** The Agent receives the raw numerical output, cross-references it with internal logistics vector embeddings (RAG) to find recent union strike reports, and generates a cohesive, mathematically verified natural language response for the executive.
 
 ## Summary of Technical Value
 
-The Agentic Lakehouse represents the final synthesis of Data Engineering and Artificial Intelligence. By explicitly wrapping the massive scale and cheap storage of the Open Data Lakehouse in a highly strict, mathematically sound Semantic Layer, organizations can safely deploy highly autonomous, self-reasoning AI Agents capable of executing flawless, petabyte-scale analytical investigations without the risk of hallucination or catastrophic security breaches.
+The Agentic Lakehouse represents the final synthesis of Data Engineering and Artificial Intelligence. By explicitly wrapping the massive scale and cheap storage of the Open Data Lakehouse in a highly strict, mathematically sound Semantic Layer, organizations can safely deploy highly autonomous, self-reasoning AI Agents capable of executing flawless, petabyte-scale analytical investigations without the risk of hallucination, data chaos, or catastrophic security breaches.
 
 
 ## Learn More
