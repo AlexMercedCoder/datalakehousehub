@@ -39,3 +39,7 @@ Instead of writing complex mathematical logic directly inside a Superset chart, 
 ## Summary of Technical Value
 
 Apache Superset drastically democratized enterprise data visualization. By combining a robust SQL IDE for power users with an intuitive, no-code visualization builder for business users, it bridges the gap between raw data engineering and executive reporting. Its cloud-native, infinitely scalable architecture and native support for aggressive caching make it a premier, highly cost-effective presentation layer for the modern Open Data Lakehouse.
+
+
+## Learn More
+To learn more about the Data Lakehouse, read the book "Lakehouse for Everyone" by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

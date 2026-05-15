@@ -38,3 +38,7 @@ When a Transformer reads a sentence, it does not process the words linearly one-
 ## Summary of Technical Value
 
 Natural Language Processing unlocked the vast majority of the world’s data. Because human knowledge is primarily stored as unstructured text, NLP provides the critical architectural mechanism to mathematically parse, organize, and analyze that information at an enormous scale. It empowers organizations to automate complex document analysis, generate real-time brand intelligence, and build the foundational infrastructure required for advanced Generative AI and Large Language Models.
+
+
+## Learn More
+To learn more about the Data Lakehouse, read the book "Lakehouse for Everyone" by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

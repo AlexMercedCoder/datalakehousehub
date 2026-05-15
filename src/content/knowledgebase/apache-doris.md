@@ -49,3 +49,7 @@ An engineer can configure Doris to connect seamlessly to an Open Data Lakehouse 
 ## Summary of Technical Value
 
 Apache Doris provides organizations with the exact low-latency infrastructure required to power modern, customer-facing analytical applications. By combining an incredibly simple operational architecture with profound hardware-level vectorized execution and native real-time streaming aggregation models, Doris ensures that highly concurrent dashboards load in milliseconds. It bridges the critical gap between heavy data lake engineering and instant business intelligence visualization.
+
+
+## Learn More
+To learn more about the Data Lakehouse, read the book "Lakehouse for Everyone" by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

@@ -40,3 +40,7 @@ Furthermore, traditional ETL discarded raw data. If a data engineer applied a fi
 ## Summary of Technical Value
 
 ETL (Extract, Transform, Load) established the fundamental discipline of data integration, proving that analytical data must be rigorously cleaned and structured to provide accurate business intelligence. While the reliance on intermediate, isolated transformation servers has been largely rendered obsolete by the raw compute power of the modern cloud, the core requirement to extract, clean, and reliably load data remains the absolute central function of all modern data engineering teams.
+
+
+## Learn More
+To learn more about the Data Lakehouse, read the book "Lakehouse for Everyone" by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

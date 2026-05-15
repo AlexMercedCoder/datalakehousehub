@@ -37,3 +37,7 @@ Furthermore, the discovery platform integrates Automated Data Lineage. It visual
 ## Summary of Technical Value
 
 Data Discovery transformed the massive, unmanageable data lake into a highly searchable, intuitively structured enterprise asset. By combining automated metadata harvesting, statistical profiling, and collaborative human intelligence, Data Discovery platforms entirely eliminate the massive engineering bottlenecks associated with finding and verifying data. It ensures that data teams spend their time executing high-value analytical work rather than endlessly searching for obscure tables.
+
+
+## Learn More
+To learn more about the Data Lakehouse, read the book "Lakehouse for Everyone" by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

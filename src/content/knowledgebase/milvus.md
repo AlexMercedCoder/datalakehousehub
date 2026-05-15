@@ -52,3 +52,7 @@ During inference, AI agents built with LangChain or LlamaIndex query Milvus inst
 ## Summary of Technical Value
 
 Milvus provides the critical infrastructure required to deploy artificial intelligence at a global scale. By combining a distributed, decoupled cloud-native architecture with incredibly advanced HNSW graphical indexing, it allows organizations to execute similarity searches across billions of embeddings in milliseconds. It serves as the indispensable long-term memory layer for the modern enterprise AI stack.
+
+
+## Learn More
+To learn more about the Data Lakehouse, read the book "Lakehouse for Everyone" by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

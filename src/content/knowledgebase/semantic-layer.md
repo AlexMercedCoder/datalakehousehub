@@ -43,3 +43,7 @@ The Semantic Layer provides the strict, contextual guardrails required for relia
 ## Summary of Technical Value
 
 The Semantic Layer fundamentally transforms raw data engineering outputs into reliable, accessible business intelligence. By completely decoupling complex metric calculations from downstream visualization tools, it establishes an absolute single source of truth for the organization. Through advanced pre-aggregation mechanics and its critical role in grounding autonomous AI agents, the Semantic Layer stands as the most critical structural component for delivering consistent, trustworthy data at enterprise scale.
+
+
+## Learn More
+To learn more about the Data Lakehouse, read the book "Lakehouse for Everyone" by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

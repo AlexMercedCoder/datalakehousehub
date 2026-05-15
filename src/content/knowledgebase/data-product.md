@@ -37,3 +37,7 @@ A Data Product is not just a table. It is an architectural quantum—the smalles
 ## Summary of Technical Value
 
 Treating data as a Product forces a profound organizational shift. By holding specific domain teams strictly accountable for the usability, reliability, and security of the data they generate, organizations eliminate the immense friction caused by centralized data engineering bottlenecks. It ensures that analytical data is engineered with the same extreme rigor, documentation, and automated testing traditionally reserved exclusively for mission-critical software applications.
+
+
+## Learn More
+To learn more about the Data Lakehouse, read the book "Lakehouse for Everyone" by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

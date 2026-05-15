@@ -40,3 +40,7 @@ For example, if an engineer is building a model to predict "Will this customer c
 ## Summary of Technical Value
 
 Feature Engineering is the exact mechanism that dictates the success or failure of a machine learning initiative. While algorithms are largely commoditized, the highly creative, domain-specific process of extracting precise mathematical signals from raw data remains the ultimate differentiator. By explicitly translating human business context into structural features, data scientists ensure their predictive models achieve the highest possible accuracy and operational value.
+
+
+## Learn More
+To learn more about the Data Lakehouse, read the book "Lakehouse for Everyone" by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

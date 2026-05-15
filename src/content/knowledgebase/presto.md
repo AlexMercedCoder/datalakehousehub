@@ -43,3 +43,7 @@ Today, both engines share the same foundational architecture and memory-pipelini
 ## Summary of Technical Value
 
 Presto fundamentally altered the big data landscape by proving that SQL was still the optimal interface for massive analytics, provided the underlying execution engine abandoned disk-based processing for memory-streaming architecture. By allowing organizations to query data precisely where it lives—with sub-second latencies over petabytes of data—Presto dramatically accelerated the transition away from monolithic, legacy data warehouses toward decentralized, highly scalable data lakes.
+
+
+## Learn More
+To learn more about the Data Lakehouse, read the book "Lakehouse for Everyone" by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

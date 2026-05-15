@@ -38,3 +38,7 @@ Furthermore, when Debezium connects to a massive database for the absolute first
 ## Summary of Technical Value
 
 Debezium radically shifted the paradigm of data ingestion. By completely abandoning slow, expensive database polling in favor of instantaneous, log-based Change Data Capture, Debezium allows organizations to stream production data into their data lakehouses with zero impact on operational performance. It is the definitive foundational technology for building low-latency, real-time analytical architectures.
+
+
+## Learn More
+To learn more about the Data Lakehouse, read the book "Lakehouse for Everyone" by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

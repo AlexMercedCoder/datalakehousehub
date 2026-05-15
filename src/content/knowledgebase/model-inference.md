@@ -37,3 +37,7 @@ Engineers use specialized compilers (like Nvidia TensorRT or ONNX) to mathematic
 ## Summary of Technical Value
 
 Model Inference is the critical execution phase where artificial intelligence actually delivers its promised business value. By strategically deploying models via highly scalable Real-Time APIs for instant user experiences, or leveraging massive Batch pipelines for high-throughput operational analytics, data teams ensure their advanced machine learning algorithms actively drive enterprise decision-making at production scale.
+
+
+## Learn More
+To learn more about the Data Lakehouse, read the book "Lakehouse for Everyone" by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

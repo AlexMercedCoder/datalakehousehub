@@ -43,3 +43,7 @@ If a European citizen invokes their "Right to be Forgotten" under GDPR (General 
 ## Summary of Technical Value
 
 Data Lineage is the navigational map for the modern data architecture. By automatically parsing code and metadata to construct visual dependency graphs, it fundamentally transforms how organizations manage complex pipelines. It drastically accelerates debugging through Root Cause Analysis, entirely prevents blind deployment failures via Impact Analysis, and serves as the foundational requirement for strict regulatory compliance.
+
+
+## Learn More
+To learn more about the Data Lakehouse, read the book "Lakehouse for Everyone" by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

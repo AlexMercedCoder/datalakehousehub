@@ -38,3 +38,7 @@ Modern governance requires intense granularity.
 ## Summary of Technical Value
 
 Data Governance is the absolute critical prerequisite for data democratization. By establishing strict ownership, universally defining business metadata, and implementing robust, automated security controls at the foundational architectural layer, governance ensures that massive enterprises can confidently distribute data access to thousands of employees without violating strict legal compliance or compromising organizational trust.
+
+
+## Learn More
+To learn more about the Data Lakehouse, read the book "Lakehouse for Everyone" by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

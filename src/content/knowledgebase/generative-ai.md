@@ -37,3 +37,7 @@ To mitigate this, advanced enterprises deploy secure, open-source Generative AI 
 ## Summary of Technical Value
 
 Generative AI represents the transition from analytical machines to creative, reasoning engines. By leveraging massive foundation models to generate high-quality text, code, and media on demand, it drastically accelerates human productivity. When securely integrated with the Data Lakehouse, it democratizes massive-scale analytics, allowing entirely non-technical users to query and manipulate petabytes of complex data using nothing but natural human language.
+
+
+## Learn More
+To learn more about the Data Lakehouse, read the book "Lakehouse for Everyone" by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

@@ -55,3 +55,7 @@ This deep integration ensures that non-technical users can interact with complex
 ## Summary of Technical Value
 
 Project Nessie revolutionized data lakehouse governance by establishing a centralized, Git-like version control system for analytical data. By enabling zero-copy branching, atomic multi-table transactions, and the strict implementation of the Write-Audit-Publish pattern, Nessie empowers organizations to manage petabyte-scale data lakes with the exact same rigor, safety, and operational agility previously reserved exclusively for software engineering.
+
+
+## Learn More
+To learn more about the Data Lakehouse, read the book "Lakehouse for Everyone" by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

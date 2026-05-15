@@ -39,3 +39,7 @@ It does not compete with orchestrators; it enhances them. An engineer can easily
 ## Summary of Technical Value
 
 dlt represents a massive shift toward "Data Engineering as Code." By condensing the immensely complex logic of schema inference, DDL generation, JSON flattening, and state management into a lightweight, easily importable Python library, dlt empowers developers to build highly resilient, production-grade ingestion pipelines instantly. It strips away the heavy infrastructure requirements of traditional ELT tools, providing pure, highly optimized programmatic ingestion for the modern data stack.
+
+
+## Learn More
+To learn more about the Data Lakehouse, read the book "Lakehouse for Everyone" by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

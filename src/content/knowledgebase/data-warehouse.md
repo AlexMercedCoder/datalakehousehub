@@ -49,3 +49,7 @@ Today, the industry is aggressively moving toward the Open Data Lakehouse. The L
 ## Summary of Technical Value
 
 The Data Warehouse fundamentally established the discipline of business intelligence. By physically separating complex analytical aggregations from fragile operational databases, and enforcing strict data quality through Schema-on-Write pipelines, it provided organizations with their first true, reliable system of record. While its architecture is evolving into the open lakehouse, the strict analytical principles established by the data warehouse remain the absolute foundation of modern data engineering.
+
+
+## Learn More
+To learn more about the Data Lakehouse, read the book "Lakehouse for Everyone" by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

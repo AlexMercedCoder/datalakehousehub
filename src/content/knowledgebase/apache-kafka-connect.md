@@ -37,3 +37,7 @@ Kafka Connect integrates natively with the Confluent Schema Registry. When a Sou
 ## Summary of Technical Value
 
 Apache Kafka Connect established the definitive standard for high-velocity data integration within event-driven architectures. By abstracting the intense complexity of distributed state management, offset tracking, and API integrations into simple configuration files, it allows organizations to connect massive external databases and storage systems to Kafka effortlessly. It is the critical ingestion framework required to build real-time, highly reliable streaming pipelines.
+
+
+## Learn More
+To learn more about the Data Lakehouse, read the book "Lakehouse for Everyone" by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

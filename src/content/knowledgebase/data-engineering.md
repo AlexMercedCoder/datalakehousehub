@@ -35,3 +35,7 @@ A decade ago, data integration consisted of manually clicking buttons inside pro
 ## Summary of Technical Value
 
 Data Engineering is the engine room of the modern data-driven enterprise. By combining the rigorous fault tolerance of software engineering with a deep mathematical understanding of distributed data processing, Data Engineers construct the highly resilient, immensely scalable pipelines required to convert chaotic raw data into verified, high-speed analytical truth.
+
+
+## Learn More
+To learn more about the Data Lakehouse, read the book "Lakehouse for Everyone" by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

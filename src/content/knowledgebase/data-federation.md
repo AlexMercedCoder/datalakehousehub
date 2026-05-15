@@ -45,3 +45,7 @@ However, for heavy, repetitive executive dashboards, they materialize the federa
 ## Summary of Technical Value
 
 Data Federation broke the physical boundaries of the traditional database. By providing sophisticated query engines capable of seamlessly connecting to, extracting from, and joining across completely disparate operational and analytical systems in real-time, federation provides unmatched architectural agility. It allows analysts to write simple SQL queries that traverse the entire global infrastructure instantly, bypassing the need for slow, brittle data duplication pipelines.
+
+
+## Learn More
+To learn more about the Data Lakehouse, read the book "Lakehouse for Everyone" by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

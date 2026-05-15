@@ -36,3 +36,7 @@ Operational Analytics proves that the Data Lakehouse *is* the CDP. The marketing
 ## Summary of Technical Value
 
 Operational Analytics represents the final, highest-value maturation stage of the modern data stack. By utilizing Reverse ETL to automatically sync complex machine learning models and refined metrics directly into the SaaS applications where work actually happens, it guarantees that massive data engineering investments directly drive measurable business outcomes, transforming passive reporting into active automation.
+
+
+## Learn More
+To learn more about the Data Lakehouse, read the book "Lakehouse for Everyone" by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

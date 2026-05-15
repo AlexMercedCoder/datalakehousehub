@@ -44,3 +44,7 @@ Because Expectations are highly structured and declarative, the framework can au
 ## Summary of Technical Value
 
 Great Expectations brought rigorous software engineering unit-testing principles directly to data pipelines. By providing an expansive library of declarative assertions, automated profiling capabilities, and native integration into modern orchestrators, it enables organizations to detect and quarantine corrupted data instantly. It is an indispensable tool for ensuring absolute trust and reliability in the modern enterprise data stack.
+
+
+## Learn More
+To learn more about the Data Lakehouse, read the book "Lakehouse for Everyone" by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

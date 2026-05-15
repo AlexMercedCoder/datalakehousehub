@@ -42,3 +42,7 @@ There is zero code duplication. The streaming code handles both the live edge an
 ## Summary of Technical Value
 
 The Kappa Architecture is the ultimate rationalization of the real-time data stack. By entirely eliminating the redundant batch processing layer and treating all data inherently as an immutable stream, it drastically reduces the massive engineering burden of maintaining duplicated pipelines. It guarantees absolute mathematical consistency between historical analytics and real-time operations, allowing teams to build highly robust, easily updatable enterprise architectures.
+
+
+## Learn More
+To learn more about the Data Lakehouse, read the book "Lakehouse for Everyone" by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

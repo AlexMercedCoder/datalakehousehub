@@ -39,3 +39,7 @@ Engineers can configure Glue ETL jobs to read raw data, apply complex deduplicat
 ## Summary of Technical Value
 
 AWS Glue fundamentally accelerated the adoption of the cloud data lake by eliminating the severe operational overhead of cluster management. By providing a ubiquitous, serverless Data Catalog combined with highly elastic, on-demand Apache Spark ETL execution, it empowers organizations of any size to build robust, automated data pipelines quickly and extremely cost-effectively.
+
+
+## Learn More
+To learn more about the Data Lakehouse, read the book "Lakehouse for Everyone" by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

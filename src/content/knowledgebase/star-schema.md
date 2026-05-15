@@ -44,3 +44,7 @@ In a massive enterprise, different departments track different facts. Sales trac
 ## Summary of Technical Value
 
 The Star Schema is the architectural translation layer that converts chaotic operational data into highly intuitive business intelligence. By strictly separating quantitative business events (Facts) from descriptive context (Dimensions), the Star Schema allows cloud data warehouses and modern lakehouses to execute massive analytical aggregations with extreme computational efficiency, empowering non-technical business analysts to explore petabytes of data frictionlessly.
+
+
+## Learn More
+To learn more about the Data Lakehouse, read the book "Lakehouse for Everyone" by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

@@ -39,3 +39,7 @@ By open-sourcing the core catalog functionality, Databricks established a univer
 ## Summary of Technical Value
 
 Unity Catalog fundamentally solved the severe governance crisis of the massive, decoupled data lakehouse. By centralizing Role-Based Access Controls, automated lineage tracking, and multi-cloud credential management into a single, highly auditable control plane, it allows enterprises to safely democratize data access. The move to open-source the platform guarantees that organizations can implement strict security boundaries without sacrificing architectural flexibility or interoperability.
+
+
+## Learn More
+To learn more about the Data Lakehouse, read the book "Lakehouse for Everyone" by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

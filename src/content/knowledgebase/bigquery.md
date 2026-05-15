@@ -58,3 +58,7 @@ As the industry shifted toward Open Lakehouse architectures, BigQuery adapted th
 ## Summary of Technical Value
 
 Google BigQuery fundamentally reshaped data warehousing by introducing a truly serverless architecture. By completely decoupling the heavy lifting of infrastructure management from the analytical workflow, it allows organizations of any size to execute petabyte-scale analytics in seconds. Its powerful columnar storage, dynamic resource allocation, and integrated machine learning capabilities make it a premier engine for the modern data stack.
+
+
+## Learn More
+To learn more about the Data Lakehouse, read the book "Lakehouse for Everyone" by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

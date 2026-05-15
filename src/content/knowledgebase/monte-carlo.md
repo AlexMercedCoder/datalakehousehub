@@ -37,3 +37,7 @@ Because Monte Carlo integrates seamlessly with the warehouse query logs and down
 ## Summary of Technical Value
 
 Monte Carlo transformed data reliability from a reactive, manual engineering chore into a proactive, automated discipline. By providing massive machine learning anomaly detection, zero-configuration monitoring, and deep end-to-end lineage tracking, it serves as the ultimate safety net for the modern data lakehouse. It guarantees that data engineering teams possess complete, absolute observability over their infrastructure, minimizing data downtime and maximizing organizational trust.
+
+
+## Learn More
+To learn more about the Data Lakehouse, read the book "Lakehouse for Everyone" by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

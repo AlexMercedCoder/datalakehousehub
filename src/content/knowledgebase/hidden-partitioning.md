@@ -46,3 +46,7 @@ If the engineering team decides to change the partition strategy from `daily` to
 ## Summary of Technical Value
 
 Hidden Partitioning fundamentally decoupled the logical querying of data from the physical layout of the hard drive. By handling complex partition pruning via internal metadata transforms, Apache Iceberg allows business analysts to write highly intuitive SQL without causing catastrophic full-table scans. Furthermore, it empowers data engineers to evolve massive multi-terabyte storage strategies instantly, providing unparalleled agility to the modern Open Data Lakehouse.
+
+
+## Learn More
+To learn more about the Data Lakehouse, read the book "Lakehouse for Everyone" by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

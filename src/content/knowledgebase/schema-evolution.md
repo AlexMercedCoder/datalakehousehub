@@ -41,3 +41,7 @@ Iceberg supports safe Type Promotion. An engineer can execute an `ALTER TABLE AL
 ## Summary of Technical Value
 
 Schema Evolution completely eradicated one of the most expensive and dangerous operational bottlenecks in data engineering. By utilizing strict, immutable Column IDs rather than physical positioning, Open Table Formats like Apache Iceberg allow organizations to add, drop, rename, and upcast columns instantaneously via simple metadata updates. It guarantees that the Data Lakehouse can rapidly adapt to chaotic, constantly changing upstream operational software without ever requiring massive, multi-terabyte data rewrites.
+
+
+## Learn More
+To learn more about the Data Lakehouse, read the book "Lakehouse for Everyone" by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

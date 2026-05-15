@@ -42,3 +42,7 @@ In the modern Open Data Lakehouse era, the ecosystem has largely consolidated ar
 ## Summary of Technical Value
 
 Apache ORC fundamentally solved the storage bottleneck of the original Hadoop era. By providing a highly intricate columnar structure featuring type-specific compression and lightweight indexing, it allowed legacy engines to perform fast analytics over massive historical datasets. It remains a powerful, deeply optimized storage format for organizations managing massive-scale data lakes.
+
+
+## Learn More
+To learn more about the Data Lakehouse, read the book "Lakehouse for Everyone" by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

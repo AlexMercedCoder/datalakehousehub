@@ -34,3 +34,7 @@ Analytics Engineering represents massive organizational empowerment. It allows i
 ## Summary of Technical Value
 
 Analytics Engineering fundamentally standardized how organizations model and transform data. By applying rigorous software engineering principles—such as version control, automated testing, and CI/CD deployment—directly to SQL, Analytics Engineers transform chaotic raw data into highly trusted, mathematically consistent semantic models, ensuring that business analysts can generate critical insights instantly and reliably.
+
+
+## Learn More
+To learn more about the Data Lakehouse, read the book "Lakehouse for Everyone" by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

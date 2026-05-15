@@ -40,3 +40,7 @@ When a data engineer writes a SQL model in dbt to calculate regional revenue, th
 ## Summary of Technical Value
 
 The Directed Acyclic Graph (DAG) fundamentally transformed data orchestration from fragile, time-based scripts into robust, dependency-aware engineering. By mathematically guaranteeing execution order, enabling intelligent parallel processing, and instantly halting upon failures, the DAG architecture ensures that incredibly complex, multi-tiered data pipelines execute reliably and safely across the entire enterprise data stack.
+
+
+## Learn More
+To learn more about the Data Lakehouse, read the book "Lakehouse for Everyone" by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

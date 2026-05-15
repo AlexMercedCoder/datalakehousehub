@@ -34,3 +34,7 @@ Pulsar was explicitly built from the ground up to support massive global enterpr
 ## Summary of Technical Value
 
 Apache Pulsar represents the cloud-native evolution of event streaming. By completely decoupling stateless broker compute from the underlying BookKeeper storage ledgers, Pulsar eliminates the catastrophic operational bottlenecks of partition rebalancing and slow scaling. With its native multi-tenancy and automatic geo-replication, it provides massive, global enterprises with a highly resilient, infinitely scalable nervous system capable of managing millions of distinct topics effortlessly.
+
+
+## Learn More
+To learn more about the Data Lakehouse, read the book "Lakehouse for Everyone" by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

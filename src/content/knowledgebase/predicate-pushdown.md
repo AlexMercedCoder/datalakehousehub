@@ -40,3 +40,7 @@ Apache Iceberg eliminates directories entirely. It tracks the exact location and
 ## Summary of Technical Value
 
 Predicate Pushdown is the fundamental optimization technique preventing modern query engines from collapsing under the weight of petabyte-scale data lakes. By intelligently pushing SQL filters directly into the metadata layers of Apache Parquet files and Apache Iceberg manifests, engines eliminate massive amounts of unnecessary Disk I/O. It guarantees that analytical queries execute precisely and efficiently, saving organizations immense amounts of time and cloud compute resources.
+
+
+## Learn More
+To learn more about the Data Lakehouse, read the book "Lakehouse for Everyone" by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

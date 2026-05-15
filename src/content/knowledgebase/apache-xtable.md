@@ -46,3 +46,7 @@ Once the initial baseline translation is complete, XTable monitors the source fo
 ## Summary of Technical Value
 
 Apache XTable fundamentally resolves the fragmentation of the open data lakehouse. By providing lightweight, zero-copy, omnidirectional metadata translation, it guarantees absolute interoperability between Apache Iceberg, Apache Hudi, and Delta Lake. It empowers organizations to select the absolute best processing engine for every unique workload without ever being trapped by an incompatible storage specification or forced to execute expensive, redundant data duplications.
+
+
+## Learn More
+To learn more about the Data Lakehouse, read the book "Lakehouse for Everyone" by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

@@ -45,3 +45,7 @@ If the statistics are stale (e.g., the catalog claims the table has 500 rows, bu
 ## Summary of Technical Value
 
 The Cost-Based Optimizer is the translation layer between human intent and bare-metal performance. By deeply evaluating metadata statistics and mathematically calculating the specific I/O and CPU costs of thousands of potential execution paths, the CBO ensures that highly complex, massively distributed analytical queries execute at the absolute physical limits of modern hardware, entirely shielding business analysts from the complexities of Big Data tuning.
+
+
+## Learn More
+To learn more about the Data Lakehouse, read the book "Lakehouse for Everyone" by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

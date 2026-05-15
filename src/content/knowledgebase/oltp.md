@@ -38,3 +38,7 @@ If the customer moves to a new house, the database only has to execute a tiny `U
 ## Summary of Technical Value
 
 OLTP databases are the mission-critical engines that physically operate the modern digital economy. By utilizing heavily normalized, row-oriented architectures backed by absolute ACID transactional guarantees, they ensure that millions of highly concurrent business operations execute instantly, safely, and perfectly, providing the pristine raw data that downstream analytical lakehouses eventually consume.
+
+
+## Learn More
+To learn more about the Data Lakehouse, read the book "Lakehouse for Everyone" by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

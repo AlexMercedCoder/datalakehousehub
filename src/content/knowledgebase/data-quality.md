@@ -38,3 +38,7 @@ While static assertions (`amount > 0`) catch obvious errors, they fail to catch 
 ## Summary of Technical Value
 
 Data Quality is the absolute foundation of organizational trust. Without rigorous, automated quality enforcement, a massive data lakehouse simply devolves into an unmanageable swamp of unreliable information. By embedding strict schema validation, programmatic assertions, and machine learning anomaly detection directly into the pipeline architecture, data engineering teams ensure that executive dashboards and AI models are powered strictly by mathematically verified, pristine data.
+
+
+## Learn More
+To learn more about the Data Lakehouse, read the book "Lakehouse for Everyone" by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

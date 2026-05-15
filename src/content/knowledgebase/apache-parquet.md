@@ -47,3 +47,7 @@ Apache Parquet is the foundational storage primitive for the entire modern Open 
 ## Summary of Technical Value
 
 Apache Parquet revolutionized big data storage by proving that the physical layout of data dictates analytical performance. By implementing strict columnar organization, aggressive mathematical compression, and intelligent statistical metadata, Parquet allows modern query engines to scan massive datasets with incredible I/O efficiency. It remains the undisputed standard for storing analytical data in the cloud.
+
+
+## Learn More
+To learn more about the Data Lakehouse, read the book "Lakehouse for Everyone" by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

@@ -35,3 +35,7 @@ The Open Data Lakehouse completely resolved this. It allows Data Scientists to a
 ## Summary of Technical Value
 
 Data Science is the ultimate catalyst for enterprise modernization. By applying rigorous statistical modeling and machine learning to the massive datasets secured by data engineering, Data Scientists transition an organization from a reactive, backward-looking posture into a highly proactive, mathematically predictive powerhouse, unlocking unprecedented operational efficiency and revenue generation.
+
+
+## Learn More
+To learn more about the Data Lakehouse, read the book "Lakehouse for Everyone" by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

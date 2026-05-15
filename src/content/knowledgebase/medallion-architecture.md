@@ -38,3 +38,7 @@ These formats are absolutely critical because they provide the ACID transactiona
 ## Summary of Technical Value
 
 The Medallion Architecture enforces strict engineering discipline upon the otherwise chaotic environment of the data lakehouse. By explicitly segmenting data into immutable raw history (Bronze), structurally validated enterprise truth (Silver), and highly optimized business aggregations (Gold), it guarantees data reliability. It empowers data engineers, data scientists, and business analysts to operate simultaneously on the exact same physical platform without ever interfering with one another's distinct analytical requirements.
+
+
+## Learn More
+To learn more about the Data Lakehouse, read the book "Lakehouse for Everyone" by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

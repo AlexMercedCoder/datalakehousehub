@@ -39,3 +39,7 @@ Furthermore, modern OLAP engines utilize Vectorized Execution (often backed by A
 ## Summary of Technical Value
 
 OLAP architectures are the foundational computational engines of the modern data-driven enterprise. By entirely abandoning fragile, row-oriented structures in favor of highly compressed, mathematically optimized columnar storage formats and denormalized schemas, OLAP engines guarantee that organizations can execute highly complex, petabyte-scale business intelligence queries in sub-second response times without ever threatening the stability of live operational software.
+
+
+## Learn More
+To learn more about the Data Lakehouse, read the book "Lakehouse for Everyone" by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

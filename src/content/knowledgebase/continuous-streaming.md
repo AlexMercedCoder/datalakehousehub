@@ -34,3 +34,7 @@ Advanced continuous streaming engines utilize strict **Event Time** processing. 
 ## Summary of Technical Value
 
 Continuous Streaming represents the absolute pinnacle of real-time data processing. By completely eliminating batch windows and processing data the exact millisecond it arrives, continuous engines like Apache Flink enable organizations to deploy highly complex, stateful applications—such as instant fraud detection and live operational monitoring—with absolute precision. It manages the intense complexities of unbounded data and out-of-order networks, ensuring instantaneous reaction times for critical business logic.
+
+
+## Learn More
+To learn more about the Data Lakehouse, read the book "Lakehouse for Everyone" by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

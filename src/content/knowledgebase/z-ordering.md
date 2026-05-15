@@ -42,3 +42,7 @@ As new data streams into the Lakehouse continuously, it arrives un-clustered. If
 ## Summary of Technical Value
 
 Z-Ordering is the definitive solution for multi-dimensional analytical queries. By leveraging complex space-filling mathematics to perfectly cluster related data on the physical hard drive, it allows query engines to execute incredibly tight Min/Max Predicate Pushdown across multiple columns simultaneously. It completely eliminates massive, unnecessary file scans, guaranteeing sub-second response times on complex dashboard filters.
+
+
+## Learn More
+To learn more about the Data Lakehouse, read the book "Lakehouse for Everyone" by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

@@ -40,3 +40,7 @@ To prevent this, engineers often apply explicit hints (like `/*+ BROADCAST(store
 ## Summary of Technical Value
 
 The Broadcast Hash Join is the execution engine's ultimate weapon for querying Star Schemas efficiently. By broadcasting tiny dimension tables directly into the memory of every worker node, the engine completely bypasses the catastrophic network latency of a distributed shuffle. It allows petabyte-scale fact tables to be joined locally and instantly, serving as the core computational mechanism powering high-speed Data Lakehouse analytics.
+
+
+## Learn More
+To learn more about the Data Lakehouse, read the book "Lakehouse for Everyone" by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

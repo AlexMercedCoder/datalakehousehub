@@ -40,3 +40,7 @@ Because spills destroy query SLAs, data engineering teams aggressively monitor c
 ## Summary of Technical Value
 
 Spilling to Disk is the ultimate fail-safe mechanism of distributed computing. It ensures that massive, multi-terabyte analytical queries and heavy ETL pipelines can successfully execute to completion, even if they drastically exceed the hardware limits of the cluster. However, because it incurs catastrophic performance penalties, understanding and eliminating disk spills remains a premier focus of advanced data engineering optimization.
+
+
+## Learn More
+To learn more about the Data Lakehouse, read the book "Lakehouse for Everyone" by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

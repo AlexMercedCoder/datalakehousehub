@@ -40,3 +40,7 @@ Fivetran natively normalizes the data. It dissects complex JSON arrays and flatt
 ## Summary of Technical Value
 
 Fivetran permanently eliminated the vast majority of custom data engineering pipeline work. By providing hundreds of fully managed, highly resilient connectors capable of handling automated schema drift and complex CDC logic natively, it allows organizations to centralize their data effortlessly. It is a critical foundational component of the modern data stack, ensuring that the open data lakehouse is constantly populated with high-fidelity, highly reliable operational data.
+
+
+## Learn More
+To learn more about the Data Lakehouse, read the book "Lakehouse for Everyone" by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

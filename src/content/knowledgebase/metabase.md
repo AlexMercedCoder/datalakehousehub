@@ -39,3 +39,7 @@ Building custom charts and maintaining a complex analytics backend specifically 
 ## Summary of Technical Value
 
 Metabase completely eliminated the steep learning curve traditionally associated with Business Intelligence. By providing an incredibly intuitive visual query builder backed by a robust SQL translation engine and lightweight semantic modeling, it allows anyone in an organization to ask complex questions of massive datasets. Its simplicity, combined with its powerful embedding capabilities, makes it an indispensable tool for data democratization.
+
+
+## Learn More
+To learn more about the Data Lakehouse, read the book "Lakehouse for Everyone" by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

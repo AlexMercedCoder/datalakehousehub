@@ -37,3 +37,7 @@ Census provides native pipeline observability. It tracks the exact status of eve
 ## Summary of Technical Value
 
 Census provides the critical infrastructure required to turn a passive analytical data warehouse into an active operational engine. By driving the Composable CDP architecture, managing intense API rate-limiting complexities, and providing deep, native object integration with frontline SaaS applications, Census allows data engineering teams to deploy their most valuable analytical models directly into the hands of the business users who need them most.
+
+
+## Learn More
+To learn more about the Data Lakehouse, read the book "Lakehouse for Everyone" by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

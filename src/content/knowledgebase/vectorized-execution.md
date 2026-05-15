@@ -41,3 +41,7 @@ Vectorized execution is the defining characteristic of modern analytical speed.
 ## Summary of Technical Value
 
 Vectorized Execution represents the absolute alignment of database software with modern CPU hardware. By abandoning inefficient row-by-row processing and leveraging contiguous columnar memory batches, vectorized engines maximize CPU Cache efficiency and trigger incredibly fast SIMD hardware instructions. This paradigm is the fundamental architectural requirement for delivering instantaneous, highly concurrent analytical performance over petabytes of data.
+
+
+## Learn More
+To learn more about the Data Lakehouse, read the book "Lakehouse for Everyone" by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

@@ -44,3 +44,7 @@ In a typical production architecture, a data engineering pipeline extracts unstr
 ## Summary of Technical Value
 
 Pinecone radically simplified the deployment of massive AI applications by providing a fully managed, serverless vector database. By combining proprietary high-speed ANN indexing, single-stage metadata filtering, and sparse-dense hybrid search capabilities without any infrastructure management overhead, Pinecone allows developers to focus entirely on building sophisticated, highly accurate Retrieval-Augmented Generation architectures.
+
+
+## Learn More
+To learn more about the Data Lakehouse, read the book "Lakehouse for Everyone" by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

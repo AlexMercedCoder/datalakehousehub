@@ -37,3 +37,7 @@ As the industry evolved, modern systems aggressively re-engineered their archite
 ## Summary of Technical Value
 
 Apache ZooKeeper provided the foundational distributed coordination required to launch the Big Data revolution. By solving the immensely complex mathematics of distributed consensus and leader election, it allowed massive systems like Hadoop and Kafka to operate flawlessly at unprecedented scale. While modern cloud architectures are successfully replacing it, ZooKeeper remains a critical historical component that defined an entire era of distributed software engineering.
+
+
+## Learn More
+To learn more about the Data Lakehouse, read the book "Lakehouse for Everyone" by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

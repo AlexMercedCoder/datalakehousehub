@@ -36,3 +36,7 @@ Crucially, Airbyte aggressively expanded into the Generative AI ecosystem. It pr
 ## Summary of Technical Value
 
 Airbyte commoditized data ingestion by combining the reliability of a modern orchestration platform with the massive flexibility of an open-source, containerized architecture. By providing an explicit Connector Development Kit and allowing organizations to execute pipelines entirely within their own secure networks, Airbyte ensures that data teams can integrate absolutely any API or obscure database into their modern open data lakehouse effortlessly.
+
+
+## Learn More
+To learn more about the Data Lakehouse, read the book "Lakehouse for Everyone" by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

@@ -36,3 +36,7 @@ The modern Data Lakehouse is explicitly designed to accelerate Machine Learning.
 ## Summary of Technical Value
 
 Machine Learning is the mathematical engine powering advanced predictive analytics. By shifting from rigid, human-authored rules to dynamic, data-driven algorithms, organizations can solve incredibly complex, multi-variable problems—from instant fraud detection to hyper-personalized product recommendations—with a level of accuracy and scale that is fundamentally impossible for traditional software engineering to achieve.
+
+
+## Learn More
+To learn more about the Data Lakehouse, read the book "Lakehouse for Everyone" by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

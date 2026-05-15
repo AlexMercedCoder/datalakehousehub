@@ -37,3 +37,7 @@ Spark SQL serves as the primary computational engine for the modern Data Lakehou
 ## Summary of Technical Value
 
 Apache Spark SQL completely revolutionized big data processing by combining the accessibility of standard SQL and DataFrames with an incredibly powerful distributed execution engine. By utilizing the intelligent Catalyst Optimizer to rewrite inefficient queries and relying on Project Tungsten to maximize bare-metal CPU and memory efficiency, Spark SQL guarantees that massive data engineering pipelines execute flawlessly at petabyte scale.
+
+
+## Learn More
+To learn more about the Data Lakehouse, read the book "Lakehouse for Everyone" by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

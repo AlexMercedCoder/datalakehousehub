@@ -43,3 +43,7 @@ MotherDuck introduced the concept of "Hybrid Execution." If a data scientist run
 ## Summary of Technical Value
 
 DuckDB revolutionized local data analysis by providing a remarkably fast, zero-configuration analytical engine. By combining vectorized processing, native Parquet capabilities, and strict in-process execution, it completely eliminates the heavy infrastructure overhead previously required to analyze multi-gigabyte datasets. It empowers analysts and engineers to write complex SQL, analyze data natively within their scripts, and iterate significantly faster than ever before.
+
+
+## Learn More
+To learn more about the Data Lakehouse, read the book "Lakehouse for Everyone" by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

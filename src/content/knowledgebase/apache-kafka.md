@@ -37,3 +37,7 @@ This unlocks extreme decoupling. If the downstream Data Lakehouse cluster violen
 ## Summary of Technical Value
 
 Apache Kafka is the foundational ingestion layer for the real-time enterprise. By acting as a highly persistent, massively distributed shock absorber, it perfectly decouples fragile upstream operational systems from massive downstream analytical data lakehouses. It guarantees that organizations can process trillions of real-time events without dropping a single byte of data, completely replacing chaotic point-to-point integrations with a unified, high-speed nervous system.
+
+
+## Learn More
+To learn more about the Data Lakehouse, read the book "Lakehouse for Everyone" by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

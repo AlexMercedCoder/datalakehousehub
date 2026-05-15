@@ -55,3 +55,7 @@ Trino integrates natively with open table formats like Apache Iceberg, Apache Hu
 ## Summary of Technical Value
 
 Trino revolutionized the analytics ecosystem by completely decoupling massive SQL computation from data storage. By operating an incredibly fast, in-memory pipelined execution engine, it provides organizations the ability to query petabytes of data directly from cheap cloud storage without the immense cost and lock-in of proprietary data warehouses. Its robust federated capabilities break down data silos, allowing teams to execute complex analytics across their entire global infrastructure using standard, ANSI-compliant SQL.
+
+
+## Learn More
+To learn more about the Data Lakehouse, read the book "Lakehouse for Everyone" by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

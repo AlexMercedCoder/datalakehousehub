@@ -37,3 +37,7 @@ LLMs cannot read an entire multi-terabyte database at once. They are strictly li
 ## Summary of Technical Value
 
 Large Language Models fundamentally redefined the boundary of human-computer interaction. By leveraging massive Transformer networks and trillion-parameter scale, they act as highly generalized reasoning engines capable of parsing immense complexity. When securely integrated with the proprietary data stored in modern Data Lakehouses, LLMs empower organizations to deploy highly autonomous, highly intelligent AI agents capable of radically accelerating enterprise workflows.
+
+
+## Learn More
+To learn more about the Data Lakehouse, read the book "Lakehouse for Everyone" by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

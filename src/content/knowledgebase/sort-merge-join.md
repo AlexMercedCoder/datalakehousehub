@@ -39,3 +39,7 @@ If the data is pre-sorted and heavily clustered on disk, the query engine can sk
 ## Summary of Technical Value
 
 The Sort-Merge Join is the heavy-lifting workhorse of distributed query execution. By strategically shuffling data across the network based on join keys, and physically sorting massive datasets on local disks before merging them sequentially, it guarantees that engines like Apache Spark can successfully join multi-terabyte tables without ever exhausting active memory. It ensures absolute stability and scalability for the most massive analytical workloads in the Data Lakehouse.
+
+
+## Learn More
+To learn more about the Data Lakehouse, read the book "Lakehouse for Everyone" by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

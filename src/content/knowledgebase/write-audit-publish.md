@@ -45,3 +45,7 @@ The modern Open Data Lakehouse entirely removes this friction. Because table for
 ## Summary of Technical Value
 
 The Write-Audit-Publish (WAP) pattern is the ultimate architectural defense against data corruption. By physically isolating incoming data, running exhaustive programmatic quality assertions, and demanding perfect compliance before exposing the data to the business, WAP transitions data engineering from a reactive debugging culture into a highly robust, proactive software discipline. It is the absolute standard for ensuring enterprise trust in the data lakehouse.
+
+
+## Learn More
+To learn more about the Data Lakehouse, read the book "Lakehouse for Everyone" by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

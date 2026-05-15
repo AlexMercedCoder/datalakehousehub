@@ -42,3 +42,7 @@ Modern engines solve this with Adaptive Query Execution (AQE). The engine active
 ## Summary of Technical Value
 
 Shuffle Partitioning is the critical mechanism that allows distributed engines to execute complex, global aggregations across massive datasets. Because physical network transfer and disk I/O are immense bottlenecks, aggressively managing data skew and dynamically optimizing partition sizes via AQE is absolutely critical to ensuring data engineering pipelines run stably and efficiently.
+
+
+## Learn More
+To learn more about the Data Lakehouse, read the book "Lakehouse for Everyone" by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

@@ -37,3 +37,7 @@ Hightouch visually translates this request into complex SQL, executes it against
 ## Summary of Technical Value
 
 Hightouch fundamentally established the operational utility of the modern data warehouse. By providing a secure, no-storage architecture capable of intelligently routing complex analytical metrics through heavily rate-limited APIs into operational SaaS tools, it transformed passive reporting databases into active drivers of business revenue. It is the critical "last mile" infrastructure required to achieve true operational analytics.
+
+
+## Learn More
+To learn more about the Data Lakehouse, read the book "Lakehouse for Everyone" by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

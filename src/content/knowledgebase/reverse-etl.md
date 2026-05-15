@@ -35,3 +35,7 @@ Reverse ETL is the foundational infrastructure behind Operational Analytics. By 
 ## Summary of Technical Value
 
 Reverse ETL bridges the massive gap between the analytical data stack and the operational frontline. By treating the cloud data warehouse not as a final destination, but as the central intelligence hub of the enterprise, it allows organizations to actively deploy their most valuable, mathematically rigorous data directly into the hands of the marketing, sales, and support teams that need it to drive immediate business value.
+
+
+## Learn More
+To learn more about the Data Lakehouse, read the book "Lakehouse for Everyone" by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

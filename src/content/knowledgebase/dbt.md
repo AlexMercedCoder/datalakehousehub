@@ -47,3 +47,7 @@ Instead of defining complex metrics (like "Monthly Active Users" or "Gross Margi
 ## Summary of Technical Value
 
 dbt transformed data transformation from a fragile, siloed IT operation into a collaborative, version-controlled software engineering discipline. By combining the accessibility of SQL with the power of Jinja templating, automated testing, and DAG orchestration, dbt empowers organizations to build incredibly complex, reliable, and scalable analytical models directly on top of modern data lakehouse platforms.
+
+
+## Learn More
+To learn more about the Data Lakehouse, read the book "Lakehouse for Everyone" by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

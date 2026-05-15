@@ -41,3 +41,7 @@ By embedding these tiny mathematical structures directly into the Parquet file f
 ## Summary of Technical Value
 
 Bloom Filters are a profound mathematical optimization for massive-scale analytics. By providing a highly compressed, probabilistic method to definitively prove that specific data does *not* exist within a massive file block, they completely eliminate the immense Disk I/O overhead of scanning random, high-cardinality data. They are a critical architectural requirement for delivering instant, pinpoint analytics over petabytes of unstructured lakehouse data.
+
+
+## Learn More
+To learn more about the Data Lakehouse, read the book "Lakehouse for Everyone" by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

@@ -47,3 +47,7 @@ Because Time Travel requires preserving old, logically deleted files, it will ev
 ## Summary of Technical Value
 
 Time Travel fundamentally transforms the reliability of the Data Lakehouse. By leveraging immutable files and strict snapshot metadata, it provides instantaneous disaster recovery, absolute mathematical reproducibility for machine learning, and effortless historical auditing. It provides data engineering teams with an absolute safety net, eliminating the catastrophic risks associated with massive data manipulation.
+
+
+## Learn More
+To learn more about the Data Lakehouse, read the book "Lakehouse for Everyone" by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

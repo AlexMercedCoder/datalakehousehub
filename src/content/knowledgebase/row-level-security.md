@@ -41,3 +41,7 @@ When optimized correctly, the injected RLS filters trigger Predicate Pushdown. T
 ## Summary of Technical Value
 
 Row-Level Security fundamentally revolutionizes multi-tenant and global data architectures. By dynamically evaluating user context and automatically injecting rigorous filtering logic at runtime, RLS allows immense organizations to maintain a single, consolidated physical database. It eliminates the severe engineering burden of managing thousands of fragmented, localized tables while absolutely guaranteeing strict data isolation and regulatory compliance.
+
+
+## Learn More
+To learn more about the Data Lakehouse, read the book "Lakehouse for Everyone" by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

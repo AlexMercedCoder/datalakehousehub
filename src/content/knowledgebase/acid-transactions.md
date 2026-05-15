@@ -39,3 +39,7 @@ In the Open Data Lakehouse, Durability is inherently guaranteed by the underlyin
 ## Summary of Technical Value
 
 ACID Transactions are the absolute bedrock of data engineering reliability. By successfully engineering Atomicity, Consistency, Isolation, and Durability directly into Open Table Formats, the industry completely eliminated the horrific data corruption issues that plagued the original big data era. It allows modern organizations to execute incredibly complex, highly concurrent updates on massive data lakehouses with the exact same unshakeable confidence traditionally reserved for operational banking databases.
+
+
+## Learn More
+To learn more about the Data Lakehouse, read the book "Lakehouse for Everyone" by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

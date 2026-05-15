@@ -34,3 +34,7 @@ If the enterprise suddenly hires a Data Science team that needs the transaction 
 ## Summary of Technical Value
 
 Pub/Sub architecture is the definitive solution for managing complex, highly distributed enterprise systems. By introducing a highly resilient event broker to completely decouple the producers of data from the consumers of data, it eliminates fragile point-to-point API connections. It guarantees that massive network outages or downstream system crashes never cascade to destroy critical upstream operational software, ensuring absolute stability and limitless architectural scalability.
+
+
+## Learn More
+To learn more about the Data Lakehouse, read the book "Lakehouse for Everyone" by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

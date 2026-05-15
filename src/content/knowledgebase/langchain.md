@@ -44,3 +44,7 @@ By providing the Agent with explicit tools that interact with the Semantic Layer
 ## Summary of Technical Value
 
 LangChain transformed LLM development from experimental scripting into a robust software engineering discipline. By providing standardized abstractions for prompt management, external data retrieval, and autonomous tool calling, it allows organizations to safely deploy highly capable AI applications. It remains the foundational framework for connecting the reasoning capabilities of modern language models to the vast, deterministic datasets residing in the enterprise data lakehouse.
+
+
+## Learn More
+To learn more about the Data Lakehouse, read the book "Lakehouse for Everyone" by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

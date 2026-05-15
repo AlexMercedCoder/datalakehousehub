@@ -40,3 +40,7 @@ The executive is entirely shielded from the immense physical complexity of the g
 ## Summary of Technical Value
 
 A Data Fabric is the ultimate technological solution for heavily fragmented, massive enterprise architectures. By utilizing an AI-driven Knowledge Graph to map disparate systems and deploying Data Virtualization to query them directly at their source, the Fabric provides a seamless, unified analytical layer. It allows global organizations to respect strict physical data sovereignty laws and legacy infrastructure constraints without sacrificing the ability to generate rapid, holistic business intelligence.
+
+
+## Learn More
+To learn more about the Data Lakehouse, read the book "Lakehouse for Everyone" by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

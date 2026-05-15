@@ -35,3 +35,7 @@ Deep Learning is notoriously resource-intensive, requiring two absolute prerequi
 ## Summary of Technical Value
 
 Deep Learning completely revolutionized the field of Artificial Intelligence by conquering unstructured data. By utilizing massive, multi-layered neural networks and GPU acceleration, Deep Learning allows computers to "see" images, "hear" audio, and process human language with near-human accuracy. It is the absolute foundational architecture powering self-driving cars, facial recognition systems, and the Generative AI revolution.
+
+
+## Learn More
+To learn more about the Data Lakehouse, read the book "Lakehouse for Everyone" by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

@@ -39,3 +39,7 @@ When an AI agent (built on LangChain or DSPy) executes a workflow, it interacts 
 ## Summary of Technical Value
 
 Apache Polaris established the definitive open standard for Iceberg catalog management. By combining strict adherence to the Iceberg REST API with a robust, centralized RBAC security model, it allows immense organizations to operate highly secure, multi-engine data lakehouses. It represents the absolute maturation of the open data ecosystem, ensuring that enterprises retain total ownership and interoperability over their entire architectural stack.
+
+
+## Learn More
+To learn more about the Data Lakehouse, read the book "Lakehouse for Everyone" by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

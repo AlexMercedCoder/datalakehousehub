@@ -50,3 +50,7 @@ The modern Open Data Lakehouse entirely solved this. Open table formats like Apa
 ## Summary of Technical Value
 
 Slowly Changing Dimensions are the architectural mechanism that guarantees the analytical integrity of a data warehouse. By explicitly defining exactly how historical modifications are tracked—whether discarding them via Type 1, preserving an exhaustive timeline via Type 2, or tracking immediate transitions via Type 3—SCDs ensure that business intelligence dashboards always reflect the precise historical reality of the organization, regardless of how often the operational data changes.
+
+
+## Learn More
+To learn more about the Data Lakehouse, read the book "Lakehouse for Everyone" by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

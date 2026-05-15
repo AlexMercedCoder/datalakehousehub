@@ -46,3 +46,7 @@ When a pipeline runs, Airflow injects a specific temporal context (the `executio
 ## Summary of Technical Value
 
 Idempotency is the ultimate safeguard against data corruption in distributed systems. By engineering pipelines to guarantee identical outcomes regardless of how many times they are executed, organizations eliminate the severe risk of data duplication caused by network timeouts and automated retries. It is the absolute foundational requirement for building highly resilient, scalable, and trustworthy data lakehouses.
+
+
+## Learn More
+To learn more about the Data Lakehouse, read the book "Lakehouse for Everyone" by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

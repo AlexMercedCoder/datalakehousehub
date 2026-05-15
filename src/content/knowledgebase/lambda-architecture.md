@@ -40,3 +40,7 @@ Because the Batch Layer and the Speed Layer utilized completely different techno
 ## Summary of Technical Value
 
 The Lambda Architecture was a groundbreaking historical milestone that proved massive enterprises could successfully balance the opposing forces of real-time operational speed and perfect historical accuracy. While its requirement to maintain two distinct, duplicated codebases ultimately caused the industry to evolve toward the simpler, unified Kappa Architecture, the foundational concepts established by Lambda permanently defined the structural requirements for building highly fault-tolerant big data systems.
+
+
+## Learn More
+To learn more about the Data Lakehouse, read the book "Lakehouse for Everyone" by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

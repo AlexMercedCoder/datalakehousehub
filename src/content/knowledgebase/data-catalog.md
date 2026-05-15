@@ -39,3 +39,7 @@ Modern architectures are shifting toward "Active Metadata." In an Active Metadat
 ## Summary of Technical Value
 
 The Data Catalog bridges the massive gap between highly technical data engineering infrastructure and the humans who actually need to analyze the data. By automating metadata discovery, visualizing end-to-end lineage, and providing a collaborative platform for defining strict business context, the Data Catalog transforms the chaotic, unmanageable data swamp into a highly searchable, deeply trusted enterprise asset.
+
+
+## Learn More
+To learn more about the Data Lakehouse, read the book "Lakehouse for Everyone" by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

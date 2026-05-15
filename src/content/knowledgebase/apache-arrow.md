@@ -39,3 +39,7 @@ Today, nearly every major analytical framework relies heavily on Arrow. Dremioâ€
 ## Summary of Technical Value
 
 Apache Arrow eliminated the greatest invisible bottleneck in data engineering: cross-system serialization. By establishing a universally accepted, highly optimized columnar memory format and a lightning-fast RPC framework, Arrow allows radically different programming languages and distributed engines to communicate instantly. It serves as the high-speed nervous system connecting the modern, decentralized analytical stack.
+
+
+## Learn More
+To learn more about the Data Lakehouse, read the book "Lakehouse for Everyone" by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

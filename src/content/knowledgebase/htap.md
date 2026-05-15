@@ -40,3 +40,7 @@ By deploying an HTAP database, the organization completely eliminates the middle
 ## Summary of Technical Value
 
 HTAP is the ultimate convergence of database architecture. By engineering profound, dual-format storage engines capable of intelligently isolating transactional writes from massive analytical aggregations on the exact same infrastructure, HTAP eliminates the massive engineering burden of complex ETL pipelines. It empowers organizations to achieve true, zero-latency real-time analytics without sacrificing operational stability or incurring massive architectural duplication costs.
+
+
+## Learn More
+To learn more about the Data Lakehouse, read the book "Lakehouse for Everyone" by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

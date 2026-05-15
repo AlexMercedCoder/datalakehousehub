@@ -35,3 +35,7 @@ A data engineer can write a simple standard SQL query: `SELECT user_id, count(*)
 ## Summary of Technical Value
 
 Apache Flink is the ultimate computational engine for real-time data architectures. By natively supporting unbounded continuous streams, guaranteeing exact state fault tolerance via distributed snapshots, and managing extreme network latency through Event Time watermarking, it allows massive enterprises to build highly resilient, sub-millisecond analytical applications that react to the physical reality of the business instantaneously.
+
+
+## Learn More
+To learn more about the Data Lakehouse, read the book "Lakehouse for Everyone" by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

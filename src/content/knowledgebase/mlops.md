@@ -33,3 +33,7 @@ MLOps infrastructure passively monitors the statistical outputs of live producti
 ## Summary of Technical Value
 
 MLOps is the industrialization of artificial intelligence. By enforcing strict version control, automating complex training pipelines, and deploying rigorous continuous monitoring to detect mathematical drift, MLOps transforms machine learning from fragile, isolated data science experiments into highly robust, mission-critical enterprise software systems capable of operating at massive global scale.
+
+
+## Learn More
+To learn more about the Data Lakehouse, read the book "Lakehouse for Everyone" by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

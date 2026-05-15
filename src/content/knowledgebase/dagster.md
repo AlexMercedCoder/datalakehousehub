@@ -43,3 +43,7 @@ Furthermore, Dagster provides immense observability natively. Every execution au
 ## Summary of Technical Value
 
 Dagster represents the natural evolution of data orchestration. By transitioning from blind task execution to data-aware Software-Defined Assets, it provides data engineering teams with unprecedented visibility and control over their infrastructure. Its uncompromising focus on local testability, robust dbt integration, and declarative scheduling makes it the premier orchestration platform for organizations building resilient, high-velocity data lakehouses.
+
+
+## Learn More
+To learn more about the Data Lakehouse, read the book "Lakehouse for Everyone" by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

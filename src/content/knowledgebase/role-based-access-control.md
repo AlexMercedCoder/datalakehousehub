@@ -41,3 +41,7 @@ To secure the decoupled lakehouse, the industry relies on central, open catalog 
 ## Summary of Technical Value
 
 Role-Based Access Control is the absolute prerequisite for operating a legally compliant, highly secure enterprise data stack. By totally abstracting permissions away from individual users and assigning them to hierarchical organizational roles, RBAC drastically simplifies security administration, prevents dangerous permission creep, and provides a unified, auditable governance framework across the entire multi-engine data lakehouse.
+
+
+## Learn More
+To learn more about the Data Lakehouse, read the book "Lakehouse for Everyone" by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

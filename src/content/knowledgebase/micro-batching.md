@@ -35,3 +35,7 @@ Instead, organizations configure micro-batch pipelines to trigger every few minu
 ## Summary of Technical Value
 
 Micro-Batching provides a highly pragmatic, immensely powerful architecture for real-time analytics. By carving continuous data streams into rapid, discrete intervals, it allows organizations to leverage robust batch-processing engines and strict fault-tolerance mechanisms to process streaming data. It serves as the foundational integration pattern for feeding high-velocity operational data safely and efficiently into the modern Open Data Lakehouse.
+
+
+## Learn More
+To learn more about the Data Lakehouse, read the book "Lakehouse for Everyone" by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

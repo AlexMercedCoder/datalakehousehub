@@ -37,3 +37,7 @@ Event Streaming is the sole mechanism that allows organizations to move beyond r
 ## Summary of Technical Value
 
 Event Streaming is the absolute critical infrastructure required to build a real-time, highly reactive enterprise. By capturing operational state changes as immutable, continuous events and broadcasting them across a highly resilient central nervous system, organizations completely decouple fragile software microservices and establish the foundation for sub-second, mission-critical analytical applications.
+
+
+## Learn More
+To learn more about the Data Lakehouse, read the book "Lakehouse for Everyone" by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

@@ -42,3 +42,7 @@ Organizations use the Data Lakehouse (storing Apache Iceberg files on Amazon S3)
 ## Summary of Technical Value
 
 Data Virtualization represents the ultimate decoupling of data access from physical data storage. By establishing a unified, virtual semantic layer that intelligently routes complex queries directly to the disparate source systems, organizations eliminate the severe latency, fragility, and massive storage costs associated with traditional data duplication pipelines. It allows enterprises to operate a truly federated, highly agile data architecture.
+
+
+## Learn More
+To learn more about the Data Lakehouse, read the book "Lakehouse for Everyone" by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

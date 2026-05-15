@@ -51,3 +51,7 @@ Airflow handles failure natively. Engineers can configure tasks with specific re
 ## Summary of Technical Value
 
 Apache Airflow brought strict software engineering discipline to the chaotic world of data pipelines. By representing complex execution dependencies as programmatic Python DAGs, Airflow provides data teams with complete observability over their infrastructure. Its highly distributed execution architecture, vast ecosystem of operators, and robust failure management make it the undisputed orchestration layer for the modern enterprise data stack.
+
+
+## Learn More
+To learn more about the Data Lakehouse, read the book "Lakehouse for Everyone" by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

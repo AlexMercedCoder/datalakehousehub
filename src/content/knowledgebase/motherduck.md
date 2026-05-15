@@ -41,3 +41,7 @@ Because it is fundamentally powered by DuckDB, it inherently possesses DuckDB’
 ## Summary of Technical Value
 
 MotherDuck successfully transitioned the extreme performance of local DuckDB execution into a robust, enterprise-grade cloud platform. By introducing highly intelligent Hybrid Execution and compiling complex analytical processing directly into WebAssembly, MotherDuck provides an incredibly fast, frictionless analytical experience. It completely abstracts the heavy burden of distributed infrastructure management, allowing data teams to focus entirely on collaborative, instantaneous SQL analysis.
+
+
+## Learn More
+To learn more about the Data Lakehouse, read the book "Lakehouse for Everyone" by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

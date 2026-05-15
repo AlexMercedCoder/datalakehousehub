@@ -41,3 +41,7 @@ The modern Data Lakehouse completely decoupled this architecture. Organizations 
 ## Summary of Technical Value
 
 Apache Hadoop proved that infinite scalability could be achieved entirely through software distributing work across cheap commodity hardware. While its specific implementations like HDFS and MapReduce have largely been superseded by cloud object storage and fast in-memory engines like Apache Spark, Hadoop fundamentally established the distributed processing paradigms that govern every single modern data architecture operating today.
+
+
+## Learn More
+To learn more about the Data Lakehouse, read the book "Lakehouse for Everyone" by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

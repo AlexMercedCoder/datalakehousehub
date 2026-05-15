@@ -37,3 +37,7 @@ The shift to ELT fundamentally altered the speed and agility of data teams.
 ## Summary of Technical Value
 
 ELT completely revolutionized enterprise data integration by treating the Cloud Data Warehouse (and the modern Lakehouse) as the central engine for both storage and computation. By abandoning intermediate transformation servers in favor of fast, raw ingestion and highly optimized, in-database SQL transformations, ELT guarantees complete data preservation, infinite scalability, and unprecedented organizational agility.
+
+
+## Learn More
+To learn more about the Data Lakehouse, read the book "Lakehouse for Everyone" by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

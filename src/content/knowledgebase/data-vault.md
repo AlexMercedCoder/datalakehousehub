@@ -49,3 +49,7 @@ In a modern architecture, Data Vault serves strictly as the foundational integra
 ## Summary of Technical Value
 
 Data Vault is the definitive architectural methodology for enterprise scale. By dismantling rigid schemas into highly decoupled, append-only Hubs, Links, and Satellites, it allows massive organizations to ingest data from hundreds of disparate systems with absolute agility. It prevents schema changes from destroying ETL pipelines and guarantees a perfect historical audit trail, serving as the ultimate integration foundation before data is transformed into business-facing Star Schemas.
+
+
+## Learn More
+To learn more about the Data Lakehouse, read the book "Lakehouse for Everyone" by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

@@ -43,3 +43,7 @@ By streaming exact transactional logs into Apache Kafka, organizations completel
 ## Summary of Technical Value
 
 Change Data Capture revolutionized enterprise data integration. By entirely abandoning inefficient, resource-heavy database polling in favor of high-speed, log-based transaction replication, CDC guarantees that downstream analytical architectures receive mathematically perfect, low-latency data streams. It is the absolute critical infrastructure required to operate a real-time, highly resilient Open Data Lakehouse.
+
+
+## Learn More
+To learn more about the Data Lakehouse, read the book "Lakehouse for Everyone" by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

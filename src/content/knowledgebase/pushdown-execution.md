@@ -41,3 +41,7 @@ Pushdown Execution is also critical when querying raw files in the Data Lakehous
 ## Summary of Technical Value
 
 Pushdown Execution is the exact mechanism that makes global Data Federation and Data Virtualization physically possible. By intelligently translating SQL logic and forcing underlying source databases to execute heavy filtering and mathematical aggregations locally, query engines minimize network transfer by orders of magnitude. It ensures that massive, multi-system queries execute with the absolute highest possible computational efficiency.
+
+
+## Learn More
+To learn more about the Data Lakehouse, read the book "Lakehouse for Everyone" by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

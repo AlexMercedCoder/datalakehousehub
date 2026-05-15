@@ -38,3 +38,7 @@ Before executing the query, the Dremio query optimizer intercepts the request. I
 ## Summary of Technical Value
 
 The Materialized View is the ultimate architectural solution for mitigating redundant analytical compute costs and achieving sub-second dashboard performance. By physically persisting the results of highly complex aggregations and maintaining them efficiently via incremental refreshes, it fundamentally breaks the bottleneck of runtime query execution. When combined with intelligent, transparent query substitution, it provides a completely frictionless, high-performance experience across the entire enterprise data stack.
+
+
+## Learn More
+To learn more about the Data Lakehouse, read the book "Lakehouse for Everyone" by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

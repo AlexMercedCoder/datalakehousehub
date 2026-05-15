@@ -41,3 +41,7 @@ Modern architectures enforce Column-Level Security centrally via Governance Cata
 ## Summary of Technical Value
 
 Column-Level Security, specifically Dynamic Data Masking, fundamentally eliminates the need to physically duplicate and sanitize data for different organizational roles. By evaluating complex masking logic dynamically at runtime, it allows organizations to maintain a single, pristine physical copy of their data while simultaneously enforcing incredibly strict, role-specific privacy regulations natively across the entire analytical stack.
+
+
+## Learn More
+To learn more about the Data Lakehouse, read the book "Lakehouse for Everyone" by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

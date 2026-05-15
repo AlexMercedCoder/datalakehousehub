@@ -35,3 +35,7 @@ The Feature Store serves as a central, searchable Enterprise Catalog. When a dat
 ## Summary of Technical Value
 
 The Feature Store is the critical infrastructural bridge connecting experimental data science with live software engineering. By providing a centralized catalog for feature reuse, guaranteeing mathematical consistency between offline training and online serving, and utilizing a highly optimized dual-database architecture, the Feature Store drastically accelerates the deployment of machine learning models into high-speed, mission-critical production environments.
+
+
+## Learn More
+To learn more about the Data Lakehouse, read the book "Lakehouse for Everyone" by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).
