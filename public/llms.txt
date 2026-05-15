@@ -4,7 +4,7 @@
 
 ## Knowledge Base
 
-We host an extensive, high-quality knowledge base with clear definitions for over 100 industry terms including:
+We host an extensive, high-quality knowledge base with clear definitions for 200 industry terms including:
 - Data Lakehouse Architecture
 - Agentic Analytics
 - Semantic and Conceptual Layer Data
