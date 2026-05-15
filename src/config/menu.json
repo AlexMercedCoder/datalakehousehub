@@ -63,6 +63,10 @@
       "name": "Learning",
       "menu": [
         {
+          "text": "Knowledge Base Glossary",
+          "url": "/knowledgebase"
+        },
+        {
           "text": "Data 101",
           "url": "https://www.youtube.com/playlist?list=PLsLAVBjQJO0p_4Nqz99tIjeoDYE97L0xY"
         },

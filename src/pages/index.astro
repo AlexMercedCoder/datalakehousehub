@@ -31,9 +31,14 @@ const recentPosts = sortedPosts.slice(0, 3);
 
           {
             banner?.button?.enable && (
-              <a class="btn btn-primary mt-8 px-8 py-3 text-lg shadow-lg hover:shadow-xl transition-shadow duration-300" href={banner.button.link}>
-                {banner.button.label}
-              </a>
+              <div class="flex flex-col sm:flex-row justify-center items-center gap-4 mt-8">
+                <a class="btn btn-primary px-8 py-3 text-lg shadow-lg hover:shadow-xl transition-shadow duration-300" href={banner.button.link}>
+                  {banner.button.label}
+                </a>
+                <a class="btn btn-outline-primary px-8 py-3 text-lg shadow-lg hover:shadow-xl transition-shadow duration-300" href="/knowledgebase">
+                  Explore Knowledge Base
+                </a>
+              </div>
             )
           }
 
