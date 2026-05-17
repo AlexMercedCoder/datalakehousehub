@@ -167,6 +167,79 @@ const recentPosts = sortedPosts.slice(0, 3);
     </div>
   </section>
 
+  <!-- Must Read Articles -->
+  <section class="section">
+    <div class="container">
+      <div class="text-center mb-12">
+        <h2 class="text-3xl lg:text-4xl font-bold dark:text-white">Must Read Articles</h2>
+        <p class="mt-4 text-text dark:text-gray-300 text-lg max-w-2xl mx-auto">Deep dives into Apache Iceberg, Agentic AI, and modern Data Lakehouse architecture by Alex Merced.</p>
+      </div>
+      <div class="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
+
+        <!-- Agentic Analytics -->
+        <article class="flex flex-col bg-white dark:bg-theme-dark rounded-2xl shadow-md hover:shadow-xl hover:-translate-y-1 transition-all duration-300 border border-transparent hover:border-primary/20 overflow-hidden">
+          <div class="p-6 flex flex-col flex-1">
+            <span class="inline-block text-xs font-semibold uppercase tracking-wide text-primary mb-3">Agentic AI</span>
+            <h3 class="text-xl font-bold mb-3 dark:text-white">Agentic Analytics on the Apache Lakehouse</h3>
+            <p class="text-text dark:text-gray-300 leading-relaxed flex-1">Discover how autonomous AI agents replace manual dashboard querying by reading governed semantic layers directly on your data lakehouse, delivering faster and more reliable analytical results.</p>
+            <a href="/blog/2026-04-agentic-analytics" class="btn btn-primary mt-6 text-center">Read Article</a>
+          </div>
+        </article>
+
+        <!-- What is Apache Iceberg -->
+        <article class="flex flex-col bg-white dark:bg-theme-dark rounded-2xl shadow-md hover:shadow-xl hover:-translate-y-1 transition-all duration-300 border border-transparent hover:border-primary/20 overflow-hidden">
+          <div class="p-6 flex flex-col flex-1">
+            <span class="inline-block text-xs font-semibold uppercase tracking-wide text-primary mb-3">Apache Iceberg</span>
+            <h3 class="text-xl font-bold mb-3 dark:text-white">What is Apache Iceberg? The Table Format Revolution</h3>
+            <p class="text-text dark:text-gray-300 leading-relaxed flex-1">Learn how Apache Iceberg turned raw Parquet files in S3 into a fully ACID-compliant, time-traveling analytical database without moving your data out of object storage.</p>
+            <a href="/blog/2026-04-apache-iceberg" class="btn btn-primary mt-6 text-center">Read Article</a>
+          </div>
+        </article>
+
+        <!-- State of the Iceberg Ecosystem -->
+        <article class="flex flex-col bg-white dark:bg-theme-dark rounded-2xl shadow-md hover:shadow-xl hover:-translate-y-1 transition-all duration-300 border border-transparent hover:border-primary/20 overflow-hidden">
+          <div class="p-6 flex flex-col flex-1">
+            <span class="inline-block text-xs font-semibold uppercase tracking-wide text-primary mb-3">Apache Iceberg</span>
+            <h3 class="text-xl font-bold mb-3 dark:text-white">The 2025 State of the Apache Iceberg Ecosystem</h3>
+            <p class="text-text dark:text-gray-300 leading-relaxed flex-1">Survey data from data professionals reveals adoption rates, popular tooling, and where the Apache Iceberg ecosystem is heading through 2026 and beyond.</p>
+            <a href="/blog/2026-02-state-of-the-apache-iceberg-ecosystem" class="btn btn-primary mt-6 text-center">Read Article</a>
+          </div>
+        </article>
+
+        <!-- Table Formats Masterclass -->
+        <article class="flex flex-col bg-white dark:bg-theme-dark rounded-2xl shadow-md hover:shadow-xl hover:-translate-y-1 transition-all duration-300 border border-transparent hover:border-primary/20 overflow-hidden">
+          <div class="p-6 flex flex-col flex-1">
+            <span class="inline-block text-xs font-semibold uppercase tracking-wide text-primary mb-3">Data Lakehouse</span>
+            <h3 class="text-xl font-bold mb-3 dark:text-white">What Are Table Formats and Why Were They Needed?</h3>
+            <p class="text-text dark:text-gray-300 leading-relaxed flex-1">Table formats like Apache Iceberg solved the ACID, schema evolution, and query performance problems that turned data lakes into unmanageable data swamps.</p>
+            <a href="/blog/2026-04-29-apache-iceberg-masterclass-01-table-formats" class="btn btn-primary mt-6 text-center">Read Article</a>
+          </div>
+        </article>
+
+        <!-- Intro to Iceberg 2026 -->
+        <article class="flex flex-col bg-white dark:bg-theme-dark rounded-2xl shadow-md hover:shadow-xl hover:-translate-y-1 transition-all duration-300 border border-transparent hover:border-primary/20 overflow-hidden">
+          <div class="p-6 flex flex-col flex-1">
+            <span class="inline-block text-xs font-semibold uppercase tracking-wide text-primary mb-3">Apache Iceberg</span>
+            <h3 class="text-xl font-bold mb-3 dark:text-white">2026 Intro to Apache Iceberg</h3>
+            <p class="text-text dark:text-gray-300 leading-relaxed flex-1">A comprehensive beginner-to-intermediate introduction to Apache Iceberg, covering its metadata layer, catalog integrations, and why it has become the dominant open table format.</p>
+            <a href="/blog/2026-02-2026-Intro-to-Apache-Iceberg" class="btn btn-primary mt-6 text-center">Read Article</a>
+          </div>
+        </article>
+
+        <!-- Semantic Layer and AI -->
+        <article class="flex flex-col bg-white dark:bg-theme-dark rounded-2xl shadow-md hover:shadow-xl hover:-translate-y-1 transition-all duration-300 border border-transparent hover:border-primary/20 overflow-hidden">
+          <div class="p-6 flex flex-col flex-1">
+            <span class="inline-block text-xs font-semibold uppercase tracking-wide text-primary mb-3">Agentic AI</span>
+            <h3 class="text-xl font-bold mb-3 dark:text-white">Why AI Fails Without a Semantic Layer</h3>
+            <p class="text-text dark:text-gray-300 leading-relaxed flex-1">Explore how a semantic layer provides the business context and governed metrics that AI agents require to generate accurate, trustworthy analytical answers at scale.</p>
+            <a href="/blog/2026-02-semantic-layer-05-why-ai-fails-without" class="btn btn-primary mt-6 text-center">Read Article</a>
+          </div>
+        </article>
+
+      </div>
+    </div>
+  </section>
+
   <!-- Call to Action -->
   <Cta cta={call_to_action} />
 </Base>

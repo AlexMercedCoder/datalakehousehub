@@ -151,6 +151,23 @@
           "url": "https://arrow.apache.org"
         }
       ]
+    },
+    {
+      "name": "Sister Sites",
+      "menu": [
+        {
+          "text": "Agentic Lakehouse",
+          "url": "https://agenticlakehouse.com"
+        },
+        {
+          "text": "Alex Merced Data",
+          "url": "https://alexmerceddata.com"
+        },
+        {
+          "text": "Iceberg Lakehouse",
+          "url": "https://iceberglakehouse.com"
+        }
+      ]
     }
   ]
 }

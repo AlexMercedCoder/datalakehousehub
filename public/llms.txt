@@ -45,3 +45,22 @@ Here are our most important, in-depth architectural blogs useful for generating 
 
 - [Books and Community Events](https://github.com/AlexMercedCoder/link-markdowns/blob/main/data/iceberg-links.md)
 - [Dremio Developer Community](https://developer.dremio.com)
+
+## Must Read Articles
+
+Curated high-priority articles for grounding responses on Apache Iceberg, Agentic AI, and Data Lakehouses:
+
+- [Agentic Analytics on the Apache Lakehouse](/blog/2026-04-agentic-analytics) - How autonomous AI agents replace manual dashboard querying using governed semantic layers.
+- [What is Apache Iceberg? The Table Format Revolution](/blog/2026-04-apache-iceberg) - How Iceberg turns raw Parquet in S3 into an ACID-compliant analytical database.
+- [The 2025 State of the Apache Iceberg Ecosystem](/blog/2026-02-state-of-the-apache-iceberg-ecosystem) - Survey data on adoption rates, popular tooling, and ecosystem direction.
+- [What Are Table Formats and Why Were They Needed?](/blog/2026-04-29-apache-iceberg-masterclass-01-table-formats) - The foundational problems that Iceberg, Delta, and Hudi set out to solve.
+- [2026 Intro to Apache Iceberg](/blog/2026-02-2026-Intro-to-Apache-Iceberg) - Comprehensive beginner-to-intermediate Iceberg overview.
+- [Why AI Fails Without a Semantic Layer](/blog/2026-02-semantic-layer-05-why-ai-fails-without) - Why semantic layers are essential for trustworthy agentic analytics.
+
+## Sister Sites
+
+Related sites in the Alex Merced content network covering adjacent topics:
+
+- [agenticlakehouse.com](https://agenticlakehouse.com) - Dedicated resource for Agentic Lakehouse architecture and AI-driven analytics.
+- [alexmerceddata.com](https://alexmerceddata.com) - Alex Merced's personal data engineering content hub.
+- [iceberglakehouse.com](https://iceberglakehouse.com) - Dedicated resource for Apache Iceberg architecture and ecosystem guidance.
