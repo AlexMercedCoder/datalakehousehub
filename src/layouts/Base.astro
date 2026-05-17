@@ -148,7 +148,7 @@ const { title, meta_title, description, image, noindex, canonical, author, pubDa
     <meta property="og:type" content={type ? type : "website"} />
     <meta
       property="og:url"
-      content={`${config.site.base_url}/${Astro.url.pathname.replace("/", "")}`}
+      content={canonical ? canonical : `${config.site.base_url}${Astro.url.pathname}`}
     />
 
     <!-- twitter-title -->
