@@ -2,7 +2,7 @@
 title: "Context Management Strategies for VS Code with LLM Plugins: A Complete Guide to Building Your Own AI-Powered IDE"
 date: 2026-03-07T11:40:00Z
 pubDatetime: 2026-03-07T11:40:00Z
-description: "Context management strategies for VS Code with LLM plugins — building your own AI-powered IDE with Copilot, Continue, Cody, and Roo Code."
+description: "Context management strategies for VS Code with LLM plugins : building your own AI-powered IDE with Copilot, Continue, Cody, and Roo Code."
 author: "Alex Merced"
 category: "AI Tools"
 bannerImage: "https://i.imgur.com/cpoMZQ8.png"

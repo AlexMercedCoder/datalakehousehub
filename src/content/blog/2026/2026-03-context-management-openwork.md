@@ -2,7 +2,7 @@
 title: "Context Management Strategies for OpenWork: A Complete Guide to the Desktop AI Agent Framework"
 date: 2026-03-07T10:40:00Z
 pubDatetime: 2026-03-07T10:40:00Z
-description: "Context management strategies for OpenWork — desktop AI agent framework, browser automation, and multi-model orchestration."
+description: "Context management strategies for OpenWork : desktop AI agent framework, browser automation, and multi-model orchestration."
 author: "Alex Merced"
 category: "AI Tools"
 bannerImage: "https://i.imgur.com/cpoMZQ8.png"

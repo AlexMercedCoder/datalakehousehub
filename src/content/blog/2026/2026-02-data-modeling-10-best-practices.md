@@ -2,7 +2,7 @@
 title: "Data Modeling Best Practices: 7 Mistakes to Avoid"
 date: 2026-02-18T10:30:00Z
 pubDatetime: 2026-02-18T10:30:00Z
-description: "Seven common data modeling mistakes and how to avoid them — from naming conventions to governance integration."
+description: "Seven common data modeling mistakes and how to avoid them : from naming conventions to governance integration."
 author: "Alex Merced"
 category: "Data Modeling"
 bannerImage: "https://i.imgur.com/cpoMZQ8.png"
@@ -19,7 +19,7 @@ image: "/images/blog.png"
 
 A bad data model doesn't announce itself. It hides behind slow dashboards, conflicting numbers, confused analysts, and AI agents that generate wrong SQL. By the time someone identifies the model as the root cause, the team has already built dozens of reports on top of it.
 
-Here are seven modeling mistakes that create downstream pain — and how to avoid each one.
+Here are seven modeling mistakes that create downstream pain : and how to avoid each one.
 
 ## Mistake 1: No Defined Grain
 
@@ -99,6 +99,6 @@ In Dremio, Fine-Grained Access Control enforces row and column-level policies, L
 
 ![Iterative data modeling cycle: design, document, measure, improve](/images/blog/data-modeling/modeling-cycle.png)
 
-Pick one of these seven mistakes. Check whether your current data model has it. Fix it. Then move to the next one. Data modeling is iterative — no team gets it perfect on the first pass. The goal is not perfection but continuous improvement: clearer names, better documentation, tighter governance, and models that match what your consumers actually need.
+Pick one of these seven mistakes. Check whether your current data model has it. Fix it. Then move to the next one. Data modeling is iterative : no team gets it perfect on the first pass. The goal is not perfection but continuous improvement: clearer names, better documentation, tighter governance, and models that match what your consumers actually need.
 
 [Try Dremio Cloud free for 30 days](https://www.dremio.com/get-started?utm_source=ev_buffer&utm_medium=influencer&utm_campaign=next-gen-dremio&utm_term=blog-021826-02-18-2026&utm_content=alexmerced)

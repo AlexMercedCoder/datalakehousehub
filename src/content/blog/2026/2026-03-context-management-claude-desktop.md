@@ -2,7 +2,7 @@
 title: "Context Management Strategies for Claude Desktop: A Complete Guide to MCP, Computer Use, and Local File Access"
 date: 2026-03-07T09:30:00Z
 pubDatetime: 2026-03-07T09:30:00Z
-description: "Context management strategies for Claude Desktop — MCP servers, computer use, local file access, and extended thinking."
+description: "Context management strategies for Claude Desktop : MCP servers, computer use, local file access, and extended thinking."
 author: "Alex Merced"
 category: "AI Tools"
 bannerImage: "https://i.imgur.com/cpoMZQ8.png"

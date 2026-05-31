@@ -2,7 +2,7 @@
 title: "How to Build a Semantic Layer: A Step-by-Step Guide"
 date: 2026-02-18T12:30:00Z
 pubDatetime: 2026-02-18T12:30:00Z
-description: "A step-by-step guide to building a semantic layer — from identifying core metrics to implementing views, documentation, and access policies."
+description: "A step-by-step guide to building a semantic layer : from identifying core metrics to implementing views, documentation, and access policies."
 author: "Alex Merced"
 category: "Semantic Layer"
 bannerImage: "https://i.imgur.com/cpoMZQ8.png"
@@ -15,7 +15,7 @@ draft: false
 image: "/images/blog.png"
 ---
 
-![Building a semantic layer — Bronze, Silver, and Gold tiers](/images/blog/semantic-layer/build-semantic-layer.png)
+![Building a semantic layer : Bronze, Silver, and Gold tiers](/images/blog/semantic-layer/build-semantic-layer.png)
 
 Most teams start building a semantic layer the wrong way: they open their BI tool, create a few calculated fields, and call it done. Six months later, three dashboards define "churn" differently, nobody trusts the numbers, and the data team is debugging metric discrepancies instead of building new features.
 
@@ -93,7 +93,7 @@ Gold views are pre-aggregated for specific consumers. A BI dashboard gets `month
 
 Gold views don't add new business logic. They aggregate and reshape Silver views for performance and usability.
 
-## Document Everything — or Let AI Help
+## Document Everything : or Let AI Help
 
 An undocumented semantic layer is a semantic layer nobody uses. Every table and every column should have a description that explains:
 - What the data represents

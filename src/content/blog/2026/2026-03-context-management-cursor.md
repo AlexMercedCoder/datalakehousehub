@@ -2,7 +2,7 @@
 title: "Context Management Strategies for Cursor: A Complete Guide to the AI-Native Code Editor"
 date: 2026-03-07T10:50:00Z
 pubDatetime: 2026-03-07T10:50:00Z
-description: "Context management strategies for Cursor — AI-native code editor, .cursor rules, composer, and codebase indexing."
+description: "Context management strategies for Cursor : AI-native code editor, .cursor rules, composer, and codebase indexing."
 author: "Alex Merced"
 category: "AI Tools"
 bannerImage: "https://i.imgur.com/cpoMZQ8.png"

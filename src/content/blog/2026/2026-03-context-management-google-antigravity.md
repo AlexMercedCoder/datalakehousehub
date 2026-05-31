@@ -2,7 +2,7 @@
 title: "Context Management Strategies for Google Antigravity: A Complete Guide to the Agent-First IDE"
 date: 2026-03-07T10:20:00Z
 pubDatetime: 2026-03-07T10:20:00Z
-description: "Context management strategies for Google Antigravity IDE — agent-first development, knowledge items, task boundaries, and MCP servers."
+description: "Context management strategies for Google Antigravity IDE : agent-first development, knowledge items, task boundaries, and MCP servers."
 author: "Alex Merced"
 category: "AI Tools"
 bannerImage: "https://i.imgur.com/cpoMZQ8.png"

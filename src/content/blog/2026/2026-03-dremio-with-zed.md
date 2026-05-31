@@ -2,7 +2,7 @@
 title: "How to Use Dremio with Zed: Connect, Query, and Build Data Apps"
 date: 2026-03-05T10:40:00Z
 pubDatetime: 2026-03-05T10:40:00Z
-description: "How to connect Dremio with Zed editor — query lakehouse data, build apps, and use MCP for AI-powered analytics."
+description: "How to connect Dremio with Zed editor : query lakehouse data, build apps, and use MCP for AI-powered analytics."
 author: "Alex Merced"
 category: "Dremio"
 bannerImage: "https://i.imgur.com/cpoMZQ8.png"

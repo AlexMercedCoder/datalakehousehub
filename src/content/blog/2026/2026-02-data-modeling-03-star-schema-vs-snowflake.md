@@ -2,7 +2,7 @@
 title: "Star Schema vs. Snowflake Schema: When to Use Each"
 date: 2026-02-18T09:20:00Z
 pubDatetime: 2026-02-18T09:20:00Z
-description: "Compare star schema and snowflake schema designs — when to denormalize for speed vs. normalize for storage, with practical examples and decision criteria."
+description: "Compare star schema and snowflake schema designs , when to denormalize for speed vs. normalize for storage, with practical examples and decision criteria."
 author: "Alex Merced"
 category: "Data Modeling"
 bannerImage: "https://i.imgur.com/cpoMZQ8.png"
@@ -25,9 +25,9 @@ That structural difference affects query performance, storage efficiency, SQL co
 
 Dimensional modeling separates data into two types:
 
-**Fact tables** store measurable events — a sale, a page view, a shipment, a login. Each row represents one event. Columns include numeric measures (revenue, quantity, duration) and foreign keys pointing to dimension tables.
+**Fact tables** store measurable events : a sale, a page view, a shipment, a login. Each row represents one event. Columns include numeric measures (revenue, quantity, duration) and foreign keys pointing to dimension tables.
 
-**Dimension tables** provide context for facts — who (customer), what (product), when (date), where (location), how (channel). Dimensions describe the "business words" people use to filter, group, and label their analysis.
+**Dimension tables** provide context for facts , who (customer), what (product), when (date), where (location), how (channel). Dimensions describe the "business words" people use to filter, group, and label their analysis.
 
 Star and snowflake schemas differ in how they organize those dimension tables.
 
@@ -35,7 +35,7 @@ Star and snowflake schemas differ in how they organize those dimension tables.
 
 In a star schema, each dimension is a single, denormalized table. All attributes for a dimension live in one place.
 
-A product dimension contains the product name, category, subcategory, department, and brand — all in one table. This means some values repeat. Every product in the "Electronics" category stores the string "Electronics" in its row.
+A product dimension contains the product name, category, subcategory, department, and brand : all in one table. This means some values repeat. Every product in the "Electronics" category stores the string "Electronics" in its row.
 
 **Advantages:**
 - Fewer joins per query. A typical star schema query joins the fact table to 3-5 dimension tables. That's it.

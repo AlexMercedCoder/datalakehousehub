@@ -2,7 +2,7 @@
 title: "Context Management Strategies for OpenAI Codex: A Complete Guide Across Browser, CLI, and App"
 date: 2026-03-07T09:10:00Z
 pubDatetime: 2026-03-07T09:10:00Z
-description: "Context management strategies for OpenAI Codex across browser, CLI, and app — AGENTS.md, sandboxed tasks, and prompt patterns."
+description: "Context management strategies for OpenAI Codex across browser, CLI, and app : AGENTS.md, sandboxed tasks, and prompt patterns."
 author: "Alex Merced"
 category: "AI Tools"
 bannerImage: "https://i.imgur.com/cpoMZQ8.png"

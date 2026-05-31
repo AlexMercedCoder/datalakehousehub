@@ -2,7 +2,7 @@
 title: "How to Use Dremio with JetBrains AI Assistant: Connect, Query, and Build Data Apps"
 date: 2026-03-05T10:10:00Z
 pubDatetime: 2026-03-05T10:10:00Z
-description: "How to connect Dremio with JetBrains AI Assistant — query lakehouse data, build apps, and use MCP for AI-powered analytics."
+description: "How to connect Dremio with JetBrains AI Assistant : query lakehouse data, build apps, and use MCP for AI-powered analytics."
 author: "Alex Merced"
 category: "Dremio"
 bannerImage: "https://i.imgur.com/cpoMZQ8.png"
@@ -30,8 +30,8 @@ This post covers four approaches, ordered from quickest setup to most customizab
 
 If you do not already have JetBrains AI Assistant:
 
-1. **Install a JetBrains IDE** — IntelliJ IDEA, PyCharm, DataGrip, or any other JetBrains IDE from [jetbrains.com](https://www.jetbrains.com/). Community editions are free; Ultimate editions require a subscription.
-2. **Activate AI Assistant** — AI Assistant is included with JetBrains IDE subscriptions (2025.1+). Go to **Settings > Plugins** and ensure "AI Assistant" is enabled.
+1. **Install a JetBrains IDE** : IntelliJ IDEA, PyCharm, DataGrip, or any other JetBrains IDE from [jetbrains.com](https://www.jetbrains.com/). Community editions are free; Ultimate editions require a subscription.
+2. **Activate AI Assistant** : AI Assistant is included with JetBrains IDE subscriptions (2025.1+). Go to **Settings > Plugins** and ensure "AI Assistant" is enabled.
 3. **Sign in** with your JetBrains account to activate the AI quota.
 4. **Open the AI Chat** by clicking the AI Assistant icon in the right sidebar or pressing `Alt+Enter` on a code selection.
 

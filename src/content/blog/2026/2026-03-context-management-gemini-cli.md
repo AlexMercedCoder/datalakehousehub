@@ -2,7 +2,7 @@
 title: "Context Management Strategies for Gemini CLI: A Complete Guide to Terminal-Native AI Development"
 date: 2026-03-07T10:10:00Z
 pubDatetime: 2026-03-07T10:10:00Z
-description: "Context management strategies for Gemini CLI — terminal-native AI development, GEMINI.md, tool use, and shell integration."
+description: "Context management strategies for Gemini CLI : terminal-native AI development, GEMINI.md, tool use, and shell integration."
 author: "Alex Merced"
 category: "AI Tools"
 bannerImage: "https://i.imgur.com/cpoMZQ8.png"

@@ -2,7 +2,7 @@
 title: "The Role of the Semantic Layer in Data Governance"
 date: 2026-02-18T13:10:00Z
 pubDatetime: 2026-02-18T13:10:00Z
-description: "The role of the semantic layer in data governance — centralized definitions, row-level security, column masking, and compliance traceability."
+description: "The role of the semantic layer in data governance : centralized definitions, row-level security, column masking, and compliance traceability."
 author: "Alex Merced"
 category: "Semantic Layer"
 bannerImage: "https://i.imgur.com/cpoMZQ8.png"
@@ -15,7 +15,7 @@ draft: false
 image: "/images/blog.png"
 ---
 
-![Data governance through a semantic layer — centralized policies and documentation](/images/blog/semantic-layer/governance-semantic.png)
+![Data governance through a semantic layer : centralized policies and documentation](/images/blog/semantic-layer/governance-semantic.png)
 
 Most organizations have a data governance policy. It lives in a Confluence page. It defines who owns what data, what terms mean, and who should have access. And almost nobody follows it, because it's not enforced where queries actually run.
 
@@ -25,7 +25,7 @@ A semantic layer changes that. It moves governance from a document into the quer
 
 Data governance fails when it depends on people doing the right thing manually. A policy says "Revenue means completed orders minus refunds." An analyst writes a slightly different formula. A dashboard uses the wrong table. An AI agent invents its own definition. The governance policy exists. Nobody follows it. And the organization makes decisions on inconsistent data.
 
-The root cause isn't that people are careless. It's that governance is separated from the systems people actually use to query data. Enforcement happens in a side channel — documentation, review processes, audit logs — not in the query itself.
+The root cause isn't that people are careless. It's that governance is separated from the systems people actually use to query data. Enforcement happens in a side channel :  documentation, review processes, audit logs ,  not in the query itself.
 
 ## Centralized Definitions Eliminate Conflicting Metrics
 
@@ -77,7 +77,7 @@ This traceability matters for compliance. When an auditor asks "Where does your 
 - `silver.orders_enriched` → joins `bronze.orders_raw` with `bronze.customers_raw`
 - `bronze.orders_raw` → maps to `production.public.orders` in PostgreSQL
 
-Every step is documented. Every transformation is visible. The lineage isn't reconstructed after the fact — it's structural.
+Every step is documented. Every transformation is visible. The lineage isn't reconstructed after the fact : it's structural.
 
 ## Documentation as a Governance Tool
 
@@ -103,7 +103,7 @@ A practical certification workflow:
 2. **Reviewed**: View reviewed by the data team. Business logic validated. Documentation complete.
 3. **Certified**: View approved for production use. Labeled "Certified." Available in production dashboards and to AI agents.
 
-Each Certified view should have a documented owner — the person accountable for its accuracy and freshness. When business requirements change, the owner updates the view and documentation together. Changes are reviewed before the "Certified" label is reapplied.
+Each Certified view should have a documented owner : the person accountable for its accuracy and freshness. When business requirements change, the owner updates the view and documentation together. Changes are reviewed before the "Certified" label is reapplied.
 
 This workflow doesn't require advanced tooling. Labels, Wikis, and a team agreement on the process are sufficient. What matters is that governance is visible inside the semantic layer, not tracked in a separate system.
 

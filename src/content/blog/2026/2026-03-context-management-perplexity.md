@@ -2,7 +2,7 @@
 title: "Context Management Strategies for Perplexity AI: A Complete Guide to Research-First AI Conversations"
 date: 2026-03-07T11:00:00Z
 pubDatetime: 2026-03-07T11:00:00Z
-description: "Context management strategies for Perplexity AI — research-first conversations, source citation, Spaces, and follow-up chains."
+description: "Context management strategies for Perplexity AI : research-first conversations, source citation, Spaces, and follow-up chains."
 author: "Alex Merced"
 category: "AI Tools"
 bannerImage: "https://i.imgur.com/cpoMZQ8.png"

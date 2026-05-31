@@ -2,7 +2,7 @@
 title: "The Model Context Protocol (MCP) Explained: A Complete Guide to How Every Major AI Tool Connects to External Data"
 date: 2026-03-07T11:50:00Z
 pubDatetime: 2026-03-07T11:50:00Z
-description: "The Model Context Protocol (MCP) explained — how every major AI tool connects to external data, servers, and APIs through a unified standard."
+description: "The Model Context Protocol (MCP) explained : how every major AI tool connects to external data, servers, and APIs through a unified standard."
 author: "Alex Merced"
 category: "AI Tools"
 bannerImage: "https://i.imgur.com/cpoMZQ8.png"

@@ -2,7 +2,7 @@
 title: "Context Management Strategies for Claude Code: A Complete Guide for Developers"
 date: 2026-03-07T09:50:00Z
 pubDatetime: 2026-03-07T09:50:00Z
-description: "Context management strategies for Claude Code — CLAUDE.md, slash commands, MCP tools, and multi-file codebase navigation."
+description: "Context management strategies for Claude Code : CLAUDE.md, slash commands, MCP tools, and multi-file codebase navigation."
 author: "Alex Merced"
 category: "AI Tools"
 bannerImage: "https://i.imgur.com/cpoMZQ8.png"

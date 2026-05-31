@@ -2,7 +2,7 @@
 title: "Denormalization: When and Why to Flatten Your Data"
 date: 2026-02-18T10:10:00Z
 pubDatetime: 2026-02-18T10:10:00Z
-description: "When and why to flatten your data — denormalization techniques, trade-offs, and how virtual denormalization via views avoids physical data duplication."
+description: "When and why to flatten your data : denormalization techniques, trade-offs, and how virtual denormalization via views avoids physical data duplication."
 author: "Alex Merced"
 category: "Data Modeling"
 bannerImage: "https://i.imgur.com/cpoMZQ8.png"
@@ -86,7 +86,7 @@ The key insight: denormalization trades write-time simplicity for read-time simp
 
 There's a way to get the query benefits of denormalization without the physical redundancy: SQL views.
 
-A view can join and flatten multiple normalized tables into a single logical table. Consumers query the view as if it's one wide table — simple SQL, no joins required. But the underlying data stays normalized. Update a customer's city in the customers table, and the view reflects the change automatically.
+A view can join and flatten multiple normalized tables into a single logical table. Consumers query the view as if it's one wide table : simple SQL, no joins required. But the underlying data stays normalized. Update a customer's city in the customers table, and the view reflects the change automatically.
 
 ```sql
 CREATE VIEW v_orders_enriched AS
@@ -105,7 +105,7 @@ JOIN products p ON o.product_id = p.product_id;
 
 Analysts query `v_orders_enriched` without knowing the underlying structure. The join logic is defined once and reused by everyone.
 
-The tradeoff: views execute the joins at query time. For very large datasets, this can be slow. Platforms like [Dremio](https://www.dremio.com/blog/5-ways-dremio-reflections-outsmart-traditional-materialized-views/?utm_source=ev_buffer&utm_medium=influencer&utm_campaign=next-gen-dremio&utm_term=blog-021826-02-18-2026&utm_content=alexmerced) solve this with Reflections — which physically materialize the view's results in an optimized format, updated automatically. Users still query the logical view, but the engine substitutes the pre-computed Reflection for performance. You get the simplicity of denormalization, the consistency of normalization, and the speed of materialization.
+The tradeoff: views execute the joins at query time. For very large datasets, this can be slow. Platforms like [Dremio](https://www.dremio.com/blog/5-ways-dremio-reflections-outsmart-traditional-materialized-views/?utm_source=ev_buffer&utm_medium=influencer&utm_campaign=next-gen-dremio&utm_term=blog-021826-02-18-2026&utm_content=alexmerced) solve this with Reflections , which physically materialize the view's results in an optimized format, updated automatically. Users still query the logical view, but the engine substitutes the pre-computed Reflection for performance. You get the simplicity of denormalization, the consistency of normalization, and the speed of materialization.
 
 ## What to Do Next
 

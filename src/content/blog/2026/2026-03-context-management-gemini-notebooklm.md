@@ -2,7 +2,7 @@
 title: "Context Management Strategies for Gemini Web and NotebookLM: A Complete Guide to Google's AI Knowledge Ecosystem"
 date: 2026-03-07T10:00:00Z
 pubDatetime: 2026-03-07T10:00:00Z
-description: "Context management strategies for Gemini Web and NotebookLM — Google's AI knowledge ecosystem, Deep Research, and source grounding."
+description: "Context management strategies for Gemini Web and NotebookLM : Google's AI knowledge ecosystem, Deep Research, and source grounding."
 author: "Alex Merced"
 category: "AI Tools"
 bannerImage: "https://i.imgur.com/cpoMZQ8.png"

@@ -2,7 +2,7 @@
 title: "Context Management Strategies for Claude Web: A Complete Guide to Projects, Artifacts, and Intelligent Context"
 date: 2026-03-07T09:20:00Z
 pubDatetime: 2026-03-07T09:20:00Z
-description: "Context management strategies for Claude Web — projects, artifacts, intelligent context windows, and structured prompting techniques."
+description: "Context management strategies for Claude Web : projects, artifacts, intelligent context windows, and structured prompting techniques."
 author: "Alex Merced"
 category: "AI Tools"
 bannerImage: "https://i.imgur.com/cpoMZQ8.png"

@@ -142,7 +142,7 @@ To follow how these trends develop and to participate in the next survey cycle, 
 
 # Raw Results
 
-# State of the Apache Iceberg Ecosystem — Raw Results (%)
+# State of the Apache Iceberg Ecosystem : Raw Results (%)
 
 ## Primary Role / Job Function
 - Data Engineer: 29.6%

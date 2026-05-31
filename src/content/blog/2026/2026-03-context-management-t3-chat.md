@@ -2,7 +2,7 @@
 title: "Context Management Strategies for T3 Chat: A Complete Guide to the Unified Multi-Model AI Interface"
 date: 2026-03-07T11:30:00Z
 pubDatetime: 2026-03-07T11:30:00Z
-description: "Context management strategies for T3 Chat — unified multi-model AI interface, personas, folders, and cross-model context."
+description: "Context management strategies for T3 Chat : unified multi-model AI interface, personas, folders, and cross-model context."
 author: "Alex Merced"
 category: "AI Tools"
 bannerImage: "https://i.imgur.com/cpoMZQ8.png"

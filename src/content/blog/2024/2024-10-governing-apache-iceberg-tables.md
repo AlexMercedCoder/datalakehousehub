@@ -19,7 +19,7 @@ image: "/images/blog.png"
 - [Free Apache Iceberg Crash Course](https://hello.dremio.com/webcast-an-apache-iceberg-lakehouse-crash-course-reg.html?utm_source=ev_external_blog&utm_medium=influencer&utm_campaign=iceberggov&utm_content=alexmerced&utm_term=external_blog)
 - [Iceberg Lakehouse Engineering Video Playlist](https://www.youtube.com/watch?v=SIriNcVIGJQ&list=PLsLAVBjQJO0p0Yq1fLkoHvt2lEJj5pcYe) 
 
-Apache Iceberg is a powerful table format designed for data lakes, offering many features that simplify the management and evolution of large datasets. However, one area that Apache Iceberg leaves outside its scope is **table governance**—specifically, managing access control and security for Iceberg tables. This means that Iceberg's metadata specification doesn't inherently govern who can view or modify tables. As a result, the responsibility of securing and governing access to Iceberg tables must be handled at different levels within your lakehouse architecture. Let’s explore these levels and their roles in controlling access.
+Apache Iceberg is a powerful table format designed for data lakes, offering many features that simplify the management and evolution of large datasets. However, one area that Apache Iceberg leaves outside its scope is **table governance** - specifically, managing access control and security for Iceberg tables. This means that Iceberg's metadata specification doesn't inherently govern who can view or modify tables. As a result, the responsibility of securing and governing access to Iceberg tables must be handled at different levels within your lakehouse architecture. Let’s explore these levels and their roles in controlling access.
 
 ### File Level Governance
 
@@ -49,7 +49,7 @@ Now that we’ve established the importance of catalog-level governance for Iceb
 
 - **Commit-Level Governance**: Nessie tracks changes through commits, and you can control who can commit changes to a branch. This ensures that only authorized users can make modifications to the Iceberg tables on a given branch.
 
-With Nessie, governance isn’t just about who can read or write a table—it extends to controlling access to specific versions of your datasets, allowing for better control over data modifications and auditing capabilities.
+With Nessie, governance isn’t just about who can read or write a table - it extends to controlling access to specific versions of your datasets, allowing for better control over data modifications and auditing capabilities.
 
 ### Apache Polaris (Incubating): Centralized Access Control with RBAC
 

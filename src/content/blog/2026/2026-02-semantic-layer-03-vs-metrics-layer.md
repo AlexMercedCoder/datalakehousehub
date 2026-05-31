@@ -2,7 +2,7 @@
 title: "Semantic Layer vs. Metrics Layer: What's the Difference?"
 date: 2026-02-18T12:40:00Z
 pubDatetime: 2026-02-18T12:40:00Z
-description: "Semantic layer vs. metrics layer — how they overlap, where they differ, and when you need one, the other, or both."
+description: "Semantic layer vs. metrics layer : how they overlap, where they differ, and when you need one, the other, or both."
 author: "Alex Merced"
 category: "Semantic Layer"
 bannerImage: "https://i.imgur.com/cpoMZQ8.png"
@@ -15,7 +15,7 @@ draft: false
 image: "/images/blog.png"
 ---
 
-![Semantic layer vs metrics layer — the metrics layer is a subset](/images/blog/semantic-layer/semantic-vs-metrics.png)
+![Semantic layer vs metrics layer : the metrics layer is a subset](/images/blog/semantic-layer/semantic-vs-metrics.png)
 
 Both terms appear in every modern data architecture diagram. They're used interchangeably in conference talks, Slack threads, and vendor marketing. And almost nobody defines them precisely.
 

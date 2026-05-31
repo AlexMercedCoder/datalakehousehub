@@ -2,7 +2,7 @@
 title: "How to Use Dremio with Windsurf: Connect, Query, and Build Data Apps"
 date: 2026-03-05T09:40:00Z
 pubDatetime: 2026-03-05T09:40:00Z
-description: "How to connect Dremio with Windsurf — query lakehouse data, build apps, and use MCP for AI-powered analytics."
+description: "How to connect Dremio with Windsurf : query lakehouse data, build apps, and use MCP for AI-powered analytics."
 author: "Alex Merced"
 category: "Dremio"
 bannerImage: "https://i.imgur.com/cpoMZQ8.png"
@@ -20,7 +20,7 @@ Windsurf is an AI-native code editor built as a fork of VS Code. Its standout fe
 
 Connecting them gives Cascade the context it needs to write accurate Dremio SQL, generate data pipelines, and build applications against your lakehouse. Without this connection, Cascade treats Dremio like a generic database. With it, the agent knows your schemas, business logic encoded in views, and the correct Dremio SQL dialect.
 
-Windsurf's Cascade is especially well-suited for data projects because it can chain together discovery, querying, code generation, and testing in a single autonomous flow. Ask it to explore your Dremio catalog, identify relevant tables, write a pipeline, and generate tests — all in one prompt.
+Windsurf's Cascade is especially well-suited for data projects because it can chain together discovery, querying, code generation, and testing in a single autonomous flow. Ask it to explore your Dremio catalog, identify relevant tables, write a pipeline, and generate tests : all in one prompt.
 
 This post covers four approaches, ordered from quickest setup to most customizable.
 

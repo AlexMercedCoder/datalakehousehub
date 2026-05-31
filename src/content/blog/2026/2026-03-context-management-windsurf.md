@@ -2,7 +2,7 @@
 title: "Context Management Strategies for Windsurf: A Complete Guide to the AI Flow IDE"
 date: 2026-03-07T11:10:00Z
 pubDatetime: 2026-03-07T11:10:00Z
-description: "Context management strategies for Windsurf — AI Flow IDE, Cascade, persistent memory, and codebase-aware development."
+description: "Context management strategies for Windsurf : AI Flow IDE, Cascade, persistent memory, and codebase-aware development."
 author: "Alex Merced"
 category: "AI Tools"
 bannerImage: "https://i.imgur.com/cpoMZQ8.png"

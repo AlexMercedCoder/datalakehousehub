@@ -2,7 +2,7 @@
 title: "Context Management Strategies for ChatGPT: A Complete Guide to Getting Better Results"
 date: 2026-03-07T09:00:00Z
 pubDatetime: 2026-03-07T09:00:00Z
-description: "A complete guide to context management strategies for ChatGPT — custom instructions, memory, projects, and prompt techniques for better results."
+description: "A complete guide to context management strategies for ChatGPT : custom instructions, memory, projects, and prompt techniques for better results."
 author: "Alex Merced"
 category: "AI Tools"
 bannerImage: "https://i.imgur.com/cpoMZQ8.png"

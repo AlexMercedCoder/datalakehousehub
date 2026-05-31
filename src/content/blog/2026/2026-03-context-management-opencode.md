@@ -2,7 +2,7 @@
 title: "Context Management Strategies for OpenCode: A Complete Guide to the Open-Source Terminal AI Agent"
 date: 2026-03-07T10:30:00Z
 pubDatetime: 2026-03-07T10:30:00Z
-description: "Context management strategies for OpenCode — open-source terminal AI agent, multi-provider support, and LSP integration."
+description: "Context management strategies for OpenCode : open-source terminal AI agent, multi-provider support, and LSP integration."
 author: "Alex Merced"
 category: "AI Tools"
 bannerImage: "https://i.imgur.com/cpoMZQ8.png"

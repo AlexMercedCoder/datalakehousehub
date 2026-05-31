@@ -2,7 +2,7 @@
 title: "Context Management Strategies for Claude CoWork: A Complete Guide for Knowledge Workers"
 date: 2026-03-07T09:40:00Z
 pubDatetime: 2026-03-07T09:40:00Z
-description: "Context management strategies for Claude CoWork — knowledge workers, team collaboration, and persistent project context."
+description: "Context management strategies for Claude CoWork : knowledge workers, team collaboration, and persistent project context."
 author: "Alex Merced"
 category: "AI Tools"
 bannerImage: "https://i.imgur.com/cpoMZQ8.png"

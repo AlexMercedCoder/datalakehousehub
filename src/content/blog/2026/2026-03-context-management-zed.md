@@ -2,7 +2,7 @@
 title: "Context Management Strategies for Zed: A Complete Guide to the High-Performance AI Code Editor"
 date: 2026-03-07T11:20:00Z
 pubDatetime: 2026-03-07T11:20:00Z
-description: "Context management strategies for Zed — high-performance AI code editor, inline assist, slash commands, and multi-model support."
+description: "Context management strategies for Zed : high-performance AI code editor, inline assist, slash commands, and multi-model support."
 author: "Alex Merced"
 category: "AI Tools"
 bannerImage: "https://i.imgur.com/cpoMZQ8.png"

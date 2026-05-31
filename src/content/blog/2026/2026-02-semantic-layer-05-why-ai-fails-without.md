@@ -2,7 +2,7 @@
 title: "Why Your AI Initiatives Fail Without a Semantic Layer"
 date: 2026-02-18T13:00:00Z
 pubDatetime: 2026-02-18T13:00:00Z
-description: "Why AI initiatives fail without a semantic layer — how LLMs hallucinate SQL without business context and how semantic grounding fixes it."
+description: "Why AI initiatives fail without a semantic layer : how LLMs hallucinate SQL without business context and how semantic grounding fixes it."
 author: "Alex Merced"
 category: "Semantic Layer"
 bannerImage: "https://i.imgur.com/cpoMZQ8.png"
@@ -15,7 +15,7 @@ draft: false
 image: "/images/blog.png"
 ---
 
-![AI with vs without a semantic layer — failure modes and fixes](/images/blog/semantic-layer/ai-semantic-layer.png)
+![AI with vs without a semantic layer : failure modes and fixes](/images/blog/semantic-layer/ai-semantic-layer.png)
 
 Your team builds an AI agent. It connects to your data warehouse. A product manager types "What was revenue last quarter?" and gets a number. The number is wrong. Nobody knows it's wrong until Finance runs the same query manually and gets a different result.
 
@@ -31,7 +31,7 @@ A semantic layer provides those definitions. Without one, AI analytics is a demo
 
 ## Five Ways AI Goes Wrong Without a Semantic Layer
 
-![AI agent confused by raw data — hallucinating metrics and joins](/images/blog/semantic-layer/ai-hallucination.png)
+![AI agent confused by raw data : hallucinating metrics and joins](/images/blog/semantic-layer/ai-hallucination.png)
 
 ### Metric Hallucination
 
