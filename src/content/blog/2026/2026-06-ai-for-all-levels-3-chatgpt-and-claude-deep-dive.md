@@ -1,16 +1,16 @@
 ---
 title: "ChatGPT and Claude: Which AI Service Should You Pay For"
-date: 2026-06-08T09:00:00Z
-description: "ChatGPT and Claude are the two leading AI assistants. Here is what each offers at every price tier, how to use their desktop apps and advanced features like Dispatch and Clips, and which one fits your workflow. 162 chars"
+date: 2026-06-01T09:00:00Z
+description: "ChatGPT and Claude are the two leading AI assistants. Here is what each offers at every price tier, how to use their desktop apps and advanced features like Dispatch and Clips, and which one fits your workflow."
 author: "Alex Merced"
-category: "AI & Agents"
+category: "Artificial Intelligence"
 tags:
-  - "ChatGPT"
-  - "Claude"
-  - "AI comparison"
-  - "paid AI tiers"
-  - "AI assistants"
-slug: "ai-for-all-levels-3-chatgpt-and-claude-deep-dive"
+  - ai
+  - artificial intelligence
+  - machine learning
+  - llm
+  - productivity
+slug: ai-for-all-levels-3-chatgpt-and-claude-deep-dive
 draft: false
 image: "/images/blog.png"
 ---
@@ -19,13 +19,13 @@ Part 2 of this series covered the extensive free AI tools Google offers through 
 
 This is Part 3 of "Catching Up with Using AI for All Levels." If you are just joining, start with Part 1 for the fundamentals of how AI works and Part 2 for the free tools. This post covers the paid side: what each service charges, what you get at each tier, the desktop apps and advanced features, and practical examples of how to use everything for daily productivity.
 
-**Return to Part 1: What AI Is and Isnt
+[Return to Part 1: What AI Is and Isnt](/blog/ai-for-all-levels-1-what-ai-is-and-isnt/)
 
-**Return to Part 2: Getting Started for Free
+[Return to Part 2: Getting Started for Free](/blog/ai-for-all-levels-2-getting-started-for-free/)
 
-[Skip to Part 4: A Tour of Specialized AI Tools: Music, Video, Images, and More](/blog/ai-for-all-levels-4-specialized-ai-tools/)
+[Skip to Part 4: Specialized AI Tools for Creation](/blog/ai-for-all-levels-4-specialized-ai-tools/)
 
-[Skip to Part 5: Going Advanced: Open Source Models, Hermes Agent, and Local AI](/blog/ai-for-all-levels-5-going-advanced/)
+[Skip to Part 5: Going Advanced: Open Source, Local Models, and Agent Tools](/blog/ai-for-all-levels-5-going-advanced/)
 
 ---
 
@@ -251,10 +251,10 @@ But the honest truth is that most people do not need to pay $200 a month for eit
 
 Part 4 of this series moves beyond text assistants into specialized AI tools. We will cover music generation with Suno and Udio, video creation with Veo and Runway, image generation with Midjourney and DALL E, and how these creative tools can fit into your daily productivity workflow.
 
-[Return to Part 1: What AI Is and Isnt: A Laypersons Guide to How LLMs Actually Work](/blog/ai-for-all-levels-1-what-ai-is-and-isnt/)
+[Return to Part 1: What AI Is and Isnt](/blog/ai-for-all-levels-1-what-ai-is-and-isnt/)
 
-[Return to Part 2: Getting Started with AI for Free](/blog/ai-for-all-levels-2-getting-started-for-free/)
+[Return to Part 2: Getting Started for Free](/blog/ai-for-all-levels-2-getting-started-for-free/)
 
-[Continue to Part 4: A Tour of Specialized AI Tools: Music, Video, Images, and More](/blog/ai-for-all-levels-4-specialized-ai-tools/)
+[Continue to Part 4: Specialized AI Tools for Creation](/blog/ai-for-all-levels-4-specialized-ai-tools/)
 
-[Skip to Part 5: Going Advanced: Open Source Models, Hermes Agent, and Local AI](/blog/ai-for-all-levels-5-going-advanced/)
+[Skip to Part 5: Going Advanced: Open Source, Local Models, and Agent Tools](/blog/ai-for-all-levels-5-going-advanced/)

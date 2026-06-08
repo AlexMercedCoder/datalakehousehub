@@ -1,16 +1,16 @@
 ---
 title: "Going Advanced: Open Source Models, Hermes Agent, and Local AI"
-date: 2026-06-08T09:00:00Z
-description: "Tired of subscriptions and privacy concerns? Open source models and agent frameworks let you run AI on your own hardware. Here is how to get started with Hermes Agent, OpenCode, DeepSeek, and local Llama models. 166 chars"
+date: 2026-06-01T09:00:00Z
+description: "Tired of subscriptions and privacy concerns? Open source models and agent frameworks let you run AI on your own hardware. Here is how to get started with Hermes Agent, OpenCode, DeepSeek, and local Llama models."
 author: "Alex Merced"
-category: "AI & Agents"
+category: "Artificial Intelligence"
 tags:
-  - "open source AI"
-  - "Hermes Agent"
-  - "local AI"
-  - "Ollama"
-  - "DeepSeek"
-slug: "ai-for-all-levels-5-going-advanced"
+  - ai
+  - artificial intelligence
+  - machine learning
+  - llm
+  - productivity
+slug: ai-for-all-levels-5-going-advanced
 draft: false
 image: "/images/blog.png"
 ---
@@ -19,13 +19,13 @@ This is the final installment of "Catching Up with Using AI for All Levels." Par
 
 This is the most technical post in the series, but do not let that scare you. The tools have matured significantly in 2026. Installing and running a local AI model is easier than it was six months ago, and the benefits are real: privacy, offline access, no subscription fees, and unlimited usage after the initial hardware investment.
 
-**Return to Part 1: What AI Is and Isnt
+[Return to Part 1: What AI Is and Isnt](/blog/ai-for-all-levels-1-what-ai-is-and-isnt/)
 
-**Return to Part 2: Getting Started for Free
+[Return to Part 2: Getting Started for Free](/blog/ai-for-all-levels-2-getting-started-for-free/)
 
-**Return to Part 3: ChatGPT and Claude Deep Dive
+[Return to Part 3: ChatGPT and Claude Deep Dive](/blog/ai-for-all-levels-3-chatgpt-and-claude-deep-dive/)
 
-**Return to Part 4: Specialized AI Tools for Creation
+[Return to Part 4: Specialized AI Tools for Creation](/blog/ai-for-all-levels-4-specialized-ai-tools/)
 
 ---
 
@@ -303,10 +303,10 @@ The point of this series is not to sell you on any particular tool or approach. 
 
 AI is not magic and it is not sentient, as we covered in Part 1. It is a tool, like a search engine or a spreadsheet, but more versatile than either. The more you understand what it is and what it is not, the better you will use it.
 
-[Return to Part 1: What AI Is and Isnt: A Laypersons Guide to How LLMs Actually Work](/blog/ai-for-all-levels-1-what-ai-is-and-isnt/)
+[Return to Part 1: What AI Is and Isnt](/blog/ai-for-all-levels-1-what-ai-is-and-isnt/)
 
-[Return to Part 2: Getting Started with AI for Free](/blog/ai-for-all-levels-2-getting-started-for-free/)
+[Return to Part 2: Getting Started for Free](/blog/ai-for-all-levels-2-getting-started-for-free/)
 
-[Return to Part 3: ChatGPT and Claude: Which AI Service Should You Pay For](/blog/ai-for-all-levels-3-chatgpt-and-claude-deep-dive/)
+[Return to Part 3: ChatGPT and Claude Deep Dive](/blog/ai-for-all-levels-3-chatgpt-and-claude-deep-dive/)
 
-[Return to Part 4: A Tour of Specialized AI Tools: Music, Video, Images, and More](/blog/ai-for-all-levels-4-specialized-ai-tools/)
+[Return to Part 4: Specialized AI Tools for Creation](/blog/ai-for-all-levels-4-specialized-ai-tools/)
