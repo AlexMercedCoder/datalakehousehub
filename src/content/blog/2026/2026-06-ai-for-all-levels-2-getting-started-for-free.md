@@ -1,16 +1,16 @@
 ---
 title: "Getting Started with AI for Free: Every Tool Google Gives You at No Cost"
-date: 2026-06-01T09:00:00Z
-description: "You already have access to powerful AI tools through your Google account and no subscription needed. Here is everything Google offers for free and how to use it today."
+date: 2026-06-08T09:00:00Z
+description: "You already have access to powerful AI tools through your Google account and no subscription needed. Here is everything Google offers for free and how to use it today. 157 chars"
 author: "Alex Merced"
-category: "Artificial Intelligence"
+category: "AI & Agents"
 tags:
-  - ai
-  - artificial intelligence
-  - machine learning
-  - llm
-  - productivity
-slug: ai-for-all-levels-2-getting-started-for-free
+  - "free AI tools"
+  - "Gemini"
+  - "NotebookLM"
+  - "Google AI Studio"
+  - "getting started"
+slug: "ai-for-all-levels-2-getting-started-for-free"
 draft: false
 image: "/images/blog.png"
 ---
@@ -19,13 +19,13 @@ Most people think you need to pay $20 or $200 a month to get value from AI. That
 
 This is Part 2 of "Catching Up with Using AI for All Levels." In Part 1, we covered what AI actually is under the hood: prediction engines built on vectors and transformers, not thinking machines. Now we get practical. This post walks through every AI tool Google provides at no cost, what each one does well, and concrete ways to use them in your daily life. Part 3 will cover ChatGPT and Claude for when you are ready to pay. Part 4 covers specialized creative tools. Part 5 goes deep into open source and local models.
 
-**If you missed Part 1: What AI Is and Isnt, start there for the foundation.**
+**If you missed Part 1: What AI Is and Isnt, start there for the foundation.
 
-[Continue to Part 3: ChatGPT and Claude Deep Dive](/blog/ai-for-all-levels-3-chatgpt-and-claude-deep-dive/)
+[Continue to Part 3: ChatGPT and Claude: Which AI Service Should You Pay For](/blog/ai-for-all-levels-3-chatgpt-and-claude-deep-dive/)
 
-[Skip to Part 4: Specialized AI Tools for Creation](/blog/ai-for-all-levels-4-specialized-ai-tools/)
+[Skip to Part 4: A Tour of Specialized AI Tools: Music, Video, Images, and More](/blog/ai-for-all-levels-4-specialized-ai-tools/)
 
-[Skip to Part 5: Going Advanced: Open Source, Local Models, and Agent Tools](/blog/ai-for-all-levels-5-going-advanced/)
+[Skip to Part 5: Going Advanced: Open Source Models, Hermes Agent, and Local AI](/blog/ai-for-all-levels-5-going-advanced/)
 
 ---
 
@@ -267,10 +267,10 @@ This post covered more than a dozen free AI tools available through your Google 
 
 Part 3 of this series covers ChatGPT and Claude, the two main competitors to Google's offerings. You will learn what you get at each paid tier, how to use desktop apps and advanced features like Clips and Dispatch, and whether the paid plans are worth it for your use case.
 
-[Return to Part 1: What AI Is and Isnt](/blog/ai-for-all-levels-1-what-ai-is-and-isnt/)
+[Return to Part 1: What AI Is and Isnt: A Laypersons Guide to How LLMs Actually Work](/blog/ai-for-all-levels-1-what-ai-is-and-isnt/)
 
-[Continue to Part 3: ChatGPT and Claude Deep Dive](/blog/ai-for-all-levels-3-chatgpt-and-claude-deep-dive/)
+[Continue to Part 3: ChatGPT and Claude: Which AI Service Should You Pay For](/blog/ai-for-all-levels-3-chatgpt-and-claude-deep-dive/)
 
-[Skip to Part 4: Specialized AI Tools for Creation](/blog/ai-for-all-levels-4-specialized-ai-tools/)
+[Skip to Part 4: A Tour of Specialized AI Tools: Music, Video, Images, and More](/blog/ai-for-all-levels-4-specialized-ai-tools/)
 
-[Skip to Part 5: Going Advanced: Open Source, Local Models, and Agent Tools](/blog/ai-for-all-levels-5-going-advanced/)
+[Skip to Part 5: Going Advanced: Open Source Models, Hermes Agent, and Local AI](/blog/ai-for-all-levels-5-going-advanced/)

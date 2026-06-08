@@ -1,16 +1,16 @@
 ---
 title: "What AI Is and Isnt: A Laypersons Guide to How LLMs Actually Work"
-date: 2026-06-01T09:00:00Z
-description: "AI is not magic or sentient. Learn what large language models actually do, how vectors and embeddings work, and why todays AI is pattern matching not thinking."
+date: 2026-06-08T09:00:00Z
+description: "AI is not magic or sentient. Learn what large language models actually do, how vectors and embeddings work, and why todays AI is pattern matching not thinking. 155 chars"
 author: "Alex Merced"
-category: "Artificial Intelligence"
+category: "AI & Agents"
 tags:
-  - ai
-  - artificial intelligence
-  - machine learning
-  - llm
-  - productivity
-slug: ai-for-all-levels-1-what-ai-is-and-isnt
+  - "AI explained"
+  - "how LLMs work"
+  - "vectors"
+  - "embeddings"
+  - "AI misconceptions"
+slug: "ai-for-all-levels-1-what-ai-is-and-isnt"
 draft: false
 image: "/images/blog.png"
 ---
@@ -147,33 +147,33 @@ The model has no mechanism to distinguish between "I know this fact from my trai
 
 Lets address the most common misunderstandings directly.
 
-**Misconception: AI understands what it is saying.**
+**Misconception: AI understands what it is saying.
 
 The model does not understand anything in the human sense. It has no consciousness, no beliefs, no preferences. When it says "I think" or "In my opinion," those are linguistic patterns it has learned from human text. The model has no thoughts or opinions to express. It is generating text that matches the pattern of a human giving an opinion.
 
-**Misconception: AI is just autocomplete.**
+**Misconception: AI is just autocomplete.
 
 This one is closer to true than the sentience claim, but it undersells what the technology can do. Yes, the core mechanism is next word prediction. But the scale and architecture create emergent capabilities that simple autocomplete cannot match. A model with hundreds of billions of parameters trained on the entire public internet can write code, solve math problems, translate languages, and generate creative fiction. Calling it "just autocomplete" is like calling a modern smartphone "just a walkie talkie." Technically true at the most basic level, but missing the point entirely.
 
-**Misconception: AI will replace all jobs immediately.**
+**Misconception: AI will replace all jobs immediately.
 
 This fear has some basis but the timeline is consistently overstated. AI today is a powerful tool that augments human capability rather than replacing it entirely. It excels at specific tasks: drafting text, summarizing documents, generating code snippets, brainstorming ideas. It struggles with tasks that require physical presence, complex negotiation, long term strategic thinking with incomplete information, and tasks where mistakes have serious consequences without human oversight.
 
 The real pattern is not replacement. It is shift. People who use AI effectively will become more productive than those who do not, and some roles will shrink. But the economy adapts, and new roles emerge. The best defense is to learn how to use these tools now.
 
-**Misconception: AI is biased because the developers are biased.**
+**Misconception: AI is biased because the developers are biased.
 
 Models reflect the data they were trained on. The internet contains plenty of biased, racist, sexist, and otherwise problematic content. When a model produces biased output, it is reproducing patterns from its training data. It has no intent. The bias is a data quality problem, not a moral failing of the model. This is why alignment training, instruction tuning, and safety filters exist. Companies spend significant effort to reduce harmful outputs, but the underlying training data still shapes the models behavior.
 
 The real challenge is that bias is subtle. A model trained mostly on English language content from Western sources will have a Western centric worldview. It will be better at answering questions about US history than about Southeast Asian history. It will default to cultural norms from the training data. This is not malice. It is a reflection of what data was available and what was prioritized during training.
 
-**Misconception: You need to be a programmer to use AI.**
+**Misconception: You need to be a programmer to use AI.
 
 This might have been true in 2022, but it is completely wrong in 2026. The best AI tools have chat interfaces, mobile apps, voice input, and integrations with everyday software like email and calendars. You do not need to write a single line of code to get real value from these tools. Parts 2 and 3 of this series focus entirely on non technical use cases.
 
 The most popular AI applications today Chrome, Gmail, Google Docs, Microsoft Office all have AI features built directly into the interface. You click a button that says "Help me write" or "Summarize this email." No prompt engineering required. No API keys. No code.
 
-**Misconception: AI is getting smarter every day.**
+**Misconception: AI is getting smarter every day.
 
 This one partially true but misleading. The AI you use today is the same AI you used last month. Models do not learn from your conversations. They are frozen snapshots of a training process that happened months ago. When you hear about AI "improving," it usually means a new model version was released, not that the model you are using got smarter on its own.
 
@@ -203,10 +203,10 @@ Use the tool for what it is good at. Verify everything important. And as you go 
 
 Now that you understand the fundamentals, you are ready for Part 2: Getting Started for Free. That post walks through every AI tool Google gives you at no cost, including Gemini in Gmail, NotebookLM for research, Google AI Studio for experimentation, and a dozen other services you probably already have access to. No credit card required, no upgrade needed.
 
-[Continue to Part 2: Getting Started for Free](/blog/ai-for-all-levels-2-getting-started-for-free/)
+[Continue to Part 2: Getting Started with AI for Free](/blog/ai-for-all-levels-2-getting-started-for-free/)
 
-[Skip to Part 3: ChatGPT and Claude Deep Dive](/blog/ai-for-all-levels-3-chatgpt-and-claude-deep-dive/)
+[Skip to Part 3: ChatGPT and Claude: Which AI Service Should You Pay For](/blog/ai-for-all-levels-3-chatgpt-and-claude-deep-dive/)
 
-[Skip to Part 4: Specialized AI Tools for Creation](/blog/ai-for-all-levels-4-specialized-ai-tools/)
+[Skip to Part 4: A Tour of Specialized AI Tools: Music, Video, Images, and More](/blog/ai-for-all-levels-4-specialized-ai-tools/)
 
-[Skip to Part 5: Going Advanced: Open Source, Local Models, and Agent Tools](/blog/ai-for-all-levels-5-going-advanced/)
+[Skip to Part 5: Going Advanced: Open Source Models, Hermes Agent, and Local AI](/blog/ai-for-all-levels-5-going-advanced/)

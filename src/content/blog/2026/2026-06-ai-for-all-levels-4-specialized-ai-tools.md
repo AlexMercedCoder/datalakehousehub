@@ -1,16 +1,16 @@
 ---
 title: "A Tour of Specialized AI Tools: Music, Video, Images, and More"
-date: 2026-06-01T09:00:00Z
-description: "Beyond chatbots lie specialized AI tools for creating music, generating videos, and editing images. Here is a tour of the best tools in 2026 and how they fit into daily productivity."
+date: 2026-06-08T09:00:00Z
+description: "Beyond chatbots lie specialized AI tools for creating music, generating videos, and editing images. Here is a tour of the best tools in 2026 and how they fit into daily productivity. 157 chars"
 author: "Alex Merced"
-category: "Artificial Intelligence"
+category: "AI & Agents"
 tags:
-  - ai
-  - artificial intelligence
-  - machine learning
-  - llm
-  - productivity
-slug: ai-for-all-levels-4-specialized-ai-tools
+  - "AI tools"
+  - "AI music"
+  - "AI video"
+  - "AI images"
+  - "specialized AI"
+slug: "ai-for-all-levels-4-specialized-ai-tools"
 draft: false
 image: "/images/blog.png"
 ---
@@ -19,13 +19,13 @@ The first three parts of this series covered general purpose AI assistants: the 
 
 This is Part 4 of "Catching Up with Using AI for All Levels." If you are new here, start with Part 1 for the fundamentals and Part 2 for the free tools, then Part 3 for ChatGPT and Claude. This post covers the creative side: what the tools are, what they cost, how good the output actually is, and when they make sense for daily productivity rather than just artistic projects.
 
-[Return to Part 1: What AI Is and Isnt](/blog/ai-for-all-levels-1-what-ai-is-and-isnt/)
+**Return to Part 1: What AI Is and Isnt
 
-[Return to Part 2: Getting Started for Free](/blog/ai-for-all-levels-2-getting-started-for-free/)
+**Return to Part 2: Getting Started for Free
 
-[Return to Part 3: ChatGPT and Claude Deep Dive](/blog/ai-for-all-levels-3-chatgpt-and-claude-deep-dive/)
+**Return to Part 3: ChatGPT and Claude Deep Dive
 
-[Skip to Part 5: Going Advanced: Open Source, Local Models, and Agent Tools](/blog/ai-for-all-levels-5-going-advanced/)
+[Skip to Part 5: Going Advanced: Open Source Models, Hermes Agent, and Local AI](/blog/ai-for-all-levels-5-going-advanced/)
 
 ---
 
@@ -263,10 +263,10 @@ For someone who generates music or images recreationally, the free tiers are gen
 
 Part 5 of this series covers the most advanced territory: open source models that run on your own computer, agent frameworks like Hermes Agent, and coding tools like OpenCode. These tools require more setup but offer privacy, offline access, and capabilities that cloud services cannot match.
 
-[Return to Part 1: What AI Is and Isnt](/blog/ai-for-all-levels-1-what-ai-is-and-isnt/)
+[Return to Part 1: What AI Is and Isnt: A Laypersons Guide to How LLMs Actually Work](/blog/ai-for-all-levels-1-what-ai-is-and-isnt/)
 
-[Return to Part 2: Getting Started for Free](/blog/ai-for-all-levels-2-getting-started-for-free/)
+[Return to Part 2: Getting Started with AI for Free](/blog/ai-for-all-levels-2-getting-started-for-free/)
 
-[Return to Part 3: ChatGPT and Claude Deep Dive](/blog/ai-for-all-levels-3-chatgpt-and-claude-deep-dive/)
+[Return to Part 3: ChatGPT and Claude: Which AI Service Should You Pay For](/blog/ai-for-all-levels-3-chatgpt-and-claude-deep-dive/)
 
-[Continue to Part 5: Going Advanced: Open Source, Local Models, and Agent Tools](/blog/ai-for-all-levels-5-going-advanced/)
+[Continue to Part 5: Going Advanced: Open Source Models, Hermes Agent, and Local AI](/blog/ai-for-all-levels-5-going-advanced/)
