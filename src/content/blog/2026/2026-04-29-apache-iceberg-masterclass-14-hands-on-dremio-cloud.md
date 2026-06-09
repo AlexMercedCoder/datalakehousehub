@@ -12,7 +12,9 @@ tags:
 slug: 2026-04-29-apache-iceberg-masterclass-14-hands-on-dremio-cloud
 draft: false
 image: "/images/blog/apache-iceberg-masterclass/14-hands-on-dremio-cloud-dremio-iceberg-workflow.png"
+canonical: "https://iceberglakehouse.com/posts/2026-04-29-iceberg-masterclass-14/"
 ---
+> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-04-29-iceberg-masterclass-14/).
 
 <!-- Meta Description: A practical walkthrough of creating, querying, and optimizing Iceberg tables on Dremio Cloud, from account setup to AI-powered analytics. -->
 <!-- Primary Keyword: Dremio Cloud Apache Iceberg -->

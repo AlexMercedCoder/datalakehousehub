@@ -11,7 +11,9 @@ tags:
 slug: 2024-9-deep-dive-into-data-apps-with-streamlit
 draft: false
 image: "/images/blog.png"
+canonical: "https://iceberglakehouse.com/posts/2024-09-Deep-Dive-into-data-apps-with-streamlit/"
 ---
+> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2024-09-Deep-Dive-into-data-apps-with-streamlit/).
 
 # Introduction
 

@@ -12,7 +12,9 @@ tags:
 slug: 2026-04-29-query-engine-optimization-01-overview
 draft: false
 image: "/images/blog/query-engine-optimization/01-overview-query-engine-decision-map.png"
+canonical: "https://iceberglakehouse.com/posts/2026-04-29-query-engine-01/"
 ---
+> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-04-29-query-engine-01/).
 
 <!-- Meta Description: Every database is a collection of engineering tradeoffs. Learn the 9 design decisions that shape how query engines store, index, and process your data. -->
 <!-- Primary Keyword: query engine design -->

@@ -12,7 +12,9 @@ tags:
 slug: 2026-04-29-apache-iceberg-masterclass-10-maintaining-iceberg
 draft: false
 image: "/images/blog/apache-iceberg-masterclass/10-maintaining-iceberg-maintenance-operations.png"
+canonical: "https://iceberglakehouse.com/posts/2026-04-29-iceberg-masterclass-10/"
 ---
+> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-04-29-iceberg-masterclass-10/).
 
 <!-- Meta Description: Keep Iceberg tables fast with compaction, snapshot expiry, orphan cleanup, and manifest rewriting. Here is when and how to run each operation. -->
 <!-- Primary Keyword: Iceberg table maintenance -->

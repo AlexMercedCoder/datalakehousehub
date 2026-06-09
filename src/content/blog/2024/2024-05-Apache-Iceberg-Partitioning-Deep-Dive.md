@@ -11,7 +11,9 @@ tags:
   - Data Architecture
   - Apache Iceberg
   - Data Lakehouse
+canonical: "https://iceberglakehouse.com/posts/2024-05-deep-dive-into-iceberg-partitioning/"
 ---
+> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2024-05-deep-dive-into-iceberg-partitioning/).
 
 - [Apache Iceberg 101](https://www.dremio.com/blog/apache-iceberg-101-your-guide-to-learning-apache-iceberg-concepts-and-practices/)
 - [Get Hands-on With Apache Iceberg](https://bit.ly/am-dremio-lakehouse-laptop)

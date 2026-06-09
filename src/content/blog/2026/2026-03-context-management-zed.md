@@ -14,7 +14,9 @@ tags:
 slug: 2026-03-context-management-zed
 draft: false
 image: "/images/blog.png"
+canonical: "https://iceberglakehouse.com/posts/2026-03-context-15-zed/"
 ---
+> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-03-context-15-zed/).
 
 Zed is a high-performance code editor built in Rust that prioritizes speed, simplicity, and real-time collaboration. Its AI integration is designed to be fast and unobtrusive, with context management built around an assistant panel, inline transformations, slash commands, and a flexible provider system that supports multiple AI services. What sets Zed apart from other AI editors is its focus on performance (everything runs natively, not in Electron) and its built-in multiplayer editing that extends to AI interactions.
 

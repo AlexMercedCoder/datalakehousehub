@@ -11,7 +11,9 @@ tags:
   - data lakehouse
   - data engineering
   - Apache Iceberg
+canonical: "https://iceberglakehouse.com/posts/2024-07-Apache-Iceberg-Reliability/"
 ---
+> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2024-07-Apache-Iceberg-Reliability/).
 
 - [Get a Free Copy of "Apache Iceberg: The Definitive Guide"](https://bit.ly/am-iceberg-book)
 - [Sign Up for the Free Apache Iceberg Crash Course](https://bit.ly/am-2024-iceberg-live-crash-course-1)

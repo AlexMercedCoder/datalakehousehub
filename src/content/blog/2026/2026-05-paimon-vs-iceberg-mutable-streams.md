@@ -14,7 +14,9 @@ tags:
 slug: 2026-05-paimon-vs-iceberg-mutable-streams
 draft: false
 image: "/images/blog/paimon-vs-iceberg-mutable-streams/paimon-vs-iceberg-workload-decision-matrix.png"
+canonical: "https://iceberglakehouse.com/posts/2026-05-24-paimon-vs-iceberg-mutable-streams/"
 ---
+> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-05-24-paimon-vs-iceberg-mutable-streams/).
 
 # When Paimon Beats Iceberg for Mutable Streams
 

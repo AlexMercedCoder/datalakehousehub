@@ -12,7 +12,9 @@ tags:
 slug: 2026-04-29-apache-iceberg-masterclass-03-iceberg-metadata-performance
 draft: false
 image: "/images/blog/apache-iceberg-masterclass/03-iceberg-metadata-performance-scan-planning-cascade.png"
+canonical: "https://iceberglakehouse.com/posts/2026-04-29-iceberg-masterclass-03/"
 ---
+> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-04-29-iceberg-masterclass-03/).
 
 <!-- Meta Description: Iceberg's three-layer metadata tree eliminates directory listing and enables multi-level data skipping. Here is how scan planning actually works. -->
 <!-- Primary Keyword: Apache Iceberg metadata performance -->

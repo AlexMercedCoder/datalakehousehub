@@ -14,7 +14,9 @@ tags:
 slug: 2026-03-connect-snowflake-open-catalog-dremio
 draft: false
 image: "/images/blog.png"
+canonical: "https://iceberglakehouse.com/posts/2026-03-connector-17-snowflake-open-catalog/"
 ---
+> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-03-connector-17-snowflake-open-catalog/).
 
 Snowflake Open Catalog is Snowflake's managed implementation of the Apache Iceberg REST catalog specification, based on the open-source Apache Polaris project. It serves as a centralized metadata catalog for Apache Iceberg tables, enabling multiple compute engines :  including Dremio, Spark, Trino, and Flink ,  to read from and write to the same Iceberg tables without metadata conflicts.
 

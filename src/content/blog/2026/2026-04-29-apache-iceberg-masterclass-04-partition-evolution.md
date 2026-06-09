@@ -12,7 +12,9 @@ tags:
 slug: 2026-04-29-apache-iceberg-masterclass-04-partition-evolution
 draft: false
 image: "/images/blog/apache-iceberg-masterclass/04-partition-evolution-hive-partition-directories.png"
+canonical: "https://iceberglakehouse.com/posts/2026-04-29-iceberg-masterclass-04/"
 ---
+> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-04-29-iceberg-masterclass-04/).
 
 <!-- Meta Description: Iceberg lets you change partition schemes without rewriting data. Here is how partition evolution works internally and why Hive-style partitioning could not do this. -->
 <!-- Primary Keyword: Iceberg partition evolution -->

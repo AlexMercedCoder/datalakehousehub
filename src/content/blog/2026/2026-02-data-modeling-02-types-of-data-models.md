@@ -13,7 +13,9 @@ tags:
 slug: 2026-02-data-modeling-02-types-of-data-models
 draft: false
 image: "/images/blog.png"
+canonical: "https://iceberglakehouse.com/posts/2026-02-dm-02-types-of-data-models/"
 ---
+> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-02-dm-02-types-of-data-models/).
 
 ![Three layers of data modeling from business concepts to database implementation](/images/blog/data-modeling/types-of-data-models.png)
 

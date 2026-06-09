@@ -10,7 +10,9 @@ bannerImage: "https://i.imgur.com/cpoMZQ8.png"
 tags:
   - data lakehouse
   - data engineering
+canonical: "https://iceberglakehouse.com/posts/2024-07-databases-deconstructed-what-is-data-lakehouse-and-table-formats/"
 ---
+> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2024-07-databases-deconstructed-what-is-data-lakehouse-and-table-formats/).
 
 - [Checkout out my Apache Iceberg Crash Course](https://bit.ly/am-2024-iceberg-live-crash-course-1)
 - [Get a free copy of Apache Iceberg the Definitive Guide](https://bit.ly/am-iceberg-book)

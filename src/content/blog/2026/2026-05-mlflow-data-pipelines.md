@@ -15,7 +15,9 @@ tags:
 slug: 2026-05-mlflow-data-pipelines
 draft: false
 image: "/images/blog/mlflow-data-pipelines/mlflow3-training-to-inference-lineage.png"
+canonical: "https://iceberglakehouse.com/posts/2026-05-24-mlflow-data-pipelines/"
 ---
+> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-05-24-mlflow-data-pipelines/).
 
 # Bringing MLflow and Data Pipelines Closer Together
 

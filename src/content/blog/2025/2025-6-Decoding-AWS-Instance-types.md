@@ -11,7 +11,9 @@ tags:
 slug: 2025-06-AWS-Instance-Types
 draft: false
 image: "/images/blog.png"
+canonical: "https://iceberglakehouse.com/posts/2025-06-AWS-instance-types/"
 ---
+> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2025-06-AWS-instance-types/).
 
 ## Free Resources  
 - **[Free Apache Iceberg Course](https://hello.dremio.com/webcast-an-apache-iceberg-lakehouse-crash-course-reg.html?utm_source=ev_external_blog&utm_medium=influencer&utm_campaign=intro_to_de&utm_content=alexmerced&utm_term=external_blog)**  

@@ -14,7 +14,9 @@ tags:
 slug: 2026-03-connect-mongodb-dremio
 draft: false
 image: "/images/blog.png"
+canonical: "https://iceberglakehouse.com/posts/2026-03-connector-14-mongodb/"
 ---
+> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-03-connector-14-mongodb/).
 
 MongoDB is the most popular NoSQL document database. It stores data in flexible JSON-like documents, making it ideal for applications with evolving schemas : user profiles, product catalogs, IoT sensor data, and content management systems. But MongoDB's document model creates analytics challenges: you can't run SQL joins natively, aggregation pipelines are complex, and connecting MongoDB data to relational sources requires custom application code or ETL.
 

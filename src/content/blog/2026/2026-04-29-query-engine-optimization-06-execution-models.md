@@ -12,7 +12,9 @@ tags:
 slug: 2026-04-29-query-engine-optimization-06-execution-models
 draft: false
 image: "/images/blog/query-engine-optimization/06-execution-models-volcano-iterator-model.png"
+canonical: "https://iceberglakehouse.com/posts/2026-04-29-query-engine-06/"
 ---
+> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-04-29-query-engine-06/).
 
 <!-- Meta Description: The Volcano model processes one row at a time. Vectorized execution processes batches with SIMD. Code generation fuses operators into compiled code. Here is how each works. -->
 <!-- Primary Keyword: query execution models -->

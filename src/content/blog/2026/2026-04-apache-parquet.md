@@ -13,7 +13,9 @@ tags:
 slug: 2026-04-apache-parquet
 draft: false
 image: "/images/blog.png"
+canonical: "https://iceberglakehouse.com/posts/2026-03-07-apache-parquet/"
 ---
+> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-03-07-apache-parquet/).
 
 *Read the complete Open Source and the Lakehouse series:*
 * [Part 1: Apache Software Foundation: History, Purpose, and Process](/blog/2026-04-apache-software-foundation)

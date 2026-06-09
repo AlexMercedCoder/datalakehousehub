@@ -1,7 +1,7 @@
 ---
 banner:
-  title: The Ultimate Hub for Data Lakehouse Engineering
-  content: Build a unified, high-performance analytics platform with the open data lakehouse architecture. Combine the flexibility of a data lake with the reliability of a warehouse using open standards.
+  title: Your Data Lakehouse Magazine and Community
+  content: News, newsletters, and a thriving community for everyone building on the data lakehouse ecosystem. Stay informed with weekly roundups, deep dives into Apache Iceberg, and expert guides from practitioners.
   image: /images/hero-v2.png
   button:
     label: "Join the Community"

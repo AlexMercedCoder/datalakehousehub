@@ -13,7 +13,9 @@ tags:
 slug: 2026-02-de-best-practices-07-partition-and-organize
 draft: false
 image: "/images/blog.png"
+canonical: "https://iceberglakehouse.com/posts/2026-02-debp-07-partition-and-organize/"
 ---
+> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-02-debp-07-partition-and-organize/).
 
 ![Table data split into partitions by date with query scanning only the relevant partition](/images/blog/debp/partition-overview.png)
 

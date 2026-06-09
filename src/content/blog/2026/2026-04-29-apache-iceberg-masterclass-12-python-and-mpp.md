@@ -12,7 +12,9 @@ tags:
 slug: 2026-04-29-apache-iceberg-masterclass-12-python-and-mpp
 draft: false
 image: "/images/blog/apache-iceberg-masterclass/12-python-and-mpp-python-iceberg-stack.png"
+canonical: "https://iceberglakehouse.com/posts/2026-04-29-iceberg-masterclass-12/"
 ---
+> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-04-29-iceberg-masterclass-12/).
 
 <!-- Meta Description: Access Iceberg tables from Python with PyIceberg, DuckDB, and Polars, or through MPP engines like Dremio, Spark, and Trino. Here is how each approach works. -->
 <!-- Primary Keyword: Python Apache Iceberg -->

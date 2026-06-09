@@ -13,7 +13,9 @@ tags:
 slug: 2026-02-semantic-layer-02-how-to-build
 draft: false
 image: "/images/blog.png"
+canonical: "https://iceberglakehouse.com/posts/2026-02-sl-02-how-to-build-semantic-layer/"
 ---
+> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-02-sl-02-how-to-build-semantic-layer/).
 
 ![Building a semantic layer : Bronze, Silver, and Gold tiers](/images/blog/semantic-layer/build-semantic-layer.png)
 

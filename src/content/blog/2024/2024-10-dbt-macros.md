@@ -12,7 +12,9 @@ tags:
 slug: 2024-10-a-guide-to-dbt-macros
 draft: false
 image: "/images/blog.png"
+canonical: "https://iceberglakehouse.com/posts/2024-10-dbt-macros/"
 ---
+> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2024-10-dbt-macros/).
 
 - [Apache Iceberg 101](https://www.dremio.com/lakehouse-deep-dives/apache-iceberg-101/?utm_source=ev_external_blog&utm_medium=influencer&utm_campaign=dbtmacros&utm_content=alexmerced&utm_term=external_blog)
 - [Hands-on Intro with Apache iceberg](https://www.dremio.com/blog/intro-to-dremio-nessie-and-apache-iceberg-on-your-laptop/?utm_source=ev_external_blog&utm_medium=influencer&utm_campaign=dbtmacros&utm_content=alexmerced&utm_term=external_blog)

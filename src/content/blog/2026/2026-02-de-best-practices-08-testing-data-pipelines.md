@@ -13,7 +13,9 @@ tags:
 slug: 2026-02-de-best-practices-08-testing-data-pipelines
 draft: false
 image: "/images/blog.png"
+canonical: "https://iceberglakehouse.com/posts/2026-02-debp-08-testing-data-pipelines/"
 ---
+> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-02-debp-08-testing-data-pipelines/).
 
 ![Data pipeline testing pyramid with schema tests at the base, contract tests in the middle, and regression tests at the top](/images/blog/debp/testing-pyramid.png)
 

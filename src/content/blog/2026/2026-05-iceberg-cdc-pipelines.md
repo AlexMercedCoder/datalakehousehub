@@ -14,7 +14,9 @@ tags:
 slug: 2026-05-iceberg-cdc-pipelines
 draft: false
 image: "/images/blog/iceberg-cdc-pipelines/iceberg-v3-cdc-pipeline-architecture.png"
+canonical: "https://iceberglakehouse.com/posts/2026-05-24-iceberg-cdc-pipelines/"
 ---
+> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-05-24-iceberg-cdc-pipelines/).
 
 # What Iceberg V3 Advances Mean for CDC Pipelines
 

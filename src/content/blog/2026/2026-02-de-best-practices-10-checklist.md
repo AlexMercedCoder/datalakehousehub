@@ -13,7 +13,9 @@ tags:
 slug: 2026-02-de-best-practices-10-checklist
 draft: false
 image: "/images/blog.png"
+canonical: "https://iceberglakehouse.com/posts/2026-02-debp-10-de-best-practices-checklist/"
 ---
+> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-02-debp-10-de-best-practices-checklist/).
 
 ![Comprehensive data engineering checklist organized by categories with status indicators](/images/blog/debp/de-checklist.png)
 

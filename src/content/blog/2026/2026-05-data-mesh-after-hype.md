@@ -16,7 +16,9 @@ tags:
 slug: 2026-05-data-mesh-after-hype
 draft: false
 image: "/images/blog/data-mesh-after-hype/data-mesh-product-thinking-maturity.png"
+canonical: "https://iceberglakehouse.com/posts/2026-05-24-data-mesh-after-hype/"
 ---
+> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-05-24-data-mesh-after-hype/).
 
 # Data Mesh After the Hype: What Actually Works
 

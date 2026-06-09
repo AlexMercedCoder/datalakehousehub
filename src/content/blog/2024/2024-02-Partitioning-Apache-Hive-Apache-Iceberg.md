@@ -11,7 +11,9 @@ tags:
   - Data Lakehouse
   - Apache Hive
   - APache Iceberg
+canonical: "https://iceberglakehouse.com/posts/2024-02-Partitioning-in-apache-iceberg-and-hive/"
 ---
+> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2024-02-Partitioning-in-apache-iceberg-and-hive/).
 
 # Partitioning Practices in Apache Hive and Apache Iceberg
 

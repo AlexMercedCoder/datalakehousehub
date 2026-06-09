@@ -14,7 +14,9 @@ tags:
 slug: 2026-03-dremio-with-amazon-kiro
 draft: false
 image: "/images/blog.png"
+canonical: "https://iceberglakehouse.com/posts/2026-03-aitool-01-amazon-kiro/"
 ---
+> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-03-aitool-01-amazon-kiro/).
 
 Amazon Kiro is an agentic AI IDE from AWS that introduces spec-driven development to the coding workflow. Instead of jumping straight to code, Kiro helps you define structured specifications :  requirements, technical designs, and task breakdowns ,  before writing a single line. It then generates code that follows those specs and keeps everything in sync as the project evolves. Dremio is a unified lakehouse platform that provides business context through its semantic layer, universal data access through query federation, and interactive speed through Reflections and Apache Arrow.
 

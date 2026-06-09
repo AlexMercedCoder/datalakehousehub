@@ -14,7 +14,9 @@ tags:
 slug: 2026-05-choosing-iceberg-control-plane
 draft: false
 image: "/images/blog/choosing-iceberg-control-plane/catalog-selection-flowchart.png"
+canonical: "https://iceberglakehouse.com/posts/2026-05-24-choosing-iceberg-control-plane/"
 ---
+> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-05-24-choosing-iceberg-control-plane/).
 
 # Choosing the Right Iceberg Control Plane: Polaris vs. Unity Catalog vs. Cloud REST
 

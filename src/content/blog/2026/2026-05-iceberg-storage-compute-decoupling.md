@@ -9,7 +9,9 @@ tags:
 slug: "iceberg-storage-compute-decoupling"
 draft: false
 image: "/images/blog.png"
+canonical: "https://iceberglakehouse.com/posts/2026-05-28-iceberg-storage-compute-decoupling/"
 ---
+> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-05-28-iceberg-storage-compute-decoupling/).
 
 # Decoupling Storage and Compute in Apache Iceberg: A Cost Optimization Deep Dive
 

@@ -12,7 +12,9 @@ tags:
 slug: 2026-04-29-query-engine-optimization-05-query-optimizer
 draft: false
 image: "/images/blog/query-engine-optimization/05-query-optimizer-sql-to-execution-plan.png"
+canonical: "https://iceberglakehouse.com/posts/2026-04-29-query-engine-05/"
 ---
+> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-04-29-query-engine-05/).
 
 <!-- Meta Description: Query optimizers transform SQL into execution plans using rule-based rewrites, cost-based search, and adaptive runtime adjustments. Here is how each approach works. -->
 <!-- Primary Keyword: query optimizer -->

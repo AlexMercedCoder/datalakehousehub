@@ -15,7 +15,9 @@ tags:
 slug: 2026-05-composable-query-engines
 draft: false
 image: "/images/blog/composable-query-engines/datafusion-vs-velox-comparison.png"
+canonical: "https://iceberglakehouse.com/posts/2026-05-24-composable-query-engines/"
 ---
+> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-05-24-composable-query-engines/).
 
 # Building Composable Query Engines with Rust Runtimes
 

@@ -14,7 +14,9 @@ draft: false
 image: "/images/blog.png"
 category: "Apache Iceberg"
 bannerImage: "https://i.imgur.com/cpoMZQ8.png"
+canonical: "https://iceberglakehouse.com/posts/2025-07-06-iceberg-optimization-cadence/"
 ---
+> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2025-07-06-iceberg-optimization-cadence/).
 
 - **[Free Apache Iceberg Course](https://hello.dremio.com/webcast-an-apache-iceberg-lakehouse-crash-course-reg.html?utm_source=ev_external_blog&utm_medium=influencer&utm_campaign=optimization_blogs&utm_content=alexmerced&utm_term=external_blog)**  
 - **[Free Copy of “Apache Iceberg: The Definitive Guide”](https://hello.dremio.com/wp-apache-iceberg-the-definitive-guide-reg.html?utm_source=ev_external_blog&utm_medium=influencer&utm_campaign=optimization_blogs&utm_content=alexmerced&utm_term=external_blog)**  

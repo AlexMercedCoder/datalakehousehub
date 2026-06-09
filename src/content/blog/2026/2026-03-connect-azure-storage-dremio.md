@@ -14,7 +14,9 @@ tags:
 slug: 2026-03-connect-azure-storage-dremio
 draft: false
 image: "/images/blog.png"
+canonical: "https://iceberglakehouse.com/posts/2026-03-connector-08-azure-storage/"
 ---
+> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-03-connector-08-azure-storage/).
 
 Azure Storage is Microsoft's cloud storage platform, spanning Blob Storage, Azure Data Lake Storage Gen2 (ADLS Gen2), and Azure Files. If your organization uses Microsoft Azure, your data lake almost certainly lives in Azure Storage : Parquet files from Azure Data Factory pipelines, CSV exports from Azure SQL Database, JSON event streams from Azure Event Hubs, and raw data from Azure IoT Hub all land in Azure Storage containers.
 

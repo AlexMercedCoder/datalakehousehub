@@ -12,7 +12,9 @@ tags:
 slug: 2026-04-29-apache-iceberg-masterclass-09-storage-degradation
 draft: false
 image: "/images/blog/apache-iceberg-masterclass/09-storage-degradation-storage-degradation-timeline.png"
+canonical: "https://iceberglakehouse.com/posts/2026-04-29-iceberg-masterclass-09/"
 ---
+> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-04-29-iceberg-masterclass-09/).
 
 <!-- Meta Description: Iceberg tables degrade through small files, orphan files, metadata bloat, sort order decay, and partition skew. Here is how to diagnose each problem. -->
 <!-- Primary Keyword: Iceberg storage degradation -->

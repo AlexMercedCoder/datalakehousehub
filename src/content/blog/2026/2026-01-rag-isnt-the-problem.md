@@ -12,7 +12,10 @@ tags:
 slug: 2026-01-rag-isnt-the-problem
 draft: false
 image: "/images/blog.png"
+canonical: "https://iceberglakehouse.com/posts/2026-01-rag-isnt-the-problem/"
 ---
+> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-01-rag-isnt-the-problem/).
+
 **Get Data Lakehouse Books:**
 - [Apache Iceberg: The Definitive Guide](https://drmevn.fyi/tableformatblog)
 - [Apache Polaris: The Defintive Guide](https://drmevn.fyi/tableformatblog-62P6t)

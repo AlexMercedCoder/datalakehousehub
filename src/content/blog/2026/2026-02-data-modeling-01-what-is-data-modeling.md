@@ -13,7 +13,9 @@ tags:
 slug: 2026-02-data-modeling-01-what-is-data-modeling
 draft: false
 image: "/images/blog.png"
+canonical: "https://iceberglakehouse.com/posts/2026-02-dm-01-what-is-data-modeling/"
 ---
+> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-02-dm-01-what-is-data-modeling/).
 
 ![Data entities connected by relationship lines forming a structured data model](/images/blog/data-modeling/data-modeling-overview.png)
 

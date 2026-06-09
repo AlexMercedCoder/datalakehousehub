@@ -13,7 +13,9 @@ tags:
 slug: 2025-10-exploring-commerical-apache-iceberg-catalogs
 draft: false
 image: "/images/blog.png"
+canonical: "https://iceberglakehouse.com/posts/2025-10-exploring-commerical-iceberg-catalogs/"
 ---
+> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2025-10-exploring-commerical-iceberg-catalogs/).
 
 **Get Data Lakehouse Books:**
 - [Apache Iceberg: The Definitive Guide](https://drmevn.fyi/tableformatblog)

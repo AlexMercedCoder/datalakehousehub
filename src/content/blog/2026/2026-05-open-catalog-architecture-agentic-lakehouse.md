@@ -9,7 +9,9 @@ tags:
 slug: "open-catalog-architecture-agentic-lakehouse"
 draft: false
 image: "/images/blog.png"
+canonical: "https://iceberglakehouse.com/posts/2026-05-22-multicloud-agentic-lakehouse-reference-architecture/"
 ---
+> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-05-22-multicloud-agentic-lakehouse-reference-architecture/).
 
 # Building the Brain of the Agentic Lakehouse: Designing an Open Catalog Architecture
 

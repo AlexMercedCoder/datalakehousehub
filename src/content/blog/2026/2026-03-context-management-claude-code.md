@@ -14,7 +14,9 @@ tags:
 slug: 2026-03-context-management-claude-code
 draft: false
 image: "/images/blog.png"
+canonical: "https://iceberglakehouse.com/posts/2026-03-context-06-claude-code/"
 ---
+> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-03-context-06-claude-code/).
 
 Claude Code is a terminal-native agentic coding assistant that lives in your command line and operates directly on your codebase. Unlike chat-based interfaces where you copy and paste code snippets, Claude Code reads your files, explores your project structure, runs commands, executes tests, and commits changes. Context management in Claude Code is about configuring the agent's persistent knowledge of your project so it can operate effectively without constant direction.
 

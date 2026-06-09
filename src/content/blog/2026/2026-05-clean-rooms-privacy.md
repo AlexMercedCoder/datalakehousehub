@@ -15,7 +15,9 @@ tags:
 slug: 2026-05-clean-rooms-privacy
 draft: false
 image: "/images/blog/clean-rooms-privacy/data-clean-room-architecture.png"
+canonical: "https://iceberglakehouse.com/posts/2026-05-24-clean-rooms-privacy/"
 ---
+> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-05-24-clean-rooms-privacy/).
 
 # Clean Rooms for Privacy-Preserving Analytics
 

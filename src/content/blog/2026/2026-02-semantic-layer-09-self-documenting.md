@@ -13,7 +13,9 @@ tags:
 slug: 2026-02-semantic-layer-09-self-documenting
 draft: false
 image: "/images/blog.png"
+canonical: "https://iceberglakehouse.com/posts/2026-02-sl-09-self-documenting-semantic-layer/"
 ---
+> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-02-sl-09-self-documenting-semantic-layer/).
 
 ![Self-documenting semantic layer : AI generating descriptions and labels automatically](/images/blog/semantic-layer/self-documenting.png)
 

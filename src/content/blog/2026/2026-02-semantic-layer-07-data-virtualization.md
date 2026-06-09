@@ -13,7 +13,9 @@ tags:
 slug: 2026-02-semantic-layer-07-data-virtualization
 draft: false
 image: "/images/blog.png"
+canonical: "https://iceberglakehouse.com/posts/2026-02-sl-07-data-virtualization-semantic-layer/"
 ---
+> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-02-sl-07-data-virtualization-semantic-layer/).
 
 ![Data virtualization : connecting sources to a unified semantic layer without copying](/images/blog/semantic-layer/data-virtualization.png)
 

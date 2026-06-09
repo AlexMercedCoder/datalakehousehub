@@ -13,7 +13,9 @@ tags:
 slug: 2026-02-data-modeling-08-denormalization-when-why
 draft: false
 image: "/images/blog.png"
+canonical: "https://iceberglakehouse.com/posts/2026-02-dm-08-denormalization-when-why/"
 ---
+> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-02-dm-08-denormalization-when-why/).
 
 ![Normalized model with many interconnected tables vs. denormalized wide flat table](/images/blog/data-modeling/denormalization-overview.png)
 

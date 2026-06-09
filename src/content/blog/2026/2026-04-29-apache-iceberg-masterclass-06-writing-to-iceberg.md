@@ -12,7 +12,9 @@ tags:
 slug: 2026-04-29-apache-iceberg-masterclass-06-writing-to-iceberg
 draft: false
 image: "/images/blog/apache-iceberg-masterclass/06-writing-to-iceberg-write-process-flow.png"
+canonical: "https://iceberglakehouse.com/posts/2026-04-29-iceberg-masterclass-06/"
 ---
+> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-04-29-iceberg-masterclass-06/).
 
 <!-- Meta Description: Here is exactly how an engine writes to an Iceberg table, step by step, from data files through the atomic commit that makes ACID guarantees possible. -->
 <!-- Primary Keyword: writing to Apache Iceberg -->

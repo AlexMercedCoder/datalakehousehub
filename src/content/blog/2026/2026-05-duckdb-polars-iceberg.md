@@ -14,7 +14,9 @@ tags:
 slug: 2026-05-duckdb-polars-iceberg
 draft: false
 image: "/images/blog/duckdb-polars-iceberg/duckdb-vs-polars-feature-comparison.png"
+canonical: "https://iceberglakehouse.com/posts/2026-05-24-duckdb-polars-iceberg/"
 ---
+> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-05-24-duckdb-polars-iceberg/).
 
 # Using DuckDB and Polars to Query Iceberg Tables
 

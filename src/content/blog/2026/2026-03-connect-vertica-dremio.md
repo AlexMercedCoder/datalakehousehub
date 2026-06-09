@@ -14,7 +14,9 @@ tags:
 slug: 2026-03-connect-vertica-dremio
 draft: false
 image: "/images/blog.png"
+canonical: "https://iceberglakehouse.com/posts/2026-03-connector-13-vertica/"
 ---
+> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-03-connector-13-vertica/).
 
 Vertica is a columnar analytics database engineered for fast aggregate queries on large datasets. It was built from the ground up for analytical workloads : column-oriented storage, massively parallel processing, and automatic database design optimization. Organizations running Vertica typically have years of investment in analytics infrastructure: curated schemas, optimized projections, and sophisticated workloads that depend on Vertica's high-performance query engine.
 

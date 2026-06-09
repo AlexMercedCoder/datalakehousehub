@@ -11,7 +11,9 @@ tags:
 slug: 2025-02-crash-course-on-langchain
 draft: false
 image: "/images/blog.png"
+canonical: "https://iceberglakehouse.com/posts/2025-02-crash-course-on-langchain/"
 ---
+> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2025-02-crash-course-on-langchain/).
 
 ## Free Resources  
 - **[Free Apache Iceberg Course](https://hello.dremio.com/webcast-an-apache-iceberg-lakehouse-crash-course-reg.html?utm_source=ev_external_blog&utm_medium=influencer&utm_campaign=intro_langchain&utm_content=alexmerced&utm_term=external_blog)**  

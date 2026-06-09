@@ -15,7 +15,9 @@ tags:
 slug: 2026-05-finops-warehouse-cost
 draft: false
 image: "/images/blog/finops-warehouse-cost/warehouse-cost-attribution-by-team.png"
+canonical: "https://iceberglakehouse.com/posts/2026-05-24-finops-warehouse-cost/"
 ---
+> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-05-24-finops-warehouse-cost/).
 
 # FinOps for Data Warehouses with Open Billing Data
 

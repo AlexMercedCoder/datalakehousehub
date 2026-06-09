@@ -14,7 +14,9 @@ tags:
 slug: 2026-05-automating-table-maintenance
 draft: false
 image: "/images/blog/automating-table-maintenance/manual-vs-automated-maintenance-comparison.png"
+canonical: "https://iceberglakehouse.com/posts/2026-05-24-automating-table-maintenance/"
 ---
+> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-05-24-automating-table-maintenance/).
 
 # Automating Table Maintenance Before Small Files Accumulate
 

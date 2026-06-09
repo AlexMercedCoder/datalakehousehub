@@ -13,7 +13,9 @@ tags:
 slug: 2026-02-data-modeling-04-data-modeling-lakehouse
 draft: false
 image: "/images/blog.png"
+canonical: "https://iceberglakehouse.com/posts/2026-02-dm-04-data-modeling-lakehouse/"
 ---
+> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-02-dm-04-data-modeling-lakehouse/).
 
 ![Traditional data warehouse model vs. open lakehouse model with flexible schema and views](/images/blog/data-modeling/lakehouse-data-modeling.png)
 

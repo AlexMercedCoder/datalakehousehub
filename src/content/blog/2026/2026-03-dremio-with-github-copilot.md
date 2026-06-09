@@ -14,7 +14,9 @@ tags:
 slug: 2026-03-dremio-with-github-copilot
 draft: false
 image: "/images/blog.png"
+canonical: "https://iceberglakehouse.com/posts/2026-03-aitool-06-github-copilot/"
 ---
+> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-03-aitool-06-github-copilot/).
 
 GitHub Copilot is the most widely adopted AI coding assistant, integrated into VS Code, JetBrains IDEs, and the GitHub platform. Its agent mode allows Copilot to plan and execute multi-step coding tasks, run terminal commands, and interact with external tools through MCP. The Copilot CLI extends agentic development to the terminal. Dremio is a unified lakehouse platform that provides business context through its semantic layer, universal data access through query federation, and interactive speed through Reflections and Apache Arrow.
 

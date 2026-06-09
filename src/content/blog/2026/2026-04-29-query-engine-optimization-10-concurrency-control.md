@@ -12,7 +12,9 @@ tags:
 slug: 2026-04-29-query-engine-optimization-10-concurrency-control
 draft: false
 image: "/images/blog/query-engine-optimization/10-concurrency-control-locking-vs-mvcc.png"
+canonical: "https://iceberglakehouse.com/posts/2026-04-29-query-engine-10/"
 ---
+> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-04-29-query-engine-10/).
 
 <!-- Meta Description: Databases handle concurrent access using locks, MVCC, or optimistic concurrency control. Here is how each approach works and what tradeoffs each creates. -->
 <!-- Primary Keyword: database concurrency control -->

@@ -15,7 +15,9 @@ tags:
 slug: 2026-05-openlineage-observability
 draft: false
 image: "/images/blog/openlineage-observability/openlineage-integration-ecosystem.png"
+canonical: "https://iceberglakehouse.com/posts/2026-05-24-openlineage-observability/"
 ---
+> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-05-24-openlineage-observability/).
 
 # OpenLineage as the Spine of Data Observability
 
