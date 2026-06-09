@@ -14,7 +14,9 @@ tags:
 slug: 2026-03-connect-azure-synapse-dremio
 draft: false
 image: "/images/blog.png"
+canonical: "https://iceberglakehouse.com/posts/2026-03-connector-12-azure-synapse/"
 ---
+> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-03-connector-12-azure-synapse/).
 
 Microsoft Azure Synapse Analytics combines big data analytics and enterprise data warehousing into a single Azure-integrated platform. If your organization has chosen the Microsoft cloud ecosystem, your cleaned and modeled analytical data likely lives in Synapse dedicated SQL pools or serverless SQL pools. Synapse works well within Azure, but it creates challenges when you need to connect that data with AWS, Google Cloud, or on-premises databases. Azure Data Factory pipelines handle some of this, but they add cost, latency, and engineering complexity.
 

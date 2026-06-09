@@ -12,7 +12,9 @@ tags:
 slug: 2024-10-intro-to-github-actions
 draft: false
 image: "/images/blog.png"
+canonical: "https://iceberglakehouse.com/posts/2024-10-intro-to-github-actions/"
 ---
+> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2024-10-intro-to-github-actions/).
 
 - [Free Copy of Apache Iceberg the Definitive Guide](https://hello.dremio.com/wp-apache-iceberg-the-definitive-guide-reg.html?utm_content=alexmerced&utm_medium=influencer&utm_source=ev_externalblog&utm_campaign=githubactionsintro)
 - [Free Apache Iceberg Crash Course](https://hello.dremio.com/webcast-an-apache-iceberg-lakehouse-crash-course-reg.html?utm_content=alexmerced&utm_medium=influencer&utm_source=ev_externalblog&utm_campaign=githubactionsintro)

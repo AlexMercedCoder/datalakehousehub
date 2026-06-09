@@ -13,7 +13,9 @@ tags:
 slug: 2026-02-de-best-practices-02-design-data-pipelines
 draft: false
 image: "/images/blog.png"
+canonical: "https://iceberglakehouse.com/posts/2026-02-debp-02-design-data-pipelines/"
 ---
+> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-02-debp-02-design-data-pipelines/).
 
 ![Data pipeline architecture with four layers flowing from ingestion through staging, transformation, and serving](/images/blog/debp/pipeline-architecture.png)
 

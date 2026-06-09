@@ -13,7 +13,9 @@ tags:
 slug: 2026-02-semantic-layer-08-headless-bi
 draft: false
 image: "/images/blog.png"
+canonical: "https://iceberglakehouse.com/posts/2026-02-sl-08-headless-bi-semantic-layer/"
 ---
+> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-02-sl-08-headless-bi-semantic-layer/).
 
 ![Headless BI : one semantic layer serving all consumers](/images/blog/semantic-layer/headless-bi.png)
 

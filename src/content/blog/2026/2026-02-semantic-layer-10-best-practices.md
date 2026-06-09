@@ -13,7 +13,9 @@ tags:
 slug: 2026-02-semantic-layer-10-best-practices
 draft: false
 image: "/images/blog.png"
+canonical: "https://iceberglakehouse.com/posts/2026-02-sl-10-semantic-layer-best-practices/"
 ---
+> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-02-sl-10-semantic-layer-best-practices/).
 
 ![Semantic layer best practices checklist : checks and mistakes](/images/blog/semantic-layer/best-practices.png)
 

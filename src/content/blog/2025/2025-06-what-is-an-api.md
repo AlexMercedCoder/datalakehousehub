@@ -11,7 +11,9 @@ tags:
 slug: 2025-06-what-is-an-api
 draft: false
 image: "/images/blog.png"
+canonical: "https://iceberglakehouse.com/posts/2025-06-what-is-an-api/"
 ---
+> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2025-06-what-is-an-api/).
 
 ## Free Resources  
 - **[Free Apache Iceberg Course](https://hello.dremio.com/webcast-an-apache-iceberg-lakehouse-crash-course-reg.html?utm_source=ev_external_blog&utm_medium=influencer&utm_campaign=what-is-an-api&utm_content=alexmerced&utm_term=external_blog)**  

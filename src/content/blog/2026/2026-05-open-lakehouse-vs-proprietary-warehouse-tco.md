@@ -9,7 +9,9 @@ tags:
 slug: "open-lakehouse-vs-proprietary-warehouse-tco"
 draft: false
 image: "/images/blog.png"
+canonical: "https://iceberglakehouse.com/posts/2026-05-28-open-lakehouse-vs-proprietary-warehouse-tco/"
 ---
+> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-05-28-open-lakehouse-vs-proprietary-warehouse-tco/).
 
 # Evaluating the TCO of an Open Lakehouse vs. Proprietary Data Warehouses
 

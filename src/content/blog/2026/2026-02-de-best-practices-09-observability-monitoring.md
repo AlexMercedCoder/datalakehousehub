@@ -13,7 +13,9 @@ tags:
 slug: 2026-02-de-best-practices-09-observability-monitoring
 draft: false
 image: "/images/blog.png"
+canonical: "https://iceberglakehouse.com/posts/2026-02-debp-09-observability-monitoring/"
 ---
+> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-02-debp-09-observability-monitoring/).
 
 ![Pipeline observability dashboard showing metrics, logs, and data lineage](/images/blog/debp/observability-dashboard.png)
 

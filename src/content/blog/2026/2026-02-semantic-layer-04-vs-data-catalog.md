@@ -13,7 +13,9 @@ tags:
 slug: 2026-02-semantic-layer-04-vs-data-catalog
 draft: false
 image: "/images/blog.png"
+canonical: "https://iceberglakehouse.com/posts/2026-02-sl-04-semantic-layer-vs-data-catalog/"
 ---
+> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-02-sl-04-semantic-layer-vs-data-catalog/).
 
 ![Data catalog and semantic layer : complementary systems bridged together](/images/blog/semantic-layer/catalog-vs-semantic.png)
 

@@ -12,7 +12,9 @@ tags:
 slug: 2024-10-hands-on-with-iceberg-dremio-laptop
 draft: false
 image: "/images/blog.png"
+canonical: "https://iceberglakehouse.com/posts/2024-10-hands-on-with-iceberg-dremio-laptop/"
 ---
+> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2024-10-hands-on-with-iceberg-dremio-laptop/).
 
 - [Free Copy of Apache Iceberg the Definitive Guide](https://hello.dremio.com/wp-apache-iceberg-the-definitive-guide-reg.html?utm_source=ev_external_blog&utm_medium=influencer&utm_campaign=iceberggov&utm_content=alexmerced&utm_term=external_blog)
 - [Free Apache Iceberg Crash Course](https://hello.dremio.com/webcast-an-apache-iceberg-lakehouse-crash-course-reg.html?utm_source=ev_external_blog&utm_medium=influencer&utm_campaign=iceberggov&utm_content=alexmerced&utm_term=external_blog)

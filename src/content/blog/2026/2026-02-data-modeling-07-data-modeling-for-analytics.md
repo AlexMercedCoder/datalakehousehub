@@ -13,7 +13,9 @@ tags:
 slug: 2026-02-data-modeling-07-data-modeling-for-analytics
 draft: false
 image: "/images/blog.png"
+canonical: "https://iceberglakehouse.com/posts/2026-02-dm-07-data-modeling-for-analytics/"
 ---
+> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-02-dm-07-data-modeling-for-analytics/).
 
 ![OLTP normalized model vs. OLAP denormalized model side by side](/images/blog/data-modeling/analytics-data-modeling.png)
 

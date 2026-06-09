@@ -13,7 +13,9 @@ tags:
 slug: 2026-02-de-best-practices-05-schema-evolution
 draft: false
 image: "/images/blog.png"
+canonical: "https://iceberglakehouse.com/posts/2026-02-debp-05-schema-evolution/"
 ---
+> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-02-debp-05-schema-evolution/).
 
 ![Schema as a contract between producers and consumers with version tracking](/images/blog/debp/schema-contract.png)
 

@@ -12,7 +12,9 @@ tags:
 slug: 2026-04-29-apache-iceberg-masterclass-08-embedded-catalogs
 draft: false
 image: "/images/blog/apache-iceberg-masterclass/08-embedded-catalogs-embedded-vs-standalone.png"
+canonical: "https://iceberglakehouse.com/posts/2026-04-29-iceberg-masterclass-08/"
 ---
+> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-04-29-iceberg-masterclass-08/).
 
 <!-- Meta Description: S3 Tables and MinIO AI Stor embed the Iceberg catalog directly in the storage layer. Here is when embedded catalogs make sense and when they do not. -->
 <!-- Primary Keyword: embedded Iceberg catalog -->

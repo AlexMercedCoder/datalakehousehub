@@ -16,7 +16,9 @@ tags:
 slug: 2026-05-policy-as-code-governance
 draft: false
 image: "/images/blog/policy-as-code-governance/policy-hierarchy-lakehouse.png"
+canonical: "https://iceberglakehouse.com/posts/2026-05-24-policy-as-code-governance/"
 ---
+> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-05-24-policy-as-code-governance/).
 
 # Policy as Code for Lakehouse Governance
 

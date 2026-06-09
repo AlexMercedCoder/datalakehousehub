@@ -13,7 +13,9 @@ tags:
 slug: 2025-10-intro-to-apache-iceberg-with-apache-polaris-and-apache-spark
 draft: false
 image: "/images/blog.png"
+canonical: "https://iceberglakehouse.com/posts/2025-10-Intro-to-Apache-Iceberg-with-Apache-Polaris-and-Apache-Spark/"
 ---
+> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2025-10-Intro-to-Apache-Iceberg-with-Apache-Polaris-and-Apache-Spark/).
 
 **Get Data Lakehouse Books:**
 - [Apache Iceberg: The Definitive Guide](https://drmevn.fyi/tableformatblog)

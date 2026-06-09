@@ -12,7 +12,9 @@ tags:
 slug: 2026-04-29-query-engine-optimization-09-distributed-joins
 draft: false
 image: "/images/blog/query-engine-optimization/09-distributed-joins-shuffle-join.png"
+canonical: "https://iceberglakehouse.com/posts/2026-04-29-query-engine-09/"
 ---
+> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-04-29-query-engine-09/).
 
 <!-- Meta Description: Distributed joins move data across the network using shuffle, broadcast, or co-location strategies. Here is how each works and when engines choose which. -->
 <!-- Primary Keyword: distributed join algorithms -->

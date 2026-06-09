@@ -12,7 +12,9 @@ tags:
 slug: 2026-04-29-apache-iceberg-masterclass-13-streaming-to-iceberg
 draft: false
 image: "/images/blog/apache-iceberg-masterclass/13-streaming-to-iceberg-streaming-approaches.png"
+canonical: "https://iceberglakehouse.com/posts/2026-04-29-iceberg-masterclass-13/"
 ---
+> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-04-29-iceberg-masterclass-13/).
 
 <!-- Meta Description: Stream data into Iceberg with Spark Structured Streaming, Flink, or Kafka Connect. Here is how each works and the trade-offs between latency and maintenance. -->
 <!-- Primary Keyword: streaming to Apache Iceberg -->

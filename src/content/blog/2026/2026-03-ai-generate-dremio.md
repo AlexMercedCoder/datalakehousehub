@@ -14,7 +14,9 @@ tags:
 slug: 2026-03-ai-generate-dremio
 draft: false
 image: "/images/blog.png"
+canonical: "https://iceberglakehouse.com/posts/2026-03-ai-03-ai-generate/"
 ---
+> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-03-ai-03-ai-generate/).
 
 Unstructured text is the most underused data in most organizations. Customer emails sit in inboxes. Contract notes live in text fields. Meeting summaries exist as free-text columns in CRM systems. The information is there, but it's locked inside prose that SQL can't filter, join, or aggregate.
 

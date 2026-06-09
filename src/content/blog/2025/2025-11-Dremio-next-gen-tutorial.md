@@ -14,7 +14,9 @@ tags:
 slug: 2025-11-dremio-next-gen-cloud-tutorial
 draft: false
 image: "/images/blog.png"
+canonical: "https://iceberglakehouse.com/posts/2025-11-Dremio-next-gen-tutorial/"
 ---
+> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2025-11-Dremio-next-gen-tutorial/).
 
 [Video Playlist of this Walkthough](https://www.youtube.com/playlist?list=PL-gIUf9e9CCvY0bcRBGu2SzFFR-yJGIB6)
 

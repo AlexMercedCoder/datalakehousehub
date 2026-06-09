@@ -13,7 +13,9 @@ tags:
 slug: 2026-02-data-modeling-10-best-practices
 draft: false
 image: "/images/blog.png"
+canonical: "https://iceberglakehouse.com/posts/2026-02-dm-10-data-modeling-best-practices/"
 ---
+> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-02-dm-10-data-modeling-best-practices/).
 
 ![Checklist of data modeling quality markers with warning symbols on common mistakes](/images/blog/data-modeling/best-practices-checklist.png)
 

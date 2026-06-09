@@ -10,7 +10,9 @@ tags:
 slug: 2024-11-rust-cargo-toml
 draft: false
 image: "/images/blog.png"
+canonical: "https://iceberglakehouse.com/posts/2024-11-rust-cargo-toml/"
 ---
+> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2024-11-rust-cargo-toml/).
 
 When working with Rust, Cargo is your go-to tool for managing dependencies, building, and running your projects. Acting as Rust's package manager and build system, Cargo simplifies a lot of the heavy lifting in a project’s lifecycle. Central to this is the `cargo.toml` file, which is at the heart of every Cargo-managed Rust project.
 

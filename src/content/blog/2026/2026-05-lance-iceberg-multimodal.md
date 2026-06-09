@@ -16,7 +16,9 @@ tags:
 slug: 2026-05-lance-iceberg-multimodal
 draft: false
 image: "/images/blog/lance-iceberg-multimodal/lance-iceberg-multimodal-architecture.png"
+canonical: "https://iceberglakehouse.com/posts/2026-05-24-lance-iceberg-multimodal/"
 ---
+> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-05-24-lance-iceberg-multimodal/).
 
 # Lance and Iceberg for Multimodal AI Data
 

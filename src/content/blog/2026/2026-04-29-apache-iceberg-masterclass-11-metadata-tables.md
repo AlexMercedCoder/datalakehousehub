@@ -12,7 +12,9 @@ tags:
 slug: 2026-04-29-apache-iceberg-masterclass-11-metadata-tables
 draft: false
 image: "/images/blog/apache-iceberg-masterclass/11-metadata-tables-metadata-tables-overview.png"
+canonical: "https://iceberglakehouse.com/posts/2026-04-29-iceberg-masterclass-11/"
 ---
+> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-04-29-iceberg-masterclass-11/).
 
 <!-- Meta Description: Iceberg metadata tables let you query snapshots, files, manifests, and partitions using SQL. Here is every metadata table and how to use them. -->
 <!-- Primary Keyword: Iceberg metadata tables -->

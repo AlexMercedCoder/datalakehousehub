@@ -14,7 +14,9 @@ tags:
 slug: 2026-03-dremio-with-zed
 draft: false
 image: "/images/blog.png"
+canonical: "https://iceberglakehouse.com/posts/2026-03-aitool-13-zed/"
 ---
+> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-03-aitool-13-zed/).
 
 Zed is an open-source, GPU-accelerated code editor written in Rust. It is designed for speed and collaboration, with a built-in AI assistant that supports multiple LLM providers and an agent mode for autonomous multi-step development. Dremio is a unified lakehouse platform that provides business context through its semantic layer, universal data access through query federation, and interactive speed through Reflections and Apache Arrow.
 

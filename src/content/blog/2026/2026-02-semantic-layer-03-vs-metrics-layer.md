@@ -13,7 +13,9 @@ tags:
 slug: 2026-02-semantic-layer-03-vs-metrics-layer
 draft: false
 image: "/images/blog.png"
+canonical: "https://iceberglakehouse.com/posts/2026-02-sl-03-semantic-layer-vs-metrics-layer/"
 ---
+> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-02-sl-03-semantic-layer-vs-metrics-layer/).
 
 ![Semantic layer vs metrics layer : the metrics layer is a subset](/images/blog/semantic-layer/semantic-vs-metrics.png)
 

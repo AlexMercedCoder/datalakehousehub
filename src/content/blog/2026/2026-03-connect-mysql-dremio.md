@@ -14,7 +14,9 @@ tags:
 slug: 2026-03-connect-mysql-dremio
 draft: false
 image: "/images/blog.png"
+canonical: "https://iceberglakehouse.com/posts/2026-03-connector-02-mysql/"
 ---
+> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-03-connector-02-mysql/).
 
 MySQL runs more web applications, SaaS platforms, and e-commerce backends than any other database. It's fast for transactional reads and writes, but it becomes a bottleneck when your data team needs to run analytical queries, join MySQL data with other sources, or build dashboards that don't compete with application traffic.
 

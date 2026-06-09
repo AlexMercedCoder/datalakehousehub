@@ -14,7 +14,9 @@ tags:
 slug: 2026-03-context-management-claude-cowork
 draft: false
 image: "/images/blog.png"
+canonical: "https://iceberglakehouse.com/posts/2026-03-context-05-claude-cowork/"
 ---
+> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-03-context-05-claude-cowork/).
 
 Claude CoWork represents a fundamentally different approach to AI context management. Unlike chat interfaces where you send messages and receive responses, CoWork is an autonomous agent that works on your local machine, reads and writes files directly, and executes multi-step tasks with minimal supervision. For knowledge workers who spend their days in documents, spreadsheets, and presentations, CoWork replaces the constant back-and-forth of copy-paste workflows with direct delegation.
 

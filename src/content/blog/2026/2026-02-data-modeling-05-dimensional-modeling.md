@@ -13,7 +13,9 @@ tags:
 slug: 2026-02-data-modeling-05-dimensional-modeling
 draft: false
 image: "/images/blog.png"
+canonical: "https://iceberglakehouse.com/posts/2026-02-dm-05-dimensional-modeling/"
 ---
+> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-02-dm-05-dimensional-modeling/).
 
 ![Dimensional model showing a central fact table connected to surrounding dimension tables](/images/blog/data-modeling/dimensional-modeling.png)
 

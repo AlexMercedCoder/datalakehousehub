@@ -13,7 +13,9 @@ tags:
 slug: 2026-02-de-best-practices-06-batch-vs-streaming
 draft: false
 image: "/images/blog.png"
+canonical: "https://iceberglakehouse.com/posts/2026-02-debp-06-batch-vs-streaming/"
 ---
+> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-02-debp-06-batch-vs-streaming/).
 
 ![Batch processing in scheduled groups vs streaming in continuous flow](/images/blog/debp/batch-vs-streaming.png)
 

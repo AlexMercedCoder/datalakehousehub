@@ -14,7 +14,9 @@ tags:
 slug: 2026-05-single-node-data-engineering
 draft: false
 image: "/images/blog/single-node-data-engineering/single-node-ecosystem.png"
+canonical: "https://iceberglakehouse.com/posts/2026-05-23-single-node-data-engineering-duckdb-datafusion-polars-lakesail/"
 ---
+> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-05-23-single-node-data-engineering-duckdb-datafusion-polars-lakesail/).
 
 <!-- Meta Description: Optimize single-node data engineering with DuckDB, DataFusion, Polars, and LakeSail. Compare architectures and learn when to transition to Dremio MPP. -->
 <!-- Primary Keyword: single-node data engineering -->

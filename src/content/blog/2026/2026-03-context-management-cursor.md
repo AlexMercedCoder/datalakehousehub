@@ -14,7 +14,9 @@ tags:
 slug: 2026-03-context-management-cursor
 draft: false
 image: "/images/blog.png"
+canonical: "https://iceberglakehouse.com/posts/2026-03-context-12-cursor/"
 ---
+> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-03-context-12-cursor/).
 
 Cursor is an AI-native code editor built on the VS Code foundation that integrates AI deeply into every aspect of the development workflow. Its context management system is one of the most sophisticated among coding tools, combining workspace-level indexing, granular rules files, documentation integration, MCP server support, and intelligent context assembly that automatically determines which files and symbols are relevant to your current task.
 

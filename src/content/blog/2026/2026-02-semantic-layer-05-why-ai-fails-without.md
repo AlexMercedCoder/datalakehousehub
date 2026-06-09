@@ -13,7 +13,9 @@ tags:
 slug: 2026-02-semantic-layer-05-why-ai-fails-without
 draft: false
 image: "/images/blog.png"
+canonical: "https://iceberglakehouse.com/posts/2026-02-sl-05-why-ai-fails-without-semantic-layer/"
 ---
+> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-02-sl-05-why-ai-fails-without-semantic-layer/).
 
 ![AI with vs without a semantic layer : failure modes and fixes](/images/blog/semantic-layer/ai-semantic-layer.png)
 

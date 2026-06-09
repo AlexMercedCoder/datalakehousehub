@@ -15,7 +15,9 @@ tags:
 slug: 2026-05-dbt-fusion-analytics-engineering
 draft: false
 image: "/images/blog/dbt-fusion-analytics-engineering/dbt-fusion-rust-lifecycle.png"
+canonical: "https://iceberglakehouse.com/posts/2026-05-24-dbt-fusion-analytics-engineering/"
 ---
+> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-05-24-dbt-fusion-analytics-engineering/).
 
 # How dbt Fusion Reshapes Analytics Engineering
 

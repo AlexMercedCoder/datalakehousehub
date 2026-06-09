@@ -13,7 +13,9 @@ tags:
 slug: 2026-02-data-modeling-09-data-vault-modeling
 draft: false
 image: "/images/blog.png"
+canonical: "https://iceberglakehouse.com/posts/2026-02-dm-09-data-vault-modeling/"
 ---
+> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-02-dm-09-data-vault-modeling/).
 
 ![Data Vault model showing Hubs, Links, and Satellites as interconnected components](/images/blog/data-modeling/data-vault-overview.png)
 

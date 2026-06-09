@@ -14,7 +14,9 @@ tags:
 slug: 2026-03-dremio-with-windsurf
 draft: false
 image: "/images/blog.png"
+canonical: "https://iceberglakehouse.com/posts/2026-03-aitool-12-windsurf/"
 ---
+> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-03-aitool-12-windsurf/).
 
 Windsurf is an AI-native code editor built as a fork of VS Code. Its standout feature is Cascade, an agentic AI system that plans and executes multi-step coding tasks autonomously. Cascade understands your entire codebase, can chain together multiple file edits, terminal commands, and tool calls in a single flow. Dremio is a unified lakehouse platform that provides business context through its semantic layer, universal data access through query federation, and interactive speed through Reflections and Apache Arrow.
 

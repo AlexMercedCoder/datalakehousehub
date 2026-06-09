@@ -14,7 +14,9 @@ tags:
 slug: 2026-03-connect-unity-catalog-dremio
 draft: false
 image: "/images/blog.png"
+canonical: "https://iceberglakehouse.com/posts/2026-03-connector-18-unity-catalog/"
 ---
+> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-03-connector-18-unity-catalog/).
 
 Databricks Unity Catalog is Databricks' governance layer for data and AI assets. It manages Delta Lake tables, machine learning models, feature stores, and other data objects across Databricks workspaces. If your data engineering team uses Databricks for ETL and ML, your curated analytical datasets likely live in Unity Catalog as Delta Lake tables.
 

@@ -14,7 +14,9 @@ tags:
 slug: 2026-03-connect-google-bigquery-dremio
 draft: false
 image: "/images/blog.png"
+canonical: "https://iceberglakehouse.com/posts/2026-03-connector-10-google-bigquery/"
 ---
+> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-03-connector-10-google-bigquery/).
 
 Google BigQuery is Google Cloud's serverless data warehouse. If your organization uses Google Cloud Platform, BigQuery is where your analytics data, marketing attribution, Google Analytics exports, and machine learning model outputs live. BigQuery is powerful within Google's ecosystem, but it creates challenges when your data spans multiple clouds or when costs grow with usage.
 

@@ -12,7 +12,9 @@ tags:
 slug: 2026-04-29-apache-iceberg-masterclass-07-lakehouse-catalogs
 draft: false
 image: "/images/blog/apache-iceberg-masterclass/07-lakehouse-catalogs-catalog-role.png"
+canonical: "https://iceberglakehouse.com/posts/2026-04-29-iceberg-masterclass-07/"
 ---
+> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-04-29-iceberg-masterclass-07/).
 
 <!-- Meta Description: Lakehouse catalogs store metadata pointers, manage namespaces, and enforce access control. Here is the complete catalog landscape from Polaris to Glue. -->
 <!-- Primary Keyword: lakehouse catalogs -->

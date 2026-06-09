@@ -14,7 +14,9 @@ tags:
 slug: 2026-03-context-management-claude-web
 draft: false
 image: "/images/blog.png"
+canonical: "https://iceberglakehouse.com/posts/2026-03-context-03-claude-web/"
 ---
+> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-03-context-03-claude-web/).
 
 Claude's web interface at claude.ai combines one of the largest context windows in the industry with a structured Project system that makes it genuinely useful for sustained, complex work. While many AI chat interfaces are limited to one-off conversations, Claude Web is designed for ongoing engagement where the AI accumulates understanding of your work over time. The key to unlocking that potential is managing context deliberately rather than treating each conversation as a blank slate.
 

@@ -16,7 +16,9 @@ tags:
 slug: 2026-05-vector-stores-retrieval
 draft: false
 image: "/images/blog/vector-stores-retrieval/vector-store-selection-guide.png"
+canonical: "https://iceberglakehouse.com/posts/2026-05-24-vector-stores-retrieval/"
 ---
+> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-05-24-vector-stores-retrieval/).
 
 # Choosing Vector Stores for Retrieval Workloads
 

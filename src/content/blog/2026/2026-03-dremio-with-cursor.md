@@ -14,7 +14,9 @@ tags:
 slug: 2026-03-dremio-with-cursor
 draft: false
 image: "/images/blog.png"
+canonical: "https://iceberglakehouse.com/posts/2026-03-aitool-04-cursor/"
 ---
+> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-03-aitool-04-cursor/).
 
 Cursor is an AI-native code editor built as a fork of VS Code. It integrates AI directly into the editing experience with features like Chat, Composer (multi-file editing), and inline code generation. Dremio is a unified lakehouse platform that provides business context through its semantic layer, universal data access through query federation, and interactive speed through Reflections and Apache Arrow.
 

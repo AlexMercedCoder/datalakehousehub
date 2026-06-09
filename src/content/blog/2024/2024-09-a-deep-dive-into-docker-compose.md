@@ -11,7 +11,9 @@ tags:
 slug: 2024-9-a-deep-dive-into-docker-compose
 draft: false
 image: "/images/blog.png"
+canonical: "https://iceberglakehouse.com/posts/2024-09-a-deep-dive-into-docker-compose/"
 ---
+> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2024-09-a-deep-dive-into-docker-compose/).
 
 ## Understanding the Docker Compose File Structure
 

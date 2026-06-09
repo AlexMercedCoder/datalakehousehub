@@ -14,7 +14,9 @@ tags:
 slug: 2026-03-context-management-opencode
 draft: false
 image: "/images/blog.png"
+canonical: "https://iceberglakehouse.com/posts/2026-03-context-10-opencode/"
 ---
+> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-03-context-10-opencode/).
 
 OpenCode is an open-source terminal-based AI coding agent that prioritizes privacy, local-first operation, and broad model provider support. Built as a TUI (terminal user interface) application, it runs entirely in your terminal and supports dozens of LLM providers from OpenAI and Anthropic to local models through Ollama. Its context management system is built around configuration files, session persistence, MCP integration, and a dual-agent architecture that separates planning from code generation.
 

@@ -12,7 +12,9 @@ tags:
 slug: 2026-04-29-query-engine-optimization-02-row-vs-column-storage
 draft: false
 image: "/images/blog/query-engine-optimization/02-row-vs-column-storage-row-vs-column-layout.png"
+canonical: "https://iceberglakehouse.com/posts/2026-04-29-query-engine-02/"
 ---
+> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-04-29-query-engine-02/).
 
 <!-- Meta Description: Row stores keep records together for fast transactions. Column stores keep field values together for fast analytics. Here is how each layout works and when to use it. -->
 <!-- Primary Keyword: columnar vs row storage -->

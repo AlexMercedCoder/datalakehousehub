@@ -13,7 +13,9 @@ tags:
 slug: 2025-09-agentic-ai-dremio-apache-iceberg
 draft: false
 image: "/images/blog.png"
+canonical: "https://iceberglakehouse.com/posts/2025-09-agentic-ai-dremio-apache-iceberg/"
 ---
+> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2025-09-agentic-ai-dremio-apache-iceberg/).
 
 ## Free Resources  
 - **[Free Apache Iceberg Course](https://hello.dremio.com/webcast-an-apache-iceberg-lakehouse-crash-course-reg.html?utm_source=ev_external_blog&utm_medium=influencer&utm_campaign=lakehouse-meetups&utm_content=alexmerced&utm_term=external_blog)**  

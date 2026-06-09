@@ -16,7 +16,9 @@ tags:
 slug: 2026-05-governed-rag-data-products
 draft: false
 image: "/images/blog/governed-rag-data-products/governed-rag-architecture.png"
+canonical: "https://iceberglakehouse.com/posts/2026-05-24-governed-rag-data-products/"
 ---
+> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-05-24-governed-rag-data-products/).
 
 # Designing Governed RAG on Data Products
 

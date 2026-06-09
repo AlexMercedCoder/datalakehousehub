@@ -12,7 +12,9 @@ tags:
 slug: 2025-11-introducing-dremioframe-dataframe-python-library
 draft: false
 image: "/images/blog.png"
+canonical: "https://iceberglakehouse.com/posts/2025-11-introducing-dremioframe-dataframe-python-library/"
 ---
+> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2025-11-introducing-dremioframe-dataframe-python-library/).
 
 If you're a data analyst or Python developer who prefers chaining expressive `.select()` and `.mutate()` calls over writing raw SQL, you're going to love `dremioframe` : the unofficial Python DataFrame library for Dremio (currently in Alpha).
 

@@ -13,7 +13,9 @@ tags:
 slug: 2026-02-semantic-layer-01-what-is-a-semantic-layer
 draft: false
 image: "/images/blog.png"
+canonical: "https://iceberglakehouse.com/posts/2026-02-sl-01-what-is-a-semantic-layer/"
 ---
+> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-02-sl-01-what-is-a-semantic-layer/).
 
 ![Semantic layer concept : translating raw data into business terms](/images/blog/semantic-layer/semantic-layer-concept.png)
 

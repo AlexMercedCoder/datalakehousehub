@@ -14,7 +14,9 @@ tags:
 slug: 2026-03-connect-sap-hana-dremio
 draft: false
 image: "/images/blog.png"
+canonical: "https://iceberglakehouse.com/posts/2026-03-connector-06-sap-hana/"
 ---
+> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-03-connector-06-sap-hana/).
 
 SAP HANA is the in-memory database platform that powers SAP S/4HANA, SAP BW/4HANA, and custom enterprise applications across finance, manufacturing, logistics, and supply chain. It's fast for SAP-native analytics : real-time financial reporting, material requirements planning, and production analytics run directly on HANA's in-memory columnar engine. But SAP HANA exists in a walled garden.
 

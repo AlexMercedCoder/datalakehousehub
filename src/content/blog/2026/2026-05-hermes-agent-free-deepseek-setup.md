@@ -15,7 +15,9 @@ tags:
 slug: 2026-05-hermes-agent-free-deepseek-setup
 draft: false
 image: "/images/blog.png"
+canonical: "https://iceberglakehouse.com/posts/2026-05-hermes-agent-free-deepseek-setup/"
 ---
+> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-05-hermes-agent-free-deepseek-setup/).
 
 Most AI agent frameworks lock you into a paid model. Claude Code needs an Anthropic subscription. Codex needs an OpenAI plan. Cursor costs $20 a month. Hermes Agent from Nous Research works differently: it is a fully open-source agent framework that lets you plug in any inference provider you want.
 

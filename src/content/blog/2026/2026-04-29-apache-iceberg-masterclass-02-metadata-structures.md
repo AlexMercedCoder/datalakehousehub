@@ -12,7 +12,9 @@ tags:
 slug: 2026-04-29-apache-iceberg-masterclass-02-metadata-structures
 draft: false
 image: "/images/blog/apache-iceberg-masterclass/02-metadata-structures-iceberg-metadata-tree.png"
+canonical: "https://iceberglakehouse.com/posts/2026-04-29-iceberg-masterclass-02/"
 ---
+> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-04-29-iceberg-masterclass-02/).
 
 <!-- Meta Description: Iceberg uses a metadata tree, Delta Lake uses a transaction log, Hudi uses a timeline. Here is exactly how each format organizes metadata and why it matters. -->
 <!-- Primary Keyword: table format metadata -->

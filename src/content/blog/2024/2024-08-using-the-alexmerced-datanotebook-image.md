@@ -12,7 +12,9 @@ tags:
 slug: 2024-8-using-the-alexmerced-datanotebook-image
 draft: false
 image: "/images/blog.png"
+canonical: "https://iceberglakehouse.com/posts/2024-08-using-the-alexmerced-datanotebook-image/"
 ---
+> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2024-08-using-the-alexmerced-datanotebook-image/).
 
 - [Watch My Intro to Data Playlist](https://www.youtube.com/watch?v=nq8ETrTgT7o&list=PLsLAVBjQJO0p_4Nqz99tIjeoDYE97L0xY&pp=iAQB)
 - [Download Free Copy of "Apache Iceberg: The Definitive Guide"](https://drmevn.fyi/datanotebook830)

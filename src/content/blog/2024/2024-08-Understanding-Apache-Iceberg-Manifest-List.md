@@ -12,7 +12,10 @@ tags:
 slug: 2024-8-understanding-apache-iceberg-manifest-list
 draft: false
 image: "/images/blog.png"
+canonical: "https://iceberglakehouse.com/posts/2024-08-Understanding-Apache-Iceberg-Manifest-List/"
 ---
+> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2024-08-Understanding-Apache-Iceberg-Manifest-List/).
+
 - [Free Copy of Apache Iceberg: The Definitive Guide](https://hello.dremio.com/wp-apache-iceberg-the-definitive-guide-reg.html?utm_source=ev_external_blog&utm_medium=social_free&utm_campaign=manifestlistblog&utm_content=alexmerced&utm_term=external_blog)
 - [Free Apache Iceberg Crash Course](https://hello.dremio.com/webcast-an-apache-iceberg-lakehouse-crash-course-reg.html?utm_source=ev_external_blog&utm_medium=social_free&utm_campaign=manifestlistblog&utm_content=alexmerced&utm_term=external_blog)
 

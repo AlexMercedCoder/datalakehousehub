@@ -12,7 +12,9 @@ tags:
 slug: 2026-04-29-apache-iceberg-masterclass-05-hidden-partitioning
 draft: false
 image: "/images/blog/apache-iceberg-masterclass/05-hidden-partitioning-exposed-vs-hidden-partitioning.png"
+canonical: "https://iceberglakehouse.com/posts/2026-04-29-iceberg-masterclass-05/"
 ---
+> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-04-29-iceberg-masterclass-05/).
 
 <!-- Meta Description: Iceberg's hidden partitioning separates physical layout from user queries using transform functions. Here is how it works and why it eliminates accidental full scans. -->
 <!-- Primary Keyword: Iceberg hidden partitioning -->

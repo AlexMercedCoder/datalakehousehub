@@ -14,7 +14,9 @@ tags:
 slug: 2026-03-ai-complete-dremio
 draft: false
 image: "/images/blog.png"
+canonical: "https://iceberglakehouse.com/posts/2026-03-ai-02-ai-complete/"
 ---
+> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-03-ai-02-ai-complete/).
 
 Every data team has a version of this problem: a table full of raw data that needs human-readable summaries, translations, or narrative descriptions. Product descriptions that need rewriting for a new market. Customer records that need one-sentence executive summaries. Support interactions that need post-call notes.
 

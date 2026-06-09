@@ -13,7 +13,9 @@ tags:
 slug: 2026-04-apache-software-foundation
 draft: false
 image: "/images/blog.png"
+canonical: "https://iceberglakehouse.com/posts/2026-03-07-apache-software-foundation/"
 ---
+> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-03-07-apache-software-foundation/).
 
 *Read the complete Open Source and the Lakehouse series:*
 * [Part 1: Apache Software Foundation](/blog/2026-04-apache-software-foundation)

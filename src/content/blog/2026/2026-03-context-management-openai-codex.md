@@ -14,7 +14,9 @@ tags:
 slug: 2026-03-context-management-openai-codex
 draft: false
 image: "/images/blog.png"
+canonical: "https://iceberglakehouse.com/posts/2026-03-context-02-openai-codex/"
 ---
+> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-03-context-02-openai-codex/).
 
 OpenAI Codex is not a chatbot. It is an autonomous software engineering agent that runs tasks in isolated cloud sandboxes, operates across a browser interface, a command-line tool, and a dedicated macOS app, and can work on multiple tasks in parallel. Because of this architecture, context management in Codex works fundamentally differently from ChatGPT or traditional coding assistants. Instead of conversational context windows, you manage context through persistent configuration files, skill definitions, and project-level instructions that shape how the agent approaches your codebase.
 

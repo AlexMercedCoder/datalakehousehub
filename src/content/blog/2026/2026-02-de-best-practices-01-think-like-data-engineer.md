@@ -13,7 +13,9 @@ tags:
 slug: 2026-02-de-best-practices-01-think-like-data-engineer
 draft: false
 image: "/images/blog.png"
+canonical: "https://iceberglakehouse.com/posts/2026-02-debp-01-think-like-data-engineer/"
 ---
+> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-02-debp-01-think-like-data-engineer/).
 
 ![Data flowing through a system of interconnected pipeline stages from sources to consumers](/images/blog/debp/data-engineer-mindset.png)
 

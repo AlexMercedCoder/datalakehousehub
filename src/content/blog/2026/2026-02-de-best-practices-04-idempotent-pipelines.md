@@ -13,7 +13,9 @@ tags:
 slug: 2026-02-de-best-practices-04-idempotent-pipelines
 draft: false
 image: "/images/blog.png"
+canonical: "https://iceberglakehouse.com/posts/2026-02-debp-04-idempotent-pipelines/"
 ---
+> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-02-debp-04-idempotent-pipelines/).
 
 ![Pipeline running multiple times and converging to the same result](/images/blog/debp/idempotent-pipeline.png)
 

@@ -13,7 +13,9 @@ tags:
 slug: 2026-02-semantic-layer-06-data-governance
 draft: false
 image: "/images/blog.png"
+canonical: "https://iceberglakehouse.com/posts/2026-02-sl-06-semantic-layer-data-governance/"
 ---
+> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-02-sl-06-semantic-layer-data-governance/).
 
 ![Data governance through a semantic layer : centralized policies and documentation](/images/blog/semantic-layer/governance-semantic.png)
 

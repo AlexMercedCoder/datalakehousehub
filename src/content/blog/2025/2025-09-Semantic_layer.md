@@ -13,7 +13,9 @@ tags:
 slug: 2025-09-composable-analytics-with-agents
 draft: false
 image: "/images/blog.png"
+canonical: "https://iceberglakehouse.com/posts/2025-09-Semantic-Layer/"
 ---
+> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2025-09-Semantic-Layer/).
 
 - **[Free Apache Iceberg Course](https://hello.dremio.com/webcast-an-apache-iceberg-lakehouse-crash-course-reg.html?utm_source=ev_external_blog&utm_medium=influencer&utm_campaign=semantic_layer&utm_content=alexmerced&utm_term=semantic_layer)**  
 - **[Free Copy of “Apache Iceberg: The Definitive Guide”](https://hello.dremio.com/wp-apache-iceberg-the-definitive-guide-reg.html?utm_source=ev_external_blog&utm_medium=influencer&utm_campaign=semantic_layer&utm_content=alexmerced&utm_term=semantic_layer)**  

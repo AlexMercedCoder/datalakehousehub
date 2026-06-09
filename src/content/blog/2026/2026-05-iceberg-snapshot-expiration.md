@@ -9,7 +9,9 @@ tags:
 slug: "iceberg-snapshot-expiration"
 draft: false
 image: "/images/blog.png"
+canonical: "https://iceberglakehouse.com/posts/2026-05-28-iceberg-snapshot-expiration/"
 ---
+> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-05-28-iceberg-snapshot-expiration/).
 
 # Designing an Immutable Data Lakehouse: Best Practices for Iceberg Snapshot Expiration
 
