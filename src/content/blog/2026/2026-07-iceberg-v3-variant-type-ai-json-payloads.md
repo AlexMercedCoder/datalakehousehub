@@ -25,7 +25,7 @@ I am using the phrase "variant-style" deliberately. Exact feature language and s
 
 That is where the lakehouse becomes interesting.
 
-![Layered papercut diagram showing nested AI payloads flowing into an Iceberg table with promoted governed columns](./diagram-1.png)
+![Layered papercut diagram showing nested AI payloads flowing into an Iceberg table with promoted governed columns](/images/blog/week-2026-07-06/iceberg-v3-variant-type-ai-json-payloads-diagram-1.png)
 
 ## Why AI Payloads Do Not Fit Neatly into Traditional Tables
 
@@ -85,7 +85,7 @@ Finally, build semantic views for business-facing consumption. Most users should
 
 This layered approach keeps ingestion flexible and analytics disciplined.
 
-![Layered papercut lifecycle showing raw nested payloads becoming validated curated semantic data](./diagram-2.png)
+![Layered papercut lifecycle showing raw nested payloads becoming validated curated semantic data](/images/blog/week-2026-07-06/iceberg-v3-variant-type-ai-json-payloads-diagram-2.png)
 
 ## The Difference Between Flexible and Sloppy
 
@@ -166,7 +166,7 @@ That lifecycle is where the lakehouse architecture becomes more valuable. Object
 
 No single layer is enough by itself.
 
-![Layered papercut diagram showing multiple engines and tools accessing semi-structured Iceberg data through governance](./diagram-3.png)
+![Layered papercut diagram showing multiple engines and tools accessing semi-structured Iceberg data through governance](/images/blog/week-2026-07-06/iceberg-v3-variant-type-ai-json-payloads-diagram-3.png)
 
 ## A Dremio-Positive Reading of the Trend
 

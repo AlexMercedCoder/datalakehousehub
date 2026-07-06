@@ -23,7 +23,7 @@ Apache Iceberg gives us a better set of tools. Its snapshot model, metadata stru
 
 I want to keep the language grounded. Exact Iceberg v3 details should always be checked against the current Apache Iceberg specification and the engine versions in use. The point of this article is not to promise a universal speedup. The point is to explain why merge-on-read patterns matter for event lakes and what teams should evaluate before using them in production.
 
-![Papercut diagram comparing copy-on-write and merge-on-read update flows for an Iceberg event lake](./diagram-1.png)
+![Papercut diagram comparing copy-on-write and merge-on-read update flows for an Iceberg event lake](/images/blog/week-2026-07-06/iceberg-v3-positional-deletes-deletion-vectors-event-lakes-diagram-1.png)
 
 ## Why Event Lakes Strain Copy-on-Write Designs
 
@@ -67,7 +67,7 @@ For event lakes, positional deletes can support several common patterns:
 
 The operational benefit is write efficiency. A small delete file may be much cheaper to write than a replacement data file. The analytical cost is that readers now have more work to do. The platform has to balance those concerns.
 
-![Papercut diagram showing a positional delete file pointing to specific rows inside Iceberg data files](./diagram-2.png)
+![Papercut diagram showing a positional delete file pointing to specific rows inside Iceberg data files](/images/blog/week-2026-07-06/iceberg-v3-positional-deletes-deletion-vectors-event-lakes-diagram-2.png)
 
 ## Where Deletion Vectors Fit
 
@@ -137,7 +137,7 @@ Iceberg's snapshot history helps because table changes are represented as commit
 
 For regulated data, the difference matters. Technical lineage and business intent need to meet.
 
-![Papercut circular workflow showing ingestion, row-level deletes, compaction, snapshots, and query acceleration](./diagram-3.png)
+![Papercut circular workflow showing ingestion, row-level deletes, compaction, snapshots, and query acceleration](/images/blog/week-2026-07-06/iceberg-v3-positional-deletes-deletion-vectors-event-lakes-diagram-3.png)
 
 ## Dremio and the Open Lakehouse Reading
 

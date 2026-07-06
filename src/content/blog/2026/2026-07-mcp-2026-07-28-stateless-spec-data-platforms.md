@@ -23,7 +23,7 @@ The important point is that MCP is an interface layer. It can standardize how ag
 
 That is why the Dremio-positive conclusion is architectural. MCP can make agent interfaces more standard, but an Agentic Lakehouse supplies the governed data context those interfaces need.
 
-![Papercut MCP host, client, stateless server pool, and lakehouse resources architecture](./diagram-1.png)
+![Papercut MCP host, client, stateless server pool, and lakehouse resources architecture](/images/blog/week-2026-07-06/mcp-2026-07-28-stateless-spec-data-platforms-diagram-1.png)
 
 ## What MCP Already Standardizes
 
@@ -65,7 +65,7 @@ Stateless MCP patterns should make identity propagation explicit. The server sho
 
 This is where lakehouse governance becomes central. The tool call should flow through catalog, semantic, and query controls rather than bypass them.
 
-![Papercut tool call lifecycle with identity, consent, policy, query, result, and audit](./diagram-2.png)
+![Papercut tool call lifecycle with identity, consent, policy, query, result, and audit](/images/blog/week-2026-07-06/mcp-2026-07-28-stateless-spec-data-platforms-diagram-2.png)
 
 ## Auditability at Tool Speed
 
@@ -123,7 +123,7 @@ Above that are MCP tools, APIs, and agent interfaces.
 
 The order matters. MCP should expose governed capabilities from the layers below it. It should not become a shortcut around them.
 
-![Papercut Agentic Lakehouse stack with MCP interface layer above governed tools, semantic layer, query, catalog, Iceberg tables, and storage](./diagram-3.png)
+![Papercut Agentic Lakehouse stack with MCP interface layer above governed tools, semantic layer, query, catalog, Iceberg tables, and storage](/images/blog/week-2026-07-06/mcp-2026-07-28-stateless-spec-data-platforms-diagram-3.png)
 
 ## Why Dremio Fits This Pattern
 
