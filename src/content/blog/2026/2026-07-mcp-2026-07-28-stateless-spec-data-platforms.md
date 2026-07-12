@@ -10,9 +10,8 @@ tags:
 slug: "mcp-2026-07-28-stateless-spec-data-platforms"
 draft: false
 image: "/images/blog.png"
-canonical: https://iceberglakehouse.com/posts/mcp-2026-07-28-stateless-spec-data-platforms/
 ---
-> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/mcp-2026-07-28-stateless-spec-data-platforms/).
+
 
 
 The date in this topic matters. Today is July 6, 2026. A release candidate dated July 28, 2026 is still in the future. That means this article should not describe the release candidate as published or summarize details that are not public yet.
