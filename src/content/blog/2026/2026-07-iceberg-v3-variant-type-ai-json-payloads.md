@@ -1,20 +1,21 @@
 ---
 title: "Mapping the Variant Type in Iceberg v3: Standardizing Semi-Structured AI JSON Payloads"
 date: 2026-07-06T09:00:00Z
-description: "AI applications are messy data producers."
 author: "Alex Merced"
 category: "Apache Iceberg"
 tags:
-  - Iceberg v3
+  - iceberg v3
   - variant type
-  - JSON
-  - semi-structured
+  - json
+  - ai
 slug: "iceberg-v3-variant-type-ai-json-payloads"
 draft: false
 image: "/images/blog.png"
 canonical: https://iceberglakehouse.com/posts/iceberg-v3-variant-type-ai-json-payloads/
 ---
 > **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/iceberg-v3-variant-type-ai-json-payloads/).
+
+# Mapping the Variant Type in Iceberg v3: Standardizing Semi-Structured AI JSON Payloads
 
 AI applications are messy data producers. They create prompts, completions, tool calls, retrieval traces, ranking signals, evaluation scores, safety annotations, user feedback, latency metrics, and error payloads. Some of that data is stable enough to deserve clean columns on day one. Much of it is not.
 
@@ -26,7 +27,7 @@ I am using the phrase "variant-style" deliberately. Exact feature language and s
 
 That is where the lakehouse becomes interesting.
 
-![Layered papercut diagram showing nested AI payloads flowing into an Iceberg table with promoted governed columns](/images/blog/wk-jul06/iceberg-v3-variant-type-ai-json-payloads-./diagram-1.png)
+![Layered papercut diagram showing nested AI payloads flowing into an Iceberg table with promoted governed columns](/images/blog/week-jul06/iceberg-v3-variant-type-ai-json-payloads-diagram-1.png)
 
 ## Why AI Payloads Do Not Fit Neatly into Traditional Tables
 
@@ -86,7 +87,7 @@ Finally, build semantic views for business-facing consumption. Most users should
 
 This layered approach keeps ingestion flexible and analytics disciplined.
 
-![Layered papercut lifecycle showing raw nested payloads becoming validated curated semantic data](/images/blog/wk-jul06/iceberg-v3-variant-type-ai-json-payloads-./diagram-2.png)
+![Layered papercut lifecycle showing raw nested payloads becoming validated curated semantic data](/images/blog/week-jul06/iceberg-v3-variant-type-ai-json-payloads-diagram-2.png)
 
 ## The Difference Between Flexible and Sloppy
 
@@ -167,7 +168,7 @@ That lifecycle is where the lakehouse architecture becomes more valuable. Object
 
 No single layer is enough by itself.
 
-![Layered papercut diagram showing multiple engines and tools accessing semi-structured Iceberg data through governance](/images/blog/wk-jul06/iceberg-v3-variant-type-ai-json-payloads-./diagram-3.png)
+![Layered papercut diagram showing multiple engines and tools accessing semi-structured Iceberg data through governance](/images/blog/week-jul06/iceberg-v3-variant-type-ai-json-payloads-diagram-3.png)
 
 ## What This Means for the Lakehouse
 

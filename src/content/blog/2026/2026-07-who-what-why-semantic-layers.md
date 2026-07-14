@@ -1,19 +1,20 @@
 ---
 title: "The Who, What, and Why of Semantic Layers: The Layer That Decides Whether Your Numbers Can Be Trusted"
 date: 2026-07-06T09:00:00Z
-description: "*By Alex Merced, Head of Developer Relations at Dremio* There is a survey statistic making the rounds this year that I cannot stop quoting: 84 percent o."
 author: "Alex Merced"
-category: "Data Engineering"
+category: "Lakehouse"
 tags:
-  - semantic layer
-  - data engineering
-  - AI agents
+  - semantic layers
+  - analytics
+  - data governance
 slug: "who-what-why-semantic-layers"
 draft: false
 image: "/images/blog.png"
 canonical: https://iceberglakehouse.com/posts/who-what-why-semantic-layers/
 ---
 > **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/who-what-why-semantic-layers/).
+
+# The Who, What, and Why of Semantic Layers: The Layer That Decides Whether Your Numbers Can Be Trusted
 
 *By Alex Merced, Head of Developer Relations at Dremio*
 

@@ -1,20 +1,20 @@
 ---
 title: "Decoupled Catalogs vs. Managed Tables: Architectural Freedom in the Age of Table Format Convergence"
 date: 2026-07-06T09:00:00Z
-description: "Open table formats have changed buyer expectations."
 author: "Alex Merced"
-category: "Lakehouse Architecture"
+category: "Apache Iceberg"
 tags:
-  - Iceberg
   - catalogs
   - table formats
-  - lakehouse
+  - architecture
 slug: "decoupled-catalogs-vs-managed-tables-table-format-convergence"
 draft: false
 image: "/images/blog.png"
 canonical: https://iceberglakehouse.com/posts/decoupled-catalogs-vs-managed-tables-table-format-convergence/
 ---
 > **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/decoupled-catalogs-vs-managed-tables-table-format-convergence/).
+
+# Decoupled Catalogs vs. Managed Tables: Architectural Freedom in the Age of Table Format Convergence
 
 Open table formats have changed buyer expectations. A few years ago, the question was whether an organization should put more analytical data into object storage and query it with modern engines. Today the question is sharper: who controls the table, the catalog, the optimization policy, the credentials, and the engine access path?
 
@@ -24,7 +24,7 @@ The mistake is pretending that the table format alone settles the issue. Apache 
 
 The Dremio-positive reading is simple: as the market converges on open table formats, the next competitive question is how usable those open tables become across engines, clouds, semantic layers, and agentic workflows. That is exactly where an open, federated, high-performance lakehouse approach becomes compelling.
 
-![Papercut comparison of a bundled managed table stack and a decoupled open catalog stack](/images/blog/wk-jul06/decoupled-catalogs-vs-managed-tables-table-format-convergence-./diagram-1.png)
+![Papercut comparison of a bundled managed table stack and a decoupled open catalog stack](/images/blog/week-jul06/decoupled-catalogs-vs-managed-tables-table-format-convergence-diagram-1.png)
 
 ## What Managed Tables Simplify
 
@@ -68,7 +68,7 @@ The table format is the floor. The catalog and query layer decide whether the ar
 
 That is why decoupled catalogs are not an academic concern. They are part of how organizations preserve optionality as the table-format market matures.
 
-![Papercut decision matrix with icons for convenience, control, portability, governance, cost, and engine choice](/images/blog/wk-jul06/decoupled-catalogs-vs-managed-tables-table-format-convergence-./diagram-2.png)
+![Papercut decision matrix with icons for convenience, control, portability, governance, cost, and engine choice](/images/blog/week-jul06/decoupled-catalogs-vs-managed-tables-table-format-convergence-diagram-2.png)
 
 ## A Decision Matrix for Architects
 
@@ -120,7 +120,7 @@ If semantic definitions are tied to one tool, the organization may end up with o
 
 This is a major reason the Dremio Lakehouse approach fits the direction of the market. Open tables need fast query access, but they also need meaning.
 
-![Papercut open architecture with multiple engines over one governed lakehouse and semantic query layer](/images/blog/wk-jul06/decoupled-catalogs-vs-managed-tables-table-format-convergence-./diagram-3.png)
+![Papercut open architecture with multiple engines over one governed lakehouse and semantic query layer](/images/blog/week-jul06/decoupled-catalogs-vs-managed-tables-table-format-convergence-diagram-3.png)
 
 ## Why This Matters for Agentic Workflows
 

@@ -1,21 +1,22 @@
 ---
 title: "Lakehouse Table Formats in 2026: Iceberg, Delta Lake, Hudi, Paimon, and DuckLake, How They Work, Where They Stand, and Where They're Going"
 date: 2026-07-06T09:00:00Z
-description: "*By Alex Merced, Head of Developer Relations at Dremio* The table format war is over, and the table formats are not."
 author: "Alex Merced"
 category: "Apache Iceberg"
 tags:
-  - Iceberg
-  - Delta Lake
-  - Hudi
-  - Paimon
-  - DuckLake
+  - table formats
+  - iceberg
+  - delta lake
+  - hudi
+  - paimon
 slug: "table-formats-2026-breakdown"
 draft: false
 image: "/images/blog.png"
 canonical: https://iceberglakehouse.com/posts/table-formats-2026-breakdown/
 ---
 > **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/table-formats-2026-breakdown/).
+
+# Lakehouse Table Formats in 2026: Iceberg, Delta Lake, Hudi, Paimon, and DuckLake, How They Work, Where They Stand, and Where They're Going
 
 *By Alex Merced, Head of Developer Relations at Dremio*
 

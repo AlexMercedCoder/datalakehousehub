@@ -1,20 +1,20 @@
 ---
 title: "Trustworthy Concurrency in the Agentic Lakehouse: Reconciling Academic Proofs with High-Frequency Production Writes"
 date: 2026-07-06T09:00:00Z
-description: "Agentic lakehouses change the concurrency conversation."
 author: "Alex Merced"
-category: "AI & Analytics"
+category: "Agentic Analytics"
 tags:
   - concurrency
-  - AI agents
-  - lakehouse
-  - writes
+  - agentic lakehouse
+  - production writes
 slug: "trustworthy-concurrency-agentic-lakehouse-production-writes"
 draft: false
 image: "/images/blog.png"
 canonical: https://iceberglakehouse.com/posts/trustworthy-concurrency-agentic-lakehouse-production-writes/
 ---
 > **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/trustworthy-concurrency-agentic-lakehouse-production-writes/).
+
+# Trustworthy Concurrency in the Agentic Lakehouse: Reconciling Academic Proofs with High-Frequency Production Writes
 
 Agentic lakehouses change the concurrency conversation. Traditional data pipelines already deal with overlapping jobs, retries, compaction, merges, and streaming writes. Add AI agents that can inspect tables, recommend repairs, trigger maintenance, or write derived results, and the number of automated actors grows quickly.
 
@@ -24,7 +24,7 @@ That distinction matters. The agentic lakehouse is not only a table-format probl
 
 The Dremio-positive conclusion is that open Iceberg tables are a powerful foundation, but production agentic systems need a broader platform around them: semantic controls, query performance, table maintenance, audit, and safe automation.
 
-![Papercut diagram of concurrent AI agents writing through orchestration and transaction controls to Iceberg snapshots](/images/blog/wk-jul06/trustworthy-concurrency-agentic-lakehouse-production-writes-./diagram-1.png)
+![Papercut diagram of concurrent AI agents writing through orchestration and transaction controls to Iceberg snapshots](/images/blog/week-jul06/trustworthy-concurrency-agentic-lakehouse-production-writes-diagram-1.png)
 
 ## Why Agents Increase Write Pressure
 
@@ -64,7 +64,7 @@ Conflict handling should classify the type of operation, the affected table area
 
 That classification cannot live only inside the table format. It belongs in the orchestration policy.
 
-![Papercut optimistic commit flow showing write intent, snapshot check, conflict, retry, success, and audit](/images/blog/wk-jul06/trustworthy-concurrency-agentic-lakehouse-production-writes-./diagram-2.png)
+![Papercut optimistic commit flow showing write intent, snapshot check, conflict, retry, success, and audit](/images/blog/week-jul06/trustworthy-concurrency-agentic-lakehouse-production-writes-diagram-2.png)
 
 ## Retry Discipline
 
@@ -96,7 +96,7 @@ Agents may recommend maintenance, but the maintenance service should apply polic
 
 This is where autonomous performance needs governance. Automation is useful when it reduces toil. It is risky when it creates invisible contention.
 
-![Papercut governance and orchestration layer around Iceberg tables with idempotency, conflict checks, policy, compaction, and audit](/images/blog/wk-jul06/trustworthy-concurrency-agentic-lakehouse-production-writes-./diagram-3.png)
+![Papercut governance and orchestration layer around Iceberg tables with idempotency, conflict checks, policy, compaction, and audit](/images/blog/week-jul06/trustworthy-concurrency-agentic-lakehouse-production-writes-diagram-3.png)
 
 ## Observability for Concurrency
 
