@@ -15,14 +15,13 @@ export async function GET(context) {
     title: 'The Data Lakehouse Hub',
     description: 'Data Lakehouse Community and Content',
     site: context.site,
-    items: blog.map((post) => ({
+    items: blog.slice(0, 20).map((post) => ({
       title: post.data.title,
       pubDate: post.data.date,
-      description: generateSummary(post.body, 150),
+      description: generateSummary(post.body, 300),
       author: post.data.author || post.data.authors[0],
       category: post.data.categories[0],
       link: `/blog/${post.slug}/`,
-      content: marked.parse(post.body || ""),
       enclosure: {
         url: new URL(`/open-graph/${post.slug}.png`, context.site).href,
         length: 0,
