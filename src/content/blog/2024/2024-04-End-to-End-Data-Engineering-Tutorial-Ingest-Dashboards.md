@@ -11,9 +11,9 @@ tags:
   - Data Architecture
   - Apache Iceberg
   - Data Lakehouse
-canonical: "https://iceberglakehouse.com/posts/2024-04-end-to-end-data-engineering-exercise-for-beginners/"
+canonical: "https://iceberglakehouse.com/posts/2024-4-end-to-end-data-engineering-tutorial-spark-dremio-superset/"
 ---
-> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2024-04-end-to-end-data-engineering-exercise-for-beginners/).
+> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2024-4-end-to-end-data-engineering-tutorial-spark-dremio-superset/).
 
 Data engineering aims to make data accessible and usable for data analytics and data science purposes. This involves several key aspects:
 
