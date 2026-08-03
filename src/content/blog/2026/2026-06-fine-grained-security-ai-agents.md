@@ -10,7 +10,7 @@ tags:
   - token exchange
   - column guardrails
   - lakehouse security
-slug: fine-grained-security-machine-speed-ai-agents
+slug: fine-grained-security-ai-agents
 draft: false
 image: "/images/blog.png"
 ---
