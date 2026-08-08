@@ -13,6 +13,10 @@
       "url": "/knowledgebase"
     },
     {
+      "name": "Videos",
+      "url": "/videos"
+    },
+    {
       "name": "Hubs",
       "url": "#",
       "hasChildren": true,
@@ -57,7 +61,7 @@
           "url": "https://open.spotify.com/show/3KHzqR9eFW6bJ1Tqoh2juM?si=1c0ca805765a4436"
         },
         {
-          "name": "Videos",
+          "name": "YouTube Channel",
           "url": "https://www.youtube.com/@alexmerceddata"
         },
         {
@@ -100,6 +104,10 @@
         {
           "text": "Knowledge Base Glossary",
           "url": "/knowledgebase"
+        },
+        {
+          "text": "Video Explainers",
+          "url": "/videos"
         },
         {
           "text": "Data 101",

@@ -1,0 +1,221 @@
+[
+  {
+    "slug": "oltp-vs-olap",
+    "index": 1,
+    "title": "OLTP vs OLAP",
+    "description": "Why transactional systems store data by row, analytical systems store it by column, and the two workloads end up on separate infrastructure.",
+    "keywords": [
+      "OLTP",
+      "OLAP",
+      "columnar storage",
+      "analytics",
+      "data warehouse"
+    ],
+    "beats": [
+      "OLTP runs the business, a few rows at a time",
+      "OLAP answers questions about the business",
+      "The shapes conflict, so the systems split"
+    ],
+    "seconds": 35,
+    "iso8601": "PT35S",
+    "src": "/assets/videos/oltp-vs-olap.mp4",
+    "poster": "/assets/videos/oltp-vs-olap.jpg",
+    "width": 1920,
+    "height": 1080
+  },
+  {
+    "slug": "data-warehouse-benefits-and-limits",
+    "index": 2,
+    "title": "The Data Warehouse",
+    "description": "The warehouse gave analytics governed, modeled, ACID-backed tables. Its limits are format lock-in, structured data only, and a cost curve tied to one vendor's engine.",
+    "keywords": [
+      "data warehouse",
+      "governance",
+      "ACID",
+      "vendor lock-in",
+      "ELT"
+    ],
+    "beats": [
+      "One governed place to ask questions",
+      "Structured data only, in someone else's format",
+      "Storage, compute and format bound together"
+    ],
+    "seconds": 35,
+    "iso8601": "PT35S",
+    "src": "/assets/videos/data-warehouse-benefits-and-limits.mp4",
+    "poster": "/assets/videos/data-warehouse-benefits-and-limits.jpg",
+    "width": 1920,
+    "height": 1080
+  },
+  {
+    "slug": "evolution-to-the-data-lakehouse",
+    "index": 3,
+    "title": "The Evolution to the Data Lakehouse",
+    "description": "Warehouse, then data lake, then lakehouse: the path from a closed governed store to open files on object storage that behave like real tables.",
+    "keywords": [
+      "data lakehouse",
+      "data lake",
+      "data warehouse",
+      "object storage",
+      "open formats"
+    ],
+    "beats": [
+      "The warehouse: reliable, closed, expensive",
+      "The data lake: open and cheap, but not a table",
+      "A table format turns files into a table",
+      "Warehouse behaviour on storage you own"
+    ],
+    "seconds": 44,
+    "iso8601": "PT44S",
+    "src": "/assets/videos/evolution-to-the-data-lakehouse.mp4",
+    "poster": "/assets/videos/evolution-to-the-data-lakehouse.jpg",
+    "width": 1920,
+    "height": 1080
+  },
+  {
+    "slug": "data-lakes-and-apache-parquet",
+    "index": 4,
+    "title": "Data Lakes and Apache Parquet",
+    "description": "Object storage is the cheap open substrate; Apache Parquet is the columnar file format — column chunks, encodings and footer statistics — that makes scanning it fast.",
+    "keywords": [
+      "Apache Parquet",
+      "data lake",
+      "columnar file format",
+      "object storage"
+    ],
+    "beats": [
+      "Object storage is cheap, durable and open",
+      "Parquet stores data by column, not by row",
+      "Footer statistics let engines skip data"
+    ],
+    "seconds": 35,
+    "iso8601": "PT35S",
+    "src": "/assets/videos/data-lakes-and-apache-parquet.mp4",
+    "poster": "/assets/videos/data-lakes-and-apache-parquet.jpg",
+    "width": 1920,
+    "height": 1080
+  },
+  {
+    "slug": "table-formats-iceberg-delta-hudi",
+    "index": 5,
+    "title": "Open Table Formats",
+    "description": "A table format is the metadata layer that turns a directory of Parquet into a real table — and the three open ones each solve it a little differently.",
+    "keywords": [
+      "Apache Iceberg",
+      "Delta Lake",
+      "Apache Hudi",
+      "table format",
+      "ACID"
+    ],
+    "beats": [
+      "A directory of Parquet is not a table",
+      "Metadata names the exact set of files",
+      "Database guarantees on open files",
+      "Same problem, three designs"
+    ],
+    "seconds": 44,
+    "iso8601": "PT44S",
+    "src": "/assets/videos/table-formats-iceberg-delta-hudi.mp4",
+    "poster": "/assets/videos/table-formats-iceberg-delta-hudi.jpg",
+    "width": 1920,
+    "height": 1080
+  },
+  {
+    "slug": "catalogs-and-apache-polaris",
+    "index": 6,
+    "title": "Catalogs and Apache Polaris",
+    "description": "A catalog holds the current pointer for every table and makes commits atomic. Apache Polaris is an open-source, vendor-neutral implementation of the Iceberg REST Catalog spec.",
+    "keywords": [
+      "Apache Polaris",
+      "Iceberg REST catalog",
+      "data catalog",
+      "RBAC",
+      "credential vending"
+    ],
+    "beats": [
+      "A catalog is the table's source of truth",
+      "The Iceberg REST Catalog is an open API",
+      "An open-source Iceberg REST catalog"
+    ],
+    "seconds": 35,
+    "iso8601": "PT35S",
+    "src": "/assets/videos/catalogs-and-apache-polaris.mp4",
+    "poster": "/assets/videos/catalogs-and-apache-polaris.jpg",
+    "width": 1920,
+    "height": 1080
+  },
+  {
+    "slug": "lakehouses-and-agentic-ai",
+    "index": 7,
+    "title": "The Lakehouse and Agentic AI",
+    "description": "Agents query data without an analyst in the loop, which moves access control, definitions and auditability down to the table and the catalog.",
+    "keywords": [
+      "agentic AI",
+      "data lakehouse",
+      "MCP",
+      "governance",
+      "semantic layer"
+    ],
+    "beats": [
+      "Agents query data on their own",
+      "Permissions have to hold at the table",
+      "One copy, many engines, one meaning",
+      "Agents need context, not just access"
+    ],
+    "seconds": 44,
+    "iso8601": "PT44S",
+    "src": "/assets/videos/lakehouses-and-agentic-ai.mp4",
+    "poster": "/assets/videos/lakehouses-and-agentic-ai.jpg",
+    "width": 1920,
+    "height": 1080
+  },
+  {
+    "slug": "semantic-layers-and-apache-ossie",
+    "index": 8,
+    "title": "Semantic Layers",
+    "description": "A semantic layer holds the endorsed metrics, dimensions and joins every consumer resolves against. Apache Ossie (incubating) is the open standard for moving those definitions between tools.",
+    "keywords": [
+      "semantic layer",
+      "Apache Ossie",
+      "metrics",
+      "Open Semantic Interchange",
+      "governance"
+    ],
+    "beats": [
+      "Every tool redefines the same metric",
+      "One governed place for meaning",
+      "Definitions written in one vendor's dialect",
+      "An open standard for semantic interchange"
+    ],
+    "seconds": 44,
+    "iso8601": "PT44S",
+    "src": "/assets/videos/semantic-layers-and-apache-ossie.mp4",
+    "poster": "/assets/videos/semantic-layers-and-apache-ossie.jpg",
+    "width": 1920,
+    "height": 1080
+  },
+  {
+    "slug": "what-is-apache-arrow",
+    "index": 9,
+    "title": "What Is Apache Arrow?",
+    "description": "Arrow is the in-memory counterpart to Parquet: one agreed columnar layout so systems can hand data to each other with no serialization step at all.",
+    "keywords": [
+      "Apache Arrow",
+      "in-memory columnar",
+      "zero-copy",
+      "Arrow Flight",
+      "interoperability"
+    ],
+    "beats": [
+      "Every hop used to re-encode the data",
+      "One columnar layout, agreed in advance",
+      "Zero-copy interchange, vectorized execution"
+    ],
+    "seconds": 35,
+    "iso8601": "PT35S",
+    "src": "/assets/videos/what-is-apache-arrow.mp4",
+    "poster": "/assets/videos/what-is-apache-arrow.jpg",
+    "width": 1920,
+    "height": 1080
+  }
+]
