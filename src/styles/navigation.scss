@@ -15,7 +15,8 @@
 }
 
 .header {
-  @apply bg-white py-[14px] px-4 md:px-0 md:py-[9px];
+  @apply sticky top-0 z-50 border-b border-border/80 bg-body/85 px-4 py-[14px] backdrop-blur-md md:px-0 md:py-[9px];
+  @apply dark:border-darkmode-border/80 dark:bg-darkmode-body/85;
 }
 
 // navbar items
@@ -24,7 +25,7 @@
 }
 
 .navbar-brand {
-  @apply text-xl font-semibold text-dark;
+  @apply font-secondary text-xl font-semibold text-dark dark:text-darkmode-dark;
 
   img {
     @apply max-h-full max-w-full object-contain;
@@ -40,32 +41,39 @@
 }
 
 .nav-item {
-  // @apply lg:mx-3;
-
   select:focus {
     box-shadow: none;
   }
 }
 
 .nav-link {
-  @apply py-3 px-2 font-primary text-base font-bold text-dark transition hover:text-primary md:py-4 lg:px-3;
+  @apply relative py-3 px-2 font-secondary text-[15px] font-medium text-dark transition-colors hover:text-primary md:py-4 lg:px-3;
+  @apply dark:text-darkmode-text dark:hover:text-darkmode-primary;
 
   &-active {
-    @apply text-primary;
+    @apply text-primary dark:text-darkmode-primary;
+
+    &::after {
+      @apply absolute inset-x-2 -bottom-px hidden h-[2px] rounded-full bg-primary content-[''] md:block lg:inset-x-3;
+      @apply dark:bg-darkmode-primary;
+    }
   }
 }
 
 .nav-dropdown {
   &-list {
-    @apply z-10 min-w-[180px] rounded-lg bg-white shadow-lg dark:bg-gray-800 p-4;
+    @apply z-10 min-w-[240px] rounded-xl border border-border bg-white p-2 shadow-[0_20px_45px_-20px_rgba(16,28,40,.35)];
+    @apply dark:border-darkmode-border dark:bg-theme-dark;
   }
-  
+
   &-item {
-     @apply mb-2 last:mb-0;
+     @apply mb-0.5 last:mb-0;
   }
 
   &-link {
-    @apply block py-1 font-primary text-sm font-semibold text-dark transition hover:text-primary dark:text-white;
+    @apply block rounded-lg py-2 px-3 font-primary text-sm font-semibold text-dark transition-colors;
+    @apply hover:bg-theme-light hover:text-primary;
+    @apply dark:text-darkmode-text dark:hover:bg-darkmode-theme-light dark:hover:text-darkmode-primary;
   }
 }
 }

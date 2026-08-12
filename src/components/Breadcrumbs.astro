@@ -28,17 +28,17 @@ paths.forEach((name, i) => {
       parts.map(({ label, href, ariaLabel }, index) => (
         <li class="inline-flex items-center">
           {index > 0 && (
-            <span class="mx-2 text-gray-400">/</span>
+            <span class="mx-2 text-text/50 dark:text-darkmode-text/50">/</span>
           )}
           {index === parts.length - 1 ? (
-            <span class="text-gray-500" aria-current="page">
+            <span class="text-text dark:text-darkmode-text" aria-current="page">
               {label}
             </span>
           ) : (
             <a
               href={href}
               aria-label={ariaLabel}
-              class="text-primary hover:text-primary/80 transition-colors"
+              class="text-primary hover:text-primary/80 dark:text-darkmode-primary dark:hover:text-darkmode-primary/80 transition-colors"
             >
               {label}
             </a>

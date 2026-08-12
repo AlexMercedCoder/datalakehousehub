@@ -1,27 +1,26 @@
 @layer components {
 .btn {
-  @apply inline-block font-primary font-bold border px-7 py-[17px] leading-[18px] transition;
+  @apply inline-flex items-center justify-center gap-2 rounded-full border font-secondary text-base font-semibold leading-none;
+  @apply px-7 py-[16px] transition-all duration-300 ease-out;
+  @apply focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary;
 }
 
 .btn-primary {
-  @apply bg-primary text-white border-transparent z-[1]  rounded-[30px] relative hover:shadow-[0_12px_24px_-6px_rgba(45,67,121,.1)] transition-all capitalize;
-
-  &:after {
-    @apply w-full h-full rounded-[30px] absolute left-1/2 top-1/2 translate-x-[-50%]  translate-y-[-50%] content-[''] bg-primary transition-all duration-300 ease-in-out -z-[1];
-  }
-  &:hover::after {
-    @apply w-[110%] h-[110%];
-  }
+  @apply border-transparent bg-primary text-white shadow-[0_10px_24px_-10px_rgba(6,124,123,.7)];
+  @apply hover:-translate-y-0.5 hover:bg-[#0a9695] hover:shadow-[0_16px_32px_-12px_rgba(6,124,123,.8)];
+  @apply active:translate-y-0;
+  @apply dark:bg-darkmode-primary dark:text-darkmode-body dark:shadow-[0_10px_24px_-10px_rgba(47,212,201,.55)];
+  @apply dark:hover:bg-[#4de0d6];
 }
 
 .btn-outline-primary {
-  @apply relative text-text border-0 bg-transparent rounded-[30px] hover:border-transparent hover:text-primary;
+  @apply border-2 border-primary/40 bg-transparent text-dark;
+  @apply hover:-translate-y-0.5 hover:border-primary hover:bg-primary/10 hover:text-primary;
+  @apply dark:border-darkmode-primary/40 dark:text-darkmode-dark;
+  @apply dark:hover:border-darkmode-primary dark:hover:bg-darkmode-primary/10 dark:hover:text-darkmode-primary;
+}
 
-  &:after {
-    @apply w-full h-full rounded-[30px] absolute left-1/2 top-1/2 translate-x-[-50%]  translate-y-[-50%] content-[''] bg-transparent border border-primary transition-all duration-300 ease-in-out z-[0];
-  }
-  &:hover::after {
-    @apply w-[110%] h-[110%];
-  }
+.btn-sm {
+  @apply px-5 py-3 text-sm;
 }
 }

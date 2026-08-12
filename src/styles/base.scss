@@ -2,10 +2,12 @@
 @layer base {
 html {
   @apply text-base;
+  scroll-behavior: smooth;
 }
 
 body {
-  @apply bg-body font-primary font-normal leading-relaxed text-text;
+  @apply bg-body font-primary font-normal leading-relaxed text-text antialiased;
+  @apply dark:bg-darkmode-body dark:text-darkmode-text;
 }
 
 h1,
@@ -14,7 +16,8 @@ h3,
 h4,
 h5,
 h6 {
-  @apply font-primary font-bold leading-tight text-dark;
+  @apply font-secondary font-bold leading-tight tracking-tight text-dark;
+  @apply dark:text-darkmode-dark;
 }
 
 h1,
@@ -45,5 +48,18 @@ h5,
 h6,
 .h6 {
   @apply text-h6;
+}
+
+hr {
+  @apply border-border dark:border-darkmode-border;
+}
+
+::selection {
+  @apply bg-primary/25 text-dark dark:bg-darkmode-primary/30 dark:text-darkmode-dark;
+}
+
+// keep anchored headings clear of the sticky header
+:target {
+  scroll-margin-top: 6rem;
 }
 }

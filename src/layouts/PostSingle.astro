@@ -12,9 +12,11 @@ import CodeBlock from "@/components/CodeBlock.astro";
 import ScrollProgress from "@/components/ScrollProgress";
 import { FaRegClock } from "react-icons/fa";
 
+import dateFormat from "@/lib/utils/dateFormat";
+
 const { post } = Astro.props;
 const { Content, headings } = await post.render();
-const { title, description } = post.data;
+const { title, description, date, category } = post.data;
 const readTime = readingTime(post.body);
 const generatedImage = `/open-graph/${post.slug}.png`;
 ---
@@ -31,30 +33,71 @@ const generatedImage = `/open-graph/${post.slug}.png`;
 
       <div class="col-12 lg:col-9">
         <article>
-          <div class="mb-12 text-center">
-             <div class="flex items-center justify-center gap-3 mb-4">
-                <h1 set:html={markdownify(title)} class="h2 lg:h1 font-extrabold text-dark dark:text-white tracking-tight" />
-                <CopyLink client:load className="text-primary hover:text-primary/80 transition-colors" />
-             </div>
-            
-            <div class="flex items-center justify-center gap-4 text-text dark:text-light mb-6 text-sm">
-                <span class="flex items-center gap-1">
-                    <FaRegClock /> {readTime}
-                </span>
-            </div>
+          <header class="mb-10 text-center">
+            {
+              category && (
+                <a
+                  href="/blog"
+                  class="badge mb-6 transition-colors hover:bg-primary/15"
+                >
+                  {category}
+                </a>
+              )
+            }
 
-            <hr class="w-24 h-1 mx-auto bg-primary rounded border-0">
-          </div>
-            
-            <div class="mb-10 text-center">
-              <img
-                src={generatedImage}
-                alt={title}
-                height={500}
-                width={1000}
-                class="rounded-lg w-full shadow-2xl border border-gray-100 dark:border-gray-800"
+            <div class="flex items-start justify-center gap-3">
+              <h1
+                set:html={markdownify(title)}
+                class="h2 lg:h1 font-extrabold tracking-tight text-dark dark:text-darkmode-dark"
+              />
+              <CopyLink
+                client:load
+                className="mt-3 shrink-0 text-primary transition-colors hover:text-primary/80 dark:text-darkmode-primary"
               />
             </div>
+
+            {
+              description && (
+                <p class="mx-auto mt-5 max-w-2xl text-lg leading-relaxed text-text dark:text-darkmode-text">
+                  {description}
+                </p>
+              )
+            }
+
+            <div class="mt-7 flex flex-wrap items-center justify-center gap-x-5 gap-y-2 text-sm font-medium text-text/85 dark:text-darkmode-text/85">
+              {
+                date && (
+                  <time datetime={new Date(date).toISOString()}>
+                    {dateFormat(date)}
+                  </time>
+                )
+              }
+              <span
+                class="hidden h-1 w-1 rounded-full bg-current opacity-40 sm:block"
+              ></span>
+              <span class="flex items-center gap-1.5">
+                <FaRegClock /> {readTime}
+              </span>
+              <span
+                class="hidden h-1 w-1 rounded-full bg-current opacity-40 sm:block"
+              ></span>
+              <a
+                href="/author/alex-merced"
+                class="transition-colors hover:text-primary dark:hover:text-darkmode-primary"
+                >Alex Merced</a
+              >
+            </div>
+          </header>
+
+          <div class="mb-12">
+            <img
+              src={generatedImage}
+              alt={title}
+              height={500}
+              width={1000}
+              class="w-full rounded-2xl border border-border shadow-[0_28px_60px_-30px_rgba(16,28,40,.55)] dark:border-darkmode-border"
+            />
+          </div>
 
           <div class="content prose prose-lg dark:prose-invert max-w-none prose-headings:font-bold prose-headings:tracking-tight prose-a:text-primary hover:prose-a:text-primary/80 prose-img:rounded-xl prose-img:shadow-lg">
             <div class="lg:hidden mb-8">
@@ -63,7 +106,9 @@ const generatedImage = `/open-graph/${post.slug}.png`;
             <Content components={{img: MDXImage, pre: CodeBlock}} />
           </div>
           
-          <div class="mt-12 flex justify-between items-center border-t border-border py-6">
+          <div
+            class="mt-12 flex items-center justify-between border-t border-border py-6 dark:border-darkmode-border"
+          >
              <h5 class="mr-3">Share :</h5>
              <Share
               className="social-icons"

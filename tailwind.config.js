@@ -44,11 +44,45 @@ module.exports = {
         text: theme.colors.default.text_color.default,
         light: theme.colors.default.text_color.light,
         dark: theme.colors.default.text_color.dark,
+        // `primary` clears WCAG AA both as text on white and as a button fill
+        // behind white text; `primary-bright` is the original brand teal, kept
+        // for decorative fills where contrast rules don't apply.
         primary: theme.colors.default.theme_color.primary,
+        "primary-bright": theme.colors.default.theme_color.primary_bright,
         secondary: theme.colors.default.theme_color.secondary,
+        accent: theme.colors.default.theme_color.accent,
         body: theme.colors.default.theme_color.body,
         border: theme.colors.default.theme_color.border,
         "theme-light": theme.colors.default.theme_color.theme_light,
+
+        // dark mode palette — the markup references these via `dark:` variants
+        "darkmode-text": theme.colors.darkmode.text_color.default,
+        "darkmode-dark": theme.colors.darkmode.text_color.dark,
+        "darkmode-primary": theme.colors.darkmode.theme_color.primary,
+        "darkmode-secondary": theme.colors.darkmode.theme_color.secondary,
+        "darkmode-accent": theme.colors.darkmode.theme_color.accent,
+        "darkmode-body": theme.colors.darkmode.theme_color.body,
+        "darkmode-border": theme.colors.darkmode.theme_color.border,
+        "darkmode-theme-light": theme.colors.darkmode.theme_color.theme_light,
+        "theme-dark": theme.colors.darkmode.theme_color.theme_dark,
+      },
+      backgroundImage: {
+        "grid-light":
+          "linear-gradient(to right, rgba(16,28,40,.05) 1px, transparent 1px), linear-gradient(to bottom, rgba(16,28,40,.05) 1px, transparent 1px)",
+        "grid-dark":
+          "linear-gradient(to right, rgba(47,212,201,.07) 1px, transparent 1px), linear-gradient(to bottom, rgba(47,212,201,.07) 1px, transparent 1px)",
+      },
+      backgroundSize: {
+        grid: "44px 44px",
+      },
+      keyframes: {
+        "float-slow": {
+          "0%, 100%": { transform: "translateY(0) scale(1)" },
+          "50%": { transform: "translateY(-18px) scale(1.04)" },
+        },
+      },
+      animation: {
+        "float-slow": "float-slow 14s ease-in-out infinite",
       },
       fontSize: {
         base: font_base + "px",

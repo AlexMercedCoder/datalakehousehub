@@ -14,6 +14,98 @@ const { banner, feature, workflow, call_to_action } = homepage.data;
 const posts = await getSinglePage("blog");
 const sortedPosts = sortByDate(posts);
 const recentPosts = sortedPosts.slice(0, 3);
+
+const kbTerms = await getSinglePage("knowledgebase");
+
+// Rounded-down counts so the numbers stay honest as content grows.
+const floorTo = (n: number, step: number) => Math.floor(n / step) * step;
+
+const stats = [
+  { value: `${floorTo(posts.length, 50)}+`, label: "Articles & tutorials" },
+  { value: `${floorTo(kbTerms.length, 50)}+`, label: "Glossary entries" },
+  { value: "5", label: "Free lakehouse books" },
+  { value: "Weekly", label: "Newsletter & roundups" },
+];
+
+// The four things a first-time visitor should be able to reach in one click.
+const destinations = [
+  {
+    title: "Knowledge Base",
+    description:
+      "A searchable glossary of lakehouse, Iceberg, and catalog terminology.",
+    href: "/knowledgebase",
+    icon: "book",
+  },
+  {
+    title: "The Blog",
+    description:
+      "Tutorials, architecture deep dives, and ecosystem news, published weekly.",
+    href: "/blog",
+    icon: "pen",
+  },
+  {
+    title: "Video Explainers",
+    description:
+      "Short, focused walkthroughs of the concepts that are hard to read about.",
+    href: "/videos",
+    icon: "play",
+  },
+  {
+    title: "Events Calendar",
+    description:
+      "Meetups, webinars, and Lakehouse Linkups happening across the community.",
+    href: "/events",
+    icon: "calendar",
+  },
+];
+
+// Curated evergreen reading. The first entry gets the featured treatment.
+const mustReads = [
+  {
+    category: "Apache Iceberg",
+    title: "What is Apache Iceberg? The Table Format Revolution",
+    description:
+      "Learn how Apache Iceberg turned raw Parquet files in S3 into a fully ACID-compliant, time-traveling analytical database without moving your data out of object storage.",
+    href: "/blog/2026-04-apache-iceberg",
+  },
+  {
+    category: "Agentic AI",
+    title: "Agentic Analytics on the Apache Lakehouse",
+    description:
+      "How autonomous AI agents replace manual dashboard querying by reading governed semantic layers directly on your data lakehouse.",
+    href: "/blog/2026-04-agentic-analytics",
+  },
+  {
+    category: "Ecosystem",
+    title: "The 2025 State of the Apache Iceberg Ecosystem",
+    description:
+      "Survey data from data professionals on adoption rates, popular tooling, and where the ecosystem is heading through 2026.",
+    href: "/blog/2026-02-state-of-the-apache-iceberg-ecosystem",
+  },
+  {
+    category: "Data Lakehouse",
+    title: "What Are Table Formats and Why Were They Needed?",
+    description:
+      "Table formats solved the ACID, schema evolution, and query performance problems that turned data lakes into unmanageable swamps.",
+    href: "/blog/2026-04-29-apache-iceberg-masterclass-01-table-formats",
+  },
+  {
+    category: "Apache Iceberg",
+    title: "2026 Intro to Apache Iceberg",
+    description:
+      "A beginner-to-intermediate introduction covering the metadata layer, catalog integrations, and why Iceberg became the dominant table format.",
+    href: "/blog/2026-02-2026-Intro-to-Apache-Iceberg",
+  },
+  {
+    category: "Agentic AI",
+    title: "Why AI Fails Without a Semantic Layer",
+    description:
+      "The business context and governed metrics AI agents need to generate accurate, trustworthy analytical answers at scale.",
+    href: "/blog/2026-02-semantic-layer-05-why-ai-fails-without",
+  },
+];
+
+const [featuredRead, ...secondaryReads] = mustReads;
 ---
 
 <Base
@@ -22,149 +114,371 @@ const recentPosts = sortedPosts.slice(0, 3);
   description="News, newsletters, and community for the data lakehouse ecosystem. Weekly roundups, deep dives into Apache Iceberg, and expert guides from practitioners."
   canonical="https://datalakehousehub.com/"
 >
-  <!-- banner -->
-  <section class="section pt-[70px] pb-[70px] bg-gradient-to-br from-white to-theme-light dark:from-dark dark:to-theme-dark">
-    <div class="container">
-      <div class="row text-center">
-        <div class="mx-auto lg:col-10">
-          <h1 class="font-primary font-bold text-4xl lg:text-6xl tracking-tight mb-6 text-dark dark:text-white">{banner?.title}</h1>
+  <!-- ───────────────────────── Hero ───────────────────────── -->
+  <section
+    class="relative overflow-hidden border-b border-border bg-theme-light/60 dark:border-darkmode-border dark:bg-darkmode-theme-light/40"
+  >
+    <!-- blueprint grid + ambient glow -->
+    <div class="grid-bg pointer-events-none absolute inset-0 opacity-70"></div>
+    <div
+      class="pointer-events-none absolute -left-40 -top-40 h-[520px] w-[520px] rounded-full bg-primary-bright/25 blur-[130px] animate-float-slow dark:bg-darkmode-primary/20"
+    >
+    </div>
+    <div
+      class="pointer-events-none absolute -bottom-56 -right-32 h-[460px] w-[460px] rounded-full bg-accent/20 blur-[130px] dark:bg-darkmode-accent/10"
+    >
+    </div>
+    <div
+      class="pointer-events-none absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-body to-transparent dark:from-darkmode-body"
+    >
+    </div>
+
+    <div class="container relative pt-16 pb-20 lg:pt-24 lg:pb-28">
+      <div class="row items-center gap-y-12">
+        <div class="lg:col-6">
+          <span class="badge">
+            <span
+              class="h-1.5 w-1.5 animate-pulse rounded-full bg-primary dark:bg-darkmode-primary"
+            ></span>
+            Independent · Practitioner-run
+          </span>
+
+          <h1
+            class="mt-6 font-secondary text-4xl font-bold leading-[1.08] tracking-tight text-dark dark:text-darkmode-dark lg:text-[3.6rem]"
+          >
+            {banner?.title}
+          </h1>
+
           {
             banner?.content && (
-              <p class="mt-4 text-lg lg:text-xl text-text dark:text-gray-100 opacity-90 max-w-2xl mx-auto" set:html={markdownify(banner.content)} />
-            )
-          }
-
-          {
-            banner?.button?.enable && (
-              <div class="flex flex-col sm:flex-row justify-center items-center gap-4 mt-8">
-                <a class="btn btn-primary px-8 py-3 text-lg shadow-lg hover:shadow-xl transition-shadow duration-300" href={banner.button.link}>
-                  {banner.button.label}
-                </a>
-                <a class="btn px-8 py-3 text-lg shadow-lg hover:shadow-xl transition-shadow duration-300 border-2 border-white text-white hover:bg-white hover:text-dark rounded-full" href="/knowledgebase">
-                  Explore Knowledge Base
-                </a>
-              </div>
-            )
-          }
-
-          {
-            banner?.image && (
-              <Image
-                class="mx-auto mt-16 shadow-2xl rounded-lg border border-border dark:border-dark"
-                src={banner?.image}
-                width={850}
-                height={442}
-                alt="banner image"
+              <p
+                class="mt-6 max-w-xl text-lg leading-relaxed text-text dark:text-darkmode-text"
+                set:html={markdownify(banner.content)}
               />
             )
           }
-        </div>
-      </div>
-    </div>
-  </section>
 
-  <!-- Features -->
-  <section class="section bg-theme-light dark:bg-dark">
-    <div class="container">
-      <div class="text-center mb-12">
-        <h2 class="text-3xl lg:text-4xl font-bold dark:text-white">{markdownify(feature!.title)}</h2>
-      </div>
-      <div class="mt-8 grid gap-x-8 gap-y-6 sm:grid-cols-2 lg:grid-cols-3">
-        {
-          feature!.features.map((item: any, i: number) => (
-            <div class="feature-card rounded-2xl bg-white dark:bg-theme-dark p-8 text-center shadow-md hover:shadow-xl hover:-translate-y-1 transition-all duration-300 border border-transparent hover:border-primary/20">
-              {item.icon && (
-                <div class="mb-6 inline-flex h-16 w-16 items-center justify-center rounded-full bg-primary/10 text-primary">
-                   <img
-                    class="mx-auto"
-                    alt={item.icon}
-                    src={item.icon}
-                    width={32}
-                    height={32}
-                  />
+          <div class="mt-9 flex flex-col gap-3 sm:flex-row sm:items-center">
+            {
+              banner?.button?.enable && (
+                <a class="btn btn-primary" href={banner.button.link}>
+                  {banner.button.label}
+                </a>
+              )
+            }
+            <a class="btn btn-outline-primary" href="/knowledgebase">
+              Explore Knowledge Base
+            </a>
+          </div>
+
+          <!-- credibility strip -->
+          <dl
+            class="mt-12 grid max-w-xl grid-cols-2 gap-x-6 gap-y-6 border-t border-border pt-8 dark:border-darkmode-border sm:grid-cols-4"
+          >
+            {
+              stats.map((stat) => (
+                <div>
+                  <dt class="font-secondary text-2xl font-bold text-dark dark:text-darkmode-dark">
+                    {stat.value}
+                  </dt>
+                  <dd class="mt-1 text-xs font-semibold uppercase tracking-wider text-text/80 dark:text-darkmode-text/80">
+                    {stat.label}
+                  </dd>
                 </div>
-              )}
-              <div class="mt-2">
-                <p class="h5 font-bold mb-3" set:html={markdownify(item!.name)} />
-                <p class="text-text dark:text-light leading-relaxed">{item.content}</p>
+              ))
+            }
+          </dl>
+        </div>
+
+        {
+          banner?.image && (
+            <div class="lg:col-6">
+              <div class="relative mx-auto max-w-[620px]">
+                <div class="absolute -inset-4 rounded-[28px] bg-gradient-to-tr from-primary/25 via-transparent to-accent/25 blur-2xl dark:from-darkmode-primary/25 dark:to-darkmode-accent/20" />
+                <Image
+                  class="surface relative w-full rounded-2xl p-2 shadow-[0_28px_70px_-30px_rgba(16,28,40,.55)]"
+                  src={banner?.image}
+                  width={850}
+                  height={442}
+                  alt="The Data Lakehouse Hub"
+                  loading="eager"
+                />
               </div>
             </div>
-          ))
+          )
         }
       </div>
     </div>
   </section>
 
-  <!-- Reading List -->
-  <section class="section bg-theme-light dark:bg-dark">
+  <!-- ─────────────────── Start here / destinations ─────────────────── -->
+  <section class="section-sm">
     <div class="container">
-      <div class="text-center mb-12">
-        <h2 class="text-3xl lg:text-4xl font-bold dark:text-white">{homepage.data.reading_list?.title}</h2>
+      <div
+        class="mb-8 flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between"
+      >
+        <div>
+          <span class="eyebrow">Start here</span>
+          <h2 class="mt-2 text-2xl lg:text-3xl">Find your way around</h2>
+        </div>
+        <p class="max-w-md text-text dark:text-darkmode-text sm:text-right">
+          Four ways into the Hub — reference, reading, watching, and meeting
+          people.
+        </p>
       </div>
-      <div class="grid gap-8 sm:grid-cols-2 lg:grid-cols-3 justify-center">
+      <div class="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
         {
-          homepage.data.reading_list?.books.map((book: any) => (
-            <a 
-              href={book.link} 
-              target="_blank" 
-              rel="noopener noreferrer"
-              class="group block bg-white dark:bg-theme-dark rounded-xl shadow-lg hover:shadow-2xl hover:-translate-y-2 transition-all duration-300 overflow-hidden"
+          destinations.map((item) => (
+            <a
+              href={item.href}
+              class="surface surface-hover group flex flex-col p-6"
             >
-              <div class="relative aspect-[2/3] w-full bg-gray-100 dark:bg-darkmode-theme-light flex items-center justify-center p-4">
-                 <Image
-                  src={book.image}
-                  alt={book.title}
-                  width={300}
-                  height={450}
-                  class="object-contain max-h-full shadow-md group-hover:shadow-xl transition-shadow duration-300"
-                />
-              </div>
-              <div class="p-6 text-center">
-                <h3 class="text-xl font-bold font-primary group-hover:text-primary transition-colors">{book.title}</h3>
-                <span class="inline-flex items-center text-primary mt-3 text-sm font-semibold">
-                  Read Book 
-                  <img src="/images/arrow-right.svg" class="ml-1 w-4 h-4" alt="arrow" />
-                </span>
-              </div>
+              <span class="mb-5 inline-flex h-11 w-11 items-center justify-center rounded-xl bg-primary/10 text-primary transition-colors group-hover:bg-primary group-hover:text-white dark:bg-darkmode-primary/10 dark:text-darkmode-primary dark:group-hover:bg-darkmode-primary dark:group-hover:text-darkmode-body">
+                {item.icon === "book" && (
+                  <svg
+                    class="h-5 w-5"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.8"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    aria-hidden="true"
+                  >
+                    <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" />
+                    <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z" />
+                  </svg>
+                )}
+                {item.icon === "pen" && (
+                  <svg
+                    class="h-5 w-5"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.8"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    aria-hidden="true"
+                  >
+                    <path d="M12 20h9" />
+                    <path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4z" />
+                  </svg>
+                )}
+                {item.icon === "play" && (
+                  <svg
+                    class="h-5 w-5"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.8"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    aria-hidden="true"
+                  >
+                    <rect x="2" y="4" width="20" height="16" rx="3" />
+                    <path d="m10 9 5 3-5 3z" />
+                  </svg>
+                )}
+                {item.icon === "calendar" && (
+                  <svg
+                    class="h-5 w-5"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.8"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    aria-hidden="true"
+                  >
+                    <rect x="3" y="5" width="18" height="16" rx="2" />
+                    <path d="M16 3v4M8 3v4M3 11h18" />
+                  </svg>
+                )}
+              </span>
+              <h3 class="font-secondary text-lg font-bold text-dark transition-colors group-hover:text-primary dark:text-darkmode-dark dark:group-hover:text-darkmode-primary">
+                {item.title}
+              </h3>
+              <p class="mt-2 flex-1 text-sm leading-relaxed text-text dark:text-darkmode-text">
+                {item.description}
+              </p>
+              <span class="mt-5 inline-flex items-center gap-1.5 text-sm font-semibold text-primary dark:text-darkmode-primary">
+                Browse
+                <svg
+                  class="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  aria-hidden="true"
+                >
+                  <path d="M5 12h14M13 6l6 6-6 6" />
+                </svg>
+              </span>
             </a>
           ))
         }
       </div>
     </div>
   </section>
-  <!-- ./End service -->
 
-  <!-- Workflow -->
-  <section class="section pb-0">
-    <div class="mb-8 text-center">
-      <h2
-        class="mx-auto max-w-[400px] font-bold leading-[44px]"
-        set:html={workflow?.title}
-      />
-      <p class="mt-3" set:html={workflow?.description} />
-    </div>
+  <!-- ───────────────────────── Latest posts ───────────────────────── -->
+  <section class="section band">
     <div class="container">
-      <Image
-        src={workflow!.image}
-        alt="workflow image"
-        width={1920}
-        height={414}
-        class="mx-auto"
-      />
+      <div
+        class="mb-10 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between"
+      >
+        <div>
+          <span class="eyebrow">Fresh off the press</span>
+          <h2 class="mt-3 text-3xl lg:text-4xl">Latest Posts</h2>
+        </div>
+        <a
+          href="/blog"
+          class="group inline-flex items-center gap-1.5 font-semibold text-primary dark:text-darkmode-primary"
+        >
+          View all posts
+          <svg
+            class="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            aria-hidden="true"
+          >
+            <path d="M5 12h14M13 6l6 6-6 6"></path>
+          </svg>
+        </a>
+      </div>
+      <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        {recentPosts.map((post) => <Post post={post} />)}
+      </div>
     </div>
   </section>
 
-  <!-- Latest Posts -->
-  <section class="section bg-theme-light dark:bg-dark">
+  <!-- ─────────────────────── Must read articles ─────────────────────── -->
+  <section class="section">
     <div class="container">
-      <div class="text-center mb-12">
-        <h2 class="text-3xl lg:text-4xl font-bold dark:text-white">Latest Posts</h2>
+      <div class="section-head">
+        <span class="eyebrow">Start with these</span>
+        <h2>Must Read Articles</h2>
+        <p>
+          Deep dives into Apache Iceberg, agentic AI, and modern data lakehouse
+          architecture by Alex Merced.
+        </p>
       </div>
-      <div class="row g-4 justify-center">
+
+      <div class="grid gap-6 lg:grid-cols-12">
+        <!-- featured -->
+        <a
+          href={featuredRead.href}
+          class="group relative flex flex-col justify-end overflow-hidden rounded-2xl bg-dark p-8 text-white transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_28px_60px_-25px_rgba(16,28,40,.7)] lg:col-span-5 lg:p-10 dark:bg-theme-dark dark:border dark:border-darkmode-border"
+        >
+          <div
+            class="absolute -right-24 -top-24 h-80 w-80 rounded-full bg-primary-bright/30 blur-3xl transition-all duration-500 group-hover:bg-primary-bright/40"
+          >
+          </div>
+          <div class="grid-bg absolute inset-0 opacity-30"></div>
+          <div class="relative">
+            <span
+              class="inline-flex items-center rounded-full bg-white/10 px-3 py-1 text-[11px] font-bold uppercase tracking-[0.16em] text-white ring-1 ring-inset ring-white/20"
+            >
+              {featuredRead.category}
+            </span>
+            <h3
+              class="mt-6 font-secondary text-2xl font-bold leading-snug text-white lg:text-3xl"
+            >
+              {featuredRead.title}
+            </h3>
+            <p class="mt-4 leading-relaxed text-white/75">
+              {featuredRead.description}
+            </p>
+            <span
+              class="mt-8 inline-flex items-center gap-2 font-semibold text-primary dark:text-darkmode-primary"
+            >
+              Read article
+              <svg
+                class="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                aria-hidden="true"
+              >
+                <path d="M5 12h14M13 6l6 6-6 6"></path>
+              </svg>
+            </span>
+          </div>
+        </a>
+
+        <!-- the rest -->
+        <div class="grid gap-5 sm:grid-cols-2 lg:col-span-7">
+          {
+            secondaryReads.map((item) => (
+              <a
+                href={item.href}
+                class="surface surface-hover group flex flex-col p-6"
+              >
+                <span class="eyebrow text-[11px]">{item.category}</span>
+                <h3 class="mt-3 font-secondary text-lg font-bold leading-snug text-dark transition-colors group-hover:text-primary dark:text-darkmode-dark dark:group-hover:text-darkmode-primary">
+                  {item.title}
+                </h3>
+                <p class="mt-3 flex-1 text-sm leading-relaxed text-text dark:text-darkmode-text">
+                  {item.description}
+                </p>
+                <span class="mt-5 inline-flex items-center gap-1.5 text-sm font-semibold text-primary dark:text-darkmode-primary">
+                  Read article
+                  <svg
+                    class="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    aria-hidden="true"
+                  >
+                    <path d="M5 12h14M13 6l6 6-6 6" />
+                  </svg>
+                </span>
+              </a>
+            ))
+          }
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ──────────────────────── Why a lakehouse ──────────────────────── -->
+  <section class="section band">
+    <div class="container">
+      <div class="section-head">
+        <span class="eyebrow">The case for open architecture</span>
+        <h2 set:html={markdownify(feature!.title)} />
+      </div>
+      <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
         {
-          recentPosts.map((post) => (
-            <div class="col-12 md:col-6 lg:col-4">
-              <Post post={post} />
+          feature!.features.map((item: any, i: number) => (
+            <div class="surface surface-hover relative overflow-hidden p-8">
+              <span class="absolute right-6 top-5 font-secondary text-5xl font-bold text-dark/[0.05] dark:text-white/5">
+                {String(i + 1).padStart(2, "0")}
+              </span>
+              {item.icon && (
+                <div class="mb-6 inline-flex h-14 w-14 items-center justify-center rounded-xl bg-primary/10 dark:bg-darkmode-primary/10">
+                  <img alt="" src={item.icon} width={28} height={28} />
+                </div>
+              )}
+              <h3
+                class="font-secondary text-xl font-bold text-dark dark:text-darkmode-dark"
+                set:html={markdownify(item!.name)}
+              />
+              <p class="mt-3 leading-relaxed text-text dark:text-darkmode-text">
+                {item.content}
+              </p>
             </div>
           ))
         }
@@ -172,79 +486,90 @@ const recentPosts = sortedPosts.slice(0, 3);
     </div>
   </section>
 
-  <!-- Must Read Articles -->
+  <!-- ─────────────────────────── Mission ─────────────────────────── -->
   <section class="section">
     <div class="container">
-      <div class="text-center mb-12">
-        <h2 class="text-3xl lg:text-4xl font-bold dark:text-white" style="color:#222">Must Read Articles</h2>
-        <p class="mt-4 text-lg max-w-2xl mx-auto dark:text-gray-200" style="color:#555">Deep dives into Apache Iceberg, Agentic AI, and modern Data Lakehouse architecture by Alex Merced.</p>
-      </div>
-      <div class="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
-
-        <!-- Agentic Analytics -->
-        <article class="flex flex-col bg-white dark:bg-theme-dark rounded-2xl shadow-md hover:shadow-xl hover:-translate-y-1 transition-all duration-300 border border-border hover:border-primary/40 overflow-hidden">
-          <div class="p-6 flex flex-col flex-1">
-            <span class="inline-block text-xs font-semibold uppercase tracking-wide text-primary mb-3">Agentic AI</span>
-            <h3 class="font-bold mb-3 dark:text-white" style="font-size:1.15rem;color:#222">Agentic Analytics on the Apache Lakehouse</h3>
-            <p class="leading-relaxed flex-1 dark:text-gray-300" style="color:#555">Discover how autonomous AI agents replace manual dashboard querying by reading governed semantic layers directly on your data lakehouse, delivering faster and more reliable analytical results.</p>
-            <a href="/blog/2026-04-agentic-analytics" class="btn btn-primary mt-6 text-center">Read Article</a>
+      <div class="row items-center gap-y-10">
+        <div class="lg:col-5">
+          <span class="eyebrow">About the Hub</span>
+          <h2 class="mt-3 text-3xl lg:text-4xl" set:html={workflow?.title} />
+          <p
+            class="mt-5 text-lg leading-relaxed text-text dark:text-darkmode-text"
+            set:html={workflow?.description}
+          />
+          <a href="/author/alex-merced" class="btn btn-outline-primary btn-sm mt-8">
+            Meet the author
+          </a>
+        </div>
+        <div class="lg:col-7">
+          <div class="relative">
+            <div
+              class="absolute -inset-3 rounded-3xl bg-gradient-to-br from-primary/15 to-transparent blur-xl dark:from-darkmode-primary/15"
+            >
+            </div>
+            <Image
+              src={workflow!.image}
+              alt="How the modern open data stack fits together"
+              width={1920}
+              height={414}
+              class="surface relative w-full rounded-2xl p-3"
+            />
           </div>
-        </article>
-
-        <!-- What is Apache Iceberg -->
-        <article class="flex flex-col bg-white dark:bg-theme-dark rounded-2xl shadow-md hover:shadow-xl hover:-translate-y-1 transition-all duration-300 border border-border hover:border-primary/40 overflow-hidden">
-          <div class="p-6 flex flex-col flex-1">
-            <span class="inline-block text-xs font-semibold uppercase tracking-wide text-primary mb-3">Apache Iceberg</span>
-            <h3 class="font-bold mb-3 dark:text-white" style="font-size:1.15rem;color:#222">What is Apache Iceberg? The Table Format Revolution</h3>
-            <p class="leading-relaxed flex-1 dark:text-gray-300" style="color:#555">Learn how Apache Iceberg turned raw Parquet files in S3 into a fully ACID-compliant, time-traveling analytical database without moving your data out of object storage.</p>
-            <a href="/blog/2026-04-apache-iceberg" class="btn btn-primary mt-6 text-center">Read Article</a>
-          </div>
-        </article>
-
-        <!-- State of the Iceberg Ecosystem -->
-        <article class="flex flex-col bg-white dark:bg-theme-dark rounded-2xl shadow-md hover:shadow-xl hover:-translate-y-1 transition-all duration-300 border border-border hover:border-primary/40 overflow-hidden">
-          <div class="p-6 flex flex-col flex-1">
-            <span class="inline-block text-xs font-semibold uppercase tracking-wide text-primary mb-3">Apache Iceberg</span>
-            <h3 class="font-bold mb-3 dark:text-white" style="font-size:1.15rem;color:#222">The 2025 State of the Apache Iceberg Ecosystem</h3>
-            <p class="leading-relaxed flex-1 dark:text-gray-300" style="color:#555">Survey data from data professionals reveals adoption rates, popular tooling, and where the Apache Iceberg ecosystem is heading through 2026 and beyond.</p>
-            <a href="/blog/2026-02-state-of-the-apache-iceberg-ecosystem" class="btn btn-primary mt-6 text-center">Read Article</a>
-          </div>
-        </article>
-
-        <!-- Table Formats Masterclass -->
-        <article class="flex flex-col bg-white dark:bg-theme-dark rounded-2xl shadow-md hover:shadow-xl hover:-translate-y-1 transition-all duration-300 border border-border hover:border-primary/40 overflow-hidden">
-          <div class="p-6 flex flex-col flex-1">
-            <span class="inline-block text-xs font-semibold uppercase tracking-wide text-primary mb-3">Data Lakehouse</span>
-            <h3 class="font-bold mb-3 dark:text-white" style="font-size:1.15rem;color:#222">What Are Table Formats and Why Were They Needed?</h3>
-            <p class="leading-relaxed flex-1 dark:text-gray-300" style="color:#555">Table formats like Apache Iceberg solved the ACID, schema evolution, and query performance problems that turned data lakes into unmanageable data swamps.</p>
-            <a href="/blog/2026-04-29-apache-iceberg-masterclass-01-table-formats" class="btn btn-primary mt-6 text-center">Read Article</a>
-          </div>
-        </article>
-
-        <!-- Intro to Iceberg 2026 -->
-        <article class="flex flex-col bg-white dark:bg-theme-dark rounded-2xl shadow-md hover:shadow-xl hover:-translate-y-1 transition-all duration-300 border border-border hover:border-primary/40 overflow-hidden">
-          <div class="p-6 flex flex-col flex-1">
-            <span class="inline-block text-xs font-semibold uppercase tracking-wide text-primary mb-3">Apache Iceberg</span>
-            <h3 class="font-bold mb-3 dark:text-white" style="font-size:1.15rem;color:#222">2026 Intro to Apache Iceberg</h3>
-            <p class="leading-relaxed flex-1 dark:text-gray-300" style="color:#555">A comprehensive beginner-to-intermediate introduction to Apache Iceberg, covering its metadata layer, catalog integrations, and why it has become the dominant open table format.</p>
-            <a href="/blog/2026-02-2026-Intro-to-Apache-Iceberg" class="btn btn-primary mt-6 text-center">Read Article</a>
-          </div>
-        </article>
-
-        <!-- Semantic Layer and AI -->
-        <article class="flex flex-col bg-white dark:bg-theme-dark rounded-2xl shadow-md hover:shadow-xl hover:-translate-y-1 transition-all duration-300 border border-border hover:border-primary/40 overflow-hidden">
-          <div class="p-6 flex flex-col flex-1">
-            <span class="inline-block text-xs font-semibold uppercase tracking-wide text-primary mb-3">Agentic AI</span>
-            <h3 class="font-bold mb-3 dark:text-white" style="font-size:1.15rem;color:#222">Why AI Fails Without a Semantic Layer</h3>
-            <p class="leading-relaxed flex-1 dark:text-gray-300" style="color:#555">Explore how a semantic layer provides the business context and governed metrics that AI agents require to generate accurate, trustworthy analytical answers at scale.</p>
-            <a href="/blog/2026-02-semantic-layer-05-why-ai-fails-without" class="btn btn-primary mt-6 text-center">Read Article</a>
-          </div>
-        </article>
-
+        </div>
       </div>
     </div>
   </section>
 
-  <!-- Call to Action -->
+  <!-- ──────────────────────── Reading list ──────────────────────── -->
+  <section
+    class="section relative overflow-hidden bg-dark dark:bg-darkmode-theme-light"
+  >
+    <div class="grid-bg pointer-events-none absolute inset-0 opacity-25"></div>
+    <div
+      class="pointer-events-none absolute -right-40 top-1/4 h-[420px] w-[420px] rounded-full bg-primary-bright/25 blur-[120px]"
+    >
+    </div>
+    <div class="container relative">
+      <div class="section-head">
+        <span class="eyebrow">Free to read</span>
+        <h2 class="!text-white">{homepage.data.reading_list?.title}</h2>
+        <p class="!text-white/70">
+          Full-length books on Apache Iceberg, Apache Polaris, and lakehouse
+          architecture — no paywall.
+        </p>
+      </div>
+      <div
+        class="grid grid-cols-2 gap-5 sm:grid-cols-3 lg:grid-cols-5 lg:gap-6"
+      >
+        {
+          homepage.data.reading_list?.books.map((book: any) => (
+            <a
+              href={book.link}
+              target="_blank"
+              rel="noopener noreferrer"
+              class="group block"
+            >
+              <div class="relative overflow-hidden rounded-lg shadow-[0_18px_40px_-18px_rgba(0,0,0,.8)] transition-all duration-300 group-hover:-translate-y-2 group-hover:shadow-[0_26px_50px_-18px_rgba(10,168,167,.55)]">
+                <Image
+                  src={book.image}
+                  alt={book.title}
+                  width={300}
+                  height={450}
+                  class="aspect-[2/3] w-full object-cover"
+                />
+                <span class="absolute inset-y-0 left-0 w-[6px] bg-gradient-to-r from-black/40 to-transparent" />
+                <span class="absolute inset-0 bg-primary/0 transition-colors duration-300 group-hover:bg-primary-bright/10" />
+              </div>
+              <h3 class="mt-4 font-secondary text-sm font-semibold leading-snug text-white/90 transition-colors group-hover:text-primary-bright">
+                {book.title}
+              </h3>
+            </a>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- ─────────────────────────── Call to action ─────────────────────────── -->
   <Cta cta={call_to_action} />
 </Base>

@@ -1,36 +1,62 @@
 ---
 import { Image } from "astro:assets";
+import { nav_button } from "@/config/config.json";
 import { markdownify } from "@/lib/utils/textConverter";
 
 const { cta } = Astro.props;
 ---
 
-<section class="section px-4">
-  <div class="section container rounded-xl shadow">
-    <div class="row mx-auto items-center justify-center">
-      <div class="md:col-5 lg:col-4">
-        <Image
-          class="w-full"
-          src={cta?.image}
-          alt="call to action image"
-          width={325}
-          height={206}
-        />
+<section class="section pt-0">
+  <div class="container">
+    <div
+      class="relative overflow-hidden rounded-3xl border border-border bg-theme-light px-6 py-14 dark:border-darkmode-border dark:bg-darkmode-theme-light sm:px-12"
+    >
+      <div class="grid-bg pointer-events-none absolute inset-0 opacity-60"></div>
+      <div
+        class="pointer-events-none absolute -right-24 -top-24 h-96 w-96 rounded-full bg-primary-bright/25 blur-[110px] dark:bg-darkmode-primary/20"
+      >
       </div>
-      <div class="mt-5 text-center md:mt-0 md:text-left md:col-6 lg:col-5">
-        <h2>{cta?.title}</h2>
-        <p class="mt-6" set:html={markdownify(cta?.content)} />
-        {
-          cta.button.enable && (
-            <a
-              class="btn btn-primary mt-4"
-              href={cta.button.link}
-              rel={cta.button.rel}
-            >
-              {cta.button.label}
-            </a>
-          )
-        }
+
+      <div class="row relative items-center justify-center gap-y-8">
+        <div class="md:col-5 lg:col-4">
+          <Image
+            class="mx-auto w-full max-w-[320px]"
+            src={cta?.image}
+            alt=""
+            width={325}
+            height={206}
+          />
+        </div>
+        <div class="text-center md:col-7 md:text-left lg:col-6">
+          <span class="eyebrow">Never miss a drop</span>
+          <h2 class="mt-3 text-3xl lg:text-4xl">{cta?.title}</h2>
+          <p
+            class="mt-5 text-lg leading-relaxed text-text dark:text-darkmode-text"
+            set:html={markdownify(cta?.content)}
+          />
+          <div
+            class="mt-8 flex flex-col gap-3 sm:flex-row sm:justify-center md:justify-start"
+          >
+            {
+              nav_button?.enable && (
+                <a class="btn btn-primary" href={nav_button.link}>
+                  {nav_button.label}
+                </a>
+              )
+            }
+            {
+              cta?.button?.enable && (
+                <a
+                  class="btn btn-outline-primary"
+                  href={cta.button.link}
+                  rel={cta.button.rel}
+                >
+                  {cta.button.label}
+                </a>
+              )
+            }
+          </div>
+        </div>
       </div>
     </div>
   </div>

@@ -59,7 +59,7 @@ const { main }: { main: NavigationLink[] } = menu;
       class="navbar-nav order-3 hidden w-full md:order-1 md:flex md:w-auto md:space-x-3"
     >
       {
-        main.map((menu) => (
+        main.map((menu, index) => (
           <>
             {menu.hasChildren ? (
               <li class="nav-item nav-dropdown group relative">
@@ -69,7 +69,13 @@ const { main }: { main: NavigationLink[] } = menu;
                     <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
                   </svg>
                 </span>
-                <ul class="nav-dropdown-list hidden group-hover:block md:invisible md:absolute md:block md:opacity-0 md:group-hover:visible md:group-hover:opacity-100">
+                {/* anchor the trailing menus to their right edge so a wide
+                    dropdown never pushes past the viewport */}
+                <ul
+                  class={`nav-dropdown-list hidden group-hover:block md:invisible md:absolute md:block md:opacity-0 md:group-hover:visible md:group-hover:opacity-100 ${
+                    index >= main.length - 2 ? "md:right-0" : "md:left-0"
+                  }`}
+                >
                   {menu.children?.map((child) => (
                     <li class="nav-dropdown-item">
                       <a
