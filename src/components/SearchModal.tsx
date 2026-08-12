@@ -85,7 +85,7 @@ export default function SearchModal() {
     return (
       <button 
         onClick={() => setIsOpen(true)}
-        className="flex items-center gap-2 text-text dark:text-light hover:text-primary transition-colors text-sm border border-border dark:border-darkmode-border rounded-md px-3 py-1.5 min-w-[150px]"
+        className="flex h-10 items-center gap-2 rounded-lg border border-border bg-white px-3 text-sm text-text transition-colors hover:border-primary hover:text-primary dark:border-darkmode-border dark:bg-theme-dark dark:text-darkmode-text dark:hover:border-darkmode-primary dark:hover:text-darkmode-primary min-w-[170px]"
       >
         <FaSearch />
         <span className="opacity-70">Search...</span>

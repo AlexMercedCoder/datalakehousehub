@@ -8,14 +8,14 @@
 }
 
 #nav-toggle:checked ~ #hide-button {
-  @apply block md:hidden;
+  @apply block xl:hidden;
 }
 #nav-toggle:checked ~ #nav-menu {
-    @apply block md:flex;
+    @apply block xl:flex;
 }
 
 .header {
-  @apply sticky top-0 z-50 border-b border-border/80 bg-body/85 px-4 py-[14px] backdrop-blur-md md:px-0 md:py-[9px];
+  @apply sticky top-0 z-50 border-b border-border/80 bg-body/85 px-4 py-[14px] backdrop-blur-md xl:px-0 xl:py-[9px];
   @apply dark:border-darkmode-border/80 dark:bg-darkmode-body/85;
 }
 
@@ -37,7 +37,7 @@
 }
 
 #nav-menu {
-  @apply w-full overflow-hidden md:max-h-full md:w-auto md:overflow-visible;
+  @apply w-full overflow-hidden xl:max-h-full xl:w-auto xl:overflow-visible;
 }
 
 .nav-item {
@@ -47,14 +47,14 @@
 }
 
 .nav-link {
-  @apply relative py-3 px-2 font-secondary text-[15px] font-medium text-dark transition-colors hover:text-primary md:py-4 lg:px-3;
+  @apply relative py-3 px-2 font-secondary text-[15px] font-medium text-dark transition-colors hover:text-primary xl:py-4 xl:px-2.5;
   @apply dark:text-darkmode-text dark:hover:text-darkmode-primary;
 
   &-active {
     @apply text-primary dark:text-darkmode-primary;
 
     &::after {
-      @apply absolute inset-x-2 -bottom-px hidden h-[2px] rounded-full bg-primary content-[''] md:block lg:inset-x-3;
+      @apply absolute inset-x-2 -bottom-px hidden h-[2px] rounded-full bg-primary content-[''] xl:block xl:inset-x-2.5;
       @apply dark:bg-darkmode-primary;
     }
   }

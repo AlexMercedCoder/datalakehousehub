@@ -28,12 +28,34 @@ const { main }: { main: NavigationLink[] } = menu;
     <div class="order-0">
       <Logo />
     </div>
-    <!-- navbar toggler -->
     <input id="nav-toggle" type="checkbox" class="hidden" />
+
+    <!-- utilities: pinned to the top row at every width so they never wrap
+         underneath the nav. Subscribe lives in the menu below xl. -->
+    <div
+      class="order-1 ml-auto flex items-center gap-3 xl:order-2 xl:ml-0"
+    >
+      <div class="hidden md:block">
+        <SearchModal client:load />
+      </div>
+      <ThemeSwitcher />
+      {
+        nav_button.enable && (
+          <a
+            class="btn btn-primary btn-sm hidden h-10 xl:inline-flex"
+            href={nav_button.link}
+          >
+            {nav_button.label}
+          </a>
+        )
+      }
+    </div>
+
+    <!-- navbar toggler -->
     <label
       id="show-button"
       for="nav-toggle"
-      class="order-2 flex cursor-pointer items-center md:order-1 md:hidden"
+      class="order-2 ml-3 flex cursor-pointer items-center xl:hidden"
     >
       <svg class="h-6 fill-current" viewBox="0 0 20 20">
         <title>Menu Open</title>
@@ -43,7 +65,7 @@ const { main }: { main: NavigationLink[] } = menu;
     <label
       id="hide-button"
       for="nav-toggle"
-      class="order-2 cursor-pointer items-center md:order-1"
+      class="order-2 ml-3 cursor-pointer items-center xl:hidden"
     >
       <svg class="h-6 fill-current" viewBox="0 0 20 20">
         <title>Menu Close</title>
@@ -56,7 +78,7 @@ const { main }: { main: NavigationLink[] } = menu;
 
     <ul
       id="nav-menu"
-      class="navbar-nav order-3 hidden w-full md:order-1 md:flex md:w-auto md:space-x-3"
+      class="navbar-nav order-3 hidden w-full xl:order-1 xl:flex xl:w-auto xl:space-x-1"
     >
       {
         main.map((menu, index) => (
@@ -72,8 +94,8 @@ const { main }: { main: NavigationLink[] } = menu;
                 {/* anchor the trailing menus to their right edge so a wide
                     dropdown never pushes past the viewport */}
                 <ul
-                  class={`nav-dropdown-list hidden group-hover:block md:invisible md:absolute md:block md:opacity-0 md:group-hover:visible md:group-hover:opacity-100 ${
-                    index >= main.length - 2 ? "md:right-0" : "md:left-0"
+                  class={`nav-dropdown-list hidden group-hover:block xl:invisible xl:absolute xl:block xl:opacity-0 xl:group-hover:visible xl:group-hover:opacity-100 ${
+                    index >= main.length - 2 ? "xl:right-0" : "xl:left-0"
                   }`}
                 >
                   {menu.children?.map((child) => (
@@ -107,7 +129,7 @@ const { main }: { main: NavigationLink[] } = menu;
       }
       {
         nav_button.enable && (
-          <div class="block md:hidden">
+          <div class="block xl:hidden">
             <a
               class="btn btn-primary z-0 ml-auto py-[14px]"
               href={nav_button.link}
@@ -118,22 +140,5 @@ const { main }: { main: NavigationLink[] } = menu;
         )
       }
     </ul>
-    
-    <div class="order-1 ml-auto hidden items-center md:order-2 md:ml-0 md:flex gap-4">
-        <SearchModal client:load />
-        <ThemeSwitcher />
-        {
-          nav_button.enable && (
-            <div class="hidden md:flex md:min-w-[150px] lg:min-w-[200px]">
-              <a
-                class="btn btn-primary z-0 ml-auto py-[14px]"
-                href={nav_button.link}
-              >
-                {nav_button.label}
-              </a>
-            </div>
-          )
-        }
-    </div>
   </nav>
 </header>
