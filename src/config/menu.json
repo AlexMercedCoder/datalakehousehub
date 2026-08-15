@@ -95,7 +95,6 @@
           "text": "Dremio Lakehouse Developer Community",
           "url": "https://developer.dremio.com"
         }
-
       ]
     },
     {
@@ -125,11 +124,11 @@
           "text": "Free Polaris Book",
           "url": "https://drmevn.fyi/dlhubpolaris"
         },
-                {
+        {
           "text": "Apache Iceberg Digest: Vol 1",
           "url": "https://www.puppygraph.com/ebooks/apache-iceberg-digest-vol-1"
         },
-                        {
+        {
           "text": "Architecting an Apache Iceberg Lakehouse",
           "url": "https://hubs.la/Q03GfY4f0"
         }
@@ -174,6 +173,75 @@
         {
           "text": "Alex Merced's Lakehouse Blog",
           "url": "https://iceberglakehouse.com"
+        }
+      ]
+    }
+  ],
+  "network": [
+    {
+      "name": "Alex Merced",
+      "menu": [
+        {
+          "text": "AlexMerced.com",
+          "url": "https://alexmerced.com"
+        },
+        {
+          "text": "WhoIsAlexMerced.com",
+          "url": "https://whoisalexmerced.com"
+        },
+        {
+          "text": "AlexMercedMedia.com",
+          "url": "https://alexmercedmedia.com"
+        },
+        {
+          "text": "Books",
+          "url": "https://books.alexmerced.com"
+        },
+        {
+          "text": "AlexMercedCoder.dev",
+          "url": "https://alexmercedcoder.dev"
+        },
+        {
+          "text": "AlexMercedData.com",
+          "url": "https://alexmerceddata.com"
+        }
+      ]
+    },
+    {
+      "name": "Lakehouse & Data",
+      "menu": [
+        {
+          "text": "IcebergLakehouse.com",
+          "url": "https://iceberglakehouse.com"
+        },
+        {
+          "text": "AgenticLakehouse.com",
+          "url": "https://agenticlakehouse.com"
+        },
+        {
+          "text": "SemanticLakehouse.com",
+          "url": "https://semanticlakehouse.com"
+        },
+        {
+          "text": "DataEngnr.com",
+          "url": "https://dataengnr.com"
+        }
+      ]
+    },
+    {
+      "name": "Blogs",
+      "menu": [
+        {
+          "text": "AlexMerced.blog",
+          "url": "https://alexmerced.blog"
+        },
+        {
+          "text": "GrokOverflow.com",
+          "url": "https://grokoverflow.com"
+        },
+        {
+          "text": "IngestThis.com",
+          "url": "https://ingestthis.com"
         }
       ]
     }

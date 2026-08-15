@@ -60,6 +60,43 @@ const { footer_content, copyright } = config.params;
       }
     </div>
 
+    {/* the wider network of Alex Merced sites */}
+    <nav
+      class="border-t border-border pt-10 dark:border-darkmode-border"
+      aria-label="The Alex Merced Network"
+    >
+      <h2
+        class="font-secondary text-sm font-bold uppercase tracking-[0.14em] text-primary dark:text-darkmode-primary"
+      >
+        The Alex Merced Network
+      </h2>
+      <div class="row mt-6">
+        {
+          menu.network.map((col) => (
+            <div class="mb-10 sm:col-6 lg:col-4">
+              <h3 class="font-secondary text-sm font-bold text-dark dark:text-darkmode-dark">
+                {col.name}
+              </h3>
+              <ul class="mt-4 space-y-2.5">
+                {col.menu.map((item) => (
+                  <li>
+                    <a
+                      href={item.url}
+                      target="_blank"
+                      rel="noopener"
+                      class="text-sm text-text transition-colors hover:text-primary dark:text-darkmode-text dark:hover:text-darkmode-primary"
+                    >
+                      {item.text}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))
+        }
+      </div>
+    </nav>
+
     {/* copyright */}
     <div class="border-t border-border py-8 dark:border-darkmode-border">
       <p

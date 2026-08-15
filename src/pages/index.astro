@@ -133,6 +133,57 @@ const [featuredRead, ...secondaryReads] = mustReads;
     >
     </div>
 
+    <!-- knowledge-graph corners -->
+    <svg class="hub-graph" viewBox="0 0 1440 1000" preserveAspectRatio="xMidYMid slice" aria-hidden="true" focusable="false">
+      <defs>
+        <radialGradient id="dlh-fade" gradientUnits="userSpaceOnUse" cx="720" cy="620" r="1020">
+          <stop offset="0" stop-color="#000"/>
+          <stop offset="0.72" stop-color="#000"/>
+          <stop offset="1" stop-color="#fff"/>
+        </radialGradient>
+        <mask id="dlh-mask"><rect width="1440" height="1000" fill="url(#dlh-fade)"/></mask>
+      </defs>
+
+      <g mask="url(#dlh-mask)">
+        <g class="hub-edges">
+          <path d="M-40 180 L110 240 L60 370 L200 420"/>
+          <path d="M110 240 L250 210"/>
+          <path d="M60 370 L-30 450"/>
+          <path d="M1480 190 L1330 250 L1380 370 L1240 420"/>
+          <path d="M1330 250 L1190 220"/>
+          <path d="M1380 370 L1470 460"/>
+          <path d="M-40 820 L120 760 L70 640 L220 590"/>
+          <path d="M120 760 L260 810"/>
+          <path d="M1480 810 L1320 750 L1370 630 L1220 585"/>
+          <path d="M1320 750 L1180 800"/>
+        </g>
+
+        <g class="hub-signals">
+          <path pathLength="100" d="M-40 180 L110 240 L60 370 L200 420" style="animation-duration:9s"/>
+          <path pathLength="100" d="M1480 190 L1330 250 L1380 370 L1240 420" style="animation-duration:11s;animation-delay:-4s"/>
+          <path pathLength="100" d="M-40 820 L120 760 L70 640 L220 590" style="animation-duration:10s;animation-delay:-6s"/>
+          <path pathLength="100" d="M1480 810 L1320 750 L1370 630 L1220 585" style="animation-duration:12s;animation-delay:-2s"/>
+        </g>
+
+        <g class="hub-nodes">
+          <circle cx="110" cy="240" r="6"/>
+          <circle cx="60" cy="370" r="5" style="animation-delay:-1.4s"/>
+          <circle cx="1330" cy="250" r="6" style="animation-delay:-2.1s"/>
+          <circle cx="1380" cy="370" r="5" style="animation-delay:-3.3s"/>
+          <circle cx="120" cy="760" r="6" style="animation-delay:-0.7s"/>
+          <circle cx="70" cy="640" r="5" style="animation-delay:-2.8s"/>
+          <circle cx="1320" cy="750" r="6" style="animation-delay:-1.9s"/>
+          <circle cx="1370" cy="630" r="5" style="animation-delay:-3.9s"/>
+        </g>
+        <g class="hub-nodes hub-nodes--accent">
+          <circle cx="200" cy="420" r="7" style="animation-delay:-1.1s"/>
+          <circle cx="1240" cy="420" r="7" style="animation-delay:-2.6s"/>
+          <circle cx="220" cy="590" r="7" style="animation-delay:-3.5s"/>
+          <circle cx="1220" cy="585" r="7" style="animation-delay:-0.4s"/>
+        </g>
+      </g>
+    </svg>
+
     <div class="container relative pt-16 pb-20 lg:pt-24 lg:pb-28">
       <div class="row items-center gap-y-12">
         <div class="lg:col-6">

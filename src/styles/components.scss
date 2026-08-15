@@ -63,6 +63,72 @@
   @apply bg-grid-light bg-grid dark:bg-grid-dark;
 }
 
+// knowledge-graph corners behind the hero, desktop only
+.hub-graph {
+  @apply hidden;
+
+  @screen lg {
+    @apply pointer-events-none absolute inset-0 block h-full w-full;
+    opacity: 0.75;
+  }
+}
+
+.hub-edges path {
+  fill: none;
+  stroke: theme("colors.primary");
+  stroke-width: 1;
+  opacity: 0.35;
+}
+
+.hub-signals path {
+  fill: none;
+  stroke: theme("colors.primary");
+  stroke-width: 2.5;
+  stroke-linecap: round;
+  stroke-dasharray: 12 88;
+  animation: hubSignal 9s linear infinite;
+}
+
+.hub-nodes circle {
+  fill: none;
+  stroke: theme("colors.primary");
+  stroke-width: 1.5;
+  animation: hubNode 5s ease-in-out infinite;
+}
+
+.hub-nodes--accent circle {
+  stroke: theme("colors.accent");
+}
+
+.dark .hub-edges path,
+.dark .hub-signals path,
+.dark .hub-nodes circle {
+  stroke: theme("colors.darkmode-primary");
+}
+
+.dark .hub-nodes--accent circle {
+  stroke: theme("colors.darkmode-accent");
+}
+
+@keyframes hubSignal {
+  from { stroke-dashoffset: 100; }
+  to { stroke-dashoffset: 0; }
+}
+
+@keyframes hubNode {
+  0%, 100% { opacity: 0.3; }
+  50% { opacity: 1; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hub-signals path,
+  .hub-nodes circle {
+    animation: none;
+  }
+  .hub-signals path { stroke-dashoffset: 55; }
+  .hub-nodes circle { opacity: 0.6; }
+}
+
 // form style
 .form-inputs * {
   @apply mb-5 leading-10;
