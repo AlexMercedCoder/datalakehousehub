@@ -80,10 +80,6 @@
       "name": "Community",
       "menu": [
         {
-          "text": "Slack",
-          "url": "https://join.slack.com/t/thedatalakehousehub/shared_invite/zt-274yc8sza-mI2zhCW8LGkOh1uxuf8T5Q"
-        },
-        {
           "text": "Events",
           "url": "/events"
         },
@@ -156,23 +152,6 @@
         {
           "text": "Apache Arrow",
           "url": "https://arrow.apache.org"
-        }
-      ]
-    },
-    {
-      "name": "Sister Sites",
-      "menu": [
-        {
-          "text": "Agentic Lakehouse",
-          "url": "https://agenticlakehouse.com"
-        },
-        {
-          "text": "Alex Merced Data",
-          "url": "https://alexmerceddata.com"
-        },
-        {
-          "text": "Alex Merced's Lakehouse Blog",
-          "url": "https://iceberglakehouse.com"
         }
       ]
     }

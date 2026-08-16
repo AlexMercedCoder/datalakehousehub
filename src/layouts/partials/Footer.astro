@@ -60,77 +60,61 @@ const { footer_content, copyright } = config.params;
       }
     </div>
 
-    {/* the wider network of Alex Merced sites */}
+    {/* Cross-network and community links. Rendered as inline runs rather than
+        stacked column grids: same links, a fraction of the vertical space, and
+        it drops six redundant sub-headings out of the footer outline. */}
     <nav
-      class="border-t border-border pt-10 dark:border-darkmode-border"
+      class="border-t border-border pt-8 dark:border-darkmode-border"
       aria-label="The Alex Merced Network"
     >
       <h2
-        class="font-secondary text-sm font-bold uppercase tracking-[0.14em] text-primary dark:text-darkmode-primary"
+        class="font-secondary text-xs font-bold uppercase tracking-[0.14em] text-primary dark:text-darkmode-primary"
       >
         The Alex Merced Network
       </h2>
-      <div class="row mt-6">
+      <ul class="mt-3 flex flex-wrap items-center gap-x-3 gap-y-2">
         {
-          menu.network.map((col) => (
-            <div class="mb-10 sm:col-6 lg:col-4">
-              <h3 class="font-secondary text-sm font-bold text-dark dark:text-darkmode-dark">
-                {col.name}
-              </h3>
-              <ul class="mt-4 space-y-2.5">
-                {col.menu.map((item) => (
-                  <li>
-                    <a
-                      href={item.url}
-                      target="_blank"
-                      rel="noopener"
-                      class="text-sm text-text transition-colors hover:text-primary dark:text-darkmode-text dark:hover:text-darkmode-primary"
-                    >
-                      {item.text}
-                    </a>
-                  </li>
-                ))}
-              </ul>
-            </div>
+          menu.network.flatMap((col) => col.menu).map((item) => (
+            <li class="footer-inline-item">
+              <a
+                href={item.url}
+                target="_blank"
+                rel="noopener"
+                class="text-sm text-text transition-colors hover:text-primary dark:text-darkmode-text dark:hover:text-darkmode-primary"
+              >
+                {item.text}
+              </a>
+            </li>
           ))
         }
-      </div>
+      </ul>
     </nav>
 
     <nav
-      class="border-t border-border pt-10 dark:border-darkmode-border"
+      class="mt-8 border-t border-border pt-8 dark:border-darkmode-border"
       aria-label="Events and community"
     >
       <h2
-        class="font-secondary text-sm font-bold uppercase tracking-[0.14em] text-primary dark:text-darkmode-primary"
+        class="font-secondary text-xs font-bold uppercase tracking-[0.14em] text-primary dark:text-darkmode-primary"
       >
         Events &amp; Community
       </h2>
-      <div class="row mt-6">
+      <ul class="mt-3 flex flex-wrap items-center gap-x-3 gap-y-2">
         {
-          menu.community.map((col) => (
-            <div class="mb-10 sm:col-6 lg:col-4">
-              <h3 class="font-secondary text-sm font-bold text-dark dark:text-darkmode-dark">
-                {col.name}
-              </h3>
-              <ul class="mt-4 space-y-2.5">
-                {col.menu.map((item) => (
-                  <li>
-                    <a
-                      href={item.url}
-                      target="_blank"
-                      rel="noopener"
-                      class="text-sm text-text transition-colors hover:text-primary dark:text-darkmode-text dark:hover:text-darkmode-primary"
-                    >
-                      {item.text}
-                    </a>
-                  </li>
-                ))}
-              </ul>
-            </div>
+          menu.community.flatMap((col) => col.menu).map((item) => (
+            <li class="footer-inline-item">
+              <a
+                href={item.url}
+                target="_blank"
+                rel="noopener"
+                class="text-sm text-text transition-colors hover:text-primary dark:text-darkmode-text dark:hover:text-darkmode-primary"
+              >
+                {item.text}
+              </a>
+            </li>
           ))
         }
-      </div>
+      </ul>
     </nav>
 
     {/* copyright */}

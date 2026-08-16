@@ -375,3 +375,11 @@
   }
 }
 }
+
+// Footer cross-network runs: inline lists with a hairline separator, so a
+// 13-site list costs two or three lines instead of a seven-row grid.
+.footer-inline-item + .footer-inline-item::before {
+  content: "·";
+  margin-right: 0.75rem;
+  opacity: 0.45;
+}
