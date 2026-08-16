@@ -245,5 +245,58 @@
         }
       ]
     }
+  ],
+  "community": [
+    {
+      "name": "Event Calendars",
+      "menu": [
+        {
+          "text": "Agentic Lakehouse Events",
+          "url": "https://luma.com/agenticlakehouse"
+        },
+        {
+          "text": "Data Lakehouse Hub Events",
+          "url": "https://luma.com/DataLakehouseHub"
+        }
+      ]
+    },
+    {
+      "name": "Communities",
+      "menu": [
+        {
+          "text": "Data Lakehouse Hub Slack",
+          "url": "https://join.slack.com/t/thedatalakehousehub/shared_invite/zt-274yc8sza-mI2zhCW8LGkOh1uxuf8T5Q"
+        },
+        {
+          "text": "Data Events Slack",
+          "url": "https://join.slack.com/t/data-events/shared_invite/zt-38vgrooy9-U9ral_gr3NAz_Siih1QwmQ"
+        },
+        {
+          "text": "Data & Tech Slack",
+          "url": "https://join.slack.com/t/datatechcommunity/shared_invite/zt-12xrk4qmd-y~6jUFFd7kdaLhgLURKwoA"
+        },
+        {
+          "text": "r/datalakehouseandai",
+          "url": "https://www.reddit.com/r/datalakehouseandai/"
+        },
+        {
+          "text": "Data Lakehouse Hub on LinkedIn",
+          "url": "https://www.linkedin.com/company/data-lakehouse-hub/"
+        }
+      ]
+    },
+    {
+      "name": "YouTube",
+      "menu": [
+        {
+          "text": "Alex Merced Tech",
+          "url": "https://www.youtube.com/@AlexMercedCoder"
+        },
+        {
+          "text": "Alex Merced Data & AI",
+          "url": "https://www.youtube.com/@alexmerceddata"
+        }
+      ]
+    }
   ]
 }

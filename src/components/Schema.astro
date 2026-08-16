@@ -8,14 +8,29 @@ const pathname = Astro.url.pathname;
 
 let schemas = [];
 
+// The Data Lakehouse Hub as an entity: this site is the community's home, so
+// its off-site presences (LinkedIn, Reddit, Luma, YouTube) belong on sameAs.
+const organization = {
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "@id": `${siteUrl}#organization`,
+  "name": "The Data Lakehouse Hub",
+  "url": siteUrl,
+  "description": "An independent, practitioner-run community and reference for data lakehouse architecture, Apache Iceberg, and agentic analytics.",
+  "founder": { "@type": "Person", "name": "Alex Merced" },
+  "sameAs": [
+    "https://www.linkedin.com/company/data-lakehouse-hub/",
+    "https://www.reddit.com/r/datalakehouseandai/",
+    "https://luma.com/DataLakehouseHub",
+    "https://luma.com/agenticlakehouse",
+    "https://www.youtube.com/@alexmerceddata",
+    "https://www.youtube.com/@AlexMercedCoder"
+  ]
+};
+
 // Base WebSite Schema for homepage
 if (pathname === '/' || pathname === '') {
-  schemas.push({
-    "@context": "https://schema.org",
-    "@type": "WebSite",
-    "name": config.site.title,
-    "url": siteUrl,
-  });
+  schemas.push(organization);
 }
 
 // Global Breadcrumb Builder
@@ -107,7 +122,9 @@ if (pathname.includes('/author/alex-merced')) {
         "https://whoisalexmerced.com",
         "https://twitter.com/alexmercedcoder",
         "https://www.linkedin.com/in/alexmerced",
-        "https://books.alexmerced.com"
+        "https://books.alexmerced.com",
+        "https://www.youtube.com/@AlexMercedCoder",
+        "https://www.youtube.com/@alexmerceddata"
       ]
     }
   });
