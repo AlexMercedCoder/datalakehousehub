@@ -13,6 +13,10 @@
       "url": "/knowledgebase"
     },
     {
+      "name": "Books",
+      "url": "/books"
+    },
+    {
       "name": "Videos",
       "url": "/videos"
     },
