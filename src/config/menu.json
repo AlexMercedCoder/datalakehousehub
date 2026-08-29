@@ -154,6 +154,39 @@
           "url": "https://arrow.apache.org"
         }
       ]
+    },
+    {
+      "name": "Alex Merced Network",
+      "menu": [
+        {
+          "text": "AlexMerced.com",
+          "url": "https://alexmerced.com"
+        },
+        {
+          "text": "OpenAgenticPlatform.com",
+          "url": "https://openagenticplatform.com"
+        },
+        {
+          "text": "AlexMercedAI.com",
+          "url": "https://www.alexmercedai.com"
+        },
+        {
+          "text": "AgenticLakehouse.com",
+          "url": "https://agenticlakehouse.com"
+        },
+        {
+          "text": "OpenDataLakehouse.com",
+          "url": "https://opendatalakehouse.com"
+        },
+        {
+          "text": "SemanticLakehouse.com",
+          "url": "https://semanticlakehouse.com"
+        },
+        {
+          "text": "Books by Alex Merced",
+          "url": "https://books.alexmerced.com"
+        }
+      ]
     }
   ],
   "network": [
