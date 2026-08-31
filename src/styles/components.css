@@ -1,6 +1,5 @@
-@reference "./tailwind.css";
 @layer components {
-// section style
+/* section style */
 .section {
   @apply pt-[70px] pb-[70px];
 }
@@ -9,27 +8,27 @@
   @apply pt-12 pb-12;
 }
 
-// container
+/* container */
 .container {
   @apply mx-auto max-w-[1140px] px-4;
 }
 
-// ─────────────────────────────────────────────
-// design primitives
-// ─────────────────────────────────────────────
+/* ───────────────────────────────────────────── */
+/* design primitives */
+/* ───────────────────────────────────────────── */
 
-// small uppercase kicker above a heading
+/* small uppercase kicker above a heading */
 .eyebrow {
   @apply inline-flex items-center gap-2 text-xs font-bold uppercase tracking-[0.18em] text-primary dark:text-darkmode-primary;
 }
 
-// pill badge used in the hero and on cards
+/* pill badge used in the hero and on cards */
 .badge {
   @apply inline-flex items-center gap-2 rounded-full border border-primary/25 bg-primary/[0.07] px-4 py-1.5 text-xs font-bold uppercase tracking-[0.14em] text-primary;
   @apply dark:border-darkmode-primary/30 dark:bg-darkmode-primary/10 dark:text-darkmode-primary;
 }
 
-// centered section heading block
+/* centered section heading block */
 .section-head {
   @apply mx-auto mb-12 max-w-2xl text-center;
 
@@ -42,7 +41,7 @@
   }
 }
 
-// the standard elevated surface used by every card on the site
+/* the standard elevated surface used by every card on the site */
 .surface {
   @apply rounded-2xl border border-border bg-white transition-all duration-300;
   @apply dark:border-darkmode-border dark:bg-theme-dark;
@@ -53,17 +52,17 @@
   @apply dark:hover:border-darkmode-primary/50 dark:hover:shadow-[0_18px_40px_-18px_rgba(47,212,201,.35)];
 }
 
-// alternating band background so sections don't all read the same
+/* alternating band background so sections don't all read the same */
 .band {
   @apply bg-theme-light dark:bg-darkmode-theme-light;
 }
 
-// faint blueprint grid, used behind the hero
+/* faint blueprint grid, used behind the hero */
 .grid-bg {
-  @apply bg-grid-light bg-grid dark:bg-grid-dark;
+  @apply bg-grid-light [background-size:44px_44px] dark:bg-grid-dark;
 }
 
-// knowledge-graph corners behind the hero, desktop only
+/* knowledge-graph corners behind the hero, desktop only */
 .hub-graph {
   @apply hidden;
 
@@ -129,12 +128,12 @@
   .hub-nodes circle { opacity: 0.6; }
 }
 
-// form style
+/* form style */
 .form-inputs * {
   @apply mb-5 leading-10;
 }
 
-// social icon style
+/* social icon style */
 .social-icons {
   @apply space-x-4;
   li {
@@ -154,19 +153,19 @@
   }
 }
 
-// form style
+/* form style */
 .form-input,
 .form-textarea {
   @apply border-border py-[6px] focus:border-primary focus:ring-transparent;
   @apply dark:border-darkmode-border dark:bg-theme-dark dark:text-darkmode-dark;
 }
 
-//feature card
+/* feature card */
 .feature-card {
   @apply transition-all duration-200 ease-in-out hover:shadow;
 }
 
-//swiper pagination
+/* swiper pagination */
 .service-carousel .swiper-pagination {
   @apply flex justify-center;
 
@@ -178,7 +177,7 @@
   }
 }
 
-//cta link
+/* cta link */
 .cta-link {
   img {
     transition: margin 0.3s ease;
@@ -190,7 +189,7 @@
   }
 }
 
-//card
+/* card */
 .card {
   @apply mt-10 rounded-[4px] border border-border bg-white px-5 py-12 shadow md:mt-0;
   @apply dark:border-darkmode-border dark:bg-theme-dark;
@@ -204,7 +203,7 @@
   }
 }
 
-//faq
+/* faq */
 .faq {
   &-head {
     &::before {
@@ -219,14 +218,14 @@
   }
 }
 
-//contact
+/* contact */
 .contact-list {
   a {
     @apply font-semibold text-dark dark:text-darkmode-dark;
   }
 }
 
-//swiper-pagination
+/* swiper-pagination */
 .pagination {
   @apply space-x-2 text-center;
   .swiper-pagination-bullet {
@@ -238,7 +237,7 @@
   }
 }
 
-// notice
+/* notice */
 .notice {
   @apply mb-6 rounded-lg border px-8 py-6;
   &-head {
@@ -278,18 +277,18 @@
   }
 }
 
-// tab
+/* tab */
 .tab {
   @apply overflow-hidden rounded-lg border border-border dark:border-darkmode-border;
   &-nav {
     @apply flex border-b border-border bg-theme-light dark:border-darkmode-border dark:bg-darkmode-theme-light;
-    @apply m-0 #{!important};
-    @apply list-none #{!important};
+    @apply m-0!;
+    @apply list-none!;
 
     &-item {
       @apply cursor-pointer border-b-[3px] border-border py-2 text-lg text-dark opacity-80 dark:border-darkmode-border dark:text-darkmode-dark;
-      @apply my-0 #{!important};
-      @apply px-8 #{!important};
+      @apply my-0!;
+      @apply px-8!;
 
       &::before {
         @apply hidden;
@@ -313,7 +312,7 @@
   }
 }
 
-// accordion
+/* accordion */
 .accordion {
   @apply mb-6 overflow-hidden rounded-lg border border-border bg-theme-light;
   @apply dark:border-darkmode-border dark:bg-darkmode-theme-light;
@@ -336,7 +335,7 @@
   }
 }
 
-// content style
+/* content style */
 .content {
   @apply prose max-w-none;
   @apply prose-headings:mt-[.5em] prose-headings:mb-[.9em] prose-headings:font-secondary prose-headings:font-bold prose-headings:text-dark;
@@ -356,7 +355,7 @@
   @apply prose-tr:border-border;
   @apply prose-td:px-3 prose-td:py-4;
 
-  // dark mode
+  /* dark mode */
   @apply dark:prose-headings:text-darkmode-dark;
   @apply dark:prose-p:text-darkmode-text dark:prose-li:text-darkmode-text;
   @apply dark:prose-strong:text-darkmode-dark;
@@ -376,8 +375,8 @@
 }
 }
 
-// Footer cross-network runs: inline lists with a hairline separator, so a
-// 13-site list costs two or three lines instead of a seven-row grid.
+/* Footer cross-network runs: inline lists with a hairline separator, so a */
+/* 13-site list costs two or three lines instead of a seven-row grid. */
 .footer-inline-item + .footer-inline-item::before {
   content: "·";
   margin-right: 0.75rem;

@@ -1,0 +1,23 @@
+/*
+ * The stylesheet Tailwind processes.
+ *
+ * Plain CSS rather than Sass: Tailwind 4 will not expand @apply in output a
+ * preprocessor produced, so the directives shipped as literal at-rules and the
+ * body lost its background, font and colour. Nothing here needed Sass anyway.
+ *
+ * The JavaScript config is loaded explicitly, which v4 no longer does by
+ * itself. It is generated from src/config/theme.json, so keeping it is what
+ * holds the palette and the type scale exactly where they were.
+ */
+@import "tailwindcss";
+@config "../../tailwind.config.js";
+
+@import "./base.css";
+@import "./components.css";
+@import "./navigation.css";
+@import "./buttons.css";
+@import "./utilities.css";
+
+@layer components {
+  @import "swiper/css";
+}

@@ -1,4 +1,3 @@
-@reference "./tailwind.css";
 @layer components {
 #hide-button {
   @apply hidden;
@@ -20,7 +19,7 @@
   @apply dark:border-darkmode-border/80 dark:bg-darkmode-body/85;
 }
 
-// navbar items
+/* navbar items */
 .navbar {
   @apply relative flex flex-wrap items-center justify-between;
 }
