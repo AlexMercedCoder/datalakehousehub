@@ -4,7 +4,12 @@ import { marked } from 'marked';
 
 export async function GET(context) {
   const blog = (await getCollection('blog', ({ data }) => !data.draft))
-    .sort((a, b) => b.data.date - a.data.date);
+    .sort((a, b) => {
+      const at = a.data.date ? a.data.date.valueOf() : 0;
+      const bt = b.data.date ? b.data.date.valueOf() : 0;
+      if (bt !== at) return bt - at;
+      return a.id < b.id ? -1 : a.id > b.id ? 1 : 0;
+    });
 
   function generateSummary(content, length = 150) {
     if (!content) return "";
@@ -21,9 +26,9 @@ export async function GET(context) {
       description: generateSummary(post.body, 300),
       author: post.data.author || post.data.authors[0],
       category: post.data.categories[0],
-      link: `/blog/${post.slug}/`,
+      link: `/blog/${post.id}/`,
       enclosure: {
-        url: new URL(`/open-graph/${post.slug}.png`, context.site).href,
+        url: new URL(`/open-graph/${post.id}.png`, context.site).href,
         length: 0,
         type: 'image/png'
       }
