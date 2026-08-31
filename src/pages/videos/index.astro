@@ -180,6 +180,8 @@ const fmt = (s: number) =>
 </Base>
 
 <style lang="scss">
+  /* Scoped styles compile separately, so the theme has to be referenced here too. */
+  @reference "@/styles/tailwind.css";
   .video-breadcrumb {
     @apply mb-6 flex items-center gap-2 text-sm text-text opacity-70 dark:text-gray-400;
 

@@ -1,3 +1,4 @@
+@reference "./tailwind.css";
 @layer components {
 .btn {
   @apply inline-flex items-center justify-center gap-2 rounded-full border font-secondary text-base font-semibold leading-none;

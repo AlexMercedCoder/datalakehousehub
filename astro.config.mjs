@@ -1,7 +1,7 @@
 import mdx from "@astrojs/mdx";
 import react from "@astrojs/react";
 import sitemap from "@astrojs/sitemap";
-import tailwind from "@astrojs/tailwind";
+import tailwindcss from "@tailwindcss/vite";
 import AutoImport from "astro-auto-import";
 import { defineConfig } from "astro/config";
 import remarkCollapse from "remark-collapse";
@@ -16,11 +16,6 @@ export default defineConfig({
   integrations: [
     react(),
     sitemap(),
-    tailwind({
-      config: {
-        applyBaseStyles: false,
-      },
-    }),
     AutoImport({
       imports: [
         "@/shortcodes/Button",
@@ -51,6 +46,8 @@ export default defineConfig({
     extendDefaultPlugins: true,
   },
   vite: {
+    // Tailwind 4 is a Vite plugin rather than an Astro integration.
+    plugins: [tailwindcss()],
     build: {
       rollupOptions: {
         external: ["/pagefind/pagefind.js"],
