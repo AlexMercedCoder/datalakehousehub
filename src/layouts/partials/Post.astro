@@ -7,12 +7,12 @@ const { blog_folder } = config.settings;
 ---
 
 <a
-  href={`/${blog_folder}/${post.slug}`}
+  href={`/${blog_folder}/${post.id}`}
   class="surface surface-hover group flex h-full flex-col overflow-hidden"
 >
   <div class="relative overflow-hidden">
     <img
-      src={`/open-graph/${post.slug}.png`}
+      src={`/open-graph/${post.id}.png`}
       alt={post.data.title}
       width={1200}
       height={630}

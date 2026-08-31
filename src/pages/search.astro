@@ -13,7 +13,7 @@ const posts = (await getCollection("blog", ({ data }) => !data.draft))
 
 // Map posts to the structure expected by SearchBar
 const searchList = posts.map((post) => ({
-  slug: post.slug,
+  slug: post.id,
   data: {
     title: post.data.title,
     // Ensure author is available for search (singular) and display (plural array)

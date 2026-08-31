@@ -61,7 +61,7 @@ const sorted = [...posts].sort((a: any, b: any) =>
         {
           sorted.map((post: any) => (
             <a
-              href={`/knowledgebase/${post.slug}`}
+              href={`/knowledgebase/${post.id}`}
               class="surface surface-hover kb-card group flex flex-col p-6"
               data-title={post.data.title.toLowerCase()}
               data-desc={post.data.description?.toLowerCase() || ""}

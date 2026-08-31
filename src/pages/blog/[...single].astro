@@ -10,7 +10,7 @@ export async function getStaticPaths() {
 
   const paths = posts.map((post: any) => ({
     params: {
-      single: post.slug,
+      single: post.id,
     },
     props: { post },
   }));
@@ -29,7 +29,7 @@ const { title, meta_title, description, image, date, authors } = post.data;
   author={authors ? authors[0] : ""}
   pubDate={date}
   type="article"
-  slug={post.slug}
+  slug={post.id}
 >
   <PostSingle post={post} />
 </Base>

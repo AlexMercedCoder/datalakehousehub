@@ -15,9 +15,9 @@ const posts = sortByDate(await getCollection("blog"));
 let similarPosts = [];
 
 if (post.data.relatedPosts && post.data.relatedPosts.length > 0) {
-  similarPosts = posts.filter((p) => post.data.relatedPosts.includes(p.slug));
+  similarPosts = posts.filter((p) => post.data.relatedPosts.includes(p.id));
 } else {
-  similarPosts = similerItems(post, posts, post.slug);
+  similarPosts = similerItems(post, posts, post.id);
 }
 ---
 
@@ -30,11 +30,11 @@ if (post.data.relatedPosts && post.data.relatedPosts.length > 0) {
           <div class="col-12 mb-8 sm:col-6 lg:col-4">
              <div class="bg-white dark:bg-darkmode-theme-light rounded-lg shadow p-4 h-full">
                 <a
-                    href={`/blog/${post.slug}`}
+                    href={`/blog/${post.id}`}
                     class="block hover:text-primary transition duration-300"
                 >
                     <img
-                    src={`/open-graph/${post.slug}.png`}
+                    src={`/open-graph/${post.id}.png`}
                     alt={post.data.title}
                     width={445}
                     height={230}
@@ -44,7 +44,7 @@ if (post.data.relatedPosts && post.data.relatedPosts.length > 0) {
                 <div class="mt-4">
                     <h3 class="h4 mb-2">
                         <a
-                        href={`/blog/${post.slug}`}
+                        href={`/blog/${post.id}`}
                         class="block hover:text-primary transition duration-300"
                         >
                         {post.data.title}

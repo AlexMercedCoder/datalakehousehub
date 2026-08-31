@@ -1,7 +1,7 @@
 ---
 import Base from "@/layouts/Base.astro";
 import { markdownify } from "@/lib/utils/textConverter";
-import { getEntry } from "astro:content";
+import { getEntry, render } from "astro:content";
 import { getCollection } from "astro:content";
 import { sortByDate } from "@/lib/utils/sortFunctions";
 import Search from "@/layouts/Search";
@@ -10,7 +10,7 @@ import { FaRegClock } from "react-icons/fa";
 import readingTime from "@/lib/utils/readingTime";
 
 const entry = await getEntry("pages", "404");
-const { Content } = await entry.render();
+const { Content } = await render(entry);
 
 const posts = await getCollection("blog");
 const recentPosts = sortByDate(
@@ -41,7 +41,7 @@ const recentPosts = sortByDate(
                  <div class="bg-white dark:bg-darkmode-theme-light rounded-lg shadow p-4 h-full">
                     {post.data.image && (
                     <a
-                        href={`/blog/${post.slug}`}
+                        href={`/blog/${post.id}`}
                         class="block hover:text-primary transition duration-300"
                     >
                         <Image
@@ -59,7 +59,7 @@ const recentPosts = sortByDate(
                         </div>
                         <h3 class="h4 mb-2">
                             <a
-                            href={`/blog/${post.slug}`}
+                            href={`/blog/${post.id}`}
                             class="block hover:text-primary transition duration-300"
                             >
                             {post.data.title}
