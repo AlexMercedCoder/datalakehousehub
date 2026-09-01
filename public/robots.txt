@@ -22,4 +22,4 @@ Allow: /
 User-agent: CCBot
 Allow: /
 
-Sitemap: https://datalakehousehub.com/sitemap.xml
+Sitemap: https://datalakehousehub.com/sitemap-index.xml

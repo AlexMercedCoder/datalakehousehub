@@ -85,6 +85,7 @@ const postsCollection = defineCollection({
     categories: z.array(z.string()).default(["others"]),
     tags: z.array(z.string()).default(["others"]),
     relatedPosts: z.array(z.string()).optional(),
+    canonical: z.string().optional(),
     draft: z.boolean().optional(),
   }),
 });
@@ -98,6 +99,7 @@ const pagesCollection = defineCollection({
     description: z.string().optional(),
     image: z.string().optional(),
     layout: z.string().optional(),
+    noindex: z.boolean().optional(),
     draft: z.boolean().optional(),
   }),
 });

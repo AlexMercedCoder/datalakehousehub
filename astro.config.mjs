@@ -15,7 +15,13 @@ export default defineConfig({
   trailingSlash: config.site.trailing_slash ? "always" : "never",
   integrations: [
     react(),
-    sitemap(),
+    sitemap({
+      filter: (page) =>
+        !page.endsWith("/search") &&
+        !page.endsWith("/search/") &&
+        !page.endsWith("/elements") &&
+        !page.endsWith("/elements/"),
+    }),
     AutoImport({
       imports: [
         "@/shortcodes/Button",

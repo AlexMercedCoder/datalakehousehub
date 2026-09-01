@@ -18,7 +18,7 @@ export async function getStaticPaths() {
 }
 
 const { post } = Astro.props;
-const { title, meta_title, description, image, date, authors } = post.data;
+const { title, meta_title, description, image, date, authors, canonical } = post.data;
 ---
 
 <Base
@@ -26,6 +26,7 @@ const { title, meta_title, description, image, date, authors } = post.data;
   meta_title={meta_title}
   description={description}
   image={image}
+  canonical={canonical}
   author={authors ? authors[0] : ""}
   pubDate={date}
   type="article"

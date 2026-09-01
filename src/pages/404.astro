@@ -4,7 +4,6 @@ import { markdownify } from "@/lib/utils/textConverter";
 import { getEntry, render } from "astro:content";
 import { getCollection } from "astro:content";
 import { sortByDate } from "@/lib/utils/sortFunctions";
-import Search from "@/layouts/Search";
 import { Image } from "astro:assets";
 import { FaRegClock } from "react-icons/fa";
 import readingTime from "@/lib/utils/readingTime";
@@ -18,17 +17,16 @@ const recentPosts = sortByDate(
 ).slice(0, 3);
 ---
 
-<Base title={entry.data.title}>
+<Base title={entry.data.title} noindex>
   <section class="section">
     <div class="container">
       <div class="flex h-[40vh] items-center justify-center">
         <div class="text-center w-full max-w-2xl">
           <h1 class="mb-4" set:html={markdownify(entry.data.title)} />
           <Content />
-          
+
           <div class="mt-8 mb-12">
-            <h3 class="h5 mb-4">Search for what you need:</h3>
-            <Search client:load searchList={posts} />
+            <a href="/search/" class="btn btn-primary">Search the site</a>
           </div>
         </div>
       </div>
