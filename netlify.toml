@@ -3,7 +3,7 @@ publish = "dist"
 command = "npm run build"
 
 [build.environment]
-  NODE_VERSION = "21.4.0" # or whatever your local `node -v` returns
+  NODE_VERSION = "22.12.0"
 
 [[headers]]
 for = "/*" # This defines which paths this specific [[headers]] block will cover.
