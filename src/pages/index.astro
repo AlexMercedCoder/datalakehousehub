@@ -7,6 +7,7 @@ import { getSinglePage } from "@/lib/contentParser.astro";
 import { sortByDate } from "@/lib/utils/sortFunctions";
 import { markdownify } from "@/lib/utils/textConverter";
 import { getEntry } from "astro:content";
+import HomeFilmShowcase from "@/components/HomeFilmShowcase.astro";
 
 const homepage = await getEntry("homepage", "index");
 const { banner, feature, workflow, call_to_action } = homepage.data;
@@ -261,6 +262,14 @@ const [featuredRead, ...secondaryReads] = mustReads;
       </div>
     </div>
   </section>
+
+  <HomeFilmShowcase eyebrow="Featured music video" heading="Tour the Iceberg open lakehouse" intro="A beat-synced, scene-rich guide to Apache Iceberg and the open architecture growing around it." films={[{
+    title: 'The Iceberg Open Lakehouse',
+    description: 'From Parquet files and snapshots to catalogs, engines, governance, and AI-ready semantics.',
+    src: 'https://opendatalakehouse.com/the-iceberg-open-lakehouse.mp4',
+    poster: 'https://opendatalakehouse.com/the-iceberg-open-lakehouse-poster.jpg',
+    runtime: '7:50',
+  }]} />
 
   <!-- ─────────────────── Start here / destinations ─────────────────── -->
   <section class="section-sm">
