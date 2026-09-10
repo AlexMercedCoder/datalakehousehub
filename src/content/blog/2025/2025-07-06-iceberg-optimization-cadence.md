@@ -16,14 +16,15 @@ category: "Apache Iceberg"
 bannerImage: "https://i.imgur.com/cpoMZQ8.png"
 canonical: "https://iceberglakehouse.com/posts/iceberg-optimization-cadence/"
 ---
-> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/iceberg-optimization-cadence/).
 
-- **[Free Apache Iceberg Course](https://hello.dremio.com/webcast-an-apache-iceberg-lakehouse-crash-course-reg.html?utm_source=ev_external_blog&utm_medium=influencer&utm_campaign=optimization_blogs&utm_content=alexmerced&utm_term=external_blog)**  
-- **[Free Copy of “Apache Iceberg: The Definitive Guide”](https://hello.dremio.com/wp-apache-iceberg-the-definitive-guide-reg.html?utm_source=ev_external_blog&utm_medium=influencer&utm_campaign=optimization_blogs&utm_content=alexmerced&utm_term=external_blog)**  
-- **[Free Copy of “Apache Polaris: The Definitive Guide”](https://hello.dremio.com/wp-apache-polaris-guide-reg.html?utm_source=ev_external_blog&utm_medium=influencer&utm_campaign=optimization_blogs&utm_content=alexmerced&utm_term=external_blog)**  
-- **[2025 Apache Iceberg Architecture Guide](https://medium.com/data-engineering-with-dremio/2025-guide-to-architecting-an-iceberg-lakehouse-9b19ed42c9de)**  
-- **[Iceberg Lakehouse Engineering Video Playlist](https://youtube.com/playlist?list=PLsLAVBjQJO0p0Yq1fLkoHvt2lEJj5pcYe&si=WTSnqjXZv6Glkc3y)**  
-- **[Ultimate Apache Iceberg Resource Guide](https://medium.com/data-engineering-with-dremio/ultimate-directory-of-apache-iceberg-resources-e3e02efac62e)** 
+- **[Free Apache Iceberg Course](https://hello.dremio.com/webcast-an-apache-iceberg-lakehouse-crash-course-reg.html?utm_source=ev_external_blog&utm_medium=influencer&utm_campaign=optimization_blogs&utm_content=alexmerced&utm_term=external_blog)** 
+- **[Free Copy of “Apache Iceberg: The Definitive Guide”](https://hello.dremio.com/wp-apache-iceberg-the-definitive-guide-reg.html?utm_source=ev_external_blog&utm_medium=influencer&utm_campaign=optimization_blogs&utm_content=alexmerced&utm_term=external_blog)** 
+- **[Free Copy of “Apache Polaris: The Definitive Guide”](https://hello.dremio.com/wp-apache-polaris-guide-reg.html?utm_source=ev_external_blog&utm_medium=influencer&utm_campaign=optimization_blogs&utm_content=alexmerced&utm_term=external_blog)** 
+- **[2025 Apache Iceberg Architecture Guide](https://medium.com/data-engineering-with-dremio/2025-guide-to-architecting-an-iceberg-lakehouse-9b19ed42c9de)** 
+- **[Iceberg Lakehouse Engineering Video Playlist](https://youtube.com/playlist?list=PLsLAVBjQJO0p0Yq1fLkoHvt2lEJj5pcYe&si=WTSnqjXZv6Glkc3y)** 
+- **[Ultimate Apache Iceberg Resource Guide](https://medium.com/data-engineering-with-dremio/ultimate-directory-of-apache-iceberg-resources-e3e02efac62e)**
+
+> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/iceberg-optimization-cadence/).
 
 # Designing the Ideal Cadence for Compaction and Snapshot Expiration
 
@@ -61,12 +62,12 @@ You need a cadence that fits your data’s lifecycle and your platform’s SLAs.
 
 ## Suggested Cadence Models
 
-| Use Case                        | Compaction Cadence     | Snapshot Expiration        |
-|--------------------------------|------------------------|-----------------------------|
-| High-volume streaming pipeline | Hourly or event-based  | Daily, keep 1–3 days        |
-| Daily batch ingestion          | Post-batch or nightly  | Weekly, keep 7–14 days      |
-| Low-latency analytics          | Hourly                 | Daily, keep 3–5 days        |
-| Regulatory or audited data     | Weekly or on-demand    | Monthly, retain 30–90 days  |
+| Use Case | Compaction Cadence | Snapshot Expiration |
+|----------------|------------|---------------|
+| High-volume streaming pipeline | Hourly or event-based | Daily, keep 1-3 days |
+| Daily batch ingestion | Post-batch or nightly | Weekly, keep 7-14 days |
+| Low-latency analytics | Hourly | Daily, keep 3-5 days |
+| Regulatory or audited data | Weekly or on-demand | Monthly, retain 30-90 days |
 
 Use metadata queries (e.g., from `files`, `manifests`, `snapshots`) to drive dynamic policies.
 

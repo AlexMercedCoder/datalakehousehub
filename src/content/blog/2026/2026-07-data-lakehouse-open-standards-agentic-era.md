@@ -13,9 +13,10 @@ draft: false
 image: "/images/blog.png"
 canonical: "https://iceberglakehouse.com/posts/data-lakehouse-open-standards-agentic-era/"
 ---
-> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/data-lakehouse-open-standards-agentic-era/).
 
 A single analyst running a report might touch three tables and issue a dozen queries in an afternoon. An AI agent working the same problem can issue a dozen queries in a minute, inspect twenty datasets to figure out which one it actually needs, and repeat that pattern across dozens of parallel tasks. The math changes the moment agents enter the picture. Every friction point in your data architecture, every copy you have to reconcile, every place where a metric is defined differently in two tools, gets multiplied by the volume and speed at which agents work.
+
+> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/data-lakehouse-open-standards-agentic-era/).
 
 That multiplication is why open standards have stopped being an ideological preference and become an operational requirement. When one team of humans works around a data silo, the workaround is annoying. When a fleet of agents has to work around the same silo, the workarounds compound into unreliable results and unbounded cost. Open table formats, open catalogs, and federated query engines are the tools that keep the silos from forming in the first place. This post walks through why the agentic era exposes closed data architectures, and what an open lakehouse foundation actually needs to provide.
 
@@ -110,7 +111,7 @@ The failure mode to avoid is treating metadata as an afterthought that lives in 
 It helps to see the two architectures side by side, especially through an agentic lens.
 
 | Concern | Closed storage silo | Open lakehouse standard |
-| --- | --- | --- |
+| -- | -- | -- |
 | Data copies | Load into the warehouse; multiple copies to reconcile | Query in place; one authoritative source |
 | Engine choice | Locked to the vendor's engine | Any engine that speaks the open format and catalog |
 | Metadata access | Proprietary catalog, vendor-only | Open REST catalog, any compliant engine |

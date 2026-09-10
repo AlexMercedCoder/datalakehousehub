@@ -1,6 +1,6 @@
 ---
 title: "When the Query Optimizer Starts Managing Its Own Materializations"
-description: "Autonomous materialized view management replaces quarterly review meetings with workload-driven scoring, and it's essential when AI agents generate unpredictable query patterns."
+description: "Autonomous materialized view management replaces quarterly review meetings with workload-driven scoring, and it's essential when AI agents generate."
 date: 2026-07-28T09:00:00Z
 author: "Alex Merced"
 category: "Apache Iceberg"
@@ -15,11 +15,11 @@ image: "/images/blog.png"
 canonical: "https://iceberglakehouse.com/posts/autonomous-reflections-agentic-lakehouse/"
 ---
 
-> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/autonomous-reflections-agentic-lakehouse/).
-
 # When the Query Optimizer Starts Managing Its Own Materializations
 
 A data engineer maintains 60 materialized views. Twelve of them accelerate queries nobody runs anymore, because the dashboard they served got retired in March and nobody told her. Eight of the slowest queries in the system have no acceleration at all, because the analysts who run them never filed a ticket. She finds out about both problems during a quarterly review, six months late.
+
+> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/autonomous-reflections-agentic-lakehouse/).
 
 This is the normal state of materialized view management, and it is not a competence problem. It is an information problem. The person deciding what to materialize does not see the query log, and the system that sees the query log does not decide what to materialize.
 
@@ -50,7 +50,7 @@ The query log has all of this. The optimizer already parses every query, builds 
 The three operating modes compare like this.
 
 | | Manual | Recommendation-assisted | Autonomous |
-|---|---|---|---|
+|--|--|--|--|
 | What to build | Engineer decides | System ranks, engineer approves | System decides |
 | What to drop | Rarely happens | System scores, engineer approves | System decides, with grace period |
 | Reaction time | Weeks to quarters | Days | Within the analysis window |
@@ -108,7 +108,7 @@ Two capabilities had to exist before autonomy made sense, and they arrived separ
 
 Scoring recommendations came first. The system analyzes job history, identifies patterns that a materialization accelerates, and ranks candidates by expected impact. Dremio's recommendation engine looks at all jobs within a rolling 7-day window and surfaces the 10 Reflections with the most impact, updated daily, ranked by the number of prior jobs a recommendation accelerates and the expected average improvement.
 
-Scoring existing materializations came second, in version 25.2, when the cost-based analyzer was extended to evaluate Reflections already in place. This is the harder half and the more valuable one. A score on an existing materialization answers "is this still earning its keep," which is the question nobody asks manually.
+Scoring existing materializations came second, in version 25.2, when the cost-based analyzer was extended to evaluate Reflections already in place. This is the harder half and the more valuable one. A score on an existing materialization answers "is this still earning its keep, " which is the question nobody asks manually.
 
 With both halves, the autonomous decision becomes a comparison. Take the highest-scoring recommendations. Take the lowest-scoring existing materializations. Decide whether swapping is worth it. Dremio shipped that logic in version 26.0, giving the system the ability to create and drop Reflections without user approval.
 
@@ -175,7 +175,7 @@ The recommendation machinery is available directly. Dremio exposes a table funct
 ```sql
 SELECT *
 FROM TABLE(SYS.RECOMMEND_REFLECTIONS(
-  ARRAY['844c0023-6272-8b16-aef3-aea289acadb1']
+ ARRAY['844c0023-6272-8b16-aef3-aea289acadb1']
 ));
 ```
 
@@ -188,11 +188,9 @@ Feeding it a batch of related jobs works better than one at a time:
 ```sql
 SELECT *
 FROM TABLE(SYS.RECOMMEND_REFLECTIONS(
-  ARRAY[
-    '844c0023-6272-8b16-aef3-aea289acadb1',
-    '9b1f7c44-0e2a-4f39-b8c1-2d5e7a9c3b10',
-    'c72e15aa-83d4-4bb7-9e6f-1a0c4d8e2f77'
-  ]
+ ARRAY[
+ '844c0023-6272-8b16-aef3-aea289acadb1', '9b1f7c44-0e2a-4f39-b8c1-2d5e7a9c3b10', 'c72e15aa-83d4-4bb7-9e6f-1a0c4d8e2f77'
+ ]
 ));
 ```
 
@@ -296,7 +294,7 @@ The arithmetic is worth doing before you enable anything.
 
 **Raw materializations** carry a subset of columns for the full row count. A table with 200 columns where the materialization carries 8 costs roughly the fraction of total bytes those 8 columns represent, which is not 4 percent, because column widths vary enormously. A single wide string column often outweighs fifty integers. Check actual column sizes rather than counting columns.
 
-**Aggregation materializations** carry a row per distinct combination of the grouping dimensions. Three dimensions with 400, 12, and 30 distinct values gives at most 144,000 rows regardless of whether the source has a billion. That is the case where aggregation is enormously cheaper than the source. Add a fourth dimension with 2 million distinct values and the arithmetic inverts.
+**Aggregation materializations** carry a row per distinct combination of the grouping dimensions. Three dimensions with 400, 12, and 30 distinct values gives at most 144, 000 rows regardless of whether the source has a billion. That is the case where aggregation is enormously cheaper than the source. Add a fourth dimension with 2 million distinct values and the arithmetic inverts.
 
 **Refresh writes new data.** Each refresh produces new files, and old snapshots persist until expiration. A materialization refreshed frequently against a changing source accumulates snapshot history like any other Iceberg table, and it needs the same expiration discipline. This is the quiet cost that grows without anyone deciding to grow it.
 

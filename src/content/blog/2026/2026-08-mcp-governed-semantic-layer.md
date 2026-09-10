@@ -1,7 +1,7 @@
 ---
 title: "Why Agentic AI Needs a Governed Semantic Layer Behind the Model Context Protocol"
 date: 2026-08-04T09:00:00Z
-description: "Why agentic AI needs a governed semantic layer behind the Model Context Protocol: metric consistency, access control, Apache Ossie for portable definitions, and Apache Polaris for enforcement."
+description: "Why agentic AI needs a governed semantic layer behind the Model Context Protocol: metric consistency, access control, Apache Ossie for portable."
 author: "Alex Merced"
 category: "AI & Agents"
 tags:
@@ -16,11 +16,11 @@ image: "/images/blog.png"
 canonical: "https://iceberglakehouse.com/posts/mcp-governed-semantic-layer/"
 ---
 
-> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/mcp-governed-semantic-layer/).
-
 # Why Agentic AI Needs a Governed Semantic Layer Behind the Model Context Protocol
 
 *By Alex Merced, Data Lakehouse and AI Evangelist*
+
+> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/mcp-governed-semantic-layer/).
 
 An executive asks an AI assistant what revenue looked like last quarter. The assistant writes SQL against the warehouse, sums an amount column, and returns a number. The number is wrong, in the specific way that is hardest to catch: it includes cancelled orders, excludes a revenue stream that lives in a different table, and counts a currency conversion at the wrong date.
 
@@ -111,7 +111,7 @@ The architectural principle is that the catalog is the one component every acces
 Put the layers in order and the design reads clearly.
 
 | Layer | Responsibility | Open implementations |
-|---|---|---|
+|--|--|--|
 | Storage | Files in object storage | S3-compatible stores |
 | Table format | Table semantics over files | Apache Iceberg |
 | Catalog | Object-level authorization, credential vending, asset registry | Apache Polaris |
@@ -127,42 +127,25 @@ The most consequential engineering decision in this architecture is the tool sur
 
 ```json
 {
-  "tools": [
-    {
-      "name": "list_metrics",
-      "description": "List available governed business metrics with their definitions, grain, and permitted dimensions.",
-      "inputSchema": {
-        "type": "object",
-        "properties": {
-          "domain": { "type": "string", "description": "Optional business domain filter, e.g. 'sales'" }
-        }
-      }
-    },
-    {
-      "name": "describe_metric",
-      "description": "Return the full definition of one metric: calculation, filters, grain, owner, and dimensions it can be sliced by.",
-      "inputSchema": {
-        "type": "object",
-        "properties": { "metric": { "type": "string" } },
-        "required": ["metric"]
-      }
-    },
-    {
-      "name": "query_metric",
-      "description": "Execute a governed metric query. SQL is generated from the semantic definition, not supplied by the caller.",
-      "inputSchema": {
-        "type": "object",
-        "properties": {
-          "metric":     { "type": "string" },
-          "dimensions": { "type": "array", "items": { "type": "string" } },
-          "filters":    { "type": "array", "items": { "type": "object" } },
-          "grain":      { "type": "string", "enum": ["day", "week", "month", "quarter"] },
-          "limit":      { "type": "integer", "maximum": 10000 }
-        },
-        "required": ["metric"]
-      }
-    }
-  ]
+ "tools": [
+ {
+ "name": "list_metrics", "description": "List available governed business metrics with their definitions, grain, and permitted dimensions.", "inputSchema": {
+ "type": "object", "properties": {
+ "domain": { "type": "string", "description": "Optional business domain filter, e.g. 'sales'" }
+ }
+ }
+ }, {
+ "name": "describe_metric", "description": "Return the full definition of one metric: calculation, filters, grain, owner, and dimensions it can be sliced by.", "inputSchema": {
+ "type": "object", "properties": { "metric": { "type": "string" } }, "required": ["metric"]
+ }
+ }, {
+ "name": "query_metric", "description": "Execute a governed metric query. SQL is generated from the semantic definition, not supplied by the caller.", "inputSchema": {
+ "type": "object", "properties": {
+ "metric": { "type": "string" }, "dimensions": { "type": "array", "items": { "type": "string" } }, "filters": { "type": "array", "items": { "type": "object" } }, "grain": { "type": "string", "enum": ["day", "week", "month", "quarter"] }, "limit": { "type": "integer", "maximum": 10000 }
+ }, "required": ["metric"]
+ }
+ }
+ ]
 }
 ```
 
@@ -178,23 +161,23 @@ The corresponding semantic definition in Ossie's YAML shape looks like this.
 
 ```yaml
 metrics:
-  - name: net_revenue
-    label: Net Revenue
-    description: >
-      Gross order value less refunds and cancellations, converted to USD
-      at the order date rate. Excludes internal test accounts.
-    calculation: SUM(orders.amount_usd) - SUM(refunds.amount_usd)
-    grain: order
-    filters:
-      - orders.status != 'cancelled'
-      - orders.account_type != 'internal_test'
-    dimensions:
-      - customer.region
-      - customer.segment
-      - product.category
-      - order.date
-    owner: finance-analytics
-    version: 3
+ - name: net_revenue
+ label: Net Revenue
+ description: >
+ Gross order value less refunds and cancellations, converted to USD
+ at the order date rate. Excludes internal test accounts.
+ calculation: SUM(orders.amount_usd) - SUM(refunds.amount_usd)
+ grain: order
+ filters:
+ - orders.status != 'cancelled'
+ - orders.account_type != 'internal_test'
+ dimensions:
+ - customer.region
+ - customer.segment
+ - product.category
+ - order.date
+ owner: finance-analytics
+ version: 3
 ```
 
 Read what that buys an agent. The description tells it what the metric means in words a model reasons over. The calculation and filters are fixed, so the cancelled-orders mistake from the opening cannot happen. The dimension list bounds what slicing is permitted. The owner makes the definition accountable to a human. The version makes changes reviewable.

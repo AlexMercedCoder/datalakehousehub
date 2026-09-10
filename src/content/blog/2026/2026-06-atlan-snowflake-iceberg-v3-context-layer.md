@@ -1,6 +1,6 @@
 ---
 title: "Lakehouse Context Layers with Atlan and Iceberg v3"
-description: "Lakehouse context layers bridge the gap between raw Iceberg tables and AI agents that need business meaning. Atlan and Snowflake Horizon each take different approaches to the same problem."
+description: "Lakehouse context layers bridge the gap between raw Iceberg tables and AI agents that need business meaning."
 date: 2026-06-08T09:00:00Z
 slug: "atlan-snowflake-iceberg-v3-context-layer"
 draft: false
@@ -15,14 +15,13 @@ tags:
   - "Snowflake Horizon"
   - "context plane"
 ---
-
 ## The Gap Between Table Formats and Business Meaning
 
 Apache Iceberg v3 went GA on Snowflake on May 7, 2026, bringing deletion vectors, row lineage, VARIANT types, and nanosecond timestamps to the open table format. These are real technical advances. Deletion vectors alone deliver up to 10x faster DML operations by replacing positional delete files with O(1) binary bitmap lookups (source: Atlan Knowledge Base, June 2026). Row lineage adds native CDC through `_row_id` and `_last_updated_sequence_number` fields that track every row change without external tooling.
 
 But here is the problem. A faster table format does not tell an AI agent what a column means. It does not tell a data consumer whether `revenue` in table A means the same thing as `revenue` in table B. It does not explain that `ACCT_STAT_CD` maps to a lookup table from 2004 that nobody remembers.
 
-A 2025 ACL study by Ji et al. quantified this gap dramatically. The same frontier LLM models that scored 94-95% accuracy on the standard BIRD text-to-SQL benchmark dropped to 39.1% on BIRD-Ent, an enterprise version with abbreviated column names, massive schemas over 4,000 columns, and scattered domain knowledge. The models did not get worse. The data got real.
+A 2025 ACL study by Ji et al. quantified this gap dramatically. The same frontier LLM models that scored 94-95% accuracy on the standard BIRD text-to-SQL benchmark dropped to 39.1% on BIRD-Ent, an enterprise version with abbreviated column names, massive schemas over 4, 000 columns, and scattered domain knowledge. The models did not get worse. The data got real.
 
 This is where the context layer enters. A context layer sits above the table format layer. It enriches raw metadata with business meaning, relationships, governance policies, and usage patterns. It is what transforms an Iceberg table from a Parquet file with a metadata pointer into a governed business asset that AI agents can query without guessing.
 
@@ -98,7 +97,7 @@ Teams adopting context layers follow one of three patterns.
 
 ## The ACL Study and Why Context Matters
 
-The 2025 ACL study by Ji et al. is worth examining closely because it quantifies the exact problem a context layer solves. The researchers created enterprise versions of the standard BIRD and Spider benchmarks. They renamed columns with abbreviations (CUST_NM, ORD_DT, ACCT_STAT_CD). They expanded schemas to over 4,000 columns. They removed the implicit semantic hints that clean benchmarks provide.
+The 2025 ACL study by Ji et al. is worth examining closely because it quantifies the exact problem a context layer solves. The researchers created enterprise versions of the standard BIRD and Spider benchmarks. They renamed columns with abbreviations (CUST_NM, ORD_DT, ACCT_STAT_CD). They expanded schemas to over 4, 000 columns. They removed the implicit semantic hints that clean benchmarks provide.
 
 The results were stark. Accuracy dropped from 95% to 39% on BIRD-Ent. The models did not get worse. The schemas got real. The lesson is that LLMs are exceptionally good at guessing meaning from well-named columns like `customer_name`. They are terrible at guessing meaning from `CUST_NM` or `revenue` when different systems define that term differently.
 
@@ -114,6 +113,6 @@ The context layer fills the gap between format and meaning. Whether you choose S
 
 The 2025 ACL study showed what happens without context. A 39% accuracy rate on real enterprise schemas is not a foundation for agentic workflows. With a proper context layer, that rate jumps above 83% according to enterprise benchmarks reported by Promethium.ai in 2026. The gap is not about model capability. It is about whether the data carries its own meaning.
 
----
+--
 
 **Ready to build a context layer for your lakehouse?** Dremio's lakehouse platform combines Apache Iceberg-native storage with a built-in semantic layer and AI-powered semantic search. Teams use Dremio to query Iceberg tables across clouds and on-premises data without moving data, while the semantic layer ensures AI agents always get governed business context. [Learn more at dremio.com](https://www.dremio.com).

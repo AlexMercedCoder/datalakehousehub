@@ -15,13 +15,12 @@ slug: 2025-04-ai-agent-frameworks
 draft: false
 image: "/images/blog.png"
 ---
-
-## Free Resources  
-- **[Free Apache Iceberg Course](https://hello.dremio.com/webcast-an-apache-iceberg-lakehouse-crash-course-reg.html?utm_source=ev_external_blog&utm_medium=influencer&utm_campaign=AItoLLMS&utm_content=alexmerced&utm_term=external_blog)**  
-- **[Free Copy of “Apache Iceberg: The Definitive Guide”](https://hello.dremio.com/wp-apache-iceberg-the-definitive-guide-reg.html?utm_source=ev_external_blog&utm_medium=influencer&utm_campaign=AItoLLMS&utm_content=alexmerced&utm_term=external_blog)**  
-- **[2025 Apache Iceberg Architecture Guide](https://medium.com/data-engineering-with-dremio/2025-guide-to-architecting-an-iceberg-lakehouse-9b19ed42c9de)**  
-- **[How to Join the Iceberg Community](https://medium.alexmerced.blog/guide-to-finding-apache-iceberg-events-near-you-and-being-part-of-the-greater-iceberg-community-0c38ae785ddb)**  
-- **[Iceberg Lakehouse Engineering Video Playlist](https://youtube.com/playlist?list=PLsLAVBjQJO0p0Yq1fLkoHvt2lEJj5pcYe&si=WTSnqjXZv6Glkc3y)**  
+## Free Resources 
+- **[Free Apache Iceberg Course](https://hello.dremio.com/webcast-an-apache-iceberg-lakehouse-crash-course-reg.html?utm_source=ev_external_blog&utm_medium=influencer&utm_campaign=AItoLLMS&utm_content=alexmerced&utm_term=external_blog)** 
+- **[Free Copy of “Apache Iceberg: The Definitive Guide”](https://hello.dremio.com/wp-apache-iceberg-the-definitive-guide-reg.html?utm_source=ev_external_blog&utm_medium=influencer&utm_campaign=AItoLLMS&utm_content=alexmerced&utm_term=external_blog)** 
+- **[2025 Apache Iceberg Architecture Guide](https://medium.com/data-engineering-with-dremio/2025-guide-to-architecting-an-iceberg-lakehouse-9b19ed42c9de)** 
+- **[How to Join the Iceberg Community](https://medium.alexmerced.blog/guide-to-finding-apache-iceberg-events-near-you-and-being-part-of-the-greater-iceberg-community-0c38ae785ddb)** 
+- **[Iceberg Lakehouse Engineering Video Playlist](https://youtube.com/playlist?list=PLsLAVBjQJO0p0Yq1fLkoHvt2lEJj5pcYe&si=WTSnqjXZv6Glkc3y)** 
 - **[Ultimate Apache Iceberg Resource Guide](https://medium.com/data-engineering-with-dremio/ultimate-directory-of-apache-iceberg-resources-e3e02efac62e)** 
 
 In our last post, we explored what makes an **AI agent** different from a traditional LLM - memory, tools, reasoning, and autonomy. These agents are the foundation of a new generation of intelligent applications.
@@ -50,9 +49,9 @@ Memory in AI agents refers to how information from past interactions is stored, 
 - **Short-term memory**: Keeps track of the current conversation or task state. Usually implemented as a conversation history buffer or rolling context window.
 
 - **Long-term memory**: Stores past interactions, facts, or discoveries for reuse across sessions. Typically backed by:
-  - A **vector database** (e.g., Pinecone, FAISS, Weaviate)
-  - Embedding models that turn text into numerical vectors
-  - A retrieval layer that finds the most relevant memories using similarity search
+ - A **vector database** (e.g., Pinecone, FAISS, Weaviate)
+ - Embedding models that turn text into numerical vectors
+ - A retrieval layer that finds the most relevant memories using similarity search
 
 Under the hood:
 - Text is embedded into a vector representation (via models like OpenAI’s `text-embedding-ada-002`)
@@ -118,12 +117,12 @@ Under the hood:
 
 Agent frameworks abstract complex functionality into composable components:
 
-| Capability        | What It Does                                  | How It Works Under the Hood                             |
-|------------------|-----------------------------------------------|----------------------------------------------------------|
-| Memory           | Recalls past interactions and facts           | Vector embeddings, similarity search, context injection  |
-| Tools            | Executes real-world actions                   | Function schemas, LLM tool calls, output feedback loop   |
-| Reasoning        | Plans steps, decides next action              | Thought-action-observation loops, scratchpads            |
-| Context Mgmt     | Curates what the model sees                   | Dynamic prompt construction, summarization, filtering    |
+| Capability | What It Does | How It Works Under the Hood |
+|---------|------------------------|-----------------------------|
+| Memory | Recalls past interactions and facts | Vector embeddings, similarity search, context injection |
+| Tools | Executes real-world actions | Function schemas, LLM tool calls, output feedback loop |
+| Reasoning | Plans steps, decides next action | Thought-action-observation loops, scratchpads |
+| Context Mgmt | Curates what the model sees | Dynamic prompt construction, summarization, filtering |
 
 Together, these allow developers to build **goal-seeking agents** that work across domains - analytics, support, operations, creative work, and more.
 
@@ -136,56 +135,56 @@ Let’s look at some of the leading options:
 ### LangChain
 - **Language**: Python, JavaScript
 - **Strengths**:
-  - Large ecosystem of components
-  - Support for chains, tools, memory, agents
-  - Integrates with most major LLMs, vector DBs, and APIs
+ - Large ecosystem of components
+ - Support for chains, tools, memory, agents
+ - Integrates with most major LLMs, vector DBs, and APIs
 - **Limitations**:
-  - Can become overly complex
-  - Boilerplate-heavy for simple tasks
-  - Hard to reason about internal agent state
+ - Can become overly complex
+ - Boilerplate-heavy for simple tasks
+ - Hard to reason about internal agent state
 
 ### AutoGPT / BabyAGI
 - **Language**: Python
 - **Strengths**:
-  - Fully autonomous task execution loops
-  - Goal-first architecture (recursive reasoning)
+ - Fully autonomous task execution loops
+ - Goal-first architecture (recursive reasoning)
 - **Limitations**:
-  - Unpredictable behavior ("runaway agents")
-  - Tooling and error handling are immature
-  - Not production-grade (yet)
+ - Unpredictable behavior ("runaway agents")
+ - Tooling and error handling are immature
+ - Not production-grade (yet)
 
 ### Semantic Kernel (Microsoft)
 - **Language**: C#, Python
 - **Strengths**:
-  - Enterprise-ready tooling
-  - Strong integration with Microsoft ecosystems
-  - Planner APIs and plugin system
+ - Enterprise-ready tooling
+ - Strong integration with Microsoft ecosystems
+ - Planner APIs and plugin system
 - **Limitations**:
-  - Steeper learning curve
-  - Limited community and examples
-  - More opinionated structure
+ - Steeper learning curve
+ - Limited community and examples
+ - More opinionated structure
 
 ### CrewAI / MetaGPT
 - **Language**: Python
 - **Strengths**:
-  - Multi-agent collaboration
-  - Role-based task assignment
+ - Multi-agent collaboration
+ - Role-based task assignment
 - **Limitations**:
-  - Heavy on orchestration
-  - Still early in maturity
-  - Debugging agent interactions is hard
+ - Heavy on orchestration
+ - Still early in maturity
+ - Debugging agent interactions is hard
 
 ## Benefits of Using an Agent Framework
 
 These tools have unlocked new possibilities for developers building AI-powered workflows. Let’s summarize the major benefits:
 
-| Benefit                        | Description |
-|-------------------------------|-------------|
-| Abstractions for Tools      | Call APIs or local functions directly from within agent flows |
-| Built-in Memory             | Manage short-term context and long-term recall without manual prompt engineering |
-| Modular Design              | Compose systems using interchangeable components |
-| Planning + Looping          | Support multi-step task execution with feedback loops |
-| Rapid Prototyping           | Build functional AI assistants quickly with reusable components |
+| Benefit | Description |
+|----------------|-------|
+| Abstractions for Tools | Call APIs or local functions directly from within agent flows |
+| Built-in Memory | Manage short-term context and long-term recall without manual prompt engineering |
+| Modular Design | Compose systems using interchangeable components |
+| Planning + Looping | Support multi-step task execution with feedback loops |
+| Rapid Prototyping | Build functional AI assistants quickly with reusable components |
 
 In short: **agent frameworks supercharge developer productivity** when working with LLMs.
 

@@ -1,6 +1,6 @@
 ---
 title: "Building a Lakehouse That Stays Inside the Border"
-description: "Residency is a storage location. Sovereignty is who can compel access, who operates the systems, and whether you can leave. A practical guide to sovereign lakehouse architecture in 2026."
+description: "Residency is a storage location. Sovereignty is who can compel access, who operates the systems, and whether you can leave."
 date: 2026-07-25T09:00:00Z
 author: "Alex Merced"
 category: "Data Engineering"
@@ -16,9 +16,9 @@ image: "/images/blog.png"
 canonical: https://iceberglakehouse.com/posts/sovereign-lakehouse/
 ---
 
-> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/sovereign-lakehouse/).
-
 A manufacturer in southern Germany asked me a question during an architecture review that I have thought about since. Their data sat in a Frankfurt region. Their contract specified EU processing. Their auditor had signed off. Then somebody asked where the catalog ran, and the answer was a software-as-a-service control plane in Virginia.
+
+> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/sovereign-lakehouse/).
 
 The data files never left Germany. The metadata about them did: table names, column names, partition values, row counts, and the credentials that gate access to every byte. For a table named `patients_oncology_2026` partitioned by `treatment_center`, the metadata alone tells you a great deal, and it was sitting under a jurisdiction the compliance review never examined.
 
@@ -118,21 +118,13 @@ Start with the catalog, since it is the control point. This is a Polaris catalog
 
 ```json
 {
-  "name": "eu_regulated",
-  "type": "INTERNAL",
-  "properties": {
-    "default-base-location": "s3://sovereign-eu-central/warehouse/regulated"
-  },
-  "storageConfigInfo": {
-    "storageType": "S3",
-    "allowedLocations": [
-      "s3://sovereign-eu-central/warehouse/regulated"
-    ],
-    "roleArn": "arn:aws:iam::000000000000:role/polaris-eu-central",
-    "region": "eu-central-1",
-    "endpoint": "https://minio.internal.example.de:9000",
-    "pathStyleAccess": true
-  }
+ "name": "eu_regulated", "type": "INTERNAL", "properties": {
+ "default-base-location": "s3://sovereign-eu-central/warehouse/regulated"
+ }, "storageConfigInfo": {
+ "storageType": "S3", "allowedLocations": [
+ "s3://sovereign-eu-central/warehouse/regulated"
+ ], "roleArn": "arn:aws:iam::000000000000:role/polaris-eu-central", "region": "eu-central-1", "endpoint": "https://minio.internal.example.de:9000", "pathStyleAccess": true
+ }
 }
 ```
 
@@ -145,14 +137,14 @@ Next, principal and role definitions bound to an identity provider you operate:
 ```bash
 # Create a catalog role scoped to one namespace, then grant it.
 curl -X POST "$POLARIS/api/management/v1/catalogs/eu_regulated/catalog-roles" \
-  -H "Authorization: Bearer $TOKEN" \
-  -H "Content-Type: application/json" \
-  -d '{"catalogRole": {"name": "clinical_reader"}}'
+ -H "Authorization: Bearer $TOKEN" \
+ -H "Content-Type: application/json" \
+ -d '{"catalogRole": {"name": "clinical_reader"}}'
 
 curl -X PUT "$POLARIS/api/management/v1/catalogs/eu_regulated/catalog-roles/clinical_reader/grants" \
-  -H "Authorization: Bearer $TOKEN" \
-  -H "Content-Type: application/json" \
-  -d '{"grant": {"type": "namespace", "namespace": ["clinical"], "privileges": ["TABLE_READ_DATA"]}}'
+ -H "Authorization: Bearer $TOKEN" \
+ -H "Content-Type: application/json" \
+ -d '{"grant": {"type": "namespace", "namespace": ["clinical"], "privileges": ["TABLE_READ_DATA"]}}'
 ```
 
 Two properties matter for sovereignty. Privileges are granted at the catalog layer rather than inside each engine, so the policy holds no matter which engine or agent asks. And when a query runs, the catalog vends short-lived credentials scoped to the specific files that query needs, which means no engine and no user holds standing access to the bucket. Revocation becomes immediate rather than eventual, and the audit trail sits in one place.
@@ -161,14 +153,14 @@ Then the engine configuration, which contains no storage credentials at all:
 
 ```python
 spark = (
-    SparkSession.builder
-    .config("spark.sql.catalog.eu", "org.apache.iceberg.spark.SparkCatalog")
-    .config("spark.sql.catalog.eu.type", "rest")
-    .config("spark.sql.catalog.eu.uri", "https://polaris.internal.example.de/api/catalog")
-    .config("spark.sql.catalog.eu.warehouse", "eu_regulated")
-    .config("spark.sql.catalog.eu.credential", f"{CLIENT_ID}:{CLIENT_SECRET}")
-    .config("spark.sql.catalog.eu.header.X-Iceberg-Access-Delegation", "vended-credentials")
-    .getOrCreate()
+ SparkSession.builder
+ .config("spark.sql.catalog.eu", "org.apache.iceberg.spark.SparkCatalog")
+ .config("spark.sql.catalog.eu.type", "rest")
+ .config("spark.sql.catalog.eu.uri", "https://polaris.internal.example.de/api/catalog")
+ .config("spark.sql.catalog.eu.warehouse", "eu_regulated")
+ .config("spark.sql.catalog.eu.credential", f"{CLIENT_ID}:{CLIENT_SECRET}")
+ .config("spark.sql.catalog.eu.header.X-Iceberg-Access-Delegation", "vended-credentials")
+ .getOrCreate()
 )
 ```
 
@@ -177,15 +169,12 @@ The absence of storage keys in that configuration is the point. An engine compro
 Finally, a verification query that any auditor can run:
 
 ```sql
--- Prove every registered table lives inside approved storage.
+- Prove every registered table lives inside approved storage.
 SELECT
-    table_namespace,
-    table_name,
-    location,
-    CASE
-        WHEN location LIKE 's3://sovereign-eu-central/%' THEN 'compliant'
-        ELSE 'REVIEW'
-    END AS residency_status
+ table_namespace, table_name, location, CASE
+ WHEN location LIKE 's3://sovereign-eu-central/%' THEN 'compliant'
+ ELSE 'REVIEW'
+ END AS residency_status
 FROM eu.information_schema.tables
 ORDER BY residency_status DESC, table_namespace;
 ```

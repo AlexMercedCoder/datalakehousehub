@@ -14,9 +14,10 @@ draft: false
 image: "/images/blog.png"
 canonical: "https://iceberglakehouse.com/posts/2024-10-data-modeling-events-entities/"
 ---
-> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2024-10-data-modeling-events-entities/).
 
 Structuring data thoughtfully is critical for both operational efficiency and analytical value. Data modeling helps us define the relationships, constraints, and organization of data within our systems. One of the key decisions in data modeling is choosing between modeling for events or entities. Both approaches offer unique insights, but deciding when to use each can make or break the effectiveness of a data platform.
+
+> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2024-10-data-modeling-events-entities/).
 
 In this blog, we’ll explore:
 - The core differences between events and entities in data modeling
@@ -25,8 +26,8 @@ In this blog, we’ll explore:
 
 ## What are Events and Entities in Data Modeling?
 
-- **Entities** are the core objects or concepts we want to capture in a data model, such as “customer,” “product,” or “order.” Entities generally have attributes that describe their current state, and they’re often represented by records in databases, forming the foundation for operational data.
-- **Events** are records of actions or changes that occur over time, such as “customer purchases product,” “order is shipped,” or “user clicks on ad.” Events capture a point-in-time action or change and are typically structured with attributes that describe the context, like a timestamp, user ID, and details of the interaction.
+- **Entities** are the core objects or concepts we want to capture in a data model, such as “customer, ” “product, ” or “order.” Entities generally have attributes that describe their current state, and they’re often represented by records in databases, forming the foundation for operational data.
+- **Events** are records of actions or changes that occur over time, such as “customer purchases product, ” “order is shipped, ” or “user clicks on ad.” Events capture a point-in-time action or change and are typically structured with attributes that describe the context, like a timestamp, user ID, and details of the interaction.
 
 ## When to Model for Entities
 
@@ -56,19 +57,19 @@ Event-based modeling is beneficial when you need to track activities over time. 
 - **Unique Event IDs**: Use unique IDs to avoid duplicates and ensure traceability.
 - **Contextual Attributes**: Include relevant attributes, such as user or session IDs, to tie events back to the entities involved, enriching the analysis with contextual data.
 
-Event modeling enables a time-series approach, capturing the "when" and "what happened," allowing businesses to understand user behavior and trends in a dynamic, ongoing way.
+Event modeling enables a time-series approach, capturing the "when" and "what happened, " allowing businesses to understand user behavior and trends in a dynamic, ongoing way.
 
 ## Modeling Events vs. Entities: Key Differences
 
 Understanding the core differences between event and entity modeling can help clarify when to use each approach. While entities capture the current state of key objects, events capture the actions that affect those objects over time. Here’s a quick comparison:
 
-| Aspect            | Entity Model                                       | Event Model                                     |
-|-------------------|----------------------------------------------------|-------------------------------------------------|
-| Purpose           | Describe current state of objects                  | Capture actions or changes over time            |
-| Typical Attributes | Static (e.g., name, type, category)               | Dynamic (e.g., timestamp, event type, status)   |
-| Granularity       | One row per entity                                | Multiple rows per entity, one per event         |
-| Example Use Case  | Product catalog, customer list                    | Clickstream, transaction history                |
-| Schema Evolution  | Slow-changing, handles updates infrequently       | Flexible, new event types can be added easily   |
+| Aspect | Entity Model | Event Model |
+|----------|--------------------------|-------------------------|
+| Purpose | Describe current state of objects | Capture actions or changes over time |
+| Typical Attributes | Static (e.g., name, type, category) | Dynamic (e.g., timestamp, event type, status) |
+| Granularity | One row per entity | Multiple rows per entity, one per event |
+| Example Use Case | Product catalog, customer list | Clickstream, transaction history |
+| Schema Evolution | Slow-changing, handles updates infrequently | Flexible, new event types can be added easily |
 
 By differentiating between the stable attributes of entities and the dynamic, timestamped nature of events, you can create a model that reflects both the current state and the historical actions within your data ecosystem. This approach supports a more comprehensive analysis, enabling better decision-making and richer insights.
 
@@ -76,7 +77,7 @@ By differentiating between the stable attributes of entities and the dynamic, ti
 
 In many systems, combining event and entity models provides a more complete picture of both the current state and historical actions. For instance:
 
-- **E-commerce Analytics**: Track events like “user clicks,” “adds to cart,” and “makes a purchase” while also modeling entities like “user,” “product,” and “order.” Together, these models offer insights into customer behavior and product popularity.
+- **E-commerce Analytics**: Track events like “user clicks, ” “adds to cart, ” and “makes a purchase” while also modeling entities like “user, ” “product, ” and “order.” Together, these models offer insights into customer behavior and product popularity.
 - **User Behavior Analysis**: In social media platforms, users are entities, while their actions (such as likes, comments, and shares) are events. Combining these perspectives enables understanding of both user attributes and engagement patterns.
 
 ### Approach to Combined Modeling

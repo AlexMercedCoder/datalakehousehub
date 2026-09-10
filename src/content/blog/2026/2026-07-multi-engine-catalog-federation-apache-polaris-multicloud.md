@@ -11,12 +11,14 @@ slug: "multi-engine-catalog-federation-apache-polaris-multicloud"
 draft: false
 image: "/images/blog.png"
 canonical: https://iceberglakehouse.com/posts/multi-engine-catalog-federation-apache-polaris-multicloud/
+description: "Open table formats changed the data lakehouse conversation, but they did not finish it. A table can be stored in an open format and still be hard."
 ---
-> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/multi-engine-catalog-federation-apache-polaris-multicloud/).
 
 # Multi-Engine Catalog Federation with Apache Polaris: Syncing Google Cloud, AWS, and Azure Metadata
 
 Open table formats changed the data lakehouse conversation, but they did not finish it. A table can be stored in an open format and still be hard to govern, hard to share across engines, or hard to operate across clouds. The next layer of openness is the catalog.
+
+> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/multi-engine-catalog-federation-apache-polaris-multicloud/).
 
 Apache Polaris is important because it reflects a market shift that has been building for a while. Enterprises do not just want open files. They want open table governance. They want multiple engines to discover and operate on shared Iceberg tables without turning the catalog itself into the next lock-in point. They want a lakehouse architecture where metadata, identity, access control, and table operations can be managed in a way that works across tools.
 

@@ -14,11 +14,12 @@ tags:
 slug: "iceberg-is-escaping-the-jvm"
 draft: false
 ---
-> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/iceberg-is-escaping-the-jvm/).
 
 The Apache Iceberg release notes I find most interesting in 2026 are not the ones for the main project. They are the ones for the subprojects: iceberg-rust shipping its 0.10 line in July after another release cycle measured in hundreds of merged pull requests from dozens of contributors, iceberg-go putting out 0.6.0 in late spring with nearly 200 PRs from 40 contributors, 26 of them first-timers, iceberg-cpp reaching 0.3.0 in June, and PyIceberg's 0.11 landing feature work, like server-side scan planning, that the Java line only recently gained itself. Four native implementations, none of them ports, all of them Apache-governed, all of them accelerating.
 
-The easy read is "Iceberg now works in more languages," which is true and undersells it badly. Table formats live or die by where they can be embedded, and for its first eight years, embedding Iceberg meant embedding a JVM, which confined the format to the big cluster engines and left everything else, services, CLIs, notebooks, edge processes, browsers, agents, reading Parquet around it. The native implementations end that confinement, and the consequences reach further than convenience: they change what kind of software can participate in a lakehouse, they change how the specification itself evolves, and they change what "the reference implementation" means for a format that intends to outlive any single runtime.
+> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/iceberg-is-escaping-the-jvm/).
+
+The easy read is "Iceberg now works in more languages, " which is true and undersells it badly. Table formats live or die by where they can be embedded, and for its first eight years, embedding Iceberg meant embedding a JVM, which confined the format to the big cluster engines and left everything else, services, CLIs, notebooks, edge processes, browsers, agents, reading Parquet around it. The native implementations end that confinement, and the consequences reach further than convenience: they change what kind of software can participate in a lakehouse, they change how the specification itself evolves, and they change what "the reference implementation" means for a format that intends to outlive any single runtime.
 
 This article makes that case with specifics: how the JVM coupling happened, a census of the implementations and their velocity, why native rewrites became viable now rather than five years ago, what each language's version distinctly enables, what the multiplication costs, and how to choose among them today. Disclosure, as always: I work at Dremio and co-authored the O'Reilly books on Apache Iceberg and Apache Polaris. Nothing below depends on any vendor, which is rather the point.
 
@@ -30,13 +31,13 @@ The gravity this created shaped the whole first era. Every capability, transform
 
 The cost was invisible because the workloads that mattered most fit the constraint. Big batch analytics runs on clusters, clusters run JVMs, no friction felt. The friction lived in everything the constraint excluded: the Go microservice that wanted to append events transactionally, the Python process that wanted a real table scan without a Spark session, the Rust storage engine that wanted Iceberg as a component, the C++ database that wanted native table access, the laptop that wanted a lakehouse without a cluster. For eight years, those were the futures the JVM coupling quietly foreclosed. The native implementations are those futures being repurchased.
 
-It is worth naming the moment the foreclosure started feeling expensive, because the timing explains the census. Around 2023 and 2024, three audiences arrived at the format's door simultaneously: the small-engine wave, DuckDB and Polars users doing serious work outside clusters, the services wave, event-producing systems whose teams wanted transactional table writes without adopting Spark, and the early agent wave, AI systems needing programmatic, governed data access from runtimes that were anything but JVMs. Each audience asked the same question, "why does using this format require someone else's infrastructure," and none of them accepted the historical answer. The subproject velocity that follows is what it looks like when a community funds the correct response.
+It is worth naming the moment the foreclosure started feeling expensive, because the timing explains the census. Around 2023 and 2024, three audiences arrived at the format's door simultaneously: the small-engine wave, DuckDB and Polars users doing serious work outside clusters, the services wave, event-producing systems whose teams wanted transactional table writes without adopting Spark, and the early agent wave, AI systems needing programmatic, governed data access from runtimes that were anything but JVMs. Each audience asked the same question, "why does using this format require someone else's infrastructure, " and none of them accepted the historical answer. The subproject velocity that follows is what it looks like when a community funds the correct response.
 
 ## A Census of the Implementations
 
 The claim that Iceberg escaped the JVM rests on the health of specific projects, so here is the census as of August 2026, with the numbers that indicate health: release cadence, contribution breadth, and capability trajectory. A note on method before the numbers: release announcements are the one form of open source marketing that cannot lie about effort, because every merged PR and every contributor name is auditable in public. When I cite them below, I am citing the ecosystem's ledger, and the pattern across the ledger, rising PR counts, rising first-timer ratios, shortening release gaps, is the same pattern in every subproject at once, which is what a coordinated expansion looks like from the outside.
 
-Java remains the reference implementation and the deepest one. The main project's 1.11.0 release, shipped this past spring, gathered over 1,000 commits from more than 200 contributors, and Java is where the newest, hardest capabilities, the REST scan planning client, table encryption, the v4 groundwork, appear first. Nothing below diminishes it. The escape from the JVM is an expansion, not an exodus, and Java's role shifts from "the implementation" to "the first among several," which is a healthier place for both the project and the language.
+Java remains the reference implementation and the deepest one. The main project's 1.11.0 release, shipped this past spring, gathered over 1, 000 commits from more than 200 contributors, and Java is where the newest, hardest capabilities, the REST scan planning client, table encryption, the v4 groundwork, appear first. Nothing below diminishes it. The escape from the JVM is an expansion, not an exodus, and Java's role shifts from "the implementation" to "the first among several, " which is a healthier place for both the project and the language.
 
 PyIceberg is the most widely deployed of the natives, a from-scratch Python implementation, not a Java wrapper, that reached real read-and-write maturity and now ships capabilities near the front of the spec: its 0.11.0 release added synchronous server-side scan planning, endpoint discovery against REST catalog capabilities, full ORC read support, and sort order updates, a feature list that reads like a peer of the Java line rather than a follower. Its 0.11 cycle merged over 380 pull requests from more than 50 contributors, 28 of them new. Python being the language of data work makes PyIceberg the implementation most people meet first, and increasingly it carries a second significance covered below: parts of the Python experience are becoming a surface over the Rust core.
 
@@ -44,15 +45,15 @@ iceberg-rust is the strategic center of the story. Its recent cadence tells the 
 
 iceberg-go earns its place through breadth of contribution and clarity of purpose. The 0.5.0 release in March 2026 merged over 110 PRs from 31 contributors with 18 first-timers, and 0.6.0, two months later, merged nearly 200 PRs from 40 contributors with 26 first-timers, numbers whose first-timer ratios say something specific: Go services teams are showing up to build the client their infrastructure needs. The project publishes an explicit capability matrix, filesystem support, metadata operations, catalogs, writes, and tracks its gaps in public, including an epic for the REST scan planning client whose stated goals, manifest-free scans at any scale, stateless operation from Lambda and Cloud Run, catalog-enforced governance, define exactly the deployment shapes Go dominates.
 
-iceberg-cpp is the youngest and, in one sense, the most consequential for end users who will never call it directly. Its 0.2.0 and 0.3.0 releases landed in 2026, and its purpose is less "write your app in C++ against Iceberg" than "let the C++ engines and runtimes that already dominate query execution speak the format natively," the substrate move. C++ is where databases live, and a solid C++ library is how Iceberg support stops being a per-engine reimplementation project.
+iceberg-cpp is the youngest and, in one sense, the most consequential for end users who will never call it directly. Its 0.2.0 and 0.3.0 releases landed in 2026, and its purpose is less "write your app in C++ against Iceberg" than "let the C++ engines and runtimes that already dominate query execution speak the format natively, " the substrate move. C++ is where databases live, and a solid C++ library is how Iceberg support stops being a per-engine reimplementation project.
 
 Five implementations, one specification, one foundation governing all of them, with shared PMC oversight visible right down to the crate ownership. That last detail matters more than it seems: this is not a fork ecosystem or a wrapper ecosystem, it is one project growing multiple bodies, and the coordination costs that structure implies are the subject of a later section.
 
 For quick reference, the census compresses to a card:
 
 | Implementation | First-class use | 2026 velocity signal | Distinctive strength | Watch item |
-|---|---|---|---|---|
-| Java (reference) | JVM engines, fullest surface | 1.11.0: 1,000+ commits, 200+ contributors | Frontier features land here first | v4 groundwork |
+|--|--|--|--|--|
+| Java (reference) | JVM engines, fullest surface | 1.11.0: 1, 000+ commits, 200+ contributors | Frontier features land here first | v4 groundwork |
 | PyIceberg | Notebooks, pipelines, orchestration | 0.11: 380+ PRs, 50+ contributors | Ubiquity plus near-frontier features | Rust core convergence |
 | iceberg-rust | Embedding, systems software, Rust data stack | 0.8 through 0.10 shipped in seven months | Component-grade embeddability, powers pyiceberg-core | Writer surface depth |
 | iceberg-go | Services, serverless, infra tooling | 0.6.0: ~200 PRs, 40 contributors, 26 new | Published capability matrix, services demand | Scan planning epic |
@@ -105,20 +106,20 @@ use futures::TryStreamExt;
 use iceberg::{Catalog, TableIdent, Result};
 
 async fn scan_orders(catalog: &impl Catalog) -> Result<()> {
-    let table = catalog
-        .load_table(&TableIdent::from_strs(["sales", "orders"])?)
-        .await?;
+ let table = catalog
+ .load_table(&TableIdent::from_strs(["sales", "orders"])?)
+ .await?;
 
-    let stream = table
-        .scan()
-        .select(["order_id", "total"])
-        .build()?
-        .to_arrow()
-        .await?;
+ let stream = table
+ .scan()
+ .select(["order_id", "total"])
+ .build()?
+ .to_arrow()
+ .await?;
 
-    let batches: Vec<_> = stream.try_collect().await?;
-    println!("read {} record batches", batches.len());
-    Ok(())
+ let batches: Vec<_> = stream.try_collect().await?;
+ println!("read {} record batches", batches.len());
+ Ok(())
 }
 ```
 
@@ -134,7 +135,7 @@ C++ buys the engines, and by extension everyone. Query engines, databases, and e
 
 Across all three, notice the common consequence: the population of things that can be lakehouse participants stops being "engines" and becomes "software." That reframing, more than any single library, is what escaping the JVM means.
 
-And one runtime deserves its own line because it breaks the frame entirely: WebAssembly. The DuckDB-Wasm build shipping the Iceberg extension in browser tabs by December 2025 demonstrated that "no JVM required" extends all the way to "no installation required," a governed table read and written from a web page, credentials vended, commits through the REST protocol, zero backend. Wasm is not one of the five census implementations, it is a compilation target the native implementations reach that the JVM one practically cannot, and it previews an entire genre, data applications whose analytical engine and table access ship inside the page. Every argument in this article about where the format can now live gets its most extreme test case, and its most persuasive demo, from a browser tab committing a snapshot.
+And one runtime deserves its own line because it breaks the frame entirely: WebAssembly. The DuckDB-Wasm build shipping the Iceberg extension in browser tabs by December 2025 demonstrated that "no JVM required" extends all the way to "no installation required, " a governed table read and written from a web page, credentials vended, commits through the REST protocol, zero backend. Wasm is not one of the five census implementations, it is a compilation target the native implementations reach that the JVM one practically cannot, and it previews an entire genre, data applications whose analytical engine and table access ship inside the page. Every argument in this article about where the format can now live gets its most extreme test case, and its most persuasive demo, from a browser tab committing a snapshot.
 
 ## From Table Format to Library: The Deeper Shift
 
@@ -196,11 +197,11 @@ Most real stacks choose several at once, so add the mixed-stack rules. Designate
 
 Near-term, expect the capability skew to compress. The REST protocol keeps absorbing client obligations, scan planning being the current wave, which shrinks what each implementation must build to be complete, and the conformance work keeps hardening what "complete" verifiably means. The plausible steady state is a small spec-correctness core per language, or shared through bindings the way Python already leans on Rust, with language-idiomatic surfaces above it.
 
-Medium-term, watch the embeddings rather than the libraries. The interesting announcements will stop being "language X gets Iceberg" and start being "system Y, which you did not think of as a lakehouse participant, now reads and writes governed tables," with browsers already banked and agent runtimes, edge platforms, and operational databases queued behind. Each such embedding is the native-implementation investment paying out where users actually live.
+Medium-term, watch the embeddings rather than the libraries. The interesting announcements will stop being "language X gets Iceberg" and start being "system Y, which you did not think of as a lakehouse participant, now reads and writes governed tables, " with browsers already banked and agent runtimes, edge platforms, and operational databases queued behind. Each such embedding is the native-implementation investment paying out where users actually live.
 
 For readers who like leading indicators, three specific signals will tell you the trajectory ahead of the announcements. First, watch the scan planning client land in Go, Rust, and the DuckDB extension, since the thin-client future arrives implementation by implementation through exactly that feature. Second, watch how quickly v4, once ratified, reaches usable support across all five bodies, because the gap between spec ratification and fifth-implementation support is the single best measure of whether the multiplication is sustainable at the format's current pace of change. Third, watch pyiceberg-core's footprint inside PyIceberg release notes, since the share of the Python experience running on the Rust core is the clearest readout on whether the consolidated-core end-state is actually emerging or remains a nice theory. All three are checkable from public release notes in an afternoon per quarter, which is a pleasant property for a trend this consequential.
 
-And long-term, the JVM-escape story resolves into something quieter: nobody talking about implementations at all. Formats succeed when they disappear, when "does it speak Iceberg" becomes as unremarkable as "does it speak HTTP," asked only when the answer is no. The multiplication of implementations, with its costs and coordination and capability matrices, is the awkward adolescence between "one library everyone imports" and "a standard everything assumes." The census says the adolescence is going well.
+And long-term, the JVM-escape story resolves into something quieter: nobody talking about implementations at all. Formats succeed when they disappear, when "does it speak Iceberg" becomes as unremarkable as "does it speak HTTP, " asked only when the answer is no. The multiplication of implementations, with its costs and coordination and capability matrices, is the awkward adolescence between "one library everyone imports" and "a standard everything assumes." The census says the adolescence is going well.
 
 ## Conclusion
 

@@ -13,11 +13,12 @@ draft: false
 image: "/images/blog.png"
 canonical: "https://iceberglakehouse.com/posts/2024-9-deep-dive-into-data-apps-with-streamlit/"
 ---
-> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2024-9-deep-dive-into-data-apps-with-streamlit/).
 
 # Introduction
 
 The ability to quickly develop and deploy interactive applications is invaluable. **Streamlit** is a powerful tool that enables data scientists and developers to create intuitive web apps with minimal code. Coupled with the [**Python Data Science Notebook Docker Image**](https://hub.docker.com/r/alexmerced/datanotebook), which comes pre-loaded with essential data science libraries, setting up a robust environment for building Streamlit apps has never been easier.
+
+> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2024-9-deep-dive-into-data-apps-with-streamlit/).
 
 ## What is Streamlit?
 
@@ -51,12 +52,12 @@ The **Python Data Science Notebook Docker Image** is a Docker container designed
 
 - **Jupyter Notebook Access**: Run and access Jupyter Notebooks through your web browser, facilitating an interactive coding environment.
 - **Pre-Installed Libraries**:
-  - **Data Manipulation**: `pandas`, `numpy`, `polars`, `dask`, `ibis`, `pyiceberg`, `datafusion`, `sqlframe`
-  - **Machine Learning**: `scikit-learn`, `tensorflow`, `torch`, `xgboost`, `lightgbm`
-  - **Visualization**: `matplotlib`, `seaborn`, `plotly`
-  - **Database Access**: `psycopg2-binary`, `mysqlclient`, `sqlalchemy`, `duckdb`, `pyarrow`
-  - **Object Storage**: `boto3`, `s3fs`, `minio`
-  - **Utilities**: `openpyxl`, `requests`, `beautifulsoup4`, `lxml`, `pyspark`, `dremio-simple-query`
+ - **Data Manipulation**: `pandas`, `numpy`, `polars`, `dask`, `ibis`, `pyiceberg`, `datafusion`, `sqlframe`
+ - **Machine Learning**: `scikit-learn`, `tensorflow`, `torch`, `xgboost`, `lightgbm`
+ - **Visualization**: `matplotlib`, `seaborn`, `plotly`
+ - **Database Access**: `psycopg2-binary`, `mysqlclient`, `sqlalchemy`, `duckdb`, `pyarrow`
+ - **Object Storage**: `boto3`, `s3fs`, `minio`
+ - **Utilities**: `openpyxl`, `requests`, `beautifulsoup4`, `lxml`, `pyspark`, `dremio-simple-query`
 - **User Configuration**: Operates under the user `pydata` with the home directory set to `/home/pydata`. The working directory is `/home/pydata/work`.
 - **Port Exposure**: Exposes port `8888` to allow access to the Jupyter Notebook server.
 
@@ -79,20 +80,20 @@ If Docker is not already installed on your machine, follow these steps:
 
 1. **Download Docker Desktop**:
 
-   - **Windows and macOS**: Visit the [Docker Desktop download page](https://www.docker.com/products/docker-desktop) and download the installer for your operating system.
-   - **Linux**: Refer to the official Docker installation guides for [Ubuntu](https://docs.docker.com/engine/install/ubuntu/), [Debian](https://docs.docker.com/engine/install/debian/), [Fedora](https://docs.docker.com/engine/install/fedora/), or your specific distribution.
+ - **Windows and macOS**: Visit the [Docker Desktop download page](https://www.docker.com/products/docker-desktop) and download the installer for your operating system.
+ - **Linux**: Refer to the official Docker installation guides for [Ubuntu](https://docs.docker.com/engine/install/ubuntu/), [Debian](https://docs.docker.com/engine/install/debian/), [Fedora](https://docs.docker.com/engine/install/fedora/), or your specific distribution.
 
 2. **Install Docker**:
 
-   - Run the installer and follow the on-screen instructions.
-   - For Linux, follow the command-line instructions provided in the installation guide for your distribution.
+ - Run the installer and follow the on-screen instructions.
+ - For Linux, follow the command-line instructions provided in the installation guide for your distribution.
 
 3. **Verify the Installation**:
 
-   Open a terminal or command prompt and run:
+ Open a terminal or command prompt and run:
 
 ```bash
-   docker --version
+ docker -version
 ```
 
 You should see the Docker version information displayed, confirming that Docker is installed.
@@ -158,7 +159,7 @@ Ensure that Streamlit is installed and functioning properly inside the Docker co
 - In the terminal, run:
 
 ```bash
-streamlit --version
+streamlit -version
 ```
 
 If Streamlit is installed, the version number will be displayed.
@@ -190,13 +191,13 @@ Save the file.
 In the Jupyter terminal, execute:
 
 ```bash
-streamlit run app.py --server.enableCORS false --server.enableXsrfProtection false --server.port 8501 --server.address 0.0.0.0
+streamlit run app.py -server.enableCORS false -server.enableXsrfProtection false -server.port 8501 -server.address 0.0.0.0
 ```
 #### Server Flags Explained:
-- **`--server.enableCORS false:`** Disables Cross-Origin Resource Sharing protection.
-- **`--server.enableXsrfProtection false:`** Disables Cross-Site Request Forgery protection.
-- **`--server.port 8501:`** Runs the app on port 8501.
-- **`--server.address 0.0.0.0:`** Makes the server accessible externally.
+- **`-server.enableCORS false:`** Disables Cross-Origin Resource Sharing protection.
+- **`-server.enableXsrfProtection false:`** Disables Cross-Site Request Forgery protection.
+- **`-server.port 8501:`** Runs the app on port 8501.
+- **`-server.address 0.0.0.0:`** Makes the server accessible externally.
 
 ### Access the Streamlit App:
 
@@ -209,7 +210,7 @@ You should see the Streamlit app displaying the title and message.
 To keep the Streamlit app running without occupying the terminal, you can run it in the background using nohup:
 
 ```bash
-nohup streamlit run app.py --server.enableCORS false --server.enableXsrfProtection false --server.port 8501 --server.address 0.0.0.0 &
+nohup streamlit run app.py -server.enableCORS false -server.enableXsrfProtection false -server.port 8501 -server.address 0.0.0.0 &
 ```
 ### Exiting the Docker Container
 
@@ -249,33 +250,32 @@ Let's begin by creating a simple Streamlit application that displays text and a 
 
 1. **Create a New Python Script**:
 
-   - In the Jupyter Notebook interface, click on `New` and select `Text File`.
-   - Save the file as `app.py` in your working directory (`/home/pydata/work`).
+ - In the Jupyter Notebook interface, click on `New` and select `Text File`.
+ - Save the file as `app.py` in your working directory (`/home/pydata/work`).
 
 2. **Write the Streamlit Code**:
 
-   Open `app.py` and add the following code:
+ Open `app.py` and add the following code:
 
 ```python
-   import streamlit as st
-   import pandas as pd
-   import numpy as np
+ import streamlit as st
+ import pandas as pd
+ import numpy as np
 
-   st.title("My First Streamlit App")
+ st.title("My First Streamlit App")
 
-   st.write("Welcome to my first Streamlit application!")
+ st.write("Welcome to my first Streamlit application!")
 
-   # Create a random dataframe
-   df = pd.DataFrame(
-       np.random.randn(20, 3),
-       columns=['Column A', 'Column B', 'Column C']
-   )
+ # Create a random dataframe
+ df = pd.DataFrame(
+ np.random.randn(20, 3), columns=['Column A', 'Column B', 'Column C']
+ )
 
-   st.write("Here is a random dataframe:")
-   st.dataframe(df)
+ st.write("Here is a random dataframe:")
+ st.dataframe(df)
 
-   st.write("Line chart of the data:")
-   st.line_chart(df)
+ st.write("Line chart of the data:")
+ st.line_chart(df)
 ```
 
 ### Explanation:
@@ -314,8 +314,8 @@ st.markdown("This is a text with **markdown** formatting.")
 Display Data:
 
 ```python
-st.dataframe(df)  # Displays an interactive table
-st.table(df)      # Displays a static table
+st.dataframe(df) # Displays an interactive table
+st.table(df) # Displays a static table
 ```
 
 ### Display Charts:
@@ -339,7 +339,7 @@ st.write(f"You are {age} years old.")
 
 ```python
 with st.sidebar:
-    st.write("This is the sidebar.")
+ st.write("This is the sidebar.")
 
 col1, col2 = st.columns(2)
 col1.write("Content in column 1")
@@ -365,14 +365,14 @@ Run the Streamlit App:
 Execute the following command:
 
 ```bash
-streamlit run app.py --server.enableCORS false --server.enableXsrfProtection false --server.port 8501 --server.address 0.0.0.0
+streamlit run app.py -server.enableCORS false -server.enableXsrfProtection false -server.port 8501 -server.address 0.0.0.0
 ```
 
 Explanation of Flags:
-- **`--server.enableCORS false:`** Disables Cross-Origin Resource Sharing protection.
-- **`--server.enableXsrfProtection false:`** Disables Cross-Site Request Forgery protection.
-- **`--server.port 8501:`** Sets the port to 8501.
-- **`--server.address 0.0.0.0:`** Makes the app accessible externally.
+- **`-server.enableCORS false:`** Disables Cross-Origin Resource Sharing protection.
+- **`-server.enableXsrfProtection false:`** Disables Cross-Site Request Forgery protection.
+- **`-server.port 8501:`** Sets the port to 8501.
+- **`-server.address 0.0.0.0:`** Makes the app accessible externally.
 
 ### Access the Streamlit App:
 
@@ -402,7 +402,7 @@ Use different ports for each app and expose them accordingly.
 To run the Streamlit app without tying up the terminal, use:
 
 ```bash
-nohup streamlit run app.py --server.enableCORS false --server.enableXsrfProtection false --server.port 8501 --server.address 0.0.0.0 &
+nohup streamlit run app.py -server.enableCORS false -server.enableXsrfProtection false -server.port 8501 -server.address 0.0.0.0 &
 ```
 This runs the app in the background and outputs logs to nohup.out.
 ### Summary
@@ -465,10 +465,7 @@ import altair as alt
 
 # Create an Altair chart
 chart = alt.Chart(df.reset_index()).mark_circle(size=60).encode(
-    x='index',
-    y='Feature A',
-    color='Feature B',
-    tooltip=['Feature A', 'Feature B', 'Feature C']
+ x='index', y='Feature A', color='Feature B', tooltip=['Feature A', 'Feature B', 'Feature C']
 ).interactive()
 
 st.altair_chart(chart, use_container_width=True)
@@ -531,10 +528,10 @@ normalize = st.checkbox('Normalize data')
 
 # Process data based on user input
 if normalize:
-    df_normalized = (df - df.mean()) / df.std()
-    data_to_plot = df_normalized[selected_features]
+ df_normalized = (df - df.mean()) / df.std()
+ data_to_plot = df_normalized[selected_features]
 else:
-    data_to_plot = df[selected_features]
+ data_to_plot = df[selected_features]
 
 # Display line chart of selected features
 st.line_chart(data_to_plot)
@@ -553,17 +550,17 @@ Explanation: Users can select which features to visualize and whether to normali
 col1, col2 = st.columns(2)
 
 with col1:
-    st.header('User Inputs')
-    # Add widgets here
-    num_points = st.slider('Number of points', 10, 100, 50)
-    feature = st.selectbox('Feature', columns)
+ st.header('User Inputs')
+ # Add widgets here
+ num_points = st.slider('Number of points', 10, 100, 50)
+ feature = st.selectbox('Feature', columns)
 
 with col2:
-    st.header('Visualization')
-    # Generate and display chart
-    data = np.random.randn(num_points, len(columns))
-    df = pd.DataFrame(data, columns=columns)
-    st.line_chart(df[feature])
+ st.header('Visualization')
+ # Generate and display chart
+ data = np.random.randn(num_points, len(columns))
+ df = pd.DataFrame(data, columns=columns)
+ st.line_chart(df[feature])
 ```
 Explanation: This layout separates user inputs and visualizations into two columns, making the app more organized.
 
@@ -592,11 +589,11 @@ import streamlit as st
 
 # Initialize counter in session state
 if 'counter' not in st.session_state:
-    st.session_state.counter = 0
+ st.session_state.counter = 0
 
 # Increment counter on button click
 if st.button('Increment'):
-    st.session_state.counter += 1
+ st.session_state.counter += 1
 
 st.write(f"Counter value: {st.session_state.counter}")
 ```
@@ -613,7 +610,7 @@ import streamlit as st
 st.write("This is visible content")
 
 with st.expander("Click to expand"):
-    st.write("This content is hidden by default")
+ st.write("This content is hidden by default")
 ```
 Explanation: st.expander creates a collapsible section that users can expand or collapse.
 
@@ -624,10 +621,10 @@ import streamlit as st
 tab1, tab2 = st.tabs(["Tab 1", "Tab 2"])
 
 with tab1:
-    st.write("Content in Tab 1")
+ st.write("Content in Tab 1")
 
 with tab2:
-    st.write("Content in Tab 2")
+ st.write("Content in Tab 2")
 ```
 Explanation: st.tabs allows you to organize content into tabs for better navigation.
 ### Uploading and Handling Files with st.file_uploader
@@ -641,9 +638,9 @@ import pandas as pd
 uploaded_file = st.file_uploader("Choose a CSV file", type="csv")
 
 if uploaded_file is not None:
-    df = pd.read_csv(uploaded_file)
-    st.write("Uploaded Data:")
-    st.dataframe(df)
+ df = pd.read_csv(uploaded_file)
+ st.write("Uploaded Data:")
+ st.dataframe(df)
 ```
 Explanation: Users can upload a CSV file, which the app reads and displays as a DataFrame.
 
@@ -657,7 +654,7 @@ import pandas as pd
 
 @st.cache_data
 def load_data(url):
-    return pd.read_csv(url)
+ return pd.read_csv(url)
 
 data_url = 'https://path-to-large-dataset.csv'
 df = load_data(data_url)
@@ -674,11 +671,7 @@ Setting Page Configuration
 import streamlit as st
 
 st.set_page_config(
-    page_title="Advanced Streamlit Features",
-    page_icon="🚀",
-    layout="wide",
-    initial_sidebar_state="expanded",
-)
+ page_title="Advanced Streamlit Features", page_icon="🚀", layout="wide", initial_sidebar_state="expanded", )
 ```
 Explanation: st.set_page_config sets global configurations like the page title, icon, layout, and sidebar state.
 
@@ -689,12 +682,12 @@ import streamlit as st
 col1, col2 = st.columns(2)
 
 with col1:
-    st.header("Column 1")
-    st.write("Content for the first column")
+ st.header("Column 1")
+ st.write("Content for the first column")
 
 with col2:
-    st.header("Column 2")
-    st.write("Content for the second column")
+ st.header("Column 2")
+ st.write("Content for the second column")
 ```
 Explanation: Columns help organize content side by side.
 
@@ -745,7 +738,7 @@ Respond to user interactions with callbacks.
 import streamlit as st
 
 def on_button_click():
-    st.write("Button was clicked!")
+ st.write("Button was clicked!")
 
 st.button("Click Me", on_click=on_button_click)
 ```
@@ -762,10 +755,10 @@ st.write("Fetch data from an API")
 
 response = requests.get('https://api.example.com/data')
 if response.status_code == 200:
-    data = response.json()
-    st.write(data)
+ data = response.json()
+ st.write(data)
 else:
-    st.error("Failed to fetch data")
+ st.error("Failed to fetch data")
 ```
 Explanation: Uses the requests library to fetch data from an API and display it.
 
@@ -790,8 +783,8 @@ Break down your app into reusable components.
 import streamlit as st
 
 def display_header():
-    st.title("Advanced Streamlit Features")
-    st.write("This is a custom component")
+ st.title("Advanced Streamlit Features")
+ st.write("This is a custom component")
 
 # main app
 import streamlit as st
@@ -872,23 +865,23 @@ import numpy as np
 uploaded_file = st.file_uploader("Upload an image", type=["jpg", "jpeg", "png"])
 
 if uploaded_file is not None:
-    # Load and preprocess the image
-    image = Image.open(uploaded_file)
-    st.image(image, caption='Uploaded Image', use_column_width=True)
+ # Load and preprocess the image
+ image = Image.open(uploaded_file)
+ st.image(image, caption='Uploaded Image', use_column_width=True)
 
-    img = image.resize((224, 224))
-    img_array = np.array(img)
-    img_array = preprocess_input(img_array)
-    img_array = np.expand_dims(img_array, axis=0)
+ img = image.resize((224, 224))
+ img_array = np.array(img)
+ img_array = preprocess_input(img_array)
+ img_array = np.expand_dims(img_array, axis=0)
 
-    # Make prediction
-    predictions = model.predict(img_array)
-    results = decode_predictions(predictions, top=3)[0]
+ # Make prediction
+ predictions = model.predict(img_array)
+ results = decode_predictions(predictions, top=3)[0]
 
-    # Display predictions
-    st.write("Top Predictions:")
-    for i, res in enumerate(results):
-        st.write(f"{i+1}. {res[1]}: {round(res[2]*100, 2)}%")
+ # Display predictions
+ st.write("Top Predictions:")
+ for i, res in enumerate(results):
+ st.write(f"{i+1}. {res[1]}: {round(res[2]*100, 2)}%")
 ```
 
 Explanation: Users can upload an image, and the app displays the top predictions from the pre-trained MobileNetV2 model.
@@ -914,36 +907,32 @@ import torchvision.transforms as T
 uploaded_file = st.file_uploader("Upload an image", type=["jpg", "jpeg", "png"])
 
 if uploaded_file is not None:
-    # Load and preprocess the image
-    image = Image.open(uploaded_file)
-    st.image(image, caption='Uploaded Image', use_column_width=True)
+ # Load and preprocess the image
+ image = Image.open(uploaded_file)
+ st.image(image, caption='Uploaded Image', use_column_width=True)
 
-    preprocess = T.Compose([
-        T.Resize(256),
-        T.CenterCrop(224),
-        T.ToTensor(),
-        T.Normalize(
-            mean=[0.485, 0.456, 0.406], 
-            std=[0.229, 0.224, 0.225]
-        )
-    ])
-    img_t = preprocess(image)
-    batch_t = torch.unsqueeze(img_t, 0)
+ preprocess = T.Compose([
+ T.Resize(256), T.CenterCrop(224), T.ToTensor(), T.Normalize(
+ mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]
+ )
+ ])
+ img_t = preprocess(image)
+ batch_t = torch.unsqueeze(img_t, 0)
 
-    # Make prediction
-    with torch.no_grad():
-        out = model(batch_t)
-    probabilities = torch.nn.functional.softmax(out[0], dim=0)
+ # Make prediction
+ with torch.no_grad():
+ out = model(batch_t)
+ probabilities = torch.nn.functional.softmax(out[0], dim=0)
 
-    # Load labels
-    with open("imagenet_classes.txt") as f:
-        labels = [line.strip() for line in f.readlines()]
+ # Load labels
+ with open("imagenet_classes.txt") as f:
+ labels = [line.strip() for line in f.readlines()]
 
-    # Show top 3 predictions
-    top3_prob, top3_catid = torch.topk(probabilities, 3)
-    st.write("Top Predictions:")
-    for i in range(top3_prob.size(0)):
-        st.write(f"{i+1}. {labels[top3_catid[i]]}: {round(top3_prob[i].item()*100, 2)}%")
+ # Show top 3 predictions
+ top3_prob, top3_catid = torch.topk(probabilities, 3)
+ st.write("Top Predictions:")
+ for i in range(top3_prob.size(0)):
+ st.write(f"{i+1}. {labels[top3_catid[i]]}: {round(top3_prob[i].item()*100, 2)}%")
 ```
 
 Note: Ensure that the imagenet_classes.txt file is available in your working directory.
@@ -982,7 +971,7 @@ st.header("Boston Housing Price Prediction")
 
 # Feature input sliders
 CRIM = st.number_input('Per capita crime rate by town', min_value=0.0, value=0.1)
-ZN = st.number_input('Proportion of residential land zoned for lots over 25,000 sq.ft.', min_value=0.0, value=0.0)
+ZN = st.number_input('Proportion of residential land zoned for lots over 25, 000 sq.ft.', min_value=0.0, value=0.0)
 # ... add inputs for other features
 
 # For brevity, we'll use default values for the rest of the features
@@ -1041,8 +1030,8 @@ Use Caching for Models: Cache the model loading or training functions to improve
 ```python
 @st.cache_resource
 def load_model():
-    # Load or train model
-    return model
+ # Load or train model
+ return model
 ```
 
 **Handle Large Models:** Be mindful of resource limitations. Use efficient data structures and consider offloading heavy computations.
@@ -1103,13 +1092,12 @@ load_dotenv()
 # Retrieve Dremio credentials and endpoints
 username = st.secrets["dremio_username"]
 password = st.secrets["dremio_password"]
-arrow_endpoint = st.secrets["dremio_arrow_endpoint"]  # e.g., "grpc+tls://data.dremio.cloud:443"
-login_endpoint = st.secrets["dremio_login_endpoint"]  # e.g., "https://your-dremio-server:9047/apiv2/login"
+arrow_endpoint = st.secrets["dremio_arrow_endpoint"] # e.g., "grpc+tls://data.dremio.cloud:443"
+login_endpoint = st.secrets["dremio_login_endpoint"] # e.g., "https://your-dremio-server:9047/apiv2/login"
 
 # Get authentication token
 payload = {
-    "userName": username,
-    "password": password
+ "userName": username, "password": password
 }
 token = get_token(uri=login_endpoint, payload=payload)
 
@@ -1118,9 +1106,9 @@ dremio = DremioConnection(token, arrow_endpoint)
 
 # Test the connection
 try:
-    st.success("Successfully connected to Dremio.")
+ st.success("Successfully connected to Dremio.")
 except Exception as e:
-    st.error(f"Failed to connect to Dremio: {e}")
+ st.error(f"Failed to connect to Dremio: {e}")
 ```
 Note: Ensure that you securely manage your credentials using Streamlit's secrets management or environment variables.
 
@@ -1222,10 +1210,10 @@ engine = create_engine(f'postgresql+psycopg2://{DB_USER}:{DB_PASSWORD}@{DB_HOST}
 
 # Test the connection
 try:
-    with engine.connect() as connection:
-        st.success("Successfully connected to the PostgreSQL database.")
+ with engine.connect() as connection:
+ st.success("Successfully connected to the PostgreSQL database.")
 except Exception as e:
-    st.error(f"Failed to connect to the database: {e}")
+ st.error(f"Failed to connect to the database: {e}")
 ```
 #### Querying Data from the Database
 ```python
@@ -1248,9 +1236,7 @@ import dask.dataframe as dd
 
 # Read data from SQL using Dask
 df = dd.read_sql_table(
-    table='large_table',
-    uri=f'postgresql+psycopg2://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}',
-    index_col='id'
+ table='large_table', uri=f'postgresql+psycopg2://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}', index_col='id'
 )
 
 # Perform computations with Dask DataFrame
@@ -1300,10 +1286,10 @@ While developing within Jupyter Notebook is convenient, deploying your app typic
 
 1. **Ensure Streamlit is Installed**
 
-   If you followed the previous sections, Streamlit should already be installed in your Docker container. If not, install it using:
+ If you followed the previous sections, Streamlit should already be installed in your Docker container. If not, install it using:
 
 ```bash
-   pip install streamlit
+ pip install streamlit
 ```
 
 #### Exit the Jupyter Notebook Environment
@@ -1351,7 +1337,7 @@ WORKDIR /app
 COPY requirements.txt .
 
 # Install dependencies
-RUN pip install --no-cache-dir -r requirements.txt
+RUN pip install -no-cache-dir -r requirements.txt
 
 # Copy the rest of the application code
 COPY . .
@@ -1360,7 +1346,7 @@ COPY . .
 EXPOSE 8501
 
 # Run the Streamlit app
-CMD ["streamlit", "run", "app.py", "--server.port=8501", "--server.address=0.0.0.0"]
+CMD ["streamlit", "run", "app.py", "-server.port=8501", "-server.address=0.0.0.0"]
 ```
 #### Create a requirements.txt File
 
@@ -1445,7 +1431,7 @@ Heroku is a cloud platform that supports deploying applications using Docker.
 In your app directory, create a file named Procfile with the following content:
 
 ```text
-web: streamlit run app.py --server.port=$PORT --server.address=0.0.0.0
+web: streamlit run app.py -server.port=$PORT -server.address=0.0.0.0
 ```
 
 ##### Create a requirements.txt File
@@ -1550,10 +1536,10 @@ docker push gcr.io/your-project-id/my-streamlit-app
 
 ```bash
 gcloud run deploy my-streamlit-app \
-  --image gcr.io/your-project-id/my-streamlit-app \
-  --platform managed \
-  --region us-central1 \
-  --allow-unauthenticated
+ -image gcr.io/your-project-id/my-streamlit-app \
+ -platform managed \
+ -region us-central1 \
+ -allow-unauthenticated
 ```
 
 ### Best Practices for Deployment
@@ -1610,12 +1596,12 @@ A well-organized codebase enhances readability and maintainability, especially a
 - **Create a `components` Module**: Encapsulate reusable UI components in a separate module to avoid code duplication.
 
 ```python
-  # components.py
-  import streamlit as st
+ # components.py
+ import streamlit as st
 
-  def sidebar_filters():
-      st.sidebar.header("Filters")
-      # Add filter widgets
+ def sidebar_filters():
+ st.sidebar.header("Filters")
+ # Add filter widgets
 ```
 
 ```python
@@ -1667,12 +1653,12 @@ font="sans serif"
 col1, col2 = st.columns(2)
 
 with col1:
-    st.header("Section 1")
-    # Content for section 1
+ st.header("Section 1")
+ # Content for section 1
 
 with col2:
-    st.header("Section 2")
-    # Content for section 2
+ st.header("Section 2")
+ # Content for section 2
 ```
 
 ### Interactive Elements
@@ -1680,7 +1666,7 @@ with col2:
 
 ```python
 with st.spinner('Loading data...'):
-    df = load_data()
+ df = load_data()
 st.success('Data loaded successfully!')
 ```
 
@@ -1719,11 +1705,11 @@ Widget State Not Preserved
 
 ```python
 if 'counter' not in st.session_state:
-    st.session_state.counter = 0
+ st.session_state.counter = 0
 
 increment = st.button('Increment')
 if increment:
-    st.session_state.counter += 1
+ st.session_state.counter += 1
 
 st.write(f"Counter: {st.session_state.counter}")
 ```
@@ -1759,10 +1745,10 @@ Use `st.error()` to display error messages to the user.
 
 ```python
 try:
-    result = perform_calculation()
-    st.write(result)
+ result = perform_calculation()
+ st.write(result)
 except Exception as e:
-    st.error(f"An error occurred: {e}")
+ st.error(f"An error occurred: {e}")
 ```
 ### Testing
 **Unit Tests:** Write unit tests for your functions using unittest or pytest.
@@ -1781,8 +1767,8 @@ Optimizing your app's performance ensures a better user experience.
 ```python
 @st.cache_data
 def load_data():
-    # Load data from source
-    return data
+ # Load data from source
+ return data
 ```
 
 ##### Cache Computations
@@ -1790,8 +1776,8 @@ def load_data():
 ```python
 @st.cache_data
 def compute_expensive_operation(params):
-    # Perform computation
-    return result
+ # Perform computation
+ return result
 ```
 
 ### Optimize Resource Usage
@@ -1881,4 +1867,3 @@ While we've covered a significant amount of ground, there's always more to learn
 Streamlit has revolutionized the way we create and share data applications, making it accessible for data scientists and developers to build interactive web apps with ease. By combining Streamlit with the Python Data Science Notebook Docker Image, we've established a powerful workflow that simplifies environment setup and accelerates application development.
 
 As you continue your journey, remember that the key to mastery is consistent practice and exploration. Don't hesitate to experiment with new ideas, seek feedback, and iterate on your applications. The world of data science is ever-evolving, and tools like Streamlit are at the forefront of making data more accessible and engaging for everyone.
-

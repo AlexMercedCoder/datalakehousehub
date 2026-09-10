@@ -1,7 +1,7 @@
 ---
 title: dremioframe & iceberg - Pythonic interfaces for Dremio and Apache Iceberg
 date: 2025-12-05T09:00:00Z
-description: "Discover DremioFrame and IceFrame, two new Python libraries that simplify working with Dremio and Apache Iceberg. Learn how these tools streamline data management and enhance productivity for modern data teams."
+description: "Discover DremioFrame and IceFrame, two new Python libraries that simplify working with Dremio and Apache Iceberg."
 author: "Alex Merced"
 category: "Data Engineering"
 bannerImage: "https://i.imgur.com/cpoMZQ8.png"
@@ -14,9 +14,10 @@ draft: false
 image: "/images/blog.png"
 canonical: "https://iceberglakehouse.com/posts/2025-12-dremioframe-and-iceframe/"
 ---
-> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2025-12-dremioframe-and-iceframe/).
 
 Modern data teams want simple tools to work with Iceberg tables and Dremio. Two new Python libraries now make that work easier. The first is DremioFrame. It gives you a clear set of functions for managing your Dremio Cloud or Dremio Software project through code. The second is IceFrame. It gives you a direct way to create and maintain Iceberg tables using PyIceberg and Polars with native extensions. Both libraries are in alpha. This is the best time to try them, share your ideas, and report issues.
+
+> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2025-12-dremioframe-and-iceframe/).
 
 You can test them with a free 30-day Dremio Cloud trial that includes $400 in credits. Sign up [here to get started](https://drmevn.fyi/am-get-started) . The trial includes a built-in Apache Polaris-based Iceberg catalog (on the ui you'll see a namespaces section, that's the catalog), so you can create tables and explore them from both libraries. This lets you know how the tools fit into real workflows with no setup.
 
@@ -106,8 +107,7 @@ The two libraries serve different roles, but they work well together. The exampl
 from dremioframe.client import DremioClient
 
 client = DremioClient(
-    token="YOUR_DREMIO_CLOUD_PAT",
-    project_id="YOUR_PROJECT_ID"
+ token="YOUR_DREMIO_CLOUD_PAT", project_id="YOUR_PROJECT_ID"
 )
 ```
 
@@ -117,11 +117,9 @@ client = DremioClient(
 from iceframe import IceFrame
 
 ice = IceFrame(
-    {
-        "uri": "https://catalog.dremio.cloud/api/iceberg/v1",
-        "token": "YOUR_DREMIO_CLOUD_PAT",
-        "project_id": "YOUR_PROJECT_ID"
-    }
+ {
+ "uri": "https://catalog.dremio.cloud/api/iceberg/v1", "token": "YOUR_DREMIO_CLOUD_PAT", "project_id": "YOUR_PROJECT_ID"
+ }
 )
 ```
 
@@ -146,8 +144,7 @@ You create a view or dataset through the catalog. Here is a simple view example.
 
 ```python
 client.catalog.create_view(
-    path=["Samples", "small_view"],
-    sql="SELECT * FROM Samples.samples.Employees"
+ path=["Samples", "small_view"], sql="SELECT * FROM Samples.samples.Employees"
 )
 ```
 
@@ -158,8 +155,7 @@ You create an Iceberg table by writing data.
 from datetime import datetime
 
 data = [
-    {"id": 1, "name": "Ada", "created_at": datetime.utcnow()},
-    {"id": 2, "name": "Max", "created_at": datetime.utcnow()}
+ {"id": 1, "name": "Ada", "created_at": datetime.utcnow()}, {"id": 2, "name": "Max", "created_at": datetime.utcnow()}
 ]
 
 ice.create_table("my_table", data=data)
@@ -178,11 +174,11 @@ DremioFrame can build SQL through a fluent API. You call `client.table(...)` to 
 ```python
 # Start with a table in the Dremio catalog
 df = (
-    client.table("Samples.samples.Employees")
-        .select("employee_id", "full_name", "department")
-        .filter("department = 'Engineering'")
-        .limit(5)
-        .run()
+ client.table("Samples.samples.Employees")
+ .select("employee_id", "full_name", "department")
+ .filter("department = 'Engineering'")
+ .limit(5)
+ .run()
 )
 
 print(df)
@@ -197,12 +193,12 @@ IceFrame includes a builder for Iceberg tables. You call `ice.query("table_name"
 from iceframe.expressions import Column
 
 result = (
-    ice.query("my_table")
-        .filter(Column("id") > 10)
-        .select("id", "name")
-        .sort("id")
-        .limit(5)
-        .execute()
+ ice.query("my_table")
+ .filter(Column("id") > 10)
+ .select("id", "name")
+ .sort("id")
+ .limit(5)
+ .execute()
 )
 
 print(result)
@@ -218,10 +214,10 @@ Both libraries include features that help you work faster with less manual code.
 
 ### Agents
 
-**DremioFrame Agent**  
+**DremioFrame Agent** 
 DremioFrame includes an optional agent that can help you work with DremioFrame and Dremio. It can help you write queries, write DremioFrame scripts, and much more.
 
-**IceFrame Agent**  
+**IceFrame Agent** 
 IceFrame includes a chat agent for Iceberg tables. You can ask about table schemas, filters, and joins. The agent can write Python code for common IceFrame tasks. It can also explain how to compact files or clean snapshots. This helps new users understand how each feature works. It also helps teams share patterns in a simple way.
 
 ### IceFrame Procedures

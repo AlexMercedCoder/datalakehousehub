@@ -14,11 +14,12 @@ draft: false
 image: "/images/blog/apache-iceberg-masterclass/11-metadata-tables-metadata-tables-overview.png"
 canonical: "https://iceberglakehouse.com/posts/2026-04-29-iceberg-masterclass-11/"
 ---
-> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-04-29-iceberg-masterclass-11/).
 
-<!-- Meta Description: Iceberg metadata tables let you query snapshots, files, manifests, and partitions using SQL. Here is every metadata table and how to use them. -->
-<!-- Primary Keyword: Iceberg metadata tables -->
-<!-- Secondary Keywords: table snapshots, table files, table history, Iceberg time travel -->
+<!- Meta Description: Iceberg metadata tables let you query snapshots, files, manifests, and partitions using SQL. Here is every metadata table and how to use them. ->
+<!- Primary Keyword: Iceberg metadata tables ->
+<!- Secondary Keywords: table snapshots, table files, table history, Iceberg time travel ->
+
+> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-04-29-iceberg-masterclass-11/).
 
 *Read the complete Apache Iceberg Masterclass series:*
 * [Part 1: What Are Table Formats and Why Were They Needed?](/blog/2026-04-29-apache-iceberg-masterclass-01-table-formats)
@@ -49,10 +50,10 @@ Iceberg exposes its internal metadata as queryable virtual tables. You can use t
 The `$snapshots` table lists every snapshot in the table's history. Each row represents a committed transaction.
 
 ```sql
--- Dremio syntax
+- Dremio syntax
 SELECT * FROM TABLE(table_snapshot('analytics.orders'))
 
--- Spark syntax
+- Spark syntax
 SELECT * FROM analytics.orders.snapshots
 ```
 
@@ -103,9 +104,7 @@ FROM TABLE(table_partitions('analytics.orders'))
 
 ```sql
 SELECT
-  AVG(file_size_in_bytes) / 1048576 AS avg_file_mb,
-  MIN(file_size_in_bytes) / 1048576 AS min_file_mb,
-  COUNT(*) AS total_files
+ AVG(file_size_in_bytes) / 1048576 AS avg_file_mb, MIN(file_size_in_bytes) / 1048576 AS min_file_mb, COUNT(*) AS total_files
 FROM TABLE(table_files('analytics.orders'))
 ```
 
@@ -129,9 +128,7 @@ Column statistics in the files table reveal whether your sort order is effective
 
 ```sql
 SELECT
-  file_path,
-  lower_bounds['customer_id'] AS min_customer_id,
-  upper_bounds['customer_id'] AS max_customer_id
+ file_path, lower_bounds['customer_id'] AS min_customer_id, upper_bounds['customer_id'] AS max_customer_id
 FROM TABLE(table_files('analytics.orders'))
 ```
 
@@ -143,9 +140,7 @@ Track how frequently the table is being written to:
 
 ```sql
 SELECT
-  DATE_TRUNC('hour', committed_at) AS hour,
-  COUNT(*) AS commits,
-  SUM(CAST(summary['added-data-files'] AS INT)) AS files_added
+ DATE_TRUNC('hour', committed_at) AS hour, COUNT(*) AS commits, SUM(CAST(summary['added-data-files'] AS INT)) AS files_added
 FROM TABLE(table_snapshot('analytics.orders'))
 WHERE committed_at > CURRENT_TIMESTAMP - INTERVAL '24' HOUR
 GROUP BY DATE_TRUNC('hour', committed_at)
@@ -172,11 +167,11 @@ This shows the last 10 operations: how many files were added or removed per comm
 Metadata tables enable time travel queries. Use the snapshot list to find the snapshot ID for a specific point in time, then query the table at that snapshot:
 
 ```sql
--- Query the table as it existed on February 15
+- Query the table as it existed on February 15
 SELECT * FROM analytics.orders
 AT SNAPSHOT '1234567890123456789'
 
--- Or by timestamp
+- Or by timestamp
 SELECT * FROM analytics.orders
 AT TIMESTAMP '2024-02-15 00:00:00'
 ```
@@ -188,12 +183,12 @@ Time travel is useful for debugging data issues ("what did this table look like 
 Metadata tables also enable incremental processing. By comparing two snapshots, you can identify which files were added between them and process only the new data:
 
 ```sql
--- Find files added in the last snapshot
+- Find files added in the last snapshot
 SELECT file_path, record_count
 FROM TABLE(table_files('analytics.orders'))
 WHERE file_path NOT IN (
-  SELECT file_path FROM TABLE(table_files('analytics.orders'))
-  AT SNAPSHOT '1234567890'
+ SELECT file_path FROM TABLE(table_files('analytics.orders'))
+ AT SNAPSHOT '1234567890'
 )
 ```
 
@@ -204,12 +199,12 @@ This pattern is the foundation for CDC (Change Data Capture) on Iceberg tables: 
 If a bad write corrupts your table, use the snapshot list to rollback:
 
 ```sql
--- Find the last good snapshot
+- Find the last good snapshot
 SELECT snapshot_id, committed_at, operation
 FROM TABLE(table_snapshot('analytics.orders'))
 ORDER BY committed_at DESC
 
--- Rollback to it (Spark)
+- Rollback to it (Spark)
 CALL system.rollback_to_snapshot('analytics.orders', 1234567890)
 ```
 
@@ -222,22 +217,19 @@ Rollback does not delete data. It simply changes the current snapshot pointer to
 Combine metadata table queries into a scheduled monitoring job:
 
 ```sql
--- Table health summary
+- Table health summary
 SELECT
-  (SELECT COUNT(*) FROM TABLE(table_snapshot('analytics.orders'))) AS snapshots,
-  (SELECT COUNT(*) FROM TABLE(table_files('analytics.orders'))) AS files,
-  (SELECT AVG(file_size_in_bytes)/1048576 FROM TABLE(table_files('analytics.orders'))) AS avg_mb,
-  (SELECT COUNT(*) FROM TABLE(table_manifests('analytics.orders'))) AS manifests
+ (SELECT COUNT(*) FROM TABLE(table_snapshot('analytics.orders'))) AS snapshots, (SELECT COUNT(*) FROM TABLE(table_files('analytics.orders'))) AS files, (SELECT AVG(file_size_in_bytes)/1048576 FROM TABLE(table_files('analytics.orders'))) AS avg_mb, (SELECT COUNT(*) FROM TABLE(table_manifests('analytics.orders'))) AS manifests
 ```
 
-Set alerts when snapshots exceed 1,000, average file size drops below 64 MB, or manifest count exceeds 500.
+Set alerts when snapshots exceed 1, 000, average file size drops below 64 MB, or manifest count exceeds 500.
 
 ### Engine Syntax Variations
 
 Different engines use different syntax for metadata tables:
 
 | Engine | Syntax |
-|---|---|
+|--|--|
 | Dremio | `TABLE(table_files('db.table'))` |
 | Spark | `db.table.files` |
 | Trino | `"db"."table$files"` |
@@ -250,10 +242,10 @@ The underlying data is identical; only the SQL syntax differs. Regardless of whi
 You can use metadata table queries to drive automated maintenance decisions. For example, a scheduler can check whether compaction is needed before running it:
 
 ```sql
--- Only compact if average file size is below threshold
+- Only compact if average file size is below threshold
 SELECT CASE
-  WHEN AVG(file_size_in_bytes) / 1048576 < 64 THEN 'COMPACT_NEEDED'
-  ELSE 'HEALTHY'
+ WHEN AVG(file_size_in_bytes) / 1048576 < 64 THEN 'COMPACT_NEEDED'
+ ELSE 'HEALTHY'
 END AS table_status
 FROM TABLE(table_files('analytics.orders'))
 ```

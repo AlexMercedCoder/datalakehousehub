@@ -13,16 +13,17 @@ tags:
   - Data Lakehouse
 canonical: "https://iceberglakehouse.com/posts/2024-4-end-to-end-data-engineering-tutorial-spark-dremio-superset/"
 ---
-> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2024-4-end-to-end-data-engineering-tutorial-spark-dremio-superset/).
 
 Data engineering aims to make data accessible and usable for data analytics and data science purposes. This involves several key aspects:
 
+> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2024-4-end-to-end-data-engineering-tutorial-spark-dremio-superset/).
+
 - Transferring data from operational systems like databases to systems optimized for analytical access.
-  
+ 
 - Modeling and optimizing data for improved accessibility and performance.
-  
+ 
 - Governing data access to ensure that only authorized individuals can access specific data.
-  
+ 
 - Creating abstractions to simplify data access.
 
 This tutorial focuses on the initial step of moving data between systems, introducing various systems commonly used in modern data platforms. Specifically, [we'll explore a "Data Lakehouse" architecture](https://bit.ly/dremio-blog-why-lakehouse).
@@ -32,7 +33,7 @@ This tutorial focuses on the initial step of moving data between systems, introd
 In many data systems, there are two primary hubs for data:
 
 - **Data Lake:** A storage system like Hadoop or Object Storage (ADLS/S3) that stores structured and unstructured data.
-  
+ 
 - **Data Warehouses:** These systems store structured data optimized for analytical workloads, in contrast to databases that are designed for transactional tasks.
 
 Data engineers typically move data from operational systems to JSON/CSV/Parquet files in the data lake, and then transfer a subset of that data to the data warehouse. However, as data volumes increased, this two-step process became time-consuming and costly, emphasizing the need for faster data delivery.
@@ -51,79 +52,79 @@ To setup our environment you will need docker desktop installed on your machine.
 version: "3"
 
 services:
-  # Nessie Catalog Server Using In-Memory Store
-  nessie:
-    image: projectnessie/nessie:latest
-    container_name: nessie
-    networks:
-      de-end-to-end:
-    ports:
-      - 19120:19120
-  # Minio Storage Server
-  minio:
-    image: minio/minio:latest
-    container_name: minio
-    environment:
-      - MINIO_ROOT_USER=admin
-      - MINIO_ROOT_PASSWORD=password
-      - MINIO_DOMAIN=storage
-      - MINIO_REGION_NAME=us-east-1
-      - MINIO_REGION=us-east-1
-    networks:
-      de-end-to-end:
-    ports:
-      - 9001:9001
-      - 9000:9000
-    command: ["server", "/data", "--console-address", ":9001"]
-  # Dremio
-  dremio:
-    platform: linux/x86_64
-    image: dremio/dremio-oss:latest
-    ports:
-      - 9047:9047
-      - 31010:31010
-      - 32010:32010
-    container_name: dremio
-    networks:
-      de-end-to-end:
-  # Spark
-  spark:
-    platform: linux/x86_64
-    image: alexmerced/spark35notebook:latest
-    ports: 
-      - 8080:8080  # Master Web UI
-      - 7077:7077  # Master Port
-      - 8888:8888  # Notebook
-    environment:
-      - AWS_REGION=us-east-1
-      - AWS_ACCESS_KEY_ID=admin #minio username
-      - AWS_SECRET_ACCESS_KEY=password #minio password
+ # Nessie Catalog Server Using In-Memory Store
+ nessie:
+ image: projectnessie/nessie:latest
+ container_name: nessie
+ networks:
+ de-end-to-end:
+ ports:
+ - 19120:19120
+ # Minio Storage Server
+ minio:
+ image: minio/minio:latest
+ container_name: minio
+ environment:
+ - MINIO_ROOT_USER=admin
+ - MINIO_ROOT_PASSWORD=password
+ - MINIO_DOMAIN=storage
+ - MINIO_REGION_NAME=us-east-1
+ - MINIO_REGION=us-east-1
+ networks:
+ de-end-to-end:
+ ports:
+ - 9001:9001
+ - 9000:9000
+ command: ["server", "/data", "-console-address", ":9001"]
+ # Dremio
+ dremio:
+ platform: linux/x86_64
+ image: dremio/dremio-oss:latest
+ ports:
+ - 9047:9047
+ - 31010:31010
+ - 32010:32010
+ container_name: dremio
+ networks:
+ de-end-to-end:
+ # Spark
+ spark:
+ platform: linux/x86_64
+ image: alexmerced/spark35notebook:latest
+ ports: 
+ - 8080:8080 # Master Web UI
+ - 7077:7077 # Master Port
+ - 8888:8888 # Notebook
+ environment:
+ - AWS_REGION=us-east-1
+ - AWS_ACCESS_KEY_ID=admin #minio username
+ - AWS_SECRET_ACCESS_KEY=password #minio password
 
-    container_name: spark
-    networks:
-      de-end-to-end:
-  # Postgres
-  postgres:
-    image: postgres:latest
-    container_name: postgres
-    environment:
-      POSTGRES_DB: mydb
-      POSTGRES_USER: myuser
-      POSTGRES_PASSWORD: mypassword
-    ports:
-      - "5435:5432"
-    networks:
-      de-end-to-end:
-  #Superset
-  superset:
-    image: alexmerced/dremio-superset
-    container_name: superset
-    networks:
-      de-end-to-end:
-    ports:
-      - 8088:8088
+ container_name: spark
+ networks:
+ de-end-to-end:
+ # Postgres
+ postgres:
+ image: postgres:latest
+ container_name: postgres
+ environment:
+ POSTGRES_DB: mydb
+ POSTGRES_USER: myuser
+ POSTGRES_PASSWORD: mypassword
+ ports:
+ - "5435:5432"
+ networks:
+ de-end-to-end:
+ #Superset
+ superset:
+ image: alexmerced/dremio-superset
+ container_name: superset
+ networks:
+ de-end-to-end:
+ ports:
+ - 8088:8088
 networks:
-  de-end-to-end:
+ de-end-to-end:
 ```
 
 ### Breakdown of the docker-compose file
@@ -131,47 +132,47 @@ networks:
 This Docker Compose file defines a set of services that work together to create a data engineering environment. Let's break down each service and its purpose:
 
 1. **Nessie Catalog Server (nessie):**
-   - Image: `projectnessie/nessie:latest`
-   - Purpose: This service sets up a Nessie catalog server using an in-memory store.
-   - Ports: Exposes port 19120 for external communication.
+ - Image: `projectnessie/nessie:latest`
+ - Purpose: This service sets up a Nessie catalog server using an in-memory store.
+ - Ports: Exposes port 19120 for external communication.
 
 2. **Minio Storage Server (minio):**
-   - Image: `minio/minio:latest`
-   - Environment Variables:
-     - `MINIO_ROOT_USER=admin`
-     - `MINIO_ROOT_PASSWORD=password`
-     - `MINIO_DOMAIN=storage`
-     - `MINIO_REGION_NAME=us-east-1`
-     - `MINIO_REGION=us-east-1`
-   - Purpose: Sets up a Minio storage server for object storage.
-   - Ports: Exposes ports 9001 and 9000 for external access and uses port 9001 for the Minio console.
-   - Command: Starts the server with the specified parameters.
+ - Image: `minio/minio:latest`
+ - Environment Variables:
+ - `MINIO_ROOT_USER=admin`
+ - `MINIO_ROOT_PASSWORD=password`
+ - `MINIO_DOMAIN=storage`
+ - `MINIO_REGION_NAME=us-east-1`
+ - `MINIO_REGION=us-east-1`
+ - Purpose: Sets up a Minio storage server for object storage.
+ - Ports: Exposes ports 9001 and 9000 for external access and uses port 9001 for the Minio console.
+ - Command: Starts the server with the specified parameters.
 
 3. **Dremio (dremio):**
-   - Platform: `linux/x86_64`
-   - Image: `dremio/dremio-oss:latest`
-   - Ports: Exposes ports 9047, 31010, and 32010 for Dremio communication.
-   - Purpose: Sets up Dremio, a data lakehouse platform, for data processing and analytics.
+ - Platform: `linux/x86_64`
+ - Image: `dremio/dremio-oss:latest`
+ - Ports: Exposes ports 9047, 31010, and 32010 for Dremio communication.
+ - Purpose: Sets up Dremio, a data lakehouse platform, for data processing and analytics.
 
 4. **Spark (spark):**
-   - Platform: `linux/x86_64`
-   - Image: `alexmerced/spark35notebook:latest`
-   - Ports: Exposes ports 8080, 7077, and 8888 for Spark services, including the web UI, master port, and notebook.
-   - Purpose: Sets up Apache Spark for distributed data processing and analytics.
+ - Platform: `linux/x86_64`
+ - Image: `alexmerced/spark35notebook:latest`
+ - Ports: Exposes ports 8080, 7077, and 8888 for Spark services, including the web UI, master port, and notebook.
+ - Purpose: Sets up Apache Spark for distributed data processing and analytics.
 
 5. **Postgres (postgres):**
-   - Image: `postgres:latest`
-   - Environment Variables:
-     - `POSTGRES_DB=mydb`
-     - `POSTGRES_USER=myuser`
-     - `POSTGRES_PASSWORD=mypassword`
-   - Ports: Exposes port 5435 for external access.
-   - Purpose: Sets up a Postgres database with a specified database name, username, and password.
+ - Image: `postgres:latest`
+ - Environment Variables:
+ - `POSTGRES_DB=mydb`
+ - `POSTGRES_USER=myuser`
+ - `POSTGRES_PASSWORD=mypassword`
+ - Ports: Exposes port 5435 for external access.
+ - Purpose: Sets up a Postgres database with a specified database name, username, and password.
 
 6. **Superset (superset):**
-   - Image: `alexmerced/dremio-superset`
-   - Ports: Exposes port 8080 for Superset access.
-   - Purpose: Sets up Apache Superset, a data visualization and exploration platform, for creating BI dashboards.
+ - Image: `alexmerced/dremio-superset`
+ - Ports: Exposes port 8080 for Superset access.
+ - Purpose: Sets up Apache Superset, a data visualization and exploration platform, for creating BI dashboards.
 
 Additionally, the file defines a network called `de-end-to-end` that connects all the services together, allowing them to communicate with each other within the Docker environment.
 
@@ -202,23 +203,15 @@ Enter the password when prompted (use `mypassword` in this example).
 Once you're in the Postgres shell, you can create a table and add data. Here's an example SQL script:
 
 ```sql
--- Create a table for a mock BI dashboard dataset
+- Create a table for a mock BI dashboard dataset
 CREATE TABLE sales_data (
-    id SERIAL PRIMARY KEY,
-    product_name VARCHAR(255),
-    category VARCHAR(50),
-    sales_amount DECIMAL(10, 2),
-    sales_date DATE
+ id SERIAL PRIMARY KEY, product_name VARCHAR(255), category VARCHAR(50), sales_amount DECIMAL(10, 2), sales_date DATE
 );
 
--- Insert sample data into the table
+- Insert sample data into the table
 INSERT INTO sales_data (product_name, category, sales_amount, sales_date)
 VALUES
-    ('Product A', 'Electronics', 1000.50, '2024-03-01'),
-    ('Product B', 'Clothing', 750.25, '2024-03-02'),
-    ('Product C', 'Home Goods', 1200.75, '2024-03-03'),
-    ('Product D', 'Electronics', 900.00, '2024-03-04'),
-    ('Product E', 'Clothing', 600.50, '2024-03-05');
+ ('Product A', 'Electronics', 1000.50, '2024-03-01'), ('Product B', 'Clothing', 750.25, '2024-03-02'), ('Product C', 'Home Goods', 1200.75, '2024-03-03'), ('Product D', 'Electronics', 900.00, '2024-03-04'), ('Product E', 'Clothing', 600.50, '2024-03-05');
 ```
 
 Run the above SQL script in the Postgres shell to create the sales_data table and populate it with sample data ideal for a mock BI dashboard. Leave the postgres shell with the command:
@@ -248,7 +241,7 @@ docker compose up spark nessie minio dremio
 Keep an eye out cause in the terminal output the URL to access the Python notebook server will appear, and this will be needed to access the server running on localhost:8888.
 
 ```
-spark   | [I 2024-04-01 15:02:50.052 ServerApp]     http://127.0.0.1:8888/lab?token=bdc8479a80be54e723eb636e1b62de141a553b75e984a9da
+spark | [I 2024-04-01 15:02:50.052 ServerApp] http://127.0.0.1:8888/lab?token=bdc8479a80be54e723eb636e1b62de141a553b75e984a9da
 ```
 
 Put the URL in the browser and you'll be able to create a new notebook, which we'll add some code to later on.
@@ -275,21 +268,21 @@ STORAGE_URI = "http://minio:9000"
 
 
 conf = (
-    pyspark.SparkConf()
-        .setAppName('app_name')
-  		#packages
-        .set('spark.jars.packages', 'org.postgresql:postgresql:42.7.3,org.apache.iceberg:iceberg-spark-runtime-3.5_2.12:1.5.0,org.projectnessie.nessie-integrations:nessie-spark-extensions-3.5_2.12:0.77.1,software.amazon.awssdk:bundle:2.24.8,software.amazon.awssdk:url-connection-client:2.24.8')
-  		#SQL Extensions
-        .set('spark.sql.extensions', 'org.apache.iceberg.spark.extensions.IcebergSparkSessionExtensions,org.projectnessie.spark.extensions.NessieSparkSessionExtensions')
-  		#Configuring Catalog
-        .set('spark.sql.catalog.nessie', 'org.apache.iceberg.spark.SparkCatalog')
-        .set('spark.sql.catalog.nessie.uri', CATALOG_URI)
-        .set('spark.sql.catalog.nessie.ref', 'main')
-        .set('spark.sql.catalog.nessie.authentication.type', 'NONE')
-        .set('spark.sql.catalog.nessie.catalog-impl', 'org.apache.iceberg.nessie.NessieCatalog')
-        .set('spark.sql.catalog.nessie.s3.endpoint', STORAGE_URI)
-        .set('spark.sql.catalog.nessie.warehouse', WAREHOUSE)
-        .set('spark.sql.catalog.nessie.io-impl', 'org.apache.iceberg.aws.s3.S3FileIO')
+ pyspark.SparkConf()
+ .setAppName('app_name')
+ 		#packages
+ .set('spark.jars.packages', 'org.postgresql:postgresql:42.7.3, org.apache.iceberg:iceberg-spark-runtime-3.5_2.12:1.5.0, org.projectnessie.nessie-integrations:nessie-spark-extensions-3.5_2.12:0.77.1, software.amazon.awssdk:bundle:2.24.8, software.amazon.awssdk:url-connection-client:2.24.8')
+ 		#SQL Extensions
+ .set('spark.sql.extensions', 'org.apache.iceberg.spark.extensions.IcebergSparkSessionExtensions, org.projectnessie.spark.extensions.NessieSparkSessionExtensions')
+ 		#Configuring Catalog
+ .set('spark.sql.catalog.nessie', 'org.apache.iceberg.spark.SparkCatalog')
+ .set('spark.sql.catalog.nessie.uri', CATALOG_URI)
+ .set('spark.sql.catalog.nessie.ref', 'main')
+ .set('spark.sql.catalog.nessie.authentication.type', 'NONE')
+ .set('spark.sql.catalog.nessie.catalog-impl', 'org.apache.iceberg.nessie.NessieCatalog')
+ .set('spark.sql.catalog.nessie.s3.endpoint', STORAGE_URI)
+ .set('spark.sql.catalog.nessie.warehouse', WAREHOUSE)
+ .set('spark.sql.catalog.nessie.io-impl', 'org.apache.iceberg.aws.s3.S3FileIO')
 
 )
 
@@ -300,9 +293,7 @@ print("Spark Running")
 # Define the JDBC URL for the Postgres database
 jdbc_url = "jdbc:postgresql://postgres:5432/mydb"
 properties = {
-    "user": "myuser",
-    "password": "mypassword",
-    "driver": "org.postgresql.Driver"
+ "user": "myuser", "password": "mypassword", "driver": "org.postgresql.Driver"
 }
 
 # Load the table from Postgres
@@ -325,39 +316,39 @@ spark.stop()
 This PySpark script demonstrates how to configure a Spark session to integrate with Apache Iceberg and Nessie, read data from a PostgreSQL database, and write it to an Iceberg table managed by Nessie.
 
 1. **Import necessary modules:**
-   - `pyspark`: The main PySpark library.
-   - `SparkSession`: The entry point to programming Spark with the Dataset and DataFrame API.
+ - `pyspark`: The main PySpark library.
+ - `SparkSession`: The entry point to programming Spark with the Dataset and DataFrame API.
 
 2. **Define sensitive variables:**
-   - `CATALOG_URI`: The URI for the Nessie server.
-   - `WAREHOUSE`: The S3 bucket URI where the Iceberg tables will be stored.
-   - `STORAGE_URI`: The URI of the S3-compatible storage, in this case, a MinIO instance running at `172.18.0.6:9000`.
+ - `CATALOG_URI`: The URI for the Nessie server.
+ - `WAREHOUSE`: The S3 bucket URI where the Iceberg tables will be stored.
+ - `STORAGE_URI`: The URI of the S3-compatible storage, in this case, a MinIO instance running at `172.18.0.6:9000`.
 
 3. **Configure Spark session:**
-   - Set the application name.
-   - Specify necessary packages (`spark.jars.packages`) including PostgreSQL JDBC driver, Iceberg, Nessie, and AWS SDK.
-   - Enable required SQL extensions for Iceberg and Nessie (`spark.sql.extensions`).
-   - Configure Nessie catalog settings such as URI, reference branch, authentication type, and implementation class.
-   - Set the S3 endpoint for Nessie to communicate with the S3-compatible storage (MinIO).
+ - Set the application name.
+ - Specify necessary packages (`spark.jars.packages`) including PostgreSQL JDBC driver, Iceberg, Nessie, and AWS SDK.
+ - Enable required SQL extensions for Iceberg and Nessie (`spark.sql.extensions`).
+ - Configure Nessie catalog settings such as URI, reference branch, authentication type, and implementation class.
+ - Set the S3 endpoint for Nessie to communicate with the S3-compatible storage (MinIO).
 
 4. **Start the Spark session:**
-   - The `SparkSession` is initialized with the above configuration.
+ - The `SparkSession` is initialized with the above configuration.
 
 5. **Database connection setup:**
-   - Define the JDBC URL for the PostgreSQL database.
-   - Set connection properties including user, password, and driver.
+ - Define the JDBC URL for the PostgreSQL database.
+ - Set connection properties including user, password, and driver.
 
 6. **Data ingestion from PostgreSQL:**
-   - Read data from the `sales_data` table in PostgreSQL into a DataFrame (`postgres_df`).
+ - Read data from the `sales_data` table in PostgreSQL into a DataFrame (`postgres_df`).
 
 7. **Write data to an Iceberg table:**
-   - Write the DataFrame to an Iceberg table named `sales_data` in the Nessie catalog.
+ - Write the DataFrame to an Iceberg table named `sales_data` in the Nessie catalog.
 
 8. **Read and display the Iceberg table:**
-   - Read the newly created Iceberg table from the Nessie catalog and display its contents.
+ - Read the newly created Iceberg table from the Nessie catalog and display its contents.
 
 9. **Stop the Spark session:**
-   - Terminate the Spark session to release resources.
+ - Terminate the Spark session to release resources.
 
 ### Can This Be Easier?
 
@@ -375,20 +366,20 @@ Configuring Apache Spark while a standard tool for the Data Engineer, can be rea
 Now, head to `localhost:9047` in your browser to set up your Dremio admin account. Once set up, click “add a Source” and select a “Nessie” as the source. Enter in the following settings:
 
 - General settings tab
-    - Source Name: nessie
-    - Nessie Endpoint URL: http://nessie:19120/api/v2
-    - Auth Type: None
+ - Source Name: nessie
+ - Nessie Endpoint URL: http://nessie:19120/api/v2
+ - Auth Type: None
 - Storage settings tab
-    - AWS Root Path: warehouse
-    - AWS Access Key: admin
-    - AWS Secret Key: password
-    - Uncheck “Encrypt Connection” Box (since we aren’t using SSL)
-    - Connection Properties
-        - Key: fs.s3a.path.style.access | Value: true
-        - Key: fs.s3a.endpoint | Value: minio:9000
-        - Key: dremio.s3.compat | Value: true
+ - AWS Root Path: warehouse
+ - AWS Access Key: admin
+ - AWS Secret Key: password
+ - Uncheck “Encrypt Connection” Box (since we aren’t using SSL)
+ - Connection Properties
+ - Key: fs.s3a.path.style.access | Value: true
+ - Key: fs.s3a.endpoint | Value: minio:9000
+ - Key: dremio.s3.compat | Value: true
 
-Click on “Save,” and the source will be added to Dremio. You can then run full DDL and DML SQL against it. Dremio turns your data lake into a data warehouse: a data lakehouse!
+Click on “Save, ” and the source will be added to Dremio. You can then run full DDL and DML SQL against it. Dremio turns your data lake into a data warehouse: a data lakehouse!
 
 Now we can connect superset and build BI dashboards over any data we have connected to Dremio which can not only include our data lake but many sources like Postgres, SQLServer, Mongo, ElasticSearch, Snowflake, Hadoop, ADLS, S3, AWS Glue, Hive and much more!
 

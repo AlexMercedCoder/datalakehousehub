@@ -1,6 +1,6 @@
 ---
 title: "The Apache Iceberg Market in the Middle of 2026"
-description: "A survey of the Apache Iceberg market in July 2026: the state of the specification, platform support, the acquisition wave, the catalog contest, and how to evaluate real Iceberg support."
+description: "A survey of the Apache Iceberg market in July 2026: the state of the specification, platform support, the acquisition wave, the catalog contest, and how."
 date: 2026-07-25T09:00:00Z
 author: "Alex Merced"
 category: "Data Engineering"
@@ -14,7 +14,6 @@ slug: "iceberg-market-2026"
 draft: false
 image: "/images/blog.png"
 ---
-
 Two years ago the interesting question was whether your data platform supported Apache Iceberg. Today every platform claims it does, and the claim tells you almost nothing. One vendor means an engine that reads Iceberg tables somebody else wrote. Another means it writes tables but only through its own catalog. A third means outside engines can create, write, and commit to its managed tables through the standard REST API with credentials the catalog hands out per query. Those are three completely different products wearing one word.
 
 That confusion is the defining feature of the Iceberg market right now, and it exists because the format won. Apache Iceberg is the table format layer for the open lakehouse, and the fight moved somewhere else: to the catalog, to table maintenance, to who governs access when the caller is an agent instead of a person, and to which parts of the stack stay open once a vendor manages them for you.
@@ -139,25 +138,12 @@ Vendor claims collapse into something testable when you write the configuration 
 
 ```sql
 CREATE TABLE lakehouse.telemetry.device_events (
-    event_id        BIGINT,
-    device_id       STRING,
-    recorded_at     TIMESTAMP,
-    location        GEOMETRY,
-    payload         VARIANT,
-    ingested_at     TIMESTAMP
+ event_id BIGINT, device_id STRING, recorded_at TIMESTAMP, location GEOMETRY, payload VARIANT, ingested_at TIMESTAMP
 )
 USING iceberg
 PARTITIONED BY (days(recorded_at), bucket(64, device_id))
 TBLPROPERTIES (
-    'format-version'                        = '3',
-    'write.delete.mode'                     = 'merge-on-read',
-    'write.update.mode'                     = 'merge-on-read',
-    'write.merge.mode'                      = 'merge-on-read',
-    'write.parquet.compression-codec'       = 'zstd',
-    'write.target-file-size-bytes'          = '536870912',
-    'write.metadata.delete-after-commit.enabled' = 'true',
-    'write.metadata.previous-versions-max'  = '50',
-    'history.expire.max-snapshot-age-ms'    = '604800000'
+ 'format-version' = '3', 'write.delete.mode' = 'merge-on-read', 'write.update.mode' = 'merge-on-read', 'write.merge.mode' = 'merge-on-read', 'write.parquet.compression-codec' = 'zstd', 'write.target-file-size-bytes' = '536870912', 'write.metadata.delete-after-commit.enabled' = 'true', 'write.metadata.previous-versions-max' = '50', 'history.expire.max-snapshot-age-ms' = '604800000'
 )
 ```
 
@@ -169,22 +155,13 @@ Reading the same table from a completely different runtime is the test that matt
 from pyiceberg.catalog import load_catalog
 
 catalog = load_catalog(
-    "lakehouse",
-    **{
-        "type": "rest",
-        "uri": "https://polaris.example.com/api/catalog",
-        "warehouse": "analytics",
-        "credential": "<client-id>:<client-secret>",
-        "header.X-Iceberg-Access-Delegation": "vended-credentials",
-    },
-)
+ "lakehouse", **{
+ "type": "rest", "uri": "https://polaris.example.com/api/catalog", "warehouse": "analytics", "credential": "<client-id>:<client-secret>", "header.X-Iceberg-Access-Delegation": "vended-credentials", }, )
 
 table = catalog.load_table("telemetry.device_events")
 
 scan = table.scan(
-    row_filter="device_id = 'dev-8891' AND recorded_at > '2026-07-01T00:00:00'",
-    selected_fields=("event_id", "recorded_at", "payload"),
-)
+ row_filter="device_id = 'dev-8891' AND recorded_at > '2026-07-01T00:00:00'", selected_fields=("event_id", "recorded_at", "payload"), )
 
 arrow_table = scan.to_arrow()
 print(arrow_table.num_rows, table.current_snapshot().snapshot_id)
@@ -196,23 +173,15 @@ The maintenance side is equally concrete:
 
 ```sql
 CALL lakehouse.system.rewrite_data_files(
-    table => 'telemetry.device_events',
-    strategy => 'sort',
-    sort_order => 'device_id ASC NULLS LAST, recorded_at ASC',
-    where => 'recorded_at >= current_date() - INTERVAL 2 DAYS',
-    options => map(
-        'min-input-files', '20',
-        'target-file-size-bytes', '536870912',
-        'partial-progress.enabled', 'true'
-    )
+ table => 'telemetry.device_events', strategy => 'sort', sort_order => 'device_id ASC NULLS LAST, recorded_at ASC', where => 'recorded_at >= current_date() - INTERVAL 2 DAYS', options => map(
+ 'min-input-files', '20', 'target-file-size-bytes', '536870912', 'partial-progress.enabled', 'true'
+ )
 );
 
 CALL lakehouse.system.rewrite_position_delete_files(table => 'telemetry.device_events');
 CALL lakehouse.system.rewrite_manifests(table => 'telemetry.device_events');
 CALL lakehouse.system.expire_snapshots(
-    table => 'telemetry.device_events',
-    older_than => current_timestamp() - INTERVAL 7 DAYS,
-    retain_last => 50
+ table => 'telemetry.device_events', older_than => current_timestamp() - INTERVAL 7 DAYS, retain_last => 50
 );
 ```
 
@@ -223,7 +192,7 @@ The `where` clause on compaction is the detail that separates a job that finishe
 Support falls into five tiers, and the word alone never tells you which one you are being sold.
 
 | Tier | What it means | The question that reveals it |
-|---|---|---|
+|--|--|--|
 | Read external | Queries Iceberg tables written by others | Can it read v3 deletion vectors and variant columns? |
 | Write external | Creates and writes tables in your storage | Which catalogs does it write through besides its own? |
 | Catalog client | Uses the Iceberg REST specification | Does it support credential vending and OAuth against a third-party catalog? |
@@ -266,8 +235,7 @@ Most teams reading a market survey are not starting from zero. They have Hive ta
 
 ```sql
 CALL lakehouse.system.snapshot(
-    source_table => 'hive_prod.web.page_views',
-    table => 'lakehouse.web.page_views_iceberg'
+ source_table => 'hive_prod.web.page_views', table => 'lakehouse.web.page_views_iceberg'
 );
 ```
 
@@ -277,9 +245,7 @@ CALL lakehouse.system.snapshot(
 
 ```sql
 CALL lakehouse.system.add_files(
-    table => 'lakehouse.web.page_views',
-    source_table => '`parquet`.`s3://raw/web/page_views/`',
-    check_duplicate_files => true
+ table => 'lakehouse.web.page_views', source_table => '`parquet`.`s3://raw/web/page_views/`', check_duplicate_files => true
 );
 ```
 

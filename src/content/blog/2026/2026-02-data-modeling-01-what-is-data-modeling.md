@@ -2,7 +2,7 @@
 title: "What Is Data Modeling? A Complete Guide"
 date: 2026-02-18T09:00:00Z
 pubDatetime: 2026-02-18T09:00:00Z
-description: "A complete guide to data modeling : what it is, the three levels of abstraction, common techniques, and why it matters more than ever for AI, analytics, and governance."
+description: "A complete guide to data modeling : what it is, the three levels of abstraction, common techniques, and why it matters more than ever for AI, analytics."
 author: "Alex Merced"
 category: "Data Modeling"
 bannerImage: "https://i.imgur.com/cpoMZQ8.png"
@@ -15,19 +15,20 @@ draft: false
 image: "/images/blog.png"
 canonical: "https://iceberglakehouse.com/posts/2026-02-dm-what-is-data-modeling/"
 ---
-> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-02-dm-what-is-data-modeling/).
 
 ![Data entities connected by relationship lines forming a structured data model](/images/blog/data-modeling/data-modeling-overview.png)
 
+> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-02-dm-what-is-data-modeling/).
+
 Every database, data warehouse, and data lakehouse starts with the same question: how should this data be organized? Data modeling answers that question by creating a structured blueprint of your data : what it contains, how it relates, and what it means.
 
-A data model is not a diagram you draw once and forget. It's a living definition of your business logic, encoded in the structure of your tables, columns, and relationships. Get it right, and every downstream consumer :  dashboards, reports, AI agents, applications ,  works from the same shared understanding. Get it wrong, and you spend months untangling conflicting definitions of "customer," "revenue," and "active user."
+A data model is not a diagram you draw once and forget. It's a living definition of your business logic, encoded in the structure of your tables, columns, and relationships. Get it right, and every downstream consumer : dashboards, reports, AI agents, applications, works from the same shared understanding. Get it wrong, and you spend months untangling conflicting definitions of "customer, " "revenue, " and "active user."
 
 ## What Data Modeling Actually Means
 
 Data modeling is the process of defining entities, attributes, and relationships for a dataset. Entities represent real-world objects or concepts (Customers, Orders, Products). Attributes describe those entities (customer name, order date, product price). Relationships define how entities connect (a customer *places* an order, an order *contains* products).
 
-The goal is to create a representation precise enough that a database can store the data reliably, and clear enough that a human :  or an AI agent ,  can understand what the data means.
+The goal is to create a representation precise enough that a database can store the data reliably, and clear enough that a human : or an AI agent, can understand what the data means.
 
 Think of it as an architectural blueprint. You wouldn't build a house without one, and you shouldn't build a data platform without a data model.
 
@@ -38,7 +39,7 @@ Think of it as an architectural blueprint. You wouldn't build a house without on
 Data models operate at three levels of abstraction, each serving a different audience:
 
 | Level | Audience | Purpose | Contains |
-|---|---|---|---|
+|--|--|--|--|
 | **Conceptual** | Business stakeholders | Define *what* data is needed | Entities, relationships, business rules |
 | **Logical** | Data architects | Define *how* data is structured | Attributes, data types, normalization rules, keys |
 | **Physical** | Database engineers | Define *where and how* data is stored | Tables, columns, indexes, partitions, constraints |
@@ -53,7 +54,7 @@ Data models operate at three levels of abstraction, each serving a different aud
 
 Several techniques exist for organizing data. Each fits different use cases:
 
-**Entity-Relationship (ER) Modeling** is the most widely used technique for transactional systems. It maps entities, attributes, and their relationships using formal diagrams. Most OLTP databases :  the systems that power applications ,  start with an ER model.
+**Entity-Relationship (ER) Modeling** is the most widely used technique for transactional systems. It maps entities, attributes, and their relationships using formal diagrams. Most OLTP databases : the systems that power applications, start with an ER model.
 
 **Dimensional Modeling** organizes data into facts (measurable events like sales transactions) and dimensions (context like date, product, and customer). Star schemas and snowflake schemas are the two primary patterns. This technique dominates data warehousing and analytics.
 

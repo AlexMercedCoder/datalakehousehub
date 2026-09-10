@@ -2,7 +2,7 @@
 title: "The State of Apache Polaris in July 2026: From Incubating Catalog to the Governance Layer of the Open Lakehouse"
 date: 2026-07-06T12:00:00Z
 canonical: https://iceberglakehouse.com/posts/state-of-apache-polaris-july-2026/
-description: "Apache Polaris as a TLP — federation, credential vending, semantic layers, lineage, and how the open catalog became the governance plane of the multi-engine lakehouse."
+description: "Apache Polaris as a TLP, federation, credential vending, semantic layers, lineage, and how the open catalog became the governance plane."
 author: "Alex Merced"
 category: "Apache Polaris"
 tags:
@@ -17,11 +17,12 @@ draft: false
 image: "/images/blog.png"
 bannerImage: "/images/blog.png"
 ---
-> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/state-of-apache-polaris-july-2026/).
 
 # The State of Apache Polaris in July 2026: From Incubating Catalog to the Governance Layer of the Open Lakehouse
 
 *By Alex Merced, Head of Developer Relations at Dremio*
+
+> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/state-of-apache-polaris-july-2026/).
 
 I have a personal stake in this one, so let me declare it up front. Apache Polaris was co-created by Snowflake and Dremio, I work at Dremio, and I co-authored Apache Polaris: The Definitive Guide for O'Reilly. I have watched this project from the first commit, through donation to the Apache Software Foundation in August 2024, through eighteen months of incubation, and past its graduation to a Top-Level Project in February 2026. I am not a neutral observer. What I can promise instead is accuracy, receipts from the dev list, and honesty about what is finished versus what is still forming.
 
@@ -143,7 +144,7 @@ Abstract capability lists never convince anyone, so let me run a composite scena
 
 The company: a retailer with a data estate that grew by accretion. Core analytics tables live in Iceberg on S3, cataloged in AWS Glue because that was the default. A legacy Hive Metastore governs an older Hadoop-era warehouse that finance still queries. One acquired business unit runs on GCP with tables in BigQuery Metastore. Spark handles ETL, Dremio serves BI, a growing crew of data scientists uses Python and DuckDB, and this year the CTO wants agents answering questions against governed data.
 
-**Stage one: govern without moving anything.** The platform team deploys Polaris, either self-managed on Kubernetes via the Helm chart with PostgreSQL behind it, or through a managed offering. They do not migrate a single table. Glue, the Hive Metastore, and BigQuery Metastore register as federated catalogs, and Polaris projects all three through one set of Iceberg REST endpoints. Engines repoint their catalog configuration at Polaris, a config change, not a code change, precisely because everything speaks the REST protocol. The immediate win is a single discovery plane: for the first time, one namespace answers "what tables exist," spanning three clouds' worth of history. The second win lands with security: principals and roles get defined once, and credential vending replaces the zoo of IAM keys living in Spark configs. Nothing about the data moved. The governance moved.
+**Stage one: govern without moving anything.** The platform team deploys Polaris, either self-managed on Kubernetes via the Helm chart with PostgreSQL behind it, or through a managed offering. They do not migrate a single table. Glue, the Hive Metastore, and BigQuery Metastore register as federated catalogs, and Polaris projects all three through one set of Iceberg REST endpoints. Engines repoint their catalog configuration at Polaris, a config change, not a code change, precisely because everything speaks the REST protocol. The immediate win is a single discovery plane: for the first time, one namespace answers "what tables exist, " spanning three clouds' worth of history. The second win lands with security: principals and roles get defined once, and credential vending replaces the zoo of IAM keys living in Spark configs. Nothing about the data moved. The governance moved.
 
 **Stage two: consolidate where it pays.** With federation carrying the legacy, the team makes migration a business-case decision instead of a prerequisite. New tables get created directly in Polaris-managed internal catalogs. The highest-value Glue tables migrate with the catalog migrator tooling when their pipelines get touched anyway. The Hive Metastore is left to age in place behind federation, queried but frozen, on a path to eventual retirement that no longer blocks anything. Meanwhile the operational muscles build: metrics reporting flows from engines back into Polaris, so the team can finally see which tables are hot, which are dead, and which governance rules actually get exercised. Policies for retention and maintenance land in the policy store. OPA arrives when the security team wants access rules expressed as reviewable policy code alongside the rest of their infrastructure policies.
 

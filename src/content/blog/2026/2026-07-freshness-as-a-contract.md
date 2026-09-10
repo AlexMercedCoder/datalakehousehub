@@ -1,6 +1,6 @@
 ---
 title: "Freshness Is a Contract, Not a Note on a Dashboard"
-description: "Data freshness needs to become an engineering contract with a measurable value, an owner, and consequences. How to decompose lag, make freshness queryable, and keep agents honest."
+description: "Data freshness needs to become an engineering contract with a measurable value, an owner, and consequences."
 date: 2026-07-25T09:00:00Z
 author: "Alex Merced"
 category: "Data Engineering"
@@ -16,9 +16,9 @@ image: "/images/blog.png"
 canonical: https://iceberglakehouse.com/posts/freshness-as-a-contract/
 ---
 
-> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/freshness-as-a-contract/).
-
 An inventory agent rerouted a shipment last quarter for a company I spoke with, based on stock levels that were six hours old. The warehouse had already committed that stock to a different order. The agent was not wrong about the data it read. The data was wrong about the world, and nothing in the system told the agent how old the numbers were.
+
+> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/freshness-as-a-contract/).
 
 Dashboards handled this with a line of small text: "as of 6:00 a.m." A human reads that, adjusts, and asks someone if the decision matters. An agent reads the number, not the caption, and takes the action.
 
@@ -69,10 +69,9 @@ A number in a runbook is documentation. A number a system can read is a contract
 Apache Iceberg makes the base case easy, because every table already carries the timestamp of its most recent commit in metadata. One metadata read returns it, with no data scan.
 
 ```sql
--- Materialization freshness for a single table, straight from metadata.
+- Materialization freshness for a single table, straight from metadata.
 SELECT
-    committed_at                                             AS last_commit,
-    TIMESTAMPDIFF(SECOND, committed_at, CURRENT_TIMESTAMP()) AS staleness_seconds
+ committed_at AS last_commit, TIMESTAMPDIFF(SECOND, committed_at, CURRENT_TIMESTAMP()) AS staleness_seconds
 FROM lakehouse.sales.orders.snapshots
 ORDER BY committed_at DESC
 LIMIT 1;
@@ -81,12 +80,9 @@ LIMIT 1;
 That covers materialization lag. It does not cover capture, extraction, or transport, because the commit time tells you when the data landed, not how old the data was when it landed. For the full picture you need event-time watermarks carried through the pipeline.
 
 ```sql
--- End-to-end freshness: how old is the newest event we can actually see?
+- End-to-end freshness: how old is the newest event we can actually see?
 SELECT
-    MAX(event_time)                                              AS newest_event,
-    MAX(ingested_at)                                             AS newest_ingest,
-    TIMESTAMPDIFF(SECOND, MAX(event_time), CURRENT_TIMESTAMP())  AS end_to_end_lag_s,
-    TIMESTAMPDIFF(SECOND, MAX(event_time), MAX(ingested_at))     AS upstream_lag_s
+ MAX(event_time) AS newest_event, MAX(ingested_at) AS newest_ingest, TIMESTAMPDIFF(SECOND, MAX(event_time), CURRENT_TIMESTAMP()) AS end_to_end_lag_s, TIMESTAMPDIFF(SECOND, MAX(event_time), MAX(ingested_at)) AS upstream_lag_s
 FROM lakehouse.sales.orders
 WHERE ingested_at >= TIMESTAMPADD(HOUR, -1, CURRENT_TIMESTAMP());
 ```
@@ -100,20 +96,15 @@ For the stages after the raw table, publish a freshness registry that consumers 
 ```sql
 CREATE OR REPLACE VIEW governance.freshness AS
 SELECT
-    'sales.orders'                AS dataset,
-    'raw'                         AS layer,
-    'streaming'                   AS pipeline,
-    30                            AS target_lag_seconds,
-    (SELECT TIMESTAMPDIFF(SECOND, MAX(event_time), CURRENT_TIMESTAMP())
-     FROM lakehouse.sales.orders) AS actual_lag_seconds
+ 'sales.orders' AS dataset, 'raw' AS layer, 'streaming' AS pipeline, 30 AS target_lag_seconds, (SELECT TIMESTAMPDIFF(SECOND, MAX(event_time), CURRENT_TIMESTAMP())
+ FROM lakehouse.sales.orders) AS actual_lag_seconds
 UNION ALL
 SELECT
-    'sales.daily_revenue', 'metric', 'scheduled', 3600,
-    (SELECT TIMESTAMPDIFF(SECOND, MAX(refreshed_at), CURRENT_TIMESTAMP())
-     FROM lakehouse.sales.daily_revenue_meta)
+ 'sales.daily_revenue', 'metric', 'scheduled', 3600, (SELECT TIMESTAMPDIFF(SECOND, MAX(refreshed_at), CURRENT_TIMESTAMP())
+ FROM lakehouse.sales.daily_revenue_meta)
 UNION ALL
 SELECT
-    'crm.accounts', 'federated', 'live', 5, 5;
+ 'crm.accounts', 'federated', 'live', 5, 5;
 ```
 
 Three rows, three very different mechanisms, one interface. A consumer that wants to know whether it is safe to act queries one view rather than understanding your pipeline topology. That is the contract, expressed as data.
@@ -128,25 +119,23 @@ The reliable technique is a heartbeat. A small process writes a row into the sou
 import time, uuid, datetime
 
 def heartbeat_probe(source_conn, lakehouse_conn, dataset):
-    marker = str(uuid.uuid4())
-    sent_at = datetime.datetime.now(datetime.timezone.utc)
+ marker = str(uuid.uuid4())
+ sent_at = datetime.datetime.now(datetime.timezone.utc)
 
-    source_conn.execute(
-        "INSERT INTO heartbeat (marker, sent_at) VALUES (%s, %s)",
-        (marker, sent_at),
-    )
+ source_conn.execute(
+ "INSERT INTO heartbeat (marker, sent_at) VALUES (%s, %s)", (marker, sent_at), )
 
-    deadline = time.time() + 900          # give up after 15 minutes
-    while time.time() < deadline:
-        found = lakehouse_conn.execute(
-            f"SELECT 1 FROM {dataset} WHERE marker = %s LIMIT 1", (marker,)
-        ).fetchone()
-        if found:
-            observed = (datetime.datetime.now(datetime.timezone.utc) - sent_at)
-            return observed.total_seconds()
-        time.sleep(2)
+ deadline = time.time() + 900 # give up after 15 minutes
+ while time.time() < deadline:
+ found = lakehouse_conn.execute(
+ f"SELECT 1 FROM {dataset} WHERE marker = %s LIMIT 1", (marker, )
+ ).fetchone()
+ if found:
+ observed = (datetime.datetime.now(datetime.timezone.utc) - sent_at)
+ return observed.total_seconds()
+ time.sleep(2)
 
-    return None                            # breach: never arrived
+ return None # breach: never arrived
 ```
 
 Three things make this worth the small effort of running it.
@@ -174,7 +163,7 @@ Borrow the vocabulary from service reliability, because it already solved this p
 Group tables into three or four tiers rather than writing a contract per table. A workable default set:
 
 | Tier | Objective | Typical mechanism | Example |
-|---|---|---|---|
+|--|--|--|--|
 | Operational | 95th percentile under 60 seconds | Streaming CDC, small commit intervals, no derived cache | Order status, inventory position |
 | Interactive | 95th percentile under 15 minutes | Micro-batch, incremental transformation | Sales pipeline, support queues |
 | Analytical | 95th percentile under 24 hours | Nightly batch, scheduled aggregates | Marketing attribution, cohort analysis |
@@ -192,7 +181,7 @@ Going from 24 hours to 1 hour is usually cheap. Batch jobs run more often, incre
 
 Going from 1 hour to 5 minutes changes the architecture. Batch becomes micro-batch or streaming. Transformation has to be incremental everywhere, including the awkward cases like slowly changing dimensions and late-arriving data. Compute runs continuously instead of in bursts. Cost typically rises by a multiple rather than a percentage.
 
-Going from 5 minutes to 30 seconds changes the storage economics. Commit frequency rises, which produces small files and snapshot accumulation, which drives compaction and metadata maintenance. A table committing every 20 seconds generates over 4,000 snapshots a day, and planning walks the metadata. The maintenance work needed to keep queries fast at that commit rate is a real, ongoing compute line item. This is the range where the format itself is being actively improved, with Iceberg v4 design work on single-file commits and adaptive metadata trees targeting exactly this cost.
+Going from 5 minutes to 30 seconds changes the storage economics. Commit frequency rises, which produces small files and snapshot accumulation, which drives compaction and metadata maintenance. A table committing every 20 seconds generates over 4, 000 snapshots a day, and planning walks the metadata. The maintenance work needed to keep queries fast at that commit rate is a real, ongoing compute line item. This is the range where the format itself is being actively improved, with Iceberg v4 design work on single-file commits and adaptive metadata trees targeting exactly this cost.
 
 Going below 30 seconds usually means a second serving system. Sub-second answers on continuously changing data are what specialized real-time engines are for, and several platforms now ship one alongside the lakehouse for this reason. Two systems means two copies, two governance surfaces, and reconciliation work.
 
@@ -230,25 +219,21 @@ Four practices make this workable.
 
 ```python
 FRESHNESS_POLICY = {
-    "answer_question":      86_400,   # a day-old number is fine to report
-    "flag_for_review":       3_600,   # an hour-old signal still worth raising
-    "reroute_shipment":         60,   # acts on the world, needs current data
-    "issue_refund":             60,
-}
+ "answer_question": 86_400, # a day-old number is fine to report
+ "flag_for_review": 3_600, # an hour-old signal still worth raising
+ "reroute_shipment": 60, # acts on the world, needs current data
+ "issue_refund": 60, }
 
 def guarded_action(action, dataset, freshness_lookup, execute):
-    limit = FRESHNESS_POLICY[action]
-    lag = freshness_lookup(dataset)
+ limit = FRESHNESS_POLICY[action]
+ lag = freshness_lookup(dataset)
 
-    if lag is None:
-        return {"status": "blocked", "reason": "freshness unknown"}
-    if lag > limit:
-        return {
-            "status": "escalate",
-            "reason": f"{dataset} is {int(lag)}s old, limit for {action} is {limit}s",
-            "suggested": "confirm with operator or use a reversible alternative",
-        }
-    return execute()
+ if lag is None:
+ return {"status": "blocked", "reason": "freshness unknown"}
+ if lag > limit:
+ return {
+ "status": "escalate", "reason": f"{dataset} is {int(lag)}s old, limit for {action} is {limit}s", "suggested": "confirm with operator or use a reversible alternative", }
+ return execute()
 ```
 
 The `freshness_lookup` returning `None` is the case people forget. Unknown freshness is not fresh. A monitoring gap and a stale pipeline produce the same risk, and treating them the same way is the safe default.

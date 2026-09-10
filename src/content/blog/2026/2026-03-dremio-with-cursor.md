@@ -16,9 +16,10 @@ draft: false
 image: "/images/blog.png"
 canonical: "https://iceberglakehouse.com/posts/2026-03-aitool-cursor/"
 ---
-> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-03-aitool-cursor/).
 
 Cursor is an AI-native code editor built as a fork of VS Code. It integrates AI directly into the editing experience with features like Chat, Composer (multi-file editing), and inline code generation. Dremio is a unified lakehouse platform that provides business context through its semantic layer, universal data access through query federation, and interactive speed through Reflections and Apache Arrow.
+
+> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-03-aitool-cursor/).
 
 Connecting them gives Cursor's AI the context it needs to write accurate Dremio SQL, generate data pipeline code, and build applications against your lakehouse. Without this connection, Cursor treats Dremio like a generic database and guesses at function names and table paths. With it, the AI knows your schemas, your business logic encoded in views, and the correct Dremio SQL dialect.
 
@@ -57,8 +58,8 @@ Dremio's hosted MCP server uses OAuth for authentication. Your existing access c
 1. Go to **Settings > Organization Settings > OAuth Applications**.
 2. Click **Add Application** and enter a name (e.g., "Cursor MCP").
 3. Add the redirect URIs for Claude:
-   - `https://claude.ai/api/mcp/auth_callback`
-   - `https://claude.com/api/mcp/auth_callback`
+ - `https://claude.ai/api/mcp/auth_callback`
+ - `https://claude.com/api/mcp/auth_callback`
 4. Save and copy the **Client ID**.
 
 ### Configure Cursor's MCP Connection
@@ -67,15 +68,13 @@ In Cursor, go to **Settings > MCP**. Click **Add new MCP server** and configure 
 
 ```json
 {
-  "mcpServers": {
-    "dremio": {
-      "url": "https://YOUR_PROJECT_MCP_URL",
-      "auth": {
-        "type": "oauth",
-        "clientId": "YOUR_CLIENT_ID"
-      }
-    }
-  }
+ "mcpServers": {
+ "dremio": {
+ "url": "https://YOUR_PROJECT_MCP_URL", "auth": {
+ "type": "oauth", "clientId": "YOUR_CLIENT_ID"
+ }
+ }
+ }
 }
 ```
 
@@ -97,23 +96,21 @@ For Dremio Software deployments, use the open-source [dremio-mcp](https://github
 git clone https://github.com/dremio/dremio-mcp
 cd dremio-mcp
 uv run dremio-mcp-server config create dremioai \
-  --uri https://your-dremio-instance.com \
-  --pat YOUR_PERSONAL_ACCESS_TOKEN
+ -uri https://your-dremio-instance.com \
+ -pat YOUR_PERSONAL_ACCESS_TOKEN
 ```
 
 In `.cursor/mcp.json`:
 
 ```json
 {
-  "mcpServers": {
-    "dremio": {
-      "command": "uv",
-      "args": [
-        "run", "--directory", "/path/to/dremio-mcp",
-        "dremio-mcp-server", "run"
-      ]
-    }
-  }
+ "mcpServers": {
+ "dremio": {
+ "command": "uv", "args": [
+ "run", "-directory", "/path/to/dremio-mcp", "dremio-mcp-server", "run"
+ ]
+ }
+ }
 }
 ```
 
@@ -149,11 +146,11 @@ The simplest approach is a `.cursorrules` file in your project root. This loads 
 For more granular control, create rule files in `.cursor/rules/` with `.mdc` (Markdown Cursor) extension. These files support YAML-like frontmatter that tells Cursor when to activate the rule:
 
 ```markdown
----
+--
 description: Dremio SQL conventions for query files
 globs: ["**/*.sql", "**/queries/**"]
 alwaysApply: false
----
+--
 
 # Dremio SQL Rules
 
@@ -168,11 +165,11 @@ When writing or modifying SQL files for Dremio:
 Create a separate rule for Python SDK usage:
 
 ```markdown
----
+--
 description: dremioframe Python SDK patterns
 globs: ["**/*.py"]
 alwaysApply: false
----
+--
 
 # dremioframe Conventions
 
@@ -190,11 +187,11 @@ The `globs` field ensures these rules only activate when editing matching files.
 Keep rules files concise by pointing to reference documents:
 
 ```markdown
----
+--
 description: Dremio documentation references
 globs: ["**/*.sql", "**/*.py"]
 alwaysApply: false
----
+--
 
 # Dremio Reference Docs
 - For SQL syntax details, read `./docs/dremio-sql-reference.md`
@@ -247,10 +244,10 @@ If the pre-built options do not fit your workflow, create a custom rules setup t
 
 ```
 .cursor/rules/
-  dremio-sql.mdc          # SQL conventions
-  dremio-python.mdc       # dremioframe patterns
-  dremio-schemas.mdc      # Team-specific table schemas
-  dremio-api.mdc          # REST API patterns
+ dremio-sql.mdc # SQL conventions
+ dremio-python.mdc # dremioframe patterns
+ dremio-schemas.mdc # Team-specific table schemas
+ dremio-api.mdc # REST API patterns
 ```
 
 ### Populate with Team Context
@@ -258,17 +255,17 @@ If the pre-built options do not fit your workflow, create a custom rules setup t
 Export your actual table schemas from Dremio and save them as a rule:
 
 ```markdown
----
+--
 description: Team Dremio table schemas
 globs: ["**/*.sql", "**/*.py"]
 alwaysApply: false
----
+--
 
 # Team Table Schemas
 
 ## analytics.gold.customer_metrics
 - customer_id: VARCHAR (primary key)
-- lifetime_value: DECIMAL(10,2)
+- lifetime_value: DECIMAL(10, 2)
 - segment: VARCHAR (values: 'enterprise', 'mid-market', 'smb')
 - last_order_date: TIMESTAMP
 - churn_risk_score: FLOAT
@@ -277,7 +274,7 @@ alwaysApply: false
 - date_key: TIMESTAMP
 - product_category: VARCHAR
 - region: VARCHAR
-- revenue: DECIMAL(12,2)
+- revenue: DECIMAL(12, 2)
 - orders: INT
 ```
 
@@ -359,12 +356,12 @@ Use Composer to scaffold a REST API:
 
 > "Build a FastAPI application that connects to Dremio using dremioframe. Create endpoints for customer segments, revenue analytics, and product performance. Include Pydantic models, request validation, response caching, and auto-generated OpenAPI docs."
 
-Cursor generates the complete API across multiple files with proper project structure, ready for `uvicorn main:app --reload`.
+Cursor generates the complete API across multiple files with proper project structure, ready for `uvicorn main:app -reload`.
 
 ## Which Approach Should You Use?
 
 | Approach | Setup Time | What You Get | Best For |
-|----------|-----------|--------------|----------|
+|-----|------|-------|-----|
 | MCP Server | 5 minutes | Live queries, schema browsing, catalog exploration | Data analysis, SQL generation, real-time access |
 | Cursor Rules | 15 minutes | Convention enforcement, pattern-matched context | Teams with specific SQL standards per file type |
 | Pre-Built Skills | 5 minutes | Comprehensive Dremio knowledge (CLI, SDK, SQL, API) | Quick start with broad coverage |

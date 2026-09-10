@@ -1,7 +1,7 @@
 ---
 title: "What is Apache Pulsar?"
 meta_title: "What is Apache Pulsar? | Expert Data Lakehouse Architecture Guide"
-description: "A comprehensive guide to Apache Pulsar. Learn how this cloud-native streaming platform completely decouples compute from storage to outperform legacy architectures."
+description: "A comprehensive guide to Apache Pulsar. Learn how this cloud-native streaming platform completely decouples compute from storage to outperform legacy."
 ---
 
 # What is Apache Pulsar?

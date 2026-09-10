@@ -16,9 +16,10 @@ draft: false
 image: "/images/blog.png"
 canonical: "https://iceberglakehouse.com/posts/2026-03-connector-ibm-db2/"
 ---
-> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-03-connector-ibm-db2/).
 
-IBM Db2 is the relational database that powers critical applications across banking, insurance, government, healthcare, and manufacturing. For organizations running Db2 :  particularly on IBM Z (mainframes) or IBM i ,  the database holds decades of transactional data: account balances, policy records, claim histories, manufacturing workflows, and government records. This data is enormously valuable for analytics but notoriously difficult to access outside the Db2/IBM ecosystem.
+IBM Db2 is the relational database that powers critical applications across banking, insurance, government, healthcare, and manufacturing. For organizations running Db2 : particularly on IBM Z (mainframes) or IBM i, the database holds decades of transactional data: account balances, policy records, claim histories, manufacturing workflows, and government records. This data is enormously valuable for analytics but notoriously difficult to access outside the Db2/IBM ecosystem.
+
+> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-03-connector-ibm-db2/).
 
 Traditional approaches to Db2 analytics involve CDC tools (IBM InfoSphere DataStage, Attunity), batch exports, or data replication to a separate analytics warehouse. These approaches are expensive, complex, and create stale copies of data that diverge from the source of truth.
 
@@ -77,7 +78,7 @@ Master Credentials (username/password) or Secret Resource URL (AWS Secrets Manag
 ### 4. Configure Advanced Options
 
 | Setting | Purpose | Default |
-|---|---|---|
+|--|--|--|
 | **Record fetch size** | Rows per batch from Db2 | 200 |
 | **Maximum Idle Connections** | Connection pool management | 8 |
 | **Connection Idle Time (s)** | Seconds before idle connections close | 60 |
@@ -89,24 +90,16 @@ Master Credentials (username/password) or Secret Resource URL (AWS Secrets Manag
 ## Query Db2 Data
 
 ```sql
--- Query core banking accounts
+- Query core banking accounts
 SELECT
-  account_id,
-  customer_id,
-  account_type,
-  current_balance,
-  last_transaction_date
+ account_id, customer_id, account_type, current_balance, last_transaction_date
 FROM "db2-banking".BANK.ACCOUNTS
 WHERE account_type = 'SAVINGS' AND current_balance > 10000
 ORDER BY current_balance DESC;
 
--- Transaction analysis
+- Transaction analysis
 SELECT
-  account_type,
-  DATE_TRUNC('month', transaction_date) AS month,
-  COUNT(*) AS transaction_count,
-  SUM(transaction_amount) AS total_amount,
-  AVG(transaction_amount) AS avg_amount
+ account_type, DATE_TRUNC('month', transaction_date) AS month, COUNT(*) AS transaction_count, SUM(transaction_amount) AS total_amount, AVG(transaction_amount) AS avg_amount
 FROM "db2-banking".BANK.TRANSACTIONS
 WHERE transaction_date >= '2024-01-01'
 GROUP BY account_type, DATE_TRUNC('month', transaction_date)
@@ -116,19 +109,14 @@ ORDER BY 1, 2;
 ## Federate Db2 with Cloud Sources
 
 ```sql
--- Join Db2 core banking with PostgreSQL digital banking and S3 support data
+- Join Db2 core banking with PostgreSQL digital banking and S3 support data
 SELECT
-  a.account_id,
-  a.current_balance,
-  pg.last_login_date,
-  pg.mobile_transactions_30d,
-  s3.support_tickets_open,
-  CASE
-    WHEN a.current_balance > 100000 AND pg.mobile_transactions_30d > 10 THEN 'High Value - Digitally Active'
-    WHEN a.current_balance > 100000 THEN 'High Value - Branch Preferred'
-    WHEN pg.mobile_transactions_30d > 20 THEN 'Digital Native'
-    ELSE 'Standard'
-  END AS customer_segment
+ a.account_id, a.current_balance, pg.last_login_date, pg.mobile_transactions_30d, s3.support_tickets_open, CASE
+ WHEN a.current_balance > 100000 AND pg.mobile_transactions_30d > 10 THEN 'High Value - Digitally Active'
+ WHEN a.current_balance > 100000 THEN 'High Value - Branch Preferred'
+ WHEN pg.mobile_transactions_30d > 20 THEN 'Digital Native'
+ ELSE 'Standard'
+ END AS customer_segment
 FROM "db2-banking".BANK.ACCOUNTS a
 LEFT JOIN "postgres-digital".public.customer_activity pg ON a.customer_id = pg.customer_id
 LEFT JOIN "s3-support".tickets.customer_tickets s3 ON a.customer_id = s3.customer_id
@@ -142,18 +130,12 @@ Mainframe banking data joins with cloud application data in a single query : no 
 ```sql
 CREATE VIEW analytics.gold.customer_banking360 AS
 SELECT
-  a.customer_id,
-  a.account_type,
-  a.current_balance,
-  pg.customer_name,
-  pg.email,
-  CASE
-    WHEN a.current_balance > 250000 THEN 'Private Banking'
-    WHEN a.current_balance > 50000 THEN 'Premium'
-    WHEN a.current_balance > 10000 THEN 'Standard'
-    ELSE 'Basic'
-  END AS service_tier,
-  DATEDIFF(DAY, a.last_transaction_date, CURRENT_DATE) AS days_since_last_transaction
+ a.customer_id, a.account_type, a.current_balance, pg.customer_name, pg.email, CASE
+ WHEN a.current_balance > 250000 THEN 'Private Banking'
+ WHEN a.current_balance > 50000 THEN 'Premium'
+ WHEN a.current_balance > 10000 THEN 'Standard'
+ ELSE 'Basic'
+ END AS service_tier, DATEDIFF(DAY, a.last_transaction_date, CURRENT_DATE) AS days_since_last_transaction
 FROM "db2-banking".BANK.ACCOUNTS a
 LEFT JOIN "postgres-digital".public.customers pg ON a.customer_id = pg.customer_id;
 ```
@@ -181,28 +163,19 @@ A compliance officer asks Claude "Show me all accounts with balances over $100K 
 ### AI SQL Functions
 
 ```sql
--- Classify account risk with AI
+- Classify account risk with AI
 SELECT
-  customer_id,
-  service_tier,
-  current_balance,
-  days_since_last_transaction,
-  AI_CLASSIFY(
-    'Based on these banking patterns, classify the account dormancy risk',
-    'Tier: ' || service_tier || ', Balance: $' || CAST(current_balance AS VARCHAR) || ', Days Inactive: ' || CAST(days_since_last_transaction AS VARCHAR),
-    ARRAY['Active', 'At Risk', 'Potentially Dormant', 'Dormant']
-  ) AS dormancy_risk
+ customer_id, service_tier, current_balance, days_since_last_transaction, AI_CLASSIFY(
+ 'Based on these banking patterns, classify the account dormancy risk', 'Tier: ' || service_tier || ', Balance: $' || CAST(current_balance AS VARCHAR) || ', Days Inactive: ' || CAST(days_since_last_transaction AS VARCHAR), ARRAY['Active', 'At Risk', 'Potentially Dormant', 'Dormant']
+ ) AS dormancy_risk
 FROM analytics.gold.customer_banking360
 WHERE days_since_last_transaction > 30;
 
--- Generate relationship manager talking points
+- Generate relationship manager talking points
 SELECT
-  customer_name,
-  service_tier,
-  AI_GENERATE(
-    'Write a one-sentence talking point for a relationship manager reaching out to this customer',
-    'Customer: ' || customer_name || ', Tier: ' || service_tier || ', Balance: $' || CAST(current_balance AS VARCHAR) || ', Inactive Days: ' || CAST(days_since_last_transaction AS VARCHAR)
-  ) AS outreach_talking_point
+ customer_name, service_tier, AI_GENERATE(
+ 'Write a one-sentence talking point for a relationship manager reaching out to this customer', 'Customer: ' || customer_name || ', Tier: ' || service_tier || ', Balance: $' || CAST(current_balance AS VARCHAR) || ', Inactive Days: ' || CAST(days_since_last_transaction AS VARCHAR)
+ ) AS outreach_talking_point
 FROM analytics.gold.customer_banking360
 WHERE service_tier = 'Private Banking' AND days_since_last_transaction > 14;
 ```
@@ -267,7 +240,7 @@ Db2 uses EBCDIC encoding on mainframes and ASCII/UTF-8 on LUW platforms. When co
 Banking, insurance, and government organizations have strict data retention and access requirements. Dremio addresses these:
 
 | Requirement | Dremio Feature |
-|---|---|
+|--|--|
 | Data residency | Query data in place : no cross-border data movement |
 | Access auditing | Query logs track who queried what data |
 | Column-level security | FGAC column masking hides sensitive fields |

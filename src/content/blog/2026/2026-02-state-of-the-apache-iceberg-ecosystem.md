@@ -14,7 +14,6 @@ slug: 2026-02-state-of-the-apache-iceberg-ecosystem
 draft: false
 image: "/images/blog.png"
 ---
-
 ![2025 Survey](https://imgur.com/eSwOYfd.png)
 
 **Raw Results at Bottom of Post**
@@ -39,7 +38,7 @@ The results reflect active builders. They offer a snapshot of where Iceberg stan
 
 The audience skews heavily toward technical roles. Data Engineers represent 29.6% of respondents. Software Engineers account for 25.9%. Architects represent another 25.9%. The remainder spans data scientists, managers, and executives. The concentration among engineers and architects suggests that responses are grounded in hands-on implementation experience rather than surface familiarity.
 
-Experience levels vary but skew seasoned. 32.1% report 1–5 years working in the data space. 28.6% report 10–20 years. 17.9% report more than 20 years. Another 17.9% report 5–10 years. Only a small minority report less than one year in the field. The distribution reflects both newer entrants and deeply experienced practitioners.
+Experience levels vary but skew seasoned. 32.1% report 1-5 years working in the data space. 28.6% report 10-20 years. 17.9% report more than 20 years. Another 17.9% report 5-10 years. Only a small minority report less than one year in the field. The distribution reflects both newer entrants and deeply experienced practitioners.
 
 Familiarity with Iceberg is strong. 60.7% describe themselves as moderately experienced, meaning they have used Iceberg across multiple projects. 25% identify as expert users. 14.3% report limited experience. No meaningful share reports unfamiliarity. This indicates that the findings reflect practitioners with operational context.
 
@@ -83,7 +82,7 @@ The catalog market remains unsettled. Governance, federation, and metadata stand
 
 ![Table Scale: Production Reality](https://imgur.com/3FfGy3J.png)
 
-Iceberg workloads are not confined to small datasets. 28.6% report managing tables between 10 and 100 TB. 21.4% report less than 1 TB. 17.9% report 1–10 TB. Another 17.9% report 100 TB to 1 PB. 10.7% report managing tables larger than 1 PB.
+Iceberg workloads are not confined to small datasets. 28.6% report managing tables between 10 and 100 TB. 21.4% report less than 1 TB. 17.9% report 1-10 TB. Another 17.9% report 100 TB to 1 PB. 10.7% report managing tables larger than 1 PB.
 
 These distributions confirm production usage at meaningful scale. Discussions about commit models, metadata pruning, and compaction strategies are grounded in operational volume.
 
@@ -152,10 +151,10 @@ To follow how these trends develop and to participate in the next survey cycle, 
 - Other roles (Manager, Product, Executive, etc.): Remaining %
 
 ## Years Working in Data Space
-- 1–5 Years: 32.1%
-- 10–20 Years: 28.6%
+- 1-5 Years: 32.1%
+- 10-20 Years: 28.6%
 - 20+ Years: 17.9%
-- 5–10 Years: 17.9%
+- 5-10 Years: 17.9%
 - Less than 1 Year: Remaining %
 
 ## Familiarity with Apache Iceberg
@@ -213,10 +212,10 @@ To follow how these trends develop and to participate in the next survey cycle, 
 - Other (Custom, JDBC, lakeFS, Tabular, etc.): 3.6% each
 
 ## Largest Iceberg Table Size
-- 10 TB – 100 TB: 28.6%
+- 10 TB - 100 TB: 28.6%
 - Less than 1 TB: 21.4%
-- 1 TB – 10 TB: 17.9%
-- 100 TB – 1 PB: 17.9%
+- 1 TB - 10 TB: 17.9%
+- 100 TB - 1 PB: 17.9%
 - More than 1 PB: 10.7%
 - Not Applicable: Remaining %
 

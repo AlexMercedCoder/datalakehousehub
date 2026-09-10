@@ -1,6 +1,6 @@
 ---
 title: "Guardrails for Analytics Agents That Do More Than Answer Questions"
-description: "The risk isn't agents going rogue, it's agents acting correctly on bad input at machine speed. Here's how to classify actions by consequence, gate capability, and design approval steps people actually use."
+description: "The risk isn't agents going rogue, it's agents acting correctly on bad input at machine speed."
 date: 2026-07-28T09:00:00Z
 author: "Alex Merced"
 category: "AI & Agents"
@@ -15,11 +15,11 @@ image: "/images/blog.png"
 canonical: "https://iceberglakehouse.com/posts/agent-guardrails-human-in-the-loop/"
 ---
 
-> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/agent-guardrails-human-in-the-loop/).
-
 # Guardrails for Analytics Agents That Do More Than Answer Questions
 
-An agent monitoring inventory levels notices a stockout risk, drafts a purchase order, and submits it. The logic was sound. The signal it read came from a table that had been double-loaded that morning, so the quantity on hand looked half what it was. The order goes out for 40,000 units of something the warehouse already has.
+An agent monitoring inventory levels notices a stockout risk, drafts a purchase order, and submits it. The logic was sound. The signal it read came from a table that had been double-loaded that morning, so the quantity on hand looked half what it was. The order goes out for 40, 000 units of something the warehouse already has.
+
+> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/agent-guardrails-human-in-the-loop/).
 
 Nobody wrote a bug. The pipeline had a duplicate load, which happens, and the normal recovery is that someone notices the weird number and asks about it. That step is gone, because the thing reading the number acts on it in 200 milliseconds and does not find numbers weird.
 
@@ -46,7 +46,7 @@ Four categories cover the space.
 Here is how the categories map to controls.
 
 | Category | Example | Undo cost | Default control |
-|---|---|---|---|
+|--|--|--|--|
 | Read | Query gold datasets | None | Grants only |
 | Reversible write | Write to a branch, create a draft | Minutes | Grants plus logging |
 | Irreversible internal write | Drop table, overwrite partition | Hours to days | Approval required |
@@ -112,35 +112,30 @@ mcp = FastMCP("analytics-agent-tools")
 # WRONG: capability constrained only by instruction
 @mcp.tool()
 def execute_sql(sql: str) -> str:
-    """Run a SQL query. Only run SELECT statements."""
-    return engine.execute(sql)
+ """Run a SQL query. Only run SELECT statements."""
+ return engine.execute(sql)
 
 
 # RIGHT: capability constrained by the interface
 @mcp.tool()
 def aggregate_metric(
-    metric: str,
-    dimensions: list[str],
-    start_date: str,
-    end_date: str,
-    filters: dict | None = None,
-) -> str:
-    """Compute a defined metric, grouped by dimensions, over a date range.
+ metric: str, dimensions: list[str], start_date: str, end_date: str, filters: dict | None = None, ) -> str:
+ """Compute a defined metric, grouped by dimensions, over a date range.
 
-    Only metrics defined in the semantic layer are available. Call
-    list_metrics first to see what exists and which dimensions each
-    one supports.
-    """
-    definition = SEMANTIC_LAYER.get_metric(metric)
-    if definition is None:
-        return f"Unknown metric: {metric}. Call list_metrics."
+ Only metrics defined in the semantic layer are available. Call
+ list_metrics first to see what exists and which dimensions each
+ one supports.
+ """
+ definition = SEMANTIC_LAYER.get_metric(metric)
+ if definition is None:
+ return f"Unknown metric: {metric}. Call list_metrics."
 
-    invalid = set(dimensions) - set(definition.dimensions)
-    if invalid:
-        return f"Metric {metric} cannot be sliced by {sorted(invalid)}."
+ invalid = set(dimensions) - set(definition.dimensions)
+ if invalid:
+ return f"Metric {metric} cannot be sliced by {sorted(invalid)}."
 
-    sql = definition.build_query(dimensions, start_date, end_date, filters)
-    return engine.execute(sql, principal=AGENT_PRINCIPAL)
+ sql = definition.build_query(dimensions, start_date, end_date, filters)
+ return engine.execute(sql, principal=AGENT_PRINCIPAL)
 ```
 
 The second tool cannot express a DROP because SQL is not one of its inputs. It cannot read an undefined metric because the semantic layer is the source of what exists. It cannot slice by a dimension the metric does not support because that check runs in code.
@@ -166,24 +161,24 @@ Four properties make an approval step work.
 ```
 APPROVAL REQUIRED
 
-Action:     Create purchase order
-Vendor:     [vendor]
-Quantity:   40,000 units of SKU-8871
-Value:      [amount]
+Action: Create purchase order
+Vendor: [vendor]
+Quantity: 40, 000 units of SKU-8871
+Value: [amount]
 
 Agent reasoning:
-  On-hand quantity for SKU-8871 read as 12,400 against a reorder
-  point of 25,000. Projected stockout in 6 days at trailing
-  14-day consumption.
+ On-hand quantity for SKU-8871 read as 12, 400 against a reorder
+ point of 25, 000. Projected stockout in 6 days at trailing
+ 14-day consumption.
 
 Data basis:
-  gold.inventory.on_hand  snapshot 8891234, written 06:14 UTC
-  gold.sales.consumption  snapshot 8891180, written 06:00 UTC
+ gold.inventory.on_hand snapshot 8891234, written 06:14 UTC
+ gold.sales.consumption snapshot 8891180, written 06:00 UTC
 
 Anomaly checks:
-  On-hand for this SKU changed -49% vs the 7-day average.  ⚠
-  Consumption rate within normal range.
-  Last PO for this SKU: 31 days ago, 18,000 units.
+ On-hand for this SKU changed -49% vs the 7-day average. ⚠
+ Consumption rate within normal range.
+ Last PO for this SKU: 31 days ago, 18, 000 units.
 
 Approve / Reject / Ask agent for more detail
 ```
@@ -204,7 +199,7 @@ Useful triggers, roughly in order of how much they earn their place.
 
 **Value thresholds.** Actions above a monetary or volume bound. Simple, understandable, and set by whoever owns the risk rather than by engineering.
 
-**Deviation from the agent's own history.** An action three standard deviations from what this agent typically does. A purchase agent that normally orders 15,000 to 20,000 units and suddenly wants 40,000 is worth a look regardless of whether that crosses a fixed threshold.
+**Deviation from the agent's own history.** An action three standard deviations from what this agent typically does. A purchase agent that normally orders 15, 000 to 20, 000 units and suddenly wants 40, 000 is worth a look regardless of whether that crosses a fixed threshold.
 
 **Input anomaly.** The one from the example. A signal the agent relied on has moved sharply against its recent distribution. This catches the data quality class of failure, which is the most common cause of confidently wrong action.
 
@@ -218,31 +213,31 @@ Implement these as checks the orchestration runs, not as things the model evalua
 
 ```python
 def requires_approval(action, agent_history, data_context) -> tuple[bool, list[str]]:
-    """Return whether to escalate and the reasons. Runs outside the model."""
-    reasons = []
+ """Return whether to escalate and the reasons. Runs outside the model."""
+ reasons = []
 
-    if action.value > THRESHOLDS[action.type]:
-        reasons.append(f"value {action.value} above threshold")
+ if action.value > THRESHOLDS[action.type]:
+ reasons.append(f"value {action.value} above threshold")
 
-    if agent_history.zscore(action.type, action.magnitude) > 3.0:
-        reasons.append("magnitude unusual for this agent")
+ if agent_history.zscore(action.type, action.magnitude) > 3.0:
+ reasons.append("magnitude unusual for this agent")
 
-    for source in data_context.sources:
-        if source.staleness_seconds > FRESHNESS_SLA[source.table]:
-            reasons.append(f"{source.table} stale by {source.staleness_seconds}s")
-        if abs(source.pct_change_vs_baseline) > 0.25:
-            reasons.append(
-                f"{source.table}.{source.column} moved "
-                f"{source.pct_change_vs_baseline:+.0%} vs 7-day average"
-            )
+ for source in data_context.sources:
+ if source.staleness_seconds > FRESHNESS_SLA[source.table]:
+ reasons.append(f"{source.table} stale by {source.staleness_seconds}s")
+ if abs(source.pct_change_vs_baseline) > 0.25:
+ reasons.append(
+ f"{source.table}.{source.column} moved "
+ f"{source.pct_change_vs_baseline:+.0%} vs 7-day average"
+ )
 
-    if not agent_history.has_taken(action.type):
-        reasons.append("first time taking this action type")
+ if not agent_history.has_taken(action.type):
+ reasons.append("first time taking this action type")
 
-    if agent_history.count_in_window(hours=1) > RATE_LIMITS[action.type]:
-        reasons.append("action rate above limit")
+ if agent_history.count_in_window(hours=1) > RATE_LIMITS[action.type]:
+ reasons.append("action rate above limit")
 
-    return bool(reasons), reasons
+ return bool(reasons), reasons
 ```
 
 The function returns reasons, not just a boolean, and those reasons go into the approval request. A reviewer who knows why they are being asked reviews better than one who only knows that they are.
@@ -254,31 +249,27 @@ For actions inside the lakehouse rather than outside it, there is a pattern bett
 Iceberg branches make this straightforward. The agent writes to its own branch, checks run against that branch, and a merge happens on success.
 
 ```sql
--- The agent works on an isolated branch
+- The agent works on an isolated branch
 ALTER TABLE catalog.sales.orders
-  CREATE BRANCH agent_correction_8871
-  RETAIN 7 DAYS;
+ CREATE BRANCH agent_correction_8871
+ RETAIN 7 DAYS;
 
--- Agent applies its changes there. Readers on main see nothing.
+- Agent applies its changes there. Readers on main see nothing.
 UPDATE catalog.sales.orders.branch_agent_correction_8871
 SET region_id = 4
 WHERE order_id IN (SELECT order_id FROM staging.misrouted_orders);
 
--- Validation runs against the branch, not against production
+- Validation runs against the branch, not against production
 SELECT
-    (SELECT count(*) FROM catalog.sales.orders
-       VERSION AS OF 'agent_correction_8871')          AS branch_rows,
-    (SELECT count(*) FROM catalog.sales.orders
-       VERSION AS OF 'main')                           AS main_rows,
-    (SELECT count(*) FROM catalog.sales.orders
-       VERSION AS OF 'agent_correction_8871'
-     WHERE region_id NOT IN (SELECT region_id FROM ref.regions)) AS orphan_region;
+ (SELECT count(*) FROM catalog.sales.orders
+ VERSION AS OF 'agent_correction_8871') AS branch_rows, (SELECT count(*) FROM catalog.sales.orders
+ VERSION AS OF 'main') AS main_rows, (SELECT count(*) FROM catalog.sales.orders
+ VERSION AS OF 'agent_correction_8871'
+ WHERE region_id NOT IN (SELECT region_id FROM ref.regions)) AS orphan_region;
 
--- Promote only after checks pass
+- Promote only after checks pass
 CALL catalog.system.fast_forward(
-  table  => 'sales.orders',
-  branch => 'main',
-  to     => 'agent_correction_8871'
+ table => 'sales.orders', branch => 'main', to => 'agent_correction_8871'
 );
 ```
 
@@ -334,39 +325,38 @@ Four bounds, all enforced outside the model.
 
 ```python
 class ExecutionBounds:
-    """Bounds enforced by the orchestrator, outside the model's reasoning."""
+ """Bounds enforced by the orchestrator, outside the model's reasoning."""
 
-    def __init__(self, max_steps=50, max_seconds=720,
-                 max_repeats=3, max_consecutive_errors=5):
-        self.max_steps = max_steps
-        self.max_seconds = max_seconds
-        self.max_repeats = max_repeats
-        self.max_consecutive_errors = max_consecutive_errors
-        self.steps = 0
-        self.started = time.monotonic()
-        self.call_counts = {}
-        self.consecutive_errors = 0
+ def __init__(self, max_steps=50, max_seconds=720, max_repeats=3, max_consecutive_errors=5):
+ self.max_steps = max_steps
+ self.max_seconds = max_seconds
+ self.max_repeats = max_repeats
+ self.max_consecutive_errors = max_consecutive_errors
+ self.steps = 0
+ self.started = time.monotonic()
+ self.call_counts = {}
+ self.consecutive_errors = 0
 
-    def check(self, tool_name, arguments) -> str | None:
-        """Return a stop reason, or None to proceed."""
-        self.steps += 1
-        if self.steps > self.max_steps:
-            return f"step budget exhausted ({self.max_steps})"
+ def check(self, tool_name, arguments) -> str | None:
+ """Return a stop reason, or None to proceed."""
+ self.steps += 1
+ if self.steps > self.max_steps:
+ return f"step budget exhausted ({self.max_steps})"
 
-        if time.monotonic() - self.started > self.max_seconds:
-            return f"time budget exhausted ({self.max_seconds}s)"
+ if time.monotonic() - self.started > self.max_seconds:
+ return f"time budget exhausted ({self.max_seconds}s)"
 
-        key = (tool_name, json.dumps(arguments, sort_keys=True))
-        self.call_counts[key] = self.call_counts.get(key, 0) + 1
-        if self.call_counts[key] > self.max_repeats:
-            return f"repeated identical call to {tool_name}"
+ key = (tool_name, json.dumps(arguments, sort_keys=True))
+ self.call_counts[key] = self.call_counts.get(key, 0) + 1
+ if self.call_counts[key] > self.max_repeats:
+ return f"repeated identical call to {tool_name}"
 
-        if self.consecutive_errors >= self.max_consecutive_errors:
-            return "consecutive tool failures"
-        return None
+ if self.consecutive_errors >= self.max_consecutive_errors:
+ return "consecutive tool failures"
+ return None
 
-    def record_result(self, errored: bool) -> None:
-        self.consecutive_errors = self.consecutive_errors + 1 if errored else 0
+ def record_result(self, errored: bool) -> None:
+ self.consecutive_errors = self.consecutive_errors + 1 if errored else 0
 ```
 
 When a bound trips, stopping cleanly matters. Report what was accomplished, what was attempted, and why it stopped. An agent that dies silently at its step budget looks identical to one that crashed, and the operator learns nothing.

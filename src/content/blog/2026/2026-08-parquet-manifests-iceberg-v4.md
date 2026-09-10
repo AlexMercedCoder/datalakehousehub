@@ -14,9 +14,10 @@ tags:
 slug: "parquet-manifests-iceberg-v4"
 draft: false
 ---
-> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/parquet-manifests-iceberg-v4/).
 
 Picture a table with 40 million data files. Every one of those files has an entry in a manifest, and every entry carries per-column statistics for 300 columns. A query arrives that filters on one timestamp column and touches two others. To plan that query, the engine has to walk the manifests, compare the timestamp bounds of each file against the predicate, and decide which files to open. In theory that is a cheap job. The engine only needs three things per entry: the file path, the partition tuple, and the lower and upper bound of one column.
+
+> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/parquet-manifests-iceberg-v4/).
 
 In practice, the engine reads everything. It reads the value counts for all 300 columns, the null counts for all 300, the sizes for all 300, the lower bounds for all 300, and the upper bounds for all 300. Then it throws 297 of them away. That is what happens when metadata lives in Apache Avro, a row-oriented format that hands you a whole record or nothing. On a small table nobody notices. On a table with tens of millions of files, planning time turns into minutes, and the cost of every query includes a large tax before a single byte of real data gets read.
 
@@ -56,11 +57,11 @@ That ratio is the reason columnar metadata matters. A columnar layout lets the e
 
 There are three separate costs in reading an Avro manifest, and it helps to separate them because the columnar move addresses each one differently.
 
-The first cost is bytes over the network. Manifests live on object storage. An engine planning a query pulls each manifest it needs from S3, GCS, or ADLS. If the manifest is 200 megabytes because it holds 100,000 entries with 300-column statistics, the engine transfers 200 megabytes even though it will use 2 megabytes of that content. Object stores are fast, but they are not free, and a planning step that reads gigabytes of manifests before every query adds latency that no amount of compute can hide.
+The first cost is bytes over the network. Manifests live on object storage. An engine planning a query pulls each manifest it needs from S3, GCS, or ADLS. If the manifest is 200 megabytes because it holds 100, 000 entries with 300-column statistics, the engine transfers 200 megabytes even though it will use 2 megabytes of that content. Object stores are fast, but they are not free, and a planning step that reads gigabytes of manifests before every query adds latency that no amount of compute can hide.
 
 The second cost is deserialization. Avro's binary encoding is compact and schema-driven, which means the decoder cannot skip a field without decoding it. To find the lower bound for column 17 in an entry, the decoder reads the map for lower bounds and walks its entries until it hits key 17. To get to the next data file entry, it decodes every field in the current one, including all six statistics maps. This is CPU work, and it happens on the driver or coordinator node, which is usually the least parallel part of the system. I have seen planning phases where the coordinator pegged a core for 30 seconds decoding manifests while the executors sat idle.
 
-The third cost is memory. Decoding a record materializes it as an object graph. Java Avro readers produce GenericRecord instances with nested maps and byte buffers. A manifest with 100,000 entries and 300 columns of statistics becomes hundreds of millions of small objects. That drives garbage collection on the coordinator, which is a known source of unpredictable planning latency on large tables.
+The third cost is memory. Decoding a record materializes it as an object graph. Java Avro readers produce GenericRecord instances with nested maps and byte buffers. A manifest with 100, 000 entries and 300 columns of statistics becomes hundreds of millions of small objects. That drives garbage collection on the coordinator, which is a known source of unpredictable planning latency on large tables.
 
 Engines have built workarounds. Manifest caching keeps decoded manifests in memory across queries, which helps for repeated queries against the same snapshot but blows up memory on wide tables and goes stale on every commit. Projection tricks in the Avro reader let you skip top-level fields you do not need, but the statistics maps are single fields, so you either read the whole map or none of it. Parallel manifest reading spreads the decode work across threads, which helps CPU but does nothing for bytes transferred. The Iceberg REST catalog's server-side scan planning moves the whole problem to the catalog, which is a good architectural answer but still has to decode Avro on the server.
 
@@ -86,7 +87,7 @@ The row group statistics I described above are coarse. A row group in a manifest
 
 The Page Index, formalized in Parquet format 2.5, stores per-page column statistics (min, max, null count) in a dedicated structure at the end of the file, along with offset information for each page. A page is much smaller than a row group, often a few hundred to a few thousand values. With page-level statistics, a reader can skip individual pages within a row group rather than only whole row groups.
 
-Applied to manifests, this changes the resolution of metadata pruning. Suppose a manifest holds 50,000 data file entries sorted by partition value. The row group min and max for the lower bounds of a timestamp column span months. The page min and max within that row group span days. A query for a single day skips almost every page in the manifest and decodes only the handful that overlap.
+Applied to manifests, this changes the resolution of metadata pruning. Suppose a manifest holds 50, 000 data file entries sorted by partition value. The row group min and max for the lower bounds of a timestamp column span months. The page min and max within that row group span days. A query for a single day skips almost every page in the manifest and decodes only the handful that overlap.
 
 In the same August 2026 stretch of dev list activity, Shangqing Yang proposed adding Page Index pruning to Iceberg's own Parquet reader. That proposal matters twice over. For data files, it lets Iceberg's reader skip pages that the statistics rule out, which is the same thing engines like Dremio and Spark's vectorized reader already do with their own Parquet readers. For manifests, it means the reference implementation of Iceberg can prune manifest entries at page granularity as soon as those manifests are Parquet.
 
@@ -122,31 +123,31 @@ Today's v2 and v3 manifest entry, expressed as a simplified Avro-style schema, l
 
 ```
 manifest_entry {
-  status: int
-  snapshot_id: long
-  sequence_number: long
-  file_sequence_number: long
-  data_file {
-    content: int
-    file_path: string
-    file_format: string
-    partition: struct<...>
-    record_count: long
-    file_size_in_bytes: long
-    column_sizes: map<int, long>
-    value_counts: map<int, long>
-    null_value_counts: map<int, long>
-    nan_value_counts: map<int, long>
-    lower_bounds: map<int, binary>
-    upper_bounds: map<int, binary>
-    key_metadata: binary
-    split_offsets: list<long>
-    equality_ids: list<int>
-    sort_order_id: int
-    referenced_data_file: string
-    content_offset: long
-    content_size_in_bytes: long
-  }
+ status: int
+ snapshot_id: long
+ sequence_number: long
+ file_sequence_number: long
+ data_file {
+ content: int
+ file_path: string
+ file_format: string
+ partition: struct<...>
+ record_count: long
+ file_size_in_bytes: long
+ column_sizes: map<int, long>
+ value_counts: map<int, long>
+ null_value_counts: map<int, long>
+ nan_value_counts: map<int, long>
+ lower_bounds: map<int, binary>
+ upper_bounds: map<int, binary>
+ key_metadata: binary
+ split_offsets: list<long>
+ equality_ids: list<int>
+ sort_order_id: int
+ referenced_data_file: string
+ content_offset: long
+ content_size_in_bytes: long
+ }
 }
 ```
 
@@ -156,34 +157,34 @@ The typed statistics proposal restructures those maps into a struct keyed by col
 
 ```
 manifest_entry {
-  status: int
-  snapshot_id: long
-  sequence_number: long
-  file_sequence_number: long
-  data_file {
-    content: int
-    file_path: string
-    file_format: string
-    partition: struct<...>
-    record_count: long
-    file_size_in_bytes: long
-    column_stats: struct {
-      col_1: struct {
-        value_count: long
-        null_value_count: long
-        nan_value_count: long
-        lower_bound: timestamp
-        upper_bound: timestamp
-        column_size: long
-      }
-      col_2: struct { ... typed for col_2 ... }
-      ...
-      col_300: struct { ... }
-    }
-    split_offsets: list<long>
-    sort_order_id: int
-    ...
-  }
+ status: int
+ snapshot_id: long
+ sequence_number: long
+ file_sequence_number: long
+ data_file {
+ content: int
+ file_path: string
+ file_format: string
+ partition: struct<...>
+ record_count: long
+ file_size_in_bytes: long
+ column_stats: struct {
+ col_1: struct {
+ value_count: long
+ null_value_count: long
+ nan_value_count: long
+ lower_bound: timestamp
+ upper_bound: timestamp
+ column_size: long
+ }
+ col_2: struct { ... typed for col_2 ... }
+ ...
+ col_300: struct { ... }
+ }
+ split_offsets: list<long>
+ sort_order_id: int
+ ...
+ }
 }
 ```
 
@@ -199,20 +200,15 @@ Here is what a planning query against this layout looks like, expressed as SQL a
 
 ```sql
 SELECT
-  data_file.file_path,
-  data_file.partition,
-  data_file.record_count,
-  data_file.column_stats.col_17.lower_bound,
-  data_file.column_stats.col_17.upper_bound,
-  data_file.column_stats.col_17.null_value_count
+ data_file.file_path, data_file.partition, data_file.record_count, data_file.column_stats.col_17.lower_bound, data_file.column_stats.col_17.upper_bound, data_file.column_stats.col_17.null_value_count
 FROM manifest_file
-WHERE status <> 2  -- exclude DELETED entries
-  AND data_file.content = 0  -- data files only
-  AND data_file.column_stats.col_17.upper_bound >= TIMESTAMP '2026-08-01'
-  AND data_file.column_stats.col_17.lower_bound <  TIMESTAMP '2026-08-02';
+WHERE status <> 2, exclude DELETED entries
+ AND data_file.content = 0, data files only
+ AND data_file.column_stats.col_17.upper_bound >= TIMESTAMP '2026-08-01'
+ AND data_file.column_stats.col_17.lower_bound < TIMESTAMP '2026-08-02';
 ```
 
-Every column in the SELECT and WHERE is a leaf in the Parquet file. The engine's Parquet reader projects six leaves out of what is likely more than 1,800 (six statistics times 300 columns, plus the fixed fields). The two bound predicates push down to row group and page statistics, so the reader skips pages whose range of `col_17` lower bounds falls entirely after August 2 or whose upper bounds fall entirely before August 1. What comes back is an Arrow batch of surviving file paths, ready to become scan tasks.
+Every column in the SELECT and WHERE is a leaf in the Parquet file. The engine's Parquet reader projects six leaves out of what is likely more than 1, 800 (six statistics times 300 columns, plus the fixed fields). The two bound predicates push down to row group and page statistics, so the reader skips pages whose range of `col_17` lower bounds falls entirely after August 2 or whose upper bounds fall entirely before August 1. What comes back is an Arrow batch of surviving file paths, ready to become scan tasks.
 
 Compare that to the Avro path: read every byte of the manifest, decode every entry into an object graph, walk six maps per entry to pull out column 17, evaluate the predicate per entry, discard the object graph. Same answer, a very different amount of work.
 
@@ -242,7 +238,7 @@ There is one open question the community is still working through, raised in the
 Here is a comparison of the two formats along the axes that matter for planning:
 
 | Property | Avro manifests (v1 to v3) | Parquet manifests (v4 proposal) |
-|---|---|---|
+|--|--|--|
 | Read granularity | Whole record | Individual columns |
 | Statistics layout | Six maps keyed by column ID | Typed struct per column |
 | Bounds encoding | Opaque binary, decoded by engine | Native Parquet types |
@@ -258,7 +254,7 @@ Columnar manifests fix a real problem, but they are not free of tradeoffs. Here 
 
 **Small manifests get slower before big ones get faster.** Parquet has fixed overhead: a footer, row group metadata, page headers, and the Page Index. For a manifest with 50 entries, that overhead is a meaningful fraction of the file, and the reader does more work to open it than it does to stream 50 Avro records. The break-even point depends on width, but a rough rule is that manifests with fewer than a few hundred entries do not gain much from Parquet. This matters for streaming tables that commit tiny manifests every few seconds. The v4 root manifest design, which lets small commits inline entries rather than write a separate manifest, is the intended answer, and the two proposals should be evaluated together.
 
-**Wide tables produce wide manifest schemas.** A 300-column table produces a manifest with more than 1,800 leaf columns. Parquet handles wide schemas, but writers have to buffer a page for every leaf column, and the footer grows with the column count. For a 2,000-column table, the manifest footer alone runs to megabytes, and the writer's memory footprint during a commit grows with it. The Parquet community is separately working on cheaper footers, and Iceberg's columnar metadata design leans on that work landing. If your tables are extremely wide, watch that dependency.
+**Wide tables produce wide manifest schemas.** A 300-column table produces a manifest with more than 1, 800 leaf columns. Parquet handles wide schemas, but writers have to buffer a page for every leaf column, and the footer grows with the column count. For a 2, 000-column table, the manifest footer alone runs to megabytes, and the writer's memory footprint during a commit grows with it. The Parquet community is separately working on cheaper footers, and Iceberg's columnar metadata design leans on that work landing. If your tables are extremely wide, watch that dependency.
 
 **Statistics for columns that do not exist yet.** Iceberg supports schema evolution. A manifest written when the table had 100 columns has a `column_stats` struct with 100 subfields. After the table grows to 150 columns, new manifests have 150. Readers have to handle manifests with different struct shapes in the same table, which is the same problem Parquet data files already solve through schema evolution by field ID. It works, but every engine's manifest reader has to implement it correctly, and this is a likely source of early bugs.
 
@@ -304,7 +300,7 @@ For engine builders, the practical implication is that the vectorized Parquet re
 
 Iceberg's metadata was designed to be read as rows, and for years that was fine. Tables got wide, statistics got heavy, and planning started spending most of its time reading bytes it never uses. Moving manifests to Parquet fixes that at the format level. Column projection reads only what the query needs, typed statistics make the manifest prunable by its own row group and page metadata, and vectorized evaluation replaces per-entry object churn with Arrow batches.
 
-The August 2026 dev list discussion pushed the question from "should Parquet be an option" to "should Parquet be the only option," and the arguments for the second position are strong: Avro cannot do projection, dual formats double the maintenance burden for no benefit, and a spec that makes the fast path optional will see it skipped. Upgraded tables keep their Avro history, so nothing breaks, and a manifest rewrite converts a table to all-Parquet metadata in one maintenance operation.
+The August 2026 dev list discussion pushed the question from "should Parquet be an option" to "should Parquet be the only option, " and the arguments for the second position are strong: Avro cannot do projection, dual formats double the maintenance burden for no benefit, and a spec that makes the fast path optional will see it skipped. Upgraded tables keep their Avro history, so nothing breaks, and a manifest rewrite converts a table to all-Parquet metadata in one maintenance operation.
 
 If you run large Iceberg tables, measure your planning time now, fix your compaction, audit your readers, and plan the v4 upgrade as a two-step move. The teams that do that will see planning on their biggest tables go from a tax to a rounding error. The teams that do not will wonder why the upgrade did not help.
 

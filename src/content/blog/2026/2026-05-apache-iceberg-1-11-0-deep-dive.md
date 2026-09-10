@@ -14,10 +14,9 @@ slug: 2026-05-apache-iceberg-1-11-0-deep-dive
 draft: false
 image: "/images/blog/apache-iceberg-1-11-0/release-pillar-overview.png"
 ---
-
-<!-- Meta Description: Apache Iceberg 1.11.0 delivers manifest list encryption, the new pluggable File Format API, credential lifecycle refreshes, and Spark/Flink improvements. -->
-<!-- Primary Keyword: Apache Iceberg 1.11.0 -->
-<!-- Secondary Keywords: manifest list encryption, Iceberg File Format API, deletion vectors, credential lifecycle -->
+<!- Meta Description: Apache Iceberg 1.11.0 delivers manifest list encryption, the new pluggable File Format API, credential lifecycle refreshes, and Spark/Flink improvements. ->
+<!- Primary Keyword: Apache Iceberg 1.11.0 ->
+<!- Secondary Keywords: manifest list encryption, Iceberg File Format API, deletion vectors, credential lifecycle ->
 
 # An In-Depth Overview of the Apache Iceberg 1.11.0 Release
 
@@ -31,7 +30,7 @@ This post analyzes the most critical improvements in the Apache Iceberg 1.11.0 r
 
 ![Apache Iceberg 1.11.0 release overview diagram showing Security, Catalog, Storage, and Engine pillars](/images/blog/apache-iceberg-1-11-0/release-pillar-overview.png)
 
----
+--
 
 ## Manifest List Encryption (PR #7770, #15813)
 
@@ -43,18 +42,18 @@ To resolve this vulnerability, PR #7770, introduced by @ggershinsky, adds native
 
 ```
 Metadata JSON (Contains encryption state references)
-       │
-       ▼
+ │
+ ▼
 Manifest List (Encrypted via GCM Stream Cipher) ◄── Decrypted in-memory during planning
-       │
-       ▼
+ │
+ ▼
 Manifest Files (Point to encrypted Parquet data files)
 ```
 
 The table encryption configuration can be defined during table creation or updated via table properties:
 
 | Property | Default | Description |
-|---|---|---|
+|--|--|--|
 | `encryption.kms.impl` | *None* | The fully qualified class name of the Key Management Service client. |
 | `encryption.kms.key-id` | *None* | The master key identifier used to encrypt data encryption keys (DEKs). |
 | `encryption.gcm.key-length` | `256` | The length of the encryption key in bits (128, 192, or 256). |
@@ -73,7 +72,7 @@ This approach implements a model of envelope encryption: each metadata file is e
 
 ![Manifest list encryption sequence showing key exchange and decryption query planning](/images/blog/apache-iceberg-1-11-0/manifest-list-encryption-flow.png)
 
----
+--
 
 ## Pluggable File Format API and V4 Spec Foundations (PR #15049)
 
@@ -85,33 +84,33 @@ PR #15049, introduced by @anoopj, restructures this architecture. It introduces 
 
 ```
 ┌────────────────────────────────────────────────────────┐
-│                  Iceberg Core Engine                   │
+│ Iceberg Core Engine │
 └───────────────────────────┬────────────────────────────┘
-                            │
-                            ▼
+ │
+ ▼
 ┌────────────────────────────────────────────────────────┐
-│            File Format API Interface Layer             │
+│ File Format API Interface Layer │
 └──────┬────────────┬─────────────┬─────────────┬────────┘
-       │            │             │             │
-       ▼            ▼             ▼             ▼
-  ┌─────────┐  ┌─────────┐   ┌─────────┐   ┌─────────┐
-  │ Parquet │  │   ORC   │   │ Vortex  │   │  Lance  │
-  └─────────┘  └─────────┘   └─────────┘   └─────────┘
+ │ │ │ │
+ ▼ ▼ ▼ ▼
+ ┌─────────┐ ┌─────────┐ ┌─────────┐ ┌─────────┐
+ │ Parquet │ │ ORC │ │ Vortex │ │ Lance │
+ └─────────┘ └─────────┘ └─────────┘ └─────────┘
 ```
 
 The File Format API provides a clean plugin interface. A file format is defined as a plugin that implements standard reader and writer interfaces. Iceberg core negotiates table transactions, schemas, and partition specs, while delegating the physical file access to the registered plugin.
 
 This decoupling makes it practical to support next-generation formats:
 
-*   **Vortex:** A general-purpose, modular format designed as a successor to Parquet. It is optimized for high-performance analytics, utilizing fixed-width columns with bitmap masks for nulls. This enables Single Instruction Multiple Data (SIMD) filtering directly on memory-mapped files without CPU decompression cycles. The community is actively using the new API to build a Vortex-backed Iceberg plugin.
-*   **Lance:** A layout built for machine learning and AI workloads. It is optimized for high-dimensional vector search and random access to nested embeddings, implementing index structures such as Inverted File with Product Quantization (IVF-PQ) directly in the file format to enable fast query planning.
-*   **Nimble:** A format optimized for wide tables containing thousands of feature columns. Nimble prioritizes fast decoding over high compression ratios, opting for lightweight run-length and bit-packing compression schemes. This reduces the CPU overhead of ML training loops that consume millions of rows per second.
+* **Vortex:** A general-purpose, modular format designed as a successor to Parquet. It is optimized for high-performance analytics, utilizing fixed-width columns with bitmap masks for nulls. This enables Single Instruction Multiple Data (SIMD) filtering directly on memory-mapped files without CPU decompression cycles. The community is actively using the new API to build a Vortex-backed Iceberg plugin.
+* **Lance:** A layout built for machine learning and AI workloads. It is optimized for high-dimensional vector search and random access to nested embeddings, implementing index structures such as Inverted File with Product Quantization (IVF-PQ) directly in the file format to enable fast query planning.
+* **Nimble:** A format optimized for wide tables containing thousands of feature columns. Nimble prioritizes fast decoding over high compression ratios, opting for lightweight run-length and bit-packing compression schemes. This reduces the CPU overhead of ML training loops that consume millions of rows per second.
 
 Additionally, PR #15049 introduces the foundational Java interfaces and types for the upcoming V4 manifest specification. These changes prepare Iceberg for format-agnostic manifest storage, ensuring the metadata layer can scale to tables with millions of files without hitting Java memory overhead limits.
 
 ![Pluggable File Format API architecture decoupling Iceberg core from format plugins](/images/blog/apache-iceberg-1-11-0/v4-manifest-foundations.png)
 
----
+--
 
 ## REST Client Protocols and Extended Headers (PR #12194)
 
@@ -123,19 +122,19 @@ PR #12194, written by @gaborkaszab, solves this constraint by extending header s
 
 ```
 ┌────────────────────────────────┐
-│      Iceberg REST Client       │
-│  (Spark, Flink, Trino, etc.)   │
+│ Iceberg REST Client │
+│ (Spark, Flink, Trino, etc.) │
 └───────────────┬────────────────┘
-                │
-                │  POST /v1/namespaces/db/tables/events
-                │  Custom-Headers:
-                │    - X-Trace-Id: trace-98421
-                │    - X-Tenant-Id: finance-billing
-                │
-                ▼
+ │
+ │ POST /v1/namespaces/db/tables/events
+ │ Custom-Headers:
+ │ - X-Trace-Id: trace-98421
+ │ - X-Tenant-Id: finance-billing
+ │
+ ▼
 ┌────────────────────────────────┐
-│      REST Catalog Server       │
-│  (Parses headers for auditing)  │
+│ REST Catalog Server │
+│ (Parses headers for auditing) │
 └────────────────────────────────┘
 ```
 
@@ -143,24 +142,24 @@ With this update, client engines can configure and inject custom headers into ev
 
 1. The client initializes the REST catalog using the properties map.
 2. The client specifies static custom headers using the prefix `header.custom.`:
-   ```properties
-   header.custom.X-Tenant-Id=finance-billing
-   header.custom.X-Trace-Id=system-trace-99
-   ```
+ ```properties
+ header.custom.X-Tenant-Id=finance-billing
+ header.custom.X-Trace-Id=system-trace-99
+ ```
 3. During request execution, the `RESTClient` intercepts the HTTP call and injects these custom headers.
 4. The REST catalog server processes the headers to apply dynamic authorization, audit logging, or request routing.
 
 This change enables the following capabilities:
 
-*   **Auditing and Governance:** Engines can pass tenant identifiers or user profiles in the HTTP headers, allowing the REST catalog server to log catalog operations with full user context.
-*   **Distributed Tracing:** Tracing headers such as W3C Trace Context can propagate from client engines through the catalog server, providing end-to-end trace visibility for query planning operations.
-*   **Dynamic Authorization:** Clients can send custom authorization tokens that the REST catalog server evaluates dynamically to enforce fine-grained access control.
+* **Auditing and Governance:** Engines can pass tenant identifiers or user profiles in the HTTP headers, allowing the REST catalog server to log catalog operations with full user context.
+* **Distributed Tracing:** Tracing headers such as W3C Trace Context can propagate from client engines through the catalog server, providing end-to-end trace visibility for query planning operations.
+* **Dynamic Authorization:** Clients can send custom authorization tokens that the REST catalog server evaluates dynamically to enforce fine-grained access control.
 
 The properties are configured during catalog initialization using the standard configuration map, making it simple to roll out headers across existing query platforms.
 
 ![Extended header propagation between Iceberg client and REST Catalog server](/images/blog/apache-iceberg-1-11-0/rest-client-headers.png)
 
----
+--
 
 ## Overwrite-Aware Table Registration (PR #15525)
 
@@ -172,9 +171,9 @@ PR #15525, written by @sririshindra, adds overwrite-aware table registration to 
 
 ```
 Writer 1: Commits events_v1 ────► [Catalog Table Pointer] ◄──── Writer 2: Commits events_v2
-                                            │
-                                            ├────────► If conflict: Catalog rejects Writer 2
-                                            └────────► Prevents silent metadata overwrites
+ │
+ ├────────► If conflict: Catalog rejects Writer 2
+ └────────► Prevents silent metadata overwrites
 ```
 
 This implementation leverages Optimistic Concurrency Control (OCC) at the catalog level. The conflict resolution sequence proceeds as follows:
@@ -192,7 +191,7 @@ This validation ensures that table registration is safe and prevents silent meta
 
 ![Flowchart of table registration verifying catalog overwrite state and rejecting transaction on conflicts](/images/blog/apache-iceberg-1-11-0/overwrite-aware-registration.png)
 
----
+--
 
 ## Deletion Vector Pruning in Snapshot Validation (PR #15653)
 
@@ -213,20 +212,20 @@ PR #15653, introduced by @anoopj, optimizes this process. It adds manifest parti
 
 ```
 Query Filter: WHERE event_date = '2026-05-23'
-       │
-       ▼
+ │
+ ▼
 Partition Pruning Step
-       │
-       ├─► Skip Partition '2026-05-22' ──► Skip Deletion Vector Validation
-       │
-       └─► Read Partition '2026-05-23'  ──► Run Deletion Vector Validation
+ │
+ ├─► Skip Partition '2026-05-22' ──► Skip Deletion Vector Validation
+ │
+ └─► Read Partition '2026-05-23' ──► Run Deletion Vector Validation
 ```
 
 With this change, the query planner matches the query filter predicates against partition bounds before executing deletion vector checks. If a partition is pruned out, the engine skips validating the deletion vectors for the files in that partition. This change reduces planning CPU cycles and improves scan startup times for partitioned tables.
 
 ![Diagram showing deletion vector validation pruning skipping partitions during planning](/images/blog/apache-iceberg-1-11-0/deletion-vector-pruning.png)
 
----
+--
 
 ## Scheduled Credential Lifecycle Refresh (PR #15678, #15732, #15696)
 
@@ -238,22 +237,22 @@ The 1.11.0 release resolves this lifecycle problem. PR #15678 (by @danielcweeks)
 
 ```
 Query Thread (Reads/Writes Data)
-       │
-       ├───────► Token Expiration Approaching (e.g. at 50 minutes)
-       │
+ │
+ ├───────► Token Expiration Approaching (e.g. at 50 minutes)
+ │
 Background Refresh Thread
-       │
-       ├───────► Send Request to Catalog ──► Fetch New Credentials
-       │
-       └───────► Update S3FileIO/GCSFileIO Credentials In-Memory
-       │
+ │
+ ├───────► Send Request to Catalog ──► Fetch New Credentials
+ │
+ └───────► Update S3FileIO/GCSFileIO Credentials In-Memory
+ │
 Query Thread (Continues without interruption)
 ```
 
 The credential refresh system runs a background daemon thread that tracks token expiration times. The lifecycle is controlled by the following properties:
 
 | Property | Default | Description |
-|---|---|---|
+|--|--|--|
 | `s3.credentials-refresh-interval` | *None* | The interval at which the S3FileIO refresh thread checks and requests new credentials. |
 | `gcs.oauth2.token-expires-in` | `3600` | The lifespan in seconds of the GCS OAuth token before the refresh thread requests a new one. |
 
@@ -263,7 +262,7 @@ This scheduled refresh is particularly important in enterprise Kubernetes enviro
 
 ![Sequence flow showing background thread updating AWS/GCS storage client credentials before expiration](/images/blog/apache-iceberg-1-11-0/credential-refresh-thread.png)
 
----
+--
 
 ## Spark Streaming Triggers and Z-Ordering (PR #13824, #15706)
 
@@ -288,13 +287,13 @@ The `AvailableNow` trigger combines the benefits of both approaches. It scans th
 ```python
 # Configure Trigger.AvailableNow with Iceberg source and sink
 query = spark.readStream \
-    .format("iceberg") \
-    .load("prod_catalog.db.events") \
-    .writeStream \
-    .format("iceberg") \
-    .trigger(availableNow=True) \
-    .option("checkpointLocation", "/mnt/checkpoints/events") \
-    .toTable("prod_catalog.db.events_compacted")
+ .format("iceberg") \
+ .load("prod_catalog.db.events") \
+ .writeStream \
+ .format("iceberg") \
+ .trigger(availableNow=True) \
+ .option("checkpointLocation", "/mnt/checkpoints/events") \
+ .toTable("prod_catalog.db.events_compacted")
 ```
 
 This trigger configuration allows data platforms to run streaming ingestion pipelines as scheduled cron jobs, reducing cluster idle time.
@@ -307,7 +306,7 @@ The update adds strict schema validation that checks for column name collisions 
 
 ![Comparison of continuous micro-batch streaming vs Spark AvailableNow trigger batches](/images/blog/apache-iceberg-1-11-0/spark-streaming-available-now.png)
 
----
+--
 
 ## Flink Post-Commit Maintenance and Branch Compaction (PR #15566, #15672, #14148)
 
@@ -322,30 +321,30 @@ During streaming ingestion, Flink commits data to the Iceberg table at every che
 ```java
 // Configure Flink sink with post-commit compaction
 IcebergSink.forRowData(dataStream, tableLoader)
-    .table(icebergTable)
-    .tableLoader(tableLoader)
-    .writeParallelism(4)
-    .distributionMode(DistributionMode.HASH)
-    .postCommitMaintenance(
-        PostCommitMaintenance.builder()
-            .optimizeDataFiles(true)
-            .rewriteManifests(true)
-            .build()
-    )
-    .append();
+ .table(icebergTable)
+ .tableLoader(tableLoader)
+ .writeParallelism(4)
+ .distributionMode(DistributionMode.HASH)
+ .postCommitMaintenance(
+ PostCommitMaintenance.builder()
+ .optimizeDataFiles(true)
+ .rewriteManifests(true)
+ .build()
+ )
+ .append();
 ```
 
 After a commit succeeds, Flink runs compaction and manifest cleaning tasks in the background, keeping the table structure optimized without requiring external scheduler jobs.
 
 ```
 Flink Stream Ingestion
-       │
-       ▼
+ │
+ ▼
 [Commit Data File (Checkpoint)]
-       │
-       ├───────► Post-Commit Trigger
-       │
-       ▼
+ │
+ ├───────► Post-Commit Trigger
+ │
+ ▼
 [Background Maintenance Action (RewriteDataFiles / Compaction)]
 ```
 
@@ -363,7 +362,7 @@ Flink applications can now read the `_row_id` and `_last_updated_sequence_number
 
 ![Flink data sink writing data and executing post-commit branch compaction on experimental branch](/images/blog/apache-iceberg-1-11-0/flink-maintenance-branch-support.png)
 
----
+--
 
 ## JSON to Variant Mapping and Spec Cleanups (PR #13137, #14045)
 
@@ -387,27 +386,27 @@ In Iceberg V2, positional delete files could store the actual deleted row data a
 
 The community has deprecated this option in favor of Deletion Vectors, simplifying the V3 read path.
 
----
+--
 
 ## Table Upgrade Path and Connector Compatibility
 
-All V3 features :  manifest list encryption, deletion vectors, Variant types, geospatial types, and nanosecond timestamps ,  require upgrading your tables to format version 3.
+All V3 features : manifest list encryption, deletion vectors, Variant types, geospatial types, and nanosecond timestamps, require upgrading your tables to format version 3.
 
 ```
 Existing V2 Table
-       │
-       ├───────► Run: ALTER TABLE events SET TBLPROPERTIES ('format-version' = '3')
-       │
+ │
+ ├───────► Run: ALTER TABLE events SET TBLPROPERTIES ('format-version' = '3')
+ │
 Upgraded V3 Table
-       │
-       ├───────► New writes use Deletion Vectors and Variant type
-       └───────► Existing data files are left untouched (no rewrite required)
+ │
+ ├───────► New writes use Deletion Vectors and Variant type
+ └───────► Existing data files are left untouched (no rewrite required)
 ```
 
 The upgrade is a metadata-only operation executed using SQL:
 
 ```sql
--- Upgrade an existing table to Iceberg V3 format version
+- Upgrade an existing table to Iceberg V3 format version
 ALTER TABLE my_catalog.schema.events
 SET TBLPROPERTIES ('format-version' = '3');
 ```
@@ -420,15 +419,15 @@ New writes to the table will adopt V3 features automatically. For example, subse
 
 Before planning your migration to V3, review the engine compatibility changes in Iceberg 1.11.0:
 
-*   **Java 11 Support Dropped:** Iceberg 1.11.0 drops support for Java 11. Core libraries and engine connectors now require **Java 17** or **Java 21**. Migrating to Java 17 was a critical decision for the community, allowing the codebase to utilize modern JVM language features (such as Java records, pattern matching, and enhanced switch expressions) to improve metadata parsing efficiency and reduce CPU utilization.
-*   **Spark 3.4 Support Deprecated:** Support for Spark 3.4 is deprecated. Teams should migrate to Spark 3.5 or Spark 4.0+.
-*   **Flink 1.19 Support Removed:** Flink 1.19 is no longer supported. The release adds support for **Flink 2.1.0**.
+* **Java 11 Support Dropped:** Iceberg 1.11.0 drops support for Java 11. Core libraries and engine connectors now require **Java 17** or **Java 21**. Migrating to Java 17 was a critical decision for the community, allowing the codebase to utilize modern JVM language features (such as Java records, pattern matching, and enhanced switch expressions) to improve metadata parsing efficiency and reduce CPU utilization.
+* **Spark 3.4 Support Deprecated:** Support for Spark 3.4 is deprecated. Teams should migrate to Spark 3.5 or Spark 4.0+.
+* **Flink 1.19 Support Removed:** Flink 1.19 is no longer supported. The release adds support for **Flink 2.1.0**.
 
 Make sure all query engines and toolchains in your lakehouse deployment support Iceberg V3 and Java 17 before upgrading production tables.
 
 ![Table upgrade timeline showing migration SQL and deprecated connector support list](/images/blog/apache-iceberg-1-11-0/table-upgrade-path.png)
 
----
+--
 
 ## Conclusion
 
@@ -440,14 +439,14 @@ At the same time, the stabilization of V3 features provides a production-ready p
 
 If you are running Iceberg V2 tables in production, evaluate your workloads to identify tables that will benefit from a V3 upgrade. In particular, tables with active update patterns or large JSON columns will see immediate performance gains.
 
----
+--
 
 ### Build Your Data Lakehouse Expertise
 
 If you are designing, building, or managing modern data platforms, staying ahead of formatting specifications is critical. To deepen your understanding of these technologies, consider reading:
 
-*   **"Architecting an Apache Iceberg Lakehouse"**: An architectural guide to designing open lakehouse platforms, managing catalog architectures, partition tuning, and optimizing table layouts for high-performance query execution engines.
-*   **Other Data Lakehouse Publications**: Practical books and reference materials covering hidden partitioning, metadata structure, schema evolution, and query acceleration engines in enterprise data systems.
+* **"Architecting an Apache Iceberg Lakehouse"**: An architectural guide to designing open lakehouse platforms, managing catalog architectures, partition tuning, and optimizing table layouts for high-performance query execution engines.
+* **Other Data Lakehouse Publications**: Practical books and reference materials covering hidden partitioning, metadata structure, schema evolution, and query acceleration engines in enterprise data systems.
 
 Find these books and other lakehouse learning resources at [books.alexmerced.com](https://books.alexmerced.com).
 

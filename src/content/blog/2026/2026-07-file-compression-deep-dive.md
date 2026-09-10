@@ -11,12 +11,14 @@ slug: "file-compression-deep-dive"
 draft: false
 image: "/images/blog.png"
 canonical: https://iceberglakehouse.com/posts/file-compression-deep-dive/
+description: "By Alex Merced, Head of Developer Relations at Dremio"
 ---
-> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/file-compression-deep-dive/).
 
 # A Deep Dive Into File Compression: How Data Gets Smaller, Why Codecs Differ, and What to Actually Use in the Lakehouse
 
 *By Alex Merced, Head of Developer Relations at Dremio*
+
+> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/file-compression-deep-dive/).
 
 Somewhere in your data platform right now, a single configuration property is quietly deciding a meaningful percentage of your storage bill, your query latency, and your compute spend. It is probably set to whatever the defaults were in 2019, nobody has looked at it since, and it is the compression codec.
 
@@ -38,7 +40,7 @@ One boundary before we proceed: this article is about lossless compression, wher
 
 Nearly every general-purpose codec in existence is a combination of two techniques, invented decades ago and refined ever since. Understand both and you can read any codec's documentation fluently.
 
-**Family one: match-based compression, the LZ family.** The insight, from Lempel and Ziv in 1977, is beautifully simple: data repeats itself, so instead of storing a repeat, store a pointer to the previous occurrence. The compressor slides through the input keeping a window of recent history, and whenever the next bytes match something already seen, it emits a reference, "go back 3,041 bytes and copy 27," instead of the bytes themselves. A log file where every line shares a timestamp prefix and a template becomes mostly pointers. The knobs of the LZ family follow from the mechanics: a bigger window finds more distant repeats at more memory cost, more effort searching for the longest match buys ratio at compression-time CPU, and decompression is gloriously cheap regardless, just copying bytes the pointers indicate, which is why LZ decompression speed is measured in gigabytes per second and why the family dominates read-heavy workloads.
+**Family one: match-based compression, the LZ family.** The insight, from Lempel and Ziv in 1977, is beautifully simple: data repeats itself, so instead of storing a repeat, store a pointer to the previous occurrence. The compressor slides through the input keeping a window of recent history, and whenever the next bytes match something already seen, it emits a reference, "go back 3, 041 bytes and copy 27, " instead of the bytes themselves. A log file where every line shares a timestamp prefix and a template becomes mostly pointers. The knobs of the LZ family follow from the mechanics: a bigger window finds more distant repeats at more memory cost, more effort searching for the longest match buys ratio at compression-time CPU, and decompression is gloriously cheap regardless, just copying bytes the pointers indicate, which is why LZ decompression speed is measured in gigabytes per second and why the family dominates read-heavy workloads.
 
 **Family two: entropy coding, pricing symbols by frequency.** After matching, what remains is a stream of symbols, literal bytes and match instructions, and they are not equally common. Entropy coding assigns short codes to frequent symbols and long codes to rare ones, squeezing the stream toward its Shannon floor. Huffman coding, from 1952, does this with whole-bit codes, elegant and fast and slightly wasteful because real frequencies want fractional bits. Arithmetic coding achieves those fractional bits and was long too slow for mainstream use. The modern breakthrough is ANS, asymmetric numeral systems, a 2010s invention that delivers arithmetic-coding compression at Huffman-like speeds, and its arrival is the single biggest reason the current codec generation beats the previous one. When you hear that Zstandard uses finite state entropy, that is ANS at work.
 
@@ -54,7 +56,7 @@ Theory lands best with bytes on the table, so let me run a concrete miniature: c
 2026-07-13 10:41:09 GET /api/users 200 6ms
 ```
 
-The matcher goes first, sliding through the bytes. Line one is virgin territory, nothing to point at, so it passes through as literals, and the window begins filling. Line two is where the design earns its keep: the matcher finds that the next forty-odd characters, the timestamp, the method, the path, the status, are an exact repeat of bytes it just saw, and emits a single instruction, go back 44 bytes, copy 41, followed by the few literal characters that differ, the "11ms." One pointer replaced most of a line. Line three matches in fragments: the date and hour match at distance 88, "GET /api/" matches, "200" matches, and the novel pieces, the "09" seconds, "users," "6ms," ride as literals between pointers. Already the intuition generalizes: templated data, which is most machine-generated data, is a thin stream of genuinely new bytes threaded through a lattice of repeats, and the matcher converts the lattice into cheap references.
+The matcher goes first, sliding through the bytes. Line one is virgin territory, nothing to point at, so it passes through as literals, and the window begins filling. Line two is where the design earns its keep: the matcher finds that the next forty-odd characters, the timestamp, the method, the path, the status, are an exact repeat of bytes it just saw, and emits a single instruction, go back 44 bytes, copy 41, followed by the few literal characters that differ, the "11ms." One pointer replaced most of a line. Line three matches in fragments: the date and hour match at distance 88, "GET /api/" matches, "200" matches, and the novel pieces, the "09" seconds, "users, " "6ms, " ride as literals between pointers. Already the intuition generalizes: templated data, which is most machine-generated data, is a thin stream of genuinely new bytes threaded through a lattice of repeats, and the matcher converts the lattice into cheap references.
 
 The entropy coder goes second, over the stream the matcher produced: literals, match lengths, match distances. It counts frequencies and prices accordingly. The digit characters, spaces, and slashes that dominate the literals get short codes, rare bytes get long ones, and the match instructions themselves get frequency-priced, since real data repeats at characteristic distances, the width of a log line, the size of a record, and the coder learns those habits. In a DEFLATE-era codec this pricing is Huffman, whole bits per symbol. In a modern codec it is ANS, fractional bits, the same idea priced more precisely. On real log files this two-stage stack routinely lands ten-to-one or better, and now you know exactly where the ratio comes from: the matcher removed the template, the coder discounted the residue.
 
@@ -88,7 +90,7 @@ The technical core is the modern stack executed superbly: a strong LZ engine wit
 
 Three features turn the codec into a toolkit. The level dial, one through twenty-two, is a genuine single-knob policy instrument: hot data at level three, warm data at level six, archives at level nineteen, same format, same decompressor, no re-tooling. Long-distance matching extends the window to hundreds of megabytes, letting it exploit repeats across huge files, a gift for logs and backups. And trained dictionaries solve the small-payload problem: compress a thousand tiny JSON messages independently and each is too short to self-describe its own redundancy, but train a dictionary on a sample of them once, and every message compresses against that shared context, routinely tripling effectiveness on small records, the trick behind efficient message queues and key-value stores everywhere.
 
-The ecosystem verdict followed the engineering: Zstandard is now a first-class or default codec in Parquet and ORC settings, in Kafka, in Arrow IPC, in package managers, filesystems, and browsers. When this article says "the modern default," it means zstd, and the burden of proof now rests on deviating from it.
+The ecosystem verdict followed the engineering: Zstandard is now a first-class or default codec in Parquet and ORC settings, in Kafka, in Arrow IPC, in package managers, filesystems, and browsers. When this article says "the modern default, " it means zstd, and the burden of proof now rests on deviating from it.
 
 ## Sixty Years in Five Moments
 
@@ -160,7 +162,7 @@ Four data domains come up constantly in questions, and each rewards specific tre
 
 ## Benchmark Like You Mean It
 
-Since the whole article keeps ending at "measure on your data," here is how to make that measurement worth trusting, because bad compression benchmarks are an industry pastime.
+Since the whole article keeps ending at "measure on your data, " here is how to make that measurement worth trusting, because bad compression benchmarks are an industry pastime.
 
 Test on real data, never on synthetic. Generated data has artificial redundancy, uniformly random data has none, and both lie in different directions. Sample actual production files, whole row groups, not handcrafted snippets, and include your ugliest tables, the wide one, the JSON-heavy one, the float-heavy one, because the average hides exactly the columns that dominate cost.
 

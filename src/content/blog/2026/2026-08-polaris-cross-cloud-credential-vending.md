@@ -17,11 +17,11 @@ image: "/images/blog.png"
 canonical: "https://iceberglakehouse.com/posts/polaris-cross-cloud-credential-vending/"
 ---
 
-> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/polaris-cross-cloud-credential-vending/).
-
 # Cross-Cloud Credential Vending in Apache Polaris and the End of Permanent Storage Keys
 
 *By Alex Merced, Data Lakehouse and AI Evangelist*
+
+> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/polaris-cross-cloud-credential-vending/).
 
 Pull up the configuration for any Spark cluster that reads a data lake and look for the storage credentials. In most organizations you find an IAM role with read access to an entire warehouse bucket, or worse, an access key pair in a properties file that three teams share and nobody has rotated since the cluster was built.
 
@@ -72,12 +72,12 @@ X-Iceberg-Access-Delegation: vended-credentials
 In Spark configuration:
 
 ```
-spark.sql.catalog.prod                = org.apache.iceberg.spark.SparkCatalog
-spark.sql.catalog.prod.type           = rest
-spark.sql.catalog.prod.uri            = https://polaris.internal.example.com/api/catalog
-spark.sql.catalog.prod.warehouse      = analytics
-spark.sql.catalog.prod.credential     = <client-id>:<client-secret>
-spark.sql.catalog.prod.scope          = PRINCIPAL_ROLE:ALL
+spark.sql.catalog.prod = org.apache.iceberg.spark.SparkCatalog
+spark.sql.catalog.prod.type = rest
+spark.sql.catalog.prod.uri = https://polaris.internal.example.com/api/catalog
+spark.sql.catalog.prod.warehouse = analytics
+spark.sql.catalog.prod.credential = <client-id>:<client-secret>
+spark.sql.catalog.prod.scope = PRINCIPAL_ROLE:ALL
 spark.sql.catalog.prod.header.X-Iceberg-Access-Delegation = vended-credentials
 ```
 
@@ -93,20 +93,13 @@ The storage configuration when creating a catalog looks like this.
 
 ```json
 {
-  "name": "analytics",
-  "type": "INTERNAL",
-  "properties": {
-    "default-base-location": "s3://acme-lakehouse/warehouse"
-  },
-  "storageConfigInfo": {
-    "storageType": "S3",
-    "roleArn": "arn:aws:iam::123456789012:role/PolarisWarehouseAccess",
-    "externalId": "acme-polaris-prod",
-    "userArn": "arn:aws:iam::123456789012:user/polaris-service",
-    "allowedLocations": [
-      "s3://acme-lakehouse/warehouse/"
-    ]
-  }
+ "name": "analytics", "type": "INTERNAL", "properties": {
+ "default-base-location": "s3://acme-lakehouse/warehouse"
+ }, "storageConfigInfo": {
+ "storageType": "S3", "roleArn": "arn:aws:iam::123456789012:role/PolarisWarehouseAccess", "externalId": "acme-polaris-prod", "userArn": "arn:aws:iam::123456789012:user/polaris-service", "allowedLocations": [
+ "s3://acme-lakehouse/warehouse/"
+ ]
+ }
 }
 ```
 
@@ -118,14 +111,11 @@ On Azure, the mechanism is a multi-tenant application with a consent flow. The s
 
 ```json
 {
-  "storageConfigInfo": {
-    "storageType": "AZURE",
-    "tenantId": "aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee",
-    "multiTenantAppName": "polaris-storage-access",
-    "allowedLocations": [
-      "abfss://warehouse@acmelake.dfs.core.windows.net/"
-    ]
-  }
+ "storageConfigInfo": {
+ "storageType": "AZURE", "tenantId": "aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee", "multiTenantAppName": "polaris-storage-access", "allowedLocations": [
+ "abfss://warehouse@acmelake.dfs.core.windows.net/"
+ ]
+ }
 }
 ```
 
@@ -133,13 +123,11 @@ On Google Cloud, Polaris impersonates a service account. Recent work added princ
 
 ```json
 {
-  "storageConfigInfo": {
-    "storageType": "GCS",
-    "gcsServiceAccount": "polaris-warehouse@acme-data.iam.gserviceaccount.com",
-    "allowedLocations": [
-      "gs://acme-lakehouse/warehouse/"
-    ]
-  }
+ "storageConfigInfo": {
+ "storageType": "GCS", "gcsServiceAccount": "polaris-warehouse@acme-data.iam.gserviceaccount.com", "allowedLocations": [
+ "gs://acme-lakehouse/warehouse/"
+ ]
+ }
 }
 ```
 
@@ -164,18 +152,18 @@ Setting this up through the CLI looks like this.
 ```bash
 polaris principal-roles create analyst
 
-polaris catalog-roles create --catalog analytics sales_reader
+polaris catalog-roles create -catalog analytics sales_reader
 
-polaris privileges --catalog analytics --catalog-role sales_reader \
-    namespace grant --namespace sales TABLE_READ_DATA
+polaris privileges -catalog analytics -catalog-role sales_reader \
+ namespace grant -namespace sales TABLE_READ_DATA
 
-polaris privileges --catalog analytics --catalog-role sales_reader \
-    namespace grant --namespace sales TABLE_LIST
+polaris privileges -catalog analytics -catalog-role sales_reader \
+ namespace grant -namespace sales TABLE_LIST
 
-polaris catalog-roles grant --catalog analytics \
-    --principal-role analyst sales_reader
+polaris catalog-roles grant -catalog analytics \
+ -principal-role analyst sales_reader
 
-polaris principals create --principal-role analyst jane_analyst
+polaris principals create -principal-role analyst jane_analyst
 ```
 
 Read that chain from the bottom up. The principal holds a principal role. The principal role holds a catalog role. The catalog role holds privileges on a namespace. A table load request walks that chain, and the privileges found at the end determine both whether the load succeeds and what the vended credential permits.
@@ -255,23 +243,15 @@ Create the cloud IAM entity before the catalog. On AWS that means a role with a 
 
 ```json
 {
-  "Version": "2012-10-17",
-  "Statement": [
-    {
-      "Effect": "Allow",
-      "Action": [
-        "s3:GetObject",
-        "s3:PutObject",
-        "s3:DeleteObject",
-        "s3:ListBucket",
-        "s3:GetBucketLocation"
-      ],
-      "Resource": [
-        "arn:aws:s3:::acme-lakehouse",
-        "arn:aws:s3:::acme-lakehouse/warehouse/*"
-      ]
-    }
-  ]
+ "Version": "2012-10-17", "Statement": [
+ {
+ "Effect": "Allow", "Action": [
+ "s3:GetObject", "s3:PutObject", "s3:DeleteObject", "s3:ListBucket", "s3:GetBucketLocation"
+ ], "Resource": [
+ "arn:aws:s3:::acme-lakehouse", "arn:aws:s3:::acme-lakehouse/warehouse/*"
+ ]
+ }
+ ]
 }
 ```
 
@@ -280,7 +260,7 @@ Notice that this policy is the outer limit of what Polaris ever hands out, not w
 Create the catalog with its storage configuration.
 
 ```bash
-curl -X POST https://polaris.internal.example.com/api/management/v1/catalogs   -H "Authorization: Bearer $POLARIS_TOKEN"   -H "Content-Type: application/json"   -d @catalog-analytics.json
+curl -X POST https://polaris.internal.example.com/api/management/v1/catalogs -H "Authorization: Bearer $POLARIS_TOKEN" -H "Content-Type: application/json" -d @catalog-analytics.json
 ```
 
 The payload is the JSON shown earlier. Verify by reading the catalog back and confirming `allowedLocations` matches what you sent, since a typo here surfaces later as a confusing permission denial.

@@ -16,9 +16,10 @@ draft: false
 image: "/images/blog.png"
 canonical: "https://iceberglakehouse.com/posts/2026-03-context-zed/"
 ---
-> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-03-context-zed/).
 
 Zed is a high-performance code editor built in Rust that prioritizes speed, simplicity, and real-time collaboration. Its AI integration is designed to be fast and unobtrusive, with context management built around an assistant panel, inline transformations, slash commands, and a flexible provider system that supports multiple AI services. What sets Zed apart from other AI editors is its focus on performance (everything runs natively, not in Electron) and its built-in multiplayer editing that extends to AI interactions.
+
+> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-03-context-zed/).
 
 This guide covers how to manage context effectively in Zed's AI features to get the most from its lightweight but capable AI integration.
 
@@ -88,7 +89,7 @@ Slash commands are Zed's primary mechanism for injecting specific types of conte
 ### Available Slash Commands
 
 | Command | Function |
-|---|---|
+|--|--|
 | `/file [path]` | Include a specific file's content |
 | `/tab` | Include all currently open tabs |
 | `/diagnostics` | Include current LSP errors and warnings |
@@ -177,7 +178,7 @@ Zed supports multiple AI providers, giving you flexibility in model selection:
 ### Supported Providers
 
 | Provider | Configuration | Notes |
-|---|---|---|
+|--|--|--|
 | **Anthropic** | API key in settings | Claude models |
 | **OpenAI** | API key in settings | GPT models |
 | **Ollama** | Local endpoint | Private, local models |
@@ -193,10 +194,9 @@ Different providers offer different context window sizes. With Zed's explicit co
 
 ```json
 {
-  "language_model": {
-    "provider": "anthropic",
-    "model": "claude-sonnet-4-20250514"
-  }
+ "language_model": {
+ "provider": "anthropic", "model": "claude-sonnet-4-20250514"
+ }
 }
 ```
 
@@ -223,12 +223,11 @@ Recent versions of Zed support MCP for connecting to external tools. The impleme
 
 ```json
 {
-  "context_servers": {
-    "postgres": {
-      "command": "npx",
-      "args": ["-y", "@anthropic/mcp-server-postgres"]
-    }
-  }
+ "context_servers": {
+ "postgres": {
+ "command": "npx", "args": ["-y", "@anthropic/mcp-server-postgres"]
+ }
+ }
 }
 ```
 
@@ -268,7 +267,7 @@ For changes that span multiple files:
 
 ```
 /file src/models/user.ts
-/file src/services/userService.ts  
+/file src/services/userService.ts 
 /file src/routes/users.ts
 /file tests/services/userService.test.ts
 

@@ -14,9 +14,10 @@ tags:
 slug: "iceberg-v4-adaptive-metadata-tree"
 draft: false
 ---
-> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/iceberg-v4-adaptive-metadata-tree/).
 
 The best way to understand the centerpiece of the Apache Iceberg v4 design effort is not to read the proposal first. It is to earn the proposal: start from one question, why does every Iceberg commit need to touch so much metadata, follow the format's own requirements to the structure v1 through v3 chose, find the invariant that structure locked in, and then ask what a structure without that invariant has to look like. Do the derivation honestly and you arrive, step by step, at something remarkably close to what the community is actually designing: a root manifest that absorbs small changes directly, flushes accumulated state downward into leaves, and gives the metadata tree a depth that adapts to the table instead of being fixed by the spec. The proposal stops looking like a clever invention and starts looking like the conclusion of an argument, which is the strongest position a design can occupy.
+
+> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/iceberg-v4-adaptive-metadata-tree/).
 
 That derivation is this article, start to finish. We will build the current metadata tree from its requirements, name precisely why its commit cost scales with the table rather than the change, derive the adaptive alternative from first principles, then compare the derivation against the actual v4 design, the root manifest, single-file commits, the Parquet metadata transition, and the supporting proposals, including the genuinely open questions the dev list is working through as I write. The v4 effort is proposals with design documents and prototypes, not shipped specification, and this article is dated August 2026 accordingly.
 
@@ -36,7 +37,7 @@ Notice what this requirement does and does not force. It forces immutability, so
 
 ## Requirement Two: Planning Must Prune Without Listing
 
-Iceberg's second commitment is that query planning scales. A query with a selective filter against a million-file table must find its few thousand relevant files without listing storage, and ideally without reading descriptions of the 996,000 irrelevant ones. This is the requirement that killed the flat file: a single manifest listing a million entries means every planner reads a million entries, and planning cost scales with table size regardless of query selectivity, which is Hive's disease wearing new clothes.
+Iceberg's second commitment is that query planning scales. A query with a selective filter against a million-file table must find its few thousand relevant files without listing storage, and ideally without reading descriptions of the 996, 000 irrelevant ones. This is the requirement that killed the flat file: a single manifest listing a million entries means every planner reads a million entries, and planning cost scales with table size regardless of query selectivity, which is Hive's disease wearing new clothes.
 
 The classical cure for scan-everything is hierarchy with summaries. Group the file entries into chunks, manifests, record a summary of each chunk, its partition value ranges, in a parent, the manifest list, and planning becomes a two-level prune: consult the summaries, discard whole chunks whose ranges exclude the filter, read only the surviving chunks. Selective queries now read metadata proportional to what they select, roughly, and this is the actual reason the manifest list exists. It is an index over manifests, and manifests are indexes over data files, statistics all the way down, which is the property that makes Iceberg planning fast and the property any redesign must preserve.
 
@@ -50,7 +51,7 @@ The v1 design made one more choice, so natural it barely registered as a choice:
 
 See what this bought and what it charged. Bought: magnificent simplicity for readers. A reader resolves the pointer, reads one metadata file, one manifest list, and holds a complete, self-consistent view with no assembly required, no deltas to replay, no reconstruction logic. Every file at every level answers its question entirely. Charged: our invariant. Because every level's artifact is complete, every level's artifact scales with the table's state at that level, and rewriting complete artifacts per commit means per-commit cost scales with table state. The choice was right for the workloads Iceberg was born into, large batch writes where a few extra megabytes of metadata per commit disappear into the job's noise, and the choice is exactly what streaming cadences, CDC mirrors, and the coming population of many small writers grind against, because their commits are small and frequent and the invariant charges them the table's full metadata toll every single time.
 
-The invariant, then, is not requirement one and not requirement two. It is a consequence of "every artifact is complete at its level," which was a simplicity trade, which means it is negotiable, which means the question has an answer: the structure can change. Now derive the change, and derive it strictly, because the next section is only worth reading if it earns each step from the constraints rather than smuggling the destination in.
+The invariant, then, is not requirement one and not requirement two. It is a consequence of "every artifact is complete at its level, " which was a simplicity trade, which means it is negotiable, which means the question has an answer: the structure can change. Now derive the change, and derive it strictly, because the next section is only worth reading if it earns each step from the constraints rather than smuggling the destination in.
 
 ## Deriving the Fix: What Must a Proportional-Cost Structure Look Like?
 
@@ -88,14 +89,13 @@ The current tree, and what the commit writes:
 
 ```
 Catalog pointer
-  └─ metadata.json      (REWRITTEN: schemas, specs, properties,
-     │                   full snapshot history - scales with table)
-     └─ manifest-list   (REWRITTEN: re-lists every manifest
-        │                - scales with table)
-        ├─ manifest-001 (unchanged)
-        ├─ manifest-002 (unchanged)
-        ├─ ...           (hundreds unchanged)
-        └─ manifest-NEW (WRITTEN: one entry - scales with change)
+ └─ metadata.json (REWRITTEN: schemas, specs, properties, │ full snapshot history - scales with table)
+ └─ manifest-list (REWRITTEN: re-lists every manifest
+ │ - scales with table)
+ ├─ manifest-001 (unchanged)
+ ├─ manifest-002 (unchanged)
+ ├─ ... (hundreds unchanged)
+ └─ manifest-NEW (WRITTEN: one entry - scales with change)
 ```
 
 Three metadata writes, two of them proportional to the table. The reader's path is the compensation: pointer, one JSON, one list, pruned manifests, complete view, no assembly.
@@ -104,13 +104,13 @@ The adaptive tree, same commit:
 
 ```
 Catalog pointer
-  └─ root-manifest     (WRITTEN: previous references carried
-     │                  forward + ONE INLINED ENTRY for the
-     │                  new file - scales with change)
-     ├─ ref → leaf-A   (unchanged, partition-summarized)
-     ├─ ref → leaf-B   (unchanged, partition-summarized)
-     ├─ ref → snapshot-log (offloaded history, unchanged)
-     └─ inline: [new file entry, stats, partition tuple]
+ └─ root-manifest (WRITTEN: previous references carried
+ │ forward + ONE INLINED ENTRY for the
+ │ new file - scales with change)
+ ├─ ref → leaf-A (unchanged, partition-summarized)
+ ├─ ref → leaf-B (unchanged, partition-summarized)
+ ├─ ref → snapshot-log (offloaded history, unchanged)
+ └─ inline: [new file entry, stats, partition tuple]
 ```
 
 One metadata write, sized to the change plus references. The reader's path gains one wrinkle: pruning consults leaf summaries as before and must also consider the inlined entries, the working set of recent changes, which is exactly the surface the open-questions section examines. After enough commits accumulate inlines, a background flush packages them into a new summarized leaf and the root slims back to references, the cycle that keeps both traces honest over time.
@@ -145,7 +145,7 @@ What travels with an entry? The partition tuple question in the single-file-comm
 
 And what does migration owe the installed base? A billion existing v3 tables, Avro manifests, manifest lists, metadata JSONs, must upgrade into whatever v4 becomes, and the thread on v3-to-v4 migration expectations is working the practicalities: upgraded tables keeping v3 Avro leaves while new metadata is written v4-style implies mixed trees during transition, readers handling both encodings at different levels of one table, and tooling that converts lazily rather than demanding rewrites. The delete-mechanism migration in v3 set the precedent, supersession rules that let tables convert gradually as they are touched, and the metadata migration wants the same property at larger scale, since this time the thing converting is the tree itself.
 
-A fourth question rides quietly under the other three: concurrency against a mutable-feeling root. The current tree's commit races are pointer races over complete artifacts, and the concurrency machinery this site has covered resolves them by rebuilding metadata against the winner. Under the adaptive tree, the racing artifact is the root manifest itself, two writers each producing "previous root plus my inlines," and reconciliation becomes a merge of inline sets rather than a re-list of manifests, cheaper in the common disjoint case, subtler where inlines and flush operations interleave, since a flush racing an append reorganizes the very entries the append carried forward. None of this breaks the optimistic model, requirements and updates handle richer structures fine, and it does mean the flush behaves like a new kind of maintenance writer whose conflict profile the design has to specify, one more place where the single-file-commit track's decisions ripple outward.
+A fourth question rides quietly under the other three: concurrency against a mutable-feeling root. The current tree's commit races are pointer races over complete artifacts, and the concurrency machinery this site has covered resolves them by rebuilding metadata against the winner. Under the adaptive tree, the racing artifact is the root manifest itself, two writers each producing "previous root plus my inlines, " and reconciliation becomes a merge of inline sets rather than a re-list of manifests, cheaper in the common disjoint case, subtler where inlines and flush operations interleave, since a flush racing an append reorganizes the very entries the append carried forward. None of this breaks the optimistic model, requirements and updates handle richer structures fine, and it does mean the flush behaves like a new kind of maintenance writer whose conflict profile the design has to specify, one more place where the single-file-commit track's decisions ripple outward.
 
 Follow those threads and you are following the actual design, which beats following the headlines by months.
 

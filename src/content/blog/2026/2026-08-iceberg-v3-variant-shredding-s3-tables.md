@@ -17,11 +17,11 @@ image: "/images/blog.png"
 canonical: "https://iceberglakehouse.com/posts/iceberg-v3-variant-shredding-s3-tables/"
 ---
 
-> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/iceberg-v3-variant-shredding-s3-tables/).
-
 # How Iceberg V3 Variant Shredding Changed Semi-Structured Data on S3 Tables
 
 *By Alex Merced, Data Lakehouse and AI Evangelist*
+
+> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/iceberg-v3-variant-shredding-s3-tables/).
 
 Every data engineer has inherited the same table. It has four or five real columns and one column called `payload`, `raw`, `body`, or `event_json`. That column holds a string. Inside the string is JSON. Analysts query it with `json_extract` or `get_json_object` or whatever the engine calls the function, and every query reads the entire string for every row in every file the planner cannot rule out. A filter on one field inside that JSON reads gigabytes to return a handful of rows.
 
@@ -80,7 +80,7 @@ Chain those together and you get the behavior that makes the feature worth the t
 It helps to see where each piece of the system does its job, because the vocabulary blurs together fast.
 
 | Layer | What it stores | What it enables |
-|---|---|---|
+|--|--|--|
 | Variant binary encoding | Dictionary of keys plus type-tagged values | Field access without full JSON parsing, faithful type preservation |
 | Parquet shredding | Consistent fields promoted to typed columns, remainder in a fallback value | Column chunk statistics, row group skipping, projection pushdown per field |
 | Parquet footer statistics | Min, max, null count per shredded column chunk | File-level and row-group-level pruning at scan time |
@@ -107,17 +107,12 @@ Start with the table definition. The important parts are the format version and 
 
 ```sql
 CREATE TABLE s3_catalog.telemetry.device_events (
-    event_id      BIGINT,
-    device_id     STRING,
-    received_at   TIMESTAMP,
-    payload       VARIANT
+ event_id BIGINT, device_id STRING, received_at TIMESTAMP, payload VARIANT
 )
 USING iceberg
 PARTITIONED BY (days(received_at))
 TBLPROPERTIES (
-    'format-version' = '3',
-    'write.parquet.shred-variants' = 'true',
-    'write.target-file-size-bytes' = '536870912'
+ 'format-version' = '3', 'write.parquet.shred-variants' = 'true', 'write.target-file-size-bytes' = '536870912'
 );
 ```
 
@@ -134,10 +129,7 @@ Now the write path. Incoming JSON gets converted to the binary encoding with `pa
 ```sql
 INSERT INTO s3_catalog.telemetry.device_events
 SELECT
-    raw.event_id,
-    raw.device_id,
-    CAST(raw.received_at AS TIMESTAMP),
-    parse_json(raw.body)
+ raw.event_id, raw.device_id, CAST(raw.received_at AS TIMESTAMP), parse_json(raw.body)
 FROM staging_kafka_landing AS raw
 WHERE raw.body IS NOT NULL;
 ```
@@ -148,12 +140,10 @@ Reads use `variant_get` to pull typed values out by path.
 
 ```sql
 SELECT
-    device_id,
-    variant_get(payload, '$.telemetry.battery_pct', 'int') AS battery_pct,
-    variant_get(payload, '$.telemetry.firmware',    'string') AS firmware
+ device_id, variant_get(payload, '$.telemetry.battery_pct', 'int') AS battery_pct, variant_get(payload, '$.telemetry.firmware', 'string') AS firmware
 FROM s3_catalog.telemetry.device_events
 WHERE received_at >= current_date() - INTERVAL 7 DAYS
-  AND variant_get(payload, '$.severity', 'string') = 'critical';
+ AND variant_get(payload, '$.severity', 'string') = 'critical';
 ```
 
 Two details in that query drive the performance.
@@ -219,10 +209,7 @@ Backfill with a single conversion query. The source string column becomes a Vari
 ```sql
 INSERT INTO s3_catalog.telemetry.device_events
 SELECT
-    event_id,
-    device_id,
-    received_at,
-    parse_json(event_json)
+ event_id, device_id, received_at, parse_json(event_json)
 FROM legacy.device_events_v2
 WHERE received_at >= '2025-01-01';
 ```

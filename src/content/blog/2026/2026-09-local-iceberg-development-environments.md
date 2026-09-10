@@ -16,9 +16,10 @@ draft: false
 image: "/images/blog.png"
 canonical: https://iceberglakehouse.com/posts/local-iceberg-development-environments/
 ---
-> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/local-iceberg-development-environments/).
 
 A data engineer changes the merge logic in a pipeline that writes to an Apache Iceberg table. To test it, they run the job against the development catalog, which is a shared Apache Polaris instance backed by a shared bucket in the cloud. The test takes eleven minutes because the Spark job has to start a cluster. It fails, because a colleague's test left a table in a half-migrated state. The engineer drops the table, reruns, and it passes, and in the process deletes a snapshot the colleague was using. Two people have lost an afternoon and neither has learned whether the merge logic is correct.
+
+> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/local-iceberg-development-environments/).
 
 The alternative is an Iceberg environment that runs on a laptop and in a continuous integration (CI) job, starts in seconds, owns its own catalog and storage, and can be thrown away after every test. Iceberg is unusually well suited to this because its three components, a catalog, an object store, and an engine, are all replaceable with lightweight local versions that speak the same protocols as the production ones. The metadata files a local test produces are byte-compatible with the ones production produces, so a test that passes locally is a test of the real format.
 
@@ -37,7 +38,7 @@ An Iceberg table is a metadata file on storage, tracked by a catalog, read and w
 The tiers below are combinations of these choices, from lightest to most faithful.
 
 | Tier | Catalog | Storage | Engine | Startup | Tests |
-|---|---|---|---|---|---|
+|--|--|--|--|--|--|
 | In-process | SQLite or in-memory | local filesystem | PyIceberg, DuckDB | milliseconds | format behavior, schema evolution, read/write logic |
 | Docker Compose | REST fixture or Polaris | MinIO | Spark, Trino, PyIceberg | 20 to 60 seconds | S3 path, REST protocol, procedures, cross-engine reads |
 | CI with real cloud | production catalog software | ephemeral bucket | same as production | minutes | credential vending, IAM, production parity |
@@ -54,16 +55,12 @@ from pathlib import Path
 from pyiceberg.catalog.sql import SqlCatalog
 
 def make_catalog():
-    root = Path(tempfile.mkdtemp())
-    warehouse = root / "warehouse"
-    warehouse.mkdir()
-    return SqlCatalog(
-        "local",
-        **{
-            "uri": f"sqlite:///{root / 'catalog.db'}",
-            "warehouse": f"file://{warehouse}",
-        },
-    )
+ root = Path(tempfile.mkdtemp())
+ warehouse = root / "warehouse"
+ warehouse.mkdir()
+ return SqlCatalog(
+ "local", **{
+ "uri": f"sqlite:///{root / 'catalog.db'}", "warehouse": f"file://{warehouse}", }, )
 ```
 
 This is a real catalog. It assigns table UUIDs, writes `metadata.json` files, performs compare-and-swap on commit, and rejects stale commits. A test that creates a table, appends data, evolves the schema, and reads back through a snapshot from before the evolution is testing exactly the code paths production uses, minus the network.
@@ -78,7 +75,7 @@ import duckdb
 con = duckdb.connect()
 con.execute("INSTALL iceberg; LOAD iceberg;")
 result = con.execute(
-    "SELECT count(*) FROM iceberg_scan('file:///tmp/.../warehouse/db/orders/metadata/v3.metadata.json')"
+ "SELECT count(*) FROM iceberg_scan('file:///tmp/.../warehouse/db/orders/metadata/v3.metadata.json')"
 ).fetchone()
 ```
 
@@ -99,8 +96,7 @@ InMemoryCatalog catalog = new InMemoryCatalog();
 catalog.initialize("test", Map.of("warehouse", Files.createTempDirectory("wh").toString()));
 
 Schema schema = new Schema(
-    Types.NestedField.required(1, "id", Types.LongType.get()),
-    Types.NestedField.optional(2, "name", Types.StringType.get()));
+ Types.NestedField.required(1, "id", Types.LongType.get()), Types.NestedField.optional(2, "name", Types.StringType.get()));
 Table table = catalog.createTable(TableIdentifier.of("db", "t"), schema);
 
 table.updateSchema().addColumn("created", Types.TimestampType.withZone()).commit();
@@ -121,60 +117,60 @@ A complete Compose file:
 
 ```yaml
 services:
-  minio:
-    image: minio/minio
-    command: server /data --console-address ":9001"
-    environment:
-      MINIO_ROOT_USER: admin
-      MINIO_ROOT_PASSWORD: password
-      MINIO_DOMAIN: minio
-    ports: ["9000:9000", "9001:9001"]
-    networks:
-      lake:
-        aliases: [warehouse.minio]
+ minio:
+ image: minio/minio
+ command: server /data -console-address ":9001"
+ environment:
+ MINIO_ROOT_USER: admin
+ MINIO_ROOT_PASSWORD: password
+ MINIO_DOMAIN: minio
+ ports: ["9000:9000", "9001:9001"]
+ networks:
+ lake:
+ aliases: [warehouse.minio]
 
-  mc:
-    image: minio/mc
-    depends_on: [minio]
-    entrypoint: >
-      /bin/sh -c "
-      until (/usr/bin/mc alias set local http://minio:9000 admin password) do sleep 1; done;
-      /usr/bin/mc mb --ignore-existing local/warehouse;
-      /usr/bin/mc anonymous set public local/warehouse;
-      tail -f /dev/null"
-    networks: [lake]
+ mc:
+ image: minio/mc
+ depends_on: [minio]
+ entrypoint: >
+ /bin/sh -c "
+ until (/usr/bin/mc alias set local http://minio:9000 admin password) do sleep 1; done;
+ /usr/bin/mc mb -ignore-existing local/warehouse;
+ /usr/bin/mc anonymous set public local/warehouse;
+ tail -f /dev/null"
+ networks: [lake]
 
-  rest:
-    image: apache/iceberg-rest-fixture
-    depends_on: [mc]
-    environment:
-      AWS_ACCESS_KEY_ID: admin
-      AWS_SECRET_ACCESS_KEY: password
-      AWS_REGION: us-east-1
-      CATALOG_WAREHOUSE: s3://warehouse/
-      CATALOG_IO__IMPL: org.apache.iceberg.aws.s3.S3FileIO
-      CATALOG_S3_ENDPOINT: http://minio:9000
-      CATALOG_S3_PATH__STYLE__ACCESS: "true"
-      CATALOG_URI: "jdbc:sqlite:file:/tmp/catalog.db"
-    ports: ["8181:8181"]
-    networks: [lake]
+ rest:
+ image: apache/iceberg-rest-fixture
+ depends_on: [mc]
+ environment:
+ AWS_ACCESS_KEY_ID: admin
+ AWS_SECRET_ACCESS_KEY: password
+ AWS_REGION: us-east-1
+ CATALOG_WAREHOUSE: s3://warehouse/
+ CATALOG_IO__IMPL: org.apache.iceberg.aws.s3.S3FileIO
+ CATALOG_S3_ENDPOINT: http://minio:9000
+ CATALOG_S3_PATH__STYLE__ACCESS: "true"
+ CATALOG_URI: "jdbc:sqlite:file:/tmp/catalog.db"
+ ports: ["8181:8181"]
+ networks: [lake]
 
-  spark:
-    image: apache/spark:4.0.0
-    depends_on: [rest]
-    environment:
-      AWS_ACCESS_KEY_ID: admin
-      AWS_SECRET_ACCESS_KEY: password
-      AWS_REGION: us-east-1
-    volumes:
-      - ./spark-defaults.conf:/opt/spark/conf/spark-defaults.conf
-      - ./jobs:/opt/jobs
-    ports: ["4040:4040"]
-    networks: [lake]
-    command: tail -f /dev/null
+ spark:
+ image: apache/spark:4.0.0
+ depends_on: [rest]
+ environment:
+ AWS_ACCESS_KEY_ID: admin
+ AWS_SECRET_ACCESS_KEY: password
+ AWS_REGION: us-east-1
+ volumes:
+ - ./spark-defaults.conf:/opt/spark/conf/spark-defaults.conf
+ - ./jobs:/opt/jobs
+ ports: ["4040:4040"]
+ networks: [lake]
+ command: tail -f /dev/null
 
 networks:
-  lake:
+ lake:
 ```
 
 Each piece does a specific job. MinIO is the object store, and the `warehouse.minio` network alias plus `MINIO_DOMAIN` let clients that insist on virtual-host-style addressing resolve `warehouse.minio` as the bucket. The `mc` container creates the bucket on startup, because an S3 client cannot write to a bucket that does not exist and MinIO does not create buckets on demand. The REST fixture is configured with double-underscore environment variable names, which the fixture translates into dotted catalog properties: `CATALOG_S3_PATH__STYLE__ACCESS` becomes `s3.path-style-access`. The Spark container is idle until a test executes something inside it.
@@ -184,16 +180,16 @@ The `CATALOG_URI` line deserves its own explanation. The fixture's default, `jdb
 The Spark configuration file that pairs with it:
 
 ```properties
-spark.jars.packages                        org.apache.iceberg:iceberg-spark-runtime-4.0_2.13:1.11.0,org.apache.iceberg:iceberg-aws-bundle:1.11.0
-spark.sql.extensions                       org.apache.iceberg.spark.extensions.IcebergSparkSessionExtensions
-spark.sql.catalog.lake                     org.apache.iceberg.spark.SparkCatalog
-spark.sql.catalog.lake.type                rest
-spark.sql.catalog.lake.uri                 http://rest:8181
-spark.sql.catalog.lake.warehouse           s3://warehouse/
-spark.sql.catalog.lake.io-impl             org.apache.iceberg.aws.s3.S3FileIO
-spark.sql.catalog.lake.s3.endpoint         http://minio:9000
+spark.jars.packages org.apache.iceberg:iceberg-spark-runtime-4.0_2.13:1.11.0, org.apache.iceberg:iceberg-aws-bundle:1.11.0
+spark.sql.extensions org.apache.iceberg.spark.extensions.IcebergSparkSessionExtensions
+spark.sql.catalog.lake org.apache.iceberg.spark.SparkCatalog
+spark.sql.catalog.lake.type rest
+spark.sql.catalog.lake.uri http://rest:8181
+spark.sql.catalog.lake.warehouse s3://warehouse/
+spark.sql.catalog.lake.io-impl org.apache.iceberg.aws.s3.S3FileIO
+spark.sql.catalog.lake.s3.endpoint http://minio:9000
 spark.sql.catalog.lake.s3.path-style-access true
-spark.sql.defaultCatalog                   lake
+spark.sql.defaultCatalog lake
 ```
 
 The `iceberg-aws-bundle` artifact carries the AWS SDK classes that `S3FileIO` needs, and forgetting it produces a `ClassNotFoundException` deep in the first write. Path-style access is required because MinIO on a Docker network is addressed by hostname and port, not by a bucket subdomain. The endpoint uses the Compose service name, `minio`, which resolves on the `lake` network but not from the host.
@@ -204,18 +200,8 @@ PyIceberg connects from the host with the host-side ports:
 from pyiceberg.catalog import load_catalog
 
 catalog = load_catalog(
-    "lake",
-    **{
-        "type": "rest",
-        "uri": "http://localhost:8181",
-        "warehouse": "s3://warehouse/",
-        "s3.endpoint": "http://localhost:9000",
-        "s3.access-key-id": "admin",
-        "s3.secret-access-key": "password",
-        "s3.region": "us-east-1",
-        "s3.path-style-access": "true",
-    },
-)
+ "lake", **{
+ "type": "rest", "uri": "http://localhost:8181", "warehouse": "s3://warehouse/", "s3.endpoint": "http://localhost:9000", "s3.access-key-id": "admin", "s3.secret-access-key": "password", "s3.region": "us-east-1", "s3.path-style-access": "true", }, )
 ```
 
 With both connected to the same catalog and bucket, a table written by PyIceberg from the host is immediately readable by Spark inside the container, and the reverse, which is the cross-engine test that tier one approximates with DuckDB and tier two runs for real.
@@ -225,13 +211,13 @@ With both connected to the same catalog and bucket, a table written by PyIceberg
 A second JVM engine turns the stack into a real cross-engine test bed. Trino's Iceberg connector speaks the REST protocol and reads MinIO with the same settings:
 
 ```yaml
-  trino:
-    image: trinodb/trino:476
-    depends_on: [rest]
-    volumes:
-      - ./trino/catalog:/etc/trino/catalog
-    ports: ["8080:8080"]
-    networks: [lake]
+ trino:
+ image: trinodb/trino:476
+ depends_on: [rest]
+ volumes:
+ - ./trino/catalog:/etc/trino/catalog
+ ports: ["8080:8080"]
+ networks: [lake]
 ```
 
 With a catalog properties file at `trino/catalog/lake.properties`:
@@ -271,13 +257,13 @@ The practical division is that the local stack tests correctness and the nightly
 
 The REST fixture is a catalog with no authentication, no access control, and no credential vending. Code that depends on those, which is any code that runs against Polaris in production, needs Polaris locally. The Polaris project publishes container images and a quickstart Compose configuration that stands up the server with a bootstrapped root principal. The differences from the fixture are that clients authenticate with a client ID and secret and receive a bearer token, that a catalog entity has to be created with a storage configuration before tables can be written, and that clients can request vended credentials with the `X-Iceberg-Access-Delegation` header.
 
-Polaris in a container takes longer to start and more configuration to bootstrap. The right pattern is to use the fixture for the bulk of the test suite and Polaris for the tests that exercise principals, roles, grants, and vended credentials. A `docker compose --profile polaris up` that swaps the catalog service is one way to keep both in one file.
+Polaris in a container takes longer to start and more configuration to bootstrap. The right pattern is to use the fixture for the bulk of the test suite and Polaris for the tests that exercise principals, roles, grants, and vended credentials. A `docker compose -profile polaris up` that swaps the catalog service is one way to keep both in one file.
 
 ## Tier Three: CI Configurations
 
 A local Compose stack works in CI too, and the question is how to run it. There are two patterns, and they trade startup time against isolation.
 
-**Compose inside the job.** The CI job checks out the repository, runs `docker compose up -d --wait`, runs the tests against `localhost`, and tears down. This is the same environment as the laptop, which is its main virtue. The `--wait` flag blocks until every container's health check passes, which requires health checks to be defined. For the fixture, `curl -f http://localhost:8181/v1/config` is a sufficient check. For MinIO, `mc ready local`.
+**Compose inside the job.** The CI job checks out the repository, runs `docker compose up -d -wait`, runs the tests against `localhost`, and tears down. This is the same environment as the laptop, which is its main virtue. The `-wait` flag blocks until every container's health check passes, which requires health checks to be defined. For the fixture, `curl -f http://localhost:8181/v1/config` is a sufficient check. For MinIO, `mc ready local`.
 
 **Service containers.** GitHub Actions, GitLab CI, and similar systems can start containers alongside the job as services, with the job addressing them by service name. This is faster to configure but the services start before the job's own steps, so the bucket-creation step has to happen from the job rather than from an `mc` container, and dependencies between services are not expressible. For a stack with one or two containers it is fine. For the full stack, Compose in the job is simpler.
 
@@ -290,53 +276,53 @@ name: iceberg-tests
 on: [push, pull_request]
 
 jobs:
-  unit:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
-        with: { python-version: "3.12" }
-      - run: pip install -e ".[test]"
-      - run: pytest tests/unit -n auto       # tier one, no containers
+ unit:
+ runs-on: ubuntu-latest
+ steps:
+ - uses: actions/checkout@v4
+ - uses: actions/setup-python@v5
+ with: { python-version: "3.12" }
+ - run: pip install -e ".[test]"
+ - run: pytest tests/unit -n auto # tier one, no containers
 
-  integration:
-    runs-on: ubuntu-latest
-    needs: unit
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
-        with: { python-version: "3.12" }
-      - run: pip install -e ".[test]"
-      - run: docker compose -f docker/compose.yml up -d --wait
-      - run: pytest tests/integration -n 4   # tier two, parallel by namespace
-      - run: docker exec spark /opt/spark/bin/spark-submit /opt/jobs/smoke.py
-      - if: always()
-        run: docker compose -f docker/compose.yml logs rest minio > compose.log
-      - if: always()
-        uses: actions/upload-artifact@v4
-        with: { name: compose-logs, path: compose.log }
-      - if: always()
-        run: docker compose -f docker/compose.yml down -v
+ integration:
+ runs-on: ubuntu-latest
+ needs: unit
+ steps:
+ - uses: actions/checkout@v4
+ - uses: actions/setup-python@v5
+ with: { python-version: "3.12" }
+ - run: pip install -e ".[test]"
+ - run: docker compose -f docker/compose.yml up -d -wait
+ - run: pytest tests/integration -n 4 # tier two, parallel by namespace
+ - run: docker exec spark /opt/spark/bin/spark-submit /opt/jobs/smoke.py
+ - if: always()
+ run: docker compose -f docker/compose.yml logs rest minio > compose.log
+ - if: always()
+ uses: actions/upload-artifact@v4
+ with: { name: compose-logs, path: compose.log }
+ - if: always()
+ run: docker compose -f docker/compose.yml down -v
 ```
 
-The unit job runs first and fast. The integration job starts the stack, runs the Python tests in parallel, runs a Spark job inside the container as a smoke test, captures container logs on failure, and tears down with `-v` so volumes do not persist. The `--wait` flag depends on health checks in the Compose file:
+The unit job runs first and fast. The integration job starts the stack, runs the Python tests in parallel, runs a Spark job inside the container as a smoke test, captures container logs on failure, and tears down with `-v` so volumes do not persist. The `-wait` flag depends on health checks in the Compose file:
 
 ```yaml
-  rest:
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8181/v1/config"]
-      interval: 2s
-      timeout: 5s
-      retries: 30
-  minio:
-    healthcheck:
-      test: ["CMD", "mc", "ready", "local"]
-      interval: 2s
-      timeout: 5s
-      retries: 30
+ rest:
+ healthcheck:
+ test: ["CMD", "curl", "-f", "http://localhost:8181/v1/config"]
+ interval: 2s
+ timeout: 5s
+ retries: 30
+ minio:
+ healthcheck:
+ test: ["CMD", "mc", "ready", "local"]
+ interval: 2s
+ timeout: 5s
+ retries: 30
 ```
 
-Without them, `--wait` returns as soon as the containers are running rather than when they are ready, and the first test races the catalog's startup.
+Without them, `-wait` returns as soon as the containers are running rather than when they are ready, and the first test races the catalog's startup.
 
 In either pattern, three things make CI runs reliable.
 
@@ -358,60 +344,50 @@ from pyiceberg.catalog import load_catalog
 
 @pytest.fixture(scope="session")
 def stack():
-    net = Network().create()
-    minio = (DockerContainer("minio/minio")
-             .with_network(net).with_network_aliases("minio")
-             .with_env("MINIO_ROOT_USER", "admin")
-             .with_env("MINIO_ROOT_PASSWORD", "password")
-             .with_exposed_ports(9000)
-             .with_command("server /data"))
-    minio.start()
-    wait_for_logs(minio, "API:")
-    minio.exec("mkdir -p /data/warehouse")
+ net = Network().create()
+ minio = (DockerContainer("minio/minio")
+ .with_network(net).with_network_aliases("minio")
+ .with_env("MINIO_ROOT_USER", "admin")
+ .with_env("MINIO_ROOT_PASSWORD", "password")
+ .with_exposed_ports(9000)
+ .with_command("server /data"))
+ minio.start()
+ wait_for_logs(minio, "API:")
+ minio.exec("mkdir -p /data/warehouse")
 
-    rest = (DockerContainer("apache/iceberg-rest-fixture")
-            .with_network(net)
-            .with_env("AWS_ACCESS_KEY_ID", "admin")
-            .with_env("AWS_SECRET_ACCESS_KEY", "password")
-            .with_env("AWS_REGION", "us-east-1")
-            .with_env("CATALOG_WAREHOUSE", "s3://warehouse/")
-            .with_env("CATALOG_IO__IMPL", "org.apache.iceberg.aws.s3.S3FileIO")
-            .with_env("CATALOG_S3_ENDPOINT", "http://minio:9000")
-            .with_env("CATALOG_S3_PATH__STYLE__ACCESS", "true")
-            .with_env("CATALOG_URI", "jdbc:sqlite:file:/tmp/catalog.db")
-            .with_exposed_ports(8181))
-    rest.start()
-    wait_for_logs(rest, "Started")
+ rest = (DockerContainer("apache/iceberg-rest-fixture")
+ .with_network(net)
+ .with_env("AWS_ACCESS_KEY_ID", "admin")
+ .with_env("AWS_SECRET_ACCESS_KEY", "password")
+ .with_env("AWS_REGION", "us-east-1")
+ .with_env("CATALOG_WAREHOUSE", "s3://warehouse/")
+ .with_env("CATALOG_IO__IMPL", "org.apache.iceberg.aws.s3.S3FileIO")
+ .with_env("CATALOG_S3_ENDPOINT", "http://minio:9000")
+ .with_env("CATALOG_S3_PATH__STYLE__ACCESS", "true")
+ .with_env("CATALOG_URI", "jdbc:sqlite:file:/tmp/catalog.db")
+ .with_exposed_ports(8181))
+ rest.start()
+ wait_for_logs(rest, "Started")
 
-    yield {
-        "rest_uri": f"http://localhost:{rest.get_exposed_port(8181)}",
-        "s3_endpoint": f"http://localhost:{minio.get_exposed_port(9000)}",
-    }
-    rest.stop()
-    minio.stop()
-    net.remove()
+ yield {
+ "rest_uri": f"http://localhost:{rest.get_exposed_port(8181)}", "s3_endpoint": f"http://localhost:{minio.get_exposed_port(9000)}", }
+ rest.stop()
+ minio.stop()
+ net.remove()
 
 @pytest.fixture
 def catalog(stack):
-    return load_catalog("lake", **{
-        "type": "rest",
-        "uri": stack["rest_uri"],
-        "warehouse": "s3://warehouse/",
-        "s3.endpoint": stack["s3_endpoint"],
-        "s3.access-key-id": "admin",
-        "s3.secret-access-key": "password",
-        "s3.region": "us-east-1",
-        "s3.path-style-access": "true",
-    })
+ return load_catalog("lake", **{
+ "type": "rest", "uri": stack["rest_uri"], "warehouse": "s3://warehouse/", "s3.endpoint": stack["s3_endpoint"], "s3.access-key-id": "admin", "s3.secret-access-key": "password", "s3.region": "us-east-1", "s3.path-style-access": "true", })
 
 @pytest.fixture
 def namespace(catalog):
-    ns = f"test_{uuid.uuid4().hex[:8]}"
-    catalog.create_namespace(ns)
-    yield ns
-    for t in catalog.list_tables(ns):
-        catalog.drop_table(t)
-    catalog.drop_namespace(ns)
+ ns = f"test_{uuid.uuid4().hex[:8]}"
+ catalog.create_namespace(ns)
+ yield ns
+ for t in catalog.list_tables(ns):
+ catalog.drop_table(t)
+ catalog.drop_namespace(ns)
 ```
 
 The session-scoped `stack` fixture starts the containers once per test session. The function-scoped `namespace` fixture gives every test a clean namespace and cleans up after it. Ports are dynamic, so several test sessions can run on one machine at once. The `mkdir` on MinIO's data directory is the container-native way to create a bucket without a client.
@@ -432,32 +408,24 @@ orders = con.execute("SELECT * FROM orders").arrow()
 
 catalog = load_catalog("lake", **rest_config)
 table = catalog.create_table(
-    "seed.orders",
-    schema=orders.schema,
-    properties={"format-version": "3"},
-)
+ "seed.orders", schema=orders.schema, properties={"format-version": "3"}, )
 table.append(orders)
 ```
 
-Scale factor 0.1 is 150,000 orders and 600,000 line items, enough to produce multiple data files and meaningful statistics, and small enough to generate on every test session. Scale factor 1 is ten times that and is right for a nightly job that tests compaction and planning behavior at a size where they matter.
+Scale factor 0.1 is 150, 000 orders and 600, 000 line items, enough to produce multiple data files and meaningful statistics, and small enough to generate on every test session. Scale factor 1 is ten times that and is right for a nightly job that tests compaction and planning behavior at a size where they matter.
 
 Format version deserves its own axis. A test that passes on v2 and fails on v3 is a test that found a real difference, and the cheapest way to find those is to run every table-level test against each version:
 
 ```python
 @pytest.fixture(params=["2", "3"])
 def format_version(request):
-    return request.param
+ return request.param
 
 def test_merge_on_read_delete(catalog, namespace, format_version):
-    table = catalog.create_table(
-        f"{namespace}.t",
-        schema=SCHEMA,
-        properties={
-            "format-version": format_version,
-            "write.delete.mode": "merge-on-read",
-        },
-    )
-    ...
+ table = catalog.create_table(
+ f"{namespace}.t", schema=SCHEMA, properties={
+ "format-version": format_version, "write.delete.mode": "merge-on-read", }, )
+ ...
 ```
 
 On v2 the delete produces a position delete file. On v3 it produces a deletion vector in a Puffin file. The assertion on the `files` metadata table differs by version, and writing it that way documents the difference for the next engineer. When v4 tables are supported by the engines in the stack, the parameter list grows by one entry and every test gains a third run.
@@ -503,46 +471,41 @@ from pyiceberg.schema import Schema
 from pyiceberg.types import NestedField, LongType, StringType, DoubleType
 
 def spark_sql(sql):
-    out = subprocess.run(
-        ["docker", "exec", "spark", "/opt/spark/bin/spark-sql", "-S", "-e", sql],
-        capture_output=True, text=True, check=True,
-    )
-    return out.stdout.strip()
+ out = subprocess.run(
+ ["docker", "exec", "spark", "/opt/spark/bin/spark-sql", "-S", "-e", sql], capture_output=True, text=True, check=True, )
+ return out.stdout.strip()
 
 def test_evolution_is_visible_across_engines(catalog, namespace):
-    schema = Schema(
-        NestedField(1, "id", LongType(), required=True),
-        NestedField(2, "sku", StringType(), required=True),
-    )
-    table = catalog.create_table(f"{namespace}.items", schema=schema,
-                                 properties={"format-version": "3"})
+ schema = Schema(
+ NestedField(1, "id", LongType(), required=True), NestedField(2, "sku", StringType(), required=True), )
+ table = catalog.create_table(f"{namespace}.items", schema=schema, properties={"format-version": "3"})
 
-    table.append(pa.table({"id": [1, 2, 3], "sku": ["a", "b", "c"]}))
-    first_snapshot = table.current_snapshot().snapshot_id
+ table.append(pa.table({"id": [1, 2, 3], "sku": ["a", "b", "c"]}))
+ first_snapshot = table.current_snapshot().snapshot_id
 
-    with table.update_schema() as update:
-        update.add_column("price", DoubleType())
-    table.append(pa.table({"id": [4], "sku": ["d"], "price": [9.5]}))
+ with table.update_schema() as update:
+ update.add_column("price", DoubleType())
+ table.append(pa.table({"id": [4], "sku": ["d"], "price": [9.5]}))
 
-    # Spark sees the evolved schema and all four rows
-    assert spark_sql(f"SELECT count(*) FROM lake.{namespace}.items") == "4"
-    cols = spark_sql(f"DESCRIBE lake.{namespace}.items")
-    assert "price" in cols
+ # Spark sees the evolved schema and all four rows
+ assert spark_sql(f"SELECT count(*) FROM lake.{namespace}.items") == "4"
+ cols = spark_sql(f"DESCRIBE lake.{namespace}.items")
+ assert "price" in cols
 
-    # Spark time-travel to the first snapshot sees two columns and three rows
-    assert spark_sql(
-        f"SELECT count(*) FROM lake.{namespace}.items VERSION AS OF {first_snapshot}"
-    ) == "3"
-    old_cols = spark_sql(
-        f"SELECT * FROM lake.{namespace}.items VERSION AS OF {first_snapshot} LIMIT 0"
-    )
-    assert "price" not in old_cols
+ # Spark time-travel to the first snapshot sees two columns and three rows
+ assert spark_sql(
+ f"SELECT count(*) FROM lake.{namespace}.items VERSION AS OF {first_snapshot}"
+ ) == "3"
+ old_cols = spark_sql(
+ f"SELECT * FROM lake.{namespace}.items VERSION AS OF {first_snapshot} LIMIT 0"
+ )
+ assert "price" not in old_cols
 
-    # The old rows read null for the new column in the current snapshot
-    nulls = spark_sql(
-        f"SELECT count(*) FROM lake.{namespace}.items WHERE price IS NULL"
-    )
-    assert nulls == "3"
+ # The old rows read null for the new column in the current snapshot
+ nulls = spark_sql(
+ f"SELECT count(*) FROM lake.{namespace}.items WHERE price IS NULL"
+ )
+ assert nulls == "3"
 ```
 
 The test writes with one implementation and reads with another, which is the cross-engine check. It evolves the schema and verifies both the current and historical views, which is the field-ID check. And it confirms that rows written before the column existed resolve to null, which is the projection-rule check. Three properties of the format in one test, running in a few seconds against a stack that started once for the whole session.
@@ -556,9 +519,9 @@ The advantage of a local stack over a cloud one is that every layer is inspectab
 **The PyIceberg CLI** talks to the REST catalog and prints what it sees:
 
 ```bash
-pyiceberg --uri http://localhost:8181 list
-pyiceberg --uri http://localhost:8181 describe test_a1b2c3d4.orders
-pyiceberg --uri http://localhost:8181 files test_a1b2c3d4.orders
+pyiceberg -uri http://localhost:8181 list
+pyiceberg -uri http://localhost:8181 describe test_a1b2c3d4.orders
+pyiceberg -uri http://localhost:8181 files test_a1b2c3d4.orders
 ```
 
 `describe` shows the current metadata location, schema, partition spec, and properties. `files` lists every data file in the current snapshot with its partition and record count. When a test asserts the wrong file count, this is where the discrepancy becomes visible.
@@ -567,7 +530,7 @@ pyiceberg --uri http://localhost:8181 files test_a1b2c3d4.orders
 
 ```bash
 mc alias set local http://localhost:9000 admin password
-mc ls --recursive local/warehouse/test_a1b2c3d4/orders/
+mc ls -recursive local/warehouse/test_a1b2c3d4/orders/
 mc cat local/warehouse/test_a1b2c3d4/orders/metadata/v3.metadata.json | jq .
 ```
 
@@ -627,7 +590,7 @@ Local Iceberg environments fail in a small number of consistent ways.
 
 **Give every test its own namespace.** Parallel by default, isolated by construction, and leftovers are diagnosable.
 
-**Health-check every service and use `--wait`.** Tests that start before the catalog is ready fail with connection errors that look like real bugs.
+**Health-check every service and use `-wait`.** Tests that start before the catalog is ready fail with connection errors that look like real bugs.
 
 **Keep one nightly job against real cloud storage and the real catalog software.** IAM, credential vending, and object-store consistency semantics do not reproduce in MinIO, and one slow integration job catches what a hundred fast unit jobs cannot.
 

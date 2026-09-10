@@ -12,13 +12,12 @@ image: "/images/blog.png"
 category: "Data Engineering"
 bannerImage: "https://i.imgur.com/cpoMZQ8.png"
 ---
-
-## Free Resources  
-- **[Free Apache Iceberg Course](https://hello.dremio.com/webcast-an-apache-iceberg-lakehouse-crash-course-reg.html?utm_source=ev_external_blog&utm_medium=influencer&utm_campaign=lakehouse-meetups&utm_content=alexmerced&utm_term=external_blog)**  
-- **[Free Copy of “Apache Iceberg: The Definitive Guide”](https://hello.dremio.com/wp-apache-iceberg-the-definitive-guide-reg.html?utm_source=ev_external_blog&utm_medium=influencer&utm_campaign=lakehouse-meetups&utm_content=alexmerced&utm_term=external_blog)**  
-- **[Free Copy of “Apache Polaris: The Definitive Guide”](https://hello.dremio.com/wp-apache-polaris-guide-reg.html?utm_source=ev_external_blog&utm_medium=influencer&utm_campaign=lakehouse-meetups&utm_content=alexmerced&utm_term=external_blog)**  
-- **[2025 Apache Iceberg Architecture Guide](https://medium.com/data-engineering-with-dremio/2025-guide-to-architecting-an-iceberg-lakehouse-9b19ed42c9de)**  
-- **[Iceberg Lakehouse Engineering Video Playlist](https://youtube.com/playlist?list=PLsLAVBjQJO0p0Yq1fLkoHvt2lEJj5pcYe&si=WTSnqjXZv6Glkc3y)**  
+## Free Resources 
+- **[Free Apache Iceberg Course](https://hello.dremio.com/webcast-an-apache-iceberg-lakehouse-crash-course-reg.html?utm_source=ev_external_blog&utm_medium=influencer&utm_campaign=lakehouse-meetups&utm_content=alexmerced&utm_term=external_blog)** 
+- **[Free Copy of “Apache Iceberg: The Definitive Guide”](https://hello.dremio.com/wp-apache-iceberg-the-definitive-guide-reg.html?utm_source=ev_external_blog&utm_medium=influencer&utm_campaign=lakehouse-meetups&utm_content=alexmerced&utm_term=external_blog)** 
+- **[Free Copy of “Apache Polaris: The Definitive Guide”](https://hello.dremio.com/wp-apache-polaris-guide-reg.html?utm_source=ev_external_blog&utm_medium=influencer&utm_campaign=lakehouse-meetups&utm_content=alexmerced&utm_term=external_blog)** 
+- **[2025 Apache Iceberg Architecture Guide](https://medium.com/data-engineering-with-dremio/2025-guide-to-architecting-an-iceberg-lakehouse-9b19ed42c9de)** 
+- **[Iceberg Lakehouse Engineering Video Playlist](https://youtube.com/playlist?list=PLsLAVBjQJO0p0Yq1fLkoHvt2lEJj5pcYe&si=WTSnqjXZv6Glkc3y)** 
 - **[Ultimate Apache Iceberg Resource Guide](https://medium.com/data-engineering-with-dremio/ultimate-directory-of-apache-iceberg-resources-e3e02efac62e)** 
 
 Planning a meetup around Apache Iceberg or modern data lakehouse architectures? Whether you're looking to host your first community event or expand your existing network, discovering and organizing meetups can be both rewarding and impactful. These gatherings offer an opportunity to connect with other data professionals, share best practices, and explore cutting-edge tools and architectures. In this blog, we'll explore how to find and collaborate with existing data communities, discover upcoming Iceberg and lakehouse-related events, and provide tips on organizing your own meetup. We'll also share links to online communities, tools, and platforms to help you build momentum around your event and grow your local or virtual data community.

@@ -2,7 +2,7 @@
 title: "Choosing Vector Stores for Retrieval Workloads"
 date: 2026-05-24T11:35:00Z
 pubDatetime: 2026-05-24T11:35:00Z
-description: "pgvector, Milvus, Weaviate, and LanceDB each make different tradeoffs on index type, hybrid search, scale, and operational complexity. Learn which fits your retrieval workload."
+description: "pgvector, Milvus, Weaviate, and LanceDB each make different tradeoffs on index type, hybrid search, scale, and operational complexity."
 author: "Alex Merced"
 category: "AI"
 tags:
@@ -18,17 +18,18 @@ draft: false
 image: "/images/blog/vector-stores-retrieval/vector-store-selection-guide.png"
 canonical: "https://iceberglakehouse.com/posts/2026-05-24-vector-stores-retrieval/"
 ---
-> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-05-24-vector-stores-retrieval/).
 
 # Choosing Vector Stores for Retrieval Workloads
 
 Vector retrieval has become a standard component in data platform architectures, not just an ML research topic. RAG pipelines use it to retrieve document context before generation. Recommendation systems use it to find similar items. Search applications use it to retrieve semantically relevant results that keyword search misses.
 
+> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-05-24-vector-stores-retrieval/).
+
 The vector store market has matured rapidly. pgvector brings approximate nearest neighbor (ANN) search to PostgreSQL. Milvus provides a purpose-built distributed vector database designed for billions of vectors. Weaviate integrates hybrid dense and sparse search with a multi-modal retrieval model. LanceDB uses the Lance columnar format for disk-native vector retrieval optimized for ML workflows.
 
 Each of these tools makes different tradeoffs that matter in practice. This guide is about those tradeoffs, not which tool markets itself best, but which tool fits specific workload and operational requirements.
 
----
+--
 
 ## Index Types: HNSW vs IVFFlat vs DiskANN
 
@@ -42,31 +43,28 @@ The index algorithm determines the recall-latency tradeoff for approximate neare
 
 **IVF-PQ (used by LanceDB)** combines inverted file indexing with Product Quantization, which compresses vectors before indexing. This enables disk-native storage of very large vector datasets without requiring the full vector in memory during search.
 
----
+--
 
 ## pgvector: Vector Search Inside PostgreSQL
 
 pgvector extends PostgreSQL with vector data types, indexes, and similarity search operations. If you're already using PostgreSQL, adding vector search is an extension install and schema change.
 
 ```sql
--- Enable pgvector extension
+- Enable pgvector extension
 CREATE EXTENSION vector;
 
--- Create a table with a vector column
+- Create a table with a vector column
 CREATE TABLE documents (
-    id BIGSERIAL PRIMARY KEY,
-    content TEXT,
-    embedding vector(1536),  -- OpenAI text-embedding-3-small dimensions
-    created_at TIMESTAMPTZ DEFAULT NOW()
+ id BIGSERIAL PRIMARY KEY, content TEXT, embedding vector(1536), OpenAI text-embedding-3-small dimensions
+ created_at TIMESTAMPTZ DEFAULT NOW()
 );
 
--- Create an HNSW index for fast approximate nearest neighbor search
+- Create an HNSW index for fast approximate nearest neighbor search
 CREATE INDEX ON documents USING hnsw (embedding vector_cosine_ops)
 WITH (m = 16, ef_construction = 64);
 
--- Semantic similarity search
-SELECT id, content, 
-       1 - (embedding <=> $1::vector) AS similarity
+- Semantic similarity search
+SELECT id, content, 1 - (embedding <=> $1::vector) AS similarity
 FROM documents
 WHERE created_at > NOW() - INTERVAL '30 days'
 ORDER BY embedding <=> $1::vector
@@ -77,7 +75,7 @@ pgvector's operational advantage is zero new infrastructure. Your existing Postg
 
 For hybrid search (combining dense vector similarity with keyword (BM25) relevance) pgvector uses PostgreSQL's native `tsvector` full-text search in combination with vector search, joined by RRF (Reciprocal Rank Fusion) or similar fusion scoring. This requires more manual implementation than Milvus or Weaviate's native hybrid search capabilities.
 
----
+--
 
 ## Milvus: Purpose-Built for Scale
 
@@ -91,10 +89,7 @@ connections.connect("default", host="localhost", port="19530")
 
 # Define a collection schema
 schema = CollectionSchema(fields=[
-    FieldSchema("id", DataType.INT64, is_primary=True, auto_id=True),
-    FieldSchema("text", DataType.VARCHAR, max_length=65535),
-    FieldSchema("dense_embedding", DataType.FLOAT_VECTOR, dim=1536),
-    FieldSchema("sparse_embedding", DataType.SPARSE_FLOAT_VECTOR)
+ FieldSchema("id", DataType.INT64, is_primary=True, auto_id=True), FieldSchema("text", DataType.VARCHAR, max_length=65535), FieldSchema("dense_embedding", DataType.FLOAT_VECTOR, dim=1536), FieldSchema("sparse_embedding", DataType.SPARSE_FLOAT_VECTOR)
 ])
 
 collection = Collection("documents", schema)
@@ -103,23 +98,16 @@ collection = Collection("documents", schema)
 from pymilvus import AnnSearchRequest, WeightedRanker
 
 dense_req = AnnSearchRequest(
-    data=[query_dense_embedding],
-    anns_field="dense_embedding",
-    param={"nprobe": 20},
-    limit=50
+ data=[query_dense_embedding], anns_field="dense_embedding", param={"nprobe": 20}, limit=50
 )
 
 sparse_req = AnnSearchRequest(
-    data=[query_sparse_embedding],
-    anns_field="sparse_embedding",
-    param={},
-    limit=50
+ data=[query_sparse_embedding], anns_field="sparse_embedding", param={}, limit=50
 )
 
 results = collection.hybrid_search(
-    reqs=[dense_req, sparse_req],
-    rerank=WeightedRanker(0.8, 0.2),  # 80% dense, 20% sparse
-    limit=10
+ reqs=[dense_req, sparse_req], rerank=WeightedRanker(0.8, 0.2), # 80% dense, 20% sparse
+ limit=10
 )
 ```
 
@@ -127,7 +115,7 @@ Milvus's hybrid search combines BGEM3 sparse embeddings (or BM25-style represent
 
 The operational cost of Milvus is high. It requires running etcd (for metadata), MinIO or S3 (for persistence), and multiple service components (proxy, query nodes, data nodes, index nodes). For teams without dedicated infrastructure, Zilliz Cloud provides a managed Milvus service.
 
----
+--
 
 ## Weaviate: Hybrid Search and Multi-Modal Retrieval
 
@@ -142,20 +130,18 @@ collection = client.collections.get("Documents")
 
 # Hybrid search with BM25 + dense vector
 results = collection.query.hybrid(
-    query="machine learning model deployment",  # Used for both BM25 and embedding
-    fusion_type=HybridFusion.RELATIVE_SCORE,
-    alpha=0.75,  # 0=pure BM25, 1=pure vector, 0.75=mostly vector
-    limit=10,
-    return_metadata=weaviate.classes.query.MetadataQuery(score=True)
+ query="machine learning model deployment", # Used for both BM25 and embedding
+ fusion_type=HybridFusion.RELATIVE_SCORE, alpha=0.75, # 0=pure BM25, 1=pure vector, 0.75=mostly vector
+ limit=10, return_metadata=weaviate.classes.query.MetadataQuery(score=True)
 )
 
 for obj in results.objects:
-    print(f"Score: {obj.metadata.score}, Content: {obj.properties['content'][:100]}")
+ print(f"Score: {obj.metadata.score}, Content: {obj.properties['content'][:100]}")
 ```
 
 Weaviate's `alpha` parameter controls the blend between sparse and dense retrieval. For domain-specific technical content where terminology matters, lower alpha (more BM25 weight) often improves precision. For general semantic retrieval, higher alpha (more vector weight) captures meaning better.
 
----
+--
 
 ## LanceDB: Disk-Native for ML Workflows
 
@@ -169,19 +155,18 @@ db = lancedb.connect("./my-lance-db")
 
 # Create a table
 table = db.create_table("embeddings", data=[
-    {"id": 1, "text": "example document", "vector": np.random.rand(1536).tolist()},
-])
+ {"id": 1, "text": "example document", "vector": np.random.rand(1536).tolist()}, ])
 
 # Query for nearest neighbors
 results = table.search(query_vector) \
-    .metric("cosine") \
-    .limit(10) \
-    .to_pandas()
+ .metric("cosine") \
+ .limit(10) \
+ .to_pandas()
 ```
 
 LanceDB integrates with DuckDB for SQL-based analytics on the same dataset, you can run aggregation queries and vector similarity searches against the same Lance table without data movement. This is particularly useful for ML workflows where you need both analytical queries (row counts by label, feature statistics) and retrieval queries (find similar training examples).
 
----
+--
 
 ## Selection Guide
 
@@ -196,7 +181,7 @@ The primary decision factors:
 
 All four options support cloud-managed deployments, reducing the operational burden of running infrastructure.
 
----
+--
 
 ## Embedding Model Choice and Dimension Tradeoffs
 
@@ -213,14 +198,14 @@ The vector store choice is only half of the retrieval architecture decision. The
 Dimensionality matters operationally because HNSW indexes must fit in RAM. For a 1-million-vector dataset with 1536 dimensions using float32 encoding:
 
 ```
-1,000,000 vectors × 1,536 dimensions × 4 bytes = 6.1 GB (vectors alone)
-HNSW graph overhead ≈ 30-40 additional bytes per vector × 1,000,000 = 30-40 MB
+1, 000, 000 vectors × 1, 536 dimensions × 4 bytes = 6.1 GB (vectors alone)
+HNSW graph overhead ≈ 30-40 additional bytes per vector × 1, 000, 000 = 30-40 MB
 Total index memory ≈ 6.1 GB + graph overhead
 ```
 
 For a server with 16 GB RAM, this is feasible. For 10 million vectors at 3072 dimensions, the math exceeds 120 GB, requiring IVFFlat (which can use less RAM at the cost of recall), DiskANN, or LanceDB's IVF-PQ disk-native approach.
 
----
+--
 
 ## Hybrid Search: Dense + Sparse in Practice
 
@@ -232,27 +217,27 @@ The fusion strategy combines results from both retrievers. Reciprocal Rank Fusio
 
 ```python
 def reciprocal_rank_fusion(dense_results, sparse_results, k=60):
-    """
-    Combine dense and sparse retrieval results using RRF.
-    k=60 is the standard constant (empirically good across many benchmarks).
-    """
-    scores = {}
-    
-    for rank, doc in enumerate(dense_results):
-        doc_id = doc["id"]
-        scores[doc_id] = scores.get(doc_id, 0) + 1 / (k + rank + 1)
-    
-    for rank, doc in enumerate(sparse_results):
-        doc_id = doc["id"]
-        scores[doc_id] = scores.get(doc_id, 0) + 1 / (k + rank + 1)
-    
-    # Sort by combined score
-    return sorted(scores.items(), key=lambda x: x[1], reverse=True)
+ """
+ Combine dense and sparse retrieval results using RRF.
+ k=60 is the standard constant (empirically good across many benchmarks).
+ """
+ scores = {}
+ 
+ for rank, doc in enumerate(dense_results):
+ doc_id = doc["id"]
+ scores[doc_id] = scores.get(doc_id, 0) + 1 / (k + rank + 1)
+ 
+ for rank, doc in enumerate(sparse_results):
+ doc_id = doc["id"]
+ scores[doc_id] = scores.get(doc_id, 0) + 1 / (k + rank + 1)
+ 
+ # Sort by combined score
+ return sorted(scores.items(), key=lambda x: x[1], reverse=True)
 ```
 
 Milvus and Weaviate implement RRF and weighted score fusion natively. For pgvector, RRF requires implementing the fusion logic in application code or PostgreSQL SQL.
 
----
+--
 
 ## Index Tuning for Production Performance
 
@@ -260,29 +245,29 @@ Each index type has tunable parameters that trade recall for speed and memory:
 
 **HNSW tuning (pgvector, Weaviate, Milvus):**
 ```sql
--- pgvector HNSW with tuned parameters
+- pgvector HNSW with tuned parameters
 CREATE INDEX ON documents USING hnsw (embedding vector_cosine_ops)
 WITH (
-    m = 16,              -- Max connections per layer (higher = better recall, more memory)
-    ef_construction = 64  -- Build-time candidate set size (higher = better quality, slower build)
+ m = 16, Max connections per layer (higher = better recall, more memory)
+ ef_construction = 64, Build-time candidate set size (higher = better quality, slower build)
 );
 
--- At query time, increase ef_search for higher recall (at latency cost)
+- At query time, increase ef_search for higher recall (at latency cost)
 SET hnsw.ef_search = 200;
 ```
 
 **IVFFlat tuning (pgvector fallback):**
 ```sql
 CREATE INDEX ON documents USING ivfflat (embedding vector_cosine_ops)
-WITH (lists = 1000);  -- More lists = lower recall per probe, fewer lists = more memory scanned
+WITH (lists = 1000);, More lists = lower recall per probe, fewer lists = more memory scanned
 
--- Query-time: increase probes for higher recall
-SET ivfflat.probes = 50;  -- Query 50 out of 1000 lists
+- Query-time: increase probes for higher recall
+SET ivfflat.probes = 50;, Query 50 out of 1000 lists
 ```
 
 The recall-latency tradeoff is real and measurable. For production deployments, establish a minimum recall threshold (often 95% recall at top-10) and tune ef_search or probes to meet that threshold with the lowest latency at expected QPS.
 
----
+--
 
 ## Production Monitoring for Vector Retrieval
 
@@ -296,7 +281,7 @@ Vector stores require different monitoring than traditional databases. Beyond st
 
 **ANN algorithm performance.** For HNSW, monitor index build time and memory usage as the dataset grows. For LanceDB IVF-PQ, monitor the number of partitions scanned per query.
 
----
+--
 
 ## Security Considerations for Vector Stores
 
@@ -314,7 +299,7 @@ The practical security controls for enterprise vector stores:
 
 **Tokenization and content filtering.** For RAG applications serving external users, the content retrieved by vector search should pass through a content filter before inclusion in the LLM prompt. Adversarial documents in the corpus can attempt to manipulate the LLM's behavior through retrieval, a technique called "indirect prompt injection." Filtering retrieved content against a predefined allowlist of acceptable content patterns reduces this risk.
 
----
+--
 
 ## Evaluating Retrieval Quality: Beyond "Does It Return Results"
 
@@ -326,7 +311,7 @@ One of the most underinvested areas in production RAG and retrieval systems is s
 
 Building a retrieval evaluation suite requires a labeled dataset of query-document relevance pairs. For internal enterprise deployments, this can be bootstrapped from historical query logs combined with analyst feedback on result quality. Even a small evaluation set of 200-300 labeled queries provides enough signal to detect retrieval regressions when index parameters or embedding models change.
 
----
+--
 
 ## Conclusion
 
@@ -336,7 +321,7 @@ The optimal architecture choice depends on current data scale, operational team 
 
 At billion-vector scale, the choice narrows to Milvus (in-memory with DiskANN for large indexes) or LanceDB (fully disk-native). The operational overhead of Milvus is significant but manageable for teams with dedicated infrastructure capacity.
 
----
+--
 
 ### Explore Further
 

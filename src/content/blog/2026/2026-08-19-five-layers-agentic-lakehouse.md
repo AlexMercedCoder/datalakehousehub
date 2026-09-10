@@ -14,9 +14,10 @@ tags:
 slug: "five-layers-agentic-lakehouse"
 draft: false
 ---
-> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/five-layers-agentic-lakehouse/).
 
 Every architecture era gets its reference diagram. The warehouse era had its star schemas and its staging-to-mart flow. The big data era had its lambda architectures. The lakehouse era drew storage, format, catalog, and engines, and settled the argument about where data should live. The agentic era needs its own diagram, because the question changed: not where data lives, but how autonomous systems get to use it, correctly, governedly, and affordably, at machine scale. After two years of building, stalling, and rebuilding, the estates that work have converged on the same shape, and it has five layers: Storage, Catalog, Semantic, Gateway, and Agent Surface.
+
+> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/five-layers-agentic-lakehouse/).
 
 I have written a full article on nearly every layer of this stack, and this piece is deliberately the map rather than another territory: what each layer does, the contract it exposes upward, the open technology that fills it, what breaks when it is missing, and, most usefully, how the five compose into one path that a question travels from an agent's prompt to a governed number and back. The synthesis matters because the layers are routinely built by different teams, bought from different vendors, and argued about in different meetings, and the estates that treat them as one architecture get properties that no layer delivers alone: agents whose answers match the dashboards, security reviews that pass on structure rather than promises, and costs that scale with value instead of with enthusiasm.
 
@@ -41,7 +42,7 @@ And what do agents actually do with the access, in what workflows, with what aut
 The map in one table, before the tour:
 
 | Layer | Question it answers | Open standard at the seam | Contract upward |
-|---|---|---|---|
+|--|--|--|--|
 | Storage | Where do bytes live neutrally? | Apache Iceberg, Parquet | Tables, snapshots, statistics |
 | Catalog | How does everything agree? | Iceberg REST protocol | Governed, credentialed table access |
 | Semantic | What does it mean, for whom? | Portable contracts, interchange formats | Compiled metrics, entities, policies |
@@ -183,7 +184,7 @@ The sequencing's honest caveat: estates rarely build cleanly, acquisitions arriv
 The diagram doubles as a diagnostic, and the audit is five questions with observable answers.
 
 | Layer | The test question | Passing looks like |
-|---|---|---|
+|--|--|--|
 | Storage | What breaks if we change engine vendors? | Configuration changes, data untouched |
 | Catalog | Who accessed table X last Tuesday? | One query, one audit stream, complete |
 | Semantic | Do the assistant and the dashboard agree? | Same number, same version, by construction |

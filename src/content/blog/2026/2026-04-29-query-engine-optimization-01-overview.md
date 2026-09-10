@@ -14,11 +14,12 @@ draft: false
 image: "/images/blog/query-engine-optimization/01-overview-query-engine-decision-map.png"
 canonical: "https://iceberglakehouse.com/posts/2026-04-29-query-engine-01/"
 ---
-> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-04-29-query-engine-01/).
 
-<!-- Meta Description: Every database is a collection of engineering tradeoffs. Learn the 9 design decisions that shape how query engines store, index, and process your data. -->
-<!-- Primary Keyword: query engine design -->
-<!-- Secondary Keywords: database tradeoffs, query optimization, OLTP vs OLAP -->
+<!- Meta Description: Every database is a collection of engineering tradeoffs. Learn the 9 design decisions that shape how query engines store, index, and process your data. ->
+<!- Primary Keyword: query engine design ->
+<!- Secondary Keywords: database tradeoffs, query optimization, OLTP vs OLAP ->
+
+> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-04-29-query-engine-01/).
 
 *Read the complete Query Engine Optimization series:*
 * [Part 1: How Query Engines Think: The Tradeoffs Behind Every Data System](/blog/2026-04-29-query-engine-optimization-01-overview)
@@ -31,7 +32,7 @@ canonical: "https://iceberglakehouse.com/posts/2026-04-29-query-engine-01/"
 * [Part 8: Partitioning, Sharding, and Data Distribution Strategies](/blog/2026-04-29-query-engine-optimization-08-partitioning)
 * [Part 9: Hash, Sort-Merge, Broadcast: How Distributed Joins Work](/blog/2026-04-29-query-engine-optimization-09-distributed-joins)
 * [Part 10: Concurrency, Isolation, and MVCC: How Engines Handle Contention](/blog/2026-04-29-query-engine-optimization-10-concurrency-control)
-Every database you have ever used is a collection of deliberate engineering tradeoffs. PostgreSQL is fast at looking up a single customer record but slow at scanning a billion rows for an aggregate. ClickHouse is the opposite. DuckDB runs analytical queries on your laptop at speeds that embarrass some cloud data warehouses, but it is not designed to handle 10,000 concurrent transactional writes per second. Dremio accelerates analytical queries on lakehouse data using Apache Arrow and Iceberg, but it is not a replacement for a transactional OLTP database.
+Every database you have ever used is a collection of deliberate engineering tradeoffs. PostgreSQL is fast at looking up a single customer record but slow at scanning a billion rows for an aggregate. ClickHouse is the opposite. DuckDB runs analytical queries on your laptop at speeds that embarrass some cloud data warehouses, but it is not designed to handle 10, 000 concurrent transactional writes per second. Dremio accelerates analytical queries on lakehouse data using Apache Arrow and Iceberg, but it is not a replacement for a transactional OLTP database.
 
 None of these systems are broken. They are each optimized for a specific set of problems, and that optimization comes at the cost of other problems. Understanding *why* they behave differently requires looking at the nine design decisions that every query engine must make.
 
@@ -62,7 +63,7 @@ The most fundamental decision is how to arrange bytes on disk.
 **Column stores** (DuckDB, ClickHouse, Dremio, Snowflake) keep all values for a single field stored together. When an analytical query needs the average of one column across a billion rows, the engine reads only that column and ignores the other 49. Compression improves because uniform data types pack tightly. But inserting a single row means writing to every column file separately.
 
 | Dimension | Row Store | Column Store |
-|---|---|---|
+|--|--|--|
 | Point lookups | Fast (one read gets full record) | Slow (must read from every column) |
 | Analytical scans | Slow (reads unused columns) | Fast (reads only needed columns) |
 | Compression | Moderate (mixed types) | High (uniform types, 5-10x better) |
@@ -115,7 +116,7 @@ All nine decisions converge on one fundamental axis: is this system built for tr
 ![Where real-world database systems land on the OLTP to OLAP design spectrum](/images/blog/query-engine-optimization/01-overview-oltp-olap-spectrum.png)
 
 | Dimension | OLTP Optimization | OLAP Optimization |
-|---|---|---|
+|--|--|--|
 | Storage | Row-oriented | Column-oriented |
 | Indexing | B-trees | Zone maps, bloom filters |
 | Access pattern | Point lookups, small updates | Full scans, aggregations |

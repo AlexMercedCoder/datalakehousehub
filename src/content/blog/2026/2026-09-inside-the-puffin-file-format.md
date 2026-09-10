@@ -15,9 +15,10 @@ draft: false
 image: "/images/blog.png"
 canonical: https://iceberglakehouse.com/posts/inside-the-puffin-file-format/
 ---
-> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/inside-the-puffin-file-format/).
 
-A query joins a 2-billion-row fact table to a 40,000-row dimension table. The optimizer has to decide which side to broadcast and which side to hash. It reads the manifests and finds row counts, min and max values, and null counts for every column in every file. What it does not find is how many distinct customer IDs exist in the fact table. Without that number it guesses, and a wrong guess means shuffling terabytes that a broadcast join avoids.
+A query joins a 2-billion-row fact table to a 40, 000-row dimension table. The optimizer has to decide which side to broadcast and which side to hash. It reads the manifests and finds row counts, min and max values, and null counts for every column in every file. What it does not find is how many distinct customer IDs exist in the fact table. Without that number it guesses, and a wrong guess means shuffling terabytes that a broadcast join avoids.
+
+> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/inside-the-puffin-file-format/).
 
 The same engine, a few minutes later, deletes 300 rows from a data file that holds 4 million. In format version 2 it writes a position delete file: a Parquet file listing the path of the data file and the position of each deleted row. Every subsequent read of that data file has to open the delete file, decode Parquet, build a set of positions, and filter. Do that across ten thousand data files and delete handling dominates query time.
 
@@ -46,7 +47,7 @@ The result was named Puffin, and the magic bytes spell out the joke: `PFA1` stan
 A Puffin file is a flat sequence with no internal structure beyond what the footer describes:
 
 ```
-Magic  Blob₁  Blob₂  ...  Blobₙ  Footer
+Magic Blob₁ Blob₂ ... Blobₙ Footer
 ```
 
 The leading `Magic` is four bytes: `0x50 0x46 0x41 0x31`, the ASCII characters `P`, `F`, `A`, `1`. Every blob follows immediately, back to back, with no headers, length prefixes, or padding between them. A blob is whatever bytes the writer chose to put there. The container does not interpret them. That interpretation is entirely the footer's job.
@@ -54,7 +55,7 @@ The leading `Magic` is four bytes: `0x50 0x46 0x41 0x31`, the ASCII characters `
 The footer sits at the end of the file and has its own fixed structure:
 
 ```
-Magic  FooterPayload  FooterPayloadSize  Flags  Magic
+Magic FooterPayload FooterPayloadSize Flags Magic
 ```
 
 Reading it backward from the end of the file: the last four bytes are the magic again. Before that, four bytes of flags. Before that, a four-byte integer holding the size of the footer payload. Before that, the payload itself. And before the payload, the magic once more, marking where the footer begins.
@@ -78,7 +79,7 @@ The JSON payload is where the format gets its meaning. It has two levels.
 Each `BlobMetadata` object describes one blob:
 
 | Field | Type | Required | Meaning |
-|---|---|---|---|
+|--|--|--|--|
 | `type` | string | yes | Blob type identifier, one of the types defined in the spec |
 | `fields` | list of int | yes | Iceberg field IDs the blob was computed for, in order |
 | `snapshot-id` | long | yes | Snapshot the blob was computed from |
@@ -100,35 +101,19 @@ Here is a footer payload for a statistics file with two NDV sketches:
 
 ```json
 {
-  "blobs": [
-    {
-      "type": "apache-datasketches-theta-v1",
-      "fields": [2],
-      "snapshot-id": 7168742983117921046,
-      "sequence-number": 14,
-      "offset": 4,
-      "length": 32912,
-      "compression-codec": "zstd",
-      "properties": { "ndv": "1249831" }
-    },
-    {
-      "type": "apache-datasketches-theta-v1",
-      "fields": [5],
-      "snapshot-id": 7168742983117921046,
-      "sequence-number": 14,
-      "offset": 32916,
-      "length": 96,
-      "compression-codec": "zstd",
-      "properties": { "ndv": "6" }
-    }
-  ],
-  "properties": {
-    "created-by": "Spark 4.1 / Iceberg 1.11.0"
-  }
+ "blobs": [
+ {
+ "type": "apache-datasketches-theta-v1", "fields": [2], "snapshot-id": 7168742983117921046, "sequence-number": 14, "offset": 4, "length": 32912, "compression-codec": "zstd", "properties": { "ndv": "1249831" }
+ }, {
+ "type": "apache-datasketches-theta-v1", "fields": [5], "snapshot-id": 7168742983117921046, "sequence-number": 14, "offset": 32916, "length": 96, "compression-codec": "zstd", "properties": { "ndv": "6" }
+ }
+ ], "properties": {
+ "created-by": "Spark 4.1 / Iceberg 1.11.0"
+ }
 }
 ```
 
-The first blob starts at offset 4, immediately after the magic. The second starts at 32916, which is 4 plus 32912, immediately after the first. The `ndv` property on each is the pre-computed estimate, so an engine that only wants the number reads the footer and stops. The second column has an NDV of 6 and its sketch is under 100 bytes, because a Theta sketch of six values holds six 8-byte hashes plus a header. The first column has over a million distinct values and its sketch is about 32 KB, which is the saturation size of a compact Theta sketch at the DataSketches default of 4,096 nominal entries. Sketch size does not grow with cardinality past that point, which is the entire reason the structure is useful.
+The first blob starts at offset 4, immediately after the magic. The second starts at 32916, which is 4 plus 32912, immediately after the first. The `ndv` property on each is the pre-computed estimate, so an engine that only wants the number reads the footer and stops. The second column has an NDV of 6 and its sketch is under 100 bytes, because a Theta sketch of six values holds six 8-byte hashes plus a header. The first column has over a million distinct values and its sketch is about 32 KB, which is the saturation size of a compact Theta sketch at the DataSketches default of 4, 096 nominal entries. Sketch size does not grow with cardinality past that point, which is the entire reason the structure is useful.
 
 ## Blob Type One: The Theta Sketch for Distinct Values
 
@@ -136,7 +121,7 @@ The `apache-datasketches-theta-v1` blob type stores a compact Theta sketch from 
 
 Counting exact distinct values requires remembering every value you have seen, which for a billion-row column means a billion-entry hash set. A Theta sketch instead keeps a small, fixed-size sample of hashed values and uses the sample to estimate the total. The idea, known as K-Minimum Values, goes like this. Hash every value to a uniformly distributed 64-bit number, which maps it to a point in the interval [0, 1). Keep only the smallest `k` hashes you have seen. If you have seen `n` distinct values spread uniformly across [0, 1), the `k`-th smallest one sits at roughly `k / n`. Call that position theta. Then the estimate for `n` is `k / theta`. Duplicates hash to the same point and never increase the sample, so the estimate counts distinct values by construction.
 
-DataSketches' Theta family generalizes this. Rather than a fixed `k`, the sketch tracks a threshold theta, keeps every hash below theta, and lowers theta as the sketch fills. The Alpha variant that Iceberg specifies uses a more sophisticated update rule that trades a bit of accuracy at small sizes for lower memory and faster updates. With the library's default of 4,096 nominal entries, the relative standard error on the estimate is about 1.6 percent. Doubling the size roughly divides the error by 1.4.
+DataSketches' Theta family generalizes this. Rather than a fixed `k`, the sketch tracks a threshold theta, keeps every hash below theta, and lowers theta as the sketch fills. The Alpha variant that Iceberg specifies uses a more sophisticated update rule that trades a bit of accuracy at small sizes for lower memory and faster updates. With the library's default of 4, 096 nominal entries, the relative standard error on the estimate is about 1.6 percent. Doubling the size roughly divides the error by 1.4.
 
 The property that matters most for Iceberg is that Theta sketches are mergeable. Two sketches built over two different sets of files union into one sketch that estimates the distinct count of the combined set, with no loss of accuracy versus building one sketch over everything. A writer that computes a sketch per data file, or per partition, or per Spark task, merges them into one table-level sketch. Re-analyzing after appending new files means sketching only the new files and merging with the old sketch. Intersection and set difference are also supported, which lets an optimizer estimate the overlap between two columns' value sets for join cardinality.
 
@@ -152,7 +137,7 @@ The `deletion-vector-v1` blob type was added to the Puffin spec for Iceberg form
 
 A deletion vector is a bitmap over the row positions of one data file. A set bit at position P means row P is deleted. Reading the data file with the vector applied means skipping every row whose position is set. The engine gets a bitmap it can test in constant time rather than a set of positions it has to build from a Parquet file.
 
-The bitmap encoding is Roaring. Roaring bitmaps partition the 32-bit integer space into 65,536 chunks of 65,536 values each, and store each chunk in whichever of three containers is smallest for its density: a sorted array of 16-bit values for sparse chunks, a 8-kilobyte bitset for dense chunks, and a run-length list for chunks with long consecutive runs. A vector marking 300 scattered rows out of 4 million uses a handful of array containers and totals a few hundred bytes. A vector marking rows 1,000,000 through 2,999,999 as deleted uses run containers and totals a few dozen bytes. This adaptivity is why Roaring became the standard for this job in Delta Lake, Lucene, and now Iceberg.
+The bitmap encoding is Roaring. Roaring bitmaps partition the 32-bit integer space into 65, 536 chunks of 65, 536 values each, and store each chunk in whichever of three containers is smallest for its density: a sorted array of 16-bit values for sparse chunks, a 8-kilobyte bitset for dense chunks, and a run-length list for chunks with long consecutive runs. A vector marking 300 scattered rows out of 4 million uses a handful of array containers and totals a few hundred bytes. A vector marking rows 1, 000, 000 through 2, 999, 999 as deleted uses run containers and totals a few dozen bytes. This adaptivity is why Roaring became the standard for this job in Delta Lake, Lucene, and now Iceberg.
 
 Iceberg rows can have positions above 2^32, since a single data file can in principle hold more than 4 billion rows. The spec handles this by splitting a 64-bit position into a 32-bit key from the high four bytes and a 32-bit sub-position from the low four bytes. For each distinct key, one 32-bit Roaring bitmap holds the sub-positions. Testing a position means finding the bitmap for its key, then testing the sub-position. Files under 4 billion rows, which is all of them in practice, have exactly one key and one bitmap. The structure supports the full 64-bit range without paying for it.
 
@@ -202,48 +187,46 @@ import struct
 MAGIC = b"PFA1"
 
 def read_puffin_footer(path):
-    with open(path, "rb") as f:
-        f.seek(0, 2)
-        file_size = f.tell()
+ with open(path, "rb") as f:
+ f.seek(0, 2)
+ file_size = f.tell()
 
-        # Trailer: FooterPayloadSize (4) + Flags (4) + Magic (4)
-        f.seek(file_size - 12)
-        trailer = f.read(12)
-        payload_size, flags, magic = struct.unpack("<ii4s", trailer)
-        assert magic == MAGIC, "bad trailing magic"
+ # Trailer: FooterPayloadSize (4) + Flags (4) + Magic (4)
+ f.seek(file_size - 12)
+ trailer = f.read(12)
+ payload_size, flags, magic = struct.unpack("<ii4s", trailer)
+ assert magic == MAGIC, "bad trailing magic"
 
-        # Payload plus the magic that precedes it
-        f.seek(file_size - 12 - payload_size - 4)
-        head_magic = f.read(4)
-        assert head_magic == MAGIC, "bad footer-start magic"
-        payload = f.read(payload_size)
+ # Payload plus the magic that precedes it
+ f.seek(file_size - 12 - payload_size - 4)
+ head_magic = f.read(4)
+ assert head_magic == MAGIC, "bad footer-start magic"
+ payload = f.read(payload_size)
 
-    compressed = flags & 0x01
-    if compressed:
-        import lz4.frame
-        payload = lz4.frame.decompress(payload)
+ compressed = flags & 0x01
+ if compressed:
+ import lz4.frame
+ payload = lz4.frame.decompress(payload)
 
-    return json.loads(payload.decode("utf-8"))
+ return json.loads(payload.decode("utf-8"))
 
 def read_blob(path, blob):
-    with open(path, "rb") as f:
-        f.seek(blob["offset"])
-        raw = f.read(blob["length"])
-    codec = blob.get("compression-codec")
-    if codec == "zstd":
-        import zstandard
-        return zstandard.ZstdDecompressor().decompress(raw)
-    if codec == "lz4":
-        import lz4.frame
-        return lz4.frame.decompress(raw)
-    return raw
+ with open(path, "rb") as f:
+ f.seek(blob["offset"])
+ raw = f.read(blob["length"])
+ codec = blob.get("compression-codec")
+ if codec == "zstd":
+ import zstandard
+ return zstandard.ZstdDecompressor().decompress(raw)
+ if codec == "lz4":
+ import lz4.frame
+ return lz4.frame.decompress(raw)
+ return raw
 
 meta = read_puffin_footer("stats.puffin")
 print("created-by:", meta.get("properties", {}).get("created-by"))
 for b in meta["blobs"]:
-    print(b["type"], "fields", b["fields"],
-          "snapshot", b["snapshot-id"],
-          "ndv", b.get("properties", {}).get("ndv"))
+ print(b["type"], "fields", b["fields"], "snapshot", b["snapshot-id"], "ndv", b.get("properties", {}).get("ndv"))
 ```
 
 Walking through it. The trailer is read as one 12-byte chunk and unpacked with `struct` using the `<` prefix for little-endian and `i` for signed 32-bit integers, matching the spec's integer rule. The payload's starting position is computed arithmetically from the file size and payload size, then the reader verifies the magic that precedes the payload before trusting it. The compression bit is bit 0 of the flags integer, tested with a bitwise AND. `read_blob` seeks to the offset from the footer, reads exactly `length` bytes, and decompresses based on the codec string. The only third-party dependencies are the two compression libraries, and only when a codec is actually used.
@@ -257,16 +240,16 @@ import zlib
 DV_MAGIC = bytes.fromhex("D1D33964")
 
 def decode_deletion_vector(blob_bytes):
-    (length,) = struct.unpack(">i", blob_bytes[:4])
-    magic = blob_bytes[4:8]
-    assert magic == DV_MAGIC, "bad deletion vector magic"
-    vector = blob_bytes[8:4 + length]
-    (crc,) = struct.unpack(">I", blob_bytes[4 + length:8 + length])
-    assert zlib.crc32(blob_bytes[4:4 + length]) == crc, "crc mismatch"
+ (length, ) = struct.unpack(">i", blob_bytes[:4])
+ magic = blob_bytes[4:8]
+ assert magic == DV_MAGIC, "bad deletion vector magic"
+ vector = blob_bytes[8:4 + length]
+ (crc, ) = struct.unpack(">I", blob_bytes[4 + length:8 + length])
+ assert zlib.crc32(blob_bytes[4:4 + length]) == crc, "crc mismatch"
 
-    # Portable 64-bit Roaring: count (8 LE), then key (4 LE) + 32-bit bitmap
-    (n_bitmaps,) = struct.unpack("<q", vector[:8])
-    return n_bitmaps, vector[8:]
+ # Portable 64-bit Roaring: count (8 LE), then key (4 LE) + 32-bit bitmap
+ (n_bitmaps, ) = struct.unpack("<q", vector[:8])
+ return n_bitmaps, vector[8:]
 ```
 
 The length and CRC use `>` for big-endian, the magic is checked, and the CRC is computed over the magic and vector together, exactly as the spec states. What comes back is the count of 32-bit bitmaps and the raw Roaring bytes, which the `pyroaring` package or any Roaring implementation deserializes. The point of showing this is not that you should write your own reader. It is that a complete, correct reader is under a hundred lines, which is what "trivially parseable" was supposed to mean.
@@ -288,8 +271,7 @@ In Spark with the Iceberg extensions, the procedure is:
 
 ```sql
 CALL polaris.system.compute_table_stats(
-  table => 'sales.orders',
-  columns => array('customer_id', 'product_id', 'order_status')
+ table => 'sales.orders', columns => array('customer_id', 'product_id', 'order_status')
 );
 ```
 

@@ -14,9 +14,10 @@ tags:
 slug: "datafusion-comet-1-spark-iceberg"
 draft: false
 ---
-> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/datafusion-comet-1-spark-iceberg/).
 
 A Spark job reads a 4 terabyte Apache Iceberg table, filters it down to a week of data, joins it against a dimension table, and aggregates. On paper the plan is simple. In the Spark UI, the scan stage takes 70 percent of the wall clock time, executors show long garbage collection pauses in the middle of the scan, and the CPU is busy but not busy doing anything you asked for. The work is decoding Parquet pages into Java objects, copying them into Spark's internal row format, and cleaning up the garbage afterward.
+
+> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/datafusion-comet-1-spark-iceberg/).
 
 That cost is structural. Spark's execution engine runs on the Java Virtual Machine (JVM), and the JVM's memory model was not designed for scanning billions of columnar values. Every value that moves through the scan touches allocation, and every allocation eventually touches the garbage collector.
 
@@ -70,7 +71,7 @@ Spark parses this, resolves it against the catalog, optimizes it, and produces a
 
 Comet's planner rule visits each node. The scan becomes a CometNativeScan (for plain Parquet) or a Comet native Iceberg scan. The filter becomes a CometFilter. The partial aggregate becomes a CometHashAggregate. The exchange becomes a CometExchange, which is Comet's native shuffle. The final aggregate becomes another CometHashAggregate. At the top, where Spark needs rows to hand back to the driver, Comet inserts a CometColumnarToRow.
 
-At execution time, each stage's Comet subtree is serialized once and sent to the native side. Inside Rust, DataFusion builds a plan: a ParquetExec with projection and pushed-down predicates, a FilterExec, an AggregateExec in partial mode, and so on. Data flows through as Arrow record batches, typically 8,192 rows at a time, and never touches the JVM heap until the final result crosses back.
+At execution time, each stage's Comet subtree is serialized once and sent to the native side. Inside Rust, DataFusion builds a plan: a ParquetExec with projection and pushed-down predicates, a FilterExec, an AggregateExec in partial mode, and so on. Data flows through as Arrow record batches, typically 8, 192 rows at a time, and never touches the JVM heap until the final result crosses back.
 
 Three things make this faster than Spark's own execution.
 
@@ -144,7 +145,7 @@ The RAPIDS Accelerator for Apache Spark, from NVIDIA, offloads Spark operators t
 Here is how the options line up on the axes that matter for an Iceberg shop:
 
 | | DataFusion Comet 1.0 | Apache Gluten (Velox) | Photon | RAPIDS Accelerator |
-|---|---|---|---|---|
+|--|--|--|--|--|
 | License and governance | Apache 2.0, ASF (DataFusion subproject) | Apache 2.0, ASF | Proprietary, Databricks only | Apache 2.0, NVIDIA |
 | Native language | Rust | C++ | C++ | C++ and CUDA |
 | Hardware | Commodity CPU (x86-64-v3, ARM neoverse-n1) | Commodity CPU | Commodity CPU | NVIDIA GPU |
@@ -164,22 +165,22 @@ Here is a complete spark-submit configuration for running Comet 1.0.0 against an
 
 ```bash
 $SPARK_HOME/bin/spark-submit \
-  --packages org.apache.datafusion:comet-spark-spark3.5_2.13:1.0.0,org.apache.iceberg:iceberg-spark-runtime-3.5_2.13:1.11.0 \
-  --conf spark.sql.extensions=org.apache.iceberg.spark.extensions.IcebergSparkSessionExtensions \
-  --conf spark.sql.catalog.lake=org.apache.iceberg.spark.SparkCatalog \
-  --conf spark.sql.catalog.lake.catalog-impl=org.apache.iceberg.rest.RESTCatalog \
-  --conf spark.sql.catalog.lake.uri=https://catalog.example.com/api/catalog \
-  --conf spark.sql.catalog.lake.warehouse=analytics \
-  --conf spark.sql.catalog.lake.io-impl=org.apache.iceberg.aws.s3.S3FileIO \
-  --conf spark.sql.catalog.lake.client.region=us-east-1 \
-  --conf spark.plugins=org.apache.spark.CometPlugin \
-  --conf spark.shuffle.manager=org.apache.spark.sql.comet.execution.shuffle.CometShuffleManager \
-  --conf spark.memory.offHeap.enabled=true \
-  --conf spark.memory.offHeap.size=16g \
-  --conf spark.comet.scan.icebergNative.enabled=true \
-  --conf spark.comet.scan.icebergNative.dataFileConcurrencyLimit=4 \
-  --conf spark.comet.explain.fallback.enabled=true \
-  my_job.py
+ -packages org.apache.datafusion:comet-spark-spark3.5_2.13:1.0.0, org.apache.iceberg:iceberg-spark-runtime-3.5_2.13:1.11.0 \
+ -conf spark.sql.extensions=org.apache.iceberg.spark.extensions.IcebergSparkSessionExtensions \
+ -conf spark.sql.catalog.lake=org.apache.iceberg.spark.SparkCatalog \
+ -conf spark.sql.catalog.lake.catalog-impl=org.apache.iceberg.rest.RESTCatalog \
+ -conf spark.sql.catalog.lake.uri=https://catalog.example.com/api/catalog \
+ -conf spark.sql.catalog.lake.warehouse=analytics \
+ -conf spark.sql.catalog.lake.io-impl=org.apache.iceberg.aws.s3.S3FileIO \
+ -conf spark.sql.catalog.lake.client.region=us-east-1 \
+ -conf spark.plugins=org.apache.spark.CometPlugin \
+ -conf spark.shuffle.manager=org.apache.spark.sql.comet.execution.shuffle.CometShuffleManager \
+ -conf spark.memory.offHeap.enabled=true \
+ -conf spark.memory.offHeap.size=16g \
+ -conf spark.comet.scan.icebergNative.enabled=true \
+ -conf spark.comet.scan.icebergNative.dataFileConcurrencyLimit=4 \
+ -conf spark.comet.explain.fallback.enabled=true \
+ my_job.py
 ```
 
 **The packages line.** Comet's artifact name encodes the Spark and Scala version it was built for. `comet-spark-spark3.5_2.13` is the Spark 3.5, Scala 2.13 build. Match it exactly to your Spark distribution, and use the same Scala version for the Iceberg runtime. The published Maven JARs bundle native libraries for Linux amd64 and arm64 only. On macOS you build from source. The amd64 build targets x86-64-v3 (AVX2 and later), and the arm64 build targets neoverse-n1 (Graviton2 and later), so very old hardware will fail with an illegal instruction error and also needs a source build.
@@ -208,10 +209,10 @@ And to see what actually ran natively, use explain on your query and look for Co
 == Physical Plan ==
 CometColumnarToRow
 +- CometHashAggregate [region], [sum(amount)]
-   +- CometExchange hashpartitioning(region, 200)
-      +- CometHashAggregate [region], [partial_sum(amount)]
-         +- CometFilter (sale_date >= 2026-08-17)
-            +- CometIcebergNativeScan lake.db.sales [region, amount, sale_date]
+ +- CometExchange hashpartitioning(region, 200)
+ +- CometHashAggregate [region], [partial_sum(amount)]
+ +- CometFilter (sale_date >= 2026-08-17)
+ +- CometIcebergNativeScan lake.db.sales [region, amount, sale_date]
 ```
 
 Every operator carries the Comet prefix. If you see a plain HashAggregate or a ColumnarToRow followed by a RowToColumnar somewhere in the middle of the plan, that is a fallback boundary, and the fallback log will tell you which expression caused it.

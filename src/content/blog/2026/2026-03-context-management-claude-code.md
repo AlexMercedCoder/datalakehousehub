@@ -16,9 +16,10 @@ draft: false
 image: "/images/blog.png"
 canonical: "https://iceberglakehouse.com/posts/2026-03-context-claude-code/"
 ---
-> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-03-context-claude-code/).
 
 Claude Code is a terminal-native agentic coding assistant that lives in your command line and operates directly on your codebase. Unlike chat-based interfaces where you copy and paste code snippets, Claude Code reads your files, explores your project structure, runs commands, executes tests, and commits changes. Context management in Claude Code is about configuring the agent's persistent knowledge of your project so it can operate effectively without constant direction.
+
+> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-03-context-claude-code/).
 
 This guide covers every context management mechanism in Claude Code, from the foundational CLAUDE.md file to MCP integrations and multi-agent orchestration.
 
@@ -44,12 +45,12 @@ CLAUDE.md is the primary mechanism for giving Claude Code persistent context abo
 Claude Code loads CLAUDE.md files from multiple locations, combining them into a single instruction set:
 
 | Location | Scope | Use For |
-|---|---|---|
+|--|--|--|
 | `~/.claude/CLAUDE.md` | Global (all projects) | Personal preferences, universal standards |
 | `./CLAUDE.md` (project root) | Project-wide | Architecture, coding standards, testing strategy |
 | `./src/CLAUDE.md` (subdirectory) | Component-specific | Module-specific patterns, API conventions |
 
-More specific files supplement more general ones. If your global CLAUDE.md says "use 2-space indentation" but your project CLAUDE.md says "use 4-space indentation," the project-level instruction takes precedence.
+More specific files supplement more general ones. If your global CLAUDE.md says "use 2-space indentation" but your project CLAUDE.md says "use 4-space indentation, " the project-level instruction takes precedence.
 
 ### What to Include in CLAUDE.md
 
@@ -63,7 +64,7 @@ Frontend: TypeScript, React 19, Vite 6, Zustand
 Testing: pytest (backend), Vitest (frontend)
 
 ## Build and Run Commands
-- Backend: `uvicorn app.main:app --reload`
+- Backend: `uvicorn app.main:app -reload`
 - Frontend: `npm run dev`
 - Tests: `pytest` (backend), `npm test` (frontend)
 - Lint: `ruff check .` (backend), `npm run lint` (frontend)
@@ -127,7 +128,7 @@ You can also use the `/memory` slash command during a session to view what Claud
 Claude Code provides several slash commands for managing context during a session:
 
 | Command | Purpose |
-|---|---|
+|--|--|
 | `/context` | Show all active context sources |
 | `/clear` | Clear conversation history (keeps CLAUDE.md and MEMORY.md) |
 | `/agent` | Spawn a sub-agent for a specific task |
@@ -160,10 +161,10 @@ Claude Code supports MCP through the `claude mcp` command, allowing you to conne
 
 ```bash
 # Add a database MCP server
-claude mcp add postgres -- npx @anthropic/mcp-server-postgres
+claude mcp add postgres, npx @anthropic/mcp-server-postgres
 
 # Add a filesystem MCP server
-claude mcp add files -- npx @anthropic/mcp-server-filesystem /path/to/project
+claude mcp add files, npx @anthropic/mcp-server-filesystem /path/to/project
 
 # List active MCP servers
 claude mcp list

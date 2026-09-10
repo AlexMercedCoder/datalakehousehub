@@ -15,13 +15,12 @@ slug: 2025-04-how-llms-work
 draft: false
 image: "/images/blog.png"
 ---
-
-## Free Resources  
-- **[Free Apache Iceberg Course](https://hello.dremio.com/webcast-an-apache-iceberg-lakehouse-crash-course-reg.html?utm_source=ev_external_blog&utm_medium=influencer&utm_campaign=AItoLLMS&utm_content=alexmerced&utm_term=external_blog)**  
-- **[Free Copy of “Apache Iceberg: The Definitive Guide”](https://hello.dremio.com/wp-apache-iceberg-the-definitive-guide-reg.html?utm_source=ev_external_blog&utm_medium=influencer&utm_campaign=AItoLLMS&utm_content=alexmerced&utm_term=external_blog)**  
-- **[2025 Apache Iceberg Architecture Guide](https://medium.com/data-engineering-with-dremio/2025-guide-to-architecting-an-iceberg-lakehouse-9b19ed42c9de)**  
-- **[How to Join the Iceberg Community](https://medium.alexmerced.blog/guide-to-finding-apache-iceberg-events-near-you-and-being-part-of-the-greater-iceberg-community-0c38ae785ddb)**  
-- **[Iceberg Lakehouse Engineering Video Playlist](https://youtube.com/playlist?list=PLsLAVBjQJO0p0Yq1fLkoHvt2lEJj5pcYe&si=WTSnqjXZv6Glkc3y)**  
+## Free Resources 
+- **[Free Apache Iceberg Course](https://hello.dremio.com/webcast-an-apache-iceberg-lakehouse-crash-course-reg.html?utm_source=ev_external_blog&utm_medium=influencer&utm_campaign=AItoLLMS&utm_content=alexmerced&utm_term=external_blog)** 
+- **[Free Copy of “Apache Iceberg: The Definitive Guide”](https://hello.dremio.com/wp-apache-iceberg-the-definitive-guide-reg.html?utm_source=ev_external_blog&utm_medium=influencer&utm_campaign=AItoLLMS&utm_content=alexmerced&utm_term=external_blog)** 
+- **[2025 Apache Iceberg Architecture Guide](https://medium.com/data-engineering-with-dremio/2025-guide-to-architecting-an-iceberg-lakehouse-9b19ed42c9de)** 
+- **[How to Join the Iceberg Community](https://medium.alexmerced.blog/guide-to-finding-apache-iceberg-events-near-you-and-being-part-of-the-greater-iceberg-community-0c38ae785ddb)** 
+- **[Iceberg Lakehouse Engineering Video Playlist](https://youtube.com/playlist?list=PLsLAVBjQJO0p0Yq1fLkoHvt2lEJj5pcYe&si=WTSnqjXZv6Glkc3y)** 
 - **[Ultimate Apache Iceberg Resource Guide](https://medium.com/data-engineering-with-dremio/ultimate-directory-of-apache-iceberg-resources-e3e02efac62e)** 
 
 In our last post, we explored the evolution of AI: from rule-based systems to deep learning, and how **Large Language Models (LLMs)** like GPT-4 and Claude represent a transformative leap in capability.
@@ -89,11 +88,11 @@ Another crucial concept in LLMs is the **context window**: the maximum number of
 
 Every input to an LLM gets broken into **tokens**, and the model has a limited capacity for how many tokens it can process per request.
 
-| Model        | Max Context Window |
-|--------------|--------------------|
-| GPT-3.5      | 4,096 tokens (~3,000 words) |
-| GPT-4 Turbo  | Up to 128,000 tokens |
-| Claude 3 Opus| Up to 200,000 tokens |
+| Model | Max Context Window |
+|-------|----------|
+| GPT-3.5 | 4, 096 tokens (~3, 000 words) |
+| GPT-4 Turbo | Up to 128, 000 tokens |
+| Claude 3 Opus| Up to 200, 000 tokens |
 
 If you go over the limit, you’ll need to:
 - Truncate input (losing information)
@@ -122,12 +121,12 @@ We’ll dive into that next.
 
 ## Recap: Key Concepts from This Post
 
-| Concept         | What It Is                                 | Why It Matters                            |
-|------------------|---------------------------------------------|---------------------------------------------|
-| Embeddings      | Vector representations of tokens/text      | Enable semantic understanding & search     |
-| Vector Space     | Mathematical space where embeddings live  | Allows similarity comparison & clustering  |
-| Context Window   | Max token size per LLM input               | Defines how much the model can “see”       |
-| Attention        | Weighs token relationships dynamically     | Enables context awareness in LLMs          |
+| Concept | What It Is | Why It Matters |
+|---------|-----------------------|-----------------------|
+| Embeddings | Vector representations of tokens/text | Enable semantic understanding & search |
+| Vector Space | Mathematical space where embeddings live | Allows similarity comparison & clustering |
+| Context Window | Max token size per LLM input | Defines how much the model can “see” |
+| Attention | Weighs token relationships dynamically | Enables context awareness in LLMs |
 
 ## 🔮 Up Next: Making LLMs Smarter with Fine-Tuning, Prompt Engineering, and RAG
 

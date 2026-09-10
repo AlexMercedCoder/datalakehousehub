@@ -13,11 +13,12 @@ draft: false
 image: "/images/blog.png"
 canonical: "https://iceberglakehouse.com/posts/2024-9-a-deep-dive-into-docker-compose/"
 ---
-> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2024-9-a-deep-dive-into-docker-compose/).
 
 ## Understanding the Docker Compose File Structure
 
 Docker Compose uses a YAML file (`docker-compose.yml`) to define services, networks, and volumes that make up your application. The structure is easy to understand and is highly configurable, allowing you to manage multiple containers with a single file.
+
+> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2024-9-a-deep-dive-into-docker-compose/).
 
 Here’s an overview of the basic components of a `docker-compose.yml` file:
 
@@ -34,10 +35,10 @@ Here’s an example of defining a basic web service:
 
 ```yaml
 services:
-  web:
-    image: nginx:latest
-    ports:
-      - "8080:80"
+ web:
+ image: nginx:latest
+ ports:
+ - "8080:80"
 ```
 
 In this case, we're using an existing image (nginx) from Docker Hub and exposing port 80 from the container to port 8080 on the host machine.
@@ -48,8 +49,8 @@ By default, Docker Compose creates a bridge network for all services to communic
 
 ```yaml
 networks:
-  my_network:
-    driver: bridge
+ my_network:
+ driver: bridge
 ```
 
 Once a network is defined, you can assign services to this network for better isolation and control.
@@ -59,17 +60,17 @@ The volumes section allows you to create and manage persistent storage that is n
 
 ```yaml
 volumes:
-  my_volume:
+ my_volume:
 ```
 
 You can then attach this volume to a service to persist data:
 
 ```yaml
 services:
-  db:
-    image: postgres
-    volumes:
-      - my_volume:/var/lib/postgresql/data
+ db:
+ image: postgres
+ volumes:
+ - my_volume:/var/lib/postgresql/data
 ```
 
 In this example, the Postgres database data is stored in the volume my_volume, ensuring that the data is not lost when the container stops or restarts.
@@ -88,22 +89,22 @@ Here’s an example of a simple setup with a web server and a database service:
 
 ```yaml
 services:
-  web:
-    image: nginx:latest
-    ports:
-      - "8080:80"
-    networks:
-      - app_network
+ web:
+ image: nginx:latest
+ ports:
+ - "8080:80"
+ networks:
+ - app_network
 
-  db:
-    image: postgres:13
-    environment:
-      POSTGRES_USER: admin
-      POSTGRES_PASSWORD: secret
-    volumes:
-      - db_data:/var/lib/postgresql/data
-    networks:
-      - app_network
+ db:
+ image: postgres:13
+ environment:
+ POSTGRES_USER: admin
+ POSTGRES_PASSWORD: secret
+ volumes:
+ - db_data:/var/lib/postgresql/data
+ networks:
+ - app_network
 ```
 ### Key Service Configuration Options
 - **Service Names:** The name you give a service (e.g., web, db) is important because Docker Compose uses these names for automatic DNS resolution between containers. Services can communicate with each other using their names as hostnames, without needing IP addresses.
@@ -118,7 +119,7 @@ image: nginx:latest
 
 ```yaml
 ports:
-  - "8080:80"
+ - "8080:80"
 ```
 In this case, port 80 inside the container is mapped to port 8080 on the host machine.
 
@@ -126,22 +127,22 @@ In this case, port 80 inside the container is mapped to port 8080 on the host ma
 
 ```yaml
 environment:
-  POSTGRES_USER: admin
-  POSTGRES_PASSWORD: secret
+ POSTGRES_USER: admin
+ POSTGRES_PASSWORD: secret
 ```
 
 - **Volumes:** Volumes are used to persist data between container restarts. In the example above, a volume is mounted for the Postgres database to ensure that data is not lost when the container stops or is removed.
 
 ```yaml
 volumes:
-  - db_data:/var/lib/postgresql/data
+ - db_data:/var/lib/postgresql/data
 ```
 
 - **Networks:** Services are assigned to networks to manage how they communicate with each other. By placing the web and db services on the same network, we enable them to communicate using the service names (web, db) as hostnames.
 
 ```yaml
 networks:
-  - app_network
+ - app_network
 ```
 
 ### Service Dependencies
@@ -149,18 +150,18 @@ Sometimes, one service depends on another. For example, in a web application, th
 
 ```yaml
 services:
-  web:
-    image: nginx:latest
-    depends_on:
-      - db
-    ports:
-      - "8080:80"
+ web:
+ image: nginx:latest
+ depends_on:
+ - db
+ ports:
+ - "8080:80"
 
-  db:
-    image: postgres:13
-    environment:
-      POSTGRES_USER: admin
-      POSTGRES_PASSWORD: secret
+ db:
+ image: postgres:13
+ environment:
+ POSTGRES_USER: admin
+ POSTGRES_PASSWORD: secret
 ```
 
 In this setup, Docker Compose ensures that the db service starts before the web service.
@@ -181,11 +182,11 @@ You can define environment variables directly under the `environment` key for ea
 
 ```yaml
 services:
-  app:
-    image: myapp:latest
-    environment:
-      - APP_ENV=production
-      - APP_DEBUG=false
+ app:
+ image: myapp:latest
+ environment:
+ - APP_ENV=production
+ - APP_DEBUG=false
 ```
 In this example, `APP_ENV` is set to production, and `APP_DEBUG` is disabled by setting it to false.
 
@@ -202,12 +203,12 @@ In your docker-compose.yml file, reference these variables like this:
 
 ```yaml
 services:
-  app:
-    image: myapp:latest
-    environment:
-      - APP_ENV
-      - APP_DEBUG
-      - DATABASE_URL
+ app:
+ image: myapp:latest
+ environment:
+ - APP_ENV
+ - APP_DEBUG
+ - DATABASE_URL
 ```
 Docker Compose will substitute the values from the .env file automatically when it starts the services.
 
@@ -216,20 +217,20 @@ Alternatively, you can load environment variables from a file explicitly by usin
 
 ```yaml
 services:
-  app:
-    image: myapp:latest
-    env_file:
-      - .env
+ app:
+ image: myapp:latest
+ env_file:
+ - .env
 ```
 You can also specify multiple environment files:
 
 ```yaml
 services:
-  app:
-    image: myapp:latest
-    env_file:
-      - .env
-      - .env.custom
+ app:
+ image: myapp:latest
+ env_file:
+ - .env
+ - .env.custom
 ```
 
 ### 4. Overriding Environment Variables
@@ -237,10 +238,10 @@ If you define environment variables in both the `docker-compose.yml` file and th
 
 ```yaml
 services:
-  app:
-    image: myapp:latest
-    environment:
-      - APP_ENV=development  # Overrides the value from .env
+ app:
+ image: myapp:latest
+ environment:
+ - APP_ENV=development # Overrides the value from .env
 ```
 
 ### Example: Configuring a Database Service with Environment Variables
@@ -248,12 +249,12 @@ Here’s an example of a database service configuration using environment variab
 
 ```yaml
 services:
-  db:
-    image: postgres:13
-    environment:
-      - POSTGRES_USER=${POSTGRES_USER}
-      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
-      - POSTGRES_DB=${POSTGRES_DB}
+ db:
+ image: postgres:13
+ environment:
+ - POSTGRES_USER=${POSTGRES_USER}
+ - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+ - POSTGRES_DB=${POSTGRES_DB}
 ```
 
 In the .env file:
@@ -286,13 +287,13 @@ For example, if you have the following configuration:
 
 ```yaml
 services:
-  web:
-    image: nginx
-    ports:
-      - "8080:80"
+ web:
+ image: nginx
+ ports:
+ - "8080:80"
 
-  db:
-    image: postgres
+ db:
+ image: postgres
 ```
 
 In this setup, the web service can access the db service using the hostname db. There’s no need to define IP addresses; Docker manages the DNS resolution internally.
@@ -304,24 +305,24 @@ To define a custom network, use the networks key in your `docker-compose.yml` fi
 
 ```yaml
 networks:
-  frontend_network:
-  backend_network:
+ frontend_network:
+ backend_network:
 ```
 
 Then assign services to these networks:
 
 ```yaml
 services:
-  web:
-    image: nginx
-    networks:
-      - frontend_network
-      - backend_network
+ web:
+ image: nginx
+ networks:
+ - frontend_network
+ - backend_network
 
-  db:
-    image: postgres
-    networks:
-      - backend_network
+ db:
+ image: postgres
+ networks:
+ - backend_network
 ```
 
 In this example, the web service is attached to both frontend_network and backend_network, allowing it to communicate with both the front-end and back-end services. The db service is only attached to backend_network, which limits its exposure to the internal services.
@@ -331,23 +332,23 @@ The most common network mode in Docker Compose is the bridge network, which allo
 
 ```yaml
 networks:
-  my_bridge_network:
-    driver: bridge
+ my_bridge_network:
+ driver: bridge
 ```
 
 You can attach services to this network by specifying it in the services section:
 
 ```yaml
 services:
-  web:
-    image: nginx
-    networks:
-      - my_bridge_network
+ web:
+ image: nginx
+ networks:
+ - my_bridge_network
 
-  db:
-    image: postgres
-    networks:
-      - my_bridge_network
+ db:
+ image: postgres
+ networks:
+ - my_bridge_network
 ```
 
 Now, both services are connected via the my_bridge_network and can communicate freely using their service names (web and db).
@@ -359,9 +360,9 @@ To use the host network mode:
 
 ```yaml
 services:
-  web:
-    image: nginx
-    network_mode: "host"
+ web:
+ image: nginx
+ network_mode: "host"
 ```
 
 However, be cautious when using the host network mode because it can introduce security risks by exposing your containers directly to the host network.
@@ -379,18 +380,18 @@ Then, in your docker-compose.yml file, define the network as external:
 
 ```yaml
 networks:
-  my_external_network:
-    external: true
+ my_external_network:
+ external: true
 ```
 
 Now, you can assign services to this external network:
 
 ```yaml
 services:
-  web:
-    image: nginx
-    networks:
-      - my_external_network
+ web:
+ image: nginx
+ networks:
+ - my_external_network
 ```
 
 This allows your web service to communicate with containers that are also connected to `my_external_network`, even if they are not defined in the same Docker Compose project.
@@ -400,10 +401,10 @@ Docker Compose allows you to expose container ports to the host machine, making 
 
 ```yaml
 services:
-  web:
-    image: nginx
-    ports:
-      - "8080:80"
+ web:
+ image: nginx
+ ports:
+ - "8080:80"
 ```
 
 In this example, port `80` on the web container is mapped to port `8080` on the host. This makes the web service accessible via `http://localhost:8080` on your machine.
@@ -427,10 +428,10 @@ Here’s an example of using a pre-built Nginx image:
 
 ```yaml
 services:
-  web:
-    image: nginx:latest
-    ports:
-      - "8080:80"
+ web:
+ image: nginx:latest
+ ports:
+ - "8080:80"
 ```
 
 In this example, Docker Compose pulls the `nginx:latest` image from Docker Hub and runs the container, exposing port `80` on the container to port `8080` on the host machine.
@@ -440,11 +441,11 @@ It’s important to specify a version tag when using pre-built images to avoid p
 
 ```yaml
 services:
-  db:
-    image: postgres:13
-    environment:
-      POSTGRES_USER: admin
-      POSTGRES_PASSWORD: secret
+ db:
+ image: postgres:13
+ environment:
+ POSTGRES_USER: admin
+ POSTGRES_PASSWORD: secret
 ```
 In this case, the image `postgres:13` is pulled from Docker Hub, ensuring that version 13 of PostgreSQL is used, rather than the latest version which might introduce breaking changes.
 
@@ -458,8 +459,8 @@ Then, you can reference the private image in your `docker-compose.yml`:
 
 ```yaml
 services:
-  app:
-    image: myprivateregistry.com/myapp:latest
+ app:
+ image: myprivateregistry.com/myapp:latest
 ```
 
 Docker Compose will automatically use your credentials from the Docker CLI to pull the image.
@@ -470,10 +471,10 @@ Some images come with different variants (e.g., alpine, slim, or buster), optimi
 
 ```yaml
 services:
-  web:
-    image: nginx:alpine
-    ports:
-      - "8080:80"
+ web:
+ image: nginx:alpine
+ ports:
+ - "8080:80"
 ```
 In this example, the `nginx:alpine` image is pulled, which is a lightweight version of Nginx, reducing the overall size of the container and startup time.
 
@@ -488,8 +489,8 @@ FROM node:14
 
 # Install additional packages
 RUN apt-get update && apt-get install -y \
-    python \
-    build-essential
+ python \
+ build-essential
 
 # Set the working directory
 WORKDIR /app
@@ -508,10 +509,10 @@ In your docker-compose.yml, use the build option to build this customized image:
 
 ```yaml
 services:
-  app:
-    build: .
-    ports:
-      - "3000:3000"
+ app:
+ build: .
+ ports:
+ - "3000:3000"
 ```
 
 Docker Compose will now build the custom image using the Dockerfile, while still benefiting from the official Node.js base image.
@@ -523,20 +524,20 @@ Here’s an example of a web service that uses a custom Dockerfile and a Postgre
 
 ```yaml
 services:
-  app:
-    build: .
-    ports:
-      - "3000:3000"
-    environment:
-      DATABASE_URL: postgres://admin:secret@db:5432/mydb
-    depends_on:
-      - db
+ app:
+ build: .
+ ports:
+ - "3000:3000"
+ environment:
+ DATABASE_URL: postgres://admin:secret@db:5432/mydb
+ depends_on:
+ - db
 
-  db:
-    image: postgres:13
-    environment:
-      POSTGRES_USER: admin
-      POSTGRES_PASSWORD: secret
+ db:
+ image: postgres:13
+ environment:
+ POSTGRES_USER: admin
+ POSTGRES_PASSWORD: secret
 ```
 
 In this setup, the db service uses a pre-built PostgreSQL image, while the app service is built using a custom Dockerfile.
@@ -582,14 +583,14 @@ In your docker-compose.yml, you can reference the Dockerfile using the build key
 
 ```yaml
 services:
-  app:
-    build: .
-    ports:
-      - "3000:3000"
-    volumes:
-      - .:/app
-    environment:
-      NODE_ENV: development
+ app:
+ build: .
+ ports:
+ - "3000:3000"
+ volumes:
+ - .:/app
+ environment:
+ NODE_ENV: development
 ```
 
 In this example, Docker Compose will look for a Dockerfile in the same directory as the docker-compose.yml file, build the image, and then run the container. The . under build specifies the current directory as the build context, which includes the Dockerfile and the application files.
@@ -599,10 +600,10 @@ If your Dockerfile is located in a different directory, you can specify its path
 
 ```yaml
 services:
-  app:
-    build:
-      context: .
-      dockerfile: ./docker/Dockerfile
+ app:
+ build:
+ context: .
+ dockerfile: ./docker/Dockerfile
 ```
 
 This tells Docker Compose to use the Dockerfile located in the docker/ directory.
@@ -643,7 +644,7 @@ RUN go build -o myapp .
 # Production stage
 FROM alpine:3.15
 WORKDIR /app
-COPY --from=builder /app/myapp .
+COPY -from=builder /app/myapp .
 CMD ["./myapp"]
 ```
 
@@ -654,11 +655,11 @@ In some cases, you may want to override the default command or entrypoint define
 
 ```yaml
 services:
-  app:
-    build: .
-    ports:
-      - "3000:3000"
-    command: ["npm", "run", "custom-script"]
+ app:
+ build: .
+ ports:
+ - "3000:3000"
+ command: ["npm", "run", "custom-script"]
 ```
 
 This overrides the CMD defined in the Dockerfile and runs the custom script instead.
@@ -667,7 +668,7 @@ This overrides the CMD defined in the Dockerfile and runs the custom script inst
 When you make changes to the Dockerfile, you need to rebuild the image for those changes to take effect. You can force a rebuild by running:
 
 ```bash
-docker-compose up --build
+docker-compose up -build
 ```
 This will recreate the images based on the updated Dockerfile and redeploy the services.
 
@@ -684,11 +685,11 @@ And in your docker-compose.yml, you can pass the argument during the build proce
 
 ```yaml
 services:
-  app:
-    build:
-      context: .
-      args:
-        APP_ENV: production
+ app:
+ build:
+ context: .
+ args:
+ APP_ENV: production
 ```
 
 This allows you to customize the build process based on different environments.
@@ -709,7 +710,7 @@ Here’s how to define a named volume:
 
 ```yaml
 volumes:
-  db_data:
+ db_data:
 ```
 
 In this example, we’ve defined a volume named db_data that can be shared between services.
@@ -721,10 +722,10 @@ Here’s an example of attaching the `db_data` volume to a PostgreSQL service to
 
 ```yaml
 services:
-  db:
-    image: postgres:13
-    volumes:
-      - db_data:/var/lib/postgresql/data
+ db:
+ image: postgres:13
+ volumes:
+ - db_data:/var/lib/postgresql/data
 
 ```
 In this case, the `db_data` volume is mapped to `/var/lib/postgresql/data` inside the container, ensuring that any data stored by PostgreSQL is saved outside the container.
@@ -736,10 +737,10 @@ Here’s how to use a bind mount in Docker Compose:
 
 ```yaml
 services:
-  app:
-    image: myapp:latest
-    volumes:
-      - ./app:/usr/src/app
+ app:
+ image: myapp:latest
+ volumes:
+ - ./app:/usr/src/app
 ```
 
 In this example, the local directory ./app on the host is mounted to /usr/src/app inside the container. This is especially useful in development environments where you want to reflect changes in real-time.
@@ -751,18 +752,18 @@ For example, here’s how you could share a volume between a web service and a b
 
 ```yaml
 services:
-  web:
-    image: nginx:latest
-    volumes:
-      - shared_data:/usr/share/nginx/html
+ web:
+ image: nginx:latest
+ volumes:
+ - shared_data:/usr/share/nginx/html
 
-  worker:
-    image: myworker:latest
-    volumes:
-      - shared_data:/usr/src/app/data
+ worker:
+ image: myworker:latest
+ volumes:
+ - shared_data:/usr/src/app/data
 
 volumes:
-  shared_data:
+ shared_data:
 ```
 
 In this setup, both the web and worker services have access to the shared_data volume. The web service stores its static content in the volume, while the worker service reads or processes the same data.
@@ -772,16 +773,16 @@ For databases, using volumes is crucial to ensure data is not lost when containe
 
 ```yaml
 services:
-  mysql:
-    image: mysql:8
-    environment:
-      MYSQL_ROOT_PASSWORD: rootpass
-      MYSQL_DATABASE: mydatabase
-    volumes:
-      - mysql_data:/var/lib/mysql
+ mysql:
+ image: mysql:8
+ environment:
+ MYSQL_ROOT_PASSWORD: rootpass
+ MYSQL_DATABASE: mydatabase
+ volumes:
+ - mysql_data:/var/lib/mysql
 
 volumes:
-  mysql_data:
+ mysql_data:
 ```
 
 In this setup, the mysql_data volume is used to persist MySQL data in `/var/lib/mysql`. This ensures that even if the mysql container is stopped or recreated, the database data remains intact.
@@ -790,12 +791,12 @@ In this setup, the mysql_data volume is used to persist MySQL data in `/var/lib/
 Since volumes are managed by Docker, you can easily back them up and restore them using Docker CLI commands. To back up a volume, you can create a new container that mounts the volume and copies its contents to a file on your host:
 
 ```bash
-docker run --rm -v db_data:/volume -v $(pwd):/backup busybox tar cvf /backup/db_data.tar /volume
+docker run -rm -v db_data:/volume -v $(pwd):/backup busybox tar cvf /backup/db_data.tar /volume
 ```
 To restore the volume, simply reverse the process:
 
 ```bash
-docker run --rm -v db_data:/volume -v $(pwd):/backup busybox tar xvf /backup/db_data.tar -C /volume
+docker run -rm -v db_data:/volume -v $(pwd):/backup busybox tar xvf /backup/db_data.tar -C /volume
 ```
 
 ### 8. Volume Drivers and Options
@@ -804,10 +805,10 @@ Docker allows you to use custom volume drivers for more advanced use cases. Thes
 ```yaml
 Copy code
 volumes:
-  my_custom_volume:
-    driver: nfs
-    driver_opts:
-      share: "192.168.1.100:/path/to/share"
+ my_custom_volume:
+ driver: nfs
+ driver_opts:
+ share: "192.168.1.100:/path/to/share"
 ```
 
 This example sets up an NFS volume, allowing your service to persist data on a remote NFS server.
@@ -835,10 +836,10 @@ While Docker Compose simplifies multi-container setups, it also provides several
 
 One of the most useful features of Docker Compose is the ability to scale your services horizontally. This means you can run multiple instances of a service to handle more load or ensure redundancy. Scaling is especially beneficial for stateless services, like web servers or worker processes.
 
-You can scale services by using the `--scale` option with `docker-compose up`:
+You can scale services by using the `-scale` option with `docker-compose up`:
 
 ```bash
-docker-compose up --scale web=3
+docker-compose up -scale web=3
 ```
 
 This command will start 3 instances of the web service. To ensure proper load balancing between the scaled services, you may need to configure a load balancer (like NGINX) or rely on Docker's internal round-robin DNS resolution.
@@ -847,10 +848,10 @@ Alternatively, you can define service replicas in your `docker-compose.yml`:
 
 ```yaml
 services:
-  web:
-    image: nginx:latest
-    deploy:
-      replicas: 3
+ web:
+ image: nginx:latest
+ deploy:
+ replicas: 3
 ```
 ### 2. Service Dependencies with `depends_on`
 In many applications, certain services depend on others to be available before they can start. Docker Compose provides the depends_on option to express this relationship. This ensures that Docker starts the dependent services in the correct order.
@@ -859,13 +860,13 @@ Here’s an example of a web service that depends on a database service:
 
 ```yaml
 services:
-  web:
-    image: nginx
-    depends_on:
-      - db
+ web:
+ image: nginx
+ depends_on:
+ - db
 
-  db:
-    image: postgres
+ db:
+ image: postgres
 ```
 
 However, note that depends_on only controls the startup order; it does not wait for the dependent service to be "ready" (e.g., wait for the database to be accepting connections). For more robust dependency management, consider using health checks (covered below) or custom retry logic in your application.
@@ -877,13 +878,13 @@ Here’s an example of adding a health check to a database service:
 
 ```yaml
 services:
-  db:
-    image: postgres
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres"]
-      interval: 30s
-      timeout: 10s
-      retries: 5
+ db:
+ image: postgres
+ healthcheck:
+ test: ["CMD-SHELL", "pg_isready -U postgres"]
+ interval: 30s
+ timeout: 10s
+ retries: 5
 ```
 
 In this case, Docker will check every 30 seconds whether the Postgres database is ready to accept connections. If the service fails the check 5 times, Docker marks the service as unhealthy.
@@ -897,13 +898,13 @@ Here’s how to define resource limits for a service:
 
 ```yaml
 services:
-  web:
-    image: nginx
-    deploy:
-      resources:
-        limits:
-          cpus: "0.5"
-          memory: "512M"
+ web:
+ image: nginx
+ deploy:
+ resources:
+ limits:
+ cpus: "0.5"
+ memory: "512M"
 ```
 In this example, the web service is limited to using 50% of the CPU and 512MB of memory. You can also set reservation values to guarantee a certain amount of resources for a container.
 
@@ -919,9 +920,9 @@ Here’s an example of using a restart policy for a web service:
 
 ```yaml
 services:
-  web:
-    image: nginx
-    restart: always
+ web:
+ image: nginx
+ restart: always
 ```
 
 In this case, the web service will always be restarted if it crashes or is stopped unintentionally.
@@ -944,20 +945,20 @@ Here’s how to define a profile in your docker-compose.yml:
 
 ```yaml
 services:
-  web:
-    image: nginx
-    profiles:
-      - production
+ web:
+ image: nginx
+ profiles:
+ - production
 
-  debug:
-    image: busybox
-    profiles:
-      - debug
+ debug:
+ image: busybox
+ profiles:
+ - debug
 ```
 You can specify the profile to use when running Docker Compose:
 
 ```bash
-docker-compose --profile production up
+docker-compose -profile production up
 ```
 
 In this case, only the web service will be started, as it belongs to the production profile.
@@ -969,14 +970,14 @@ Here’s an example of using Docker secrets in a Compose file:
 
 ```yaml
 services:
-  app:
-    image: myapp:latest
-    secrets:
-      - db_password
+ app:
+ image: myapp:latest
+ secrets:
+ - db_password
 
 secrets:
-  db_password:
-    file: ./secrets/db_password.txt
+ db_password:
+ file: ./secrets/db_password.txt
 ```
 
 In this example, the secret `db_password` is stored in an external file and made available to the app service. Docker Compose automatically ensures that the secret is only accessible to the service that needs it.
@@ -993,10 +994,10 @@ Here’s an example of using environment variables in your Compose file:
 
 ```yaml
 services:
-  app:
-    image: myapp:latest
-    environment:
-      - DATABASE_URL=${DATABASE_URL}
+ app:
+ image: myapp:latest
+ environment:
+ - DATABASE_URL=${DATABASE_URL}
 ```
 
 And in your `.env` file:
@@ -1030,13 +1031,13 @@ Here’s how to define a named volume:
 
 ```yaml
 services:
-  db:
-    image: postgres
-    volumes:
-      - db_data:/var/lib/postgresql/data
+ db:
+ image: postgres
+ volumes:
+ - db_data:/var/lib/postgresql/data
 
 volumes:
-  db_data:
+ db_data:
 ```
 
 Named volumes also make it simpler to perform backups or migrate data between environments.
@@ -1048,13 +1049,13 @@ Here’s how to define resource limits for a service:
 
 ```yaml
 services:
-  web:
-    image: nginx:latest
-    deploy:
-      resources:
-        limits:
-          cpus: "0.5"
-          memory: "512M"
+ web:
+ image: nginx:latest
+ deploy:
+ resources:
+ limits:
+ cpus: "0.5"
+ memory: "512M"
 ```
 
 This ensures that the web service only consumes half a CPU core and 512MB of memory, avoiding resource contention.
@@ -1066,17 +1067,17 @@ For example, you can define a development-only service:
 
 ```yaml
 services:
-  debug:
-    image: busybox
-    command: sleep 1000
-    profiles:
-      - debug
+ debug:
+ image: busybox
+ command: sleep 1000
+ profiles:
+ - debug
 ```
 
 When you deploy to production, simply omit the debug profile:
 
 ```bash
-docker-compose --profile production up
+docker-compose -profile production up
 ```
 
 6. Use Build Caching to Speed Up Development
@@ -1107,14 +1108,14 @@ Here’s an example of using Docker secrets in your Compose file:
 
 ```yaml
 services:
-  db:
-    image: postgres
-    secrets:
-      - db_password
+ db:
+ image: postgres
+ secrets:
+ - db_password
 
 secrets:
-  db_password:
-    file: ./secrets/db_password.txt
+ db_password:
+ file: ./secrets/db_password.txt
 ```
 This way, secrets are managed securely and are only accessible to the service that needs them.
 

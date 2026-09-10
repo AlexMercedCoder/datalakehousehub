@@ -14,9 +14,10 @@ draft: false
 image: "/images/blog.png"
 canonical: "https://iceberglakehouse.com/posts/iceberg-variant-type-semi-structured-ai-datasets/"
 ---
-> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/iceberg-variant-type-semi-structured-ai-datasets/).
 
 A single LLM response is not a single value. It carries the generated text, a reasoning trace, one or more tool calls with their arguments, source references, a confidence field, token usage counts, and sometimes an error object. Store a million of those responses and you have a dataset where every row is a small nested document, the shapes vary from row to row, and the fields you care about are buried two or three levels deep. This is the normal shape of AI data, and it does not fit a rigid columnar schema without a fight. A native variant-style type in [Apache Iceberg](https://iceberg.apache.org/spec/) is the format's answer to that mismatch.
+
+> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/iceberg-variant-type-semi-structured-ai-datasets/).
 
 One caveat up front on status. Native semi-structured support in Iceberg has been moving through standardization, and the exact type naming and binary layout continue to settle. I have not pinned every detail to a specific release for this article, so treat "variant type" here as a standardization direction rather than a finished production guarantee, and confirm current status and naming against the [Iceberg type system docs](https://iceberg.apache.org/spec/#schemas-and-data-types) and the [Iceberg GitHub proposals](https://github.com/apache/iceberg) before building on it. The design argument for why this matters stands regardless of the release timeline.
 
@@ -65,7 +66,7 @@ This is also why a standardized binary representation matters more than it might
 Here is the comparison across the three approaches.
 
 | Capability | JSON string | Map column | Native variant |
-| --- | --- | --- | --- |
+| -- | -- | -- | -- |
 | Preserves nested structure | Yes, but as opaque text | Only one level, uniform values | Yes, with type info |
 | Mixed value types in one value | Yes, but unparsed | No; values must share one type | Yes |
 | Path extraction cost | Full parse per row per query | Cheap for flat keys | Structured traversal, no full text parse |
@@ -80,14 +81,12 @@ The everyday payoff of a native type is that analysts stop writing the same pars
 With a native variant, path access is a first-class operation. Conceptually, querying a variant column looks like this:
 
 ```sql
--- Conceptual example. Exact syntax depends on the engine and version.
+- Conceptual example. Exact syntax depends on the engine and version.
 SELECT
-  response.model              AS model,
-  response.usage.total_tokens AS tokens,
-  response.tool_calls[0].name AS first_tool
+ response.model AS model, response.usage.total_tokens AS tokens, response.tool_calls[0].name AS first_tool
 FROM llm_responses
 WHERE response.confidence > 0.8
-  AND response.error IS NULL;
+ AND response.error IS NULL;
 ```
 
 I want to be explicit that this is conceptual. The exact path syntax, the array-access notation, and the functions available all depend on the engine and its version, and you should verify them against your engine's documentation rather than copying this literally. The point the snippet makes is structural: you reference nested paths directly, the engine understands them as paths into a typed value, and you are not wrapping every field in a parse-then-cast expression. Native storage should reduce the need for repeated casts and ad hoc JSON parsing, which is both a readability win and a performance win, because the engine can plan around structure it understands instead of treating each row as text to re-parse.

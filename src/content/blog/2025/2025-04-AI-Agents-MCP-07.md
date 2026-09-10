@@ -15,15 +15,14 @@ slug: 2025-04-under-the-hood-of-mcp
 draft: false
 image: "/images/blog.png"
 ---
-
 # A Journey from AI to LLMs and MCP - 7 - Under the Hood : The Architecture of MCP and Its Core Components
 
-## Free Resources  
-- **[Free Apache Iceberg Course](https://hello.dremio.com/webcast-an-apache-iceberg-lakehouse-crash-course-reg.html?utm_source=ev_external_blog&utm_medium=influencer&utm_campaign=AItoLLMS&utm_content=alexmerced&utm_term=external_blog)**  
-- **[Free Copy of “Apache Iceberg: The Definitive Guide”](https://hello.dremio.com/wp-apache-iceberg-the-definitive-guide-reg.html?utm_source=ev_external_blog&utm_medium=influencer&utm_campaign=AItoLLMS&utm_content=alexmerced&utm_term=external_blog)**  
-- **[2025 Apache Iceberg Architecture Guide](https://medium.com/data-engineering-with-dremio/2025-guide-to-architecting-an-iceberg-lakehouse-9b19ed42c9de)**  
-- **[How to Join the Iceberg Community](https://medium.alexmerced.blog/guide-to-finding-apache-iceberg-events-near-you-and-being-part-of-the-greater-iceberg-community-0c38ae785ddb)**  
-- **[Iceberg Lakehouse Engineering Video Playlist](https://youtube.com/playlist?list=PLsLAVBjQJO0p0Yq1fLkoHvt2lEJj5pcYe&si=WTSnqjXZv6Glkc3y)**  
+## Free Resources 
+- **[Free Apache Iceberg Course](https://hello.dremio.com/webcast-an-apache-iceberg-lakehouse-crash-course-reg.html?utm_source=ev_external_blog&utm_medium=influencer&utm_campaign=AItoLLMS&utm_content=alexmerced&utm_term=external_blog)** 
+- **[Free Copy of “Apache Iceberg: The Definitive Guide”](https://hello.dremio.com/wp-apache-iceberg-the-definitive-guide-reg.html?utm_source=ev_external_blog&utm_medium=influencer&utm_campaign=AItoLLMS&utm_content=alexmerced&utm_term=external_blog)** 
+- **[2025 Apache Iceberg Architecture Guide](https://medium.com/data-engineering-with-dremio/2025-guide-to-architecting-an-iceberg-lakehouse-9b19ed42c9de)** 
+- **[How to Join the Iceberg Community](https://medium.alexmerced.blog/guide-to-finding-apache-iceberg-events-near-you-and-being-part-of-the-greater-iceberg-community-0c38ae785ddb)** 
+- **[Iceberg Lakehouse Engineering Video Playlist](https://youtube.com/playlist?list=PLsLAVBjQJO0p0Yq1fLkoHvt2lEJj5pcYe&si=WTSnqjXZv6Glkc3y)** 
 - **[Ultimate Apache Iceberg Resource Guide](https://medium.com/data-engineering-with-dremio/ultimate-directory-of-apache-iceberg-resources-e3e02efac62e)** 
 
 In our last post, we introduced the **Model Context Protocol (MCP)** as a standard way to connect AI models and agents to tools, data, and workflows - much like how the Apache Iceberg REST protocol brings interoperability to data engines.
@@ -45,18 +44,18 @@ MCP follows a **client-server architecture** that enables many-to-many connectio
 Here’s the high-level setup:
 
 ```
-+------------------------+      +--------------------+
-|    Claude Desktop      |      |      Web IDE       |
-| (Host + MCP Client)    |      | (Host + MCP Client)|
-+------------------------+      +--------------------+
-             |                         |
-             |     MCP Protocol        |
-             |                         |
-             v                         v
-+------------------------+    +---------------------------+
-|   Local Tool Server    |    |     Cloud API Server      |
-| (Exposes tools/resources)|  | (Exposes prompts/tools)   |
-+------------------------+    +---------------------------+
++------------+ +----------+
+| Claude Desktop | | Web IDE |
+| (Host + MCP Client) | | (Host + MCP Client)|
++------------+ +----------+
+ | |
+ | MCP Protocol |
+ | |
+ v v
++------------+ +--------------+
+| Local Tool Server | | Cloud API Server |
+| (Exposes tools/resources)| | (Exposes prompts/tools) |
++------------+ +--------------+
 
 ```
 
@@ -106,12 +105,12 @@ Before communication starts:
 
 ### 2. Message Types
 
-| Type         | Description                                 |
-|--------------|---------------------------------------------|
-| Request      | A message expecting a response (e.g. `tools/call`) |
-| Response     | Result from a request (e.g. tool output)     |
-| Notification | One-way message with no response expected    |
-| Error        | Sent when a request fails or is invalid      |
+| Type | Description |
+|-------|-----------------------|
+| Request | A message expecting a response (e.g. `tools/call`) |
+| Response | Result from a request (e.g. tool output) |
+| Notification | One-way message with no response expected |
+| Error | Sent when a request fails or is invalid |
 
 Each message is wrapped in a **transport layer** (more on that next).
 

@@ -14,11 +14,12 @@ draft: false
 image: "/images/blog/apache-iceberg-masterclass/13-streaming-to-iceberg-streaming-approaches.png"
 canonical: "https://iceberglakehouse.com/posts/2026-04-29-iceberg-masterclass-13/"
 ---
-> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-04-29-iceberg-masterclass-13/).
 
-<!-- Meta Description: Stream data into Iceberg with Spark Structured Streaming, Flink, or Kafka Connect. Here is how each works and the trade-offs between latency and maintenance. -->
-<!-- Primary Keyword: streaming to Apache Iceberg -->
-<!-- Secondary Keywords: Spark Structured Streaming Iceberg, Flink Iceberg sink, Kafka Connect Iceberg -->
+<!- Meta Description: Stream data into Iceberg with Spark Structured Streaming, Flink, or Kafka Connect. Here is how each works and the trade-offs between latency and maintenance. ->
+<!- Primary Keyword: streaming to Apache Iceberg ->
+<!- Secondary Keywords: Spark Structured Streaming Iceberg, Flink Iceberg sink, Kafka Connect Iceberg ->
+
+> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-04-29-iceberg-masterclass-13/).
 
 *Read the complete Apache Iceberg Masterclass series:*
 * [Part 1: What Are Table Formats and Why Were They Needed?](/blog/2026-04-29-apache-iceberg-masterclass-01-table-formats)
@@ -50,17 +51,17 @@ Spark Structured Streaming processes data in micro-batches and commits to Iceber
 
 ```python
 df = spark.readStream.format("kafka") \
-    .option("subscribe", "events") \
-    .load()
+ .option("subscribe", "events") \
+ .load()
 
 df.writeStream.format("iceberg") \
-    .outputMode("append") \
-    .option("checkpointLocation", "s3://checkpoint/events") \
-    .trigger(processingTime="60 seconds") \
-    .toTable("analytics.events")
+ .outputMode("append") \
+ .option("checkpointLocation", "s3://checkpoint/events") \
+ .trigger(processingTime="60 seconds") \
+ .toTable("analytics.events")
 ```
 
-Each trigger creates a new Iceberg commit with the accumulated data. A 60-second trigger produces 1,440 commits per day, each adding a small number of files.
+Each trigger creates a new Iceberg commit with the accumulated data. A 60-second trigger produces 1, 440 commits per day, each adding a small number of files.
 
 **Latency:** Seconds to minutes (configurable via trigger interval).
 **Small file impact:** Moderate. Longer trigger intervals produce fewer, larger files.
@@ -71,7 +72,7 @@ Each trigger creates a new Iceberg commit with the accumulated data. A 60-second
 Flink processes events continuously and commits to Iceberg at checkpoint intervals:
 
 ```sql
--- Flink SQL
+- Flink SQL
 INSERT INTO iceberg_catalog.analytics.events
 SELECT event_id, event_time, payload
 FROM kafka_source
@@ -95,14 +96,9 @@ The Iceberg Sink Connector reads directly from Kafka topics and writes to Iceber
 
 ```json
 {
-  "name": "iceberg-sink",
-  "config": {
-    "connector.class": "org.apache.iceberg.connect.IcebergSinkConnector",
-    "topics": "events",
-    "iceberg.catalog.type": "rest",
-    "iceberg.catalog.uri": "https://catalog.example.com",
-    "iceberg.tables": "analytics.events"
-  }
+ "name": "iceberg-sink", "config": {
+ "connector.class": "org.apache.iceberg.connect.IcebergSinkConnector", "topics": "events", "iceberg.catalog.type": "rest", "iceberg.catalog.uri": "https://catalog.example.com", "iceberg.tables": "analytics.events"
+ }
 }
 ```
 
@@ -133,9 +129,9 @@ A typical production pattern:
 ![The spectrum from real-time to batch showing how latency affects small file production](/images/blog/apache-iceberg-masterclass/13-streaming-to-iceberg-latency-vs-maintenance.png)
 
 | Approach | Commit Frequency | Files/Day | Compaction Need |
-|---|---|---|---|
-| Flink (30s checkpoint) | Every 30 seconds | 5,000+ | Very high |
-| Spark (60s trigger) | Every 60 seconds | 2,500+ | High |
+|--|--|--|--|
+| Flink (30s checkpoint) | Every 30 seconds | 5, 000+ | Very high |
+| Spark (60s trigger) | Every 60 seconds | 2, 500+ | High |
 | Spark (5min trigger) | Every 5 minutes | 300+ | Moderate |
 | Kafka Connect | Every few minutes | 500+ | Moderate |
 | Batch (hourly) | Every hour | 24 | Low |
@@ -156,7 +152,7 @@ The most common mistake in streaming Iceberg architectures is deploying the stre
 ## Choosing the Right Approach
 
 | Requirement | Recommendation |
-|---|---|
+|--|--|
 | Sub-second latency | Flink + aggressive compaction |
 | 1-5 minute latency | Spark Structured Streaming |
 | Existing Kafka infrastructure | Kafka Connect sink |

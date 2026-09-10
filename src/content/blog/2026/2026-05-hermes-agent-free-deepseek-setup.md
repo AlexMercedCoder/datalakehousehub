@@ -2,7 +2,7 @@
 title: "Use Hermes Agent for Free With DeepSeek V4 and Slack"
 date: 2026-05-25T12:00:00Z
 pubDatetime: 2026-05-25T12:00:00Z
-description: "Hermes Agent is a free, open-source AI agent from Nous Research. Connect it to DeepSeek V4 for zero-cost inference and Slack for anywhere access. Here is how to set it up in 10 minutes."
+description: "Hermes Agent is a free, open-source AI agent from Nous Research. Connect it to DeepSeek V4 for zero-cost inference and Slack for anywhere access."
 author: "Alex Merced"
 category: "AI Tools & Developer Tools"
 bannerImage: "https://i.imgur.com/cpoMZQ8.png"
@@ -17,9 +17,10 @@ draft: false
 image: "/images/blog.png"
 canonical: "https://iceberglakehouse.com/posts/2026-05-hermes-agent-free-deepseek-setup/"
 ---
-> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-05-hermes-agent-free-deepseek-setup/).
 
 Most AI agent frameworks lock you into a paid model. Claude Code needs an Anthropic subscription. Codex needs an OpenAI plan. Cursor costs $20 a month. Hermes Agent from Nous Research works differently: it is a fully open-source agent framework that lets you plug in any inference provider you want.
+
+> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-05-hermes-agent-free-deepseek-setup/).
 
 That means you can run a capable AI coding agent for exactly zero dollars by pointing it at DeepSeek V4 through the Nous Portal. And if you add Slack integration, you can talk to that agent from your phone, your browser, or wherever your team already chats.
 
@@ -51,7 +52,7 @@ The free path uses DeepSeek V4 Flash through the Nous inference API. You do not 
 
 **One-command setup:**
 ```bash
-hermes setup --portal
+hermes setup -portal
 ```
 
 That runs the Portal OAuth flow, sets Nous as your inference provider in `config.yaml`, and configures the gateway. You are ready to chat immediately after.
@@ -64,9 +65,9 @@ NOUS_API_KEY=your_key_here
 And in `~/.hermes/config.yaml`:
 ```yaml
 model:
-  default: deepseek/deepseek-v4-flash:free
-  provider: nous
-  base_url: https://inference-api.nousresearch.com/v1
+ default: deepseek/deepseek-v4-flash:free
+ provider: nous
+ base_url: https://inference-api.nousresearch.com/v1
 ```
 
 Run `hermes chat` and you are talking to DeepSeek V4 through a free inference endpoint.
@@ -83,8 +84,8 @@ OPENCODE_ZEN_API_KEY=your_key_here
 And in config.yaml:
 ```yaml
 model:
-  default: gpt-4o
-  provider: opencode-zen
+ default: gpt-4o
+ provider: opencode-zen
 ```
 
 OpenCode Zen is a solid alternative if you want access to OpenAI or Anthropic models without managing separate API keys. For purely free inference, the Nous Portal path is simpler and more direct.
@@ -171,7 +172,7 @@ Setting up the Slack App requires navigating Slack's API console, which has a re
 
 ## Recommended Approach
 
-Start with the Nous Portal path. Run `hermes setup --portal`, pick DeepSeek V4 Flash, and verify it works with `hermes chat`. Use `hermes doctor` to check that everything is healthy.
+Start with the Nous Portal path. Run `hermes setup -portal`, pick DeepSeek V4 Flash, and verify it works with `hermes chat`. Use `hermes doctor` to check that everything is healthy.
 
 Once the terminal workflow is solid, add the Slack gateway. Create the Slack App, set the env vars, and run `hermes gateway run` to confirm the WebSocket connects. Then install it as a service with `hermes gateway install`.
 

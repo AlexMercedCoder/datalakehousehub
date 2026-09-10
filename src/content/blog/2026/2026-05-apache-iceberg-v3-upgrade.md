@@ -11,11 +11,12 @@ draft: false
 image: "/images/blog.png"
 canonical: "https://iceberglakehouse.com/posts/apache-iceberg-v3-upgrade/"
 ---
-> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/apache-iceberg-v3-upgrade/).
 
 # Apache Iceberg v3: What Changed and How to Upgrade Safely
 
 Apache Iceberg v3 became production-ready with the release of Apache Iceberg 1.11.0 on May 19, 2026. The specification had been in development for over a year, and 1.11.0 is the version that locks it in as stable for production workloads. If you run Iceberg tables, you need to understand what changed, what it costs to upgrade, and when to wait.
+
+> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/apache-iceberg-v3-upgrade/).
 
 This guide covers all six major features in Apache Iceberg v3 and walks through the upgrade path, including which engines are ready and what to test before you flip the switch.
 
@@ -84,7 +85,7 @@ Before running any upgrade command, confirm that every engine writing to the tab
 **Engine support as of mid-2026:**
 
 | Engine | v3 Read | v3 Write |
-|---|---|---|
+|--|--|--|
 | Apache Spark (with Iceberg 1.11.0) | Yes | Yes |
 | Trino | Check your version | Check your version |
 | Flink | Partial : verify 1.11.0 support | Partial |

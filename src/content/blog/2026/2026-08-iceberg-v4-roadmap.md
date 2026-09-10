@@ -1,7 +1,7 @@
 ---
 title: "Reading the Apache Iceberg V4 Proposals Before They Land"
 date: 2026-08-04T09:00:00Z
-description: "A field guide to the Apache Iceberg V4 proposals: adaptive metadata trees, single-file commits, typed statistics, column families, and what is safe to build on today."
+description: "A field guide to the Apache Iceberg V4 proposals: adaptive metadata trees, single-file commits, typed statistics, column families, and what is safe."
 author: "Alex Merced"
 category: "Apache Iceberg"
 tags:
@@ -16,11 +16,11 @@ image: "/images/blog.png"
 canonical: "https://iceberglakehouse.com/posts/iceberg-v4-roadmap/"
 ---
 
-> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/iceberg-v4-roadmap/).
-
 # Reading the Apache Iceberg V4 Proposals Before They Land
 
 *By Alex Merced, Data Lakehouse and AI Evangelist*
+
+> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/iceberg-v4-roadmap/).
 
 A Flink job commits every five seconds. Each commit writes one small Parquet file. It also writes a manifest, rewrites a manifest list, and writes a new `metadata.json`. Three metadata objects for one data file, seventeen thousand times a day, against object storage that starts throttling when you hammer the same prefix.
 
@@ -129,7 +129,7 @@ An idea enters as a `[DISCUSS]` thread, usually paired with a design document an
 Use these signals to judge maturity:
 
 | Signal | What it tells you |
-|---|---|
+|--|--|
 | Open `[DISCUSS]` with no design doc | Early idea, do not plan around it |
 | Design doc plus active sync meetings | Serious proposal, direction likely stable |
 | Reference implementation behind a flag | Mechanism is settled, details still moving |
@@ -166,11 +166,7 @@ Start by counting manifests per snapshot. Manifest count is the single best pred
 
 ```sql
 SELECT
-    snapshot_id,
-    COUNT(*)                          AS manifest_count,
-    SUM(added_data_files_count)       AS files_added,
-    SUM(existing_data_files_count)    AS files_carried,
-    ROUND(AVG(length) / 1024.0, 1)    AS avg_manifest_kb
+ snapshot_id, COUNT(*) AS manifest_count, SUM(added_data_files_count) AS files_added, SUM(existing_data_files_count) AS files_carried, ROUND(AVG(length) / 1024.0, 1) AS avg_manifest_kb
 FROM prod_catalog.telemetry.device_events.manifests
 GROUP BY snapshot_id
 ORDER BY snapshot_id DESC
@@ -183,10 +179,7 @@ Next, measure commit frequency and metadata churn over time.
 
 ```sql
 SELECT
-    date_trunc('hour', committed_at)  AS hour,
-    COUNT(*)                          AS commits,
-    SUM(CAST(summary['added-data-files'] AS BIGINT))   AS data_files,
-    SUM(CAST(summary['added-records']    AS BIGINT))   AS records
+ date_trunc('hour', committed_at) AS hour, COUNT(*) AS commits, SUM(CAST(summary['added-data-files'] AS BIGINT)) AS data_files, SUM(CAST(summary['added-records'] AS BIGINT)) AS records
 FROM prod_catalog.telemetry.device_events.snapshots
 WHERE committed_at >= current_timestamp - INTERVAL '7' DAY
 GROUP BY 1
@@ -201,10 +194,7 @@ Now check the shape of the file layer, since planning cost depends on it.
 
 ```sql
 SELECT
-    partition,
-    COUNT(*)                                  AS file_count,
-    ROUND(SUM(file_size_in_bytes) / 1048576.0, 1)     AS total_mb,
-    ROUND(AVG(file_size_in_bytes) / 1048576.0, 1)     AS avg_file_mb
+ partition, COUNT(*) AS file_count, ROUND(SUM(file_size_in_bytes) / 1048576.0, 1) AS total_mb, ROUND(AVG(file_size_in_bytes) / 1048576.0, 1) AS avg_file_mb
 FROM prod_catalog.telemetry.device_events.files
 GROUP BY partition
 HAVING COUNT(*) > 500

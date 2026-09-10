@@ -13,9 +13,10 @@ draft: false
 image: "/images/blog.png"
 canonical: "https://iceberglakehouse.com/posts/five-layer-agentic-lakehouse-architecture-enterprise-pattern/"
 ---
-> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/five-layer-agentic-lakehouse-architecture-enterprise-pattern/).
 
 Hand an AI agent a database connection string and broad SQL access, and you have built the fastest possible path to an inconsistent, unauditable, and occasionally dangerous analytics system. The agent will query things it should not, define metrics however the schema suggests, and leave you no clean record of why it did what it did. The problem is not the agent's competence. It is that you gave it raw storage access with no layer in between to supply meaning, constrain actions, and enforce policy.
+
+> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/five-layer-agentic-lakehouse-architecture-enterprise-pattern/).
 
 Trusted agentic analytics needs architectural boundaries, the same way a well-built application does not let the UI reach straight into the database. The pattern that has emerged for this is a five-layer model: Data, Knowledge, Agent, Tool, and Policy. Each layer has a distinct job, and the separation is what makes the whole system reviewable and safe. This post walks through each layer, what belongs in it, and where the boundaries between them matter most. It closes with a checklist you can run against your own architecture.
 
@@ -27,7 +28,7 @@ Before the layers, it is worth being precise about what goes wrong when an agent
 
 **Security risk.** An agent with a database connection has whatever that connection's account can see, which is almost always broader than any individual human should have. Row-level and column-level restrictions that apply to people do not automatically apply to an agent hitting the tables directly. The agent becomes a way to route around access control, not because anyone intended it but because nothing sat between the agent and the data to enforce the rules.
 
-**Audit gaps.** When an agent generates and runs one-off SQL, that SQL is ephemeral. The conversation ends and the exact query is gone. When someone asks "how did the agent arrive at this number," there is nothing durable to point to. No named metric, no defined tool, no logged action tied to an identity. You cannot audit what you did not structure.
+**Audit gaps.** When an agent generates and runs one-off SQL, that SQL is ephemeral. The conversation ends and the exact query is gone. When someone asks "how did the agent arrive at this number, " there is nothing durable to point to. No named metric, no defined tool, no logged action tied to an identity. You cannot audit what you did not structure.
 
 The five layers exist to close these three gaps. The Data layer makes storage reachable and governed. The Knowledge layer supplies meaning so the agent is not guessing. The Agent layer bounds what the agent tries to do. The Tool layer constrains how it acts. The Policy layer enforces identity and limits across all of it. Take the layers in order.
 
@@ -43,7 +44,7 @@ The tradeoff to acknowledge here is operational. Open tables require maintenance
 
 ## Layer 2: Knowledge
 
-The Knowledge layer is where physical data becomes business meaning. If the Data layer answers "what data exists and where," the Knowledge layer answers "what does it mean and how do I use it correctly." This is the layer that most directly prevents the semantic-ambiguity failures, and it is the one teams most often underbuild.
+The Knowledge layer is where physical data becomes business meaning. If the Data layer answers "what data exists and where, " the Knowledge layer answers "what does it mean and how do I use it correctly." This is the layer that most directly prevents the semantic-ambiguity failures, and it is the one teams most often underbuild.
 
 What lives here: semantic models and virtual datasets that encode joins and metric logic; metric contracts that define calculations, grain, and allowed usage; wikis and documentation that carry human context; labels that classify and describe datasets; data quality signals that tell an agent whether a dataset is trustworthy; and lineage that traces where data and metrics come from.
 
@@ -55,7 +56,7 @@ The honest limitation, again, is coverage. The Knowledge layer only supplies mea
 
 ## Layer 3: Agents
 
-The Agent layer is where reasoning happens: task planning, reasoning loops, prompt templates, memory, evaluation, and tool selection. This is the layer people think of first when they hear "agentic," and it is deliberately placed third here, above Data and Knowledge, because an agent is only as good as the foundation it reasons over.
+The Agent layer is where reasoning happens: task planning, reasoning loops, prompt templates, memory, evaluation, and tool selection. This is the layer people think of first when they hear "agentic, " and it is deliberately placed third here, above Data and Knowledge, because an agent is only as good as the foundation it reasons over.
 
 An agent in this model decomposes a goal into steps, decides which tools to call, calls them, reads results, and decides what to do next. Memory lets it carry context across steps. Evaluation, whether self-checks or external scoring, lets the system judge whether the agent's output is any good. Tool selection is the agent choosing, from a defined set, which capability to use for the current step.
 
@@ -65,7 +66,7 @@ Task boundaries belong here too. An agent should have a defined scope of what it
 
 ## Layer 4: Tools
 
-The Tool layer is where the agent's intentions become specific, constrained capabilities. Instead of "the agent can do whatever it can express in SQL," the Tool layer offers a defined set of actions: query a metric, inspect lineage, validate data freshness, create a ticket, trigger a pipeline, request an approval. Each tool is a narrow door with a known shape.
+The Tool layer is where the agent's intentions become specific, constrained capabilities. Instead of "the agent can do whatever it can express in SQL, " the Tool layer offers a defined set of actions: query a metric, inspect lineage, validate data freshness, create a ticket, trigger a pipeline, request an approval. Each tool is a narrow door with a known shape.
 
 A good tool definition specifies more than a name. It includes:
 
@@ -116,22 +117,22 @@ No step in that flow let the agent reconstruct business logic from schema, route
 Described as a stack, with policy wrapping the whole thing:
 
 ```
-+-------------------------------------------------------+
-|  POLICY: identity, permissions, egress, approvals,    |
-|          rate limits, audit  (wraps every layer)      |
-|  +-------------------------------------------------+  |
-|  |  AGENT: planning, reasoning, memory, evaluation |  |
-|  +-------------------------------------------------+  |
-|  |  TOOL: query metric, inspect lineage, validate  |  |
-|  |        freshness, request approval (constrained)|  |
-|  +-------------------------------------------------+  |
-|  |  KNOWLEDGE: semantic models, metric contracts,  |  |
-|  |             wikis, labels, lineage, quality     |  |
-|  +-------------------------------------------------+  |
-|  |  DATA: object storage, Iceberg, catalogs,       |  |
-|  |        source systems, federation               |  |
-|  +-------------------------------------------------+  |
-+-------------------------------------------------------+
++----------------------------+
+| POLICY: identity, permissions, egress, approvals, |
+| rate limits, audit (wraps every layer) |
+| +-------------------------+ |
+| | AGENT: planning, reasoning, memory, evaluation | |
+| +-------------------------+ |
+| | TOOL: query metric, inspect lineage, validate | |
+| | freshness, request approval (constrained)| |
+| +-------------------------+ |
+| | KNOWLEDGE: semantic models, metric contracts, | |
+| | wikis, labels, lineage, quality | |
+| +-------------------------+ |
+| | DATA: object storage, Iceberg, catalogs, | |
+| | source systems, federation | |
+| +-------------------------+ |
++----------------------------+
 ```
 
 The agent reasons, but it reasons through tools; the tools resolve meaning from the knowledge layer; the knowledge layer describes governed data; and policy applies at every boundary. Each arrow from top to bottom is a place where open-ended risk gets narrowed into something defined and reviewable.

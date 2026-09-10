@@ -13,9 +13,10 @@ draft: false
 image: "/images/blog.png"
 canonical: "https://iceberglakehouse.com/posts/apache-polaris-asf-top-level-multi-engine-catalog-interoperability/"
 ---
-> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/apache-polaris-asf-top-level-multi-engine-catalog-interoperability/).
 
 Apache Iceberg solved a hard problem: it gave analytics teams a table format that multiple engines can read and write without corrupting each other's view of the data. Snapshot isolation, schema evolution, hidden partitioning, and time travel all live in the table format itself. What Iceberg did not fully solve on its own is the question one layer up. How does an engine find a table in the first place? How does it know which snapshot is current, commit a new one safely, or organize tables into namespaces? That job belongs to a catalog, and for years the catalog is where the openness of a lakehouse quietly leaked away. You could have perfectly open Iceberg files sitting in object storage and still be locked into whichever engine controlled the catalog that pointed at them.
+
+> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/apache-polaris-asf-top-level-multi-engine-catalog-interoperability/).
 
 Apache Polaris exists to close that gap. It is an open source implementation of an Iceberg REST catalog, and its significance is not that it is one more catalog option. It is that it makes catalog interoperability an implementable pattern rather than a diagram on a slide. What follows covers why open table formats need open catalogs, what Polaris actually does at the protocol level, how role-based access control works when several engines share one catalog, why a shared catalog is the natural spine for a multi-cloud lakehouse, and what you should check before you standardize on it. The through-line: the open lakehouse needs an open metadata plane, and Polaris turns that requirement into working software.
 
@@ -48,11 +49,11 @@ The core operations are straightforward to describe. A client can list namespace
 Here is roughly what an engine's interaction looks like, in shape if not exact syntax:
 
 ```
-GET  /v1/namespaces
-GET  /v1/namespaces/analytics/tables
+GET /v1/namespaces
+GET /v1/namespaces/analytics/tables
 POST /v1/namespaces/analytics/tables/orders/load
 POST /v1/namespaces/analytics/tables/orders/commit
-     body: { requirements: [assert-current-snapshot], updates: [add-snapshot, set-current-snapshot] }
+ body: { requirements: [assert-current-snapshot], updates: [add-snapshot, set-current-snapshot] }
 ```
 
 Because this is a standard protocol, compatibility is a property of compliance, not of vendor partnership. If Spark's Iceberg REST client and Dremio's Iceberg REST client both speak the spec, and Polaris implements the spec, then all three interoperate without anyone writing bespoke connectors. That is the difference between openness as a marketing claim and openness as a testable behavior. You can point a compliant client at a compliant server and it works, or it does not, and the spec tells you which.
@@ -88,7 +89,7 @@ It also changes the economics of vendor choice over time. When the catalog is pr
 The table below contrasts the two operating models.
 
 | Concern | Closed vendor catalog | Open REST catalog (Polaris-style) |
-| --- | --- | --- |
+| -- | -- | -- |
 | Protocol | Proprietary, vendor-specific | Standard Iceberg REST API |
 | Engine access | Best through the owning engine | Any compliant engine, equal footing |
 | Adding an engine | Custom connector or replication | Conformance to the spec |

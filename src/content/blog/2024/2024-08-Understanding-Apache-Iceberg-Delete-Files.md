@@ -14,12 +14,13 @@ draft: false
 image: "/images/blog.png"
 canonical: "https://iceberglakehouse.com/posts/2024-8-understanding-apache-iceberg-delete-files/"
 ---
+
+Apache Iceberg is a powerful open-source table format for large-scale, distributed data storage. It enables complex data management tasks like schema evolution, time travel, and efficient query execution on massive datasets. An important feature of Iceberg is its ability to handle data deletions efficiently without requiring expensive rewrites of entire datasets when a table is "merge-on-read". This capability is made possible by **delete files** - specialized files that track row-level deletions in an Iceberg table.
+
 > **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2024-8-understanding-apache-iceberg-delete-files/).
 
 - [Free Copy of Apache Iceberg: The Definitive Guide](https://hello.dremio.com/wp-apache-iceberg-the-definitive-guide-reg.html?utm_source=ev_external_blog&utm_medium=influencer&utm_campaign=deletefileblog&utm_content=alexmerced&utm_term=external_blog)
 - [Free Apache Iceberg Crash Course](https://hello.dremio.com/webcast-an-apache-iceberg-lakehouse-crash-course-reg.html?utm_source=ev_external_blog&utm_medium=influencer&utm_campaign=deletefileblog&utm_content=alexmerced&utm_term=external_blog)
-
-Apache Iceberg is a powerful open-source table format for large-scale, distributed data storage. It enables complex data management tasks like schema evolution, time travel, and efficient query execution on massive datasets. An important feature of Iceberg is its ability to handle data deletions efficiently without requiring expensive rewrites of entire datasets when a table is "merge-on-read". This capability is made possible by **delete files** - specialized files that track row-level deletions in an Iceberg table.
 
 We'll dive deep into the role of delete files in Apache Iceberg. We'll explore delete files, how they work, and why they are essential for maintaining data consistency and optimizing query performance in a data lakehouse environment. By the end of this post, you'll have a solid understanding of how delete files function within Iceberg and how they can be leveraged to enhance your data management strategies.
 
@@ -34,14 +35,14 @@ Iceberg supports two types of delete files:
 1. **Position Deletes**: These delete files specify the exact position of rows within a data file that should be considered deleted. They are used when the physical location of the data (i.e., the row's position in the file) is known.
 
 ```
-+--------------------------------------------+-----------------+------------------------------------+
-| file_path                                  | pos             | row                                |
-+--------------------------------------------+-----------------+------------------------------------+
-| s3://bucket/path/to/data-file-1.parquet    | 0               | { "id": 1, "category": "marsupial",|
-|                                            |                 |   "name": "Koala" }               |
-| s3://bucket/path/to/data-file-1.parquet    | 102             | { "id": 2, "category": "toy",      |
-|                                            |                 |   "name": "Teddy" }               |
-+--------------------------------------------+-----------------+------------------------------------+
++----------------------+---------+------------------+
+| file_path | pos | row |
++----------------------+---------+------------------+
+| s3://bucket/path/to/data-file-1.parquet | 0 | { "id": 1, "category": "marsupial", |
+| | | "name": "Koala" } |
+| s3://bucket/path/to/data-file-1.parquet | 102 | { "id": 2, "category": "toy", |
+| | | "name": "Teddy" } |
++----------------------+---------+------------------+
 
 
 ```
@@ -49,13 +50,13 @@ Iceberg supports two types of delete files:
 2. **Equality Deletes**: These delete files mark rows for deletion based on specific column values rather than their position. For example, suppose a record with a particular ID needs to be deleted. In that case, an equality delete file can specify that any row matching this ID should be excluded from query results.
 
 ```
-+-------------------+-----------------+------------------------------------+
-| equality_ids      | id              | category        | name             |
-+-------------------+-----------------+-----------------+------------------+
-| equality_ids=[1]  | 3               | NULL            | Grizzly          |
-+-------------------+-----------------+-----------------+------------------+
-| equality_ids=[1,2]| 4               | NULL            | Polar            |
-+-------------------+-----------------+-----------------+------------------+
++----------+---------+------------------+
+| equality_ids | id | category | name |
++----------+---------+---------+---------+
+| equality_ids=[1] | 3 | NULL | Grizzly |
++----------+---------+---------+---------+
+| equality_ids=[1, 2]| 4 | NULL | Polar |
++----------+---------+---------+---------+
 
 ```
 

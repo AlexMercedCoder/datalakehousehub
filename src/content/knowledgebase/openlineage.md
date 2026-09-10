@@ -1,7 +1,7 @@
 ---
 title: "What is OpenLineage?"
 meta_title: "What is OpenLineage? | Expert Data Lakehouse & AI Glossary"
-description: "An open standard for metadata and lineage collection designed to instrument data pipelines regardless of the specific tool. Learn the architecture, mechanics, and real-world value of OpenLineage in the modern data stack."
+description: "An open standard for metadata and lineage collection designed to instrument data pipelines regardless of the specific tool."
 ---
 
 ## What is OpenLineage?

@@ -14,9 +14,10 @@ tags:
 slug: "semantic-layer-federation-multi-cloud"
 draft: false
 ---
-> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/semantic-layer-federation-multi-cloud/).
 
 Ask three systems in the same company what monthly recurring revenue was in July and you can get three answers, each computed correctly by its own definition, each defended by its own team, each feeding decisions. One came from a dashboard whose SQL a departed analyst tuned, one from a warehouse view written before the pricing model changed, one from a spreadsheet that finance trusts precisely because they can see the formula. The data was fine. The meaning was fragmented, and meaning fragments faster than data does, because every tool that touches data invites someone to redefine it there.
+
+> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/semantic-layer-federation-multi-cloud/).
 
 The semantic layer is the architectural answer: business definitions, metrics, models, relationships, and access rules, defined once, above the physical data, consumed by every tool through open interfaces. Federation is what makes the answer complete in the world enterprises actually inhabit, where the physical data spans two clouds, an on-premises estate, a lakehouse, and a warehouse or two that are not going anywhere this year: the semantic layer virtualizes across all of it, so one set of definitions governs data that never consolidates.
 
@@ -87,31 +88,23 @@ The application tier shapes business entities for specific consumers: the market
 Concretely, the layering is just composed SQL, which is its virtue:
 
 ```sql
--- Source tier: standardize a federated operational table
+- Source tier: standardize a federated operational table
 CREATE VIEW source_pg.customers_clean AS
 SELECT
-    cust_id AS customer_id,
-    TRIM(UPPER(cust_email)) AS email,
-    created_at AS signup_ts,
-    region_cd AS region_code
+ cust_id AS customer_id, TRIM(UPPER(cust_email)) AS email, created_at AS signup_ts, region_cd AS region_code
 FROM postgres_prod.public.customers
 
--- Business tier: the governed entity, joining lakehouse and federated data
+- Business tier: the governed entity, joining lakehouse and federated data
 CREATE VIEW business.customers AS
 SELECT
-    c.customer_id,
-    c.email,
-    c.signup_ts,
-    r.region_name,
-    s.plan_tier,
-    s.mrr_amount
+ c.customer_id, c.email, c.signup_ts, r.region_name, s.plan_tier, s.mrr_amount
 FROM source_pg.customers_clean c
 JOIN lake.reference.regions r
-    ON c.region_code = r.region_code
+ ON c.region_code = r.region_code
 LEFT JOIN lake.billing.subscriptions_current s
-    ON c.customer_id = s.customer_id
+ ON c.customer_id = s.customer_id
 
--- Application tier: the shape one audience consumes
+- Application tier: the shape one audience consumes
 CREATE VIEW app_marketing.active_customers AS
 SELECT customer_id, email, region_name, plan_tier
 FROM business.customers

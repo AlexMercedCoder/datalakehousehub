@@ -16,9 +16,10 @@ draft: false
 image: "/images/blog.png"
 canonical: "https://iceberglakehouse.com/posts/2026-03-aitool-claude-cowork/"
 ---
-> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-03-aitool-claude-cowork/).
 
 Claude CoWork is Anthropic's desktop agentic assistant. Unlike Claude Code (a terminal coding agent), CoWork operates as a general-purpose autonomous agent that reads and writes files, browses the web, manages tasks, and generates complete project artifacts. Dremio is a unified lakehouse platform that provides business context through its semantic layer, universal data access through query federation, and interactive speed through Reflections.
+
+> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-03-aitool-claude-cowork/).
 
 CoWork's strength is autonomous project execution. Give it a goal and grant it folder access, and it works through the steps independently. For data teams, this means CoWork can query your Dremio lakehouse, analyze the results, build a local dashboard, and write a summary report without you watching over every step.
 
@@ -66,8 +67,8 @@ Then add the Dremio MCP server through the [Claude web interface](https://claude
 1. Log into [Dremio Cloud](https://www.dremio.com/get-started) and go to **Settings > Organization Settings > OAuth Applications**.
 2. Click **Add Application** and name it (e.g., "Claude CoWork").
 3. Add the redirect URIs for Claude:
-   - `https://claude.ai/api/mcp/auth_callback`
-   - `https://claude.com/api/mcp/auth_callback`
+ - `https://claude.ai/api/mcp/auth_callback`
+ - `https://claude.com/api/mcp/auth_callback`
 4. Save and copy the **Client ID**.
 
 ### Configure the MCP Connector
@@ -87,15 +88,13 @@ For Dremio Software, configure the open-source [dremio-mcp](https://github.com/d
 
 ```json
 {
-  "mcpServers": {
-    "dremio": {
-      "command": "uv",
-      "args": [
-        "run", "--directory", "/path/to/dremio-mcp",
-        "dremio-mcp-server", "run"
-      ]
-    }
-  }
+ "mcpServers": {
+ "dremio": {
+ "command": "uv", "args": [
+ "run", "-directory", "/path/to/dremio-mcp", "dremio-mcp-server", "run"
+ ]
+ }
+ }
 }
 ```
 
@@ -183,12 +182,12 @@ Create a dedicated folder with everything CoWork needs for your Dremio project:
 
 ```
 dremio-context/
-  README.md               # Overview and instructions
-  sql-conventions.md       # Team SQL rules
-  table-schemas.md         # Exported schemas from Dremio
-  common-queries.md        # Frequently used query patterns
-  dremioframe-examples.md  # Python SDK code snippets
-  rest-api-patterns.md     # API call examples
+ README.md # Overview and instructions
+ sql-conventions.md # Team SQL rules
+ table-schemas.md # Exported schemas from Dremio
+ common-queries.md # Frequently used query patterns
+ dremioframe-examples.md # Python SDK code snippets
+ rest-api-patterns.md # API call examples
 ```
 
 Write a `README.md` that tells CoWork how to use the folder:
@@ -282,7 +281,7 @@ CoWork generates the full application with proper error handling and dremioframe
 ## Which Approach Should You Use?
 
 | Approach | Setup Time | What You Get | Best For |
-|----------|-----------|--------------|----------|
+|-----|------|-------|-----|
 | MCP Connector | 5 minutes | Live queries, schema browsing, catalog access | Natural language data exploration, ad-hoc analysis |
 | Folder Instructions | 10 minutes | Convention enforcement, project context | Teams with specific SQL standards |
 | Pre-Built Docs | 5 minutes | Comprehensive Dremio knowledge | Quick setup with broad coverage |

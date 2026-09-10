@@ -16,9 +16,10 @@ draft: false
 image: "/images/blog.png"
 canonical: "https://iceberglakehouse.com/posts/2026-03-context-gemini-cli/"
 ---
-> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-03-context-gemini-cli/).
 
 Gemini CLI is an open-source terminal agent powered by Gemini models that operates directly in your command line. It brings Google's AI capabilities into the environment where many developers already live, with a context management system built around hierarchical configuration files, persistent memory, MCP server integration, and direct codebase interaction. Unlike web-based tools where context is managed through uploads and conversation, Gemini CLI assembles its context from your project structure, your instruction files, and the tools you connect to it.
+
+> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-03-context-gemini-cli/).
 
 This guide covers every context management mechanism in Gemini CLI and explains how to configure them for productive development workflows.
 
@@ -43,7 +44,7 @@ GEMINI.md is the foundational context mechanism. It is a Markdown file that Gemi
 ### File Hierarchy
 
 | Location | Scope | Purpose |
-|---|---|---|
+|--|--|--|
 | `~/.gemini/GEMINI.md` | All projects | Personal coding style, universal preferences |
 | `./GEMINI.md` (project root) | Current project | Architecture, stack, conventions |
 | `./src/GEMINI.md` | Specific directory | Module-specific patterns |
@@ -168,22 +169,17 @@ MCP servers are configured in `settings.json`:
 
 ```json
 {
-  "mcpServers": {
-    "github": {
-      "command": "npx",
-      "args": ["-y", "@anthropic/mcp-server-github"]
-    },
-    "postgres": {
-      "httpUrl": "http://localhost:3001/mcp"
-    },
-    "custom-tool": {
-      "command": "python",
-      "args": ["./scripts/my-mcp-server.py"],
-      "env": {
-        "API_KEY": "${MY_API_KEY}"
-      }
-    }
-  }
+ "mcpServers": {
+ "github": {
+ "command": "npx", "args": ["-y", "@anthropic/mcp-server-github"]
+ }, "postgres": {
+ "httpUrl": "http://localhost:3001/mcp"
+ }, "custom-tool": {
+ "command": "python", "args": ["./scripts/my-mcp-server.py"], "env": {
+ "API_KEY": "${MY_API_KEY}"
+ }
+ }
+ }
 }
 ```
 
@@ -199,7 +195,7 @@ Gemini CLI supports three MCP transport mechanisms:
 
 ### MCP Prompts as Slash Commands
 
-MCP servers can expose predefined prompts as slash commands. If a connected server exposes a prompt named "analyze-performance," you can invoke it with `/analyze-performance` directly in the CLI.
+MCP servers can expose predefined prompts as slash commands. If a connected server exposes a prompt named "analyze-performance, " you can invoke it with `/analyze-performance` directly in the CLI.
 
 ### When to Use MCP
 

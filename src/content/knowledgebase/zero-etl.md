@@ -1,7 +1,7 @@
 ---
 title: "What is Zero-ETL?"
 meta_title: "What is Zero-ETL? | Expert Data Lakehouse & AI Glossary"
-description: "An architectural goal seeking to connect operational databases directly to analytical endpoints without heavy intermediary data transformation loops. Learn the architecture, mechanics, and real-world value of Zero-ETL in the modern data stack."
+description: "An architectural goal seeking to connect operational databases directly to analytical endpoints without heavy intermediary data transformation loops."
 ---
 
 ## What is Zero-ETL?

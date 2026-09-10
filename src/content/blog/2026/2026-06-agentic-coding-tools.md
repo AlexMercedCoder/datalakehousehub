@@ -1,6 +1,6 @@
 ---
 title: "The Complete Guide to Agentic Coding Tools in 2026"
-description: "A deep dive into the four categories of agentic coding tools dominating 2026: CLI agents, desktop IDEs, 24/7 autonomous agents, and model routers. 40+ tools compared."
+description: "A deep dive into the four categories of agentic coding tools dominating 2026: CLI agents, desktop IDEs, 24/7 autonomous agents, and model routers."
 date: 2026-06-08T09:00:00Z
 slug: "agentic-coding-tools"
 draft: false
@@ -14,7 +14,6 @@ tags:
   - "autonomous coding agents"
   - "model routers"
 ---
-
 The terminal is back. Not the green phosphor CRT kind, but the ethos. In 2026, the most interesting work in developer tooling happens at a command prompt, inside an IDE panel, or through a chat app you already have open. Agentic coding tools have exploded from a handful of experimental projects into a full ecosystem with hundreds of options, billions of API calls per month, and a pace of change that makes last year's roundups feel like ancient history.
 
 I track this space obsessively, across four distinct categories. Each solves a different problem. Each has its own tradeoffs. Here is the breakdown.
@@ -31,7 +30,7 @@ It scores 80.9 percent on SWE-Bench Verified, the highest of any publicly availa
 
 ### OpenCode
 
-With over 140,000 GitHub stars, OpenCode is the open-source alternative that refuses to be ignored. It supports 75-plus LLM providers through a unified adapter layer. Want Claude for reasoning and a local Qwen model for quick edits? OpenCode handles that. It runs multi-session workflows, has a plugin system called "SLIM," and operates locally so your code never touches a server unless you want it to.
+With over 140, 000 GitHub stars, OpenCode is the open-source alternative that refuses to be ignored. It supports 75-plus LLM providers through a unified adapter layer. Want Claude for reasoning and a local Qwen model for quick edits? OpenCode handles that. It runs multi-session workflows, has a plugin system called "SLIM, " and operates locally so your code never touches a server unless you want it to.
 
 The project moves fast, and that speed comes with occasional breakage. But for developers who want maximum model flexibility without vendor lock-in, OpenCode is the default choice.
 
@@ -43,7 +42,7 @@ Codex has extensions for VS Code, Cursor, and Windsurf, making it a hybrid betwe
 
 ### Aider
 
-Aider is the veteran of the category, with 39,000 GitHub stars, 4.1 million installations, and 15 billion tokens processed per week. It auto-commits to git with sensible commit messages, works with over 100 languages, and supports Claude, GPT, DeepSeek, and local models via Ollama.
+Aider is the veteran of the category, with 39, 000 GitHub stars, 4.1 million installations, and 15 billion tokens processed per week. It auto-commits to git with sensible commit messages, works with over 100 languages, and supports Claude, GPT, DeepSeek, and local models via Ollama.
 
 The voice-to-code feature is surprisingly useful. Dictating "refactor this function to use async/await" while scrolling through code feels faster than typing it. Aider remains the gold standard for terminal pair programming, and it is completely free and open source.
 
@@ -61,7 +60,7 @@ Goose is MCP-extensible, meaning any tool that speaks the Model Context Protocol
 
 ### Gemini CLI
 
-Google's entry is open source and offers the most generous free tier in the category: 1,000 requests per day with a Google account. That is effectively unlimited for most developers. The 1 million token context window matches Claude Code, and built-in web search grounding lets the agent pull documentation live.
+Google's entry is open source and offers the most generous free tier in the category: 1, 000 requests per day with a Google account. That is effectively unlimited for most developers. The 1 million token context window matches Claude Code, and built-in web search grounding lets the agent pull documentation live.
 
 Gemini CLI supports conversation checkpointing, so you can pause a session and resume it later. The model router automatically picks Gemini 2.5 Pro for complex reasoning and Gemini 2.5 Flash for quick tasks. If Google keeps this free tier, it will be hard to beat for experimentation and learning.
 
@@ -91,7 +90,7 @@ Augment scored first on SWE-Bench Pro and counts MongoDB, Spotify, and Webflow a
 
 ### Roo Code / Kilo Code
 
-Roo Code (formerly Roo Cline) and Kilo Code (formerly Kilocode) are both VS Code extensions that function as standalone CLI agents. Roo Code has a reputation for reliability on large multi-file changes -- "when other agents break down, use Roo" is a common sentiment.
+Roo Code (formerly Roo Cline) and Kilo Code (formerly Kilocode) are both VS Code extensions that function as standalone CLI agents. Roo Code has a reputation for reliability on large multi-file changes, "when other agents break down, use Roo" is a common sentiment.
 
 Kilo Code supports 500-plus models across 60-plus providers, has an orchestrator mode that breaks complex tasks into subagent workflows, and offers full transparency by showing every token and cost in real time. Both operate on pay-as-you-go pricing.
 
@@ -109,7 +108,7 @@ Forge Code is a relative newcomer that focuses on agentic CI/CD pipelines. It ge
 
 ### Qwen Code
 
-Alibaba's Qwen Code offers a completely free API, which is remarkable for a tool that scores around 70.6 percent on SWE-Bench. The 1 million token context window matches Claude Code. The catch is availability -- the free API has rate limits, and while Alibaba is clearly subsidizing it for market share, nobody knows how long that will last. For experimentation and learning, it is unbeatable value.
+Alibaba's Qwen Code offers a completely free API, which is remarkable for a tool that scores around 70.6 percent on SWE-Bench. The 1 million token context window matches Claude Code. The catch is availability, the free API has rate limits, and while Alibaba is clearly subsidizing it for market share, nobody knows how long that will last. For experimentation and learning, it is unbeatable value.
 
 ### T3 Code
 
@@ -135,7 +134,7 @@ A typical pull request costs around $4-5 in background agent compute. Cursor pri
 
 ### Windsurf
 
-Windsurf introduced "Flows," a persistent context mechanism that keeps the agent aware of your work across sessions. Unlike Cursor, which starts fresh each time, Windsurf remembers what you were working on, what decisions you made, and why you made them.
+Windsurf introduced "Flows, " a persistent context mechanism that keeps the agent aware of your work across sessions. Unlike Cursor, which starts fresh each time, Windsurf remembers what you were working on, what decisions you made, and why you made them.
 
 The price increased from $15 to $20 per month in March 2026, which caused some grumbling. Windsurf still offers the best continuous context experience, and its multi-model support lets you pick the best model for each task.
 
@@ -157,7 +156,7 @@ Claude Desktop integrates with your local file system and runs code directly on 
 
 OpenAI's desktop application mirrors Claude Desktop but for the GPT-5 series models. It runs on macOS and Windows and lets non-engineers dispatch coding tasks through a chat interface. The cloud sandbox executes code remotely, so you do not need a development environment.
 
-Codex Desktop has its own version of background execution. You can kick off a task -- refactor a module, add tests, update documentation -- and switch to other work while the agent keeps running in the cloud. The results appear as a pull request when done. Combined with the ChatGPT Pro subscription, this makes Codex Desktop a strong contender for teams that want async coding without managing infrastructure.
+Codex Desktop has its own version of background execution. You can kick off a task, refactor a module, add tests, update documentation, and switch to other work while the agent keeps running in the cloud. The results appear as a pull request when done. Combined with the ChatGPT Pro subscription, this makes Codex Desktop a strong contender for teams that want async coding without managing infrastructure.
 
 ### GitHub Copilot in VS Code
 
@@ -167,7 +166,7 @@ Copilot is the default choice for millions of VS Code users because it ships wit
 
 ### Continue.dev
 
-Continue is the open-source IDE extension that works with both VS Code and JetBrains. With 26,000 GitHub stars, it is the only tool in this category with full cross-editor support. You bring your own models: local via Ollama, cloud via any provider, or a mix of both.
+Continue is the open-source IDE extension that works with both VS Code and JetBrains. With 26, 000 GitHub stars, it is the only tool in this category with full cross-editor support. You bring your own models: local via Ollama, cloud via any provider, or a mix of both.
 
 The tab completion quality is improving, and the slash command system lets you define custom workflows. Continue is not as polished as Cursor, but it is the most flexible option for developers who refuse to switch editors.
 
@@ -249,9 +248,9 @@ The most interesting shift in 2026 is the move from interactive pair programming
 
 ### OpenClaw
 
-OpenClaw is the largest open-source agent runtime by adoption with 369,000 GitHub stars and 3.2 million active users. It runs on Node.js, bridges 7-plus messaging platforms (Telegram, Discord, Slack, WhatsApp, Signal, WeChat), and routes tasks to any LLM backend.
+OpenClaw is the largest open-source agent runtime by adoption with 369, 000 GitHub stars and 3.2 million active users. It runs on Node.js, bridges 7-plus messaging platforms (Telegram, Discord, Slack, WhatsApp, Signal, WeChat), and routes tasks to any LLM backend.
 
-The sub-agent orchestration via the Agent Client Protocol (ACP) lets OpenClaw dispatch coding work to Claude Code, Codex CLI, or Cursor as sub-agents. The ClawHub marketplace has 44,000 community skills. Need an agent that monitors your AWS bill and DMs you when costs spike? There is a skill for that.
+The sub-agent orchestration via the Agent Client Protocol (ACP) lets OpenClaw dispatch coding work to Claude Code, Codex CLI, or Cursor as sub-agents. The ClawHub marketplace has 44, 000 community skills. Need an agent that monitors your AWS bill and DMs you when costs spike? There is a skill for that.
 
 OpenClaw runs on a single `npx openclaw` command or a DigitalOcean one-click droplet for about $24 per month. The ecosystem includes KiloClaw ($49 per month managed hosting), NemoClaw (NVIDIA enterprise container), and ZeroClaw (Rust reimplementation for performance).
 
@@ -259,7 +258,7 @@ The weakness is that self-hosting carries operational burden, and skill quality 
 
 ### Hermes Agent
 
-Hermes Agent from Nous Research launched in February 2026 and grew to 64,000 GitHub stars in three months. It is a Python-based, self-improving agent harness. Every time it solves a problem, it generates a skill document so it can reuse that approach later without being told.
+Hermes Agent from Nous Research launched in February 2026 and grew to 64, 000 GitHub stars in three months. It is a Python-based, self-improving agent harness. Every time it solves a problem, it generates a skill document so it can reuse that approach later without being told.
 
 The persistent cross-session memory uses FTS5 session search and LLM-curated memory with periodic nudges. Hermes connects to Telegram, Discord, Slack, WhatsApp, and Signal. It runs on local, Docker, SSH, Singularity, Modal, Daytona, and Vercel Sandbox.
 
@@ -309,7 +308,7 @@ Code Channels requires Anthropic Max ($100-200 per month). The agent stops if Cl
 
 ### Devin
 
-Cognition's Devin was the first "AI software engineer" to capture mainstream attention, and it has matured into a production tool used by Goldman Sachs in a hybrid workforce model of 12,000 human developers plus agents.
+Cognition's Devin was the first "AI software engineer" to capture mainstream attention, and it has matured into a production tool used by Goldman Sachs in a hybrid workforce model of 12, 000 human developers plus agents.
 
 Devin spins up a full cloud VM with browser, terminal, and editor. You assign tasks via Slack or web UI, and Devin delivers a pull request with tests and documentation. The pricing is $20 per month for Core plus ACU compute at $9 per hour of active work. The team plan runs $500 per month with 250 ACUs.
 

@@ -2,6 +2,7 @@
 title: "What is Project Nessie?"
 meta_title: "What is Project Nessie? | Expert Data Lakehouse Architecture Guide"
 description: "A comprehensive guide to Project Nessie. Learn about Git-like version control for data lakes, branch isolation, and multi-table transactions."
+canonical: "https://iceberglakehouse.com/iceberg/project-nessie/"
 ---
 
 # What is Project Nessie?

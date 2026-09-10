@@ -15,13 +15,12 @@ slug: 2025-04-boosting-llm-performance
 draft: false
 image: "/images/blog.png"
 ---
-
-## Free Resources  
-- **[Free Apache Iceberg Course](https://hello.dremio.com/webcast-an-apache-iceberg-lakehouse-crash-course-reg.html?utm_source=ev_external_blog&utm_medium=influencer&utm_campaign=AItoLLMS&utm_content=alexmerced&utm_term=external_blog)**  
-- **[Free Copy of “Apache Iceberg: The Definitive Guide”](https://hello.dremio.com/wp-apache-iceberg-the-definitive-guide-reg.html?utm_source=ev_external_blog&utm_medium=influencer&utm_campaign=AItoLLMS&utm_content=alexmerced&utm_term=external_blog)**  
-- **[2025 Apache Iceberg Architecture Guide](https://medium.com/data-engineering-with-dremio/2025-guide-to-architecting-an-iceberg-lakehouse-9b19ed42c9de)**  
-- **[How to Join the Iceberg Community](https://medium.alexmerced.blog/guide-to-finding-apache-iceberg-events-near-you-and-being-part-of-the-greater-iceberg-community-0c38ae785ddb)**  
-- **[Iceberg Lakehouse Engineering Video Playlist](https://youtube.com/playlist?list=PLsLAVBjQJO0p0Yq1fLkoHvt2lEJj5pcYe&si=WTSnqjXZv6Glkc3y)**  
+## Free Resources 
+- **[Free Apache Iceberg Course](https://hello.dremio.com/webcast-an-apache-iceberg-lakehouse-crash-course-reg.html?utm_source=ev_external_blog&utm_medium=influencer&utm_campaign=AItoLLMS&utm_content=alexmerced&utm_term=external_blog)** 
+- **[Free Copy of “Apache Iceberg: The Definitive Guide”](https://hello.dremio.com/wp-apache-iceberg-the-definitive-guide-reg.html?utm_source=ev_external_blog&utm_medium=influencer&utm_campaign=AItoLLMS&utm_content=alexmerced&utm_term=external_blog)** 
+- **[2025 Apache Iceberg Architecture Guide](https://medium.com/data-engineering-with-dremio/2025-guide-to-architecting-an-iceberg-lakehouse-9b19ed42c9de)** 
+- **[How to Join the Iceberg Community](https://medium.alexmerced.blog/guide-to-finding-apache-iceberg-events-near-you-and-being-part-of-the-greater-iceberg-community-0c38ae785ddb)** 
+- **[Iceberg Lakehouse Engineering Video Playlist](https://youtube.com/playlist?list=PLsLAVBjQJO0p0Yq1fLkoHvt2lEJj5pcYe&si=WTSnqjXZv6Glkc3y)** 
 - **[Ultimate Apache Iceberg Resource Guide](https://medium.com/data-engineering-with-dremio/ultimate-directory-of-apache-iceberg-resources-e3e02efac62e)** 
 
 In our last post, we explored how LLMs process text using embeddings and vector spaces within limited context windows. While LLMs are powerful out-of-the-box, they aren’t perfect - and in many real-world scenarios, we need to push them further.
@@ -30,8 +29,8 @@ That’s where enhancement techniques come in.
 
 In this post, we’ll walk through the three most popular and practical ways to **boost the performance of Large Language Models (LLMs)**:
 
-1. Fine-tuning  
-2. Prompt engineering  
+1. Fine-tuning 
+2. Prompt engineering 
 3. Retrieval-Augmented Generation (RAG)
 
 Each approach has its strengths, trade-offs, and ideal use cases. By the end, you’ll know when to use each - and how they work under the hood.
@@ -53,11 +52,11 @@ Think of it like giving the model a focused education after it’s graduated fro
 - You have recurring, structured inputs that aren’t handled well with prompting alone
 
 ### Trade-offs:
-| Pros                              | Cons                              |
-|-----------------------------------|-----------------------------------|
-| Highly accurate for specific tasks| Expensive (compute + time)        |
-| Reduces prompt complexity         | Risk of overfitting or forgetting |
-| Works well offline or locally     | Not ideal for frequently changing data |
+| Pros | Cons |
+|------------------|------------------|
+| Highly accurate for specific tasks| Expensive (compute + time) |
+| Reduces prompt complexity | Risk of overfitting or forgetting |
+| Works well offline or locally | Not ideal for frequently changing data |
 
 > Fine-tuning is powerful, but it’s not always the first choice - especially when you need flexibility or real-time knowledge.
 
@@ -69,11 +68,11 @@ Sometimes, you don’t need to retrain the model - you just need to *talk to it 
 
 ### Prompting patterns:
 - **Zero-shot prompting**: Just ask a question
-  > “Summarize this article.”
+ > “Summarize this article.”
 - **Few-shot prompting**: Show examples
-  > “Here’s how I want you to respond…”
+ > “Here’s how I want you to respond…”
 - **Chain-of-Thought (CoT)**: Encourage reasoning
-  > “Let’s think step by step…”
+ > “Let’s think step by step…”
 
 ### Tools and techniques:
 - Templates: Reusable format strings with variables
@@ -87,11 +86,11 @@ Sometimes, you don’t need to retrain the model - you just need to *talk to it 
 - You need to quickly iterate and improve outcomes
 
 ### Trade-offs:
-| Pros                             | Cons                                 |
-|----------------------------------|--------------------------------------|
-| Fast to test and implement       | Sensitive to wording                 |
-| Doesn’t require model access     | Can be brittle or unpredictable      |
-| Great for prototyping            | Doesn’t scale well for complex logic |
+| Pros | Cons |
+|-----------------|-------------------|
+| Fast to test and implement | Sensitive to wording |
+| Doesn’t require model access | Can be brittle or unpredictable |
+| Great for prototyping | Doesn’t scale well for complex logic |
 
 > Prompt engineering is like UX for AI - small changes in input can completely change the output.
 
@@ -120,11 +119,11 @@ User → Query → Vector Search (Embeddings) → Top K Documents → LLM Prompt
 - LLMs that read log files, support tickets, or PDFs
 
 ### Trade-offs:
-| Pros                                  | Cons                                  |
-|---------------------------------------|---------------------------------------|
-| Real-time access to changing data     | Adds latency due to search layer      |
-| No need to retrain the model          | Requires infrastructure (DB + search) |
-| Keeps context windows lean            | Needs good chunking & ranking logic   |
+| Pros | Cons |
+|--------------------|--------------------|
+| Real-time access to changing data | Adds latency due to search layer |
+| No need to retrain the model | Requires infrastructure (DB + search) |
+| Keeps context windows lean | Needs good chunking & ranking logic |
 
 > With RAG, your LLM becomes a smart interface to *your* data - not just the internet.
 
@@ -132,11 +131,11 @@ User → Query → Vector Search (Embeddings) → Top K Documents → LLM Prompt
 
 Here’s a quick cheat sheet to help you choose:
 
-| Goal                               | Best Technique           |
-|------------------------------------|--------------------------|
-| Specialize a model on internal tasks | Fine-tuning             |
-| Guide output or behavior flexibly   | Prompt engineering       |
-| Inject dynamic, real-time knowledge | Retrieval-Augmented Gen  |
+| Goal | Best Technique |
+|------------------|-------------|
+| Specialize a model on internal tasks | Fine-tuning |
+| Guide output or behavior flexibly | Prompt engineering |
+| Inject dynamic, real-time knowledge | Retrieval-Augmented Gen |
 
 Often, the best systems **combine** these techniques:
 - Fine-tuned base model
@@ -147,13 +146,13 @@ This is exactly what advanced AI agent systems are starting to do - and it’s w
 
 ## Recap: Boosting LLMs Is All About Context and Control
 
-| Technique         | What It Does                                  | Ideal For                           |
-|------------------|------------------------------------------------|-------------------------------------|
-| Fine-Tuning       | Teaches model new behavior                    | Repetitive, specialized tasks       |
-| Prompt Engineering| Crafts effective inputs                       | Fast prototyping, hosted models     |
-| RAG               | Adds knowledge dynamically at runtime         | Large, evolving, external datasets  |
+| Technique | What It Does | Ideal For |
+|---------|------------------------|-------------------|
+| Fine-Tuning | Teaches model new behavior | Repetitive, specialized tasks |
+| Prompt Engineering| Crafts effective inputs | Fast prototyping, hosted models |
+| RAG | Adds knowledge dynamically at runtime | Large, evolving, external datasets |
 
----
+--
 
 ## Up Next: What Are AI Agents : And Why They’re the Future
 

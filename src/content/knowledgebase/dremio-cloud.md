@@ -1,7 +1,7 @@
 ---
 title: "What is Dremio Cloud?"
 meta_title: "What is Dremio Cloud? | Expert Data Lakehouse & AI Glossary"
-description: "The completely managed service platform executing analytics without generating challenging inherent physical maintenance requirements whatsoever. Learn the architecture, mechanics, and real-world value of Dremio Cloud in the modern data stack."
+description: "The completely managed service platform executing analytics without generating challenging inherent physical maintenance requirements whatsoever."
 ---
 
 ## What is Dremio Cloud?

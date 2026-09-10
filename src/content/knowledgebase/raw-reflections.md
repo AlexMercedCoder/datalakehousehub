@@ -1,7 +1,7 @@
 ---
 title: "What is Raw Reflections?"
 meta_title: "What is Raw Reflections? | Expert Data Lakehouse & AI Glossary"
-description: "A specific organizational mechanism storing explicitly filtered records dramatically improving basic highly repetitive query operations. Learn the architecture, mechanics, and real-world value of Raw Reflections in the modern data stack."
+description: "A specific organizational mechanism storing explicitly filtered records dramatically improving basic highly repetitive query operations."
 ---
 
 ## What is Raw Reflections?

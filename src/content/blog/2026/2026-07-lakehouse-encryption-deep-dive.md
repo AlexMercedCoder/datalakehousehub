@@ -11,12 +11,14 @@ slug: "lakehouse-encryption-deep-dive"
 draft: false
 image: "/images/blog.png"
 canonical: https://iceberglakehouse.com/posts/lakehouse-encryption-deep-dive/
+description: "By Alex Merced, Head of Developer Relations at Dremio"
 ---
-> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/lakehouse-encryption-deep-dive/).
 
 # File Encryption for the Lakehouse: The Terminology, the Machinery, and the Hard Problem of Interoperable Encrypted Tables
 
 *By Alex Merced, Head of Developer Relations at Dremio*
+
+> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/lakehouse-encryption-deep-dive/).
 
 For years, the open lakehouse had an honest gap that practitioners whispered about and slide decks skipped: encryption. Not the checkbox kind, every cloud bucket has offered that for a decade, but the real kind, where the data itself is cryptographically protected in a way that survives a compromised bucket, satisfies a regulator, and still works when five different query engines from five different vendors need to read the same table. That last clause is the hard part, and it is why encryption arrived at the lakehouse years after transactions, evolution, and time travel.
 
@@ -30,7 +32,7 @@ Start with the question that stalls half the encryption conversations I have: ou
 
 Server-side encryption, the SSE in your S3 configuration, means the storage service encrypts bytes before writing them to its disks and decrypts them on every authorized read. It is genuinely valuable and genuinely narrow: it protects against threats to the physical storage layer, stolen drives, decommissioned hardware, a breach beneath the service's API. Against everything above that line it does nothing, because the service transparently decrypts for any caller with bucket permissions. A leaked credential, an over-broad IAM role, a compromised service, a malicious insider with storage access: every one of them reads plaintext, because to the storage API, they are authorized.
 
-Threat modeling makes the gap precise. Server-side encryption answers "what if someone steals the disks." It does not answer "what if someone gets into the bucket," which is the overwhelmingly more common incident, nor "what if the storage provider itself must be outside the trust boundary," which is the sovereignty and regulated-industry requirement, nor "how do I prove to an auditor that a specific column of personal data was unreadable to everyone without a specific key." Those questions require the data to be encrypted before it reaches storage, under keys the storage service never holds, decryptable only by clients you control. That is client-side encryption, and in the lakehouse, where the clients are a fleet of heterogeneous query engines sharing files, client-side encryption is exactly the interoperability puzzle this article exists to work through.
+Threat modeling makes the gap precise. Server-side encryption answers "what if someone steals the disks." It does not answer "what if someone gets into the bucket, " which is the overwhelmingly more common incident, nor "what if the storage provider itself must be outside the trust boundary, " which is the sovereignty and regulated-industry requirement, nor "how do I prove to an auditor that a specific column of personal data was unreadable to everyone without a specific key." Those questions require the data to be encrypted before it reaches storage, under keys the storage service never holds, decryptable only by clients you control. That is client-side encryption, and in the lakehouse, where the clients are a fleet of heterogeneous query engines sharing files, client-side encryption is exactly the interoperability puzzle this article exists to work through.
 
 The honest framing, which I will repeat at the end: bucket-level encryption plus access control is a legitimate, sufficient posture for plenty of estates. The machinery below is for the estates where it is not, regulated data, multi-tenant platforms, sovereignty constraints, defense in depth mandates, and the population of those estates grows every year the AI era pushes more sensitive data into analytical reach.
 

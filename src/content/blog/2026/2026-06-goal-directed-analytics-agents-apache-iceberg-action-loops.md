@@ -1,6 +1,6 @@
 ---
 title: "Goal-Directed Analytics Agents on Apache Iceberg"
-description: "How goal-directed analytics agents decompose business questions into sub-tasks, execute action loops over Apache Iceberg tables, and use the lakehouse as both a data source and a state store for agent action logs."
+description: "How goal-directed analytics agents decompose business questions into sub-tasks, execute action loops over Apache Iceberg tables, and use the lakehouse."
 date: 2026-06-08T09:00:00Z
 slug: "goal-directed-analytics-agents-apache-iceberg-action-loops"
 draft: false
@@ -15,7 +15,6 @@ tags:
   - "agent tool-use patterns"
   - "analytics agent security"
 ---
-
 A prompt-response AI answers one question and stops. A goal-directed analytics agent holds a business objective, decomposes it into sub-tasks, executes each sub-task against live data, evaluates the result, and decides whether to continue or escalate. It does not stop after one query because one query is rarely enough to answer a real business question.
 
 Consider a goal like "Find out why Q3 revenue dropped by 8 percent compared to Q2." A prompt-response AI might execute a single SQL query and produce a plausible-sounding but factually incorrect answer. A goal-directed agent would decompose that goal into sub-tasks: check revenue by product category, check revenue by region, check for pricing changes, check for inventory issues, check for marketing campaign timing, check for competitor activity in the news. Each sub-task produces data that the next sub-task builds on. The agent loops until it has enough evidence to form a conclusion.
@@ -62,20 +61,14 @@ The schema for an agent action log table looks like this:
 
 ```sql
 CREATE TABLE catalog.system.agent_action_log (
-    session_id VARCHAR,
-    action_id VARCHAR,
-    parent_action_id VARCHAR,       -- NULL for root actions
-    goal TEXT,                      -- The original business goal
-    sub_task_type VARCHAR,          -- semantic_query, sql_exploration, comparison, external_lookup, summarization
-    phase VARCHAR,                  -- observe, orient, decide, act
-    phase_started_at TIMESTAMP,
-    phase_completed_at TIMESTAMP,
-    input_data TEXT,                -- SQL query, tool call parameters, API request
-    output_data TEXT,               -- Query results, analysis, decision text
-    tokens_used INTEGER,
-    model_id VARCHAR,
-    status VARCHAR,                 -- completed, failed, escalated
-    error_message TEXT
+ session_id VARCHAR, action_id VARCHAR, parent_action_id VARCHAR, NULL for root actions
+ goal TEXT, The original business goal
+ sub_task_type VARCHAR, semantic_query, sql_exploration, comparison, external_lookup, summarization
+ phase VARCHAR, observe, orient, decide, act
+ phase_started_at TIMESTAMP, phase_completed_at TIMESTAMP, input_data TEXT, SQL query, tool call parameters, API request
+ output_data TEXT, Query results, analysis, decision text
+ tokens_used INTEGER, model_id VARCHAR, status VARCHAR, completed, failed, escalated
+ error_message TEXT
 ) PARTITIONED BY (date(phase_started_at))
 ```
 
@@ -87,7 +80,7 @@ Using Iceberg for this table gives you:
 
 **Schema evolution.** As you add new phases or sub-task types, the action log schema evolves without breaking existing queries. Old entries have NULL for new columns.
 
-**Partition pruning.** When reviewing a specific agent session, the query planner prunes to the single date partition of that session. Reviewing a 10,000-action session takes milliseconds.
+**Partition pruning.** When reviewing a specific agent session, the query planner prunes to the single date partition of that session. Reviewing a 10, 000-action session takes milliseconds.
 
 **Concurrent reads.** Multiple reviewers (human analysts, automated audit systems) can read the action log simultaneously without locks.
 
@@ -103,7 +96,7 @@ The correct set of tools for an analytics agent, ranked from most constrained to
 
 2. **Schema discovery tools.** `list_catalogs()`, `list_schemas(catalog)`, `get_table_schema(catalog, schema, table)`. These tools let the agent discover what data is available. They return metadata only, no row data.
 
-3. **Scoped SQL tools.** `run_read_only_query(sql, max_rows, max_duration_seconds)`. This tool executes arbitrary SQL but enforces strict limits: no DML, no DDL, max 10,000 rows returned, max 30 seconds execution. The SQL is logged, validated (parsed to confirm read-only), and executed under a restricted catalog principal.
+3. **Scoped SQL tools.** `run_read_only_query(sql, max_rows, max_duration_seconds)`. This tool executes arbitrary SQL but enforces strict limits: no DML, no DDL, max 10, 000 rows returned, max 30 seconds execution. The SQL is logged, validated (parsed to confirm read-only), and executed under a restricted catalog principal.
 
 4. **Comparison tools.** `compare_metrics(metric, period_a, period_b, dimensions)`. This tool computes a structured comparison between two time periods, highlighting changes and statistical significance.
 

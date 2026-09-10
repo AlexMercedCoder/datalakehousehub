@@ -16,15 +16,16 @@ draft: false
 image: "/images/blog.png"
 canonical: "https://iceberglakehouse.com/posts/2026-03-context-openai-codex/"
 ---
-> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-03-context-openai-codex/).
 
 OpenAI Codex is not a chatbot. It is an autonomous software engineering agent that runs tasks in isolated cloud sandboxes, operates across a browser interface, a command-line tool, and a dedicated macOS app, and can work on multiple tasks in parallel. Because of this architecture, context management in Codex works fundamentally differently from ChatGPT or traditional coding assistants. Instead of conversational context windows, you manage context through persistent configuration files, skill definitions, and project-level instructions that shape how the agent approaches your codebase.
+
+> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-03-context-openai-codex/).
 
 This guide covers every context management mechanism Codex provides, explains when to use each one, and walks through practical strategies for getting the agent to produce reliable, project-aligned results across all three interfaces.
 
 ## Understanding How Codex Handles Context
 
-Codex operates with a large context window (approximately 192,000 tokens), which means it can reason about substantial portions of a codebase in a single task. But context in Codex is not just conversation history. The agent assembles its context dynamically from multiple sources:
+Codex operates with a large context window (approximately 192, 000 tokens), which means it can reason about substantial portions of a codebase in a single task. But context in Codex is not just conversation history. The agent assembles its context dynamically from multiple sources:
 
 1. **Your repository:** Codex clones your repo into a sandboxed environment for each task
 2. **AGENTS.md files:** Persistent instructions that live in your repository
@@ -38,7 +39,7 @@ The key insight is that most of Codex's context comes from your repository itsel
 
 ### Minimal Context (Quick Tasks)
 
-For simple, self-contained tasks like "add input validation to this function" or "write unit tests for utils.py," the task prompt and the codebase itself provide sufficient context. Codex will explore the relevant files, understand the patterns, and produce targeted changes. You do not need to provide extensive background.
+For simple, self-contained tasks like "add input validation to this function" or "write unit tests for utils.py, " the task prompt and the codebase itself provide sufficient context. Codex will explore the relevant files, understand the patterns, and produce targeted changes. You do not need to provide extensive background.
 
 ### Moderate Context (Targeted Changes)
 
@@ -118,10 +119,10 @@ Skills are defined as structured folders with a manifest file:
 ```markdown
 # SKILL.md
 
----
+--
 name: create-api-endpoint
 description: Creates a new REST API endpoint with validation, tests, and documentation
----
+--
 
 ## Steps
 1. Create the route file in backend/api/routes/
@@ -211,7 +212,7 @@ MCP servers are configured through the CLI:
 codex mcp add playwright
 
 # Add a custom database MCP server
-codex mcp add my-db-server --command "node /path/to/db-mcp.js"
+codex mcp add my-db-server -command "node /path/to/db-mcp.js"
 ```
 
 ## External Documents: When to Use PDFs vs. Markdown

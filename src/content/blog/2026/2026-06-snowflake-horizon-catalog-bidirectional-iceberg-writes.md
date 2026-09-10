@@ -1,6 +1,6 @@
 ---
 title: "Bidirectional Iceberg Writes with Horizon Catalog"
-description: "Snowflake Horizon Catalog enables bidirectional Iceberg writes from external engines like Spark and Trino, powered by Apache Polaris. Deep dive into REST Scan Plan API, governance, and Snowflake Summit 2026 announcements."
+description: "Snowflake Horizon Catalog enables bidirectional Iceberg writes from external engines like Spark and Trino, powered by Apache Polaris."
 date: 2026-06-08T09:00:00Z
 slug: "snowflake-horizon-catalog-bidirectional-iceberg-writes"
 draft: false
@@ -15,7 +15,6 @@ tags:
   - "Open Catalog vs Horizon"
   - "Snowflake Summit 2026"
 ---
-
 For years, the limitation of Snowflake's Iceberg support was direction. You could read Iceberg tables managed by external catalogs (AWS Glue, Polaris, Unity Catalog) from Snowflake. You could write Iceberg tables through Snowflake and read them in Snowflake. But you could not write to a Snowflake-managed Iceberg table from an external engine. If your Spark pipeline needed to update a table that Snowflake also owned, you either ran the pipeline inside Snowflake or you accepted a multi-copy architecture where the two engines maintained separate tables.
 
 That limitation ended in March 2026, when Snowflake announced public preview of external writes to Snowflake-managed Iceberg tables through the Horizon Catalog. At Snowflake Summit 2026 (June 2026), the company confirmed that bidirectional Iceberg interoperability is now a core capability of the platform, powered by Apache Polaris (which graduated to Apache top-level project in February 2026).
@@ -140,6 +139,6 @@ For teams evaluating multi-engine lakehouse architectures, Snowflake Horizon Cat
 
 Snowflake Summit 2026 confirmed that catalog interoperability is now the primary competitive dimension in the lakehouse market. Snowflake's bet on Apache Polaris as the standard Iceberg REST catalog implementation positions Horizon Catalog as the most interoperable option for multi-engine architectures that include external compute.
 
----
+--
 
 *For detailed documentation on Horizon Catalog bidirectional writes, visit [docs.snowflake.com](https://docs.snowflake.com/en/user-guide/tables-iceberg-query-using-external-query-engine-snowflake-horizon). To explore Iceberg interoperability with a governed multi-engine lakehouse, start a free trial at [dremio.com/get-started](https://www.dremio.com/get-started).*

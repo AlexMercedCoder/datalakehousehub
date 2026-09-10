@@ -10,7 +10,6 @@ bannerImage: "https://i.imgur.com/cpoMZQ8.png"
 tags:
   - Database
 ---
-
 [Follow my Data Youtube Channel](https://www.youtube.com/@alexmerceddata)
 
 The decision between using columnar and row-based data structures can significantly impact the performance and efficiency of data retrieval and processing. This choice is especially crucial when distinguishing between Online Transaction Processing (OLTP) and Online Analytical Processing (OLAP) systems, each optimized for different types of workloads. Understanding the differences between these data structures and their best use cases can help developers and database administrators make informed decisions that enhance system performance and scalability.
@@ -28,27 +27,13 @@ In row-based systems, data is organized as a sequence of records, storing all va
 _json representation of a row based structure_
 ```json
 [
-  {
-    "id": 1,
-    "name": "John Doe",
-    "age": 30,
-    "email": "johndoe@example.com",
-    "occupation": "Software Developer"
-  },
-  {
-    "id": 2,
-    "name": "Jane Smith",
-    "age": 25,
-    "email": "janesmith@example.com",
-    "occupation": "Data Analyst"
-  },
-  {
-    "id": 3,
-    "name": "Mike Johnson",
-    "age": 28,
-    "email": "mikejohnson@example.com",
-    "occupation": "Product Manager"
-  }
+ {
+ "id": 1, "name": "John Doe", "age": 30, "email": "johndoe@example.com", "occupation": "Software Developer"
+ }, {
+ "id": 2, "name": "Jane Smith", "age": 25, "email": "janesmith@example.com", "occupation": "Data Analyst"
+ }, {
+ "id": 3, "name": "Mike Johnson", "age": 28, "email": "mikejohnson@example.com", "occupation": "Product Manager"
+ }
 ]
 ```
 
@@ -72,11 +57,7 @@ In columnar systems, each column of a table is stored separately, which means th
 _json representation of columnar data_
 ```json
 {
-  "id": [1, 2, 3],
-  "name": ["John Doe", "Jane Smith", "Mike Johnson"],
-  "age": [30, 25, 28],
-  "email": ["johndoe@example.com", "janesmith@example.com", "mikejohnson@example.com"],
-  "occupation": ["Software Developer", "Data Analyst", "Product Manager"]
+ "id": [1, 2, 3], "name": ["John Doe", "Jane Smith", "Mike Johnson"], "age": [30, 25, 28], "email": ["johndoe@example.com", "janesmith@example.com", "mikejohnson@example.com"], "occupation": ["Software Developer", "Data Analyst", "Product Manager"]
 }
 ```
 
@@ -95,7 +76,7 @@ OLTP systems are designed to manage transaction-oriented applications. They are 
 **Why Row-based Storage Is Typically Preferred for OLTP**
 
 - **Efficient Transactions**: Row-based storage systems are optimized for the quick retrieval and modification of entire rows, which aligns with the nature of OLTP transactions that often need access to complete records.
-  
+ 
 - **Example Scenarios Where Row-based Storage Excels**: Banking systems, retail point-of-sale systems, and online booking systems are prime examples where the efficiency of row-based storage in handling transactional data is evident.
 
 - **Handling High Transaction Volumes and Concurrency**: Row-based databases are engineered to support high levels of concurrency and fast data manipulation, ensuring data integrity and performance under the load of simultaneous transactions.

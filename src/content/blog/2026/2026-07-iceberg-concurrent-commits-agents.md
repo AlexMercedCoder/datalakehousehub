@@ -1,6 +1,6 @@
 ---
 title: "Surviving Commit Conflicts When Dozens of Writers Hit the Same Iceberg Table"
-description: "Commit conflicts multiply with writer count, and AI agents introduce unpredictable write patterns. Here's how to diagnose, tune, and architect around Iceberg's optimistic concurrency."
+description: "Commit conflicts multiply with writer count, and AI agents introduce unpredictable write patterns."
 date: 2026-07-28T09:00:00Z
 author: "Alex Merced"
 category: "Apache Iceberg"
@@ -15,11 +15,11 @@ image: "/images/blog.png"
 canonical: "https://iceberglakehouse.com/posts/iceberg-concurrent-commits-agents/"
 ---
 
-> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/iceberg-concurrent-commits-agents/).
-
 # Surviving Commit Conflicts When Dozens of Writers Hit the Same Iceberg Table
 
-A compaction job runs for three hours, rewrites 4,000 files, and dies at the last step with `CommitFailedException: Cannot commit changes based on stale table metadata`. The cluster time is gone. The table is unchanged. Somebody reruns it that night and the same thing happens.
+A compaction job runs for three hours, rewrites 4, 000 files, and dies at the last step with `CommitFailedException: Cannot commit changes based on stale table metadata`. The cluster time is gone. The table is unchanged. Somebody reruns it that night and the same thing happens.
+
+> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/iceberg-concurrent-commits-agents/).
 
 This is the most expensive failure mode in Apache Iceberg operations, and it is not a bug. It is optimistic concurrency control doing exactly what the design says it does. The writer assumed it was alone, did all its work, and found out at the end that it was not.
 
@@ -74,7 +74,7 @@ No number of retries fixes that. A's plan was built against files that no longer
 Here is how the two classes compare.
 
 | | Catalog commit conflict | Validation conflict |
-|---|---|---|
+|--|--|--|
 | Detected at | Pointer swap | Conflict check before commit |
 | Cause | Race between two commits | Overlapping data changes |
 | Retry helps | Yes | No |
@@ -102,9 +102,7 @@ Set it per operation type through table properties:
 
 ```sql
 ALTER TABLE catalog.sales.orders SET TBLPROPERTIES (
-  'write.delete.isolation-level' = 'serializable',
-  'write.update.isolation-level' = 'snapshot',
-  'write.merge.isolation-level'  = 'snapshot'
+ 'write.delete.isolation-level' = 'serializable', 'write.update.isolation-level' = 'snapshot', 'write.merge.isolation-level' = 'snapshot'
 );
 ```
 
@@ -142,10 +140,7 @@ Configure them as table properties so every engine writing to the table inherits
 
 ```sql
 ALTER TABLE catalog.sales.orders SET TBLPROPERTIES (
-  'commit.retry.num-retries'       = '10',
-  'commit.retry.min-wait-ms'       = '100',
-  'commit.retry.max-wait-ms'       = '5000',
-  'commit.retry.total-timeout-ms'  = '120000'
+ 'commit.retry.num-retries' = '10', 'commit.retry.min-wait-ms' = '100', 'commit.retry.max-wait-ms' = '5000', 'commit.retry.total-timeout-ms' = '120000'
 );
 ```
 
@@ -155,16 +150,8 @@ Or per client, which is what you want when one writer needs different behavior f
 from pyiceberg.catalog import load_catalog
 
 catalog = load_catalog(
-    "prod",
-    **{
-        "type": "rest",
-        "uri": "https://catalog.example.com",
-        "commit.retry.num-retries": "10",
-        "commit.retry.min-wait-ms": "100",
-        "commit.retry.max-wait-ms": "5000",
-        "commit.retry.total-timeout-ms": "120000",
-    },
-)
+ "prod", **{
+ "type": "rest", "uri": "https://catalog.example.com", "commit.retry.num-retries": "10", "commit.retry.min-wait-ms": "100", "commit.retry.max-wait-ms": "5000", "commit.retry.total-timeout-ms": "120000", }, )
 ```
 
 Reasoning through each value.
@@ -196,25 +183,23 @@ This is the pattern I recommend first for agent writes. An agent appending a row
 **Branch-per-writer with controlled merge.** Iceberg branches give each writer an isolated line of commits. The writer commits to its own branch, a validation step runs, and a merge into the main branch happens under controlled conditions.
 
 ```sql
--- Create a working branch for one agent's batch of changes
+- Create a working branch for one agent's batch of changes
 ALTER TABLE catalog.sales.orders
-  CREATE BRANCH agent_run_2026_07_28
-  RETAIN 7 DAYS;
+ CREATE BRANCH agent_run_2026_07_28
+ RETAIN 7 DAYS;
 
--- The agent writes against its branch only
+- The agent writes against its branch only
 INSERT INTO catalog.sales.orders.branch_agent_run_2026_07_28
 SELECT * FROM staging.corrections;
 
--- Validate before anything reaches main
+- Validate before anything reaches main
 SELECT count(*) AS bad_rows
 FROM catalog.sales.orders.branch_agent_run_2026_07_28
 WHERE order_total < 0;
 
--- Merge once validation passes
+- Merge once validation passes
 CALL catalog.system.fast_forward(
-  table => 'sales.orders',
-  branch => 'main',
-  to     => 'agent_run_2026_07_28'
+ table => 'sales.orders', branch => 'main', to => 'agent_run_2026_07_28'
 );
 ```
 
@@ -234,7 +219,7 @@ The commit is an atomic swap of a pointer, and the catalog owns the pointer. Whi
 
 The practical guidance is short. If you have more than one writer on a table, run a REST catalog. If you are on a filesystem catalog and have concurrent writers, that is a correctness problem to fix ahead of any tuning discussion.
 
-One more catalog property matters at high commit rates: how the catalog stores its state. Polaris runs on a JDBC backend, with Postgres and CockroachDB both documented. A commit is a small transaction against that backend. At 4,000 commits a day, the backend does not notice. At 4,000 commits an hour across a busy estate, backend configuration starts to matter, and the metrics to watch are transaction latency and connection pool saturation rather than anything Iceberg-specific.
+One more catalog property matters at high commit rates: how the catalog stores its state. Polaris runs on a JDBC backend, with Postgres and CockroachDB both documented. A commit is a small transaction against that backend. At 4, 000 commits a day, the backend does not notice. At 4, 000 commits an hour across a busy estate, backend configuration starts to matter, and the metrics to watch are transaction latency and connection pool saturation rather than anything Iceberg-specific.
 
 ## Readers never conflict, and that is worth stating
 
@@ -280,7 +265,7 @@ Notice what is missing from that list: retry tuning. Retries make conflicts surv
 
 **Silent data loss from insufficient retries.** This one is nasty. In some engine and configuration combinations, an exhausted retry budget on a write surfaces as a warning rather than an error, and the pipeline reports success with rows missing. Warning sign: row counts that do not reconcile with source systems on high-concurrency tables. Fix: assert on row counts after every write, and treat any commit failure as a hard error in your orchestration.
 
-**Snapshot growth from tiny commits.** Frequent small writers produce a snapshot per commit. A table taking 4,000 commits a day accumulates snapshots faster than a weekly expiration job removes them, and metadata reads slow for everyone. Warning sign: rising query planning time on a table with no data growth. Fix: expire snapshots more often, and reduce commit frequency by batching agent writes.
+**Snapshot growth from tiny commits.** Frequent small writers produce a snapshot per commit. A table taking 4, 000 commits a day accumulates snapshots faster than a weekly expiration job removes them, and metadata reads slow for everyone. Warning sign: rising query planning time on a table with no data growth. Fix: expire snapshots more often, and reduce commit frequency by batching agent writes.
 
 **Expiration racing writes.** Snapshot expiration is a write. It conflicts. Scheduling it during a busy period means it either fails repeatedly or wins and disrupts something else. Warning sign: expiration job failures clustered at the same time of day. Fix: coordinate maintenance through an explicit lock rather than hoping schedules do not overlap.
 
@@ -316,29 +301,29 @@ from contextlib import contextmanager
 
 @contextmanager
 def table_maintenance_lock(conn, table_id: str):
-    """Advisory lock keyed on table identity. Skips if already held."""
-    key = hash(table_id) % (2**31)
-    with conn.cursor() as cur:
-        cur.execute("SELECT pg_try_advisory_lock(%s)", (key,))
-        acquired = cur.fetchone()[0]
-    if not acquired:
-        yield False
-        return
-    try:
-        yield True
-    finally:
-        with conn.cursor() as cur:
-            cur.execute("SELECT pg_advisory_unlock(%s)", (key,))
+ """Advisory lock keyed on table identity. Skips if already held."""
+ key = hash(table_id) % (2**31)
+ with conn.cursor() as cur:
+ cur.execute("SELECT pg_try_advisory_lock(%s)", (key, ))
+ acquired = cur.fetchone()[0]
+ if not acquired:
+ yield False
+ return
+ try:
+ yield True
+ finally:
+ with conn.cursor() as cur:
+ cur.execute("SELECT pg_advisory_unlock(%s)", (key, ))
 
 
 with psycopg.connect(MAINTENANCE_DSN) as conn:
-    with table_maintenance_lock(conn, "sales.orders") as got_lock:
-        if got_lock:
-            run_compaction("sales.orders")
-            expire_snapshots("sales.orders")
-            rewrite_manifests("sales.orders")
-        else:
-            log.info("maintenance skipped, lock held elsewhere")
+ with table_maintenance_lock(conn, "sales.orders") as got_lock:
+ if got_lock:
+ run_compaction("sales.orders")
+ expire_snapshots("sales.orders")
+ rewrite_manifests("sales.orders")
+ else:
+ log.info("maintenance skipped, lock held elsewhere")
 ```
 
 `pg_try_advisory_lock` returns immediately rather than blocking, which is what makes the skip behavior work. The lock releases automatically if the session dies, so a crashed job does not leave the table locked forever.
@@ -357,9 +342,7 @@ For teams running Flink maintenance tasks, the framework already includes lock c
 
 ```sql
 SELECT
-    date_trunc('hour', committed_at) AS hour,
-    operation,
-    count(*) AS snapshots
+ date_trunc('hour', committed_at) AS hour, operation, count(*) AS snapshots
 FROM catalog.sales.orders.snapshots
 WHERE committed_at > current_timestamp - INTERVAL '7' DAY
 GROUP BY 1, 2
@@ -381,9 +364,7 @@ Grouping by operation shows which writer type dominates. A table where `append` 
 **Watch manifest count as a leading indicator.** Commit cost grows with metadata size, and metadata size grows with manifest count. A table whose manifest count has tripled commits more slowly, which widens the conflict window, which raises the conflict rate. Rewriting manifests on a schedule keeps commits fast. Query it directly:
 
 ```sql
-SELECT count(*) AS manifest_count,
-       sum(added_data_files_count) AS added_files,
-       sum(existing_data_files_count) AS existing_files
+SELECT count(*) AS manifest_count, sum(added_data_files_count) AS added_files, sum(existing_data_files_count) AS existing_files
 FROM catalog.sales.orders.manifests;
 ```
 

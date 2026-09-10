@@ -16,9 +16,10 @@ draft: false
 image: "/images/blog.png"
 canonical: "https://iceberglakehouse.com/posts/2026-03-aitool-amazon-kiro/"
 ---
-> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-03-aitool-amazon-kiro/).
 
-Amazon Kiro is an agentic AI IDE from AWS that introduces spec-driven development to the coding workflow. Instead of jumping straight to code, Kiro helps you define structured specifications :  requirements, technical designs, and task breakdowns ,  before writing a single line. It then generates code that follows those specs and keeps everything in sync as the project evolves. Dremio is a unified lakehouse platform that provides business context through its semantic layer, universal data access through query federation, and interactive speed through Reflections and Apache Arrow.
+Amazon Kiro is an agentic AI IDE from AWS that introduces spec-driven development to the coding workflow. Instead of jumping straight to code, Kiro helps you define structured specifications : requirements, technical designs, and task breakdowns, before writing a single line. It then generates code that follows those specs and keeps everything in sync as the project evolves. Dremio is a unified lakehouse platform that provides business context through its semantic layer, universal data access through query federation, and interactive speed through Reflections and Apache Arrow.
+
+> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-03-aitool-amazon-kiro/).
 
 Connecting them gives Kiro's agent the context it needs to write accurate Dremio SQL, generate data pipelines, and build applications against your lakehouse. Kiro's spec-driven approach is especially well-suited for data projects: you can define your data model requirements in plain language, let Kiro generate the technical design, and then have it build the implementation with full traceability back to the original requirements.
 
@@ -62,11 +63,11 @@ In Kiro, open the MCP settings and add a new server. You can configure via the s
 
 ```json
 {
-  "mcpServers": {
-    "dremio": {
-      "url": "https://YOUR_PROJECT_MCP_URL"
-    }
-  }
+ "mcpServers": {
+ "dremio": {
+ "url": "https://YOUR_PROJECT_MCP_URL"
+ }
+ }
 }
 ```
 
@@ -90,15 +91,13 @@ For Dremio Software deployments, configure the dremio-mcp server:
 
 ```json
 {
-  "mcpServers": {
-    "dremio": {
-      "command": "uv",
-      "args": [
-        "run", "--directory", "/path/to/dremio-mcp",
-        "dremio-mcp-server", "run"
-      ]
-    }
-  }
+ "mcpServers": {
+ "dremio": {
+ "command": "uv", "args": [
+ "run", "-directory", "/path/to/dremio-mcp", "dremio-mcp-server", "run"
+ ]
+ }
+ }
 }
 ```
 
@@ -117,11 +116,11 @@ Kiro generates three spec files in `.kiro/specs/`:
 **requirements.md** : User stories in structured format:
 ```markdown
 1. As a data engineer, I want to ingest raw data from Dremio bronze tables
-   so that I can process it through the pipeline.
+ so that I can process it through the pipeline.
 2. As a data analyst, I want cleaned data in gold views
-   so that I can run accurate business queries.
+ so that I can run accurate business queries.
 3. As an application developer, I want REST endpoints over gold data
-   so that I can build dashboards and reports.
+ so that I can build dashboards and reports.
 ```
 
 **design.md** : Technical design covering architecture, data flow, table schemas, and technology choices.
@@ -214,10 +213,10 @@ Create comprehensive steering files in `.kiro/steering/`:
 
 ```
 .kiro/steering/
-  dremio-sql.md        # SQL conventions
-  dremio-python.md     # dremioframe patterns
-  dremio-schemas.md    # Team table schemas
-  dremio-pipeline.md   # Pipeline architecture rules
+ dremio-sql.md # SQL conventions
+ dremio-python.md # dremioframe patterns
+ dremio-schemas.md # Team table schemas
+ dremio-pipeline.md # Pipeline architecture rules
 ```
 
 These files are loaded into every Kiro interaction and ensure consistent code generation.
@@ -275,7 +274,7 @@ Kiro generates the complete API with full traceability to the requirements.
 ## Which Approach Should You Use?
 
 | Approach | Setup Time | What You Get | Best For |
-|----------|-----------|--------------|----------|
+|-----|------|-------|-----|
 | MCP Server | 5 minutes | Live queries, schema browsing, catalog exploration | Data analysis, SQL generation, real-time access |
 | Kiro Specs | 15 minutes | Structured requirements, design, traceable implementation | Teams valuing documentation and traceability |
 | Pre-Built Skills | 5 minutes | Comprehensive Dremio knowledge (CLI, SDK, SQL, API) | Quick start with broad coverage |

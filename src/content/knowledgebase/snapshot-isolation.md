@@ -1,7 +1,7 @@
 ---
 title: "What is Snapshot Isolation?"
 meta_title: "What is Snapshot Isolation? | Expert Data Lakehouse & AI Glossary"
-description: "A database protocol guaranteeing transactions execute against a static perspective allowing reading and writing to happen simultaneously. Learn the architecture, mechanics, and real-world value of Snapshot Isolation in the modern data stack."
+description: "A database protocol guaranteeing transactions execute against a static perspective allowing reading and writing to happen simultaneously."
 ---
 
 ## What is Snapshot Isolation?

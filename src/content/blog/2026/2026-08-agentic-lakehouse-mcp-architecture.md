@@ -1,7 +1,7 @@
 ---
 title: "The Five Layers of an Agentic Lakehouse and Where the MCP Server Sits"
 date: 2026-08-04T09:00:00Z
-description: "The five layers of an agentic lakehouse and where the MCP server sits: storage, catalog, semantic layer, MCP gateway, and agent surface, plus identity, session isolation, and budgets."
+description: "The five layers of an agentic lakehouse and where the MCP server sits: storage, catalog, semantic layer, MCP gateway, and agent surface, plus identity."
 author: "Alex Merced"
 category: "AI & Agents"
 tags:
@@ -16,11 +16,11 @@ image: "/images/blog.png"
 canonical: "https://iceberglakehouse.com/posts/agentic-lakehouse-mcp-architecture/"
 ---
 
-> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/agentic-lakehouse-mcp-architecture/).
-
 # The Five Layers of an Agentic Lakehouse and Where the MCP Server Sits
 
 *By Alex Merced, Data Lakehouse and AI Evangelist*
+
+> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/agentic-lakehouse-mcp-architecture/).
 
 Someone on your team connects an AI desktop client to a query engine, asks a question about last quarter, and gets an answer in fifteen seconds. It works. It is genuinely impressive, and the room reacts accordingly. Then somebody asks whether the sales team can have it, and the conversation stops.
 
@@ -35,7 +35,7 @@ A disclosure. I work for Dremio, which was acquired by SAP and now sits within S
 ## The five layers
 
 | Layer | Responsibility | What breaks without it |
-|---|---|---|
+|--|--|--|
 | Storage | Durable files in object storage | Nothing to query |
 | Metadata and catalog | Table semantics, authorization, credential vending, asset registry | No governance, no multi-engine access |
 | Semantic layer | Metrics, dimensions, joins, business rules | Plausible wrong answers |
@@ -118,16 +118,13 @@ Local configuration for a desktop client looks like this.
 
 ```json
 {
-  "mcpServers": {
-    "lakehouse": {
-      "command": "uvx",
-      "args": ["dremio-mcp-server", "run"],
-      "env": {
-        "DREMIO_URI": "https://lakehouse.internal.acme.com",
-        "DREMIO_PAT": "${DREMIO_PAT}"
-      }
-    }
-  }
+ "mcpServers": {
+ "lakehouse": {
+ "command": "uvx", "args": ["dremio-mcp-server", "run"], "env": {
+ "DREMIO_URI": "https://lakehouse.internal.acme.com", "DREMIO_PAT": "${DREMIO_PAT}"
+ }
+ }
+ }
 }
 ```
 
@@ -137,16 +134,13 @@ The remote form points at a service and delegates authentication.
 
 ```json
 {
-  "mcpServers": {
-    "lakehouse": {
-      "type": "http",
-      "url": "https://mcp.internal.acme.com/lakehouse/mcp",
-      "authorization": {
-        "type": "oauth2",
-        "issuer": "https://sso.internal.acme.com"
-      }
-    }
-  }
+ "mcpServers": {
+ "lakehouse": {
+ "type": "http", "url": "https://mcp.internal.acme.com/lakehouse/mcp", "authorization": {
+ "type": "oauth2", "issuer": "https://sso.internal.acme.com"
+ }
+ }
+ }
 }
 ```
 
@@ -182,56 +176,31 @@ Making the tool surface concrete is worth the space, because this is the design 
 
 ```json
 {
-  "tools": [
-    {
-      "name": "list_semantic_objects",
-      "description": "List governed metrics and views this user may query, with a one-line summary of each.",
-      "inputSchema": {
-        "type": "object",
-        "properties": {
-          "domain": { "type": "string" },
-          "search": { "type": "string" }
-        }
-      }
-    },
-    {
-      "name": "describe_semantic_object",
-      "description": "Return the full definition of one metric or view: calculation, filters, grain, valid and invalid dimensions, owner, version, and data freshness.",
-      "inputSchema": {
-        "type": "object",
-        "properties": { "name": { "type": "string" } },
-        "required": ["name"]
-      }
-    },
-    {
-      "name": "query_semantic_object",
-      "description": "Execute a governed query. The server builds SQL from the stored definition. Returns at most 1000 rows.",
-      "inputSchema": {
-        "type": "object",
-        "properties": {
-          "name":       { "type": "string" },
-          "dimensions": { "type": "array", "items": { "type": "string" }, "maxItems": 6 },
-          "filters":    { "type": "array", "items": { "type": "object" }, "maxItems": 10 },
-          "grain":      { "type": "string", "enum": ["day", "week", "month", "quarter", "year"] },
-          "order_by":   { "type": "string" },
-          "limit":      { "type": "integer", "minimum": 1, "maximum": 1000 }
-        },
-        "required": ["name"]
-      }
-    },
-    {
-      "name": "list_dimension_values",
-      "description": "Enumerate the distinct values of a dimension, with cardinality. Use before filtering on an unfamiliar dimension.",
-      "inputSchema": {
-        "type": "object",
-        "properties": {
-          "dimension": { "type": "string" },
-          "limit":     { "type": "integer", "maximum": 200 }
-        },
-        "required": ["dimension"]
-      }
-    }
-  ]
+ "tools": [
+ {
+ "name": "list_semantic_objects", "description": "List governed metrics and views this user may query, with a one-line summary of each.", "inputSchema": {
+ "type": "object", "properties": {
+ "domain": { "type": "string" }, "search": { "type": "string" }
+ }
+ }
+ }, {
+ "name": "describe_semantic_object", "description": "Return the full definition of one metric or view: calculation, filters, grain, valid and invalid dimensions, owner, version, and data freshness.", "inputSchema": {
+ "type": "object", "properties": { "name": { "type": "string" } }, "required": ["name"]
+ }
+ }, {
+ "name": "query_semantic_object", "description": "Execute a governed query. The server builds SQL from the stored definition. Returns at most 1000 rows.", "inputSchema": {
+ "type": "object", "properties": {
+ "name": { "type": "string" }, "dimensions": { "type": "array", "items": { "type": "string" }, "maxItems": 6 }, "filters": { "type": "array", "items": { "type": "object" }, "maxItems": 10 }, "grain": { "type": "string", "enum": ["day", "week", "month", "quarter", "year"] }, "order_by": { "type": "string" }, "limit": { "type": "integer", "minimum": 1, "maximum": 1000 }
+ }, "required": ["name"]
+ }
+ }, {
+ "name": "list_dimension_values", "description": "Enumerate the distinct values of a dimension, with cardinality. Use before filtering on an unfamiliar dimension.", "inputSchema": {
+ "type": "object", "properties": {
+ "dimension": { "type": "string" }, "limit": { "type": "integer", "maximum": 200 }
+ }, "required": ["dimension"]
+ }
+ }
+ ]
 }
 ```
 
@@ -239,7 +208,7 @@ Four tools. That is close to the right number for most deployments, and the rest
 
 `maxItems` on dimensions and filters bounds query complexity at the protocol boundary. Six dimensions is already a wide result, and a request for fifteen is a sign the agent is exploring rather than answering.
 
-`list_dimension_values` is the tool teams omit, and its absence is what pushes agents toward wanting raw SQL. Most exploratory questions are really "what values exist here," and answering that cheaply removes the pressure for an escape hatch.
+`list_dimension_values` is the tool teams omit, and its absence is what pushes agents toward wanting raw SQL. Most exploratory questions are really "what values exist here, " and answering that cheaply removes the pressure for an escape hatch.
 
 The `describe_semantic_object` response returning data freshness matters more than it looks. An agent that knows the underlying table was last updated eleven hours ago writes a materially better answer than one that assumes currency, and an auditor reading the transcript later sees what the agent knew.
 
@@ -251,21 +220,7 @@ The telemetry table is the artifact that makes the deployment operable. Log ever
 
 ```sql
 CREATE TABLE ops.agents.tool_calls (
-    call_id           STRING,
-    session_id        STRING,
-    principal         STRING,
-    surface           STRING,
-    tool_name         STRING,
-    parameters        VARIANT,
-    semantic_object   STRING,
-    generated_sql     STRING,
-    snapshot_id       BIGINT,
-    rows_returned     BIGINT,
-    engine_ms         BIGINT,
-    queue_ms          BIGINT,
-    outcome           STRING,
-    error_class       STRING,
-    called_at         TIMESTAMP
+ call_id STRING, session_id STRING, principal STRING, surface STRING, tool_name STRING, parameters VARIANT, semantic_object STRING, generated_sql STRING, snapshot_id BIGINT, rows_returned BIGINT, engine_ms BIGINT, queue_ms BIGINT, outcome STRING, error_class STRING, called_at TIMESTAMP
 )
 USING iceberg
 PARTITIONED BY (days(called_at))

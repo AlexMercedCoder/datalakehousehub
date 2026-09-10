@@ -2,7 +2,7 @@
 title: "Lance and Iceberg for Multimodal AI Data"
 date: 2026-05-24T10:55:00Z
 pubDatetime: 2026-05-24T10:55:00Z
-description: "LanceDB and Apache Iceberg serve complementary roles in a multimodal AI lakehouse. Learn when to use Lance for embeddings and random access, and Iceberg for structured metadata and SQL analytics."
+description: "LanceDB and Apache Iceberg serve complementary roles in a multimodal AI lakehouse. Learn when to use Lance for embeddings and random access, and Iceberg."
 author: "Alex Merced"
 category: "Apache Iceberg"
 tags:
@@ -18,17 +18,18 @@ draft: false
 image: "/images/blog/lance-iceberg-multimodal/lance-iceberg-multimodal-architecture.png"
 canonical: "https://iceberglakehouse.com/posts/2026-05-24-lance-iceberg-multimodal/"
 ---
-> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-05-24-lance-iceberg-multimodal/).
 
 # Lance and Iceberg for Multimodal AI Data
 
 Apache Iceberg was designed for analytical workloads: columnar scans, partition pruning, SQL aggregations. It's excellent at returning the answer to "what was the average revenue by region for the last 30 days?" and poor at answering "give me the 500 training images most similar to this query image."
 
+> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-05-24-lance-iceberg-multimodal/).
+
 The second question is random access retrieval from an embedding index, a fundamentally different access pattern. Columnar storage optimized for scan performance is inefficient for retrieving arbitrary rows by vector similarity. Iceberg tables store Parquet files, and Parquet files are optimized for column projection and predicate pushdown, not random row access.
 
 This is where LanceDB and the Lance format fill a gap. Lance is a columnar format designed for both scan-efficient analytics (like Parquet) and random-access retrieval (unlike Parquet). It builds IVF-PQ vector indexes natively on disk, without requiring vectors to fit in RAM. Combined with Iceberg for structured metadata and SQL analytics, Lance enables a complete multimodal AI data architecture.
 
----
+--
 
 ## The Two Patterns That Don't Fit Together
 
@@ -40,7 +41,7 @@ ML training workloads require random access at scale: sample 256 images from 10 
 
 The Lance format was designed for exactly this workload. Its on-disk layout supports random access to individual rows with low read amplification. Combined with its IVF-PQ vector index (which is disk-native and doesn't require vectors to be in RAM) Lance is the format of choice for embedding storage and training data retrieval.
 
----
+--
 
 ## The Complementary Architecture
 
@@ -56,7 +57,7 @@ The production architecture uses Iceberg and Lance together:
 
 The multimodal ingestion pipeline ties these together: when new media arrives, it gets stored in object storage, its embedding is computed (CLIP for images and video, Whisper for audio), the embedding is written to the Lance table, and the structured metadata is written to the Iceberg table.
 
----
+--
 
 ## Working with Lance and DuckDB
 
@@ -72,10 +73,10 @@ images_table = db.open_table("training_images")
 
 # Query: find similar images to a reference image
 similar_images = (
-    images_table.search(reference_embedding)
-    .metric("cosine")
-    .limit(100)
-    .to_pandas()
+ images_table.search(reference_embedding)
+ .metric("cosine")
+ .limit(100)
+ .to_pandas()
 )
 
 # Join with Iceberg metadata via DuckDB for filtered retrieval
@@ -87,16 +88,16 @@ conn.register("similar_images", similar_images)
 
 # Join with Iceberg metadata to filter by label and split
 annotated_similar = conn.execute("""
-    SELECT s.content_id, s.s3_uri, m.label, m.split
-    FROM similar_images s
-    JOIN iceberg_scan('s3://my-bucket/iceberg/image_metadata/') m
-        ON s.content_id = m.content_id
-    WHERE m.label IN ('cat', 'dog')
-      AND m.split = 'train'
+ SELECT s.content_id, s.s3_uri, m.label, m.split
+ FROM similar_images s
+ JOIN iceberg_scan('s3://my-bucket/iceberg/image_metadata/') m
+ ON s.content_id = m.content_id
+ WHERE m.label IN ('cat', 'dog')
+ AND m.split = 'train'
 """).fetchdf()
 ```
 
----
+--
 
 ## Workload Fit: When to Use Each
 
@@ -112,7 +113,7 @@ The choice between Lance and Iceberg is not either/or. The complementary archite
 
 The operational complexity of running both formats is lower than it appears. Lance tables can be co-located in S3 alongside Iceberg tables. Both use object storage as the persistence layer. Catalog management for Lance tables can use LanceDB's own catalog API or integrate with Polaris/Nessie for unified catalog visibility.
 
----
+--
 
 ## LanceDB: Beyond Embeddings
 
@@ -122,7 +123,7 @@ In this model, a Lance table for a vision model training dataset might store: `i
 
 For large-scale training datasets, this architecture offers better cache locality and simpler pipeline management than the separate Iceberg + object store + Lance design, at the cost of storing raw bytes in the table format rather than object storage.
 
----
+--
 
 ## Conclusion
 
@@ -130,7 +131,7 @@ Apache Iceberg and LanceDB/Lance serve different access patterns in a multimodal
 
 For teams building AI training infrastructure in 2026, defaulting to "Iceberg for everything" creates unnecessary performance bottlenecks in the training data retrieval path. Adding Lance tables for embedding and blob storage is low-friction and high-impact.
 
----
+--
 
 ## Building the Multimodal Ingestion Pipeline
 
@@ -150,52 +151,48 @@ import torch
 from pyiceberg.catalog import load_catalog
 
 def ingest_image_batch(image_paths: list[str], labels: list[str]):
-    """
-    Ingest a batch of images into the multimodal AI lakehouse.
-    Writes embeddings to Lance and metadata to Iceberg.
-    """
-    # Load CLIP model for embedding computation
-    model, _, preprocess = open_clip.create_model_and_transforms("ViT-B-32")
-    
-    # Compute embeddings
-    embeddings = []
-    content_ids = []
-    for path in image_paths:
-        image = preprocess(Image.open(path)).unsqueeze(0)
-        with torch.no_grad():
-            embedding = model.encode_image(image)
-        content_id = compute_content_hash(path)
-        embeddings.append(embedding.numpy().flatten())
-        content_ids.append(content_id)
-    
-    # Upload to object storage and get S3 URIs
-    s3_uris = upload_to_s3(image_paths, content_ids)
-    
-    # Write to Lance table
-    lance_db = lancedb.connect("s3://ai-lake/lancedb/")
-    lance_table = lance_db.open_table("training_images")
-    lance_records = [
-        {"content_id": cid, "embedding": emb, "s3_uri": uri}
-        for cid, emb, uri in zip(content_ids, embeddings, s3_uris)
-    ]
-    lance_table.add(lance_records)
-    
-    # Write metadata to Iceberg
-    catalog = load_catalog("polaris", **{"uri": "https://catalog.example.com"})
-    iceberg_table = catalog.load_table("ai_datasets.image_metadata")
-    
-    metadata_records = pa.table({
-        "content_id": content_ids,
-        "s3_uri": s3_uris,
-        "label": labels,
-        "split": assign_split(content_ids),  # train/val/test assignment
-        "ingested_at": [datetime.utcnow().isoformat()] * len(content_ids),
-        "embedding_model": ["ViT-B-32"] * len(content_ids)
-    })
-    iceberg_table.append(metadata_records)
+ """
+ Ingest a batch of images into the multimodal AI lakehouse.
+ Writes embeddings to Lance and metadata to Iceberg.
+ """
+ # Load CLIP model for embedding computation
+ model, _, preprocess = open_clip.create_model_and_transforms("ViT-B-32")
+ 
+ # Compute embeddings
+ embeddings = []
+ content_ids = []
+ for path in image_paths:
+ image = preprocess(Image.open(path)).unsqueeze(0)
+ with torch.no_grad():
+ embedding = model.encode_image(image)
+ content_id = compute_content_hash(path)
+ embeddings.append(embedding.numpy().flatten())
+ content_ids.append(content_id)
+ 
+ # Upload to object storage and get S3 URIs
+ s3_uris = upload_to_s3(image_paths, content_ids)
+ 
+ # Write to Lance table
+ lance_db = lancedb.connect("s3://ai-lake/lancedb/")
+ lance_table = lance_db.open_table("training_images")
+ lance_records = [
+ {"content_id": cid, "embedding": emb, "s3_uri": uri}
+ for cid, emb, uri in zip(content_ids, embeddings, s3_uris)
+ ]
+ lance_table.add(lance_records)
+ 
+ # Write metadata to Iceberg
+ catalog = load_catalog("polaris", **{"uri": "https://catalog.example.com"})
+ iceberg_table = catalog.load_table("ai_datasets.image_metadata")
+ 
+ metadata_records = pa.table({
+ "content_id": content_ids, "s3_uri": s3_uris, "label": labels, "split": assign_split(content_ids), # train/val/test assignment
+ "ingested_at": [datetime.utcnow().isoformat()] * len(content_ids), "embedding_model": ["ViT-B-32"] * len(content_ids)
+ })
+ iceberg_table.append(metadata_records)
 ```
 
----
+--
 
 ## Versioning Training Datasets
 
@@ -216,30 +213,30 @@ snapshot_id = current_snapshot.snapshot_id
 
 # Log to MLflow for training reproducibility
 with mlflow.start_run() as run:
-    mlflow.log_param("training_dataset_table", "ai_datasets.image_metadata")
-    mlflow.log_param("training_dataset_snapshot_id", snapshot_id)
-    
-    # Load training data from the specific snapshot for reproducibility
-    training_metadata = iceberg_table.scan(snapshot_id=snapshot_id).to_arrow()
-    training_content_ids = training_metadata["content_id"].to_pylist()
-    
-    # Retrieve embeddings from Lance using the content IDs
-    lance_db = lancedb.connect("s3://ai-lake/lancedb/")
-    lance_table = lance_db.open_table("training_images")
-    
-    # Filter Lance table to only the content IDs in the Iceberg snapshot
-    training_data = lance_table.search() \
-        .where(f"content_id IN {tuple(training_content_ids[:100])}") \
-        .to_pandas()
-    
-    # Train model
-    model = train_vision_model(training_data)
-    mlflow.pytorch.log_model(model, "model")
+ mlflow.log_param("training_dataset_table", "ai_datasets.image_metadata")
+ mlflow.log_param("training_dataset_snapshot_id", snapshot_id)
+ 
+ # Load training data from the specific snapshot for reproducibility
+ training_metadata = iceberg_table.scan(snapshot_id=snapshot_id).to_arrow()
+ training_content_ids = training_metadata["content_id"].to_pylist()
+ 
+ # Retrieve embeddings from Lance using the content IDs
+ lance_db = lancedb.connect("s3://ai-lake/lancedb/")
+ lance_table = lance_db.open_table("training_images")
+ 
+ # Filter Lance table to only the content IDs in the Iceberg snapshot
+ training_data = lance_table.search() \
+ .where(f"content_id IN {tuple(training_content_ids[:100])}") \
+ .to_pandas()
+ 
+ # Train model
+ model = train_vision_model(training_data)
+ mlflow.pytorch.log_model(model, "model")
 ```
 
 Six months later, a team investigating why model v5 had better performance than model v7 can retrieve the exact training data composition for each run using the recorded snapshot IDs.
 
----
+--
 
 ## Fine-Tuning Workflow Patterns
 
@@ -248,13 +245,13 @@ The Iceberg + Lance architecture particularly shines for fine-tuning workflows, 
 The fine-tuning dataset selection query uses Iceberg's SQL capabilities:
 
 ```sql
--- Select high-quality fine-tuning examples from Iceberg metadata
+- Select high-quality fine-tuning examples from Iceberg metadata
 SELECT content_id, s3_uri, label
 FROM iceberg.ai_datasets.image_metadata
 WHERE label IN ('product_photo', 'lifestyle_photo')
-  AND annotation_quality_score >= 4  -- Expert-annotated examples only
-  AND split = 'train'
-  AND ingested_at >= '2024-01-01'  -- Recent, high-quality additions only
+ AND annotation_quality_score >= 4, Expert-annotated examples only
+ AND split = 'train'
+ AND ingested_at >= '2024-01-01', Recent, high-quality additions only
 LIMIT 50000;
 ```
 
@@ -262,7 +259,7 @@ The query results identify which content IDs to retrieve from Lance for embeddin
 
 This SQL-to-Lance bridge (using Iceberg SQL to select training example metadata, then using Lance vector retrieval to access the embedding and raw data) is the core pattern of a multimodal fine-tuning pipeline that doesn't require loading tens of millions of embeddings into memory.
 
----
+--
 
 ## LanceDB in Production: Cloud and Self-Hosted Options
 
@@ -278,15 +275,13 @@ db = lancedb.connect("s3://my-bucket/lancedb/")
 
 # LanceDB Cloud (shared multi-process access)
 db = lancedb.connect(
-    "db://my-org-name",
-    api_key="lancedb_api_key_here",
-    region="us-east-1"
+ "db://my-org-name", api_key="lancedb_api_key_here", region="us-east-1"
 )
 ```
 
 The operational difference is significant for ML infrastructure. In embedded mode on S3, multiple training jobs reading the same Lance table simultaneously can conflict on file access. LanceDB Cloud provides the coordination layer that makes concurrent read and write safe. For training pipelines where several GPU nodes read from the same embedding store during distributed training, LanceDB Cloud is the appropriate deployment target.
 
----
+--
 
 ## Lance vs. Dedicated Vector Databases
 
@@ -300,7 +295,7 @@ Teams evaluating the Lance/Iceberg combination often ask how it compares to dedi
 
 Many organizations end up using both: a dedicated vector database for production retrieval serving and LanceDB or Lance files for training data management. These aren't competing choices; they serve different points in the ML lifecycle.
 
----
+--
 
 ## Versioning Training Datasets with Lance and Iceberg Snapshots
 
@@ -321,18 +316,18 @@ mlflow.log_param("iceberg_snapshot_id", training_snapshot_id)
 
 # Dataset construction proceeds from this specific snapshot
 selected_ids = spark.read.format("iceberg") \
-    .option("snapshot-id", training_snapshot_id) \
-    .table("training.multimodal_annotations") \
-    .filter("annotation_quality_score >= 4 AND split = 'train'") \
-    .select("content_id") \
-    .collect()
+ .option("snapshot-id", training_snapshot_id) \
+ .table("training.multimodal_annotations") \
+ .filter("annotation_quality_score >= 4 AND split = 'train'") \
+ .select("content_id") \
+ .collect()
 ```
 
 Six months later, when a production model regression is reported, the training team can load the same snapshot and reconstruct the exact training set that produced the model, enabling them to compare against the current data distribution and identify what changed.
 
 Lance files are versioned implicitly through their S3 paths and the LanceDB table versions. Recording both the Iceberg snapshot ID and the LanceDB table version in the experiment metadata creates a complete, reproducible reference to the training dataset.
 
----
+--
 
 ### Go Deeper on AI-Native Data Architecture
 

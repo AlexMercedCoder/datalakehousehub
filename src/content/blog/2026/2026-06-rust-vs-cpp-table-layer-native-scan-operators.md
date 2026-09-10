@@ -13,7 +13,6 @@ slug: rust-vs-cpp-table-layer-native-scan-operators
 draft: false
 image: "/images/blog.png"
 ---
-
 # Rust vs C++ in Native Iceberg Scan Operators
 
 
@@ -89,7 +88,7 @@ The engineering guardrail is correctness testing before production deployment. A
 ## Operational Checklist
 
 | Area | Question to answer | Why it matters |
-|---|---|---|
+|--|--|--|
 | Correctness | Have delete semantics (equality and position) been verified explicitly? | A fast but incorrect scan is worse than a slow correct one. |
 | Memory | Has memory behavior under concurrent scans been profiled? | Memory fragmentation under concurrency is often invisible in single-scan tests. |
 | Evolution | Have schema evolution cases been tested in the native path? | Fallbacks to slow paths can eliminate the performance benefit. |
@@ -138,7 +137,7 @@ The first question is simple: what table features are included in the native sca
 
 The second question: what is the memory growth profile of the native scan operator under ten concurrent scans against a 100-partition table? If nobody has measured it, the concurrent behavior is unknown.
 
-The third question: what is the fallback path when the native scan produces incorrect results in production? If the answer is "file a bug and wait," the deployment is not production-safe.
+The third question: what is the fallback path when the native scan produces incorrect results in production? If the answer is "file a bug and wait, " the deployment is not production-safe.
 
 ## A Realistic Pilot Shape
 

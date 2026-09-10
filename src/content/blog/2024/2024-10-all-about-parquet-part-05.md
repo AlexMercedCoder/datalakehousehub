@@ -14,13 +14,14 @@ draft: false
 image: "/images/blog.png"
 canonical: "https://iceberglakehouse.com/posts/2024-10-all-about-parquet-part-05/"
 ---
+
+One of the key benefits of using the Parquet file format is its ability to compress data efficiently, reducing storage costs while maintaining fast query performance. Parquet’s columnar storage model enables highly effective compression, as data of the same type is stored together, allowing compression algorithms to work more effectively. In this post, we’ll explore the various **compression techniques** supported by Parquet, how they work, and how to choose the right one for your data.
+
 > **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2024-10-all-about-parquet-part-05/).
 
 - [Free Copy of Apache Iceberg the Definitive Guide](https://hello.dremio.com/wp-apache-iceberg-the-definitive-guide-reg.html?utm_source=alexmerced&utm_medium=external_blog&utm_campaign=allaboutparquet)
 - [Free Apache Iceberg Crash Course](https://hello.dremio.com/webcast-an-apache-iceberg-lakehouse-crash-course-reg.html?utm_source=alexmerced&utm_medium=external_blog&utm_campaign=allaboutparquet)
 - [Iceberg Lakehouse Engineering Video Playlist](https://www.youtube.com/watch?v=SIriNcVIGJQ&list=PLsLAVBjQJO0p0Yq1fLkoHvt2lEJj5pcYe)
-
-One of the key benefits of using the Parquet file format is its ability to compress data efficiently, reducing storage costs while maintaining fast query performance. Parquet’s columnar storage model enables highly effective compression, as data of the same type is stored together, allowing compression algorithms to work more effectively. In this post, we’ll explore the various **compression techniques** supported by Parquet, how they work, and how to choose the right one for your data.
 
 ## Why Compression Matters
 
@@ -77,7 +78,7 @@ Parquet supports several widely-used compression algorithms, each with its own s
 Selecting the right compression algorithm for your Parquet files depends on your specific use case and the balance you want to achieve between compression efficiency and performance. Here are some considerations to help guide your decision:
 
 - **Query Speed vs. File Size**: If your workload requires fast query performance, prioritize algorithms like Snappy or ZSTD that decompress quickly, even if they provide slightly larger file sizes. If storage space is more important, algorithms like Gzip or Brotli may be better suited due to their higher compression ratios.
-  
+ 
 - **Data Type and Repetition**: Some compression algorithms work better on certain data types. For example, dictionary encoding combined with Gzip or Brotli works well on columns with many repeated values. Snappy or LZO might be better for columns with highly variable data.
 
 - **Storage Costs**: For workloads where storage costs are a primary concern (e.g., archiving large datasets), Gzip and Brotli will provide the smallest file sizes, which can lead to significant cost savings in cloud storage environments.

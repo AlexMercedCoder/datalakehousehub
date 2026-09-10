@@ -16,9 +16,10 @@ draft: false
 image: "/images/blog.png"
 canonical: "https://iceberglakehouse.com/posts/2026-03-aitool-google-antigravity/"
 ---
-> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-03-aitool-google-antigravity/).
 
 Google Antigravity is an agent-first IDE built by Google DeepMind. Its autonomous agents plan multi-step tasks, write code, browse documentation, and iterate without constant hand-holding. Dremio is a unified lakehouse platform that provides the business context, universal data access, and interactive query speed that AI agents need to produce accurate analytics.
+
+> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-03-aitool-google-antigravity/).
 
 Connecting the two gives your Antigravity agents something most coding agents lack: direct access to your data catalog, table schemas, business logic encoded in views, and the correct SQL dialect for Dremio's query engine. Without it, the agent guesses at table names and hallucinates SQL functions. With it, the agent writes queries that actually run.
 
@@ -78,19 +79,17 @@ For Dremio Software deployments, use the open-source [dremio-mcp](https://github
 git clone https://github.com/dremio/dremio-mcp
 cd dremio-mcp
 uv run dremio-mcp-server config create dremioai \
-  --uri https://your-dremio-instance.com \
-  --pat YOUR_PERSONAL_ACCESS_TOKEN
+ -uri https://your-dremio-instance.com \
+ -pat YOUR_PERSONAL_ACCESS_TOKEN
 ```
 
 In Antigravity's MCP settings, configure the server to run via the local command:
 
 ```json
 {
-  "command": "uv",
-  "args": [
-    "run", "--directory", "/path/to/dremio-mcp",
-    "dremio-mcp-server", "run"
-  ]
+ "command": "uv", "args": [
+ "run", "-directory", "/path/to/dremio-mcp", "dremio-mcp-server", "run"
+ ]
 }
 ```
 
@@ -109,10 +108,10 @@ This architecture is called progressive disclosure. A tool like Claude Code load
 A `SKILL.md` file has two parts:
 
 ```markdown
----
+--
 name: Dremio Conventions
 description: SQL syntax, REST API patterns, and credential handling for Dremio Cloud
----
+--
 
 # Dremio Conventions
 
@@ -155,9 +154,9 @@ Antigravity also supports workflows in `.agent/workflows/`. These are saved prom
 
 ```markdown
 # .agent/workflows/dremio-data-model.md
----
+--
 description: Create a bronze-silver-gold data model in Dremio
----
+--
 
 1. Read the Dremio skill for SQL conventions
 2. Create folders for bronze, silver, and gold layers
@@ -215,20 +214,20 @@ If the pre-built skill does not fit your workflow, build a custom one. Antigravi
 
 ```
 .agent/skills/my-dremio/
-  SKILL.md
-  knowledge/
-    sql-conventions.md
-    team-schemas.md
-    dremioframe-patterns.md
+ SKILL.md
+ knowledge/
+ sql-conventions.md
+ team-schemas.md
+ dremioframe-patterns.md
 ```
 
 ### Write the SKILL.md
 
 ```markdown
----
+--
 name: Team Dremio Skill
 description: SQL conventions, table schemas, and dremioframe patterns for our analytics lakehouse
----
+--
 
 # Team Dremio Skill
 
@@ -322,7 +321,7 @@ Antigravity generates the full application with proper error handling, connectio
 ## Which Approach Should You Use?
 
 | Approach | Setup Time | What You Get | Best For |
-|----------|-----------|--------------|----------|
+|-----|------|-------|-----|
 | MCP Server | 5 minutes | Live queries, schema browsing, catalog exploration | Data analysis, SQL generation, real-time access |
 | SKILL.md + Rules | 15 minutes | Convention enforcement, on-demand doc references | Teams with specific SQL standards |
 | Pre-Built Skill | 5 minutes | Comprehensive Dremio knowledge (CLI, SDK, SQL, API) | Quick start with broad coverage |

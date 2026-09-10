@@ -1,6 +1,6 @@
 ---
 title: "REST Catalog Credential Vending for Lakehouse Security"
-description: "Iceberg REST catalog credential vending issues short-lived, table-scoped storage tokens for S3, ADLS, and GCS. How Polaris, Snowflake Horizon, Databricks Unity Catalog, and Dremio implement credential vending for secure lakehouse storage access."
+description: "Iceberg REST catalog credential vending issues short-lived, table-scoped storage tokens for S3, ADLS, and GCS."
 date: 2026-06-08T09:00:00Z
 slug: "rest-catalog-credential-vending-secure-lakehouse-storage"
 draft: false
@@ -14,8 +14,7 @@ tags:
   - "Polaris credential vending"
   - "Unity Catalog credential vending"
 ---
-
-Every query engine in a lakehouse needs access to object storage. In the simplest architecture, every engine shares a static access key with bucket-wide permissions. This creates a single point of failure: if any engine is compromised, the entire storage bucket is exposed. The audit trail says "the key was used," but it does not say which engine or which user used it.
+Every query engine in a lakehouse needs access to object storage. In the simplest architecture, every engine shares a static access key with bucket-wide permissions. This creates a single point of failure: if any engine is compromised, the entire storage bucket is exposed. The audit trail says "the key was used, " but it does not say which engine or which user used it.
 
 Credential vending solves this by replacing static keys with short-lived, dynamically scoped tokens issued by the Iceberg REST catalog. When an engine needs to read a table, it requests credentials from the catalog. The catalog authenticates the engine, checks governance policies, obtains a temporary token from the storage provider, and returns a token scoped to exactly the table's storage path. The engine uses the token to access storage directly. When the token expires (typically after 5-60 minutes), the engine requests a new one.
 
@@ -47,17 +46,13 @@ Credential vending works differently on each cloud provider because each has a d
 
 ```json
 {
-  "Effect": "Allow",
-  "Action": ["s3:GetObject", "s3:ListBucket"],
-  "Resource": [
-    "arn:aws:s3:::my-bucket",
-    "arn:aws:s3:::my-bucket/tables/my_table/*"
-  ],
-  "Condition": {
-    "StringLike": {
-      "s3:prefix": "tables/my_table/*"
-    }
-  }
+ "Effect": "Allow", "Action": ["s3:GetObject", "s3:ListBucket"], "Resource": [
+ "arn:aws:s3:::my-bucket", "arn:aws:s3:::my-bucket/tables/my_table/*"
+ ], "Condition": {
+ "StringLike": {
+ "s3:prefix": "tables/my_table/*"
+ }
+ }
 }
 ```
 
@@ -112,7 +107,7 @@ The credential TTL (time to live) is a critical operational parameter. A longer 
 Standard practice across Iceberg catalogs:
 
 | Provider | Default TTL | Min TTL | Max TTL |
-|----------|-------------|---------|---------|
+|-----|-------|-----|-----|
 | AWS S3 (STS) | 1 hour | 15 minutes | 12 hours |
 | Azure ADLS (SAS) | 1 hour | 5 minutes | 24 hours |
 | Google GCS | 1 hour | 5 minutes | 12 hours |
@@ -158,6 +153,6 @@ For production deployments with PII or regulated data, set the credential TTL to
 
 Credential vending is not the final word on lakehouse security. Remote signing provides stronger per-file access control but at higher latency. The choice between the two depends on your data sensitivity, workload characteristics, and compliance requirements. The common factor is that both mechanisms are defined by the Iceberg REST catalog spec and supported by the leading catalog implementations, which means your choice of delegation mechanism does not lock you into a single catalog vendor.
 
----
+--
 
 *For the complete Iceberg REST catalog specification, visit [iceberg.apache.org/spec](https://iceberg.apache.org/spec). To try credential vending in a governed multi-engine lakehouse, start a free trial at [dremio.com/get-started](https://www.dremio.com/get-started).*

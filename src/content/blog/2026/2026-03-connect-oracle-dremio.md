@@ -16,9 +16,10 @@ draft: false
 image: "/images/blog.png"
 canonical: "https://iceberglakehouse.com/posts/2026-03-connector-oracle/"
 ---
-> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-03-connector-oracle/).
 
 Oracle Database runs the most critical enterprise applications in the world : ERP systems, financial ledgers, supply chain management, and HR platforms. These systems generate massive volumes of data that business teams want to analyze, but running analytical queries directly against Oracle is expensive (license costs scale with CPU usage), complex (Oracle-specific SQL dialects and tooling), and risky (heavy queries can impact transactional performance).
+
+> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-03-connector-oracle/).
 
 Dremio Cloud connects to Oracle Database and queries it in place using standard SQL. You don't need to license additional Oracle tools, build ETL pipelines, or export data to a separate warehouse. Dremio pushes filters and aggregations to Oracle, fetches only the results, and lets you join Oracle data with every other source in your organization in a single query.
 
@@ -26,7 +27,7 @@ This guide walks through the complete setup, including Oracle-specific features 
 
 ## Why Oracle Users Need Dremio
 
-**Oracle licensing costs make analytics expensive.** Oracle licenses are typically tied to CPU cores. Running analytical workloads on your production Oracle instance consumes CPU, which means higher licensing costs. Dremio's Reflections create pre-computed copies of frequently queried Oracle data. After the initial query, subsequent analytics hit the Reflection :  not Oracle ,  reducing CPU consumption and license exposure.
+**Oracle licensing costs make analytics expensive.** Oracle licenses are typically tied to CPU cores. Running analytical workloads on your production Oracle instance consumes CPU, which means higher licensing costs. Dremio's Reflections create pre-computed copies of frequently queried Oracle data. After the initial query, subsequent analytics hit the Reflection : not Oracle, reducing CPU consumption and license exposure.
 
 **Cross-system analytics require ETL.** Your financial data is in Oracle, your CRM data is in PostgreSQL, and your marketing data is in S3. Without a federation layer, joining these requires building ETL pipelines that extract data from each source, transform it, and load it into a central warehouse. That's months of engineering work. Dremio federates across all three sources with a single SQL query.
 
@@ -59,10 +60,10 @@ In the Dremio console, click the **"+"** in the left sidebar and select **Oracle
 - **Service Name:** The Oracle service name for your database.
 - **Enable TLS encryption:** Toggle this on for encrypted connections over TLS.
 - **Oracle Native Encryption:** If you don't use TLS, Oracle supports its own encryption protocol. Options are:
-  - **Accepted (default):** Allows both encrypted and unencrypted connections.
-  - **Requested:** Prefers encryption but accepts unencrypted if not available.
-  - **Required:** Only encrypted connections allowed.
-  - **Rejected:** No encryption.
+ - **Accepted (default):** Allows both encrypted and unencrypted connections.
+ - **Requested:** Prefers encryption but accepts unencrypted if not available.
+ - **Required:** Only encrypted connections allowed.
+ - **Rejected:** No encryption.
 
 You can use either TLS or Oracle Native Encryption, but not both on the same source.
 
@@ -79,7 +80,7 @@ Three options:
 Oracle has several unique advanced settings:
 
 | Setting | What It Does |
-|---|---|
+|--|--|
 | **Use timezone as connection region** | Uses the timezone to set the connection region |
 | **Include synonyms** | Makes Oracle synonyms visible as datasets in Dremio |
 | **Map Oracle DATE to TIMESTAMP** | Oracle's `DATE` type includes time components. Enable this to expose them as `TIMESTAMP` in Dremio instead of truncating to `DATE` |
@@ -122,10 +123,7 @@ Combine Oracle ERP data with S3 data and PostgreSQL data in one query:
 
 ```sql
 SELECT
-  d.department_name,
-  COUNT(e.employee_id) AS headcount,
-  AVG(e.salary) AS avg_salary,
-  SUM(b.budget_amount) AS total_budget
+ d.department_name, COUNT(e.employee_id) AS headcount, AVG(e.salary) AS avg_salary, SUM(b.budget_amount) AS total_budget
 FROM "erp-oracle".HR.DEPARTMENTS d
 JOIN "erp-oracle".HR.EMPLOYEES e ON d.department_id = e.department_id
 LEFT JOIN "finance-postgres".budgets.dept_budgets b ON d.department_id = b.dept_id
@@ -150,7 +148,7 @@ This extensive pushdown support means Oracle does most of the heavy lifting for 
 ## Data Type Mapping
 
 | Oracle | Dremio | Notes |
-|---|---|---|
+|--|--|--|
 | NUMBER | DECIMAL | Preserves precision |
 | VARCHAR2 / NVARCHAR2 / CHAR / NCHAR | VARCHAR | |
 | DATE | DATE or TIMESTAMP | Use advanced option to map to TIMESTAMP |
@@ -172,15 +170,11 @@ Create views that translate Oracle's technical schema into business-friendly ana
 ```sql
 CREATE VIEW analytics.gold.department_performance AS
 SELECT
-  d.department_name,
-  COUNT(e.employee_id) AS employee_count,
-  ROUND(AVG(e.salary), 2) AS avg_salary,
-  MAX(e.hire_date) AS most_recent_hire,
-  CASE
-    WHEN COUNT(e.employee_id) > 50 THEN 'Large'
-    WHEN COUNT(e.employee_id) > 20 THEN 'Medium'
-    ELSE 'Small'
-  END AS department_size
+ d.department_name, COUNT(e.employee_id) AS employee_count, ROUND(AVG(e.salary), 2) AS avg_salary, MAX(e.hire_date) AS most_recent_hire, CASE
+ WHEN COUNT(e.employee_id) > 50 THEN 'Large'
+ WHEN COUNT(e.employee_id) > 20 THEN 'Medium'
+ ELSE 'Small'
+ END AS department_size
 FROM "erp-oracle".HR.DEPARTMENTS d
 LEFT JOIN "erp-oracle".HR.EMPLOYEES e ON d.department_id = e.department_id
 GROUP BY d.department_name;
@@ -219,26 +213,18 @@ A CFO asks Claude "Compare department headcount and budget utilization across ou
 Use AI directly in queries against Oracle data:
 
 ```sql
--- Classify departments by operational health
+- Classify departments by operational health
 SELECT
-  department_name,
-  employee_count,
-  avg_salary,
-  department_size,
-  AI_CLASSIFY(
-    'Based on these HR metrics, classify the department health',
-    'Department: ' || department_name || ', Employees: ' || CAST(employee_count AS VARCHAR) || ', Avg Salary: $' || CAST(avg_salary AS VARCHAR) || ', Size: ' || department_size,
-    ARRAY['Thriving', 'Stable', 'Understaffed', 'Needs Attention']
-  ) AS department_health
+ department_name, employee_count, avg_salary, department_size, AI_CLASSIFY(
+ 'Based on these HR metrics, classify the department health', 'Department: ' || department_name || ', Employees: ' || CAST(employee_count AS VARCHAR) || ', Avg Salary: $' || CAST(avg_salary AS VARCHAR) || ', Size: ' || department_size, ARRAY['Thriving', 'Stable', 'Understaffed', 'Needs Attention']
+ ) AS department_health
 FROM analytics.gold.department_performance;
 
--- Generate executive briefings from Oracle data
+- Generate executive briefings from Oracle data
 SELECT
-  department_name,
-  AI_GENERATE(
-    'Write a one-sentence executive summary for this department',
-    'Department: ' || department_name || ', Headcount: ' || CAST(employee_count AS VARCHAR) || ', Avg Salary: $' || CAST(avg_salary AS VARCHAR) || ', Most Recent Hire: ' || CAST(most_recent_hire AS VARCHAR)
-  ) AS executive_summary
+ department_name, AI_GENERATE(
+ 'Write a one-sentence executive summary for this department', 'Department: ' || department_name || ', Headcount: ' || CAST(employee_count AS VARCHAR) || ', Avg Salary: $' || CAST(avg_salary AS VARCHAR) || ', Most Recent Hire: ' || CAST(most_recent_hire AS VARCHAR)
+ ) AS executive_summary
 FROM analytics.gold.department_performance
 WHERE department_size = 'Large';
 ```

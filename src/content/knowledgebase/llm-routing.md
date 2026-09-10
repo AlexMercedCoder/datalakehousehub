@@ -1,7 +1,7 @@
 ---
 title: "What is LLM Routing?"
 meta_title: "What is LLM Routing? | Expert Data Lakehouse & AI Glossary"
-description: "The dynamic capability of selecting the most appropriate large language model for a specific task to optimize performance and cost. Learn the architecture, mechanics, and real-world value of LLM Routing in the modern data stack."
+description: "The dynamic capability of selecting the most appropriate large language model for a specific task to optimize performance and cost."
 ---
 
 ## What is LLM Routing?

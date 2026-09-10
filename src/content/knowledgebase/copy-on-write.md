@@ -1,7 +1,7 @@
 ---
 title: "What is Copy-On-Write?"
 meta_title: "What is Copy-On-Write? | Expert Data Lakehouse & AI Glossary"
-description: "A table design requiring entire files to be completely rewritten whenever modifications occur to optimize reading access limits. Learn the architecture, mechanics, and real-world value of Copy-On-Write in the modern data stack."
+description: "A table design requiring entire files to be completely rewritten whenever modifications occur to optimize reading access limits."
 ---
 
 ## What is Copy-On-Write?

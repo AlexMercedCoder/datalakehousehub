@@ -15,9 +15,10 @@ draft: false
 image: "/images/blog.png"
 canonical: https://iceberglakehouse.com/posts/geospatial-data-in-apache-iceberg/
 ---
-> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/geospatial-data-in-apache-iceberg/).
 
 A logistics team stores 40 million delivery stops in an Apache Iceberg table. Every row has a latitude and a longitude. The analyst wants every stop inside a polygon that outlines one metro area. The query engine scans every data file in the table, because nothing in the table metadata tells it which files contain points inside that polygon. Forty million rows get read to return two hundred thousand.
+
+> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/geospatial-data-in-apache-iceberg/).
 
 That was the normal state of spatial data on the lakehouse for most of a decade. Coordinates lived in two double columns or in an opaque binary column. The table format did not know the column was spatial. The file format did not know either. Every optimization that Iceberg applies to timestamps, integers, and strings, from min/max pruning to partition transforms, simply did not apply.
 
@@ -47,7 +48,7 @@ The `geometry` type treats coordinates as points on a flat plane. Distance is Eu
 
 The `geography` type treats coordinates as positions on the surface of an ellipsoid or sphere. A line between two points follows a geodesic, the shortest path over the curved surface, rather than a straight line in longitude and latitude. Distance is computed along that surface. This is the right model for global data stored in longitude and latitude, where a "straight" line across a thousand kilometers in planar math bends noticeably away from the true shortest path.
 
-The difference shows up in ordinary queries. Take two airports 8,000 kilometers apart. Planar distance on raw longitude and latitude gives a number in degrees that means nothing. Geodesic distance gives kilometers. Take a polygon that covers Alaska. Under planar math its western edge crosses the antimeridian at longitude 180 and the polygon appears to wrap around the entire planet. Under geographic math the polygon is a small region on a sphere and behaves correctly.
+The difference shows up in ordinary queries. Take two airports 8, 000 kilometers apart. Planar distance on raw longitude and latitude gives a number in degrees that means nothing. Geodesic distance gives kilometers. Take a polygon that covers Alaska. Under planar math its western edge crosses the antimeridian at longitude 180 and the polygon appears to wrap around the entire planet. Under geographic math the polygon is a small region on a sphere and behaves correctly.
 
 The spec encodes this distinction in the type definitions. `geometry(C)` is parameterized by a CRS `C`. `geography(C, A)` is parameterized by a CRS `C` and an edge-interpolation algorithm `A`. Both default the CRS to `OGC:CRS84`, which means longitude and latitude on the WGS84 datum with longitude first. Geography defaults the algorithm to `spherical`.
 
@@ -99,7 +100,7 @@ Z is elevation and M is a fourth measure such as a milepost or timestamp. Both a
 
 In v3, the two bound points are serialized as raw binary: an `x:y:z:m` concatenation of 8-byte little-endian IEEE 754 doubles. X and Y are mandatory. The encoding shrinks to `x:y` when Z and M are absent, `x:y:z` when only M is absent, and `x:y:NaN:m` when only Z is absent. The NaN placeholder keeps the byte offsets unambiguous.
 
-In v4, the bounds move into typed structs called `geo_lower` and `geo_upper` inside the new `content_stats` structure. Each struct has required `x` and `y` doubles and optional `z` and `m` doubles. The struct field IDs are assigned by fixed offsets within the column's stats ID range, so a geometry column with field ID 4 gets its lower-bound X at stats ID 10,810 and its upper-bound X at 10,814. The information is the same as v3. The difference is that engines read typed fields instead of parsing a variable-length byte array.
+In v4, the bounds move into typed structs called `geo_lower` and `geo_upper` inside the new `content_stats` structure. Each struct has required `x` and `y` doubles and optional `z` and `m` doubles. The struct field IDs are assigned by fixed offsets within the column's stats ID range, so a geometry column with field ID 4 gets its lower-bound X at stats ID 10, 810 and its upper-bound X at 10, 814. The information is the same as v3. The difference is that engines read typed fields instead of parsing a variable-length byte array.
 
 The geography type has one special rule for bounding boxes that catches people out. For `geography` columns, the X value of the lower bound is allowed to be greater than the X value of the upper bound. This encodes a box that crosses the antimeridian at longitude 180. A file containing shapes around Fiji, which straddles that line, gets a lower X of 178 and an upper X of negative 179. Under normal min/max logic that box is empty. Under the geography rule, an object matches if its X satisfies `x >= xmin OR x <= xmax`. The spec ties this to geographic vocabulary: xmin is westernmost, xmax is easternmost, ymin southernmost, ymax northernmost. Bounds are further restricted to the canonical ranges of [-180, 180] and [-90, 90].
 
@@ -122,7 +123,7 @@ Parquet 2.11, released in March 2025, added `GEOMETRY` and `GEOGRAPHY` as logica
 Iceberg v3 sits above both. The Iceberg schema declares the column type, CRS, and algorithm. The Parquet files carry the matching logical type and per-row-group statistics. The Iceberg manifests carry per-file bounding boxes computed from those files. Three layers, one set of semantics.
 
 | Layer | What declares the column is spatial | Where the CRS lives | Statistics for pruning | Engines need to |
-|---|---|---|---|---|
+|--|--|--|--|--|
 | GeoParquet 1.0 | `geo` JSON key in file metadata | `geo` JSON | File-level bbox only | Parse sidecar JSON |
 | GeoParquet 1.1 | `geo` JSON key | `geo` JSON | Row-group stats on `covering` columns | Parse sidecar JSON and know the covering convention |
 | Parquet 2.11 native (GeoParquet 2.0) | `GEOMETRY` / `GEOGRAPHY` logical type | Logical type parameter | Native per-column-chunk bbox | Support Parquet 2.11 |
@@ -152,16 +153,9 @@ A v3 table metadata file with two spatial columns carries a schema like this:
 
 ```json
 {
-  "type": "struct",
-  "schema-id": 0,
-  "fields": [
-    { "id": 1, "name": "stop_id", "required": true, "type": "long" },
-    { "id": 2, "name": "delivered_at", "required": true, "type": "timestamptz" },
-    { "id": 3, "name": "location", "required": false, "type": "geography" },
-    { "id": 4, "name": "zone_id", "required": false, "type": "string" },
-    { "id": 5, "name": "zone_footprint", "required": false,
-      "type": "geometry(EPSG:3857)" }
-  ]
+ "type": "struct", "schema-id": 0, "fields": [
+ { "id": 1, "name": "stop_id", "required": true, "type": "long" }, { "id": 2, "name": "delivered_at", "required": true, "type": "timestamptz" }, { "id": 3, "name": "location", "required": false, "type": "geography" }, { "id": 4, "name": "zone_id", "required": false, "type": "string" }, { "id": 5, "name": "zone_footprint", "required": false, "type": "geometry(EPSG:3857)" }
+ ]
 }
 ```
 
@@ -173,26 +167,15 @@ Creating the table from Python uses PyIceberg's type classes. This requires a Py
 from pyiceberg.catalog import load_catalog
 from pyiceberg.schema import Schema
 from pyiceberg.types import (
-    NestedField, LongType, TimestamptzType, StringType,
-    GeographyType, GeometryType,
-)
+ NestedField, LongType, TimestamptzType, StringType, GeographyType, GeometryType, )
 
 catalog = load_catalog("polaris")
 
 schema = Schema(
-    NestedField(1, "stop_id", LongType(), required=True),
-    NestedField(2, "delivered_at", TimestamptzType(), required=True),
-    NestedField(3, "location", GeographyType(), required=False),
-    NestedField(4, "zone_id", StringType(), required=False),
-    NestedField(5, "zone_footprint",
-                GeometryType(crs="EPSG:3857"), required=False),
-)
+ NestedField(1, "stop_id", LongType(), required=True), NestedField(2, "delivered_at", TimestamptzType(), required=True), NestedField(3, "location", GeographyType(), required=False), NestedField(4, "zone_id", StringType(), required=False), NestedField(5, "zone_footprint", GeometryType(crs="EPSG:3857"), required=False), )
 
 table = catalog.create_table(
-    "logistics.delivery_stops",
-    schema=schema,
-    properties={"format-version": "3"},
-)
+ "logistics.delivery_stops", schema=schema, properties={"format-version": "3"}, )
 ```
 
 The `format-version` property is the part people forget. Spatial types are rejected on v1 and v2 tables. PyIceberg raises a validation error through its format-version compatibility check rather than silently writing a binary column.
@@ -207,7 +190,7 @@ stops = gpd.read_parquet("s3://raw/stops/2026-08.parquet")
 stops = stops.set_crs("OGC:CRS84", allow_override=True)
 
 arrow_table = pa.Table.from_pandas(
-    stops[["stop_id", "delivered_at", "location", "zone_id"]]
+ stops[["stop_id", "delivered_at", "location", "zone_id"]]
 )
 table.append(arrow_table)
 ```
@@ -215,10 +198,7 @@ table.append(arrow_table)
 Each `append` commits a snapshot whose manifest entries carry bounding boxes for the `location` column. You can verify this from the metadata tables. In Spark with the Iceberg extensions loaded:
 
 ```sql
-SELECT file_path,
-       record_count,
-       lower_bounds[3] AS location_lower,
-       upper_bounds[3] AS location_upper
+SELECT file_path, record_count, lower_bounds[3] AS location_lower, upper_bounds[3] AS location_upper
 FROM logistics.delivery_stops.files
 LIMIT 5;
 ```
@@ -231,11 +211,9 @@ Querying is where engine support matters. In Apache Sedona on Spark, a containme
 SELECT s.stop_id, s.delivered_at
 FROM logistics.delivery_stops s
 WHERE ST_Intersects(
-  s.location,
-  ST_Transform(
-    ST_GeomFromWKT('POLYGON((-81.6 28.3, -81.2 28.3, -81.2 28.7, -81.6 28.7, -81.6 28.3))'),
-    'EPSG:4326', 'OGC:CRS84'
-  )
+ s.location, ST_Transform(
+ ST_GeomFromWKT('POLYGON((-81.6 28.3, -81.2 28.3, -81.2 28.7, -81.6 28.7, -81.6 28.3))'), 'EPSG:4326', 'OGC:CRS84'
+ )
 );
 ```
 
@@ -269,7 +247,7 @@ Getting the types right is the first day. Keeping the table fast is every day af
 
 **Sort spatially before writing.** Since bounding-box pruning depends on spatial coherence within files, the write path has to cluster nearby shapes together. The standard technique is to compute a space-filling curve index for each row and sort on it. A geohash string, an H3 cell index, or a Hilbert curve value all work. Compute it as an ordinary column, sort the write by it, and files naturally contain neighbors. Iceberg's `RewriteDataFiles` action with a sort order on that column does the same job for existing data during compaction.
 
-**Partition on a derived cell, not on the shape.** Since `identity` and `bucket` transforms are not allowed on spatial types, partitioning uses a derived column. A coarse H3 resolution (resolution 3 gives cells around 12,000 square kilometers) or a short geohash prefix works as a partition column. Choose the resolution so that a typical query touches a small number of partitions and each partition holds a healthy number of files. Partition on the cell column with the `identity` transform, and sort within partitions on a finer cell for file-level coherence.
+**Partition on a derived cell, not on the shape.** Since `identity` and `bucket` transforms are not allowed on spatial types, partitioning uses a derived column. A coarse H3 resolution (resolution 3 gives cells around 12, 000 square kilometers) or a short geohash prefix works as a partition column. Choose the resolution so that a typical query touches a small number of partitions and each partition holds a healthy number of files. Partition on the cell column with the `identity` transform, and sort within partitions on a finer cell for file-level coherence.
 
 **Keep polygons and points in separate tables.** Point tables prune beautifully because each point is a single coordinate. Polygon tables prune less well because polygons have area. Mixing them in one table gives you the worst of both. Two tables joined at query time is almost always the faster design.
 

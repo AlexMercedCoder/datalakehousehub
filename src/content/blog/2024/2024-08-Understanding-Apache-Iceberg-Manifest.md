@@ -14,12 +14,13 @@ draft: false
 image: "/images/blog.png"
 canonical: "https://iceberglakehouse.com/posts/2024-8-understanding-apache-iceberg-manifest/"
 ---
+
+Apache Iceberg is an open lakehouse table format with SQL-like capabilities and guarantees data stored in distributed file systems, making it a cornerstone of modern data lakehouse architectures. It has become a popular choice for managing large datasets due to its ability to handle complex data engineering challenges, such as time travel, schema evolution, and efficient query execution. At the heart of Iceberg's architecture is its metadata, which is crucial for maintaining the integrity and performance of the data.
+
 > **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2024-8-understanding-apache-iceberg-manifest/).
 
 - [Free Copy of Apache Iceberg: The Definitive Guide](https://hello.dremio.com/wp-apache-iceberg-the-definitive-guide-reg.html?utm_source=ev_external_blog&utm_medium=influencer&utm_campaign=manifestblog&utm_content=alexmerced&utm_term=external_blog)
 - [Free Apache Iceberg Crash Course](https://hello.dremio.com/webcast-an-apache-iceberg-lakehouse-crash-course-reg.html?utm_source=ev_external_blog&utm_medium=influencer&utm_campaign=manifestblog&utm_content=alexmerced&utm_term=external_blog)
-
-Apache Iceberg is an open lakehouse table format with SQL-like capabilities and guarantees data stored in distributed file systems, making it a cornerstone of modern data lakehouse architectures. It has become a popular choice for managing large datasets due to its ability to handle complex data engineering challenges, such as time travel, schema evolution, and efficient query execution. At the heart of Iceberg's architecture is its metadata, which is crucial for maintaining the integrity and performance of the data.
 
 We will explore a key component of Iceberg's metadata management: the **Manifest File**. Manifest files are vital in how Iceberg tracks and manages individual data files, ensuring that queries are executed efficiently and data consistency is maintained across snapshots. Understanding the role of these files will help data engineers optimize their data platforms and make the most of Iceberg's capabilities.
 

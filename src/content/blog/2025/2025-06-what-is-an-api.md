@@ -13,16 +13,17 @@ draft: false
 image: "/images/blog.png"
 canonical: "https://iceberglakehouse.com/posts/2025-06-what-is-an-api/"
 ---
-> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2025-06-what-is-an-api/).
 
 ## Free Resources  
-- **[Free Apache Iceberg Course](https://hello.dremio.com/webcast-an-apache-iceberg-lakehouse-crash-course-reg.html?utm_source=ev_external_blog&utm_medium=influencer&utm_campaign=what-is-an-api&utm_content=alexmerced&utm_term=external_blog)**  
-- **[Free Copy of “Apache Iceberg: The Definitive Guide”](https://hello.dremio.com/wp-apache-iceberg-the-definitive-guide-reg.html?utm_source=ev_external_blog&utm_medium=influencer&utm_campaign=what-is-an-api&utm_content=alexmerced&utm_term=external_blog)**  
-- **[Free Copy of “Apache Polaris: The Definitive Guide”](https://hello.dremio.com/wp-apache-polaris-guide-reg.html?utm_source=ev_external_blog&utm_medium=influencer&utm_campaign=what-is-an-api&utm_content=alexmerced&utm_term=external_blog)**  
-- **[2025 Apache Iceberg Architecture Guide](https://medium.com/data-engineering-with-dremio/2025-guide-to-architecting-an-iceberg-lakehouse-9b19ed42c9de)**  
-- **[How to Join the Iceberg Community](https://medium.alexmerced.blog/guide-to-finding-apache-iceberg-events-near-you-and-being-part-of-the-greater-iceberg-community-0c38ae785ddb)**  
-- **[Iceberg Lakehouse Engineering Video Playlist](https://youtube.com/playlist?list=PLsLAVBjQJO0p0Yq1fLkoHvt2lEJj5pcYe&si=WTSnqjXZv6Glkc3y)**  
-- **[Ultimate Apache Iceberg Resource Guide](https://medium.com/data-engineering-with-dremio/ultimate-directory-of-apache-iceberg-resources-e3e02efac62e)** 
+- **[Free Apache Iceberg Course](https://hello.dremio.com/webcast-an-apache-iceberg-lakehouse-crash-course-reg.html?utm_source=ev_external_blog&utm_medium=influencer&utm_campaign=what-is-an-api&utm_content=alexmerced&utm_term=external_blog)** 
+- **[Free Copy of “Apache Iceberg: The Definitive Guide”](https://hello.dremio.com/wp-apache-iceberg-the-definitive-guide-reg.html?utm_source=ev_external_blog&utm_medium=influencer&utm_campaign=what-is-an-api&utm_content=alexmerced&utm_term=external_blog)** 
+- **[Free Copy of “Apache Polaris: The Definitive Guide”](https://hello.dremio.com/wp-apache-polaris-guide-reg.html?utm_source=ev_external_blog&utm_medium=influencer&utm_campaign=what-is-an-api&utm_content=alexmerced&utm_term=external_blog)** 
+- **[2025 Apache Iceberg Architecture Guide](https://medium.com/data-engineering-with-dremio/2025-guide-to-architecting-an-iceberg-lakehouse-9b19ed42c9de)** 
+- **[How to Join the Iceberg Community](https://medium.alexmerced.blog/guide-to-finding-apache-iceberg-events-near-you-and-being-part-of-the-greater-iceberg-community-0c38ae785ddb)** 
+- **[Iceberg Lakehouse Engineering Video Playlist](https://youtube.com/playlist?list=PLsLAVBjQJO0p0Yq1fLkoHvt2lEJj5pcYe&si=WTSnqjXZv6Glkc3y)** 
+- **[Ultimate Apache Iceberg Resource Guide](https://medium.com/data-engineering-with-dremio/ultimate-directory-of-apache-iceberg-resources-e3e02efac62e)**
+
+> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2025-06-what-is-an-api/).
 
 Imagine walking into a restaurant in a foreign country where you don’t speak the language. You point at things, gesture wildly, maybe even draw pictures : anything to communicate what you want. But if you and the server spoke a common language like English or Spanish, things would go a lot smoother.
 
@@ -73,11 +74,11 @@ With so many tools available, the ability to integrate them seamlessly becomes a
 
 For example, if two different tools both understand the same API for reading from a data catalog or writing to object storage, they can work together out of the box. This eliminates the need for custom connectors or fragile workarounds.
 
-APIs also encourage specialization. A tool can focus on doing one thing well :  like cataloging metadata or transporting data ,  and expose an API that others can build upon. This modularity is what makes today's data architectures more flexible and scalable than ever before.
+APIs also encourage specialization. A tool can focus on doing one thing well : like cataloging metadata or transporting data, and expose an API that others can build upon. This modularity is what makes today's data architectures more flexible and scalable than ever before.
 
 In short, APIs are the foundation of composability in data systems. They allow different parts of the stack to evolve independently while still working together in harmony.
 
-## Case Study – The Ubiquity of the S3 API
+## Case Study - The Ubiquity of the S3 API
 
 Amazon S3 wasn't just a game changer because it offered scalable cloud storage. It also introduced a clean, consistent API that made storing and retrieving objects over the web straightforward. This API became so widely adopted that it evolved into a de facto standard for cloud object storage.
 
@@ -87,7 +88,7 @@ This is a powerful example of how API adoption fuels interoperability. Instead o
 
 The takeaway: when an API reaches critical mass, it becomes more than a technical interface : it becomes an ecosystem enabler.
 
-## Data Transport APIs – From JDBC/ODBC to ADBC
+## Data Transport APIs - From JDBC/ODBC to ADBC
 
 Moving data between systems has always been a core challenge in data architecture. For decades, the standard approach involved using JDBC (Java Database Connectivity) and ODBC (Open Database Connectivity). These APIs allowed applications to connect to relational databases in a consistent way, abstracting the underlying database-specific protocols.
 
@@ -101,9 +102,9 @@ With ADBC, the API is designed for today’s needs: fast, language-agnostic, and
 
 As analytics platforms grow more distributed and data-hungry, APIs like ADBC represent a forward-looking approach to data transport : one that matches the scale and speed of modern data systems.
 
-## Data Catalog APIs – Hive, Glue, and Iceberg REST
+## Data Catalog APIs - Hive, Glue, and Iceberg REST
 
-Lakehouse Data catalogs store metadata about datasets :  such as schema, location, and partitioning ,  allowing tools to discover and manage data assets consistently. But for this ecosystem to function, catalogs need APIs that other tools can understand.
+Lakehouse Data catalogs store metadata about datasets : such as schema, location, and partitioning, allowing tools to discover and manage data assets consistently. But for this ecosystem to function, catalogs need APIs that other tools can understand.
 
 Three primary catalog APIs have emerged in the lakehouse and analytics space:
 
@@ -132,6 +133,3 @@ We’ve seen how APIs act like shared languages, allowing software to communicat
 By adopting established APIs, tools become more compatible, easier to integrate, and more valuable within the broader ecosystem. And for data teams, aligning on common APIs means less time wrestling with custom connectors and more time delivering insights.
 
 As the data world continues to evolve, understanding and leveraging key APIs is essential. They’re not just part of the plumbing : they’re a strategic asset for building robust, scalable, and flexible data systems.
-
-
-

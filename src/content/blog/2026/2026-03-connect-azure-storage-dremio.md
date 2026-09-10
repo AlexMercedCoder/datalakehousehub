@@ -16,9 +16,10 @@ draft: false
 image: "/images/blog.png"
 canonical: "https://iceberglakehouse.com/posts/2026-03-connector-azure-storage/"
 ---
-> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-03-connector-azure-storage/).
 
 Azure Storage is Microsoft's cloud storage platform, spanning Blob Storage, Azure Data Lake Storage Gen2 (ADLS Gen2), and Azure Files. If your organization uses Microsoft Azure, your data lake almost certainly lives in Azure Storage : Parquet files from Azure Data Factory pipelines, CSV exports from Azure SQL Database, JSON event streams from Azure Event Hubs, and raw data from Azure IoT Hub all land in Azure Storage containers.
+
+> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-03-connector-azure-storage/).
 
 Dremio Cloud connects directly to Azure Storage and lets you query these files in place using standard SQL. You don't need Azure Synapse Analytics (DWU-based pricing), Azure Databricks (DBU costs), or HDInsight (cluster management) to run analytical queries against your data lake. Dremio reads the data, accelerates repeated queries with Reflections, and federates Azure Storage with every other source in your data ecosystem.
 
@@ -28,7 +29,7 @@ Many Azure customers face a fragmented analytics experience: Synapse for warehou
 
 ### SQL Without Azure Synapse Costs
 
-Azure Synapse serverless SQL charges per terabyte of data processed. For large datasets queried frequently :  dashboard refreshes, ad-hoc exploration, scheduled reports ,  costs accumulate quickly. Dremio's Reflections eliminate repeat scans by caching pre-computed results. C3 caching further reduces Azure Storage API calls for frequently accessed files. Your first query scans Azure Storage; subsequent matching queries hit Dremio's cache.
+Azure Synapse serverless SQL charges per terabyte of data processed. For large datasets queried frequently : dashboard refreshes, ad-hoc exploration, scheduled reports, costs accumulate quickly. Dremio's Reflections eliminate repeat scans by caching pre-computed results. C3 caching further reduces Azure Storage API calls for frequently accessed files. Your first query scans Azure Storage; subsequent matching queries hit Dremio's cache.
 
 ### Federation Beyond Azure
 
@@ -71,7 +72,7 @@ Choose from:
 ### 4. Configure Advanced Options
 
 | Setting | Purpose | Default |
-|---|---|---|
+|--|--|--|
 | **Root Path** | Starting container/path | `/` (all containers) |
 | **CTAS Format** | Default CREATE TABLE format | Iceberg recommended |
 | **Encrypt Connection** | Enable HTTPS | On |
@@ -83,13 +84,13 @@ Choose from:
 ## Query Azure Storage Data
 
 ```sql
--- Query Parquet files directly
+- Query Parquet files directly
 SELECT transaction_id, customer_id, amount, transaction_date
 FROM "azure-datalake".sales."transactions.parquet"
 WHERE transaction_date >= '2024-01-01' AND amount > 100
 ORDER BY amount DESC;
 
--- Query partitioned data (Hive-style partitions)
+- Query partitioned data (Hive-style partitions)
 SELECT region, product_category, SUM(revenue) AS total_revenue
 FROM "azure-datalake".sales.transactions
 WHERE year = '2024' AND quarter = 'Q1'
@@ -100,13 +101,9 @@ ORDER BY total_revenue DESC;
 ## Federate with Other Clouds
 
 ```sql
--- Join Azure data with AWS and Google Cloud sources
+- Join Azure data with AWS and Google Cloud sources
 SELECT
-  c.customer_name,
-  c.segment,
-  SUM(a.amount) AS azure_revenue,
-  COUNT(s.event_id) AS aws_events,
-  bq.campaign_clicks
+ c.customer_name, c.segment, SUM(a.amount) AS azure_revenue, COUNT(s.event_id) AS aws_events, bq.campaign_clicks
 FROM "postgres-crm".public.customers c
 LEFT JOIN "azure-datalake".sales.transactions a ON c.customer_id = a.customer_id
 LEFT JOIN "s3-events".analytics.user_events s ON c.customer_id = s.user_id
@@ -122,15 +119,11 @@ Four clouds, one query.
 ```sql
 CREATE VIEW analytics.gold.customer_transactions AS
 SELECT
-  a.customer_id,
-  a.transaction_date,
-  a.amount,
-  CASE
-    WHEN a.amount > 1000 THEN 'High Value'
-    WHEN a.amount > 100 THEN 'Standard'
-    ELSE 'Micro'
-  END AS transaction_tier,
-  DATE_TRUNC('month', a.transaction_date) AS transaction_month
+ a.customer_id, a.transaction_date, a.amount, CASE
+ WHEN a.amount > 1000 THEN 'High Value'
+ WHEN a.amount > 100 THEN 'Standard'
+ ELSE 'Micro'
+ END AS transaction_tier, DATE_TRUNC('month', a.transaction_date) AS transaction_month
 FROM "azure-datalake".sales.transactions a
 WHERE a.transaction_date >= '2024-01-01';
 ```
@@ -156,26 +149,19 @@ An operations team member can ask Claude "Show me a summary of our Azure sales d
 ### AI SQL Functions
 
 ```sql
--- Classify transactions with AI
+- Classify transactions with AI
 SELECT
-  transaction_id,
-  amount,
-  AI_CLASSIFY(
-    'Based on this transaction, classify the likely purchase category',
-    'Amount: $' || CAST(amount AS VARCHAR) || ', Date: ' || CAST(transaction_date AS VARCHAR),
-    ARRAY['Subscription', 'One-Time Purchase', 'Refund', 'Upgrade']
-  ) AS inferred_category
+ transaction_id, amount, AI_CLASSIFY(
+ 'Based on this transaction, classify the likely purchase category', 'Amount: $' || CAST(amount AS VARCHAR) || ', Date: ' || CAST(transaction_date AS VARCHAR), ARRAY['Subscription', 'One-Time Purchase', 'Refund', 'Upgrade']
+ ) AS inferred_category
 FROM "azure-datalake".sales.transactions
 WHERE transaction_date = CURRENT_DATE;
 
--- Generate data quality summaries
+- Generate data quality summaries
 SELECT
-  transaction_month,
-  COUNT(*) AS total_transactions,
-  AI_GENERATE(
-    'Write a one-sentence summary of this month data quality',
-    'Transactions: ' || CAST(COUNT(*) AS VARCHAR) || ', Avg Amount: $' || CAST(ROUND(AVG(amount), 2) AS VARCHAR) || ', Nulls: ' || CAST(SUM(CASE WHEN customer_id IS NULL THEN 1 ELSE 0 END) AS VARCHAR)
-  ) AS quality_summary
+ transaction_month, COUNT(*) AS total_transactions, AI_GENERATE(
+ 'Write a one-sentence summary of this month data quality', 'Transactions: ' || CAST(COUNT(*) AS VARCHAR) || ', Avg Amount: $' || CAST(ROUND(AVG(amount), 2) AS VARCHAR) || ', Nulls: ' || CAST(SUM(CASE WHEN customer_id IS NULL THEN 1 ELSE 0 END) AS VARCHAR)
+ ) AS quality_summary
 FROM analytics.gold.customer_transactions
 GROUP BY transaction_month;
 ```
@@ -194,7 +180,7 @@ WHERE event_type IS NOT NULL;
 Iceberg tables benefit from automatic compaction, time travel, results caching, and Autonomous Reflections. You can also use time travel to query historical states:
 
 ```sql
--- Query as table existed 7 days ago
+- Query as table existed 7 days ago
 SELECT * FROM analytics.bronze.azure_events
 AT TIMESTAMP '2024-06-01 00:00:00';
 ```
@@ -248,7 +234,7 @@ For raw Azure files, query through the connector and create manual Reflections. 
 Azure Storage offers multiple access tiers that affect query performance:
 
 | Tier | Access Latency | Cost | Dremio Recommendation |
-|---|---|---|---|
+|--|--|--|--|
 | **Hot** | Milliseconds | Highest storage, lowest access | Active analytics data : best performance |
 | **Cool** | Milliseconds | Lower storage, higher access | Infrequent queries : still fast |
 | **Cold** | Milliseconds | Even lower storage, higher access | Archival analytics : acceptable latency |

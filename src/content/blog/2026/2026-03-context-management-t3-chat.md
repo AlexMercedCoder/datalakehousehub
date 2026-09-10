@@ -16,9 +16,10 @@ draft: false
 image: "/images/blog.png"
 canonical: "https://iceberglakehouse.com/posts/2026-03-context-t3-chat/"
 ---
-> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-03-context-t3-chat/).
 
 T3 Chat is a modern web-based AI chat interface that gives you access to multiple AI models through a single unified platform. Its primary value proposition is model flexibility: instead of being locked into one provider, you can switch between Claude, GPT, Gemini, Llama, and other models within the same interface. This makes T3 Chat unique from a context management perspective because the same context strategies must work across fundamentally different model families with different capabilities, context window sizes, and strengths.
+
+> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-03-context-t3-chat/).
 
 This guide covers how to manage context effectively in T3 Chat to get the most from its multi-model architecture, from conversation organization to system prompts and file handling.
 
@@ -77,7 +78,7 @@ Personas combine a system prompt with a preferred model selection into a reusabl
 ### Creating Effective Personas
 
 | Persona | System Prompt Focus | Model Choice |
-|---|---|---|
+|--|--|--|
 | **Code Reviewer** | Security, performance, style guide checks | Claude Sonnet (strong at code analysis) |
 | **Technical Writer** | Documentation standards, audience awareness | GPT-4o (strong at prose) |
 | **Research Analyst** | Citation requirements, source evaluation | Gemini Pro (strong at retrieval and synthesis) |
@@ -99,7 +100,7 @@ Choosing the right model in T3 Chat is itself a context management decision beca
 ### Context Window Comparison
 
 | Model | Approximate Context Window | Strengths |
-|---|---|---|
+|--|--|--|
 | **Claude Sonnet** | 200K tokens | Long context, code analysis, nuanced reasoning |
 | **Claude Opus** | 200K tokens | Complex analysis, creative writing |
 | **GPT-4o** | 128K tokens | Broad capabilities, strong at prose and instruction following |

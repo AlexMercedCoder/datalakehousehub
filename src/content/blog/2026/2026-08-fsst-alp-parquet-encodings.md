@@ -14,9 +14,10 @@ tags:
 slug: "fsst-alp-parquet-encodings"
 draft: false
 ---
-> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/fsst-alp-parquet-encodings/).
 
 Look at the byte breakdown of a large Parquet table in a lakehouse and two column types dominate out of proportion to their row count. The first is high-cardinality strings: user agents, URLs, log messages, JSON fragments, free-text fields. The second is floating-point measurements: sensor readings, prices, model scores, embedding components. Both compress badly under the encodings Parquet has shipped for a decade, and both are becoming a larger share of what gets written as observability and AI workloads move into Apache Iceberg tables.
+
+> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/fsst-alp-parquet-encodings/).
 
 The symptom is easy to spot. Dictionary encoding on a string column with 40 million distinct values falls back to plain encoding, and a Zstandard block compressor gets a modest ratio on it while burning CPU on every read. A double column of sensor values compresses to maybe 80 percent of its raw size, because the low bits of IEEE 754 doubles look random to any byte-oriented compressor. You pay for storage, you pay for the bytes scanned, and you pay again for the decompression on every query.
 
@@ -64,7 +65,7 @@ The August 2026 discussions on the Parquet list settled the remaining design que
 
 ALP comes from a 2024 SIGMOD paper by Azim Afroozeh, Leonardo Kuffo, and Peter Boncz, and it is already used in DuckDB and several other engines. The observation behind it is that real-world doubles are not random. They are decimal numbers that were converted to binary. A price of 19.99, a temperature of 72.4, a sensor reading of 0.0312 all started as short decimals, and the mantissa noise that defeats compressors is an artifact of the binary representation, not information.
 
-ALP recovers the decimal. For a vector of doubles (typically 1,024 values), it searches for a pair of small integers, an exponent e and a factor f, such that for as many values as possible:
+ALP recovers the decimal. For a vector of doubles (typically 1, 024 values), it searches for a pair of small integers, an exponent e and a factor f, such that for as many values as possible:
 
 ```
 round(value * 10^e) / 10^f
@@ -72,7 +73,7 @@ round(value * 10^e) / 10^f
 
 produces an integer that, when converted back through the inverse operation, reproduces the original double bit for bit. For a column of prices with two decimal places, e = 2 and f = 0 works for nearly every value: 19.99 becomes 1999, and 1999 / 100 gives back exactly 19.99 in IEEE 754. The encoder verifies the round trip for every value, so the encoding is lossless by construction.
 
-The resulting integers are small and clustered, which is the case Parquet's existing integer machinery handles best. ALP applies frame-of-reference (subtract the minimum) and bit-packing (store each value in the minimum bits needed for the range). A vector of 1,024 prices between 0.01 and 999.99 becomes 1,024 integers between 1 and 99,999, which fit in 17 bits each. That is 2,176 bytes instead of 8,192, before any general-purpose compression runs on top.
+The resulting integers are small and clustered, which is the case Parquet's existing integer machinery handles best. ALP applies frame-of-reference (subtract the minimum) and bit-packing (store each value in the minimum bits needed for the range). A vector of 1, 024 prices between 0.01 and 999.99 becomes 1, 024 integers between 1 and 99, 999, which fit in 17 bits each. That is 2, 176 bytes instead of 8, 192, before any general-purpose compression runs on top.
 
 Values that do not fit the pattern are exceptions. A double like 0.1 + 0.2 in floating point (which is 0.30000000000000004) does not round trip through any small e and f. ALP stores such values verbatim in a separate exceptions list along with their positions, and the main vector stores a placeholder. The encoder chooses e and f to minimize the total size including exceptions, and when exceptions dominate, it switches strategies.
 
@@ -117,44 +118,44 @@ import struct
 import math
 
 def bits(x: float) -> int:
-    """Return the IEEE 754 bit pattern of a double as an integer."""
-    return struct.unpack("<Q", struct.pack("<d", x))[0]
+ """Return the IEEE 754 bit pattern of a double as an integer."""
+ return struct.unpack("<Q", struct.pack("<d", x))[0]
 
 def try_encode(values, e, f):
-    """
-    Attempt to encode a list of doubles with exponent e and factor f.
-    Returns (encoded_integers, exceptions) where exceptions is a list
-    of (position, original_value) for values that do not round-trip.
-    """
-    scale = 10.0 ** e
-    unscale = 10.0 ** f
-    encoded = []
-    exceptions = []
-    for i, v in enumerate(values):
-        n = round(v * scale / unscale)
-        back = n * unscale / scale
-        if bits(back) == bits(v) and abs(n) < 2**48:
-            encoded.append(n)
-        else:
-            encoded.append(0)             # placeholder
-            exceptions.append((i, v))
-    return encoded, exceptions
+ """
+ Attempt to encode a list of doubles with exponent e and factor f.
+ Returns (encoded_integers, exceptions) where exceptions is a list
+ of (position, original_value) for values that do not round-trip.
+ """
+ scale = 10.0 ** e
+ unscale = 10.0 ** f
+ encoded = []
+ exceptions = []
+ for i, v in enumerate(values):
+ n = round(v * scale / unscale)
+ back = n * unscale / scale
+ if bits(back) == bits(v) and abs(n) < 2**48:
+ encoded.append(n)
+ else:
+ encoded.append(0) # placeholder
+ exceptions.append((i, v))
+ return encoded, exceptions
 
 def choose_parameters(values, max_e=18):
-    """
-    Search a small grid of (e, f) pairs and pick the one that
-    minimizes bits for the packed integers plus exception storage.
-    """
-    best = None
-    for e in range(0, max_e + 1):
-        for f in range(0, e + 1):
-            enc, exc = try_encode(values, e, f)
-            lo, hi = min(enc), max(enc)
-            width = max(1, (hi - lo).bit_length())
-            cost = len(enc) * width + len(exc) * (64 + 16)
-            if best is None or cost < best[0]:
-                best = (cost, e, f, width, len(exc))
-    return best
+ """
+ Search a small grid of (e, f) pairs and pick the one that
+ minimizes bits for the packed integers plus exception storage.
+ """
+ best = None
+ for e in range(0, max_e + 1):
+ for f in range(0, e + 1):
+ enc, exc = try_encode(values, e, f)
+ lo, hi = min(enc), max(enc)
+ width = max(1, (hi - lo).bit_length())
+ cost = len(enc) * width + len(exc) * (64 + 16)
+ if best is None or cost < best[0]:
+ best = (cost, e, f, width, len(exc))
+ return best
 
 prices = [19.99, 24.50, 3.15, 100.00, 0.99, 47.25, 12.30, 8.75]
 cost, e, f, width, n_exc = choose_parameters(prices)
@@ -186,10 +187,9 @@ import pyarrow.parquet as pq
 
 meta = pq.ParquetFile("sensor_readings.parquet").metadata
 for rg in range(meta.num_row_groups):
-    for c in range(meta.num_columns):
-        col = meta.row_group(rg).column(c)
-        print(rg, col.path_in_schema, col.encodings,
-              col.compression, col.total_compressed_size)
+ for c in range(meta.num_columns):
+ col = meta.row_group(rg).column(c)
+ print(rg, col.path_in_schema, col.encodings, col.compression, col.total_compressed_size)
 ```
 
 Once ALP and FSST land in the libraries, the same `encodings` field is where you will see them appear, and the compressed size column is where you will measure the difference.
@@ -199,51 +199,47 @@ Once ALP and FSST land in the libraries, the same `encodings` field is where you
 FSST is even simpler to demonstrate, because the hard part (training the symbol table) is separable from the part that matters at read time (using it). The following toy hardcodes a symbol table for a column of URLs so you can see the encode, decode, random access, and equality properties directly. A real encoder discovers the symbols by sampling. The real spec uses a compact binary table layout and a specific escape convention. The mechanism is the same.
 
 ```python
-SYMBOLS = ["https://", "www.", ".com/", "api/v",
-           "/users/", "?id=", "example", "shop"]
+SYMBOLS = ["https://", "www.", ".com/", "api/v", "/users/", "?id=", "example", "shop"]
 table = {i: s for i, s in enumerate(SYMBOLS)}
 ESC = 255
 
 def encode(s, table):
-    """Greedy longest-match encoding to 1-byte codes plus escapes."""
-    out = []
-    i = 0
-    while i < len(s):
-        best = None
-        for code, sym in table.items():
-            if s.startswith(sym, i) and (best is None or len(sym) > len(table[best])):
-                best = code
-        if best is None:
-            out.append(ESC)
-            out.append(ord(s[i]))
-            i += 1
-        else:
-            out.append(best)
-            i += len(table[best])
-    return bytes(out)
+ """Greedy longest-match encoding to 1-byte codes plus escapes."""
+ out = []
+ i = 0
+ while i < len(s):
+ best = None
+ for code, sym in table.items():
+ if s.startswith(sym, i) and (best is None or len(sym) > len(table[best])):
+ best = code
+ if best is None:
+ out.append(ESC)
+ out.append(ord(s[i]))
+ i += 1
+ else:
+ out.append(best)
+ i += len(table[best])
+ return bytes(out)
 
 def decode(codes, table):
-    """Stateless table lookup. No window, no back-references."""
-    out = []
-    i = 0
-    while i < len(codes):
-        c = codes[i]
-        if c == ESC:
-            out.append(chr(codes[i + 1]))
-            i += 2
-        else:
-            out.append(table[c])
-            i += 1
-    return "".join(out)
+ """Stateless table lookup. No window, no back-references."""
+ out = []
+ i = 0
+ while i < len(codes):
+ c = codes[i]
+ if c == ESC:
+ out.append(chr(codes[i + 1]))
+ i += 2
+ else:
+ out.append(table[c])
+ i += 1
+ return "".join(out)
 
 urls = [
-    "https://www.example.com/api/v2/users/42?id=7",
-    "https://shop.example.com/users/9",
-    "https://www.example.com/api/v1/shop?id=3",
-]
+ "https://www.example.com/api/v2/users/42?id=7", "https://shop.example.com/users/9", "https://www.example.com/api/v1/shop?id=3", ]
 encoded = [encode(u, table) for u in urls]
 for u, e in zip(urls, encoded):
-    print(len(u), len(e), decode(e, table) == u)
+ print(len(u), len(e), decode(e, table) == u)
 
 # equality without decoding: same table, same string, same codes
 print(encode(urls[1], table) == encoded[1])
@@ -264,7 +260,7 @@ The escape path is the cost of coverage. Characters that no symbol covers cost t
 Parquet now has, or is about to have, more than one reasonable choice for most physical types. Here is how I think about the options for the column types that dominate storage in a typical lakehouse. Compression ratios are rough, vary widely by data, and are meant to set expectations rather than predict results.
 
 | Column type | Encoding today | Typical ratio today | New encoding | Typical ratio with new encoding | Read path change |
-|---|---|---|---|---|---|
+|--|--|--|--|--|--|
 | Low-cardinality strings (status, country, category) | RLE_DICTIONARY | 10x or better | No change needed | No change | None |
 | High-cardinality strings (URLs, user agents, log text) | PLAIN, then Zstandard | 1.5x to 3x, full-page decode | FSST | 2x to 3x with random access | Table lookup per string |
 | Decimals stored as doubles (prices, percentages, scaled metrics) | PLAIN or BYTE_STREAM_SPLIT, then Zstandard | 1.1x to 1.5x | ALP (decimal path) | 3x to 5x | Bit unpack, multiply, patch |

@@ -13,7 +13,6 @@ slug: ltap-lakehouse-transactional-analytical-processing-2026
 draft: false
 image: "/images/blog.png"
 ---
-
 # What Is LTAP in the Lakehouse?
 
 
@@ -89,7 +88,7 @@ I would also require a visible refusal path. If data is outside the freshness wi
 ## Operational Checklist
 
 | Area | Question to answer | Why it matters |
-|---|---|---|
+|--|--|--|
 | Ownership | Who owns the table, the write pipeline, and the compaction schedule? | Incidents need named owners, not shared confusion. |
 | Freshness | What is the defined freshness window for each analytical table? | Freshness without a number is not a contract. |
 | Isolation | Which write and read workloads are isolated from each other? | Write pressure should not degrade analytical latency. |
@@ -140,11 +139,11 @@ The next step is to define the dimensions that actually change behavior: fresh w
 
 ## Review Questions Worth Asking
 
-The first question: what is the freshness window for each table that is part of this rollout, measured in clock time? If the answer is "as fresh as possible," the contract is not defined.
+The first question: what is the freshness window for each table that is part of this rollout, measured in clock time? If the answer is "as fresh as possible, " the contract is not defined.
 
 The second question: what happens when a heavy write window and a compaction job overlap on the same partition? If the answer is unclear, the rollout is not ready for production write patterns.
 
-The third question: who gets notified when the freshness window is breached? If the answer is "nobody," the monitoring is not ready. Freshness contracts without enforcement are just documentation.
+The third question: who gets notified when the freshness window is breached? If the answer is "nobody, " the monitoring is not ready. Freshness contracts without enforcement are just documentation.
 
 ## A Realistic Pilot Shape
 

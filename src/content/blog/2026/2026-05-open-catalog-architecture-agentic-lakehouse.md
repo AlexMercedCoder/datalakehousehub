@@ -1,7 +1,7 @@
 ---
 title: "Building the Brain of the Agentic Lakehouse: Designing an Open Catalog Architecture"
 date: 2026-05-28T09:00:00Z
-description: "The open catalog is the brain of the agentic lakehouse. Learn how Apache Polaris, Dremio's Open Catalog, and catalog-native governance enable reliable AI data access."
+description: "The open catalog is the brain of the agentic lakehouse. Learn how Apache Polaris, Dremio's Open Catalog, and catalog-native governance enable reliable AI."
 author: "Alex Merced"
 category: "Agentic Lakehouse"
 tags:
@@ -11,11 +11,12 @@ draft: false
 image: "/images/blog.png"
 canonical: "https://iceberglakehouse.com/posts/2026-05-22-multicloud-agentic-lakehouse-reference-architecture/"
 ---
-> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-05-22-multicloud-agentic-lakehouse-reference-architecture/).
 
 # Building the Brain of the Agentic Lakehouse: Designing an Open Catalog Architecture
 
 An AI agent connected to a data platform needs to know three things before it can answer questions reliably: what data exists, what it means, and who is allowed to see it. In an agentic lakehouse, the catalog provides all three. Without a well-designed catalog, the agent is navigating blind.
+
+> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-05-22-multicloud-agentic-lakehouse-reference-architecture/).
 
 This post covers the architectural components of an open catalog designed for AI agent access, how Apache Polaris implements the open standard, and how Dremio's Open Catalog extends that foundation with the federation and governance features that production agentic systems require.
 
@@ -96,17 +97,17 @@ When designing your catalog for AI agent access, organize namespaces around busi
 ```
 catalog/
 ├── finance/
-│   ├── bronze/          # Raw financial data
-│   ├── silver/          # Cleaned, governed financial metrics
-│   └── gold/            # Report-ready financial aggregates
+│ ├── bronze/ # Raw financial data
+│ ├── silver/ # Cleaned, governed financial metrics
+│ └── gold/ # Report-ready financial aggregates
 ├── operations/
-│   ├── bronze/
-│   ├── silver/
-│   └── gold/
+│ ├── bronze/
+│ ├── silver/
+│ └── gold/
 └── customer_success/
-    ├── bronze/
-    ├── silver/
-    └── gold/
+ ├── bronze/
+ ├── silver/
+ └── gold/
 ```
 
 Each silver-layer virtual dataset should have a full wiki description, column-level labels, and access control policies. The agent is configured to query the silver layer by default, escalating to gold for specific reporting use cases.

@@ -14,9 +14,10 @@ tags:
 slug: "iceberg-delete-story-2026"
 draft: false
 ---
-> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/iceberg-delete-story-2026/).
 
 Deleting a row from an immutable file is a contradiction, and every table format on object storage is, at bottom, a system for managing that contradiction gracefully. Apache Iceberg has now shipped three different answers to it: position delete files, equality delete files, and deletion vectors, with a fourth generation taking shape in the v4 design discussions. Each answer encodes a different bet about where the cost of change should land, at write time, at read time, or at maintenance time, and in 2026 all three coexist in production tables, sometimes in the same table's history, which is exactly why a canonical comparison is worth writing. Vendors quote whichever mechanism flatters their benchmark, migration guides assume whichever one their author last operated, and the spec text, precise as it is, never puts the three side by side for a decision-maker.
+
+> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/iceberg-delete-story-2026/).
 
 This article is that comparison, built from the specification outward. We will establish the shared problem and the copy-on-write baseline, then take each mechanism in turn, what it physically writes, how readers apply it, what it costs, and where it wins, before putting all three in one table, walking the transition rules that govern their coexistence, and looking at where v4 is taking the whole story. By the end, "which delete mechanism is my table using, and should it be" should be a question you can answer from metadata in minutes.
 
@@ -48,7 +49,7 @@ The second flaw is subtler: positions are fragile coordinates. A position delete
 
 Where they still belong: existing v2 tables, full stop. Position deletes remain fully valid in v2, engines support them maturely, and a stable v2 deployment with a healthy compaction cadence is not an emergency. The spec's own trajectory tells you the future, though: position delete files are formally deprecated in v3, existing ones remain readable, and new v3 deletes take the form described two sections down. The workhorse earned retirement by defining the job its successor was built for.
 
-The accumulation problem deserves its arithmetic, because the numbers explain a decade of on-call rotations better than any adjective. Take a modest CDC feed committing once a minute, each commit deleting or updating a handful of rows scattered across the table's hot partition, ten data files, say. Each commit adds delete files covering the touched data files. After one day: 1,440 commits, and the hot files each carry delete artifacts numbering in the hundreds. After a week without compaction: several thousand mutation commits, each hot data file dragging a train of delete files that every single read must list, fetch, decode, and merge before returning a row, with the storage system billing per request the whole way. Now put the same feed on deletion vectors: after the same week, each hot file carries exactly one bitmap whose size grew by bytes per mutation, and read cost is indistinguishable from day one. The v2 curve is linear in mutation count and the v3 curve is flat, and every operational war story about merge-on-read tables "suddenly" getting slow is a team discovering which curve it was on. Compaction was v2's answer, and a good one, and the difference between "compaction keeps the table healthy" and "compaction races the workload for the table's usability" is the difference the arithmetic just drew.
+The accumulation problem deserves its arithmetic, because the numbers explain a decade of on-call rotations better than any adjective. Take a modest CDC feed committing once a minute, each commit deleting or updating a handful of rows scattered across the table's hot partition, ten data files, say. Each commit adds delete files covering the touched data files. After one day: 1, 440 commits, and the hot files each carry delete artifacts numbering in the hundreds. After a week without compaction: several thousand mutation commits, each hot data file dragging a train of delete files that every single read must list, fetch, decode, and merge before returning a row, with the storage system billing per request the whole way. Now put the same feed on deletion vectors: after the same week, each hot file carries exactly one bitmap whose size grew by bytes per mutation, and read cost is indistinguishable from day one. The v2 curve is linear in mutation count and the v3 curve is flat, and every operational war story about merge-on-read tables "suddenly" getting slow is a team discovering which curve it was on. Compaction was v2's answer, and a good one, and the difference between "compaction keeps the table healthy" and "compaction races the workload for the table's usability" is the difference the arithmetic just drew.
 
 ## Equality Deletes: The Write-Side Escape Hatch
 
@@ -66,13 +67,13 @@ Where they belong in 2026: as a buffer, not a resting state. Streaming and CDC w
 
 Before the third mechanism, ground the first two with a single concrete statement traced through each regime, because the mechanisms feel abstract until you watch them produce files.
 
-The statement: `DELETE FROM orders WHERE order_id = 8675309`, one row, living at position 41,207 of a 512 MB data file that holds 4 million rows, in a table of 2,000 such files.
+The statement: `DELETE FROM orders WHERE order_id = 8675309`, one row, living at position 41, 207 of a 512 MB data file that holds 4 million rows, in a table of 2, 000 such files.
 
 Copy-on-write: the engine plans the delete, statistics identify the one candidate file, and the write rewrites it, 512 MB read, roughly 512 MB written as a new file omitting one row, one commit swapping new file for old. Artifacts produced: one full-size data file. The next read sees a perfectly clean table and pays nothing extra, forever. The bill was the half-gigabyte rewrite for a 100-byte row, and whether that offends you is precisely the copy-on-write question.
 
-V2 merge-on-read with position deletes: same planning finds the file and the row's position, and the write emits a tiny Parquet delete file containing one pair, the data file's path and position 41,207, plus a commit. Artifacts produced: one delete file of a few kilobytes. The next read of that data file fetches and applies the delete file, trivial at count one, and here is the regime's character: run this statement pattern hourly against the same hot file for a month and the artifacts number in the hundreds, each read paying the whole stack, until compaction resolves them.
+V2 merge-on-read with position deletes: same planning finds the file and the row's position, and the write emits a tiny Parquet delete file containing one pair, the data file's path and position 41, 207, plus a commit. Artifacts produced: one delete file of a few kilobytes. The next read of that data file fetches and applies the delete file, trivial at count one, and here is the regime's character: run this statement pattern hourly against the same hot file for a month and the artifacts number in the hundreds, each read paying the whole stack, until compaction resolves them.
 
-V3 merge-on-read with a deletion vector: planning finds file and position as before, and the write consults the file's existing vector, none yet, so it creates one, a Roaring bitmap with bit 41,207 set, stored as a blob in a Puffin file, with the manifest entry pinning the referenced data file and the blob's exact offset and length. Artifacts produced: one bitmap blob measured in bytes. The next read fetches the bitmap by offset and masks the scan. Now run the hourly pattern for a month: each subsequent delete merges its position into the existing bitmap and writes the replacement, so after seven hundred mutations the artifact count for that data file is still exactly one, its size still trivial, and the read-side cost identical to day one. Same statement, three regimes, and the third is the only one whose costs do not compound with history.
+V3 merge-on-read with a deletion vector: planning finds file and position as before, and the write consults the file's existing vector, none yet, so it creates one, a Roaring bitmap with bit 41, 207 set, stored as a blob in a Puffin file, with the manifest entry pinning the referenced data file and the blob's exact offset and length. Artifacts produced: one bitmap blob measured in bytes. The next read fetches the bitmap by offset and masks the scan. Now run the hourly pattern for a month: each subsequent delete merges its position into the existing bitmap and writes the replacement, so after seven hundred mutations the artifact count for that data file is still exactly one, its size still trivial, and the read-side cost identical to day one. Same statement, three regimes, and the third is the only one whose costs do not compound with history.
 
 ## Deletion Vectors: The V3 Settlement
 
@@ -97,7 +98,7 @@ One clarification pays for itself in design reviews: everything above about dele
 With all three established, here is the comparison the article's title promises, dimensions chosen for decision-making rather than trivia:
 
 | Dimension | Position deletes (v2) | Equality deletes (v2, v3) | Deletion vectors (v3) |
-|---|---|---|---|
+|--|--|--|--|
 | Identifies rows by | File path and row position | Column values | Bit positions, one file's bitmap |
 | Physical form | Parquet delete file, sorted by file and position | Delete file of key values plus field IDs | Roaring bitmap blob in Puffin |
 | Artifacts per data file | Unbounded, grows with mutation history | Unbounded, partition-scoped | At most one, enforced |
@@ -133,19 +134,16 @@ The comparison becomes actionable the moment you can interrogate a real table, a
 Start with the delete inventory. The files and entries metadata tables expose content type per tracked file, data versus position deletes versus equality deletes, and for vectors, the referenced data file, blob offsets, and cardinality ride the same metadata. In Spark SQL against the metadata tables, the census is one query:
 
 ```sql
--- Delete artifact census: content 0 = data, 1 = position deletes,
--- 2 = equality deletes (vectors ride position-delete entries in v3)
-SELECT content,
-       count(*)                    AS file_count,
-       sum(record_count)           AS total_rows
-FROM   lake.sales.orders.files
-GROUP  BY content;
+- Delete artifact census: content 0 = data, 1 = position deletes, - 2 = equality deletes (vectors ride position-delete entries in v3)
+SELECT content, count(*) AS file_count, sum(record_count) AS total_rows
+FROM lake.sales.orders.files
+GROUP BY content;
 
--- Ratio and hot spots: which data files carry the most delete pressure
+- Ratio and hot spots: which data files carry the most delete pressure
 SELECT count(*) FILTER (WHERE content != 0) * 1.0
-       / nullif(count(*) FILTER (WHERE content = 0), 0)
-       AS delete_to_data_ratio
-FROM   lake.sales.orders.files;
+ / nullif(count(*) FILTER (WHERE content = 0), 0)
+ AS delete_to_data_ratio
+FROM lake.sales.orders.files;
 ```
 
 Three aggregate numbers characterize the table immediately: count of delete artifacts by type, ratio of delete artifacts to data files, and total deleted-row cardinality against live rows. A v2 table showing five position delete files per data file has told you its compaction story without a single query plan. A v3 table showing vectors on 40 percent of files with tiny cardinalities has told you it mutates lightly and evenly.

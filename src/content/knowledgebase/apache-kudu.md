@@ -1,7 +1,7 @@
 ---
 title: "What is Apache Kudu?"
 meta_title: "What is Apache Kudu? | Expert Data Lakehouse Architecture Guide"
-description: "A comprehensive guide to Apache Kudu. Learn how this massive hybrid storage engine bridged the catastrophic gap between high-speed ingestion and complex analytics."
+description: "A comprehensive guide to Apache Kudu. Learn how this massive hybrid storage engine bridged the catastrophic gap between high-speed ingestion and complex."
 ---
 
 # What is Apache Kudu?

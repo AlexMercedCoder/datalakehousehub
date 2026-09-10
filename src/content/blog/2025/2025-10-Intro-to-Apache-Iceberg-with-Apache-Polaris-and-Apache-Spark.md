@@ -15,7 +15,6 @@ draft: false
 image: "/images/blog.png"
 canonical: "https://iceberglakehouse.com/posts/2025-10-intro-to-apache-iceberg-with-apache-polaris-and-apache-spark/"
 ---
-> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2025-10-intro-to-apache-iceberg-with-apache-polaris-and-apache-spark/).
 
 **Get Data Lakehouse Books:**
 - [Apache Iceberg: The Definitive Guide](https://drmevn.fyi/tableformatblog)
@@ -23,29 +22,31 @@ canonical: "https://iceberglakehouse.com/posts/2025-10-intro-to-apache-iceberg-w
 - [Architecting an Apache Iceberg Lakehouse](https://hubs.la/Q03GfY4f0)
 - [The Apache Iceberg Digest: Vol. 1](https://www.puppygraph.com/ebooks/apache-iceberg-digest-vol-1)
 
+> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2025-10-intro-to-apache-iceberg-with-apache-polaris-and-apache-spark/).
+
 **Lakehouse Community:**
 - [Join the Data Lakehouse Community](https://www.datalakehousehub.com)
 - [Data Lakehouse Blog Roll](https://lakehouseblogs.com)
 - [OSS Community Listings](https://osscommunity.com)
 - [Dremio Lakehouse Developer Hub](https://developer.dremio.com)
 
-Modern analytics depend on flexibility. Teams want to query raw data with the same speed and reliability they expect from a warehouse. That goal led to the rise of the *data lakehouse*, an architecture that unifies structured and unstructured data while supporting multiple compute engines.  
+Modern analytics depend on flexibility. Teams want to query raw data with the same speed and reliability they expect from a warehouse. That goal led to the rise of the *data lakehouse*, an architecture that unifies structured and unstructured data while supporting multiple compute engines. 
 
 The lakehouse model removes silos by allowing data to live in open formats, accessible to tools like Spark, Trino, Dremio, and Flink. Interoperability becomes the foundation of this design: storage is separated from compute, and metadata lives in a shared catalog. Apache Iceberg sits at the center of this open ecosystem.
 
 ## The Lakehouse and the Value of Interoperability
 
-Traditional data systems often forced teams to choose between performance and openness. Data warehouses provided fast queries but required proprietary formats and vendor lock-in. Data lakes offered openness and low cost but lacked reliability and consistent schema management.  
+Traditional data systems often forced teams to choose between performance and openness. Data warehouses provided fast queries but required proprietary formats and vendor lock-in. Data lakes offered openness and low cost but lacked reliability and consistent schema management. 
 
-The lakehouse combines both. It keeps data in object storage while using open table formats like Apache Iceberg to bring reliability, version control, and transactional guarantees. This allows multiple engines to read and write the same datasets without duplication.  
+The lakehouse combines both. It keeps data in object storage while using open table formats like Apache Iceberg to bring reliability, version control, and transactional guarantees. This allows multiple engines to read and write the same datasets without duplication. 
 
 Interoperability is the key advantage. When organizations use open standards, they can build systems that evolve without re-platforming. Governance, lineage, and performance optimizations can be shared across tools, creating one consistent view of enterprise data.
 
 ## Apache Iceberg’s Role in the Lakehouse
 
-Apache Iceberg is the open table format that makes the lakehouse possible. It defines how large analytic tables are stored, versioned, and accessed in cloud or on-premises object storage. Iceberg tracks snapshots of data files, enabling ACID transactions, schema evolution, and time travel.  
+Apache Iceberg is the open table format that makes the lakehouse possible. It defines how large analytic tables are stored, versioned, and accessed in cloud or on-premises object storage. Iceberg tracks snapshots of data files, enabling ACID transactions, schema evolution, and time travel. 
 
-Each Iceberg table is independent of any single compute engine. Spark, Dremio, Trino, and Flink can all operate on the same tables because the format defines a consistent API for reading and writing data. This makes Iceberg a shared foundation for analytics across the open data ecosystem.  
+Each Iceberg table is independent of any single compute engine. Spark, Dremio, Trino, and Flink can all operate on the same tables because the format defines a consistent API for reading and writing data. This makes Iceberg a shared foundation for analytics across the open data ecosystem. 
 
 In practice, Iceberg replaces the old Hive Metastore model with a more scalable and flexible metadata structure. Tables are self-describing, and every change creates a new immutable snapshot. This design not only enables concurrency and rollback but also ensures that the same data can be reliably queried from different engines without conflict.
 
@@ -114,17 +115,17 @@ Before you begin creating tables, make sure Spark is configured to connect to Po
 from pyspark.sql import SparkSession
 
 spark = (SparkSession.builder
-    .config("spark.jars.packages", "org.apache.polaris:polaris-spark-3.5_2.13:1.1.0-incubating,org.apache.iceberg:iceberg-aws-bundle:1.10.0,io.delta:delta-spark_2.12:3.3.1,org.apache.iceberg:iceberg-spark-runtime-3.5_2.12:1.10.0")
-    .config("spark.sql.catalog.spark_catalog", "org.apache.spark.sql.delta.catalog.DeltaCatalog")
-    .config("spark.sql.extensions", "org.apache.iceberg.spark.extensions.IcebergSparkSessionExtensions,io.delta.sql.DeltaSparkSessionExtension")
-    .config("spark.sql.catalog.polaris", "org.apache.polaris.spark.SparkCatalog")
-    .config("spark.sql.catalog.polaris.uri", "http://polaris:8181/api/catalog")
-    .config("spark.sql.catalog.polaris.warehouse", "lakehouse")
-    .config("spark.sql.catalog.polaris.credential", "{client_id}:{client_secret}")
-    .config("spark.sql.catalog.polaris.scope", "PRINCIPAL_ROLE:ALL")
-    .config("spark.sql.catalog.polaris.header.X-Iceberg-Access-Delegation", "vended-credentials")
-    .config("spark.sql.catalog.polaris.token-refresh-enabled", "true")
-    .getOrCreate())
+ .config("spark.jars.packages", "org.apache.polaris:polaris-spark-3.5_2.13:1.1.0-incubating, org.apache.iceberg:iceberg-aws-bundle:1.10.0, io.delta:delta-spark_2.12:3.3.1, org.apache.iceberg:iceberg-spark-runtime-3.5_2.12:1.10.0")
+ .config("spark.sql.catalog.spark_catalog", "org.apache.spark.sql.delta.catalog.DeltaCatalog")
+ .config("spark.sql.extensions", "org.apache.iceberg.spark.extensions.IcebergSparkSessionExtensions, io.delta.sql.DeltaSparkSessionExtension")
+ .config("spark.sql.catalog.polaris", "org.apache.polaris.spark.SparkCatalog")
+ .config("spark.sql.catalog.polaris.uri", "http://polaris:8181/api/catalog")
+ .config("spark.sql.catalog.polaris.warehouse", "lakehouse")
+ .config("spark.sql.catalog.polaris.credential", "{client_id}:{client_secret}")
+ .config("spark.sql.catalog.polaris.scope", "PRINCIPAL_ROLE:ALL")
+ .config("spark.sql.catalog.polaris.header.X-Iceberg-Access-Delegation", "vended-credentials")
+ .config("spark.sql.catalog.polaris.token-refresh-enabled", "true")
+ .getOrCreate())
 
 spark.sql("CREATE NAMESPACE IF NOT EXISTS polaris.db").show()
 spark.sql("CREATE TABLE IF NOT EXISTS polaris.db.example (name STRING)").show()
@@ -143,9 +144,7 @@ spark.sql("USE polaris.db")
 
 spark.sql("""
 CREATE TABLE customers (
-    id INT,
-    name STRING,
-    city STRING
+ id INT, name STRING, city STRING
 )
 USING iceberg
 """)
@@ -165,10 +164,7 @@ Partition by a single column:
 ```python
 spark.sql("""
 CREATE TABLE polaris.db.sales (
-    sale_id INT,
-    product STRING,
-    quantity INT,
-    city STRING
+ sale_id INT, product STRING, quantity INT, city STRING
 )
 USING iceberg
 PARTITIONED BY (city)
@@ -180,10 +176,7 @@ Partition by time:
 ```python
 spark.sql("""
 CREATE TABLE polaris.db.orders (
-    order_id INT,
-    customer_id INT,
-    order_date DATE,
-    total DECIMAL(10,2)
+ order_id INT, customer_id INT, order_date DATE, total DECIMAL(10, 2)
 )
 USING iceberg
 PARTITIONED BY (months(order_date))
@@ -195,9 +188,7 @@ Partition by hash buckets for even data distribution:
 ```python
 spark.sql("""
 CREATE TABLE polaris.db.transactions (
-    txn_id BIGINT,
-    user_id BIGINT,
-    amount DOUBLE
+ txn_id BIGINT, user_id BIGINT, amount DOUBLE
 )
 USING iceberg
 PARTITIONED BY (bucket(8, user_id))
@@ -217,9 +208,7 @@ Start with a simple insert:
 ```python
 spark.sql("""
 INSERT INTO polaris.db.customers VALUES
-(1, 'Alice', 'New York'),
-(2, 'Bob', 'Chicago'),
-(3, 'Carla', 'Boston')
+(1, 'Alice', 'New York'), (2, 'Bob', 'Chicago'), (3, 'Carla', 'Boston')
 """)
 ```
 
@@ -231,9 +220,7 @@ If you created partitioned tables earlier, Iceberg will automatically place data
 ```python
 spark.sql("""
 INSERT INTO polaris.db.sales VALUES
-(101, 'Laptop', 5, 'New York'),
-(102, 'Tablet', 3, 'Boston'),
-(103, 'Phone', 7, 'Chicago')
+(101, 'Laptop', 5, 'New York'), (102, 'Tablet', 3, 'Boston'), (103, 'Phone', 7, 'Chicago')
 """)
 ```
 
@@ -243,8 +230,7 @@ To confirm partitioning, you can check MinIO. Each partition value (in this case
 For larger datasets, you can also write directly from a DataFrame:
 
 ```python
-data = [(201, 'Monitor', 2, 'Denver'),
-        (202, 'Keyboard', 10, 'Austin')]
+data = [(201, 'Monitor', 2, 'Denver'), (202, 'Keyboard', 10, 'Austin')]
 
 df = spark.createDataFrame(data, ['sale_id', 'product', 'quantity', 'city'])
 df.writeTo("polaris.db.sales").append()
@@ -357,10 +343,10 @@ Apache Iceberg doesn’t just store data - it stores the entire history of your 
 
 Each Iceberg table automatically includes several metadata tables that you can query just like normal tables:
 
-- **history** – shows when snapshots were created.
-- **snapshots** – lists snapshot IDs and timestamps.
-- **files** – lists all data and manifest files in each snapshot.
-- **manifests** – details how files are grouped and filtered.
+- **history** - shows when snapshots were created.
+- **snapshots** - lists snapshot IDs and timestamps.
+- **files** - lists all data and manifest files in each snapshot.
+- **manifests** - details how files are grouped and filtered.
 
 You can explore them with Spark SQL:
 
@@ -419,8 +405,7 @@ You can also target specific partitions or filter files by size:
 ```python
 spark.sql("""
 CALL polaris.system.rewrite_data_files(
-  table => 'polaris.db.sales',
-  options => map('min-input-files', '4', 'max-concurrent-rewrites', '2')
+ table => 'polaris.db.sales', options => map('min-input-files', '4', 'max-concurrent-rewrites', '2')
 )
 """)
 ```
@@ -435,8 +420,7 @@ For example, to remove snapshots older than seven days:
 ```python
 spark.sql("""
 CALL polaris.system.expire_snapshots(
-  table => 'polaris.db.sales',
-  older_than => TIMESTAMPADD(DAY, -7, CURRENT_TIMESTAMP)
+ table => 'polaris.db.sales', older_than => TIMESTAMPADD(DAY, -7, CURRENT_TIMESTAMP)
 )
 """)
 ```
@@ -445,8 +429,7 @@ You can also specify how many snapshots to retain regardless of age:
 ```python
 spark.sql("""
 CALL polaris.system.expire_snapshots(
-  table => 'polaris.db.sales',
-  retain_last => 5
+ table => 'polaris.db.sales', retain_last => 5
 )
 """)
 ```
@@ -479,7 +462,7 @@ spark.conf.set("spark.sql.shuffle.partitions", 8)
 spark.conf.set("spark.sql.files.maxRecordsPerFile", 5_000_000)
 ```
 
-These settings reduce the number of output files per job and encourage larger Parquet files (typically `128–512 MB` each). You can also call `.coalesce()` or `.repartition()` before writes to further control file output:
+These settings reduce the number of output files per job and encourage larger Parquet files (typically `128-512 MB` each). You can also call `.coalesce()` or `.repartition()` before writes to further control file output:
 
 ```python
 df.coalesce(8).writeTo("polaris.db.sales").append()
@@ -494,25 +477,22 @@ For example:
 
 ```sql
 CREATE TABLE polaris.db.sales (
-  id BIGINT,
-  region STRING,
-  sale_date DATE,
-  amount DOUBLE
+ id BIGINT, region STRING, sale_date DATE, amount DOUBLE
 )
 USING iceberg
 PARTITIONED BY (days(sale_date))
 TBLPROPERTIES (
-  'write.target-file-size-bytes'='268435456',  -- 256 MB target file size
-  'commit.manifest-merge.enabled'='true',       -- reduces manifest churn
-  'write.distribution-mode'='hash',             -- distributes data evenly
-  'write.merge.mode'='copy-on-write'            -- ensures clean updates
+ 'write.target-file-size-bytes'='268435456', 256 MB target file size
+ 'commit.manifest-merge.enabled'='true', reduces manifest churn
+ 'write.distribution-mode'='hash', distributes data evenly
+ 'write.merge.mode'='copy-on-write', ensures clean updates
 );
 ```
 You can also modify these settings later:
 
 ```sql
 ALTER TABLE polaris.db.sales SET TBLPROPERTIES (
-  'write.target-file-size-bytes'='536870912'  -- 512 MB
+ 'write.target-file-size-bytes'='536870912', 512 MB
 );
 ```
 
@@ -548,10 +528,7 @@ Or combine multiple transforms for balance:
 
 ```sql
 CREATE TABLE polaris.db.sales (
-  id BIGINT,
-  region STRING,
-  sale_date DATE,
-  amount DOUBLE
+ id BIGINT, region STRING, sale_date DATE, amount DOUBLE
 )
 USING iceberg
 PARTITIONED BY (bucket(8, region), days(sale_date))
@@ -564,9 +541,7 @@ For large write jobs, commit coordination and validation can also affect perform
 
 ```sql
 ALTER TABLE polaris.db.sales SET TBLPROPERTIES (
-  'commit.manifest-merge.enabled'='true',
-  'commit.retry.num-retries'='5',
-  'write.distribution-mode'='hash'
+ 'commit.manifest-merge.enabled'='true', 'commit.retry.num-retries'='5', 'write.distribution-mode'='hash'
 );
 ```
 These settings help large concurrent writers (for example, in Spark and Flink) commit safely to the same table without conflicts.
@@ -611,10 +586,10 @@ Now that you’ve successfully set up Apache Polaris with Spark and Iceberg on y
 
 Polaris is designed to work seamlessly across multiple compute engines. Once your Iceberg tables are registered in Polaris, you can connect tools such as:
 
-- **Dremio** – Query and optimize Iceberg tables visually through its integrated Polaris-based catalog.  
-- **Trino** – Use Polaris as a REST-based catalog for federated queries across your data lake.  
-- **Flink** – Stream data into Iceberg tables managed by Polaris for real-time analytics.  
-- **DuckDB** or **Python (PyIceberg)** – Interact directly with Iceberg tables for lightweight local exploration.
+- **Dremio** - Query and optimize Iceberg tables visually through its integrated Polaris-based catalog. 
+- **Trino** - Use Polaris as a REST-based catalog for federated queries across your data lake. 
+- **Flink** - Stream data into Iceberg tables managed by Polaris for real-time analytics. 
+- **DuckDB** or **Python (PyIceberg)** - Interact directly with Iceberg tables for lightweight local exploration.
 
 Each of these engines communicates through the same Polaris REST interface, ensuring that all metadata and access control remain consistent, no matter where you query from.
 
@@ -622,10 +597,10 @@ Each of these engines communicates through the same Polaris REST interface, ensu
 
 Once you’re comfortable with the basics, try exploring Iceberg’s advanced capabilities:
 
-- **Schema Evolution** – Add, rename, or delete columns without rewriting data.  
-- **Row-Level Deletes** – Use deletion vectors for efficient, fine-grained record removal.  
-- **Table Branching and Tagging** – Experiment safely with data changes using versioned metadata.  
-- **Snapshot Isolation** – Test concurrent writes to understand Iceberg’s transaction model.  
+- **Schema Evolution** - Add, rename, or delete columns without rewriting data. 
+- **Row-Level Deletes** - Use deletion vectors for efficient, fine-grained record removal. 
+- **Table Branching and Tagging** - Experiment safely with data changes using versioned metadata. 
+- **Snapshot Isolation** - Test concurrent writes to understand Iceberg’s transaction model. 
 
 These features are fully tracked by Polaris, giving you a reliable, auditable history of every change.
 
@@ -647,8 +622,8 @@ This local-to-cloud continuity is one of the greatest advantages of Iceberg and 
 
 You’ve now seen how Apache Iceberg, Apache Polaris, and Apache Spark work together to form a robust, open lakehouse. Through this hands-on setup, you’ve learned how to:
 
-- Write and optimize Iceberg tables in Spark.  
-- Manage metadata, catalogs, and access through Polaris.  
+- Write and optimize Iceberg tables in Spark. 
+- Manage metadata, catalogs, and access through Polaris. 
 - Explore advanced Iceberg features safely and efficiently.
 
 For larger-scale deployments: or if you want automated optimization, integrated governance, and performance acceleration, explore **Dremio’s Intelligent Lakehouse Platform**, which builds directly on Apache Polaris and Iceberg to deliver a unified, self-service analytics experience.

@@ -16,9 +16,10 @@ draft: false
 image: "/images/blog.png"
 canonical: "https://iceberglakehouse.com/posts/2026-03-context-gemini-web-notebooklm/"
 ---
-> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-03-context-gemini-web-notebooklm/).
 
 Google's AI ecosystem for knowledge work consists of two deeply integrated tools: Gemini (the conversational AI at gemini.google.com) and NotebookLM (the research-focused assistant at notebooklm.google.com). In early 2026, these two platforms became interoperable, allowing Gemini to access information stored in NotebookLM notebooks. This integration creates something unique in the AI landscape: a persistent knowledge infrastructure where documents you upload once become available across both conversational and research interfaces.
+
+> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-03-context-gemini-web-notebooklm/).
 
 This guide covers context management strategies for both Gemini Web and NotebookLM, with a focus on how to use them together for maximum effectiveness.
 
@@ -77,7 +78,7 @@ Within a Notebook:
 Gemini Web supports direct file uploads in conversations:
 
 | File Type | Use Case |
-|---|---|
+|--|--|
 | **PDF** | Research papers, specifications, reports |
 | **Documents** | Google Docs, Word files for editing or analysis |
 | **Spreadsheets** | Data analysis, financial modeling |
@@ -98,7 +99,7 @@ This integration effectively makes your entire Google Workspace a context source
 
 ## NotebookLM: Deep Research Context Management
 
-NotebookLM is purpose-built for research and knowledge work. Its context management is centered around "notebooks," each of which contains sources (your uploaded documents) and a conversation interface grounded in those sources.
+NotebookLM is purpose-built for research and knowledge work. Its context management is centered around "notebooks, " each of which contains sources (your uploaded documents) and a conversation interface grounded in those sources.
 
 ### How NotebookLM Handles Context
 
@@ -116,7 +117,7 @@ NotebookLM supports a wide range of source types:
 - **Audio files:** Podcast episodes, interviews, lectures
 - **Text files:** Any plaintext content
 
-**Free tier:** Up to 50 sources per notebook (500,000 words or 200MB per source)
+**Free tier:** Up to 50 sources per notebook (500, 000 words or 200MB per source)
 **NotebookLM Pro:** Up to 300 sources per notebook
 
 ### Custom Instructions in NotebookLM
@@ -152,7 +153,7 @@ This workflow gives you both grounded, citation-backed analysis (NotebookLM) and
 ### When to Use Each
 
 | Need | Use |
-|---|---|
+|--|--|
 | Answers grounded strictly in your documents | NotebookLM |
 | Broad research with web search integration | Gemini Web |
 | Citation-backed analysis of specific papers | NotebookLM |

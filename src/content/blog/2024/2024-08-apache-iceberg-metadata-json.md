@@ -14,14 +14,15 @@ draft: false
 image: "/images/blog.png"
 canonical: "https://iceberglakehouse.com/posts/2024-8-apache-iceberg-metadata-json/"
 ---
-> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2024-8-apache-iceberg-metadata-json/).
-
-- [Free Copy of Apache Iceberg: The Definitive Guide](https://hello.dremio.com/wp-apache-iceberg-the-definitive-guide-reg.html?utm_source=alexmerced&utm_medium=external_blog&utm_campaign=metadatajson)
-- [Free Apache Iceberg Crash Course](https://hello.dremio.com/webcast-an-apache-iceberg-lakehouse-crash-course-reg.html?utm_source=alexmerced&utm_medium=external_blog&utm_campaign=metadatajson)
 
 ## Introduction
 
 Apache Iceberg is a data lakehouse table format designed to solve many of the problems associated with large-scale data lakes turning them in data warehouses called data lakehouses. It allows for schema evolution, time travel queries, and efficient data partitioning, all while maintaining compatibility with existing data processing engines. Central to Iceberg's functionality is the `metadata.json` file, which serves as the heart of table metadata management.
+
+> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2024-8-apache-iceberg-metadata-json/).
+
+- [Free Copy of Apache Iceberg: The Definitive Guide](https://hello.dremio.com/wp-apache-iceberg-the-definitive-guide-reg.html?utm_source=alexmerced&utm_medium=external_blog&utm_campaign=metadatajson)
+- [Free Apache Iceberg Crash Course](https://hello.dremio.com/webcast-an-apache-iceberg-lakehouse-crash-course-reg.html?utm_source=alexmerced&utm_medium=external_blog&utm_campaign=metadatajson)
 
 ### Purpose of metadata.json
 
@@ -95,102 +96,57 @@ This file is not just a static record but a dynamic document that evolves with t
 
 ```json
 {
-  "format-version": 2,
-  "table-uuid": "5f8b14d8-0a14-4e6a-8b04-7b1b9341c939",
-  "location": "s3://my-bucket/tables/my_table",
-  "last-updated-ms": 1692643200000,
-  "last-sequence-number": 100,
-  "last-column-id": 10,
-  "schemas": [
-    {
-      "schema-id": 1,
-      "columns": [
-        {"name": "id", "type": "integer", "id": 1},
-        {"name": "name", "type": "string", "id": 2}
-      ]
-    },
-    {
-      "schema-id": 2,
-      "columns": [
-        {"name": "id", "type": "integer", "id": 1},
-        {"name": "name", "type": "string", "id": 2},
-        {"name": "age", "type": "integer", "id": 3}
-      ]
-    }
-  ],
-  "current-schema-id": 2,
-  "partition-specs": [
-    {
-      "spec-id": 1,
-      "fields": [
-        {"name": "name", "transform": "identity", "source-id": 2}
-      ]
-    },
-    {
-      "spec-id": 2,
-      "fields": [
-        {"name": "age", "transform": "bucket[4]", "source-id": 3}
-      ]
-    }
-  ],
-  "default-spec-id": 2,
-  "last-partition-id": 4,
-  "properties": {
-    "commit.retry.num-retries": "5"
-  },
-  "current-snapshot-id": 3,
-  "snapshots": [
-    {"snapshot-id": 1, "timestamp-ms": 1692643200000},
-    {"snapshot-id": 2, "timestamp-ms": 1692643500000},
-    {"snapshot-id": 3, "timestamp-ms": 1692643800000}
-  ],
-  "snapshot-log": [
-    {"timestamp-ms": 1692643200000, "snapshot-id": 1},
-    {"timestamp-ms": 1692643500000, "snapshot-id": 2},
-    {"timestamp-ms": 1692643800000, "snapshot-id": 3}
-  ],
-  "metadata-log": [
-    {"timestamp-ms": 1692643200000, "metadata-file": "s3://my-bucket/tables/my_table/metadata/00001.json"},
-    {"timestamp-ms": 1692643500000, "metadata-file": "s3://my-bucket/tables/my_table/metadata/00002.json"}
-  ],
-  "sort-orders": [
-    {
-      "order-id": 1,
-      "fields": [
-        {"name": "id", "direction": "ASC", "null-order": "NULLS_FIRST"}
-      ]
-    }
-  ],
-  "default-sort-order-id": 1,
-  "refs": {
-    "main": {"snapshot-id": 3}
-  },
-  "statistics": [
-    {
-      "snapshot-id": "3",
-      "statistics-path": "s3://my-bucket/tables/my_table/stats/00003.puffin",
-      "file-size-in-bytes": 1024,
-      "file-footer-size-in-bytes": 64,
-      "blob-metadata": [
-        {
-          "type": "table-stats",
-          "snapshot-id": 3,
-          "sequence-number": 100,
-          "fields": [1, 2, 3],
-          "properties": {
-            "statistic-type": "summary"
-          }
-        }
-      ]
-    }
-  ],
-  "partition-statistics": [
-    {
-      "snapshot-id": 3,
-      "statistics-path": "s3://my-bucket/tables/my_table/partition_stats/00003.parquet",
-      "file-size-in-bytes": 512
-    }
-  ]
+ "format-version": 2, "table-uuid": "5f8b14d8-0a14-4e6a-8b04-7b1b9341c939", "location": "s3://my-bucket/tables/my_table", "last-updated-ms": 1692643200000, "last-sequence-number": 100, "last-column-id": 10, "schemas": [
+ {
+ "schema-id": 1, "columns": [
+ {"name": "id", "type": "integer", "id": 1}, {"name": "name", "type": "string", "id": 2}
+ ]
+ }, {
+ "schema-id": 2, "columns": [
+ {"name": "id", "type": "integer", "id": 1}, {"name": "name", "type": "string", "id": 2}, {"name": "age", "type": "integer", "id": 3}
+ ]
+ }
+ ], "current-schema-id": 2, "partition-specs": [
+ {
+ "spec-id": 1, "fields": [
+ {"name": "name", "transform": "identity", "source-id": 2}
+ ]
+ }, {
+ "spec-id": 2, "fields": [
+ {"name": "age", "transform": "bucket[4]", "source-id": 3}
+ ]
+ }
+ ], "default-spec-id": 2, "last-partition-id": 4, "properties": {
+ "commit.retry.num-retries": "5"
+ }, "current-snapshot-id": 3, "snapshots": [
+ {"snapshot-id": 1, "timestamp-ms": 1692643200000}, {"snapshot-id": 2, "timestamp-ms": 1692643500000}, {"snapshot-id": 3, "timestamp-ms": 1692643800000}
+ ], "snapshot-log": [
+ {"timestamp-ms": 1692643200000, "snapshot-id": 1}, {"timestamp-ms": 1692643500000, "snapshot-id": 2}, {"timestamp-ms": 1692643800000, "snapshot-id": 3}
+ ], "metadata-log": [
+ {"timestamp-ms": 1692643200000, "metadata-file": "s3://my-bucket/tables/my_table/metadata/00001.json"}, {"timestamp-ms": 1692643500000, "metadata-file": "s3://my-bucket/tables/my_table/metadata/00002.json"}
+ ], "sort-orders": [
+ {
+ "order-id": 1, "fields": [
+ {"name": "id", "direction": "ASC", "null-order": "NULLS_FIRST"}
+ ]
+ }
+ ], "default-sort-order-id": 1, "refs": {
+ "main": {"snapshot-id": 3}
+ }, "statistics": [
+ {
+ "snapshot-id": "3", "statistics-path": "s3://my-bucket/tables/my_table/stats/00003.puffin", "file-size-in-bytes": 1024, "file-footer-size-in-bytes": 64, "blob-metadata": [
+ {
+ "type": "table-stats", "snapshot-id": 3, "sequence-number": 100, "fields": [1, 2, 3], "properties": {
+ "statistic-type": "summary"
+ }
+ }
+ ]
+ }
+ ], "partition-statistics": [
+ {
+ "snapshot-id": 3, "statistics-path": "s3://my-bucket/tables/my_table/partition_stats/00003.parquet", "file-size-in-bytes": 512
+ }
+ ]
 }
 ```
 

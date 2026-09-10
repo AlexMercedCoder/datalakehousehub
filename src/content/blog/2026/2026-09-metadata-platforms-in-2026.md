@@ -16,9 +16,10 @@ draft: false
 image: "/images/blog.png"
 canonical: https://iceberglakehouse.com/posts/metadata-platforms-in-2026/
 ---
-> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/metadata-platforms-in-2026/).
 
 The word "catalog" has meant two different things in data infrastructure for about a decade, and in 2026 the two are colliding.
+
+> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/metadata-platforms-in-2026/).
 
 The first meaning is the technical catalog: the service that maps a table name to its current metadata file and provides the atomic swap that makes commits safe. Apache Polaris, AWS Glue, Databricks Unity Catalog, Nessie, and every other Iceberg REST catalog implementation are technical catalogs. They are in the write path. A query engine cannot read or commit to a table without one. They know what tables exist, where they are, what schema they have, and who is allowed to touch them, because they have to.
 
@@ -108,7 +109,7 @@ Both are enterprise governance platforms that predate the modern stack and have 
 ## Comparison
 
 | | DataHub | OpenMetadata | Atlan | Collibra / Alation | Polaris | Unity Catalog | Gravitino |
-|---|---|---|---|---|---|---|---|
+|--|--|--|--|--|--|--|--|
 | Layer | Metadata platform, plus technical catalog for Iceberg | Metadata platform | Metadata platform | Governance platform | Technical catalog | Technical catalog growing up | Federation over technical catalogs |
 | Open source | Yes, plus DataHub Cloud | Yes, Linux Foundation, plus Collate | No | No | Yes, Apache | Yes, LF AI & Data, plus Databricks-hosted | Yes, Apache |
 | In the write path | For Iceberg tables, optionally | No | No | No | Yes | Yes | Yes, as a proxy |
@@ -210,32 +211,32 @@ OpenMetadata ingests from Polaris through its Iceberg connector, configured agai
 
 ```yaml
 source:
-  type: iceberg
-  serviceName: polaris_analytics
-  serviceConnection:
-    config:
-      type: Iceberg
-      catalog:
-        name: analytics
-        connection:
-          uri: https://polaris.internal/api/catalog
-          credential:
-            clientId: ${OM_POLARIS_CLIENT_ID}
-            clientSecret: ${OM_POLARIS_CLIENT_SECRET}
-        warehouseLocation: analytics
-  sourceConfig:
-    config:
-      type: DatabaseMetadata
-      includeTables: true
-      includeViews: true
-      markDeletedTables: true
+ type: iceberg
+ serviceName: polaris_analytics
+ serviceConnection:
+ config:
+ type: Iceberg
+ catalog:
+ name: analytics
+ connection:
+ uri: https://polaris.internal/api/catalog
+ credential:
+ clientId: ${OM_POLARIS_CLIENT_ID}
+ clientSecret: ${OM_POLARIS_CLIENT_SECRET}
+ warehouseLocation: analytics
+ sourceConfig:
+ config:
+ type: DatabaseMetadata
+ includeTables: true
+ includeViews: true
+ markDeletedTables: true
 sink:
-  type: metadata-rest
-  config: {}
+ type: metadata-rest
+ config: {}
 workflowConfig:
-  openMetadataServerConfig:
-    hostPort: https://openmetadata.internal/api
-    authProvider: openmetadata
+ openMetadataServerConfig:
+ hostPort: https://openmetadata.internal/api
+ authProvider: openmetadata
 ```
 
 The ingestion principal in Polaris has a read-only role on the catalog, so OpenMetadata can list namespaces and load table metadata but never commit. On each run it reads every table's schema, partition spec, properties, and current snapshot summary, and updates the corresponding entities. `markDeletedTables` handles tables dropped from Polaris by marking them deleted in the platform rather than leaving stale entries.
@@ -243,10 +244,10 @@ The ingestion principal in Polaris has a read-only role on the catalog, so OpenM
 Lineage arrives separately, from OpenLineage. Spark jobs are configured with the OpenLineage listener pointed at OpenMetadata's OpenLineage endpoint:
 
 ```properties
-spark.extraListeners                    io.openlineage.spark.agent.OpenLineageSparkListener
-spark.openlineage.transport.type        http
-spark.openlineage.transport.url         https://openmetadata.internal/api/v1/openlineage
-spark.openlineage.namespace             lakehouse-prod
+spark.extraListeners io.openlineage.spark.agent.OpenLineageSparkListener
+spark.openlineage.transport.type http
+spark.openlineage.transport.url https://openmetadata.internal/api/v1/openlineage
+spark.openlineage.namespace lakehouse-prod
 ```
 
 Every Spark job that reads and writes Iceberg tables now emits run events with input and output datasets, and the Iceberg integration includes the snapshot ID in the output dataset's facets. dbt emits the same through its OpenLineage integration. Airflow's OpenLineage provider emits task-level events. The platform stitches them into a graph where a table's lineage node shows the job, the run, and the snapshot.
@@ -255,10 +256,7 @@ The pipeline side sets summary properties on commit so that the snapshot carries
 
 ```python
 table.append(df, snapshot_properties={
-    "pipeline": "orders_hourly",
-    "run_id": run_id,
-    "source_snapshots": "raw.orders:7168742983117921046",
-})
+ "pipeline": "orders_hourly", "run_id": run_id, "source_snapshots": "raw.orders:7168742983117921046", })
 ```
 
 OpenMetadata's Iceberg connector surfaces these as table properties per snapshot, and a small custom step in the ingestion workflow turns `source_snapshots` into lineage edges for cases where OpenLineage was not available, such as a PyIceberg script with no listener.
@@ -281,7 +279,7 @@ For all of them, ingestion is the ongoing operational task. Each connector is a 
 
 **The platform as the source of truth.** A team treats the metadata platform's schema as authoritative and builds on it. The technical catalog has a newer schema. The team's code breaks on the column the platform did not know about yet. The catalog is the truth. The platform is a view with ingestion lag.
 
-**Ingestion that never runs.** The platform was set up in a project, the ingestion schedule was left at "manual," and six months later the platform describes a lakehouse that no longer exists. Ingestion is a pipeline and needs monitoring like one.
+**Ingestion that never runs.** The platform was set up in a project, the ingestion schedule was left at "manual, " and six months later the platform describes a lakehouse that no longer exists. Ingestion is a pipeline and needs monitoring like one.
 
 **Lineage from SQL parsing alone.** Parsers miss dynamic SQL, procedures, and anything outside the query log. Lineage that is 80 percent complete is worse than no lineage for impact analysis, because people trust it. Emit from the source.
 
@@ -321,7 +319,7 @@ For all of them, ingestion is the ongoing operational task. Each connector is a 
 
 **Foundation governance.** OpenMetadata under the Linux Foundation, Polaris and Gravitino under Apache, Unity Catalog under the Linux Foundation's LF AI & Data. The open-source catalogs are now all foundation-governed, which reduces the vendor-capture risk that shaped the previous generation.
 
-**The catalog as the agent's world model.** The platforms are repositioning from "where people find data" to "what agents know about data," and the MCP servers are the first step. The next is the platform holding the semantic layer, the contracts, and the certification status that an agent needs to produce a trustworthy answer, which makes the metadata platform the governance boundary for AI as much as for people.
+**The catalog as the agent's world model.** The platforms are repositioning from "where people find data" to "what agents know about data, " and the MCP servers are the first step. The next is the platform holding the semantic layer, the contracts, and the certification status that an agent needs to produce a trustworthy answer, which makes the metadata platform the governance boundary for AI as much as for people.
 
 **Consolidation.** The prediction most observers make is three commercial platforms and two open-source projects surviving, with the smaller and older tools fading. The pattern in ingestion, orchestration, and quality during 2025 and 2026 suggests the metadata platform category will not be exempt.
 

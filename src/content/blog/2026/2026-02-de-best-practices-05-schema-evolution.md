@@ -15,9 +15,10 @@ draft: false
 image: "/images/blog.png"
 canonical: "https://iceberglakehouse.com/posts/2026-02-debp-schema-evolution/"
 ---
-> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-02-debp-schema-evolution/).
 
 ![Schema as a contract between producers and consumers with version tracking](/images/blog/debp/schema-contract.png)
+
+> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-02-debp-schema-evolution/).
 
 A source team renames a column from `user_id` to `customer_id`. Twelve hours later, five dashboards show blank values, two ML pipelines fail, and the data engineering team spends the morning tracing a problem that could have been prevented with one rule: treat your schema like an API.
 
@@ -27,7 +28,7 @@ Schema evolution is the practice of changing data structures without breaking th
 
 When an application team changes a REST API endpoint, they version it. They deprecate the old version. They give consumers time to migrate. They don't silently rename fields and hope nobody notices.
 
-Data schemas deserve the same discipline. Your columns are fields. Your tables are endpoints. Your downstream consumers :  dashboards, ML pipelines, reports, other pipelines ,  are API clients. When you change the schema, you change the contract.
+Data schemas deserve the same discipline. Your columns are fields. Your tables are endpoints. Your downstream consumers : dashboards, ML pipelines, reports, other pipelines, are API clients. When you change the schema, you change the contract.
 
 The difference: API changes are usually intentional and reviewed. Schema changes often happen accidentally : a source system updates its export format, an engineer renames a column for readability, a new data type is introduced. Without guardrails, these changes propagate downstream silently.
 

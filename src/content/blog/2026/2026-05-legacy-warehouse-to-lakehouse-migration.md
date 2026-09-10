@@ -1,7 +1,7 @@
 ---
 title: "Legacy Warehouses to Open Lakehouses: A Step-by-Step Migration Playbook"
 date: 2026-05-28T09:00:00Z
-description: "Migrating from a legacy data warehouse to an open lakehouse? This step-by-step playbook covers assessment, phased migration, validation, and avoiding common pitfalls."
+description: "Migrating from a legacy data warehouse to an open lakehouse? This step-by-step playbook covers assessment, phased migration, validation, and avoiding."
 author: "Alex Merced"
 category: "Data Lakehouse"
 tags:
@@ -10,10 +10,9 @@ slug: "legacy-warehouse-to-lakehouse-migration"
 draft: false
 image: "/images/blog.png"
 ---
-
 # Legacy Warehouses to Open Lakehouses: A Step-by-Step Migration Playbook
 
-Most teams that start a warehouse-to-lakehouse migration underestimate one thing: the actual problem is trust, not technology. Your stakeholders have dashboards that have been running the same numbers for years. The moment those numbers change :  even correctly ,  you've got a political problem.
+Most teams that start a warehouse-to-lakehouse migration underestimate one thing: the actual problem is trust, not technology. Your stakeholders have dashboards that have been running the same numbers for years. The moment those numbers change : even correctly, you've got a political problem.
 
 The technical migration is solvable. The trust migration is harder. This playbook handles both.
 
@@ -21,7 +20,7 @@ The technical migration is solvable. The trust migration is harder. This playboo
 
 ## Why Teams Migrate Now
 
-The economics of staying on a proprietary warehouse have shifted. Storage costs in legacy warehouses run 3–5x what the same data costs on object storage with Iceberg. Compute can't scale independently when it's bundled with storage. SQL on Iceberg has reached performance parity with managed warehouses for most analytical workloads, especially with a query engine like Dremio that adds Reflections-based acceleration.
+The economics of staying on a proprietary warehouse have shifted. Storage costs in legacy warehouses run 3-5x what the same data costs on object storage with Iceberg. Compute can't scale independently when it's bundled with storage. SQL on Iceberg has reached performance parity with managed warehouses for most analytical workloads, especially with a query engine like Dremio that adds Reflections-based acceleration.
 
 The second driver is AI. Teams building agentic analytics need open catalogs with semantic metadata. Proprietary warehouses have governance models designed for human analysts : schema-level permissions, not the column-level masking and contextual documentation that AI agents need to generate accurate SQL.
 
@@ -58,7 +57,7 @@ Map your current tables to a Medallion architecture before writing any migration
 
 The Medallion mapping forces you to decide where transformations live. In a legacy warehouse, business logic accumulates in stored procedures, views, and ETL code spread across systems. The migration is your opportunity to consolidate it in the silver layer as SQL-defined virtual datasets.
 
-Dremio's [semantic layer](https://www.dremio.com/blog/agentic-analytics-semantic-layer/) handles this: virtual datasets are SQL views defined in the platform, versioned, and documented with wikis. Every downstream tool :  dashboards, notebooks, AI agents ,  reads from the same logical definitions.
+Dremio's [semantic layer](https://www.dremio.com/blog/agentic-analytics-semantic-layer/) handles this: virtual datasets are SQL views defined in the platform, versioned, and documented with wikis. Every downstream tool : dashboards, notebooks, AI agents, reads from the same logical definitions.
 
 ## Phase 3: Run a Lighthouse Migration
 
@@ -110,7 +109,7 @@ Set a hard cutover date for each table during the parallel run. Build consensus 
 
 ## Handling BI Tool Compatibility
 
-Your BI tools :  Tableau, Power BI, Looker ,  all support JDBC and ODBC connections. If your legacy warehouse exposes standard SQL, switching to Dremio as the query layer requires only a connection string change, not a report rebuild.
+Your BI tools : Tableau, Power BI, Looker, all support JDBC and ODBC connections. If your legacy warehouse exposes standard SQL, switching to Dremio as the query layer requires only a connection string change, not a report rebuild.
 
 The exceptions: if you relied on warehouse-specific SQL functions (Snowflake's ARRAY_CONSTRUCT, Redshift's DATEADD, BigQuery's DATE_DIFF), those queries need rewriting in standard SQL or Dremio equivalents. Run a SQL audit on your most frequently executed dashboard queries before migration to identify any non-standard functions early.
 

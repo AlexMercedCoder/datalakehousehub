@@ -16,9 +16,10 @@ draft: false
 image: "/images/blog.png"
 canonical: "https://iceberglakehouse.com/posts/2026-03-context-vscode-llm-plugins/"
 ---
-> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-03-context-vscode-llm-plugins/).
 
 Visual Studio Code is the most widely used code editor in the world, and its extensibility means you can integrate AI capabilities through a growing ecosystem of LLM plugins. Unlike purpose-built AI editors (Cursor, Windsurf, Zed), VS Code gives you the freedom to choose and combine AI extensions, configure them to your preferences, and even switch between providers without changing editors. The tradeoff is that context management is not as seamlessly integrated as in dedicated AI editors. It requires more deliberate configuration.
+
+> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-03-context-vscode-llm-plugins/).
 
 This guide covers context management strategies for the most popular VS Code AI extensions: GitHub Copilot, Continue, Cline (formerly Claude Dev), Aider, and others. It explains what context management capabilities each offers and how to configure them for maximum effectiveness.
 
@@ -27,7 +28,7 @@ This guide covers context management strategies for the most popular VS Code AI 
 VS Code's AI extension ecosystem falls into several categories:
 
 | Category | Extensions | Approach |
-|---|---|---|
+|--|--|--|
 | **Inline completion** | GitHub Copilot, CodeiumChat, Supermaven | Suggest code as you type |
 | **Chat panel** | Copilot Chat, Continue, Cody | Conversational AI in a sidebar |
 | **Agentic coding** | Cline, Aider, Roo Code | Autonomous agents that read/write files |
@@ -111,7 +112,7 @@ Continue supports:
 Continue's "@-mention" context system includes:
 
 | Context Provider | Function |
-|---|---|
+|--|--|
 | `@file` | Include a specific file |
 | `@code` | Include code blocks from the codebase |
 | `@docs` | Search indexed documentation |
@@ -125,31 +126,21 @@ Continue's "@-mention" context system includes:
 
 ```json
 {
-  "models": [
-    {
-      "title": "Claude Sonnet",
-      "provider": "anthropic",
-      "model": "claude-sonnet-4-20250514",
-      "apiKey": "your-key"
-    },
-    {
-      "title": "Local Llama",
-      "provider": "ollama",
-      "model": "llama3.1:70b"
-    }
-  ],
-  "customCommands": [
-    {
-      "name": "review",
-      "prompt": "Review this code for security issues, performance problems, and style violations."
-    }
-  ],
-  "docs": [
-    {
-      "title": "React Docs",
-      "startUrl": "https://react.dev/reference"
-    }
-  ]
+ "models": [
+ {
+ "title": "Claude Sonnet", "provider": "anthropic", "model": "claude-sonnet-4-20250514", "apiKey": "your-key"
+ }, {
+ "title": "Local Llama", "provider": "ollama", "model": "llama3.1:70b"
+ }
+ ], "customCommands": [
+ {
+ "name": "review", "prompt": "Review this code for security issues, performance problems, and style violations."
+ }
+ ], "docs": [
+ {
+ "title": "React Docs", "startUrl": "https://react.dev/reference"
+ }
+ ]
 }
 ```
 
@@ -184,7 +175,7 @@ Create a `.clinerules` file in your project root:
 - React frontend with TypeScript
 
 ## Build Commands
-- Backend: `uvicorn app.main:app --reload`
+- Backend: `uvicorn app.main:app -reload`
 - Frontend: `npm run dev`
 - Tests: `pytest -v`
 
@@ -216,10 +207,10 @@ Aider uses a unique context model:
 ### Commands for Context Control
 
 ```
-/add src/auth/middleware.ts    # Add to chat context (can be edited)
-/read docs/architecture.md     # Add as read-only context
-/drop src/auth/middleware.ts   # Remove from context
-/map                           # Show the repository map
+/add src/auth/middleware.ts # Add to chat context (can be edited)
+/read docs/architecture.md # Add as read-only context
+/drop src/auth/middleware.ts # Remove from context
+/map # Show the repository map
 ```
 
 ### The Repository Map
@@ -259,7 +250,7 @@ Continue and Copilot Chat support documentation indexing through @docs. Add your
 MCP support varies by extension:
 
 | Extension | MCP Support | Configuration |
-|---|---|---|
+|--|--|--|
 | **Cline** | Yes | Settings panel |
 | **Continue** | Yes | config.json |
 | **Copilot** | Limited | Through GitHub integration |
@@ -277,12 +268,9 @@ Create a `.vscode/settings.json` file in your project to configure AI extensions
 
 ```json
 {
-  "github.copilot.enable": {
-    "markdown": true,
-    "plaintext": false
-  },
-  "continue.enableTabAutocomplete": false,
-  "cline.customInstructions": "Follow the conventions in INSTRUCTIONS.md"
+ "github.copilot.enable": {
+ "markdown": true, "plaintext": false
+ }, "continue.enableTabAutocomplete": false, "cline.customInstructions": "Follow the conventions in INSTRUCTIONS.md"
 }
 ```
 

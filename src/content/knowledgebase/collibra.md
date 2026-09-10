@@ -1,7 +1,7 @@
 ---
 title: "What is Collibra?"
 meta_title: "What is Collibra? | Expert Data Lakehouse & AI Glossary"
-description: "An enterprise data governance platform offering deep capabilities for data stewardship, privacy, and cataloging. Learn the architecture, mechanics, and real-world value of Collibra in the modern data stack."
+description: "An enterprise data governance platform offering deep capabilities for data stewardship, privacy, and cataloging."
 ---
 
 ## What is Collibra?

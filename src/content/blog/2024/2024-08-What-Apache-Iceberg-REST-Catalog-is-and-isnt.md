@@ -13,12 +13,13 @@ draft: false
 image: "/images/blog.png"
 canonical: "https://iceberglakehouse.com/posts/2024-8-what-apache-iceberg-rest-catalog-is-and-isnt/"
 ---
+
+I've recently written a few blogs on the evolution of Apache Iceberg catalogs:
+
 > **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2024-8-what-apache-iceberg-rest-catalog-is-and-isnt/).
 
 - [Free Copy of Apache Iceberg: The Definitive Guide](https://hello.dremio.com/wp-apache-iceberg-the-definitive-guide-reg.html?utm_source=alexmerced&utm_medium=external_blog&utm_campaign=rest_catalog_is_isnt)
 - [Free Apache Iceberg Crash Course](https://hello.dremio.com/webcast-an-apache-iceberg-lakehouse-crash-course-reg.html?utm_source=alexmerced&utm_medium=external_blog&utm_campaign=rest_catalog_is_isnt)
-
-I've recently written a few blogs on the evolution of Apache Iceberg catalogs:
 
 - [The Evolution of Apache Iceberg Catalogs](https://www.dremio.com/blog/the-evolution-of-apache-iceberg-catalogs/?utm_source=alexmerced&utm_medium=external_blog&utm_campaign=rest_catalog_is_isnt)
 - [The Future of Apache Iceberg Catalogs](https://medium.com/data-engineering-with-dremio/understanding-the-future-of-apache-iceberg-catalogs-ff2a2878fbc0)

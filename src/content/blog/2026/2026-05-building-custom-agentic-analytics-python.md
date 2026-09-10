@@ -1,7 +1,7 @@
 ---
 title: "Building a Custom Agentic Analytics System: Python, LangChain, and SQL Data Lakes"
 date: 2026-05-28T09:00:00Z
-description: "Build a custom agentic analytics system using Python, LangChain, and Dremio. A developer tutorial covering SQL tool binding, prompt design, and secure execution."
+description: "Build a custom agentic analytics system using Python, LangChain, and Dremio. A developer tutorial covering SQL tool binding, prompt design, and secure."
 author: "Alex Merced"
 category: "Agentic Analytics"
 tags:
@@ -10,7 +10,6 @@ slug: "building-custom-agentic-analytics-python"
 draft: false
 image: "/images/blog.png"
 ---
-
 # Building a Custom Agentic Analytics System: Python, LangChain, and SQL Data Lakes
 
 Building your own agentic analytics system is a reasonable choice if you need custom investigation logic, specific tool integrations, or control over how the agent reasons about your schema. The open-source tooling is mature enough in 2026 that you can have a working prototype in an afternoon, and a production-grade system in a few weeks.
@@ -43,17 +42,13 @@ DREMIO_TOKEN = os.getenv("DREMIO_TOKEN")
 
 # Dremio JDBC connection string via Arrow Flight SQL
 engine = create_engine(
-    f"dremio+flight://{DREMIO_HOST}:32010/dremio",
-    connect_args={
-        "token": DREMIO_TOKEN,
-        "disableCertificateVerification": False,
-    }
+ f"dremio+flight://{DREMIO_HOST}:32010/dremio", connect_args={
+ "token": DREMIO_TOKEN, "disableCertificateVerification": False, }
 )
 
 db = SQLDatabase(
-    engine,
-    schema="my_catalog.analytics",  # Limit to specific schema for safety
-    include_tables=["orders", "customers", "revenue_daily", "product_catalog"]
+ engine, schema="my_catalog.analytics", # Limit to specific schema for safety
+ include_tables=["orders", "customers", "revenue_daily", "product_catalog"]
 )
 ```
 
@@ -70,21 +65,16 @@ from langchain_openai import ChatOpenAI
 from langchain.agents.agent_types import AgentType
 
 llm = ChatOpenAI(
-    model="gpt-4o",
-    temperature=0,  # Zero temperature for deterministic SQL generation
-    openai_api_key=os.getenv("OPENAI_API_KEY")
+ model="gpt-4o", temperature=0, # Zero temperature for deterministic SQL generation
+ openai_api_key=os.getenv("OPENAI_API_KEY")
 )
 
 toolkit = SQLDatabaseToolkit(db=db, llm=llm)
 
 agent = create_sql_agent(
-    llm=llm,
-    toolkit=toolkit,
-    agent_type=AgentType.ZERO_SHOT_REACT_DESCRIPTION,
-    verbose=True,  # Set to False in production
-    max_iterations=15,
-    max_execution_time=60,  # Hard timeout in seconds
-    handle_parsing_errors=True
+ llm=llm, toolkit=toolkit, agent_type=AgentType.ZERO_SHOT_REACT_DESCRIPTION, verbose=True, # Set to False in production
+ max_iterations=15, max_execution_time=60, # Hard timeout in seconds
+ handle_parsing_errors=True
 )
 ```
 
@@ -102,17 +92,14 @@ from langchain.prompts import PromptTemplate
 SYSTEM_PROMPT = """You are an analytical assistant for Acme Corp. 
 You have access to the following tables in the analytics schema:
 
-- orders: Transaction records with order_id, customer_id, product_id, 
-  amount_usd, order_date, status
-- customers: Customer master with customer_id, region, segment, 
-  acquisition_date
+- orders: Transaction records with order_id, customer_id, product_id, amount_usd, order_date, status
+- customers: Customer master with customer_id, region, segment, acquisition_date
 - revenue_daily: Pre-aggregated daily revenue by region and product line
-- product_catalog: Product metadata with product_id, category, 
-  unit_cost, launch_date
+- product_catalog: Product metadata with product_id, category, unit_cost, launch_date
 
 Important business definitions:
 - "Active customer": customer with at least one order in the last 30 days
-- "Revenue": sum of amount_usd where status = 'completed'  
+- "Revenue": sum of amount_usd where status = 'completed' 
 - "This quarter": current calendar quarter based on order_date
 
 Always verify your results make sense against expected scale. 
@@ -120,13 +107,7 @@ Monthly revenue should be in the range $2M-$15M.
 If a query returns a value outside that range, check your WHERE clause."""
 
 agent = create_sql_agent(
-    llm=llm,
-    toolkit=toolkit,
-    agent_type=AgentType.ZERO_SHOT_REACT_DESCRIPTION,
-    prefix=SYSTEM_PROMPT,
-    max_iterations=15,
-    max_execution_time=60,
-    handle_parsing_errors=True
+ llm=llm, toolkit=toolkit, agent_type=AgentType.ZERO_SHOT_REACT_DESCRIPTION, prefix=SYSTEM_PROMPT, max_iterations=15, max_execution_time=60, handle_parsing_errors=True
 )
 ```
 
@@ -142,11 +123,8 @@ Add a query result size limit:
 
 ```python
 db = SQLDatabase(
-    engine,
-    schema="my_catalog.analytics",
-    include_tables=["orders", "customers", "revenue_daily", "product_catalog"],
-    sample_rows_in_table_info=3,  # Sample rows for context, not full scan
-    max_string_length=300  # Truncate long string columns in results
+ engine, schema="my_catalog.analytics", include_tables=["orders", "customers", "revenue_daily", "product_catalog"], sample_rows_in_table_info=3, # Sample rows for context, not full scan
+ max_string_length=300 # Truncate long string columns in results
 )
 ```
 
@@ -159,8 +137,8 @@ import logging
 logging.basicConfig(filename="agent_queries.log", level=logging.INFO)
 
 def log_query(query: str, result: str):
-    logging.info(f"QUERY: {query}")
-    logging.info(f"RESULT_ROWS: {len(result.split(chr(10)))}")
+ logging.info(f"QUERY: {query}")
+ logging.info(f"RESULT_ROWS: {len(result.split(chr(10)))}")
 
 # Add to your agent invocation wrapper
 ```
@@ -173,8 +151,8 @@ With the agent configured, run an analytical question:
 
 ```python
 result = agent.invoke({
-    "input": "What were the top 3 product categories by revenue last month, "
-             "and how did each compare to the same period last year?"
+ "input": "What were the top 3 product categories by revenue last month, "
+ "and how did each compare to the same period last year?"
 })
 
 print(result["output"])
@@ -206,23 +184,18 @@ from langchain.tools import Tool
 import requests
 
 def get_exchange_rate(currency_pair: str) -> str:
-    """Fetch current exchange rate for enriching financial analysis."""
-    base, quote = currency_pair.split("/")
-    resp = requests.get(f"https://api.exchangerate.host/convert?from={base}&to={quote}")
-    rate = resp.json().get("result", "unavailable")
-    return f"Current {base}/{quote} rate: {rate}"
+ """Fetch current exchange rate for enriching financial analysis."""
+ base, quote = currency_pair.split("/")
+ resp = requests.get(f"https://api.exchangerate.host/convert?from={base}&to={quote}")
+ rate = resp.json().get("result", "unavailable")
+ return f"Current {base}/{quote} rate: {rate}"
 
 exchange_tool = Tool(
-    name="get_exchange_rate",
-    description="Use when the user asks about revenue in foreign currencies. Input: currency pair like USD/EUR",
-    func=get_exchange_rate
+ name="get_exchange_rate", description="Use when the user asks about revenue in foreign currencies. Input: currency pair like USD/EUR", func=get_exchange_rate
 )
 
 agent = create_sql_agent(
-    llm=llm,
-    toolkit=toolkit,
-    extra_tools=[exchange_tool],
-    max_iterations=15
+ llm=llm, toolkit=toolkit, extra_tools=[exchange_tool], max_iterations=15
 )
 ```
 
@@ -238,27 +211,21 @@ Build a test suite of questions with known correct SQL and expected result range
 
 ```python
 TEST_CASES = [
-    {
-        "question": "What was total revenue last month?",
-        "expected_sql_contains": ["SUM(amount_usd)", "status = 'completed'"],
-        "result_range": (2_000_000, 15_000_000)
-    },
-    {
-        "question": "How many active customers do we have?",
-        "expected_sql_contains": ["COUNT", "order_date"],
-        "result_range": (10_000, 500_000)
-    }
+ {
+ "question": "What was total revenue last month?", "expected_sql_contains": ["SUM(amount_usd)", "status = 'completed'"], "result_range": (2_000_000, 15_000_000)
+ }, {
+ "question": "How many active customers do we have?", "expected_sql_contains": ["COUNT", "order_date"], "result_range": (10_000, 500_000)
+ }
 ]
 
 def evaluate_agent(agent, test_cases):
-    results = []
-    for case in test_cases:
-        response = agent.invoke({"input": case["question"]})
-        results.append({
-            "question": case["question"],
-            "passed": True  # Implement your validation logic
-        })
-    return results
+ results = []
+ for case in test_cases:
+ response = agent.invoke({"input": case["question"]})
+ results.append({
+ "question": case["question"], "passed": True # Implement your validation logic
+ })
+ return results
 ```
 
 Run this evaluation after any schema change, any system prompt update, or any LLM model upgrade. The test suite tells you whether the agent still produces correct outputs for the cases you've verified.

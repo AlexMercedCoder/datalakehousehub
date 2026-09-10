@@ -14,11 +14,12 @@ draft: false
 image: "/images/blog/apache-iceberg-masterclass/08-embedded-catalogs-embedded-vs-standalone.png"
 canonical: "https://iceberglakehouse.com/posts/2026-04-29-iceberg-masterclass-08/"
 ---
-> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-04-29-iceberg-masterclass-08/).
 
-<!-- Meta Description: S3 Tables and MinIO AI Stor embed the Iceberg catalog directly in the storage layer. Here is when embedded catalogs make sense and when they do not. -->
-<!-- Primary Keyword: embedded Iceberg catalog -->
-<!-- Secondary Keywords: S3 Tables, MinIO AI Stor, storage-managed catalog -->
+<!- Meta Description: S3 Tables and MinIO AI Stor embed the Iceberg catalog directly in the storage layer. Here is when embedded catalogs make sense and when they do not. ->
+<!- Primary Keyword: embedded Iceberg catalog ->
+<!- Secondary Keywords: S3 Tables, MinIO AI Stor, storage-managed catalog ->
+
+> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-04-29-iceberg-masterclass-08/).
 
 *Read the complete Apache Iceberg Masterclass series:*
 * [Part 1: What Are Table Formats and Why Were They Needed?](/blog/2026-04-29-apache-iceberg-masterclass-01-table-formats)
@@ -85,7 +86,7 @@ MinIO AI Stor takes a similar approach for on-premises and private cloud deploym
 ![Decision tree for choosing between embedded and standalone catalogs](/images/blog/apache-iceberg-masterclass/08-embedded-catalogs-embedded-decision-tree.png)
 
 | Scenario | Recommendation |
-|---|---|
+|--|--|
 | AWS-only, want minimal ops | S3 Tables |
 | On-premises, private cloud | MinIO AI Stor |
 | Multi-cloud portability needed | Standalone catalog ([Dremio Open Catalog](https://www.dremio.com/platform/open-catalog/)) |

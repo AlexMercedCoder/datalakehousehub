@@ -15,9 +15,10 @@ tags:
 slug: "stateless-mcp-tool-gateways-fastmcp"
 draft: false
 ---
-> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/stateless-mcp-tool-gateways-fastmcp/).
 
 The gap between an agent demo and an agent platform is an infrastructure gap, and it has a specific shape. The demo runs one MCP server on a laptop, one client connected, state held comfortably in process memory. The platform serves thousands of agents through load balancers into autoscaled pods, where in-process state is a bug, sessions are a scaling ceiling, and every assumption the demo made about who talks to whom breaks on the second replica. For two years, teams building serious Model Context Protocol deployments engineered around a protocol that assumed the demo's shape. As of the 2026-07-28 specification, they no longer have to: MCP's core went stateless, and tool gateways can finally be built like the web services they always needed to be.
+
+> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/stateless-mcp-tool-gateways-fastmcp/).
 
 This article is the builder's guide to that architecture: why agents need tool gateways at all, why state was the enemy of scale, exactly what the new specification changed, how to build a production server with FastMCP, where state legitimately lives when the protocol no longer holds it, how to deploy and scale on Kubernetes, how authorization works when the consumers are autonomous, and how the gateway connects to the governed data platform underneath, which is where my usual territory meets this one. A disclosure as always: I work at Dremio, whose platform exposes an MCP Server for agent access to the lakehouse, so tool gateways over data infrastructure are close to home. The article stays on the open protocol and open source tooling throughout.
 
@@ -74,32 +75,27 @@ mcp = FastMCP("lakehouse-gateway")
 
 @mcp.tool
 def query_metric(
-    metric: str,
-    dimensions: list[str],
-    time_grain: str = "month",
-    relative_range: str = "last_complete",
-) -> dict:
-    """Query a governed metric from the semantic layer.
+ metric: str, dimensions: list[str], time_grain: str = "month", relative_range: str = "last_complete", ) -> dict:
+ """Query a governed metric from the semantic layer.
 
-    Use for business questions with defined metrics such as
-    recognized_revenue or active_customers. Returns rows plus
-    the metric's definition reference. Refuses metrics not in
-    the caller's granted catalog.
-    """
-    principal = mcp.get_context().auth_principal
-    request = build_metric_request(metric, dimensions,
-                                   time_grain, relative_range)
-    return semantic_layer.execute(request, principal=principal)
+ Use for business questions with defined metrics such as
+ recognized_revenue or active_customers. Returns rows plus
+ the metric's definition reference. Refuses metrics not in
+ the caller's granted catalog.
+ """
+ principal = mcp.get_context().auth_principal
+ request = build_metric_request(metric, dimensions, time_grain, relative_range)
+ return semantic_layer.execute(request, principal=principal)
 
 @mcp.tool
 def list_table_health(namespace: str) -> dict:
-    """Summarize Iceberg table health for a namespace.
+ """Summarize Iceberg table health for a namespace.
 
-    Returns per-table snapshot counts, small-file ratios, and
-    last-maintenance timestamps from catalog metadata. Read-only.
-    """
-    principal = mcp.get_context().auth_principal
-    return catalog_client.table_health(namespace, principal=principal)
+ Returns per-table snapshot counts, small-file ratios, and
+ last-maintenance timestamps from catalog metadata. Read-only.
+ """
+ principal = mcp.get_context().auth_principal
+ return catalog_client.table_health(namespace, principal=principal)
 
 app = mcp.http_app()
 ```
@@ -130,65 +126,65 @@ With state externalized and the protocol stateless, the Kubernetes story collaps
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: lakehouse-mcp-gateway
+ name: lakehouse-mcp-gateway
 spec:
-  replicas: 3
-  selector:
-    matchLabels:
-      app: lakehouse-mcp-gateway
-  template:
-    metadata:
-      labels:
-        app: lakehouse-mcp-gateway
-    spec:
-      containers:
-        - name: gateway
-          image: registry.internal/ai/lakehouse-mcp-gateway:4.1.2
-          ports:
-            - containerPort: 8080
-          env:
-            - name: SEMANTIC_LAYER_URI
-              value: https://semantic.internal/api
-            - name: STATE_BACKEND_URI
-              valueFrom:
-                secretKeyRef:
-                  name: gateway-secrets
-                  key: state-backend-uri
-          readinessProbe:
-            httpGet:
-              path: /health/ready
-              port: 8080
-            periodSeconds: 5
-          livenessProbe:
-            httpGet:
-              path: /health/live
-              port: 8080
-            periodSeconds: 15
-          resources:
-            requests:
-              cpu: "500m"
-              memory: 512Mi
-            limits:
-              memory: 1Gi
----
+ replicas: 3
+ selector:
+ matchLabels:
+ app: lakehouse-mcp-gateway
+ template:
+ metadata:
+ labels:
+ app: lakehouse-mcp-gateway
+ spec:
+ containers:
+ - name: gateway
+ image: registry.internal/ai/lakehouse-mcp-gateway:4.1.2
+ ports:
+ - containerPort: 8080
+ env:
+ - name: SEMANTIC_LAYER_URI
+ value: https://semantic.internal/api
+ - name: STATE_BACKEND_URI
+ valueFrom:
+ secretKeyRef:
+ name: gateway-secrets
+ key: state-backend-uri
+ readinessProbe:
+ httpGet:
+ path: /health/ready
+ port: 8080
+ periodSeconds: 5
+ livenessProbe:
+ httpGet:
+ path: /health/live
+ port: 8080
+ periodSeconds: 15
+ resources:
+ requests:
+ cpu: "500m"
+ memory: 512Mi
+ limits:
+ memory: 1Gi
+--
 apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler
 metadata:
-  name: lakehouse-mcp-gateway
+ name: lakehouse-mcp-gateway
 spec:
-  scaleTargetRef:
-    apiVersion: apps/v1
-    kind: Deployment
-    name: lakehouse-mcp-gateway
-  minReplicas: 3
-  maxReplicas: 30
-  metrics:
-    - type: Resource
-      resource:
-        name: cpu
-        target:
-          type: Utilization
-          averageUtilization: 65
+ scaleTargetRef:
+ apiVersion: apps/v1
+ kind: Deployment
+ name: lakehouse-mcp-gateway
+ minReplicas: 3
+ maxReplicas: 30
+ metrics:
+ - type: Resource
+ resource:
+ name: cpu
+ target:
+ type: Utilization
+ averageUtilization: 65
 ```
 
 The manifest is deliberately unremarkable, and three tunings deserve their reasoning. The readiness probe should verify downstream reachability, the semantic layer, the state backend, not just process liveness, because a pod that accepts tool calls it cannot serve converts an upstream blip into agent-visible errors, and stateless pods make aggressive readiness gating free. The autoscaling signal starts with CPU and matures toward request-based metrics, in-flight tool executions per pod, because tool workloads are bursty and I/O-bound in ways CPU lags: the platforms that instrument per-tool latency, as the observability section urges, feed the same metrics to the scaler. And rollouts are ordinary rolling updates with zero drama, which veterans of the session era should pause to enjoy: draining a pod no longer strands anyone's handshake, and a bad release rolls back as fast as the deployment controller moves.
@@ -269,7 +265,7 @@ The quarter's last commit is the one that makes the pattern durable: the gateway
 
 **State smuggled back in.** A tool caches something in a module global, works on one replica, and produces the maddening intermittent failures statelessness was supposed to end. The defense is the state review from the design template, plus running a minimum of two replicas in every environment including development, so state leaks fail fast and loudly instead of in production.
 
-**The mega-tool.** One tool grows optional arguments until it is an API in a trench coat, and selection quality collapses because its description promises everything. The defense is the one-job rule enforced at review, with the selection suite as the regression gate: when a tool's description needs the word "also," it is two tools.
+**The mega-tool.** One tool grows optional arguments until it is an API in a trench coat, and selection quality collapses because its description promises everything. The defense is the one-job rule enforced at review, with the selection suite as the regression gate: when a tool's description needs the word "also, " it is two tools.
 
 **Timeout roulette.** Long-running work runs inline because the queue felt like overkill, and the calls die differently at each layer's timeout, agent, ingress, pod, with retries multiplying the work. The defense is the bright line from the state section: anything beyond interactive latency returns a task handle, no exceptions, and the background-task patterns are plumbing you build once.
 

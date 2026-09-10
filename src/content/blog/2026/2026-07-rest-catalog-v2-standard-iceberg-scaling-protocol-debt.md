@@ -14,13 +14,14 @@ draft: false
 image: "/images/blog.png"
 canonical: "https://iceberglakehouse.com/posts/rest-catalog-v2-standard-iceberg-scaling-protocol-debt/"
 ---
-> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/rest-catalog-v2-standard-iceberg-scaling-protocol-debt/).
 
 A single BI dashboard refresh can trigger dozens of catalog calls before a single byte of table data is scanned. An AI agent investigating a revenue anomaly can trigger hundreds. Each of those calls loads a namespace, resolves a table identifier, fetches a metadata pointer, reads the current metadata file, and vends temporary credentials. When one analyst ran one query, that overhead was invisible. Now that engines, semantic layers, and autonomous agents all hammer the same [Apache Iceberg REST catalog](https://iceberg.apache.org/rest-catalog-spec/) at once, the overhead is the bottleneck. The scan is fast. Getting ready to scan is slow.
 
+> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/rest-catalog-v2-standard-iceberg-scaling-protocol-debt/).
+
 That gap between planning cost and execution cost is what I want to work through here. The Iceberg REST catalog protocol solved a real problem: it replaced a pile of engine-specific catalog integrations with one HTTP contract that Spark, Flink, Trino, Dremio, and others can speak. But the first version of that contract was designed for a world with fewer clients issuing fewer, larger queries. The workloads have changed. The protocol is starting to show its age in ways that are worth naming precisely.
 
-A note on scope before going further. There is forward-looking language circulating about a "REST Catalog V2" that would formalize batching, stateless access, and richer capability exchange. Some of that maps to accepted work in the Iceberg project, and some of it maps to active proposals and a design direction rather than a finalized, released specification. I will treat it as a design direction throughout, because the interesting part is the set of problems being solved, not a version number that may or may not ship exactly as described. When I say "V2" below, read it as "the next phase of REST catalog design," not a GA release you can pin a dependency to today.
+A note on scope before going further. There is forward-looking language circulating about a "REST Catalog V2" that would formalize batching, stateless access, and richer capability exchange. Some of that maps to accepted work in the Iceberg project, and some of it maps to active proposals and a design direction rather than a finalized, released specification. I will treat it as a design direction throughout, because the interesting part is the set of problems being solved, not a version number that may or may not ship exactly as described. When I say "V2" below, read it as "the next phase of REST catalog design, " not a GA release you can pin a dependency to today.
 
 ## Why REST Catalog Scaling Matters Now
 
@@ -72,9 +73,7 @@ GET /v1/namespaces/analytics/tables/fiscal_calendar
 # Batched planning: one round trip
 POST /v2/namespaces/analytics/tables:batchLoad
 {
-  "tables": ["orders", "customers", "regions",
-             "products", "fiscal_calendar"],
-  "include": ["metadata", "credentials"]
+ "tables": ["orders", "customers", "regions", "products", "fiscal_calendar"], "include": ["metadata", "credentials"]
 }
 ```
 
@@ -90,9 +89,9 @@ There is a second-order benefit worth spelling out. When the catalog knows the f
 
 Batching reduces the cost of a cold load, but the fastest catalog call is the one you never make. That is why any serious conversation about REST catalog scaling has to include caching, and why the protocol needs to help clients cache correctly rather than forcing them to guess.
 
-The core problem with caching Iceberg metadata is knowing when it is stale. A table's metadata is immutable per snapshot, which is a gift: if a client has loaded snapshot N of a table, that snapshot will never change, so the client can cache the metadata for it forever. What changes is the pointer to the current snapshot. So the expensive, cacheable payload is the metadata itself, and the cheap, volatile thing is "which snapshot is current." A protocol that lets a client ask the small question, "is my cached snapshot still current," without re-fetching the large metadata document is doing exactly the right thing.
+The core problem with caching Iceberg metadata is knowing when it is stale. A table's metadata is immutable per snapshot, which is a gift: if a client has loaded snapshot N of a table, that snapshot will never change, so the client can cache the metadata for it forever. What changes is the pointer to the current snapshot. So the expensive, cacheable payload is the metadata itself, and the cheap, volatile thing is "which snapshot is current." A protocol that lets a client ask the small question, "is my cached snapshot still current, " without re-fetching the large metadata document is doing exactly the right thing.
 
-This maps onto standard HTTP mechanics well. Entity tags and conditional requests let a client say "I have version X, tell me if it changed," and receive a small "not modified" response when it has not. Applied to catalog loads, that turns a large, repeated metadata transfer into a tiny freshness check for the common case where nothing has moved. For a dashboard that refreshes every thirty seconds against tables that update hourly, the difference between re-transferring full metadata every refresh and confirming a cheap freshness check is enormous at fleet scale.
+This maps onto standard HTTP mechanics well. Entity tags and conditional requests let a client say "I have version X, tell me if it changed, " and receive a small "not modified" response when it has not. Applied to catalog loads, that turns a large, repeated metadata transfer into a tiny freshness check for the common case where nothing has moved. For a dashboard that refreshes every thirty seconds against tables that update hourly, the difference between re-transferring full metadata every refresh and confirming a cheap freshness check is enormous at fleet scale.
 
 The tradeoff to hold honestly is staleness tolerance. Aggressive caching means a client might plan against a snapshot that is a few seconds behind the true current one. For most analytical and BI workloads that is completely acceptable and often desirable, because it trades a sliver of freshness for a large drop in latency and load. For workloads that require read-your-writes consistency, the client needs a way to bypass the cache and force a fresh resolution. The protocol's job is to make both modes expressible, so a client can choose fast-and-slightly-stale or fresh-and-slightly-slower per request rather than being locked into one behavior. Getting that choice into the client's hands is more valuable than any single caching default.
 
@@ -134,7 +133,7 @@ Here is the sequence I would follow.
 The table below maps each V1 pain point to the design response and what it means for the person operating the catalog.
 
 | V1 pain point | V2 design response | Operator impact |
-| --- | --- | --- |
+| -- | -- | -- |
 | Many serial round trips per query | Batch multi-table load in one request | Lower planning latency, fewer requests to size for |
 | Large metadata payloads on every load | Fetch only needed fields, batched | Less wire traffic and client CPU on cold loads |
 | Sticky server state limits scaling | Stateless request contract | Horizontal scaling behind a plain load balancer |

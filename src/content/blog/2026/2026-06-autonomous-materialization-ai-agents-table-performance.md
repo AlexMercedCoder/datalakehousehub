@@ -13,7 +13,6 @@ slug: autonomous-materialization-ai-agents-table-performance
 draft: false
 image: "/images/blog.png"
 ---
-
 # Autonomous Materialization for Agentic Analytics
 
 
@@ -89,7 +88,7 @@ I would also require a visible refusal path. If data is stale, the agent should 
 ## Operational Checklist
 
 | Area | Question to answer | Why it matters |
-|---|---|---|
+|--|--|--|
 | Ownership | Who owns the table, catalog path, semantic definition, and agent tool? | Incidents need named owners, not shared confusion. |
 | Scope | Which operations are allowed for this rollout? | A narrow launch is easier to test and govern. |
 | Identity | Which human, service, or agent identities are mapped to access? | Machine-speed access needs machine-enforced policy. |

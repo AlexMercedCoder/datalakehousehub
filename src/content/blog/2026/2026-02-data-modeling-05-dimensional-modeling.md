@@ -15,9 +15,10 @@ draft: false
 image: "/images/blog.png"
 canonical: "https://iceberglakehouse.com/posts/2026-02-dm-dimensional-modeling/"
 ---
-> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-02-dm-dimensional-modeling/).
 
 ![Dimensional model showing a central fact table connected to surrounding dimension tables](/images/blog/data-modeling/dimensional-modeling.png)
+
+> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-02-dm-dimensional-modeling/).
 
 Dimensional modeling is the most widely used approach for organizing analytics data. Developed by Ralph Kimball, it structures data into two types of tables: facts (what happened) and dimensions (the context around what happened). The technique optimizes for query speed and business readability, not for storage efficiency or transactional integrity.
 
@@ -31,14 +32,7 @@ A typical sales fact table might look like:
 
 ```sql
 CREATE TABLE fact_sales (
-    sale_id BIGINT,
-    date_key INT,
-    customer_key INT,
-    product_key INT,
-    store_key INT,
-    quantity INT,
-    unit_price DECIMAL(10,2),
-    total_amount DECIMAL(12,2)
+ sale_id BIGINT, date_key INT, customer_key INT, product_key INT, store_key INT, quantity INT, unit_price DECIMAL(10, 2), total_amount DECIMAL(12, 2)
 )
 ```
 
@@ -77,7 +71,7 @@ Three types of fact tables handle different analytical patterns:
 
 Best practices for fact tables:
 - Keep facts additive when possible (SUM-able across dimensions)
-- Avoid storing text in fact tables , that belongs in dimensions
+- Avoid storing text in fact tables, that belongs in dimensions
 - Use surrogate keys (integers) for dimension references, not natural keys
 - Never mix grains in one fact table
 

@@ -16,9 +16,10 @@ draft: false
 image: "/images/blog.png"
 canonical: "https://iceberglakehouse.com/posts/2026-03-aitool-github-copilot/"
 ---
-> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-03-aitool-github-copilot/).
 
 GitHub Copilot is the most widely adopted AI coding assistant, integrated into VS Code, JetBrains IDEs, and the GitHub platform. Its agent mode allows Copilot to plan and execute multi-step coding tasks, run terminal commands, and interact with external tools through MCP. The Copilot CLI extends agentic development to the terminal. Dremio is a unified lakehouse platform that provides business context through its semantic layer, universal data access through query federation, and interactive speed through Reflections and Apache Arrow.
+
+> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-03-aitool-github-copilot/).
 
 Connecting them gives Copilot's agent mode the context it needs to write accurate Dremio SQL, generate data pipelines, and build applications against your lakehouse. This is significant because of Copilot's massive user base: if you already use Copilot for code completion and chat, adding Dremio context turns it into a data-aware development partner without switching tools.
 
@@ -67,12 +68,11 @@ Create `.vscode/mcp.json` in your project root:
 
 ```json
 {
-  "servers": {
-    "dremio": {
-      "type": "http",
-      "url": "https://YOUR_PROJECT_MCP_URL"
-    }
-  }
+ "servers": {
+ "dremio": {
+ "type": "http", "url": "https://YOUR_PROJECT_MCP_URL"
+ }
+ }
 }
 ```
 
@@ -80,14 +80,13 @@ You can also configure MCP servers in your VS Code user settings:
 
 ```json
 {
-  "mcp": {
-    "servers": {
-      "dremio": {
-        "type": "http",
-        "url": "https://YOUR_PROJECT_MCP_URL"
-      }
-    }
-  }
+ "mcp": {
+ "servers": {
+ "dremio": {
+ "type": "http", "url": "https://YOUR_PROJECT_MCP_URL"
+ }
+ }
+ }
 }
 ```
 
@@ -107,16 +106,13 @@ For Dremio Software deployments, use the open-source [dremio-mcp](https://github
 
 ```json
 {
-  "servers": {
-    "dremio": {
-      "type": "stdio",
-      "command": "uv",
-      "args": [
-        "run", "--directory", "/path/to/dremio-mcp",
-        "dremio-mcp-server", "run"
-      ]
-    }
-  }
+ "servers": {
+ "dremio": {
+ "type": "stdio", "command": "uv", "args": [
+ "run", "-directory", "/path/to/dremio-mcp", "dremio-mcp-server", "run"
+ ]
+ }
+ }
 }
 ```
 
@@ -160,9 +156,9 @@ Copilot also supports `.instructions` files with YAML glob patterns for targeted
 Create `.github/instructions/dremio-sql.instructions.md`:
 
 ```markdown
----
+--
 applyTo: "**/*.sql"
----
+--
 
 When writing SQL for Dremio:
 - Validate function names against the Dremio SQL reference
@@ -173,9 +169,9 @@ When writing SQL for Dremio:
 Create `.github/instructions/dremio-python.instructions.md`:
 
 ```markdown
----
+--
 applyTo: "**/*.py"
----
+--
 
 When writing Python code that uses dremioframe:
 - Import as: from dremioframe import DremioConnection
@@ -301,12 +297,12 @@ Create backend services:
 
 > "Build a FastAPI app that serves Dremio gold-layer data through REST endpoints. Add customer analytics, revenue by region, and product performance. Include Pydantic models, caching, and OpenAPI docs."
 
-Copilot generates the complete API. Run `uvicorn main:app --reload` for a local server.
+Copilot generates the complete API. Run `uvicorn main:app -reload` for a local server.
 
 ## Which Approach Should You Use?
 
 | Approach | Setup Time | What You Get | Best For |
-|----------|-----------|--------------|----------|
+|-----|------|-------|-----|
 | MCP Server | 5 minutes | Live queries, schema browsing, catalog exploration | Data analysis, SQL generation, real-time access |
 | copilot-instructions.md | 10 minutes | Convention enforcement, pattern-specific rules | Teams with repository-wide standards |
 | Pre-Built Skills | 5 minutes | Comprehensive Dremio knowledge (CLI, SDK, SQL, API) | Quick start with broad coverage |

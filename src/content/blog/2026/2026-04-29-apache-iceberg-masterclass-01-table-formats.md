@@ -14,11 +14,12 @@ draft: false
 image: "/images/blog/apache-iceberg-masterclass/01-table-formats-before-after-table-formats.png"
 canonical: "https://iceberglakehouse.com/posts/2026-04-29-iceberg-masterclass-01/"
 ---
-> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-04-29-iceberg-masterclass-01/).
 
-<!-- Meta Description: Table formats like Apache Iceberg solved the ACID, schema, and performance problems that turned data lakes into data swamps. Here is how each one works. -->
-<!-- Primary Keyword: data lake table formats -->
-<!-- Secondary Keywords: Apache Iceberg, Delta Lake, Apache Hudi, Apache Paimon -->
+<!- Meta Description: Table formats like Apache Iceberg solved the ACID, schema, and performance problems that turned data lakes into data swamps. Here is how each one works. ->
+<!- Primary Keyword: data lake table formats ->
+<!- Secondary Keywords: Apache Iceberg, Delta Lake, Apache Hudi, Apache Paimon ->
+
+> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-04-29-iceberg-masterclass-01/).
 
 *Read the complete Apache Iceberg Masterclass series:*
 * [Part 1: What Are Table Formats and Why Were They Needed?](/blog/2026-04-29-apache-iceberg-masterclass-01-table-formats)
@@ -50,7 +51,7 @@ This approach had five critical problems:
 
 **No atomic commits.** If a Spark job wrote 500 new Parquet files and failed after writing 300, readers could see the 300 partial files. There was no mechanism to make all 500 files visible at once or none of them. Cleanup required manual intervention or custom garbage collection scripts.
 
-**Expensive query planning.** To determine which files to scan, the engine issued `LIST` requests against object storage. S3 returns up to 5,000 objects per request. A table with 100,000 files required 20+ sequential HTTP calls before query execution could even start. At Netflix, query planning for large tables could take minutes just from directory listing.
+**Expensive query planning.** To determine which files to scan, the engine issued `LIST` requests against object storage. S3 returns up to 5, 000 objects per request. A table with 100, 000 files required 20+ sequential HTTP calls before query execution could even start. At Netflix, query planning for large tables could take minutes just from directory listing.
 
 **Schema changes required rewrites.** Adding a column to a Hive table meant either rewriting every file (expensive) or accepting that old files had a different schema than new files (confusing). Renaming a column was not supported without a full table rewrite because Hive mapped columns by position, not by identity.
 
@@ -116,7 +117,7 @@ This means a single SQL query resolves all metadata (schema, file list, statisti
 ![Positioning chart showing where Iceberg, Delta Lake, Hudi, Paimon, and DuckLake sit on batch vs streaming and single vs multi-engine axes](/images/blog/apache-iceberg-masterclass/01-table-formats-format-positioning-chart.png)
 
 | Dimension | Iceberg | Delta Lake | Hudi | Paimon | DuckLake |
-|---|---|---|---|---|---|
+|--|--|--|--|--|--|
 | **Metadata** | File-based tree | File-based log | File-based timeline | File-based LSM | SQL database |
 | **Engine support** | Broadest | Good (via UniForm) | Moderate | Growing | DuckDB |
 | **Schema evolution** | By column ID | By name | By version | By version | SQL ALTER |

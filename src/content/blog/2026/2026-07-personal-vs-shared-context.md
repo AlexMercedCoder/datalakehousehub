@@ -11,12 +11,14 @@ slug: "personal-vs-shared-context"
 draft: false
 image: "/images/blog.png"
 canonical: https://iceberglakehouse.com/posts/personal-vs-shared-context/
+description: "By Alex Merced, Head of Developer Relations at Dremio"
 ---
-> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/personal-vs-shared-context/).
 
 # Personal Context vs. Shared Context: A Deep Dive Into How Humans and Organizations Should Feed Their AI Agents
 
 *By Alex Merced, Head of Developer Relations at Dremio*
+
+> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/personal-vs-shared-context/).
 
 The most important discovery of the agent era fits in one sentence: most AI failures are context failures, not model failures. When your assistant gives a generic answer, forgets what you told it last week, invents a metric definition, or confidently applies last quarter's policy, the model underneath was usually working fine. What failed was the pipeline that decides what the model knows at the moment it answers.
 
@@ -148,7 +150,7 @@ And for both: measure. Personal or enterprise, the health metrics are the same, 
 
 ## The 2026 Vendor Map, in One Honest Paragraph Per Category
 
-Since evaluations always end with "so who do I look at," here is the map as it stands, with the usual caveat that this space reorganizes quarterly.
+Since evaluations always end with "so who do I look at, " here is the map as it stands, with the usual caveat that this space reorganizes quarterly.
 
 Personal memory and portability is the fastest-moving category: Mem0 for managed long-term memory and personalization, Supermemory for memory paired with retrieval over learned user context, Membase and its universal-memory peers for context that follows one person across many agent tools, and an open source field, Zep, Graphiti, Letta and company, iterating on the abstractions in public. Enterprise context infrastructure clusters around governed ingestion and retrieval platforms like Graphlit and its peers, offering permissioned, multimodal, audited context as a service, with the hyperscaler agent platforms bundling their own variants. The context hub category, Promethium's Context Hub, Atlan positioned as a context layer, Kaelio's open source ktx, aggregates semantics, lineage, and glossaries from existing tools into one AI-consumable surface rather than replacing them. The governed data side is my home turf and my earlier sections covered it: semantic layers from dbt, Cube, AtScale, the warehouse-native views, and Dremio's lakehouse-native approach, with Apache Polaris and Apache Ossie carrying the open governance and open semantics standards underneath. And the assistants themselves, Claude, ChatGPT, Copilot and their enterprise editions, keep absorbing the basics, projects, memory, instruction files, from below.
 
@@ -158,11 +160,11 @@ Read the map with the article's frame and the buying advice writes itself: indiv
 
 The recurring questions from both sides of my life, answered directly.
 
-**Don't giant context windows make all this engineering unnecessary?** No, and the evidence has hardened rather than softened. Attention quality degrades as windows fill, costs scale with tokens, and irrelevant context actively harms answers, the rot phenomenon. Big windows changed the constraint from "what fits" to "what deserves to be there," which made curation more valuable, not less. The window is a stage, not a warehouse, and staging is the skill.
+**Don't giant context windows make all this engineering unnecessary?** No, and the evidence has hardened rather than softened. Attention quality degrades as windows fill, costs scale with tokens, and irrelevant context actively harms answers, the rot phenomenon. Big windows changed the constraint from "what fits" to "what deserves to be there, " which made curation more valuable, not less. The window is a stage, not a warehouse, and staging is the skill.
 
 **What is the difference between RAG and memory?** Overlapping mechanics, different sources and lifecycles. RAG retrieves from reference knowledge, documents, data, things that exist independently of your interactions. Memory persists and retrieves from the interactions themselves, what was said, decided, and learned. A mature system runs both, and the design questions differ: RAG lives or dies on source governance and retrieval quality, memory on extraction accuracy, expiry, and provenance. The best mental model: RAG is the library, memory is the diary, and the context window is the desk where selected pages from each get laid out.
 
-**Should my company let agents remember things employees tell them?** Only inside a governance design: memories attributed to identities, permission-scoped like everything else, provenance-tagged, expirable, and auditable. The failure mode is folk memory, unattributed claims accumulating into an unofficial policy layer nobody can inspect. If you cannot answer "who told the system that, and when," the system should not be remembering it.
+**Should my company let agents remember things employees tell them?** Only inside a governance design: memories attributed to identities, permission-scoped like everything else, provenance-tagged, expirable, and auditable. The failure mode is folk memory, unattributed claims accumulating into an unofficial policy layer nobody can inspect. If you cannot answer "who told the system that, and when, " the system should not be remembering it.
 
 **How do we keep shared context from going stale?** Treat freshness as metadata and ownership as mandatory. Every governed artifact, definition, document, memory, carries a source, a date, and an owner, retrieval weights recency, and staleness triggers review rather than silent serving. The organizations doing this well run knowledge hygiene as an ongoing program with the same seriousness as data quality, because for agents, it is the same thing.
 

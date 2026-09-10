@@ -17,11 +17,11 @@ image: "/images/blog.png"
 canonical: "https://iceberglakehouse.com/posts/iceberg-v3-deletion-vectors-merge-on-read/"
 ---
 
-> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/iceberg-v3-deletion-vectors-merge-on-read/).
-
 # How Iceberg V3 Deletion Vectors Fixed Merge-on-Read for Streaming Tables
 
 *By Alex Merced, Data Lakehouse and AI Evangelist*
+
+> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/iceberg-v3-deletion-vectors-merge-on-read/).
 
 A change data capture pipeline lands updates from an operational database every thirty seconds. Under Iceberg V2 with merge-on-read, each of those commits writes a small positional delete file. By the end of a day, one 512 MB data file is associated with forty separate delete files. A query that touches that data file opens all forty, joins them against row positions, and masks the deleted rows before returning anything.
 
@@ -92,7 +92,7 @@ That single constraint eliminates accumulation. Forty commits deleting rows from
 Compare the two shapes directly.
 
 | Property | V2 positional deletes | V3 deletion vectors |
-|---|---|---|
+|--|--|--|
 | Files per delete operation | One new delete file | One bitmap replacement |
 | Files consulted per data file at read | Grows with commit count | Exactly one |
 | Read cost driver | Number of delete operations | Number of deleted rows |
@@ -111,21 +111,12 @@ Here is the configuration and the operations for a CDC target table under V3.
 
 ```sql
 CREATE TABLE prod.logistics.orders (
-    order_id      BIGINT,
-    customer_id   STRING,
-    status        STRING,
-    amount        DECIMAL(12,2),
-    updated_at    TIMESTAMP
+ order_id BIGINT, customer_id STRING, status STRING, amount DECIMAL(12, 2), updated_at TIMESTAMP
 )
 USING iceberg
 PARTITIONED BY (days(updated_at))
 TBLPROPERTIES (
-    'format-version'              = '3',
-    'write.delete.mode'           = 'merge-on-read',
-    'write.update.mode'           = 'merge-on-read',
-    'write.merge.mode'            = 'merge-on-read',
-    'write.delete.format'         = 'puffin',
-    'write.target-file-size-bytes'= '536870912'
+ 'format-version' = '3', 'write.delete.mode' = 'merge-on-read', 'write.update.mode' = 'merge-on-read', 'write.merge.mode' = 'merge-on-read', 'write.delete.format' = 'puffin', 'write.target-file-size-bytes'= '536870912'
 );
 ```
 
@@ -143,9 +134,7 @@ USING staging.orders_cdc AS source
 ON target.order_id = source.order_id
 WHEN MATCHED AND source.op = 'D' THEN DELETE
 WHEN MATCHED AND source.op = 'U' THEN UPDATE SET
-    target.status     = source.status,
-    target.amount     = source.amount,
-    target.updated_at = source.updated_at
+ target.status = source.status, target.amount = source.amount, target.updated_at = source.updated_at
 WHEN NOT MATCHED AND source.op != 'D' THEN INSERT *;
 ```
 
@@ -155,10 +144,7 @@ Inspecting the result is worth doing at least once, because seeing the file coun
 
 ```sql
 SELECT
-    file_path,
-    content,
-    record_count,
-    file_size_in_bytes
+ file_path, content, record_count, file_size_in_bytes
 FROM prod.logistics.orders.delete_files
 ORDER BY file_path
 LIMIT 50;
@@ -170,13 +156,10 @@ Track the ratio of deleted rows to total rows per file, since that is the number
 
 ```sql
 SELECT
-    d.file_path,
-    f.record_count                             AS total_rows,
-    d.record_count                             AS deleted_rows,
-    ROUND(100.0 * d.record_count / f.record_count, 1) AS pct_deleted
+ d.file_path, f.record_count AS total_rows, d.record_count AS deleted_rows, ROUND(100.0 * d.record_count / f.record_count, 1) AS pct_deleted
 FROM prod.logistics.orders.delete_files d
 JOIN prod.logistics.orders.files f
-  ON d.file_path = f.file_path
+ ON d.file_path = f.file_path
 ORDER BY pct_deleted DESC
 LIMIT 25;
 ```
@@ -245,11 +228,11 @@ The configuration for a Flink Iceberg sink looks like this.
 
 ```java
 FlinkSink.forRowData(stream)
-    .tableLoader(tableLoader)
-    .upsert(true)
-    .equalityFieldColumns(List.of("order_id"))
-    .writeParallelism(8)
-    .append();
+ .tableLoader(tableLoader)
+ .upsert(true)
+ .equalityFieldColumns(List.of("order_id"))
+ .writeParallelism(8)
+ .append();
 ```
 
 `upsert(true)` turns each record into a delete plus an insert. `equalityFieldColumns` names the columns that identify a row. Restrict this to a genuine identity key. An equality delete on a low-cardinality column like `status` marks every matching row in scope, which is almost never the intent and is expensive to apply.

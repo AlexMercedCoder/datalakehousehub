@@ -15,9 +15,10 @@ draft: false
 image: "/images/blog.png"
 canonical: "https://iceberglakehouse.com/posts/2026-02-sl-why-ai-fails-without-semantic-layer/"
 ---
-> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-02-sl-why-ai-fails-without-semantic-layer/).
 
 ![AI with vs without a semantic layer : failure modes and fixes](/images/blog/semantic-layer/ai-semantic-layer.png)
+
+> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-02-sl-why-ai-fails-without-semantic-layer/).
 
 Your team builds an AI agent. It connects to your data warehouse. A product manager types "What was revenue last quarter?" and gets a number. The number is wrong. Nobody knows it's wrong until Finance runs the same query manually and gets a different result.
 
@@ -72,7 +73,7 @@ The same question asked twice generates different SQL because the LLM's output i
 Each failure maps to a specific semantic layer component:
 
 | Failure Mode | Semantic Layer Fix |
-|---|---|
+|--|--|
 | Metric hallucination | Virtual datasets with canonical formulas |
 | Join confusion | Pre-defined join relationships |
 | Column misinterpretation | Wiki descriptions on every field |

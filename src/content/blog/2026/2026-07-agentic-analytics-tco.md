@@ -1,6 +1,6 @@
 ---
 title: "What Agentic Analytics Actually Costs, and How to Keep It Bounded"
-description: "Agent analytics generates two cost streams that scale on different variables. Here's the arithmetic, the levers that actually move the number, and how to build attribution before you need it."
+description: "Agent analytics generates two cost streams that scale on different variables. Here's the arithmetic, the levers that actually move the number, and how."
 date: 2026-07-28T09:00:00Z
 author: "Alex Merced"
 category: "AI & Agents"
@@ -15,11 +15,11 @@ image: "/images/blog.png"
 canonical: "https://iceberglakehouse.com/posts/agentic-analytics-tco/"
 ---
 
-> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/agentic-analytics-tco/).
-
 # What Agentic Analytics Actually Costs, and How to Keep It Bounded
 
 A data platform team gets a question from finance in month four of an agent rollout. The engine bill is up 38 percent and the model provider invoice arrived at a number nobody forecast. What is driving it?
+
+> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/agentic-analytics-tco/).
 
 The team cannot answer. Every agent runs under the same service account, so engine cost attributes to one line item labeled with a machine name. Token spend arrives as one figure from the provider with no breakdown by use case. The honest answer is that the money went somewhere and the instrumentation to say where was never built.
 
@@ -46,7 +46,7 @@ A third cost that shows up in real budgets: the engineering time to build and ma
 The three ways an organization answers the same question have very different cost shapes.
 
 | | Dashboard | Human analyst | Agent |
-|---|---|---|---|
+|--|--|--|--|
 | Cost per answer | Near zero after build | High (analyst hours) | Moderate (tokens plus compute) |
 | Cost to add a new question | High (build cycle) | Moderate (analyst time) | Near zero |
 | Latency to answer | Seconds | Hours to days | Seconds to minutes |
@@ -69,10 +69,9 @@ Three things make attribution work, and none is difficult.
 **Session IDs propagated into queries.** Most engines accept a comment or tag on a query that lands in job history. Attach the agent's session ID and you can join engine-side cost records to your own agent telemetry.
 
 ```python
-def run_agent_query(engine, sql: str, session_id: str,
-                    agent: str, principal: str):
-    tagged = f"-- session={session_id} agent={agent}\n{sql}"
-    return engine.execute(tagged, principal=principal)
+def run_agent_query(engine, sql: str, session_id: str, agent: str, principal: str):
+ tagged = f"- session={session_id} agent={agent}\n{sql}"
+ return engine.execute(tagged, principal=principal)
 ```
 
 **Token accounting recorded per session.** The provider response carries token counts. Record them alongside the session. Without this, you have a monthly invoice and no way to decompose it.
@@ -81,18 +80,12 @@ With those three in place, the cost question becomes a query:
 
 ```sql
 SELECT
-    s.agent_name,
-    count(DISTINCT s.session_id)                       AS sessions,
-    sum(s.input_tokens)                                AS input_tokens,
-    sum(s.output_tokens)                               AS output_tokens,
-    sum(j.bytes_scanned) / power(1024, 4)              AS tb_scanned,
-    sum(j.execution_ms) / 1000.0 / 3600.0              AS engine_hours,
-    sum(s.input_tokens) / count(DISTINCT s.session_id) AS input_tokens_per_session
+ s.agent_name, count(DISTINCT s.session_id) AS sessions, sum(s.input_tokens) AS input_tokens, sum(s.output_tokens) AS output_tokens, sum(j.bytes_scanned) / power(1024, 4) AS tb_scanned, sum(j.execution_ms) / 1000.0 / 3600.0 AS engine_hours, sum(s.input_tokens) / count(DISTINCT s.session_id) AS input_tokens_per_session
 FROM governance.ai.agent_sessions s
 JOIN engine.system.jobs j
-  ON j.query_tag_session_id = s.session_id
+ ON j.query_tag_session_id = s.session_id
 WHERE s.started_at >= :month_start
-  AND s.started_at <  :month_end
+ AND s.started_at < :month_end
 GROUP BY 1
 ORDER BY engine_hours DESC;
 ```
@@ -108,14 +101,14 @@ Work the numbers before the rollout rather than after. The model is simple enoug
 Start with the token side. For one session:
 
 ```
-input_tokens  ≈ T × (S + D) + Σ(turn_content across turns)
+input_tokens ≈ T × (S + D) + Σ(turn_content across turns)
 ```
 
 Where `T` is turns, `S` is system prompt plus tool definitions, and `D` is the schema and description context you inject. The `S + D` term multiplies by turn count, which is the whole story.
 
-Put numbers on it. A system prompt plus tool definitions at 3,000 tokens, schema context at 2,000, and a 10-turn session: the fixed portion alone is 10 × 5,000 = 50,000 input tokens before any content. Add accumulated tool results and conversation, realistically another 30,000 to 60,000 for a session that reads a few tables. Call it 100,000 input tokens for a moderate session.
+Put numbers on it. A system prompt plus tool definitions at 3, 000 tokens, schema context at 2, 000, and a 10-turn session: the fixed portion alone is 10 × 5, 000 = 50, 000 input tokens before any content. Add accumulated tool results and conversation, realistically another 30, 000 to 60, 000 for a session that reads a few tables. Call it 100, 000 input tokens for a moderate session.
 
-Now scale. At 1,000 sessions a day, that is 100 million input tokens a day, roughly 3 billion a month. Whatever your rate is, multiply. The number is usually larger than the intuition that preceded it.
+Now scale. At 1, 000 sessions a day, that is 100 million input tokens a day, roughly 3 billion a month. Whatever your rate is, multiply. The number is usually larger than the intuition that preceded it.
 
 The compute side:
 
@@ -129,7 +122,7 @@ Three sensitivities to test in the spreadsheet, because they determine where to 
 
 **Turn count.** Halving average turns from 10 to 5 nearly halves token spend, because the fixed context multiplies by turns. Turn count falls when the agent finds what it needs quickly, which is a data modeling outcome rather than a cost initiative.
 
-**Fixed context size.** Trimming `S + D` from 5,000 to 3,000 tokens cuts 40 percent off the fixed portion of every turn of every session. This is often the fastest available win and it is usually available, because tool definitions and schema dumps accumulate cruft nobody prunes.
+**Fixed context size.** Trimming `S + D` from 5, 000 to 3, 000 tokens cuts 40 percent off the fixed portion of every turn of every session. This is often the fastest available win and it is usually available, because tool definitions and schema dumps accumulate cruft nobody prunes.
 
 **Sessions per user per day.** This one grows on its own as adoption spreads, and it is the variable most likely to make your forecast wrong. Model it optimistically for capacity planning and pessimistically for budget.
 
@@ -153,26 +146,26 @@ The general shape: agent workloads are cheaper per question than a human analyst
 
 Abstract formulas are less useful than one set of numbers carried all the way through. Here is a hypothetical deployment sized like ones I have seen.
 
-**The setup.** A mid-sized organization. 200 people with access to an analytics agent. Average 3 sessions per active user per week, with 40 percent of licensed users active in a given week. That is 200 × 0.4 × 3 = 240 sessions per week, roughly 1,000 a month.
+**The setup.** A mid-sized organization. 200 people with access to an analytics agent. Average 3 sessions per active user per week, with 40 percent of licensed users active in a given week. That is 200 × 0.4 × 3 = 240 sessions per week, roughly 1, 000 a month.
 
-**Token side.** System prompt plus tool definitions: 3,000 tokens. Injected schema and description context: 2,000 tokens. Average 8 turns per session.
+**Token side.** System prompt plus tool definitions: 3, 000 tokens. Injected schema and description context: 2, 000 tokens. Average 8 turns per session.
 
-Fixed portion: 8 × 5,000 = 40,000 input tokens.
-Accumulated content, meaning questions, tool results, and prior turns: call it 45,000.
-Total input: about 85,000 tokens per session.
-Output: about 4,000 tokens per session.
+Fixed portion: 8 × 5, 000 = 40, 000 input tokens.
+Accumulated content, meaning questions, tool results, and prior turns: call it 45, 000.
+Total input: about 85, 000 tokens per session.
+Output: about 4, 000 tokens per session.
 
-At 1,000 sessions a month: 85 million input tokens, 4 million output tokens.
+At 1, 000 sessions a month: 85 million input tokens, 4 million output tokens.
 
-**Compute side.** 6 queries per session, 6,000 queries a month. This is where the variance lives. Two scenarios:
+**Compute side.** 6 queries per session, 6, 000 queries a month. This is where the variance lives. Two scenarios:
 
-*Without gold datasets.* Agents explore. Average 180 GB scanned per query, because unfiltered scans against wide raw tables are the default when nothing better exists. 6,000 × 180 GB = roughly 1.05 PB scanned per month.
+*Without gold datasets.* Agents explore. Average 180 GB scanned per query, because unfiltered scans against wide raw tables are the default when nothing better exists. 6, 000 × 180 GB = roughly 1.05 PB scanned per month.
 
-*With gold datasets.* Agents hit shaped datasets with partition-aligned filters. Average 2 GB scanned per query. 6,000 × 2 GB = 12 TB per month.
+*With gold datasets.* Agents hit shaped datasets with partition-aligned filters. Average 2 GB scanned per query. 6, 000 × 2 GB = 12 TB per month.
 
 That is a factor of about 88 between the two scenarios, on the same number of queries answering the same questions. Whatever your engine charges, that ratio is the headline finding.
 
-**The turn count interaction.** In the exploratory scenario, sessions also run longer, because the agent takes more attempts to get a usable answer. Bump 8 turns to 13 and input tokens per session go from 85,000 to roughly 140,000, a 65 percent increase on the token bill as well.
+**The turn count interaction.** In the exploratory scenario, sessions also run longer, because the agent takes more attempts to get a usable answer. Bump 8 turns to 13 and input tokens per session go from 85, 000 to roughly 140, 000, a 65 percent increase on the token bill as well.
 
 So the comparison is not "gold datasets save compute." It is that the same investment cuts the compute bill by most of two orders of magnitude and the token bill by more than half.
 
@@ -184,7 +177,7 @@ So the comparison is not "gold datasets save compute." It is that the same inves
 
 Compute cost reduces to bytes scanned and work done, and four things drive both. Knowing which one you are hitting tells you what to fix.
 
-**Missing partition filters.** The dominant factor by a wide margin. A table partitioned by day, holding three years of data, scans about 1,100 times more data without a date filter than with one narrowed to a single day. An agent that does not know the table is partitioned writes the unfiltered version.
+**Missing partition filters.** The dominant factor by a wide margin. A table partitioned by day, holding three years of data, scans about 1, 100 times more data without a date filter than with one narrowed to a single day. An agent that does not know the table is partitioned writes the unfiltered version.
 
 The fix is not to teach the agent about partitioning. It is to make the tool require a date range as a parameter, so an unbounded query is unexpressible. A tool signature with required `start_date` and `end_date` arguments eliminates this failure entirely.
 
@@ -192,7 +185,7 @@ The fix is not to teach the agent about partitioning. It is to make the tool req
 
 The fix is a describe tool that returns the schema from metadata rather than from a data query, plus a sample tool with a hard row cap. An agent that gets its orientation from metadata never issues an exploratory `SELECT *`.
 
-**Small files.** A table with 400,000 small files spends most of a query's time on file opens and metadata rather than on data. This is a maintenance problem rather than an agent problem, and agents make it visible because they issue more queries against more tables than a hand-built dashboard workload does.
+**Small files.** A table with 400, 000 small files spends most of a query's time on file opens and metadata rather than on data. This is a maintenance problem rather than an agent problem, and agents make it visible because they issue more queries against more tables than a hand-built dashboard workload does.
 
 Compaction on a schedule fixes it. The signal is planning time growing while data volume is flat.
 
@@ -216,19 +209,19 @@ The measurable version: track bytes scanned per session by agent. Agents with hi
 
 ```python
 def cached_query(sql: str, session_id: str, ttl_seconds: int = 900):
-    key = hashlib.sha256(normalize_sql(sql).encode()).hexdigest()
-    hit = cache.get(key)
-    if hit is not None:
-        telemetry.record(session_id, "cache_hit", key=key)
-        return hit
-    result = engine.execute(sql, session_id=session_id)
-    cache.set(key, result, ttl=ttl_seconds)
-    return result
+ key = hashlib.sha256(normalize_sql(sql).encode()).hexdigest()
+ hit = cache.get(key)
+ if hit is not None:
+ telemetry.record(session_id, "cache_hit", key=key)
+ return hit
+ result = engine.execute(sql, session_id=session_id)
+ cache.set(key, result, ttl=ttl_seconds)
+ return result
 ```
 
 `normalize_sql` matters more than the cache. Two agents asking the same question produce SQL that differs in whitespace, alias names, and clause order. Normalizing before hashing turns a 5 percent hit rate into something worth having. Record hits in telemetry so you know what the cache is buying.
 
-**Trim the fixed context.** Audit what goes into every turn. Tool definitions written verbosely, schema for tables the agent rarely touches, examples that no longer earn their place. Cutting 2,000 tokens off the per-turn fixed cost saves that amount times every turn of every session, forever.
+**Trim the fixed context.** Audit what goes into every turn. Tool definitions written verbosely, schema for tables the agent rarely touches, examples that no longer earn their place. Cutting 2, 000 tokens off the per-turn fixed cost saves that amount times every turn of every session, forever.
 
 Specifically: do not inject the whole catalog schema. Give the agent a search tool that returns the two or three relevant datasets. That change alone often halves the context.
 

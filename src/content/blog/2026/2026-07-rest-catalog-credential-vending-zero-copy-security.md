@@ -14,9 +14,10 @@ draft: false
 image: "/images/blog.png"
 canonical: "https://iceberglakehouse.com/posts/rest-catalog-credential-vending-zero-copy-security/"
 ---
-> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/rest-catalog-credential-vending-zero-copy-security/).
 
 Handing a query engine a long-lived cloud storage key so it can read an Iceberg table is one of the most common and most dangerous patterns in lakehouse deployments. That key is broad, hard to rotate, and once it exists it tends to spread into config files, notebooks, CI systems, and every engine cluster that touches the data. Credential vending replaces that pattern. Instead of distributing static keys, an Iceberg REST catalog issues short-lived, scoped storage credentials at the moment a client needs them, for exactly the table and operation the client is authorized to perform, expiring shortly after.
+
+> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/rest-catalog-credential-vending-zero-copy-security/).
 
 This post explains why static cloud keys break multi-engine lakehouses, how the credential vending handshake works, the important distinction between what the catalog controls and what object storage controls, how Polaris-style vending is configured at a conceptual level, and why this mechanism matters specifically for autonomous agents. The theme throughout: open lakehouses only work at enterprise scale when storage access is scoped, temporary, and mediated through a trusted catalog rather than granted directly.
 
@@ -34,7 +35,7 @@ Blast radius grows with engines. In a multi-engine lakehouse, Spark, Trino, a Py
 
 For autonomous agents this is acute. An agent tool that holds a broad storage key is a piece of software, driven by a non-deterministic model, that can read or write cloud storage directly. That is precisely the actor you least want holding a long-lived, broadly scoped credential. Credential vending exists to make sure it never does.
 
-There is also an auditability gap with static keys that is easy to overlook. When many clients share a key, or when a key is broadly scoped, the object storage access logs tell you that the key was used but not which client, which table, or which user was behind the access. Attribution collapses. If you later need to answer "who read this sensitive table last Tuesday," a shared static key gives you no clean answer, because every client looks the same to storage. Vended credentials, because they are minted per request against a specific identity for a specific table, restore that attribution: the catalog knows who asked for what and when, and the storage access maps back to a narrow, identified grant. For anything touching regulated or sensitive data, this attribution is not a nicety, it is a requirement, and it is one that static keys structurally cannot meet.
+There is also an auditability gap with static keys that is easy to overlook. When many clients share a key, or when a key is broadly scoped, the object storage access logs tell you that the key was used but not which client, which table, or which user was behind the access. Attribution collapses. If you later need to answer "who read this sensitive table last Tuesday, " a shared static key gives you no clean answer, because every client looks the same to storage. Vended credentials, because they are minted per request against a specific identity for a specific table, restore that attribution: the catalog knows who asked for what and when, and the storage access maps back to a narrow, identified grant. For anything touching regulated or sensitive data, this attribution is not a nicety, it is a requirement, and it is one that static keys structurally cannot meet.
 
 ## How Credential Vending Works
 
@@ -55,13 +56,13 @@ The zero-copy property is worth dwelling on, because it is what distinguishes cr
 Here is the flow described conceptually. Exact request and response shapes should be verified against the current Iceberg REST spec.
 
 ```
-Client                      REST Catalog                  Object Storage
-  |  authenticate  ------->  [ verify client identity ]
-  |  loadTable(t)  ------->  [ authorize identity for table t ]
-  |                          [ mint scoped temp credentials ]
-  |  <----- metadata + temp creds (bucket/prefix/op/expiry)
-  |  read/write files t  ----------------------------->  [ enforce creds ]
-  |  <------------------------ data (zero-copy path) -----
+Client REST Catalog Object Storage
+ | authenticate ----> [ verify client identity ]
+ | loadTable(t) ----> [ authorize identity for table t ]
+ | [ mint scoped temp credentials ]
+ | <--- metadata + temp creds (bucket/prefix/op/expiry)
+ | read/write files t ---------------> [ enforce creds ]
+ | <------------ data (zero-copy path) ---
 ```
 
 ## What the Catalog Controls and What Storage Controls
@@ -95,15 +96,15 @@ The conceptual shape, not literal configuration:
 ```
 # Conceptual - verify field names and syntax against Polaris docs
 StorageIntegration:
-  cloud role the catalog may assume to mint scoped creds
-  allowed locations: bucket / prefixes the catalog may vend for
+ cloud role the catalog may assume to mint scoped creds
+ allowed locations: bucket / prefixes the catalog may vend for
 
 Catalog roles / grants:
-  principal -> namespace/table access (logical authorization)
+ principal -> namespace/table access (logical authorization)
 
 Credential vending policy:
-  scope: table location + operation (read or write)
-  expiration: short window
+ scope: table location + operation (read or write)
+ expiration: short window
 ```
 
 The design goal is least privilege at both layers: narrow logical grants in the catalog, and narrow physical scope plus short expiry in the vended credentials.
@@ -123,7 +124,7 @@ An honest limitation belongs here. Credential vending shrinks the window and sco
 The following table contrasts static keys with credential vending directly.
 
 | Property | Static cloud keys | Credential vending |
-| --- | --- | --- |
+| -- | -- | -- |
 | Lifetime | Long-lived, rarely rotated | Short-lived, expires in minutes |
 | Scope | Often whole-bucket, over-scoped | Table, prefix, and operation |
 | Where held | Copied into every client and config | Minted per request, not stored |
@@ -134,7 +135,7 @@ The following table contrasts static keys with credential vending directly.
 
 ## Why Zero-Copy Security Favors Open Lakehouses
 
-Credential vending is the mechanism that lets an open, multi-engine lakehouse be both open and secure at the same time. Without it, "open" tends to mean "every engine has broad storage keys," which is open in the worst way. With it, many engines can query the same Iceberg tables in place, each getting only the narrow, temporary access it needs, authorized consistently through one catalog.
+Credential vending is the mechanism that lets an open, multi-engine lakehouse be both open and secure at the same time. Without it, "open" tends to mean "every engine has broad storage keys, " which is open in the worst way. With it, many engines can query the same Iceberg tables in place, each getting only the narrow, temporary access it needs, authorized consistently through one catalog.
 
 This is the security argument for open lakehouses over closed systems. In a closed system, security is a property of a single vendor's engine, and you accept that vendor's boundaries. In an open lakehouse built on Apache Iceberg, the data sits in your object storage in an open format, and the catalog governs access to it for any engine that speaks the REST protocol. Credential vending is what makes that multi-engine openness safe: the catalog is the trusted authorization point, storage credentials are scoped and short-lived, and no engine needs a standing broad key. You keep zero-copy analytics, engines read data directly from storage without moving it, while the access to that storage is mediated and scoped.
 

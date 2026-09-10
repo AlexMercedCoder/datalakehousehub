@@ -16,9 +16,10 @@ draft: false
 image: "/images/blog.png"
 canonical: "https://iceberglakehouse.com/posts/2026-03-aitool-gemini-cli/"
 ---
-> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-03-aitool-gemini-cli/).
 
 Gemini CLI is Google's open-source terminal-based AI agent. It runs directly in your terminal, powered by Gemini models with a 1-million token context window. Dremio is a unified lakehouse platform that provides business context through its semantic layer, universal data access through query federation, and interactive speed through Reflections and Apache Arrow.
+
+> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-03-aitool-gemini-cli/).
 
 Connecting them gives Gemini CLI the data context it needs to write accurate Dremio SQL, generate pipeline scripts, and build applications against your lakehouse. The 1-million token context window is a significant advantage: Gemini CLI can hold your entire project, documentation, and Dremio schema context simultaneously without the context limitations that constrain other agents.
 
@@ -34,10 +35,10 @@ If you do not already have Gemini CLI installed:
 
 1. **Install Node.js** (version 18 or later) from [nodejs.org](https://nodejs.org/).
 2. **Install Gemini CLI** globally via npm:
-   ```bash
-   npm install -g @anthropic-ai/gemini-cli
-   ```
-   Or install from source via the [GitHub repository](https://github.com/google-gemini/gemini-cli).
+ ```bash
+ npm install -g @anthropic-ai/gemini-cli
+ ```
+ Or install from source via the [GitHub repository](https://github.com/google-gemini/gemini-cli).
 3. **Authenticate** by running `gemini` in your terminal. On first launch, it will prompt you to sign in with your Google account. Gemini CLI is free to use with a Google account (rate-limited) or with a Gemini API key for higher throughput.
 4. **Verify the installation** by asking a question: `gemini "What is Apache Iceberg?"`
 
@@ -71,18 +72,18 @@ Create or edit the settings file:
 
 ```json
 {
-  "mcpServers": {
-    "dremio": {
-      "httpUrl": "https://YOUR_PROJECT_MCP_URL"
-    }
-  }
+ "mcpServers": {
+ "dremio": {
+ "httpUrl": "https://YOUR_PROJECT_MCP_URL"
+ }
+ }
 }
 ```
 
 You can also add MCP servers using the CLI command:
 
 ```bash
-gemini mcp add dremio --httpUrl "https://YOUR_PROJECT_MCP_URL"
+gemini mcp add dremio -httpUrl "https://YOUR_PROJECT_MCP_URL"
 ```
 
 Restart Gemini CLI. The agent now has access to Dremio's MCP tools:
@@ -103,23 +104,21 @@ For Dremio Software deployments, use the open-source [dremio-mcp](https://github
 git clone https://github.com/dremio/dremio-mcp
 cd dremio-mcp
 uv run dremio-mcp-server config create dremioai \
-  --uri https://your-dremio-instance.com \
-  --pat YOUR_PERSONAL_ACCESS_TOKEN
+ -uri https://your-dremio-instance.com \
+ -pat YOUR_PERSONAL_ACCESS_TOKEN
 ```
 
 In your `settings.json`:
 
 ```json
 {
-  "mcpServers": {
-    "dremio": {
-      "command": "uv",
-      "args": [
-        "run", "--directory", "/path/to/dremio-mcp",
-        "dremio-mcp-server", "run"
-      ]
-    }
-  }
+ "mcpServers": {
+ "dremio": {
+ "command": "uv", "args": [
+ "run", "-directory", "/path/to/dremio-mcp", "dremio-mcp-server", "run"
+ ]
+ }
+ }
 }
 ```
 
@@ -190,7 +189,7 @@ Gemini CLI has built-in Google Search grounding, meaning it can look up real-tim
 ```markdown
 ## Documentation Strategy
 - Before writing any Dremio SQL, use Google Search to verify the syntax
-  against the latest Dremio documentation at docs.dremio.com
+ against the latest Dremio documentation at docs.dremio.com
 - If a function name is uncertain, search for it before including it
 ```
 
@@ -244,12 +243,12 @@ If the pre-built options do not fit your workflow, build a custom `GEMINI.md` ta
 
 ```
 .gemini/
-  GEMINI.md              # Points to the reference files below
+ GEMINI.md # Points to the reference files below
 project-docs/
-  dremio-conventions.md  # Team SQL rules
-  table-schemas.md       # Exported schemas from Dremio
-  common-queries.md      # Frequently used query patterns
-  dremioframe-patterns.md # Python SDK code snippets
+ dremio-conventions.md # Team SQL rules
+ table-schemas.md # Exported schemas from Dremio
+ common-queries.md # Frequently used query patterns
+ dremioframe-patterns.md # Python SDK code snippets
 ```
 
 ### Write a Comprehensive GEMINI.md
@@ -346,12 +345,12 @@ Create backend services:
 
 > "Build a FastAPI application that connects to Dremio using dremioframe. Create endpoints for customer segments, revenue by geography, and product performance trends. Include Pydantic response models, request validation, caching with TTL, and auto-generated OpenAPI docs."
 
-Gemini CLI generates the complete API server with proper error handling and connection management. Deploy it locally with `uvicorn main:app --reload` or containerize for production.
+Gemini CLI generates the complete API server with proper error handling and connection management. Deploy it locally with `uvicorn main:app -reload` or containerize for production.
 
 ## Which Approach Should You Use?
 
 | Approach | Setup Time | What You Get | Best For |
-|----------|-----------|--------------|----------|
+|-----|------|-------|-----|
 | MCP Server | 5 minutes | Live queries, schema browsing, catalog exploration | Data analysis, SQL generation, real-time access |
 | GEMINI.md | 10 minutes | Convention enforcement, protocol blocks, Search grounding | Teams with specific SQL standards or project rules |
 | Pre-Built Skills | 5 minutes | Comprehensive Dremio knowledge (CLI, SDK, SQL, API) | Quick start with broad coverage |

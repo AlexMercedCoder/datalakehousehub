@@ -14,9 +14,10 @@ draft: false
 image: "/images/blog.png"
 canonical: "https://iceberglakehouse.com/posts/2024-10-ultimate-directory-of-Apache-Iceberg-Resources/"
 ---
-> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2024-10-ultimate-directory-of-Apache-Iceberg-Resources/).
 
 This article is a comprehensive directory of Apache Iceberg resources, including educational materials, tutorials, and hands-on exercises. Whether you're a beginner or an experienced data engineer, this guide will help you navigate the world of Apache Iceberg and its applications.
+
+> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2024-10-ultimate-directory-of-Apache-Iceberg-Resources/).
 
 ## Apache Iceberg?
 
@@ -86,8 +87,8 @@ Here is a list of resources to help you learn Apache Iceberg's architecture and 
 - [How Apache Iceberg is Built for Open Optimized Performance](https://www.dremio.com/blog/how-apache-iceberg-is-built-for-open-optimized-performance/)
 - [Ensuring High Performance at Any Scale with Apache Iceberg’s Object Store File Layout](https://www.dremio.com/blog/ensuring-high-performance-at-any-scale-with-apache-icebergs-object-store-file-layout/?utm_source=ev_external_blog&utm_medium=influencer&utm_campaign=ultimate_directory_of_apache_iceberg_resources&utm_content=alexmerced&utm_term=external_blog)
 - [Row-Level Changes on the Lakehouse: Copy-On-Write vs. Merge-On-Read in Apache Iceberg](https://www.dremio.com/blog/row-level-changes-on-the-lakehouse-copy-on-write-vs-merge-on-read-in-apache-iceberg/?utm_source=ev_external_blog&utm_medium=influencer&utm_campaign=ultimate_directory_of_apache_iceberg_resources&utm_content=alexmerced&utm_term=external_blog)
-- [ACID Guarantees and Apache Iceberg: Turning Any Storage into a Data Warehouse](https://medium.com/data-engineering-with-dremio/acid-guarantees-and-apache-iceberg-turning-any-storage-into-a-data-warehouse-e2b6cdf8bf45?source=---------3)
-- [Apache Iceberg Reliability](https://medium.com/data-engineering-with-dremio/apache-iceberg-reliability-8ef491ff055f?source=---------8)
+- [ACID Guarantees and Apache Iceberg: Turning Any Storage into a Data Warehouse](https://medium.com/data-engineering-with-dremio/acid-guarantees-and-apache-iceberg-turning-any-storage-into-a-data-warehouse-e2b6cdf8bf45?source=-----3)
+- [Apache Iceberg Reliability](https://medium.com/data-engineering-with-dremio/apache-iceberg-reliability-8ef491ff055f?source=-----8)
 
 
 ### Getting Data into Apache Iceberg
@@ -140,7 +141,7 @@ Here is a list of resources to help you learn how to partition your data with Ap
 - [Leveraging Apache Iceberg Metadata Tables in Dremio for Effective Data Lakehouse Auditing](https://www.dremio.com/blog/apache-iceberg-metadata-tables/?utm_source=ev_external_blog&utm_medium=influencer&utm_campaign=ultimate_directory_of_apache_iceberg_resources&utm_content=alexmerced&utm_term=external_blog)
 - [What is DataOps? Automating Data Management on the Apache Iceberg Lakehouse](https://www.dremio.com/blog/what-is-dataops-automating-data-management-on-the-apache-iceberg-lakehouse/?utm_source=ev_external_blog&utm_medium=influencer&utm_campaign=ultimate_directory_of_apache_iceberg_resources&utm_content=alexmerced&utm_term=external_blog)
 - [How Z-Ordering in Apache Iceberg Helps Improve Performance](https://www.dremio.com/blog/how-z-ordering-in-apache-iceberg-helps-improve-performance/?utm_source=ev_external_blog&utm_medium=influencer&utm_campaign=ultimate_directory_of_apache_iceberg_resources&utm_content=alexmerced&utm_term=external_blog)
-- [Maintaining Iceberg Tables – Compaction, Expiring Snapshots, and More](https://www.dremio.com/blog/maintaining-iceberg-tables-compaction-expiring-snapshots-and-more/)
+- [Maintaining Iceberg Tables - Compaction, Expiring Snapshots, and More](https://www.dremio.com/blog/maintaining-iceberg-tables-compaction-expiring-snapshots-and-more/)
 
 ### Apache Iceberg Catalogs
 
@@ -148,7 +149,7 @@ Here is a list of resources to help you learn about Apache Iceberg Catalogs:
 
 - [The Evolution of Apache Iceberg Catalogs](https://www.dremio.com/blog/the-evolution-of-apache-iceberg-catalogs/?utm_source=ev_external_blog&utm_medium=influencer&utm_campaign=ultimate_directory_of_apache_iceberg_resources&utm_content=alexmerced&utm_term=external_blog)
 - [Introducing the Apache Iceberg Catalog Migration Tool](https://www.dremio.com/blog/introducing-the-apache-iceberg-catalog-migration-tool/?utm_source=ev_external_blog&utm_medium=influencer&utm_campaign=ultimate_directory_of_apache_iceberg_resources&utm_content=alexmerced&utm_term=external_blog)
-- [What Iceberg REST Catalog Is and Isn’t](https://medium.com/data-engineering-with-dremio/what-iceberg-rest-catalog-is-and-isnt-b4a6d056f493?source=---------7)
+- [What Iceberg REST Catalog Is and Isn’t](https://medium.com/data-engineering-with-dremio/what-iceberg-rest-catalog-is-and-isnt-b4a6d056f493?source=-----7)
 - [Why Thinking about Apache Iceberg Catalogs Like Nessie and Apache Polaris (incubating) Matters](https://www.dremio.com/blog/why-thinking-about-apache-iceberg-catalogs-like-nessie-and-apache-polaris-incubating-matters/?utm_source=ev_external_blog&utm_medium=influencer&utm_campaign=ultimate_directory_of_apache_iceberg_resources&utm_content=alexmerced&utm_term=external_blog)
 - [Using Nessie’s REST Catalog Support for Working with Apache Iceberg Tables](https://www.dremio.com/blog/use-nessie-with-iceberg-rest-catalog/?utm_source=ev_external_blog&utm_medium=influencer&utm_campaign=ultimate_directory_of_apache_iceberg_resources&utm_content=alexmerced&utm_term=external_blog)
 - [The Nessie Ecosystem and the Reach of Git for Data for Apache Iceberg](https://www.dremio.com/blog/the-nessie-ecosystem-and-the-reach-of-git-for-data-for-apache-iceberg/?utm_source=ev_external_blog&utm_medium=influencer&utm_campaign=ultimate_directory_of_apache_iceberg_resources&utm_content=alexmerced&utm_term=external_blog)
@@ -216,8 +217,5 @@ Here is a list of miscellaneous resources to help you learn Apache Iceberg:
 - [Connecting Tableau to Apache Iceberg Tables with Dremio](https://www.dremio.com/blog/connecting-tableau-to-apache-iceberg-tables-with-dremio/?utm_source=ev_external_blog&utm_medium=influencer&utm_campaign=ultimate_directory_of_apache_iceberg_resources&utm_content=alexmerced&utm_term=external_blog)
 - [Apache Iceberg 101](https://www.dremio.com/lakehouse-deep-dives/apache-iceberg-101/?utm_source=ev_external_blog&utm_medium=influencer&utm_campaign=ultimate_directory_of_apache_iceberg_resources&utm_content=alexmerced&utm_term=external_blog)
 - [Apache Iceberg FAQ](https://www.dremio.com/blog/apache-iceberg-faq/?utm_source=ev_external_blog&utm_medium=influencer&utm_campaign=ultimate_directory_of_apache_iceberg_resources&utm_content=alexmerced&utm_term=external_blog)
-- [Why Data Analysts, Engineers, Architects and Scientists Should Care about Dremio and Apache Iceberg](https://medium.com/data-engineering-with-dremio/why-data-analysts-engineers-architects-and-scientists-should-care-about-dremio-and-apache-iceberg-361ba9e01f38?source=---------1)
+- [Why Data Analysts, Engineers, Architects and Scientists Should Care about Dremio and Apache Iceberg](https://medium.com/data-engineering-with-dremio/why-data-analysts-engineers-architects-and-scientists-should-care-about-dremio-and-apache-iceberg-361ba9e01f38?source=-----1)
 - [Data Lake Mysteries Unveiled: Nessie, Dremio, and MinIO Make Waves](https://blog.min.io/uncover-data-lake-nessie-dremio-iceberg/)
-
-
-

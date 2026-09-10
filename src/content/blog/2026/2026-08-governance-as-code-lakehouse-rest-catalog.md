@@ -14,11 +14,12 @@ tags:
 slug: "governance-as-code-lakehouse-rest-catalog"
 draft: false
 ---
-> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/governance-as-code-lakehouse-rest-catalog/).
 
 A security audit asks a simple question: who can read the `customers.pii` table, and when was that last changed? The data platform team opens four consoles. The Spark cluster has its own ACLs. The Trino deployment has a Ranger policy set. The BI tool has its own row-level security config. The catalog has grants that were entered by hand over two years. The answers differ. Nobody can say which one is authoritative, and nobody can say who changed what, when, or why, because none of it is in version control.
 
-That is the state of most lakehouse governance today, and it is a direct consequence of how the lakehouse was assembled. Open table formats let many engines read the same data, which is the whole point. But each engine brought its own security model, so "many engines" became "many places to define permissions," and the permissions drifted apart. The fix is not a better console. It is moving the definitions out of the engines and into the layer they all share, the catalog, and managing that layer the way infrastructure has been managed for a decade: as code, in Git, applied by a pipeline, with a plan step before every change and a drift check after.
+> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/governance-as-code-lakehouse-rest-catalog/).
+
+That is the state of most lakehouse governance today, and it is a direct consequence of how the lakehouse was assembled. Open table formats let many engines read the same data, which is the whole point. But each engine brought its own security model, so "many engines" became "many places to define permissions, " and the permissions drifted apart. The fix is not a better console. It is moving the definitions out of the engines and into the layer they all share, the catalog, and managing that layer the way infrastructure has been managed for a decade: as code, in Git, applied by a pipeline, with a plan step before every change and a drift check after.
 
 This article is a practical guide to doing that with Apache Polaris, the open source Iceberg REST catalog now at version 1.7.0, and the tooling around it. I will cover what the catalog can hold declaratively and what it cannot, the four layers of a governance-as-code stack (cloud IAM, catalog entities, engine-side masking policies, and externalized policy decisions), the specific tools for each layer including Polaris's `setup apply` command, the CI/CD pipeline that ties them together, and the drift detection that keeps the repository and reality in agreement. I work at Dremio, whose Open Catalog is built on Polaris, and I will use Dremio's SQL for the engine-side policies. The pattern applies to any engine with policy support and any REST catalog with a management API.
 
@@ -30,9 +31,9 @@ A grant in Spark's ACL layer applies to Spark. Trino reading the same Iceberg ta
 
 The engines also see the data at different points. Spark reads Parquet files directly through the catalog's vended credentials. A BI tool reads through a SQL endpoint. An agent reads through an MCP server. A column mask defined in the BI tool masks the BI tool's view of the column and nothing else. The Parquet file still has the raw value, and any engine with the credential reads it.
 
-The catalog is the one component every path goes through. Every engine asks it for the table location and for credentials. If the catalog says no, no engine gets the credential, and the Parquet file is unreadable regardless of what the engine's own ACLs say. That makes the catalog the enforcement point for "can this principal reach this table at all," which is the coarse question, and it makes the catalog's grant model the single source of truth for it.
+The catalog is the one component every path goes through. Every engine asks it for the table location and for credentials. If the catalog says no, no engine gets the credential, and the Parquet file is unreadable regardless of what the engine's own ACLs say. That makes the catalog the enforcement point for "can this principal reach this table at all, " which is the coarse question, and it makes the catalog's grant model the single source of truth for it.
 
-What the catalog cannot do, as of Polaris 1.7.0, is enforce column masking or row filtering. Those require evaluating the data, and the catalog never touches the data. It hands out a credential to a table location and the engine reads the files. So the fine-grained question, "which rows and which columns can this principal see within a table they can reach," lives in the engine or the semantic layer, and governance-as-code has to cover both places with one repository and one pipeline.
+What the catalog cannot do, as of Polaris 1.7.0, is enforce column masking or row filtering. Those require evaluating the data, and the catalog never touches the data. It hands out a credential to a table location and the engine reads the files. So the fine-grained question, "which rows and which columns can this principal see within a table they can reach, " lives in the engine or the semantic layer, and governance-as-code has to cover both places with one repository and one pipeline.
 
 ## What the Catalog Holds Declaratively
 
@@ -51,7 +52,7 @@ External policy decisions are the extension point. Since 1.3.0, Polaris can defe
 Here is how the pieces map to the two questions governance has to answer:
 
 | Question | Where it is enforced | Polaris mechanism | Managed as |
-|---|---|---|---|
+|--|--|--|--|
 | Can this principal reach this catalog / namespace / table? | Catalog (blocks credential vending) | Principal roles, catalog roles, privileges | YAML via `setup apply`, or Terraform |
 | Where is this table allowed to live? | Catalog | Storage config, allowed locations, location flags | YAML plus Helm values |
 | Which cloud identity vends credentials, with what scope? | Catalog plus cloud IAM | Storage config role ARN / service account, STS session policy | Terraform for IAM, YAML for catalog |
@@ -70,49 +71,48 @@ For AWS, the catalog's storage configuration names an IAM role. Polaris calls ST
 
 ```hcl
 resource "aws_iam_role" "polaris_sales" {
-  name = "polaris-catalog-sales"
+ name = "polaris-catalog-sales"
 
-  assume_role_policy = jsonencode({
-    Version = "2012-10-17"
-    Statement = [{
-      Effect    = "Allow"
-      Principal = { AWS = var.polaris_service_role_arn }
-      Action    = "sts:AssumeRole"
-      Condition = {
-        StringEquals = { "sts:ExternalId" = var.polaris_external_id }
-      }
-    }]
-  })
+ assume_role_policy = jsonencode({
+ Version = "2012-10-17"
+ Statement = [{
+ Effect = "Allow"
+ Principal = { AWS = var.polaris_service_role_arn }
+ Action = "sts:AssumeRole"
+ Condition = {
+ StringEquals = { "sts:ExternalId" = var.polaris_external_id }
+ }
+ }]
+ })
 
-  tags = { managed_by = "terraform", catalog = "sales" }
+ tags = { managed_by = "terraform", catalog = "sales" }
 }
 
 resource "aws_iam_role_policy" "polaris_sales_storage" {
-  name = "polaris-catalog-sales-storage"
-  role = aws_iam_role.polaris_sales.id
+ name = "polaris-catalog-sales-storage"
+ role = aws_iam_role.polaris_sales.id
 
-  policy = jsonencode({
-    Version = "2012-10-17"
-    Statement = [
-      {
-        Effect   = "Allow"
-        Action   = ["s3:GetObject", "s3:PutObject", "s3:DeleteObject"]
-        Resource = "arn:aws:s3:::lake-prod/sales/*"
-      },
-      {
-        Effect   = "Allow"
-        Action   = ["s3:ListBucket"]
-        Resource = "arn:aws:s3:::lake-prod"
-        Condition = {
-          StringLike = { "s3:prefix" = ["sales/*"] }
-        }
-      }
-    ]
-  })
+ policy = jsonencode({
+ Version = "2012-10-17"
+ Statement = [
+ {
+ Effect = "Allow"
+ Action = ["s3:GetObject", "s3:PutObject", "s3:DeleteObject"]
+ Resource = "arn:aws:s3:::lake-prod/sales/*"
+ }, {
+ Effect = "Allow"
+ Action = ["s3:ListBucket"]
+ Resource = "arn:aws:s3:::lake-prod"
+ Condition = {
+ StringLike = { "s3:prefix" = ["sales/*"] }
+ }
+ }
+ ]
+ })
 }
 
 output "polaris_sales_role_arn" {
-  value = aws_iam_role.polaris_sales.arn
+ value = aws_iam_role.polaris_sales.arn
 }
 ```
 
@@ -126,7 +126,7 @@ Polaris itself is deployed with the project's Helm chart, and the chart's values
 
 The second layer is the catalog's own entities: principals, principal roles, catalogs, catalog roles, namespaces, privileges, and policies. This is where Polaris shipped a first-class declarative tool this year.
 
-The Polaris Python CLI has a `setup` command with two subcommands. `setup apply` reads a YAML file and creates or grants everything in it, in dependency order, with a `--dry-run` flag that prints the actions without executing them. `setup export` walks a running Polaris instance and writes its current configuration as YAML in the same format, which is what makes drift detection possible. The command was introduced in early 2026 and the 1.7.0 release fixed its exit codes so a failed apply returns non-zero, which matters for CI.
+The Polaris Python CLI has a `setup` command with two subcommands. `setup apply` reads a YAML file and creates or grants everything in it, in dependency order, with a `-dry-run` flag that prints the actions without executing them. `setup export` walks a running Polaris instance and writes its current configuration as YAML in the same format, which is what makes drift detection possible. The command was introduced in early 2026 and the 1.7.0 release fixed its exit codes so a failed apply returns non-zero, which matters for CI.
 
 Here is a setup file for the sales catalog, with the IAM role from layer one:
 
@@ -134,67 +134,67 @@ Here is a setup file for the sales catalog, with the IAM role from layer one:
 # governance/polaris/sales.yaml
 
 principals:
-  pipeline_sales:
-    roles:
-      - sales_writer_role
-  svc_dremio:
-    roles:
-      - analyst_role
-      - pii_reader_role
+ pipeline_sales:
+ roles:
+ - sales_writer_role
+ svc_dremio:
+ roles:
+ - analyst_role
+ - pii_reader_role
 
 principal_roles:
-  - sales_writer_role
-  - analyst_role
-  - pii_reader_role
+ - sales_writer_role
+ - analyst_role
+ - pii_reader_role
 
 catalogs:
-  - name: sales
-    type: INTERNAL
-    storage_type: S3
-    default_base_location: s3://lake-prod/sales/
-    allowed_locations:
-      - s3://lake-prod/sales/
-    role_arn: arn:aws:iam::123456789012:role/polaris-catalog-sales
-    region: us-east-1
-    properties:
-      polaris.config.allow.client.specified.table.location: "false"
-    namespaces:
-      - orders
-      - customers
-      - customers.pii
-    roles:
-      sales_writer:
-        assign_to:
-          - sales_writer_role
-        privileges:
-          namespace:
-            orders:
-              - TABLE_CREATE
-              - TABLE_READ_DATA
-              - TABLE_WRITE_DATA
-            customers:
-              - TABLE_CREATE
-              - TABLE_READ_DATA
-              - TABLE_WRITE_DATA
-      sales_reader:
-        assign_to:
-          - analyst_role
-        privileges:
-          catalog:
-            - NAMESPACE_LIST
-            - TABLE_LIST
-          namespace:
-            orders:
-              - TABLE_READ_DATA
-            customers:
-              - TABLE_READ_DATA
-      pii_reader:
-        assign_to:
-          - pii_reader_role
-        privileges:
-          namespace:
-            customers.pii:
-              - TABLE_READ_DATA
+ - name: sales
+ type: INTERNAL
+ storage_type: S3
+ default_base_location: s3://lake-prod/sales/
+ allowed_locations:
+ - s3://lake-prod/sales/
+ role_arn: arn:aws:iam::123456789012:role/polaris-catalog-sales
+ region: us-east-1
+ properties:
+ polaris.config.allow.client.specified.table.location: "false"
+ namespaces:
+ - orders
+ - customers
+ - customers.pii
+ roles:
+ sales_writer:
+ assign_to:
+ - sales_writer_role
+ privileges:
+ namespace:
+ orders:
+ - TABLE_CREATE
+ - TABLE_READ_DATA
+ - TABLE_WRITE_DATA
+ customers:
+ - TABLE_CREATE
+ - TABLE_READ_DATA
+ - TABLE_WRITE_DATA
+ sales_reader:
+ assign_to:
+ - analyst_role
+ privileges:
+ catalog:
+ - NAMESPACE_LIST
+ - TABLE_LIST
+ namespace:
+ orders:
+ - TABLE_READ_DATA
+ customers:
+ - TABLE_READ_DATA
+ pii_reader:
+ assign_to:
+ - pii_reader_role
+ privileges:
+ namespace:
+ customers.pii:
+ - TABLE_READ_DATA
 ```
 
 Read it top to bottom. Two service principals exist. Three principal roles exist. One catalog exists, on S3, with a single allowed location, a client-specified-location override set to false, and three namespaces. Three catalog roles exist, each granted to a principal role and each holding privileges at the namespace level. The `analyst_role` can list and read `orders` and `customers` but not `customers.pii`. The `pii_reader_role` can read `customers.pii` and nothing else. The `svc_dremio` principal holds both, so the Dremio engine can reach PII on behalf of users who are authorized for it, and the engine-side masking in layer three decides which of those users see the raw values.
@@ -204,27 +204,27 @@ The workflow around the file:
 ```bash
 # In CI on a pull request: print the planned actions, fail on error.
 polaris setup apply \
-  --host "$POLARIS_HOST" \
-  --client-id "$POLARIS_ADMIN_CLIENT_ID" \
-  --client-secret "$POLARIS_ADMIN_CLIENT_SECRET" \
-  --dry-run \
-  governance/polaris/sales.yaml
+ -host "$POLARIS_HOST" \
+ -client-id "$POLARIS_ADMIN_CLIENT_ID" \
+ -client-secret "$POLARIS_ADMIN_CLIENT_SECRET" \
+ -dry-run \
+ governance/polaris/sales.yaml
 
 # On merge to main: apply.
 polaris setup apply \
-  --host "$POLARIS_HOST" \
-  --client-id "$POLARIS_ADMIN_CLIENT_ID" \
-  --client-secret "$POLARIS_ADMIN_CLIENT_SECRET" \
-  governance/polaris/sales.yaml
+ -host "$POLARIS_HOST" \
+ -client-id "$POLARIS_ADMIN_CLIENT_ID" \
+ -client-secret "$POLARIS_ADMIN_CLIENT_SECRET" \
+ governance/polaris/sales.yaml
 
 # Nightly: export the live state and diff against the repository.
 polaris setup export \
-  --host "$POLARIS_HOST" \
-  --client-id "$POLARIS_ADMIN_CLIENT_ID" \
-  --client-secret "$POLARIS_ADMIN_CLIENT_SECRET" \
-  > /tmp/polaris-live.yaml
+ -host "$POLARIS_HOST" \
+ -client-id "$POLARIS_ADMIN_CLIENT_ID" \
+ -client-secret "$POLARIS_ADMIN_CLIENT_SECRET" \
+ > /tmp/polaris-live.yaml
 diff <(yq -P 'sort_keys(..)' governance/polaris/*.yaml | yq ea '. as $item ireduce ({}; . * $item)') \
-     <(yq -P 'sort_keys(..)' /tmp/polaris-live.yaml)
+ <(yq -P 'sort_keys(..)' /tmp/polaris-live.yaml)
 ```
 
 Two honest caveats about `setup apply` as of 1.7.0. It is additive: it creates what is missing and grants what is not yet granted, but it does not remove an entity or a grant that exists in Polaris and is absent from the file. Removals have to be applied explicitly through the CLI's `revoke` and `delete` commands or the management API, and the pipeline needs a step for them. And the export format normalizes some fields (secrets are not exported, and ordering is not guaranteed), so the diff needs canonicalization, which is what the `yq` sort in the example does. Neither caveat is a reason not to use it. Both are reasons to keep the nightly diff, because the additive apply means a manually added grant in the console persists until the diff catches it.
@@ -239,21 +239,21 @@ So the resource model for an official provider is already designed and has worki
 
 ```hcl
 resource "polaris_catalog_role" "sales_reader" {
-  catalog_name = "sales"
-  name         = "sales_reader"
+ catalog_name = "sales"
+ name = "sales_reader"
 }
 
 resource "polaris_grant" "sales_reader_orders" {
-  catalog_name      = "sales"
-  catalog_role_name = polaris_catalog_role.sales_reader.name
-  privilege         = "TABLE_READ_DATA"
-  namespace         = ["orders"]
+ catalog_name = "sales"
+ catalog_role_name = polaris_catalog_role.sales_reader.name
+ privilege = "TABLE_READ_DATA"
+ namespace = ["orders"]
 }
 
 resource "polaris_catalog_role_assignment" "analyst_gets_sales_reader" {
-  catalog_name        = "sales"
-  catalog_role_name   = polaris_catalog_role.sales_reader.name
-  principal_role_name = "analyst_role"
+ catalog_name = "sales"
+ catalog_role_name = polaris_catalog_role.sales_reader.name
+ principal_role_name = "analyst_role"
 }
 ```
 
@@ -268,39 +268,39 @@ Dremio implements column masking and row-level security as SQL user-defined func
 Here are the policies for the `customers.pii` table:
 
 ```sql
--- governance/engine/policies/mask_email.sql
+- governance/engine/policies/mask_email.sql
 CREATE OR REPLACE FUNCTION governance.mask_email(email VARCHAR)
 RETURNS VARCHAR
 RETURN SELECT CASE
-  WHEN is_member('pii_readers') THEN email
-  ELSE CONCAT(LEFT(email, 1), '***@', SPLIT_PART(email, '@', 2))
+ WHEN is_member('pii_readers') THEN email
+ ELSE CONCAT(LEFT(email, 1), '***@', SPLIT_PART(email, '@', 2))
 END;
 
--- governance/engine/policies/mask_national_id.sql
+- governance/engine/policies/mask_national_id.sql
 CREATE OR REPLACE FUNCTION governance.mask_national_id(id VARCHAR)
 RETURNS VARCHAR
 RETURN SELECT CASE
-  WHEN is_member('pii_readers') THEN id
-  ELSE CONCAT('***-**-', RIGHT(id, 4))
+ WHEN is_member('pii_readers') THEN id
+ ELSE CONCAT('***-**-', RIGHT(id, 4))
 END;
 
--- governance/engine/policies/region_row_filter.sql
+- governance/engine/policies/region_row_filter.sql
 CREATE OR REPLACE FUNCTION governance.region_row_filter(region VARCHAR)
 RETURNS BOOLEAN
 RETURN SELECT CASE
-  WHEN is_member('global_analysts') THEN TRUE
-  WHEN is_member('emea_analysts')   THEN region IN ('DE', 'FR', 'GB', 'NL')
-  WHEN is_member('amer_analysts')   THEN region IN ('US', 'CA', 'MX')
-  ELSE FALSE
+ WHEN is_member('global_analysts') THEN TRUE
+ WHEN is_member('emea_analysts') THEN region IN ('DE', 'FR', 'GB', 'NL')
+ WHEN is_member('amer_analysts') THEN region IN ('US', 'CA', 'MX')
+ ELSE FALSE
 END;
 
--- governance/engine/bindings/customers_pii.sql
+- governance/engine/bindings/customers_pii.sql
 ALTER TABLE sales.customers.pii
-  MODIFY COLUMN email SET MASKING POLICY governance.mask_email(email);
+ MODIFY COLUMN email SET MASKING POLICY governance.mask_email(email);
 ALTER TABLE sales.customers.pii
-  MODIFY COLUMN national_id SET MASKING POLICY governance.mask_national_id(national_id);
+ MODIFY COLUMN national_id SET MASKING POLICY governance.mask_national_id(national_id);
 ALTER TABLE sales.customers.pii
-  ADD ROW ACCESS POLICY governance.region_row_filter(region);
+ ADD ROW ACCESS POLICY governance.region_row_filter(region);
 ```
 
 The `is_member` function checks the querying user's role membership in the engine, which is typically synced from the identity provider. The policies reference role names, not user names, so onboarding a new PII reader is an identity provider change and not a policy change.
@@ -311,7 +311,7 @@ One more thing belongs in this layer: the semantic layer views that most consume
 
 ## Layer Four: Attribute-Based Rules in OPA
 
-Role-based grants cover most cases. They do not cover "any table tagged `pii` requires the `pii_reader` role regardless of which namespace it is in," or "writes to a table tagged `frozen` are denied for everyone," or "this service account reads only during its scheduled window." Those are attribute-based rules, and Polaris's external policy decision point is where they go.
+Role-based grants cover most cases. They do not cover "any table tagged `pii` requires the `pii_reader` role regardless of which namespace it is in, " or "writes to a table tagged `frozen` are denied for everyone, " or "this service account reads only during its scheduled window." Those are attribute-based rules, and Polaris's external policy decision point is where they go.
 
 With OPA configured as the PDP, Polaris sends every authorization decision to OPA as a JSON input describing the principal, its roles, the action, the target resource, and the realm, and OPA evaluates Rego policies to return a decision. The Rego lives in Git, is tested with OPA's own test framework, and is deployed as a bundle.
 
@@ -328,28 +328,28 @@ default allow := false
 # Fall through to Polaris's built-in RBAC decision for everything
 # that this policy does not explicitly deny.
 allow if {
-    not deny
-    input.rbac_decision == "allow"
+ not deny
+ input.rbac_decision == "allow"
 }
 
 # Deny any data read on a table carrying the pii tag unless the
 # principal holds the pii_reader_role.
 deny if {
-    input.action in {"TABLE_READ_DATA", "TABLE_WRITE_DATA"}
-    input.resource.type == "TABLE"
-    input.resource.properties.tag == "pii"
-    not "pii_reader_role" in input.principal.roles
+ input.action in {"TABLE_READ_DATA", "TABLE_WRITE_DATA"}
+ input.resource.type == "TABLE"
+ input.resource.properties.tag == "pii"
+ not "pii_reader_role" in input.principal.roles
 }
 
 # Deny writes to anything tagged frozen, for everyone.
 deny if {
-    input.action in {"TABLE_WRITE_DATA", "TABLE_DROP"}
-    input.resource.properties.tag == "frozen"
+ input.action in {"TABLE_WRITE_DATA", "TABLE_DROP"}
+ input.resource.properties.tag == "frozen"
 }
 
 # Realm isolation: a principal from one realm never acts in another.
 deny if {
-    input.context.realm != input.principal.realm
+ input.context.realm != input.principal.realm
 }
 ```
 
@@ -365,31 +365,31 @@ The four layers come together in one repository and one pipeline. Here is the la
 
 ```
 governance/
-  terraform/           # Layer 1: cloud IAM, Polaris Helm values
-    aws/
-    azure/
-    gcp/
-    polaris-helm/
-  polaris/             # Layer 2: catalog entities, one file per catalog
-    sales.yaml
-    finance.yaml
-    shared.yaml
-  engine/              # Layer 3: masking and row policies, bindings, views
-    policies/
-    bindings/
-    views/
-  opa/                 # Layer 4: Rego policies and tests
-    policies/
-    tests/
-  tests/               # Access parity tests run against a live environment
-    access_matrix.yaml
-    run_access_tests.py
+ terraform/ # Layer 1: cloud IAM, Polaris Helm values
+ aws/
+ azure/
+ gcp/
+ polaris-helm/
+ polaris/ # Layer 2: catalog entities, one file per catalog
+ sales.yaml
+ finance.yaml
+ shared.yaml
+ engine/ # Layer 3: masking and row policies, bindings, views
+ policies/
+ bindings/
+ views/
+ opa/ # Layer 4: Rego policies and tests
+ policies/
+ tests/
+ tests/ # Access parity tests run against a live environment
+ access_matrix.yaml
+ run_access_tests.py
 ```
 
 On every pull request:
 
 1. `terraform plan` on layer one. Reviewers see IAM changes as a diff.
-2. `polaris setup apply --dry-run` on every changed YAML in layer two. The output is posted as a comment on the pull request.
+2. `polaris setup apply -dry-run` on every changed YAML in layer two. The output is posted as a comment on the pull request.
 3. Static checks on layer three: parse every SQL file, confirm every binding references a policy that exists, confirm every policy references only role names that exist in the identity provider's export.
 4. `opa test` on layer four. Every Rego change needs a test that exercises it.
 5. A rendered summary: "this PR grants `analyst_role` read on `finance.gl`, adds a masking policy on `finance.gl.account_holder`, and adds no OPA rules."
@@ -419,18 +419,18 @@ The requester opens a pull request with four files changed.
 Layer two, `governance/polaris/finance.yaml`, gains a namespace and a catalog role:
 
 ```yaml
-    namespaces:
-      - gl
-      - payroll          # new
-    roles:
-      payroll_reader:    # new
-        assign_to:
-          - payroll_analyst_role
-        privileges:
-          namespace:
-            payroll:
-              - TABLE_READ_DATA
-              - TABLE_LIST
+ namespaces:
+ - gl
+ - payroll # new
+ roles:
+ payroll_reader: # new
+ assign_to:
+ - payroll_analyst_role
+ privileges:
+ namespace:
+ payroll:
+ - TABLE_READ_DATA
+ - TABLE_LIST
 ```
 
 and the top-level `principal_roles` list gains `payroll_analyst_role`.
@@ -438,17 +438,17 @@ and the top-level `principal_roles` list gains `payroll_analyst_role`.
 Layer three gains a policy and a binding:
 
 ```sql
--- governance/engine/policies/mask_salary.sql
-CREATE OR REPLACE FUNCTION governance.mask_salary(amount DECIMAL(18,2))
-RETURNS DECIMAL(18,2)
+- governance/engine/policies/mask_salary.sql
+CREATE OR REPLACE FUNCTION governance.mask_salary(amount DECIMAL(18, 2))
+RETURNS DECIMAL(18, 2)
 RETURN SELECT CASE
-  WHEN is_member('hr_compensation') THEN amount
-  ELSE NULL
+ WHEN is_member('hr_compensation') THEN amount
+ ELSE NULL
 END;
 
--- governance/engine/bindings/finance_payroll_employees.sql
+- governance/engine/bindings/finance_payroll_employees.sql
 ALTER TABLE finance.payroll.employees
-  MODIFY COLUMN salary SET MASKING POLICY governance.mask_salary(salary);
+ MODIFY COLUMN salary SET MASKING POLICY governance.mask_salary(salary);
 ```
 
 Layer four is unchanged, because no attribute rule is involved. Layer one is unchanged, because the finance catalog's IAM role already covers `s3://lake-prod/finance/`.
@@ -457,20 +457,20 @@ The test matrix gains three rows:
 
 ```yaml
 - principal: payroll_analyst_role
-  resource: finance.payroll.employees
-  action: read
-  expect: allowed
-  expect_masked: [salary]
+ resource: finance.payroll.employees
+ action: read
+ expect: allowed
+ expect_masked: [salary]
 - principal: payroll_analyst_role
-  resource: finance.payroll.employees
-  action: read
-  as_engine_user_in: [hr_compensation]
-  expect: allowed
-  expect_masked: []
+ resource: finance.payroll.employees
+ action: read
+ as_engine_user_in: [hr_compensation]
+ expect: allowed
+ expect_masked: []
 - principal: analyst_role
-  resource: finance.payroll.employees
-  action: read
-  expect: denied_at_catalog
+ resource: finance.payroll.employees
+ action: read
+ expect: denied_at_catalog
 ```
 
 CI runs on the pull request. The Terraform plan shows no changes. The Polaris dry-run posts a comment: create namespace `finance.payroll`, create principal role `payroll_analyst_role`, create catalog role `payroll_reader`, grant `TABLE_READ_DATA` and `TABLE_LIST` on namespace `payroll` to `payroll_reader`, grant `payroll_reader` to `payroll_analyst_role`. The SQL static check confirms `hr_compensation` exists in the identity provider export and that the binding references a policy defined in the same PR. The OPA tests pass unchanged. The rendered summary reads: "Adds read access to `finance.payroll` for `payroll_analyst_role`. Masks `salary` for all but `hr_compensation`. No IAM or OPA changes."
@@ -498,10 +498,10 @@ The one piece of evidence this stack does not produce on its own is the data-acc
 Teams arrive at governance-as-code from different starting points, and the tooling choice depends on where they are. Here is how the main options for layer two compare:
 
 | | `polaris setup apply` | Official `terraform-provider-polaris` | Community Terraform provider | Direct management API in CI |
-|---|---|---|---|---|
+|--|--|--|--|--|
 | Maintained by | Apache Polaris project (Python CLI) | Apache Polaris project (repo created, no release yet) | Community (`tsukubatexas/polaris`) | You |
 | Declaration format | YAML matching Polaris entity model | HCL with typed resources (principals, roles, assignments, grants) | HCL over OpenAPI operations | Whatever you script |
-| Plan step | `--dry-run` | `terraform plan` | `terraform plan` | Build it yourself |
+| Plan step | `-dry-run` | `terraform plan` | `terraform plan` | Build it yourself |
 | Removals | Not applied (additive only) | Applied via state diff | Applied via state diff | Build it yourself |
 | Drift detection | `setup export` and diff | `terraform plan` against state | `terraform plan` against state | Build it yourself |
 | State file | None (Polaris is the state) | Terraform state to manage and secure | Terraform state to manage and secure | None |
@@ -528,7 +528,7 @@ For layer three, the choice is made by the engine. Dremio's SQL policies are the
 
 **Secrets in the governance repo.** Principal client secrets are created by Polaris at principal creation time and returned once. A pipeline that captures them into the repository, even encrypted, has made the repository a credential store. Route new secrets straight into the secrets manager from the apply step and never write them to disk in the pipeline.
 
-**Tests that only check allows.** An access matrix that lists only what should work passes when everything is open. Half the matrix should be denials. The most important test in the suite is "the analyst cannot read PII," and it should be the first one written.
+**Tests that only check allows.** An access matrix that lists only what should work passes when everything is open. Half the matrix should be denials. The most important test in the suite is "the analyst cannot read PII, " and it should be the first one written.
 
 ## Operational Guidance
 

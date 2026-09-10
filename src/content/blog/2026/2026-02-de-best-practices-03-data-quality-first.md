@@ -15,9 +15,10 @@ draft: false
 image: "/images/blog.png"
 canonical: "https://iceberglakehouse.com/posts/2026-02-debp-data-quality-first/"
 ---
-> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-02-debp-data-quality-first/).
 
 ![Data quality checks enforced at the pipeline validation stage before data reaches consumers](/images/blog/debp/data-quality-pipeline.png)
+
+> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-02-debp-data-quality-first/).
 
 When an analyst finds null values in a revenue column, the typical response is to add a calculated field in the BI tool: `IF revenue IS NULL THEN 0`. That "fix" doesn't fix anything. It masks a problem at the source : and every downstream consumer has to independently discover and patch the same issue.
 
@@ -55,11 +56,11 @@ Add a validation stage between ingestion and transformation. This stage checks e
 
 **Schema validation.** Check column names, data types, and required vs. optional fields. If the source adds or removes a column, catch it here : not when a transformation SQL query fails.
 
-**Range and format checks.** Ensure numeric values fall within expected ranges (0 ≤ price ≤ 1,000,000). Validate date formats, email patterns, and enum values against allowed lists.
+**Range and format checks.** Ensure numeric values fall within expected ranges (0 ≤ price ≤ 1, 000, 000). Validate date formats, email patterns, and enum values against allowed lists.
 
 **Referential checks.** Verify that foreign key values exist in their reference tables. An order referencing a non-existent customer ID means either the order is invalid or the customer pipeline is behind.
 
-**Volume checks.** Compare the row count of the incoming batch against historical baselines. A daily feed that usually delivers 50,000 rows but arrives with 500 rows should trigger an alert, not proceed silently.
+**Volume checks.** Compare the row count of the incoming batch against historical baselines. A daily feed that usually delivers 50, 000 rows but arrives with 500 rows should trigger an alert, not proceed silently.
 
 **Freshness checks.** Validate that event timestamps fall within the expected window. A batch of events all timestamped from three days ago may indicate a delayed replay, not current data.
 

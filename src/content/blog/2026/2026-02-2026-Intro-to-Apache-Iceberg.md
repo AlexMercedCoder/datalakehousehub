@@ -17,9 +17,10 @@ draft: false
 image: "/images/blog.png"
 canonical: "https://iceberglakehouse.com/posts/2026-02-intro-to-Apache-Iceberg/"
 ---
-> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-02-intro-to-Apache-Iceberg/).
 
-Apache Iceberg is an open-source table format for large analytic datasets. It defines how data files stored on object storage (S3, ADLS, GCS) are organized into a logical table with a schema, partition layout, and consistent point-in-time snapshots. If you've heard the term "data lakehouse," Iceberg is the layer that makes it possible by bringing warehouse-grade reliability to data lake storage.
+Apache Iceberg is an open-source table format for large analytic datasets. It defines how data files stored on object storage (S3, ADLS, GCS) are organized into a logical table with a schema, partition layout, and consistent point-in-time snapshots. If you've heard the term "data lakehouse, " Iceberg is the layer that makes it possible by bringing warehouse-grade reliability to data lake storage.
+
+> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-02-intro-to-Apache-Iceberg/).
 
 This post covers what Iceberg is, how its metadata works under the hood, what changed across specification versions 1 through 3, what's being proposed for v4, and how to get started using Iceberg tables with [Dremio](https://www.dremio.com/get-started) in about ten minutes.
 
@@ -51,7 +52,7 @@ This structure means scan planning is O(1) in metadata lookups rather than O(n) 
 
 ![Image description](https://dev-to-uploads.s3.amazonaws.com/uploads/articles/drqplx888rtwbfyo9czk.png)
 
-### Version 1: Analytic Tables (2017–2020)
+### Version 1: Analytic Tables (2017-2020)
 
 V1 established the fundamentals: immutable data files, snapshot-based tracking, manifest-level file stats, hidden partitioning, and schema evolution via unique column IDs. Operations were limited to appends and full-partition overwrites.
 
@@ -70,7 +71,7 @@ V3 brought several major additions:
 - **Multi-Argument Transforms:** Partition and sort transforms can accept multiple input columns.
 - **Table Encryption Keys:** Built-in support for encrypting data at rest.
 
-### Version 4: Active Proposals (2025–2026)
+### Version 4: Active Proposals (2025-2026)
 
 The community is actively discussing several changes for a future v4 spec:
 
@@ -108,18 +109,11 @@ CREATE FOLDER IF NOT EXISTS db;
 CREATE FOLDER IF NOT EXISTS db.schema;
 
 CREATE TABLE db.schema.sales (
-  order_id INT,
-  customer_name VARCHAR,
-  product VARCHAR,
-  quantity INT,
-  order_date DATE,
-  total_amount DECIMAL(10,2)
+ order_id INT, customer_name VARCHAR, product VARCHAR, quantity INT, order_date DATE, total_amount DECIMAL(10, 2)
 ) PARTITION BY (MONTH(order_date));
 
 INSERT INTO db.schema.sales VALUES
-  (1, 'Alice Chen', 'Widget A', 10, '2025-01-15', 150.00),
-  (2, 'Bob Smith', 'Widget B', 5, '2025-01-20', 75.00),
-  (3, 'Carol Davis', 'Widget A', 8, '2025-02-10', 120.00);
+ (1, 'Alice Chen', 'Widget A', 10, '2025-01-15', 150.00), (2, 'Bob Smith', 'Widget B', 5, '2025-01-20', 75.00), (3, 'Carol Davis', 'Widget A', 8, '2025-02-10', 120.00);
 ```
 
 Notice the `PARTITION BY (MONTH(order_date))`. That's hidden partitioning in action. You query `order_date` directly; Iceberg handles the partitioning.
@@ -127,16 +121,16 @@ Notice the `PARTITION BY (MONTH(order_date))`. That's hidden partitioning in act
 **3. Query the metadata tables.** Dremio exposes Iceberg's metadata through `TABLE()` functions. These let you inspect the internal state of your table without touching the raw metadata files:
 
 ```sql
--- View all snapshots (who committed what and when)
+- View all snapshots (who committed what and when)
 SELECT * FROM TABLE(table_snapshot('db.schema.sales'));
 
--- View commit history
+- View commit history
 SELECT * FROM TABLE(table_history('db.schema.sales'));
 
--- View manifest file details
+- View manifest file details
 SELECT * FROM TABLE(table_manifests('db.schema.sales'));
 
--- View partition statistics
+- View partition statistics
 SELECT * FROM TABLE(table_partitions('db.schema.sales'));
 ```
 

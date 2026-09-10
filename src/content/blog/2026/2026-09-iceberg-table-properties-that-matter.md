@@ -14,9 +14,10 @@ draft: false
 image: "/images/blog.png"
 canonical: https://iceberglakehouse.com/posts/iceberg-table-properties-that-matter/
 ---
-> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/iceberg-table-properties-that-matter/).
 
 Every Apache Iceberg table carries a `properties` map in its metadata file. The reference implementation defines somewhere north of a hundred keys that engines read from it, and the configuration page that lists them is organized alphabetically by prefix rather than by consequence. The result is that most tables run on defaults, and most tuning happens by copying a `TBLPROPERTIES` block from a blog post without knowing what each line does.
+
+> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/iceberg-table-properties-that-matter/).
 
 That is a problem because a handful of these properties decide whether a table stays healthy. Target file size determines how many files a query opens. Metrics mode determines whether a filter prunes files or scans them. Row-level operation mode determines whether an update rewrites gigabytes or writes kilobytes. Retention properties determine how far back you can recover and how fast storage grows. Get four or five of these right and the table runs well for years. Get them wrong and no amount of compaction catches up.
 
@@ -28,8 +29,7 @@ The `properties` field in table metadata is a flat map of string keys to string 
 
 ```sql
 ALTER TABLE sales.orders SET TBLPROPERTIES (
-  'write.target-file-size-bytes' = '268435456',
-  'write.metadata.metrics.default' = 'truncate(32)'
+ 'write.target-file-size-bytes' = '268435456', 'write.metadata.metrics.default' = 'truncate(32)'
 );
 ```
 
@@ -82,17 +82,17 @@ Four properties define what kind of table this is.
 
 These properties decide how many files a table has and how expensive each is to read. They are the most frequently mistuned group.
 
-**`write.target-file-size-bytes`** (default 536,870,912, or 512 MB). The size a writer aims for when rolling to a new data file. This is the most consequential property in the map. The value is measured in the writer's in-memory representation and the file on disk is usually smaller after compression, so a 512 MB target produces files in the 200 to 400 MB range for typical Parquet. Smaller targets mean more files per snapshot, more manifest entries, more file opens per query, and more work for compaction. Larger targets mean fewer, bigger files and less parallelism for engines that split at file boundaries. The default is right for most batch-written analytical tables. Streaming writers with small micro-batches never reach it regardless of the setting, which is why streaming tables need compaction rather than a smaller target.
+**`write.target-file-size-bytes`** (default 536, 870, 912, or 512 MB). The size a writer aims for when rolling to a new data file. This is the most consequential property in the map. The value is measured in the writer's in-memory representation and the file on disk is usually smaller after compression, so a 512 MB target produces files in the 200 to 400 MB range for typical Parquet. Smaller targets mean more files per snapshot, more manifest entries, more file opens per query, and more work for compaction. Larger targets mean fewer, bigger files and less parallelism for engines that split at file boundaries. The default is right for most batch-written analytical tables. Streaming writers with small micro-batches never reach it regardless of the setting, which is why streaming tables need compaction rather than a smaller target.
 
-**`write.delete.target-file-size-bytes`** (default 67,108,864, or 64 MB). The same target for delete files. Delete files are small by nature and the default is rarely changed.
+**`write.delete.target-file-size-bytes`** (default 67, 108, 864, or 64 MB). The same target for delete files. Delete files are small by nature and the default is rarely changed.
 
-**`write.parquet.row-group-size-bytes`** (default 134,217,728, or 128 MB). The Parquet row group size. A row group is the unit of column-chunk statistics and of parallel reading within a file. With a 512 MB file target, the default yields about four row groups per file. Dropping it to 32 or 64 MB gives finer-grained min/max pruning inside a file at the cost of more footer metadata and slightly worse compression. Tables with highly selective point lookups on sorted keys benefit from smaller row groups. Tables that are always scanned in full do not.
+**`write.parquet.row-group-size-bytes`** (default 134, 217, 728, or 128 MB). The Parquet row group size. A row group is the unit of column-chunk statistics and of parallel reading within a file. With a 512 MB file target, the default yields about four row groups per file. Dropping it to 32 or 64 MB gives finer-grained min/max pruning inside a file at the cost of more footer metadata and slightly worse compression. Tables with highly selective point lookups on sorted keys benefit from smaller row groups. Tables that are always scanned in full do not.
 
-**`write.parquet.page-size-bytes`** (default 1,048,576, or 1 MB) and **`write.parquet.page-row-limit`** (default 20,000). Page-level settings inside a row group. Page indexes let readers skip pages, so smaller pages give finer skipping. Most teams leave these alone.
+**`write.parquet.page-size-bytes`** (default 1, 048, 576, or 1 MB) and **`write.parquet.page-row-limit`** (default 20, 000). Page-level settings inside a row group. Page indexes let readers skip pages, so smaller pages give finer skipping. Most teams leave these alone.
 
 **`write.parquet.compression-codec`** (default `zstd`) and **`write.parquet.compression-level`** (default null, meaning the codec's default). Zstandard replaced gzip as the default in Iceberg 1.4 and is the right choice: better compression than Snappy at comparable decode speed, far faster decode than gzip. The level is worth setting explicitly on cold archive tables, where level 6 to 9 buys 10 to 20 percent smaller files for slower writes that nobody notices, and on hot tables, where the default level 3 is the right balance.
 
-**`write.parquet.dict-size-bytes`** (default 2,097,152, or 2 MB). The maximum dictionary page size. Dictionary encoding is what makes low-cardinality string columns tiny. When a column's distinct values exceed this size, Parquet falls back to plain encoding for the remainder of the row group, which balloons file size for medium-cardinality strings. Raising it to 4 or 8 MB on tables with wide-ish string columns is a cheap win.
+**`write.parquet.dict-size-bytes`** (default 2, 097, 152, or 2 MB). The maximum dictionary page size. Dictionary encoding is what makes low-cardinality string columns tiny. When a column's distinct values exceed this size, Parquet falls back to plain encoding for the remainder of the row group, which balloons file size for medium-cardinality strings. Raising it to 4 or 8 MB on tables with wide-ish string columns is a cheap win.
 
 **`write.parquet.bloom-filter-enabled.column.<name>`** (not set) with **`write.parquet.bloom-filter-fpp.column.<name>`** (default 0.01) and **`write.parquet.bloom-filter-max-bytes`** (default 1 MB). Enables a Parquet Bloom filter for one column. Bloom filters answer "is this value definitely absent from this row group" and are the right tool for equality lookups on high-cardinality columns that are not sorted, such as a UUID or an email. They are useless for range predicates and for columns the data is sorted on, where min/max already prunes. Set them on the two or three columns that point-lookup queries actually hit and nowhere else, because each one adds to every file's footer.
 
@@ -139,11 +139,11 @@ The right setting depends on the ratio of writes to reads and on how scattered t
 
 These control what happens at the moment a write becomes a snapshot.
 
-**`commit.retry.num-retries`** (default 4), **`commit.retry.min-wait-ms`** (default 100), **`commit.retry.max-wait-ms`** (default 60,000), and **`commit.retry.total-timeout-ms`** (default 1,800,000, or 30 minutes). Commits use optimistic concurrency: read the current metadata, write new metadata, swap the catalog pointer if it still points at what you read. When the swap fails because someone else committed first, the writer rebases and retries with exponential backoff between the min and max wait. Tables with many concurrent writers, such as a streaming sink with several parallel jobs, need more retries. Four is low for that case and twenty is not unreasonable. The total timeout is the cap.
+**`commit.retry.num-retries`** (default 4), **`commit.retry.min-wait-ms`** (default 100), **`commit.retry.max-wait-ms`** (default 60, 000), and **`commit.retry.total-timeout-ms`** (default 1, 800, 000, or 30 minutes). Commits use optimistic concurrency: read the current metadata, write new metadata, swap the catalog pointer if it still points at what you read. When the swap fails because someone else committed first, the writer rebases and retries with exponential backoff between the min and max wait. Tables with many concurrent writers, such as a streaming sink with several parallel jobs, need more retries. Four is low for that case and twenty is not unreasonable. The total timeout is the cap.
 
 **`commit.status-check.num-retries`** (default 3) and the matching wait properties. After a network failure during the pointer swap, the writer does not know whether the commit landed. These control how long it polls the catalog to find out before giving up with an unknown-commit-state error, which is the error nobody wants to see because it means files were written and the caller must check by hand.
 
-**`commit.manifest.target-size-bytes`** (default 8,388,608, or 8 MB), **`commit.manifest.min-count-to-merge`** (default 100), and **`commit.manifest-merge.enabled`** (default `true`). Every append writes a new manifest. Left alone, a table accumulates one manifest per commit, and scan planning reads all of them. Manifest merging rewrites small manifests into larger ones during commits once the count exceeds the minimum. The defaults are fine for batch tables. For a streaming table committing every minute, lowering `min-count-to-merge` to 20 or so keeps planning fast without waiting for a separate `rewrite_manifests` run. Disabling merging speeds up individual commits and is occasionally done for tables where a dedicated manifest rewrite job runs on a schedule.
+**`commit.manifest.target-size-bytes`** (default 8, 388, 608, or 8 MB), **`commit.manifest.min-count-to-merge`** (default 100), and **`commit.manifest-merge.enabled`** (default `true`). Every append writes a new manifest. Left alone, a table accumulates one manifest per commit, and scan planning reads all of them. Manifest merging rewrites small manifests into larger ones during commits once the count exceeds the minimum. The defaults are fine for batch tables. For a streaming table committing every minute, lowering `min-count-to-merge` to 20 or so keeps planning fast without waiting for a separate `rewrite_manifests` run. Disabling merging speeds up individual commits and is occasionally done for tables where a dedicated manifest rewrite job runs on a schedule.
 
 **`write.summary.partition-limit`** (default 0). Includes per-partition statistics in the snapshot summary when the number of changed partitions is below this limit. Set it to a few hundred on tables where operators want to see, from the `snapshots` metadata table, which partitions a commit touched. Zero disables it.
 
@@ -153,11 +153,11 @@ These control what happens at the moment a write becomes a snapshot.
 
 These properties decide how much history the table keeps and how large its metadata grows.
 
-**`history.expire.max-snapshot-age-ms`** (default 432,000,000, or 5 days) and **`history.expire.min-snapshots-to-keep`** (default 1). The defaults that `expire_snapshots` uses when called without arguments. Together they define how far back time travel and rollback reach. Five days is the default because it is a reasonable balance for most tables. Raising it to fourteen on critical tables extends the recovery window at the cost of retaining files that were deleted or rewritten in that window. Lowering it below a day on any table is a mistake unless the table is a transient staging area, because a day is the minimum needed to notice and undo a bad commit.
+**`history.expire.max-snapshot-age-ms`** (default 432, 000, 000, or 5 days) and **`history.expire.min-snapshots-to-keep`** (default 1). The defaults that `expire_snapshots` uses when called without arguments. Together they define how far back time travel and rollback reach. Five days is the default because it is a reasonable balance for most tables. Raising it to fourteen on critical tables extends the recovery window at the cost of retaining files that were deleted or rewritten in that window. Lowering it below a day on any table is a mistake unless the table is a transient staging area, because a day is the minimum needed to notice and undo a bad commit.
 
 **`history.expire.max-ref-age-ms`** (default forever). How long branches and tags other than `main` survive before expiry removes them. The default means a tag lives until explicitly dropped. Branch-heavy workflows sometimes set this to a few weeks so that abandoned feature branches do not pin files forever.
 
-**`write.metadata.previous-versions-max`** (default 100) and **`write.metadata.delete-after-commit.enabled`** (default `false`). Every commit writes a new `metadata.json`, and the old ones accumulate in the `metadata-log`. The first property caps how many are tracked. The second deletes the untracked ones from storage during commits. Enabling deletion is right for high-commit-rate tables where the metadata directory otherwise fills with thousands of small JSON files, and wrong for tables where an external DR process or audit needs old metadata files to exist. On a streaming table committing every minute, this is the difference between a metadata directory with 100 files and one with 500,000.
+**`write.metadata.previous-versions-max`** (default 100) and **`write.metadata.delete-after-commit.enabled`** (default `false`). Every commit writes a new `metadata.json`, and the old ones accumulate in the `metadata-log`. The first property caps how many are tracked. The second deletes the untracked ones from storage during commits. Enabling deletion is right for high-commit-rate tables where the metadata directory otherwise fills with thousands of small JSON files, and wrong for tables where an external DR process or audit needs old metadata files to exist. On a streaming table committing every minute, this is the difference between a metadata directory with 100 files and one with 500, 000.
 
 **`gc.enabled`**, covered above, is the master switch for all of this.
 
@@ -173,20 +173,20 @@ These properties decide how much history the table keeps and how large its metad
 
 These are read from the table but often overridden by engine session settings.
 
-**`read.split.target-size`** (default 134,217,728, or 128 MB) and **`read.split.metadata-target-size`** (default 32 MB). The target size when combining files or file fragments into tasks. Smaller splits mean more tasks and more parallelism up to the point where task overhead dominates. Larger splits mean fewer, longer tasks. The default is right for most clusters. **`read.split.adaptive-size.enabled`** (default `true`) lets the planner adjust the split size to the scan size and available parallelism when no explicit size is set, which is why tuning this by hand is rarely necessary anymore.
+**`read.split.target-size`** (default 134, 217, 728, or 128 MB) and **`read.split.metadata-target-size`** (default 32 MB). The target size when combining files or file fragments into tasks. Smaller splits mean more tasks and more parallelism up to the point where task overhead dominates. Larger splits mean fewer, longer tasks. The default is right for most clusters. **`read.split.adaptive-size.enabled`** (default `true`) lets the planner adjust the split size to the scan size and available parallelism when no explicit size is set, which is why tuning this by hand is rarely necessary anymore.
 
 **`read.split.open-file-cost`** (default 4 MB) is the minimum weight assigned to a file when combining splits, so that a thousand 10 KB files are not packed into one task. Small-file-heavy tables benefit from raising it.
 
 **`read.data-planning-mode`** and **`read.delete-planning-mode`** (default `auto`). Whether scan planning reads manifests locally on the driver or distributes the work across the cluster. Auto picks based on manifest count and size. Tables with thousands of manifests benefit from `distributed`. Tables with a handful benefit from `local` to avoid the job launch overhead.
 
-**`read.parquet.vectorization.enabled`** (default `true`) and **`read.parquet.vectorization.batch-size`** (default 5,000). Whether Spark uses vectorized Parquet reads. There is no reason to disable this on a modern engine.
+**`read.parquet.vectorization.enabled`** (default `true`) and **`read.parquet.vectorization.batch-size`** (default 5, 000). Whether Spark uses vectorized Parquet reads. There is no reason to disable this on a modern engine.
 
 ## The Ones That Matter, by Workload
 
 Most tables fall into one of four patterns, and each pattern has a short list of properties worth setting explicitly.
 
 | Property | Append-heavy events | CDC / upsert target | Slowly changing dimension | Wide feature table |
-|---|---|---|---|---|
+|--|--|--|--|--|
 | `format-version` | 3 | 3 | 3 | 3 |
 | `write.target-file-size-bytes` | 512 MB | 256 MB | 128 MB | 512 MB |
 | `write.parquet.compression-codec` | zstd | zstd | zstd | zstd |
@@ -208,13 +208,12 @@ The event table is written in bulk and read by range, so big files, standard met
 
 ## Walkthrough: Configuring a CDC Target Table
 
-A team lands change events from a transactional database into an Iceberg table via `MERGE INTO`, several hundred merges an hour, from three parallel jobs partitioned by source shard. Queries filter on `customer_id` and `updated_at`. The table starts with defaults and, after a month, queries are slow and the metadata directory has 40,000 files.
+A team lands change events from a transactional database into an Iceberg table via `MERGE INTO`, several hundred merges an hour, from three parallel jobs partitioned by source shard. Queries filter on `customer_id` and `updated_at`. The table starts with defaults and, after a month, queries are slow and the metadata directory has 40, 000 files.
 
 The diagnosis from the metadata tables comes first:
 
 ```sql
-SELECT count(*) AS data_files,
-       sum(file_size_in_bytes) / count(*) / 1048576 AS avg_mb
+SELECT count(*) AS data_files, sum(file_size_in_bytes) / count(*) / 1048576 AS avg_mb
 FROM sales.customers.files WHERE content = 0;
 
 SELECT count(*) AS delete_files FROM sales.customers.files WHERE content > 0;
@@ -224,27 +223,13 @@ SELECT count(*) AS manifests FROM sales.customers.manifests;
 SELECT count(*) AS metadata_versions FROM sales.customers.metadata_log_entries;
 ```
 
-Suppose the answers are 12,000 data files averaging 30 MB, 9,000 delete files, 2,400 manifests, and 40,000 metadata versions. Copy-on-write merges have been rewriting files piecemeal, producing small files. The delete files are from a period someone switched to merge-on-read and back. Manifests are not merging because the merge threshold was never crossed per commit. Metadata files were never cleaned.
+Suppose the answers are 12, 000 data files averaging 30 MB, 9, 000 delete files, 2, 400 manifests, and 40, 000 metadata versions. Copy-on-write merges have been rewriting files piecemeal, producing small files. The delete files are from a period someone switched to merge-on-read and back. Manifests are not merging because the merge threshold was never crossed per commit. Metadata files were never cleaned.
 
 The property changes:
 
 ```sql
 ALTER TABLE sales.customers SET TBLPROPERTIES (
-  'format-version' = '3',
-  'write.merge.mode' = 'merge-on-read',
-  'write.update.mode' = 'merge-on-read',
-  'write.delete.mode' = 'merge-on-read',
-  'write.target-file-size-bytes' = '268435456',
-  'write.distribution-mode' = 'hash',
-  'write.metadata.metrics.column.customer_id' = 'full',
-  'write.metadata.metrics.column.updated_at' = 'full',
-  'write.parquet.bloom-filter-enabled.column.customer_id' = 'true',
-  'commit.retry.num-retries' = '12',
-  'commit.manifest.min-count-to-merge' = '20',
-  'write.metadata.delete-after-commit.enabled' = 'true',
-  'write.metadata.previous-versions-max' = '50',
-  'history.expire.max-snapshot-age-ms' = '604800000',
-  'write.object-storage.enabled' = 'true'
+ 'format-version' = '3', 'write.merge.mode' = 'merge-on-read', 'write.update.mode' = 'merge-on-read', 'write.delete.mode' = 'merge-on-read', 'write.target-file-size-bytes' = '268435456', 'write.distribution-mode' = 'hash', 'write.metadata.metrics.column.customer_id' = 'full', 'write.metadata.metrics.column.updated_at' = 'full', 'write.parquet.bloom-filter-enabled.column.customer_id' = 'true', 'commit.retry.num-retries' = '12', 'commit.manifest.min-count-to-merge' = '20', 'write.metadata.delete-after-commit.enabled' = 'true', 'write.metadata.previous-versions-max' = '50', 'history.expire.max-snapshot-age-ms' = '604800000', 'write.object-storage.enabled' = 'true'
 );
 ```
 
@@ -254,8 +239,7 @@ None of this touches existing files. The next step is a one-time cleanup that ap
 
 ```sql
 CALL polaris.system.rewrite_data_files(
-  table => 'sales.customers',
-  options => map('target-file-size-bytes', '268435456', 'min-input-files', '5')
+ table => 'sales.customers', options => map('target-file-size-bytes', '268435456', 'min-input-files', '5')
 );
 CALL polaris.system.rewrite_manifests('sales.customers');
 CALL polaris.system.expire_snapshots(table => 'sales.customers', older_than => TIMESTAMP '2026-08-25 00:00:00');
@@ -281,7 +265,7 @@ The same handful of mistakes account for most badly behaving Iceberg tables.
 
 **Merge-on-read without compaction.** The opposite failure. Delete files or deletion vectors accumulate, and every read applies more of them. Reads slow down gradually over weeks. The `files` table's delete file count, or on v3 the count of delete manifests, climbs steadily.
 
-**Distribution mode `none` on a partitioned table.** A batch job with 200 tasks writing to 50 partitions produces up to 10,000 files per commit. The table's average file size collapses to a few megabytes. Compaction can fix it after the fact, but setting `hash` prevents it.
+**Distribution mode `none` on a partitioned table.** A batch job with 200 tasks writing to 50 partitions produces up to 10, 000 files per commit. The table's average file size collapses to a few megabytes. Compaction can fix it after the fact, but setting `hash` prevents it.
 
 **Snapshot retention below the replication or backup window.** Expiry deletes files before the DR replica or the backup captured them. The replica's metadata references files that no longer exist anywhere.
 

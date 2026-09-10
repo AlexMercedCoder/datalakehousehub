@@ -1,6 +1,6 @@
 ---
 title: "Agentic Lakehouse Concurrency and Isolation"
-description: "How Iceberg optimistic concurrency control, partition-level isolation, and idempotency keys enable safe concurrent writes from multiple AI agents to the same lakehouse tables."
+description: "How Iceberg optimistic concurrency control, partition-level isolation, and idempotency keys enable safe concurrent writes from multiple AI agents."
 date: 2026-06-08T09:00:00Z
 slug: "agentic-lakehouse-concurrency-isolation-contracts"
 draft: false
@@ -15,7 +15,6 @@ tags:
   - "idempotency keys"
   - "lakehouse isolation contracts"
 ---
-
 When a human analyst runs a query, they wait for the result before deciding the next step. When a fleet of AI agents runs against the same Iceberg table, every agent discovers, reads, reasons, and writes simultaneously. The result is a new class of concurrency problem that the lakehouse must solve at the storage layer, not just the application layer.
 
 Apache Iceberg's optimistic concurrency control (OCC) was designed for ETL pipelines and human-driven BI tools, not for agent swarms that retry, back off, and retry again within seconds. The 2026 reality is that companies like Slack and Magnite, presenting at Iceberg Summit 2026, are running agent workloads that generate write patterns no traditional data platform expected. These workloads demand isolation contracts that go beyond table-level commits.
@@ -30,7 +29,7 @@ The atomic swap is the critical operation. Iceberg catalogs (the REST catalog, P
 
 The retry is not a simple replay. Iceberg structures commits as a set of assumptions and actions. When a writer retries, it re-reads the current table state and checks whether its original assumptions still hold. For an append operation, the assumption is that the files being added do not collide with files added by the concurrent commit. For a compaction operation, the assumption is that the source files being rewritten still exist in the table. If the assumptions hold, the writer re-applies its actions and commits. If they do not, the operation fails.
 
-This design keeps retry costs low for append-only workloads. A writer that adds new data files creates a new manifest file for those files. On retry, it simply links that manifest into the new metadata tree without rewriting it. The Iceberg spec refers to this as "work reuse," and it is the primary reason append-heavy pipelines suffer few retry penalties.
+This design keeps retry costs low for append-only workloads. A writer that adds new data files creates a new manifest file for those files. On retry, it simply links that manifest into the new metadata tree without rewriting it. The Iceberg spec refers to this as "work reuse, " and it is the primary reason append-heavy pipelines suffer few retry penalties.
 
 The problem for agentic workloads is that agents do not only append. They update, delete, merge, and compact. Each of these operations invalidates more assumptions and makes retry more expensive.
 
@@ -138,10 +137,7 @@ Each agent authenticates with a principal that is assigned exactly one role. No 
 
 ```sql
 CREATE TABLE catalog.system.agent_dedup_log (
-    agent_id VARCHAR,
-    idempotency_key VARCHAR,
-    table_name VARCHAR,
-    committed_at TIMESTAMP
+ agent_id VARCHAR, idempotency_key VARCHAR, table_name VARCHAR, committed_at TIMESTAMP
 ) PARTITIONED BY (date(committed_at));
 ```
 

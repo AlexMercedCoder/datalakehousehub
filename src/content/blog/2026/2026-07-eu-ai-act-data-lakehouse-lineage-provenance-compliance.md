@@ -11,12 +11,14 @@ slug: "eu-ai-act-data-lakehouse-lineage-provenance-compliance"
 draft: false
 image: "/images/blog.png"
 canonical: https://iceberglakehouse.com/posts/eu-ai-act-data-lakehouse-lineage-provenance-compliance/
+description: "The EU AI Act changes the conversation around AI architecture because it makes trust operational."
 ---
-> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/eu-ai-act-data-lakehouse-lineage-provenance-compliance/).
 
 # Preparing Your Data Lakehouse for the EU AI Act: Auditable Lineage and Data Provenance
 
 The EU AI Act changes the conversation around AI architecture because it makes trust operational. It is not enough to say that an AI system is useful, accurate, or monitored. For many use cases, especially those that fall into high-risk categories, organizations need a way to explain how data is governed, how systems are documented, how activity is logged, how human oversight works, and how accuracy, robustness, and cybersecurity are addressed.
+
+> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/eu-ai-act-data-lakehouse-lineage-provenance-compliance/).
 
 This is technical guidance, not legal advice. The legal interpretation belongs with counsel and compliance teams. The point I want to focus on is the data architecture implication: if an organization cannot explain where data came from, how it changed, who touched it, what logic shaped it, and how an AI workflow consumed it, then AI governance becomes a meeting exercise instead of an engineering capability.
 

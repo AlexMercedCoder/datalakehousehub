@@ -1,7 +1,7 @@
 ---
 title: "What is Late Materialization?"
 meta_title: "What is Late Materialization? | Expert Data Lakehouse & AI Glossary"
-description: "A database execution optimization where the engine delays fetching full record attributes until after all heavy filtering has occurred. Learn the architecture, mechanics, and real-world value of Late Materialization in the modern data stack."
+description: "A database execution optimization where the engine delays fetching full record attributes until after all heavy filtering has occurred."
 ---
 
 ## What is Late Materialization?

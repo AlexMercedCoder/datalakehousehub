@@ -13,7 +13,6 @@ slug: databricks-summit-2026-lakehouse-agentic-ai-operating-layer
 draft: false
 image: "/images/blog.png"
 ---
-
 # Lakehouse as the Operating Layer for Agentic AI
 
 
@@ -89,7 +88,7 @@ I would also require a visible refusal path. If data is stale, the agent should 
 ## Operational Checklist
 
 | Area | Question to answer | Why it matters |
-|---|---|---|
+|--|--|--|
 | Ownership | Who owns the table, catalog path, semantic definition, and agent tool? | Incidents need named owners, not shared confusion. |
 | Scope | Which operations are allowed for this rollout? | A narrow launch is easier to test and govern. |
 | Identity | Which human, service, or agent identities are mapped to access? | Machine-speed access needs machine-enforced policy. |

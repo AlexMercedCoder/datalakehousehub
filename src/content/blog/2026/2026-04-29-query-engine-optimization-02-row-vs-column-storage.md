@@ -2,7 +2,7 @@
 title: "Row vs. Column: How Storage Layout Shapes Everything"
 date: 2026-04-29T09:02:00Z
 pubDatetime: 2026-04-29T09:02:00Z
-description: "Row stores keep records together for fast transactions. Column stores keep field values together for fast analytics. Here is how each layout works and when to use it."
+description: "Row stores keep records together for fast transactions. Column stores keep field values together for fast analytics."
 author: "Alex Merced"
 category: "Data Engineering"
 tags:
@@ -14,11 +14,12 @@ draft: false
 image: "/images/blog/query-engine-optimization/02-row-vs-column-storage-row-vs-column-layout.png"
 canonical: "https://iceberglakehouse.com/posts/2026-04-29-query-engine-02/"
 ---
-> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-04-29-query-engine-02/).
 
-<!-- Meta Description: Row stores keep records together for fast transactions. Column stores keep field values together for fast analytics. Here is how each layout works and when to use it. -->
-<!-- Primary Keyword: columnar vs row storage -->
-<!-- Secondary Keywords: column-oriented database, row store performance, data storage layout -->
+<!- Meta Description: Row stores keep records together for fast transactions. Column stores keep field values together for fast analytics. Here is how each layout works and when to use it. ->
+<!- Primary Keyword: columnar vs row storage ->
+<!- Secondary Keywords: column-oriented database, row store performance, data storage layout ->
+
+> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-04-29-query-engine-02/).
 
 *Read the complete Query Engine Optimization series:*
 * [Part 1: How Query Engines Think: The Tradeoffs Behind Every Data System](/blog/2026-04-29-query-engine-optimization-01-overview)
@@ -67,7 +68,7 @@ The savings from columnar storage scale with table width. Consider a concrete ex
 ![I/O comparison showing row store reading 100 GB versus column store reading only 4 GB for the same analytical query](/images/blog/query-engine-optimization/02-row-vs-column-storage-io-comparison-row-vs-column.png)
 
 | Storage Layout | Data Read | Percentage of Total |
-|---|---|---|
+|--|--|--|
 | Row store | 100 GB | 100% |
 | Column store | 4 GB | 4% |
 
@@ -80,7 +81,7 @@ The tradeoff goes the other direction for point lookups. Fetching one complete r
 Uniform data within a column enables specialized encoding that mixed-type rows cannot use:
 
 | Encoding | Best For | How It Works |
-|---|---|---|
+|--|--|--|
 | **Run-Length (RLE)** | Sorted columns with repeated values | Store (value, count) pairs. A column of 1M "USA" values becomes one entry. |
 | **Dictionary** | Low-cardinality strings | Map each unique string to an integer ID. Store the small integers instead. |
 | **Delta** | Sorted integers/timestamps | Store differences between consecutive values. Monotonic sequences shrink to near-zero. |
@@ -115,7 +116,7 @@ Not every system picks one side and stays there.
 ![Storage format choices across real systems from row-oriented PostgreSQL to column-oriented DuckDB, ClickHouse, Snowflake, and Dremio](/images/blog/query-engine-optimization/02-row-vs-column-storage-storage-format-spectrum.png)
 
 | System | Storage Format | Primary Workload | Notes |
-|---|---|---|---|
+|--|--|--|--|
 | PostgreSQL | Row | OLTP | Heap tuples, TOAST for large values |
 | MySQL/InnoDB | Row | OLTP | Clustered B-tree by primary key |
 | SQL Server | Row + optional column | Mixed | Columnstore indexes for analytics |

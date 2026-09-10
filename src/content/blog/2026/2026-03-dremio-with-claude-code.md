@@ -16,9 +16,10 @@ draft: false
 image: "/images/blog.png"
 canonical: "https://iceberglakehouse.com/posts/2026-03-aitool-claude-code/"
 ---
-> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-03-aitool-claude-code/).
 
 Claude Code is Anthropic's terminal-based coding agent. It reads your files, writes code, runs commands, and maintains context across a session. Dremio is a unified lakehouse platform that gives AI agents three things they need to answer business questions accurately: deep business context through its semantic layer, universal data access through query federation, and interactive speed through Reflections and Apache Arrow.
+
+> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-03-aitool-claude-code/).
 
 Connecting them means your coding agent can query live data, validate SQL against real schemas, and generate scripts that actually work against your lakehouse. Without this connection, Claude Code treats Dremio like any other database and often hallucinates function names or syntax. With it, the agent knows your table schemas, your business logic encoded in views, and the correct Dremio SQL dialect.
 
@@ -32,9 +33,9 @@ If you do not already have Claude Code installed, here is how to get started:
 
 1. **Install Node.js** (version 18 or later) from [nodejs.org](https://nodejs.org/).
 2. **Install Claude Code** globally via npm:
-   ```bash
-   npm install -g @anthropic-ai/claude-code
-   ```
+ ```bash
+ npm install -g @anthropic-ai/claude-code
+ ```
 3. **Launch Claude Code** by running `claude` in your terminal from any project directory.
 4. **Authenticate** with your Anthropic API key or Claude Pro/Team subscription on first launch.
 
@@ -58,8 +59,8 @@ Dremio's hosted MCP server uses OAuth for authentication. This means Claude Code
 2. Click **Add Application**.
 3. Enter an application name (e.g., "Claude Code MCP").
 4. Add the redirect URIs for Claude:
-   - `https://claude.ai/api/mcp/auth_callback`
-   - `https://claude.com/api/mcp/auth_callback`
+ - `https://claude.ai/api/mcp/auth_callback`
+ - `https://claude.com/api/mcp/auth_callback`
 5. Save the application and copy the **Client ID**.
 
 ### Configure Claude Code's MCP Client
@@ -68,15 +69,13 @@ Claude Code reads MCP server definitions from a `.mcp.json` file. Create one in 
 
 ```json
 {
-  "mcpServers": {
-    "dremio": {
-      "url": "https://YOUR_PROJECT_MCP_URL",
-      "auth": {
-        "type": "oauth",
-        "clientId": "YOUR_CLIENT_ID"
-      }
-    }
-  }
+ "mcpServers": {
+ "dremio": {
+ "url": "https://YOUR_PROJECT_MCP_URL", "auth": {
+ "type": "oauth", "clientId": "YOUR_CLIENT_ID"
+ }
+ }
+ }
 }
 ```
 
@@ -110,7 +109,7 @@ DREMIO_PROJECT_ID=<your_project_id>
 
 Then add the Dremio MCP server through the [Claude web interface](https://claude.ai) under **Customize > Connectors > Add custom connector**. Claude Code automatically inherits the connection.
 
-Run `/dremio-setup` in Claude Code for step-by-step guidance. The plugin walks you through OAuth configuration, including setting the redirect URI to `http://localhost/callback,https://claude.ai/api/mcp/auth_callback`.
+Run `/dremio-setup` in Claude Code for step-by-step guidance. The plugin walks you through OAuth configuration, including setting the redirect URI to `http://localhost/callback, https://claude.ai/api/mcp/auth_callback`.
 
 This is the recommended starting point for Claude Code users because it is officially maintained by Dremio and handles the configuration details for you.
 
@@ -122,8 +121,8 @@ If you run Dremio Software instead of Dremio Cloud, use the open-source [dremio-
 git clone https://github.com/dremio/dremio-mcp
 cd dremio-mcp
 uv run dremio-mcp-server config create dremioai \
-  --uri https://your-dremio-instance.com \
-  --pat YOUR_PERSONAL_ACCESS_TOKEN
+ -uri https://your-dremio-instance.com \
+ -pat YOUR_PERSONAL_ACCESS_TOKEN
 uv run dremio-mcp-server config create claude
 ```
 
@@ -131,15 +130,13 @@ The second command writes the MCP server entry directly into Claude's desktop co
 
 ```json
 {
-  "mcpServers": {
-    "dremio": {
-      "command": "uv",
-      "args": [
-        "run", "--directory", "/path/to/dremio-mcp",
-        "dremio-mcp-server", "run"
-      ]
-    }
-  }
+ "mcpServers": {
+ "dremio": {
+ "command": "uv", "args": [
+ "run", "-directory", "/path/to/dremio-mcp", "dremio-mcp-server", "run"
+ ]
+ }
+ }
 }
 ```
 
@@ -221,15 +218,15 @@ The [dremio-agent-skill](https://github.com/developer-advocacy-dremio/dremio-age
 
 ```
 dremio-skill/
-  SKILL.md          # Entry point defining capabilities
-  knowledge/        # Comprehensive docs for:
-    cli/            #   Dremio CLI administration
-    python/         #   dremioframe Python SDK
-    sql/            #   SQL syntax, Iceberg DML, metadata
-    rest-api/       #   REST API endpoints
-  rules/
-    .cursorrules    # Config for Cursor/VS Code
-    AGENTS.md       # Config for OpenCode/Codex
+ SKILL.md # Entry point defining capabilities
+ knowledge/ # Comprehensive docs for:
+ cli/ # Dremio CLI administration
+ python/ # dremioframe Python SDK
+ sql/ # SQL syntax, Iceberg DML, metadata
+ rest-api/ # REST API endpoints
+ rules/
+ .cursorrules # Config for Cursor/VS Code
+ AGENTS.md # Config for OpenCode/Codex
 ```
 
 **Installation:**
@@ -283,11 +280,11 @@ If the pre-built options do not cover your specific workflow, build a custom ski
 
 ```
 my-dremio-skill/
-  SKILL.md
-  knowledge/
-    sql-conventions.md
-    rest-api-endpoints.md
-    project-schemas.md
+ SKILL.md
+ knowledge/
+ sql-conventions.md
+ rest-api-endpoints.md
+ project-schemas.md
 ```
 
 ### Write SKILL.md
@@ -295,21 +292,19 @@ my-dremio-skill/
 The `SKILL.md` file needs YAML frontmatter for discovery and markdown instructions for the agent:
 
 ```markdown
----
+--
 name: My Dremio Skill
 description: Custom conventions and API patterns for our team's Dremio Cloud project
----
+--
 
 # My Dremio Skill
 
 ## When to Use
-Use this skill when working with Dremio queries, dremioframe scripts,
-or any code that interacts with our lakehouse.
+Use this skill when working with Dremio queries, dremioframe scripts, or any code that interacts with our lakehouse.
 
 ## SQL Rules
 - All tables live under the `analytics` namespace
-- Use `analytics.bronze.*` for raw views, `analytics.silver.*` for joins,
-  `analytics.gold.*` for final datasets
+- Use `analytics.bronze.*` for raw views, `analytics.silver.*` for joins, `analytics.gold.*` for final datasets
 - Always use TIMESTAMP, never DATE
 - Validate function names against `knowledge/sql-conventions.md`
 
@@ -424,7 +419,7 @@ Claude Code generates a complete API server with typed request/response models, 
 ## Which Approach Should You Use?
 
 | Approach | Setup Time | What You Get | Best For |
-|----------|-----------|--------------|----------|
+|-----|------|-------|-----|
 | MCP Server | 5 minutes | Live queries, schema browsing, catalog exploration | Data analysis, SQL generation, real-time data access |
 | CLAUDE.md | 10 minutes | Convention enforcement, doc references, credential rules | Teams with specific SQL standards or project conventions |
 | Pre-Built Skills | 5 minutes | Comprehensive Dremio knowledge (CLI, SDK, SQL, API) | Getting started quickly with broad Dremio coverage |

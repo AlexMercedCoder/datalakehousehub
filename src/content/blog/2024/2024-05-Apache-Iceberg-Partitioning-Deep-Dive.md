@@ -13,15 +13,16 @@ tags:
   - Data Lakehouse
 canonical: "https://iceberglakehouse.com/posts/2024-5-partitioning-with-apache-iceberg-deep-dive/"
 ---
+
+## Introduction
+
+Partitioning is a fundamental concept in data management that significantly enhances query performance by organizing data into distinct segments. This technique groups similar rows together based on specific criteria, making it easier and faster to retrieve relevant data.
+
 > **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2024-5-partitioning-with-apache-iceberg-deep-dive/).
 
 - [Apache Iceberg 101](https://www.dremio.com/blog/apache-iceberg-101-your-guide-to-learning-apache-iceberg-concepts-and-practices/)
 - [Get Hands-on With Apache Iceberg](https://bit.ly/am-dremio-lakehouse-laptop)
 - [Free PDF Copy of Apache Iceberg: The Definitive Guide](https://bit.ly/am-iceberg-book)
-
-## Introduction
-
-Partitioning is a fundamental concept in data management that significantly enhances query performance by organizing data into distinct segments. This technique groups similar rows together based on specific criteria, making it easier and faster to retrieve relevant data.
 
 Apache Iceberg is an open table format designed for large analytic datasets. It brings high performance and reliability to data lake architectures, offering advanced capabilities such as hidden partitioning, which simplifies data management and improves query efficiency. In this blog, we will explore the partitioning capabilities of Apache Iceberg, highlighting how it stands out from traditional partitioning methods and demonstrating its practical applications using Dremio.
 
@@ -50,8 +51,8 @@ In Hive, partitions are explicit and must be defined as separate columns. For a 
 
 ```sql
 INSERT INTO sales PARTITION (sale_date)
-  SELECT product_id, amount, sale_time, format_time(sale_time, 'YYYY-MM-dd')
-  FROM unstructured_sales_source;
+ SELECT product_id, amount, sale_time, format_time(sale_time, 'YYYY-MM-dd')
+ FROM unstructured_sales_source;
 ```
 
 Querying the sales table in Hive also requires an additional filter on the partition column:
@@ -59,7 +60,7 @@ Querying the sales table in Hive also requires an additional filter on the parti
 ```sql
 SELECT product_id, count(1) as count FROM sales
 WHERE sale_time BETWEEN '2022-01-01 10:00:00' AND '2022-01-01 12:00:00'
-  AND sale_date = '2022-01-01';
+ AND sale_date = '2022-01-01';
 ```
 
 ### Problems with Hive Partitioning:
@@ -89,10 +90,7 @@ For example, in an Iceberg table, sales can be partitioned by date and product c
 
 ```sql
 CREATE TABLE sales (
-  product_id STRING,
-  amount DECIMAL,
-  sale_time TIMESTAMP,
-  category STRING
+ product_id STRING, amount DECIMAL, sale_time TIMESTAMP, category STRING
 ) PARTITIONED BY (date(sale_time), category);
 ```
 
@@ -107,8 +105,8 @@ Apache Iceberg supports a variety of partition transformations that allow for fl
 1. **Year, Month, Day, Hour Transformations:** These transformations are used for timestamp columns to partition data by specific time intervals.
 
 2. **Categorical Column Transformations:**
-   - **Bucket:** Partitions data by hashing values into a specified number of buckets.
-   - **Truncate:** Partitions data by truncating values to a specified length, suitable for strings or numeric ranges.
+ - **Bucket:** Partitions data by hashing values into a specified number of buckets.
+ - **Truncate:** Partitions data by truncating values to a specified length, suitable for strings or numeric ranges.
 
 ### Example Scenarios for Each Transformation
 
@@ -128,10 +126,7 @@ To create an Iceberg table partitioned by month:
 
 ```sql
 CREATE TABLE sales (
-  product_id STRING,
-  amount DECIMAL,
-  sale_time TIMESTAMP,
-  category STRING
+ product_id STRING, amount DECIMAL, sale_time TIMESTAMP, category STRING
 ) PARTITIONED BY (month(sale_time));
 ```
 

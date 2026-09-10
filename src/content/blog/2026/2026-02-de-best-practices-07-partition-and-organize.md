@@ -15,11 +15,12 @@ draft: false
 image: "/images/blog.png"
 canonical: "https://iceberglakehouse.com/posts/2026-02-debp-partition-and-organize/"
 ---
-> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-02-debp-partition-and-organize/).
 
 ![Table data split into partitions by date with query scanning only the relevant partition](/images/blog/debp/partition-overview.png)
 
-A table with 500 million rows takes 45 seconds to query. After partitioning it by date, the same query :  filtering on a single day ,  returns in 2 seconds. The SQL didn't change. The data didn't change. The only thing that changed was how the data was organized on disk.
+> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-02-debp-partition-and-organize/).
+
+A table with 500 million rows takes 45 seconds to query. After partitioning it by date, the same query : filtering on a single day, returns in 2 seconds. The SQL didn't change. The data didn't change. The only thing that changed was how the data was organized on disk.
 
 Performance in analytical workloads is almost never about faster hardware. It's about reading less data.
 
@@ -61,7 +62,7 @@ Partitioning controls which directory the query engine reads. File-level organiz
 
 ## Compaction: The Maintenance Task You Can't Skip
 
-Streaming writes and frequent small batch appends create many small files. A partition with 10,000 files of 1 MB each is dramatically slower to query than the same data in 10 files of 1 GB each.
+Streaming writes and frequent small batch appends create many small files. A partition with 10, 000 files of 1 MB each is dramatically slower to query than the same data in 10 files of 1 GB each.
 
 Compaction merges small files into optimally-sized files. It's the data equivalent of defragmenting a disk.
 

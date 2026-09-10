@@ -2,7 +2,7 @@
 title: "Conceptual, Logical, and Physical Data Models Explained"
 date: 2026-02-18T09:10:00Z
 pubDatetime: 2026-02-18T09:10:00Z
-description: "Understand conceptual, logical, and physical data models : what each level contains, who owns it, and how they connect from business requirements to database implementation."
+description: "Understand conceptual, logical, and physical data models : what each level contains, who owns it, and how they connect from business requirements."
 author: "Alex Merced"
 category: "Data Modeling"
 bannerImage: "https://i.imgur.com/cpoMZQ8.png"
@@ -15,9 +15,10 @@ draft: false
 image: "/images/blog.png"
 canonical: "https://iceberglakehouse.com/posts/2026-02-dm-types-of-data-models/"
 ---
-> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-02-dm-types-of-data-models/).
 
 ![Three layers of data modeling from business concepts to database implementation](/images/blog/data-modeling/types-of-data-models.png)
+
+> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-02-dm-types-of-data-models/).
 
 Most data teams jump straight from a stakeholder request to creating database tables. They skip the planning steps that prevent misalignment, redundancy, and rework. The result: tables that make sense to the engineer who built them but confuse everyone else.
 
@@ -42,7 +43,7 @@ For an e-commerce platform, a conceptual model might look like this:
 
 There are no column names, no data types, no keys. The conceptual model exists to answer one question: "Do we agree on what data the system needs?"
 
-This model is created collaboratively with business stakeholders. Its value is alignment. When the finance team says "customer" and the marketing team says "customer," the conceptual model ensures they mean the same thing.
+This model is created collaboratively with business stakeholders. Its value is alignment. When the finance team says "customer" and the marketing team says "customer, " the conceptual model ensures they mean the same thing.
 
 **Skip this level**, and you build a database that captures the wrong entities or misses key relationships. Fixing structural errors after the database is in production costs 10x more than catching them at conception.
 
@@ -73,7 +74,7 @@ A physical model specifies:
 - Partitioning strategies (partition `orders` by `order_date` using monthly ranges)
 - Compression and file format choices (Parquet with Snappy compression for Iceberg)
 
-The physical model is where performance tuning happens. You might denormalize at this level :  joining the customer name into the orders table to avoid an expensive join at query time ,  even though the logical model keeps them separate.
+The physical model is where performance tuning happens. You might denormalize at this level : joining the customer name into the orders table to avoid an expensive join at query time, even though the logical model keeps them separate.
 
 In a lakehouse architecture, the physical model also includes Iceberg table properties: partition specs (time-based or value-based), sort orders for query optimization, and file format settings.
 
@@ -82,7 +83,7 @@ In a lakehouse architecture, the physical model also includes Iceberg table prop
 Each level feeds the next:
 
 | Aspect | Conceptual | Logical | Physical |
-|---|---|---|---|
+|--|--|--|--|
 | **Abstraction** | High | Medium | Low |
 | **Audience** | Business stakeholders | Data architects | Database engineers |
 | **Entities** | Named | Defined with attributes | Tables with typed columns |

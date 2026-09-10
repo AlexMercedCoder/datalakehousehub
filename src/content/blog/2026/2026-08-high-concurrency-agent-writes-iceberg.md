@@ -1,7 +1,7 @@
 ---
 title: "Surviving Optimistic Commit Collisions When Hundreds of Agents Write to Iceberg"
 date: 2026-08-04T09:00:00Z
-description: "Surviving optimistic commit collisions when hundreds of agents write to Iceberg: which conflicts are real, commit buffers, partitioning, and the patterns that prevent commit storms."
+description: "Surviving optimistic commit collisions when hundreds of agents write to Iceberg: which conflicts are real, commit buffers, partitioning, and the patterns."
 author: "Alex Merced"
 category: "Apache Iceberg"
 tags:
@@ -16,11 +16,11 @@ image: "/images/blog.png"
 canonical: "https://iceberglakehouse.com/posts/high-concurrency-agent-writes-iceberg/"
 ---
 
-> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/high-concurrency-agent-writes-iceberg/).
-
 # Surviving Optimistic Commit Collisions When Hundreds of Agents Write to Iceberg
 
 *By Alex Merced, Data Lakehouse and AI Evangelist*
+
+> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/high-concurrency-agent-writes-iceberg/).
 
 The read path got all the attention. Agents query tables, a semantic layer keeps them honest, a catalog decides what they can see. That architecture is well understood by now.
 
@@ -55,7 +55,7 @@ That second property is the lever. Most of the tuning below is about making conc
 Sorting operations by conflict behavior tells you what layout to design.
 
 | Operation pair | Conflicts? | Why |
-|---|---|---|
+|--|--|--|
 | Append and append | No | Both add files, neither invalidates the other |
 | Append and append to same partition | No | Partition is not a lock unit |
 | Append and compaction | Sometimes | Rewrite might not see the new files, depending on isolation level |
@@ -99,30 +99,30 @@ The objection is latency, and it is usually smaller than it sounds. A ten-second
 
 ```python
 class CommitBuffer:
-    def __init__(self, table, max_rows=50_000, max_seconds=10):
-        self.table = table
-        self.max_rows = max_rows
-        self.max_seconds = max_seconds
-        self.rows = []
-        self.opened_at = time.monotonic()
+ def __init__(self, table, max_rows=50_000, max_seconds=10):
+ self.table = table
+ self.max_rows = max_rows
+ self.max_seconds = max_seconds
+ self.rows = []
+ self.opened_at = time.monotonic()
 
-    def add(self, row):
-        self.rows.append(row)
-        if self._should_flush():
-            self.flush()
+ def add(self, row):
+ self.rows.append(row)
+ if self._should_flush():
+ self.flush()
 
-    def _should_flush(self):
-        return (len(self.rows) >= self.max_rows
-                or time.monotonic() - self.opened_at >= self.max_seconds)
+ def _should_flush(self):
+ return (len(self.rows) >= self.max_rows
+ or time.monotonic() - self.opened_at >= self.max_seconds)
 
-    def flush(self):
-        if not self.rows:
-            return
-        batch = self.rows
-        self.rows = []
-        self.opened_at = time.monotonic()
-        # one append, one commit, regardless of how many producers contributed
-        self.table.append(to_arrow(batch))
+ def flush(self):
+ if not self.rows:
+ return
+ batch = self.rows
+ self.rows = []
+ self.opened_at = time.monotonic()
+ # one append, one commit, regardless of how many producers contributed
+ self.table.append(to_arrow(batch))
 ```
 
 The important property is that the buffer owns the commit. Producers hand it rows and never touch the table.
@@ -135,17 +135,12 @@ For agent workloads the natural key is often the loop name, the surface, or a ha
 
 ```sql
 CREATE TABLE ops.agents.decisions (
-    decision_id   STRING,
-    loop_name     STRING,
-    principal     STRING,
-    started_at    TIMESTAMP,
-    payload       VARIANT
+ decision_id STRING, loop_name STRING, principal STRING, started_at TIMESTAMP, payload VARIANT
 )
 USING iceberg
 PARTITIONED BY (loop_name, hours(started_at))
 TBLPROPERTIES (
-    'format-version' = '3',
-    'write.distribution-mode' = 'hash'
+ 'format-version' = '3', 'write.distribution-mode' = 'hash'
 );
 ```
 
@@ -175,12 +170,7 @@ For agent write paths, snapshot isolation on delete and update operations is usu
 
 ```sql
 ALTER TABLE ops.agents.decisions SET TBLPROPERTIES (
-    'commit.retry.num-retries'         = '10',
-    'commit.retry.min-wait-ms'         = '100',
-    'commit.retry.max-wait-ms'         = '10000',
-    'commit.retry.total-timeout-ms'    = '120000',
-    'write.delete.isolation-level'     = 'snapshot',
-    'write.update.isolation-level'     = 'snapshot'
+ 'commit.retry.num-retries' = '10', 'commit.retry.min-wait-ms' = '100', 'commit.retry.max-wait-ms' = '10000', 'commit.retry.total-timeout-ms' = '120000', 'write.delete.isolation-level' = 'snapshot', 'write.update.isolation-level' = 'snapshot'
 );
 ```
 
@@ -197,12 +187,11 @@ Write the status change as a new row with a timestamp instead. Reads take the la
 ```sql
 CREATE VIEW ops.agents.decisions_current AS
 SELECT * FROM (
-    SELECT *,
-           ROW_NUMBER() OVER (
-               PARTITION BY decision_id
-               ORDER BY event_at DESC
-           ) AS rn
-    FROM ops.agents.decision_events
+ SELECT *, ROW_NUMBER() OVER (
+ PARTITION BY decision_id
+ ORDER BY event_at DESC
+ ) AS rn
+ FROM ops.agents.decision_events
 ) WHERE rn = 1;
 ```
 

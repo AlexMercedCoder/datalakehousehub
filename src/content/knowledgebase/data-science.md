@@ -1,7 +1,7 @@
 ---
 title: "What is Data Science?"
 meta_title: "What is Data Science? | Expert Data Lakehouse Architecture Guide"
-description: "A comprehensive guide to Data Science. Learn how advanced mathematics, statistical modeling, and machine learning extract predictive value from the data lakehouse."
+description: "A comprehensive guide to Data Science. Learn how advanced mathematics, statistical modeling, and machine learning extract predictive value from the data."
 ---
 
 # What is Data Science?

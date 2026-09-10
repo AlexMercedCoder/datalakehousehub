@@ -1,7 +1,7 @@
 ---
 title: "A Migration Playbook for Moving Legacy Warehouses onto Apache Iceberg"
 date: 2026-08-04T09:00:00Z
-description: "A dependency-first playbook for migrating legacy warehouses onto Apache Iceberg: snapshot vs migrate vs add_files, four-level parity validation, and federation-based cutover."
+description: "A dependency-first playbook for migrating legacy warehouses onto Apache Iceberg: snapshot vs migrate vs add_files, four-level parity validation."
 author: "Alex Merced"
 category: "Data Lakehouse"
 tags:
@@ -17,11 +17,11 @@ image: "/images/blog.png"
 canonical: "https://iceberglakehouse.com/posts/warehouse-to-iceberg-migration-playbook/"
 ---
 
-> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/warehouse-to-iceberg-migration-playbook/).
-
 # A Migration Playbook for Moving Legacy Warehouses onto Apache Iceberg
 
 *By Alex Merced, Data Lakehouse and AI Evangelist*
+
+> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/warehouse-to-iceberg-migration-playbook/).
 
 The migration plan says twelve weeks. Week fourteen arrives and the team has moved four tables out of six hundred, because table number five turned out to feed a report that a regulator sees quarterly, and nobody can find who owns the SQL that builds it.
 
@@ -61,8 +61,7 @@ Iceberg ships three procedures for this. Understanding the difference matters, b
 
 ```sql
 CALL spark_catalog.system.snapshot(
-    source_table => 'legacy_hive.sales.orders',
-    table        => 'prod.sales.orders_iceberg'
+ source_table => 'legacy_hive.sales.orders', table => 'prod.sales.orders_iceberg'
 );
 ```
 
@@ -70,7 +69,7 @@ CALL spark_catalog.system.snapshot(
 
 ```sql
 CALL spark_catalog.system.migrate(
-    table => 'legacy_hive.sales.orders'
+ table => 'legacy_hive.sales.orders'
 );
 ```
 
@@ -78,20 +77,14 @@ CALL spark_catalog.system.migrate(
 
 ```sql
 CREATE TABLE prod.sales.orders (
-    order_id     BIGINT,
-    customer_id  STRING,
-    status       STRING,
-    amount       DECIMAL(12,2),
-    order_date   DATE
+ order_id BIGINT, customer_id STRING, status STRING, amount DECIMAL(12, 2), order_date DATE
 )
 USING iceberg
 PARTITIONED BY (months(order_date))
 TBLPROPERTIES ('format-version' = '3');
 
 CALL spark_catalog.system.add_files(
-    table             => 'prod.sales.orders',
-    source_table      => 'legacy_hive.sales.orders',
-    partition_filter  => map('year', '2026')
+ table => 'prod.sales.orders', source_table => 'legacy_hive.sales.orders', partition_filter => map('year', '2026')
 );
 ```
 
@@ -135,12 +128,7 @@ Run four levels of validation.
 
 ```sql
 SELECT
-    COUNT(*)                       AS rows,
-    SUM(amount)                    AS amount_sum,
-    MIN(order_date)                AS first_date,
-    MAX(order_date)                AS last_date,
-    COUNT(DISTINCT customer_id)    AS customers,
-    COUNT(*) FILTER (WHERE status IS NULL) AS null_status
+ COUNT(*) AS rows, SUM(amount) AS amount_sum, MIN(order_date) AS first_date, MAX(order_date) AS last_date, COUNT(DISTINCT customer_id) AS customers, COUNT(*) FILTER (WHERE status IS NULL) AS null_status
 FROM prod.sales.orders;
 ```
 
@@ -222,9 +210,7 @@ Start with object dependencies from the source system's own metadata. Every majo
 
 ```sql
 SELECT
-    referencing_schema || '.' || referencing_object AS consumer,
-    referenced_schema  || '.' || referenced_object  AS producer,
-    referencing_object_type                          AS consumer_type
+ referencing_schema || '.' || referencing_object AS consumer, referenced_schema || '.' || referenced_object AS producer, referencing_object_type AS consumer_type
 FROM information_schema.object_dependencies
 WHERE referenced_schema NOT IN ('information_schema', 'system');
 ```
@@ -235,11 +221,7 @@ Then pull query history, which is where undocumented consumers live.
 
 ```sql
 SELECT
-    table_reference,
-    query_source,
-    COUNT(*)                    AS executions,
-    MAX(start_time)             AS last_seen,
-    COUNT(DISTINCT user_name)   AS distinct_users
+ table_reference, query_source, COUNT(*) AS executions, MAX(start_time) AS last_seen, COUNT(DISTINCT user_name) AS distinct_users
 FROM query_history_with_table_refs
 WHERE start_time >= current_date - INTERVAL '90' DAY
 GROUP BY table_reference, query_source

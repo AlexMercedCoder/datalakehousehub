@@ -1,7 +1,7 @@
 ---
 title: "Anatomy of an Agentic Analytics System: Inside the Multi-Step Reasoning Loop"
 date: 2026-05-28T09:00:00Z
-description: "How does an agentic analytics system actually work? Inside the ReAct loop, tool calling, schema exploration, and self-correction that power autonomous data agents."
+description: "How does an agentic analytics system actually work? Inside the ReAct loop, tool calling, schema exploration, and self-correction that power autonomous."
 author: "Alex Merced"
 category: "Agentic Analytics"
 tags:
@@ -10,10 +10,9 @@ slug: "anatomy-agentic-analytics-system"
 draft: false
 image: "/images/blog.png"
 ---
-
 # Anatomy of an Agentic Analytics System: Inside the Multi-Step Reasoning Loop
 
-When someone asks "how does an agentic analytics system work," the usual answer is "it uses AI to answer questions." That's accurate in the way that "a jet engine uses combustion to fly" is accurate : technically true, completely insufficient for understanding what's actually happening.
+When someone asks "how does an agentic analytics system work, " the usual answer is "it uses AI to answer questions." That's accurate in the way that "a jet engine uses combustion to fly" is accurate : technically true, completely insufficient for understanding what's actually happening.
 
 This post opens the hood on the agentic analytics architecture: what the reasoning loop does, how the LLM uses tools to execute queries, how the agent handles errors and refines its approach, and what makes the difference between an agent that produces useful answers and one that confidently produces wrong ones.
 
@@ -23,13 +22,13 @@ This post opens the hood on the agentic analytics architecture: what the reasoni
 
 The core pattern in modern agentic analytics systems is ReAct: Reasoning + Acting. The loop runs in three phases that repeat until the agent satisfies the goal or determines it can't.
 
-**Reasoning:** The LLM analyzes the current state :  the original goal, any results from previous query steps, any errors encountered ,  and determines what to do next. This produces a structured "thought": a description of the hypothesis to test, what data is needed, and which tool to use.
+**Reasoning:** The LLM analyzes the current state : the original goal, any results from previous query steps, any errors encountered, and determines what to do next. This produces a structured "thought": a description of the hypothesis to test, what data is needed, and which tool to use.
 
 **Acting:** The agent invokes a tool. For analytics, the primary tools are SQL execution and schema exploration. The agent generates a SQL query and sends it to the query engine through a structured function call. The function call is typed and validated : not free-form text that gets parsed, but a defined schema with query text, target catalog, and execution parameters.
 
 **Observing:** The system captures the tool's output and returns it to the agent. For a successful SQL query, this is the result set. For a failed query, this is the error message and any database context available. The agent reads the observation, updates its understanding of the problem, and decides whether to continue, retry with a corrected approach, or declare the investigation complete.
 
-The loop runs sequentially: one thought, one action, one observation. No parallel reasoning within a single loop iteration. Complex investigations may run 10–20 iterations before reaching a conclusion.
+The loop runs sequentially: one thought, one action, one observation. No parallel reasoning within a single loop iteration. Complex investigations may run 10-20 iterations before reaching a conclusion.
 
 ## Tool Access Design: What the Agent Can Do
 
@@ -47,9 +46,9 @@ The quality of an agentic analytics system depends heavily on which tools the ag
 
 When an agentic system encounters a new question about a schema it hasn't analyzed before, it starts with exploration rather than querying.
 
-A well-designed agent begins by listing available schemas, then listing tables in the relevant schema, then describing the tables most likely to contain the relevant data, then examining column statistics to understand data ranges and null rates. This typically takes 3–5 tool calls before the agent writes its first analytical query.
+A well-designed agent begins by listing available schemas, then listing tables in the relevant schema, then describing the tables most likely to contain the relevant data, then examining column statistics to understand data ranges and null rates. This typically takes 3-5 tool calls before the agent writes its first analytical query.
 
-This exploration step is expensive :  it adds 5–10 seconds to the response time. But it prevents the agent from writing SQL that references non-existent columns or joins on mismatched types. The alternative ,  skipping exploration and trusting the model's general knowledge : produces errors on real schemas that don't match the training distribution.
+This exploration step is expensive : it adds 5-10 seconds to the response time. But it prevents the agent from writing SQL that references non-existent columns or joins on mismatched types. The alternative, skipping exploration and trusting the model's general knowledge : produces errors on real schemas that don't match the training distribution.
 
 Semantic layers reduce the exploration cost significantly. When table and column documentation is rich and accurate, the agent can often go straight to the analytical query without full schema exploration, because the metadata provides the context it would otherwise need to discover empirically.
 
@@ -62,7 +61,7 @@ When a SQL query returns an error, the agent's observation is the error message 
 Common error patterns and their corrections:
 
 | Error | Agent Corrective Action |
-|---|---|
+|--|--|
 | Column not found | Re-explore table schema, find correct column name |
 | Type mismatch in JOIN | Add CAST to the appropriate column |
 | Division by zero | Add a CASE statement or filter before dividing |

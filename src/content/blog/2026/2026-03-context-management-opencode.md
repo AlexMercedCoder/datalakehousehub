@@ -16,9 +16,10 @@ draft: false
 image: "/images/blog.png"
 canonical: "https://iceberglakehouse.com/posts/2026-03-context-opencode/"
 ---
-> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-03-context-opencode/).
 
 OpenCode is an open-source terminal-based AI coding agent that prioritizes privacy, local-first operation, and broad model provider support. Built as a TUI (terminal user interface) application, it runs entirely in your terminal and supports dozens of LLM providers from OpenAI and Anthropic to local models through Ollama. Its context management system is built around configuration files, session persistence, MCP integration, and a dual-agent architecture that separates planning from code generation.
+
+> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-03-context-opencode/).
 
 This guide covers every context management mechanism OpenCode offers and explains how to configure them for effective development workflows, regardless of which model provider you choose.
 
@@ -54,16 +55,11 @@ The `opencode.json` file in your project root is the primary configuration mecha
 
 ```json
 {
-  "$schema": "https://opencode.ai/config.schema.json",
-  "provider": {
-    "name": "anthropic",
-    "model": "claude-sonnet-4.5"
-  },
-  "context": {
-    "instructions": "This is a Python FastAPI application with PostgreSQL. Use Ruff for linting and pytest for testing. Follow PEP 8 strictly.",
-    "include": ["src/", "tests/", "docs/"],
-    "exclude": ["*.pyc", "__pycache__/", ".venv/"]
-  }
+ "$schema": "https://opencode.ai/config.schema.json", "provider": {
+ "name": "anthropic", "model": "claude-sonnet-4.5"
+ }, "context": {
+ "instructions": "This is a Python FastAPI application with PostgreSQL. Use Ruff for linting and pytest for testing. Follow PEP 8 strictly.", "include": ["src/", "tests/", "docs/"], "exclude": ["*.pyc", "__pycache__/", ".venv/"]
+ }
 }
 ```
 
@@ -86,7 +82,7 @@ Control what OpenCode sees by specifying include and exclude patterns. This focu
 OpenCode supports a wide range of providers:
 
 | Provider | Models | Notes |
-|---|---|---|
+|--|--|--|
 | **OpenAI** | GPT-4o, o3, etc. | Cloud-hosted |
 | **Anthropic** | Claude Sonnet, Opus | Cloud-hosted |
 | **Google** | Gemini Pro, Flash | Cloud-hosted |
@@ -157,7 +153,7 @@ This is particularly important when using models with smaller context windows (l
 Different providers offer different context window sizes, and your strategy should adapt:
 
 | Provider Tier | Context Size | Strategy |
-|---|---|---|
+|--|--|--|
 | **Small (8K-32K)** | Ollama local models | Aggressive compaction, focused sessions, minimal background context |
 | **Medium (64K-128K)** | GPT-4o, Claude Sonnet | Standard compaction, moderate session length, room for codebase context |
 | **Large (200K+)** | Claude Opus, Gemini Pro | Minimal compaction needed, can handle long sessions with extensive context |
@@ -172,7 +168,7 @@ OpenCode supports MCP through the `opencode mcp` command, providing integration 
 
 ```bash
 # Add an MCP server
-opencode mcp add my-db-server -- npx @my-org/db-mcp-server
+opencode mcp add my-db-server, npx @my-org/db-mcp-server
 
 # List configured servers
 opencode mcp list
@@ -185,14 +181,13 @@ MCP servers can also be configured in `opencode.json`:
 
 ```json
 {
-  "mcp": {
-    "servers": {
-      "filesystem": {
-        "command": "npx",
-        "args": ["-y", "@anthropic/mcp-server-filesystem", "./"]
-      }
-    }
-  }
+ "mcp": {
+ "servers": {
+ "filesystem": {
+ "command": "npx", "args": ["-y", "@anthropic/mcp-server-filesystem", "./"]
+ }
+ }
+ }
 }
 ```
 
@@ -223,16 +218,13 @@ OpenCode supports user-defined custom commands that encapsulate common operation
 
 ```json
 {
-  "commands": {
-    "review": {
-      "description": "Review the current branch for issues",
-      "prompt": "Review all changes in the current branch compared to main. Check for: security issues, performance problems, missing error handling, and test coverage gaps."
-    },
-    "test-all": {
-      "description": "Run and analyze the full test suite",
-      "prompt": "Run the complete test suite. Report any failures, flaky tests, or tests that take unusually long. Suggest fixes for any failures."
-    }
-  }
+ "commands": {
+ "review": {
+ "description": "Review the current branch for issues", "prompt": "Review all changes in the current branch compared to main. Check for: security issues, performance problems, missing error handling, and test coverage gaps."
+ }, "test-all": {
+ "description": "Run and analyze the full test suite", "prompt": "Run the complete test suite. Report any failures, flaky tests, or tests that take unusually long. Suggest fixes for any failures."
+ }
+ }
 }
 ```
 

@@ -13,12 +13,13 @@ draft: false
 image: "/images/blog.png"
 canonical: "https://iceberglakehouse.com/posts/2024-9-five-trends-in-data-lakehouse/"
 ---
+
+The data lakehouse is emerging and evolving as the next iteration of analytical data architecture. It builds on previous approaches by integrating the data lake and data warehouse, which were traditionally separate, and reimagining the tightly coupled components of a data warehouse (storage, table format, catalog, processing) into a modular, deconstructed form. In this new architecture, the data lake is the storage layer, allowing you to stitch together diverse, interoperable components modularly. Let's explore the current trends in the lakehouse space to see where we stand today.
+
 > **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2024-9-five-trends-in-data-lakehouse/).
 
 - [Free Copy of Apache Iceberg: The Definitive Guide](https://hello.dremio.com/wp-apache-iceberg-the-definitive-guide-reg.html?utm_source=ev_external_blog&utm_medium=influencer&utm_campaign=lakehousetrends&utm_content=alexmerced&utm_term=external_blog)
 - [Free Apache Iceberg Crash Course](https://hello.dremio.com/webcast-an-apache-iceberg-lakehouse-crash-course-reg.html?utm_source=ev_external_blog&utm_medium=influencer&utm_campaign=lakehousetrends&utm_content=alexmerced&utm_term=external_blog)
-
-The data lakehouse is emerging and evolving as the next iteration of analytical data architecture. It builds on previous approaches by integrating the data lake and data warehouse, which were traditionally separate, and reimagining the tightly coupled components of a data warehouse (storage, table format, catalog, processing) into a modular, deconstructed form. In this new architecture, the data lake is the storage layer, allowing you to stitch together diverse, interoperable components modularly. Let's explore the current trends in the lakehouse space to see where we stand today.
 
 ## 1. Storage Vendors Becoming Data Warehouses
 

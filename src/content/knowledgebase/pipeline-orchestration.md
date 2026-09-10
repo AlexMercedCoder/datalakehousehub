@@ -1,7 +1,7 @@
 ---
 title: "What is Pipeline Orchestration?"
 meta_title: "What is Pipeline Orchestration? | Expert Data Lakehouse & AI Glossary"
-description: "The systematic organization and automated execution of complex computational tasks across disparate engineering pipelines. Learn the architecture, mechanics, and real-world value of Pipeline Orchestration in the modern data stack."
+description: "The systematic organization and automated execution of complex computational tasks across disparate engineering pipelines."
 ---
 
 ## What is Pipeline Orchestration?

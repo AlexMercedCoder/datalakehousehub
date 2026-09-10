@@ -15,17 +15,18 @@ draft: false
 image: "/images/blog.png"
 canonical: "https://iceberglakehouse.com/posts/2026-02-debp-idempotent-pipelines/"
 ---
-> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-02-debp-idempotent-pipelines/).
 
 ![Pipeline running multiple times and converging to the same result](/images/blog/debp/idempotent-pipeline.png)
 
-A pipeline runs, processes 100,000 records, and loads them into the target table. Then it fails on a downstream step. The orchestrator retries the entire job. Now the table has 200,000 records : 100,000 of them duplicates. Revenue reports double. Dashboards misfire. Someone spends the next four hours manually deduplicating records and explaining to stakeholders why the numbers were wrong.
+> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-02-debp-idempotent-pipelines/).
+
+A pipeline runs, processes 100, 000 records, and loads them into the target table. Then it fails on a downstream step. The orchestrator retries the entire job. Now the table has 200, 000 records : 100, 000 of them duplicates. Revenue reports double. Dashboards misfire. Someone spends the next four hours manually deduplicating records and explaining to stakeholders why the numbers were wrong.
 
 This is the cost of not building idempotent pipelines.
 
 ## What Idempotency Means for Pipelines
 
-An idempotent operation produces the same result no matter how many times you execute it. For data pipelines, that means: running the same job twice :  or ten times ,  leaves the target data in the exact same state as running it once.
+An idempotent operation produces the same result no matter how many times you execute it. For data pipelines, that means: running the same job twice : or ten times, leaves the target data in the exact same state as running it once.
 
 This property matters because retries are inevitable. Orchestrators retry failed tasks. Backfill jobs reprocess historical data. Network glitches cause at-least-once delivery. Engineers manually rerun jobs during debugging. Without idempotency, every one of these events risks data corruption.
 
@@ -38,10 +39,10 @@ The simplest and most reliable idempotency pattern for batch pipelines: overwrit
 Instead of appending rows, your pipeline replaces the complete partition for the time period being processed. For a daily pipeline processing January 15th:
 
 ```sql
--- Delete existing data for this partition
+- Delete existing data for this partition
 DELETE FROM target_table WHERE event_date = '2024-01-15';
 
--- Insert fresh data for this partition
+- Insert fresh data for this partition
 INSERT INTO target_table
 SELECT * FROM staging_table WHERE event_date = '2024-01-15';
 ```
@@ -54,15 +55,14 @@ If the job reruns, it deletes and recreates the same partition : resulting in th
 
 ## The Upsert/MERGE Pattern
 
-For data that doesn't partition cleanly :  or for change data capture (CDC) workloads ,  use MERGE (also called upsert):
+For data that doesn't partition cleanly : or for change data capture (CDC) workloads, use MERGE (also called upsert):
 
 ```sql
 MERGE INTO target_table t
 USING staging_table s
 ON t.order_id = s.order_id
 WHEN MATCHED THEN UPDATE SET
-  t.status = s.status,
-  t.updated_at = s.updated_at
+ t.status = s.status, t.updated_at = s.updated_at
 WHEN NOT MATCHED THEN INSERT (order_id, status, updated_at)
 VALUES (s.order_id, s.status, s.updated_at);
 ```

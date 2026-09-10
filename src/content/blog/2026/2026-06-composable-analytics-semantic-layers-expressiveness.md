@@ -1,6 +1,6 @@
 ---
 title: "Composable Analytics Beats Metric Catalogs"
-description: "Metric catalogs define what terms mean. Composable analytics defines how terms combine, transform, and relate. For AI agents, composability is what turns definitions into reasoning."
+description: "Metric catalogs define what terms mean. Composable analytics defines how terms combine, transform, and relate."
 date: 2026-06-08T09:00:00Z
 slug: "composable-analytics-semantic-layers-expressiveness"
 draft: false
@@ -14,7 +14,6 @@ tags:
   - "metric catalogs"
   - "Cube Metricflow Dremio"
 ---
-
 ## The Definition Trap
 
 A metric catalog tells you that "Monthly Recurring Revenue" equals `SUM(recurring_charges) WHERE subscription_status = 'active'`. That is useful. It resolves the ambiguity between gross MRR and net MRR. It gives the AI agent one correct formula to use.
@@ -75,13 +74,13 @@ Human analysts follow a pattern. They ask a question, get an answer, then ask a 
 
 AI agents operate the same way, but faster and with more parallel branches. A single agent conversation can explore dozens of metric-dimension combinations. A static metric catalog requires each combination to be pre-defined. A composable semantic layer allows any valid combination.
 
-The ACL 2025 study by Ji et al. showed what happens without composable semantics. Frontier LLMs dropped from 95% accuracy on clean benchmarks to 39% on enterprise schemas with 4,000+ columns and abbreviated names. A composable semantic layer solves this by presenting the agent with a small, well-defined vocabulary of business concepts. The agent does not need to guess which of 4,000 columns represents revenue. The semantic layer tells it. And the agent can combine revenue with any dimension in the semantic model without needing a pre-defined query.
+The ACL 2025 study by Ji et al. showed what happens without composable semantics. Frontier LLMs dropped from 95% accuracy on clean benchmarks to 39% on enterprise schemas with 4, 000+ columns and abbreviated names. A composable semantic layer solves this by presenting the agent with a small, well-defined vocabulary of business concepts. The agent does not need to guess which of 4, 000 columns represents revenue. The semantic layer tells it. And the agent can combine revenue with any dimension in the semantic model without needing a pre-defined query.
 
 Put concretely, a metric catalog answers "What is revenue QoQ?" A composable semantic layer answers "What is revenue QoQ for enterprise customers in the West region, segmented by product category, and compared to the same quarter last year, with the option to drill into the top 10 customers driving the change?" The first question is definitional. The second is analytical. AI agents need the second.
 
 ## The Semantic Layer as the Agent's Business Vocabulary
 
-Every AI agent needs a bounded vocabulary to operate correctly. Raw database schemas with 4,000 columns are unbounded. The agent has no way to know which columns matter for a given question. It has to guess.
+Every AI agent needs a bounded vocabulary to operate correctly. Raw database schemas with 4, 000 columns are unbounded. The agent has no way to know which columns matter for a given question. It has to guess.
 
 A semantic layer bounds the vocabulary. It defines 30 to 200 business metrics with clear formulas, allowed dimensions, and valid join paths. The agent operates within this bounded set. When it needs a metric not in the vocabulary, it asks the data team to add it. When it uses a metric in the vocabulary, it gets the same definition every time.
 
@@ -119,6 +118,6 @@ Composable analytics adds the grammar. Metrics combine with dimensions. Filters 
 
 The difference shows up in the numbers. 40% LLM accuracy without a semantic layer. 83% with one. 22% fewer hallucination incidents. 28% faster AI deployment. $3.4M average annual impact. The metric catalog is a start. The composable semantic layer is the destination.
 
----
+--
 
 **Ready to move beyond metric catalogs?** Dremio's AI Semantic Layer combines business context, semantic search, and automatic data discovery in a single platform. Query Iceberg tables across clouds and catalogs through a governed semantic layer that AI agents can access via SQL or MCP. [Learn more at dremio.com](https://www.dremio.com).

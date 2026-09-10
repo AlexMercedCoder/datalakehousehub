@@ -1,6 +1,6 @@
 ---
 title: "The Model Class Enterprise Data Teams Are Not Using Yet"
-description: "Tabular foundation models perform supervised learning in a single forward pass with no training run. What they are, where they win, and what they change in the data architecture."
+description: "Tabular foundation models perform supervised learning in a single forward pass with no training run."
 date: 2026-07-25T09:00:00Z
 author: "Alex Merced"
 category: "AI & Agents"
@@ -16,9 +16,9 @@ image: "/images/blog.png"
 canonical: https://iceberglakehouse.com/posts/tabular-foundation-models/
 ---
 
-> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/tabular-foundation-models/).
+A finance team asks which of their 40, 000 open invoices will pay late. The data sits in a table with 22 columns: customer, terms, amount, history, region, past delinquency. Somebody points a large language model at it. The model reads a sample of rows, writes three paragraphs about risk factors, and produces a confident list that turns out to be roughly as accurate as sorting by amount.
 
-A finance team asks which of their 40,000 open invoices will pay late. The data sits in a table with 22 columns: customer, terms, amount, history, region, past delinquency. Somebody points a large language model at it. The model reads a sample of rows, writes three paragraphs about risk factors, and produces a confident list that turns out to be roughly as accurate as sorting by amount.
+> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/tabular-foundation-models/).
 
 That result is not a prompt engineering failure. It is a category error. The question is a supervised prediction problem over structured rows, and language models are not built to solve those. The tool that solves them well used to be gradient boosting, which requires a training pipeline, a tuning budget, and a model per problem. Since 2022 a third option has existed, and since roughly 2025 it has been good enough to change how enterprise prediction gets built.
 
@@ -30,13 +30,13 @@ The category deserves far more attention from people who work with lakehouse dat
 
 Four separate problems compound.
 
-Tokenization destroys numeric structure. A language model sees 1,847.32 as a sequence of tokens, not as a quantity with a magnitude. Arithmetic and ordering relationships that a tree model reads directly from the value have to be reconstructed from text statistics. Models have gotten better at this and the representation remains fundamentally wrong for the job.
+Tokenization destroys numeric structure. A language model sees 1, 847.32 as a sequence of tokens, not as a quantity with a magnitude. Arithmetic and ordering relationships that a tree model reads directly from the value have to be reconstructed from text statistics. Models have gotten better at this and the representation remains fundamentally wrong for the job.
 
 Column order and row order carry no meaning in a table, and a sequence model treats them as if they do. Shuffle the columns of a CSV and a language model's answer changes. Shuffle them for XGBoost and nothing changes, because the model learned per-feature splits rather than a sequence.
 
 There is no calibrated probability. A prediction that an invoice pays late is worth much more when it arrives as 0.83 with meaningful calibration than as the word "likely." Downstream decisions need thresholds, expected values, and cost-weighted cutoffs. Prose does not provide them.
 
-Cost scales the wrong way. Scoring 40,000 rows through a frontier model means 40,000 inference calls, or long batched prompts that blow past context limits. A gradient boosted model scores 40,000 rows in milliseconds on a laptop.
+Cost scales the wrong way. Scoring 40, 000 rows through a frontier model means 40, 000 inference calls, or long batched prompts that blow past context limits. A gradient boosted model scores 40, 000 rows in milliseconds on a laptop.
 
 None of this makes language models useless here. They are excellent at the surrounding work: interpreting the question, finding the right table, writing the query, explaining the result. The prediction itself belongs to a different tool.
 
@@ -70,15 +70,15 @@ The field moved fast enough that the names need untangling.
 
 **TabPFN**, introduced in 2022 by Hollmann, Müller, Eggensperger, and Hutter, treated each row as a token and performed in-context learning over rows. It solved small classification problems in about a second and was mostly a research curiosity because of its size limits.
 
-**TabPFN v2**, published in 2025, changed the architecture to a cell-based design with alternating attention across rows and across columns, so each cell gets its own representation. That change is what made the approach competitive with tuned gradient boosting on real datasets. The cost is complexity that grows as roughly n squared times m plus n times m squared for a table of n rows and m columns, which is why the practical sample ceiling sat around 10,000 rows.
+**TabPFN v2**, published in 2025, changed the architecture to a cell-based design with alternating attention across rows and across columns, so each cell gets its own representation. That change is what made the approach competitive with tuned gradient boosting on real datasets. The cost is complexity that grows as roughly n squared times m plus n times m squared for a table of n rows and m columns, which is why the practical sample ceiling sat around 10, 000 rows.
 
-**TabPFN-2.5**, released in late 2025, extended the v2 design with deeper networks and pushed the usable sample ceiling to roughly 50,000 rows. A variant trained with continued pretraining on hand-selected real-world datasets rather than purely synthetic ones performs better again, which is an interesting result on its own: the synthetic prior gets you most of the way, and real data at the end closes part of the remaining gap.
+**TabPFN-2.5**, released in late 2025, extended the v2 design with deeper networks and pushed the usable sample ceiling to roughly 50, 000 rows. A variant trained with continued pretraining on hand-selected real-world datasets rather than purely synthetic ones performs better again, which is an interesting result on its own: the synthetic prior gets you most of the way, and real data at the end closes part of the remaining gap.
 
-**TabICL**, from Qu, Holzmüller, Varoquaux, and Le Morvan, took a different architectural route. A lightweight column-then-row attention stage first builds fixed-dimensional row embeddings, and in-context learning happens over those embeddings. That reduces complexity to roughly n squared plus n times m squared, which scales to around 500,000 samples and runs roughly ten times faster than TabPFN v2 on large, wide datasets.
+**TabICL**, from Qu, Holzmüller, Varoquaux, and Le Morvan, took a different architectural route. A lightweight column-then-row attention stage first builds fixed-dimensional row embeddings, and in-context learning happens over those embeddings. That reduces complexity to roughly n squared plus n times m squared, which scales to around 500, 000 samples and runs roughly ten times faster than TabPFN v2 on large, wide datasets.
 
 **TabICLv2** arrived February 11, 2026, with a more diverse synthetic data engine and refined pretraining across three stages of increasing dataset size, targeting both classification and regression. It is open, and it currently sits at or near the top of independent tabular leaderboards.
 
-Around those four sit a growing set of specialized variants. **Mitra** from Amazon uses designed mixtures of synthetic priors plus fine-tuning. **LimiX** models the joint distribution over variables and missingness and proposes its own scaling law. **ContextTab** brings semantic awareness so column names and values carry meaning rather than being treated as anonymous numbers. **TabPFN-Wide** targets extreme feature counts above 50,000 columns for biomedical work. **TabFlex** uses linear attention to reach millions of samples. **TabDPT** trains on real data rather than synthetic priors.
+Around those four sit a growing set of specialized variants. **Mitra** from Amazon uses designed mixtures of synthetic priors plus fine-tuning. **LimiX** models the joint distribution over variables and missingness and proposes its own scaling law. **ContextTab** brings semantic awareness so column names and values carry meaning rather than being treated as anonymous numbers. **TabPFN-Wide** targets extreme feature counts above 50, 000 columns for biomedical work. **TabFlex** uses linear attention to reach millions of samples. **TabDPT** trains on real data rather than synthetic priors.
 
 The direction of travel across all of them is the same: relax the size limits, keep the single-forward-pass property, and close the remaining accuracy gap on large datasets.
 
@@ -92,7 +92,7 @@ Honest scoping matters more here than in most model categories, because the swee
 
 **They win on uncertainty.** The Bayesian framing produces calibrated distributions rather than point estimates, which matters for anything where you act on a threshold or compute an expected value.
 
-**They lose on very large datasets.** Above the sample ceiling of whichever model you pick, you subsample, which throws away information that a gradient boosted model trained on the full set keeps. The ceiling has moved from 10,000 to 50,000 to 500,000 depending on architecture, and it is still a ceiling.
+**They lose on very large datasets.** Above the sample ceiling of whichever model you pick, you subsample, which throws away information that a gradient boosted model trained on the full set keeps. The ceiling has moved from 10, 000 to 50, 000 to 500, 000 depending on architecture, and it is still a ceiling.
 
 **They lose on latency without extra work.** In-context learning means the training set travels with every prediction. Scoring one row requires passing the whole context. For batch scoring that is fine. For a real-time endpoint answering in ten milliseconds it is not, which is why Prior Labs sells an enterprise inference mode that distills the model into a compact MLP or tree ensemble for serving.
 
@@ -120,49 +120,30 @@ from tabpfn import TabPFNClassifier
 import numpy as np
 
 catalog = load_catalog(
-    "lakehouse",
-    **{
-        "type": "rest",
-        "uri": "https://polaris.example.com/api/catalog",
-        "warehouse": "finance",
-        "credential": "<client-id>:<client-secret>",
-        "header.X-Iceberg-Access-Delegation": "vended-credentials",
-    },
-)
+ "lakehouse", **{
+ "type": "rest", "uri": "https://polaris.example.com/api/catalog", "warehouse": "finance", "credential": "<client-id>:<client-secret>", "header.X-Iceberg-Access-Delegation": "vended-credentials", }, )
 
 table = catalog.load_table("finance.invoice_features")
 
 # Labeled history: invoices already resolved, with the outcome recorded.
 train = table.scan(
-    row_filter="resolved = true AND issued_at >= '2025-01-01'",
-    selected_fields=(
-        "customer_id", "amount", "terms_days", "region",
-        "prior_late_count", "prior_invoice_count", "credit_score",
-        "days_since_first_invoice", "paid_late",
-    ),
-).to_pandas()
+ row_filter="resolved = true AND issued_at >= '2025-01-01'", selected_fields=(
+ "customer_id", "amount", "terms_days", "region", "prior_late_count", "prior_invoice_count", "credit_score", "days_since_first_invoice", "paid_late", ), ).to_pandas()
 
 # Open invoices: what we actually want scored.
 score = table.scan(
-    row_filter="resolved = false",
-    selected_fields=(
-        "invoice_id", "customer_id", "amount", "terms_days", "region",
-        "prior_late_count", "prior_invoice_count", "credit_score",
-        "days_since_first_invoice",
-    ),
-).to_pandas()
+ row_filter="resolved = false", selected_fields=(
+ "invoice_id", "customer_id", "amount", "terms_days", "region", "prior_late_count", "prior_invoice_count", "credit_score", "days_since_first_invoice", ), ).to_pandas()
 
 feature_cols = [
-    "amount", "terms_days", "region", "prior_late_count",
-    "prior_invoice_count", "credit_score", "days_since_first_invoice",
-]
+ "amount", "terms_days", "region", "prior_late_count", "prior_invoice_count", "credit_score", "days_since_first_invoice", ]
 
 X_train = train[feature_cols]
 y_train = train["paid_late"].astype(int)
 X_score = score[feature_cols]
 
 model = TabPFNClassifier(device="cuda", n_estimators=8)
-model.fit(X_train, y_train)          # stores context, no gradient updates
+model.fit(X_train, y_train) # stores context, no gradient updates
 proba = model.predict_proba(X_score)[:, 1]
 
 score["late_probability"] = proba
@@ -191,27 +172,15 @@ import numpy as np
 import pandas as pd
 
 hist = table.scan(
-    row_filter="closed = true AND closed_at >= '2025-07-01'",
-    selected_fields=(
-        "supplier_id", "category", "order_qty", "lead_time_promised",
-        "supplier_on_time_rate", "distance_km", "season",
-        "lead_time_actual",
-    ),
-).to_pandas()
+ row_filter="closed = true AND closed_at >= '2025-07-01'", selected_fields=(
+ "supplier_id", "category", "order_qty", "lead_time_promised", "supplier_on_time_rate", "distance_km", "season", "lead_time_actual", ), ).to_pandas()
 
 open_orders = table.scan(
-    row_filter="closed = false",
-    selected_fields=(
-        "order_id", "supplier_id", "category", "order_qty",
-        "lead_time_promised", "supplier_on_time_rate",
-        "distance_km", "season",
-    ),
-).to_pandas()
+ row_filter="closed = false", selected_fields=(
+ "order_id", "supplier_id", "category", "order_qty", "lead_time_promised", "supplier_on_time_rate", "distance_km", "season", ), ).to_pandas()
 
 features = [
-    "category", "order_qty", "lead_time_promised",
-    "supplier_on_time_rate", "distance_km", "season",
-]
+ "category", "order_qty", "lead_time_promised", "supplier_on_time_rate", "distance_km", "season", ]
 
 reg = TabPFNRegressor(device="cuda", n_estimators=8)
 reg.fit(hist[features], hist["lead_time_actual"])
@@ -266,7 +235,7 @@ This model class pushes work toward the data layer, which is why it belongs in a
 Four tools now compete for tabular prediction work, and they do not overlap as much as the arguments suggest.
 
 | Approach | Training cost | Best dataset size | Latency profile | Uncertainty | Where it wins |
-|---|---|---|---|---|---|
+|--|--|--|--|--|--|
 | Gradient boosted trees | Minutes to hours per problem, plus tuning | Any, scales to hundreds of millions of rows | Microseconds per row after training | Needs explicit calibration | Very large data, hard latency limits, regulated scorecards |
 | AutoML ensembles | Hours per problem | Small to large | Fast after training | Varies by ensemble | One high-value problem worth heavy compute |
 | Tabular foundation models | None | Hundreds to hundreds of thousands of rows | Milliseconds to seconds per batch, context-dependent | Calibrated by construction | Many problems, fast iteration, small and medium data |
@@ -326,7 +295,7 @@ The operational picture differs enough from standard MLOps that it deserves an e
 
 ## Failure Modes
 
-**Silently exceeding the sample ceiling.** Passing 200,000 rows to a model designed for 10,000 does not error. It subsamples or degrades. Know the ceiling of the specific model version you run, and subsample deliberately with a strategy you chose rather than one the library picked.
+**Silently exceeding the sample ceiling.** Passing 200, 000 rows to a model designed for 10, 000 does not error. It subsamples or degrades. Know the ceiling of the specific model version you run, and subsample deliberately with a strategy you chose rather than one the library picked.
 
 **Target leakage through the context.** In-context learning makes leakage easier, not harder. A feature computed after the outcome, such as a collections flag on an invoice, produces spectacular validation numbers and useless predictions. Build the feature table with an explicit as-of timestamp per feature and verify that every feature was knowable at prediction time.
 
@@ -366,7 +335,7 @@ It also changes the failure mode you should worry about. With few models, the ri
 
 ## Conclusion
 
-The enterprise question is almost never "write me a paragraph about supplier risk." It is "which of these 8,000 suppliers is likely to miss a delivery next quarter, how confident are you, and what is the expected cost." That is a tabular prediction problem, and there is now a model class that answers it in one forward pass with no training run and calibrated probabilities.
+The enterprise question is almost never "write me a paragraph about supplier risk." It is "which of these 8, 000 suppliers is likely to miss a delivery next quarter, how confident are you, and what is the expected cost." That is a tabular prediction problem, and there is now a model class that answers it in one forward pass with no training run and calibrated probabilities.
 
 The barrier to trying it is close to zero. Weights are open, the interface mimics scikit-learn, and a meaningful evaluation on your own data takes an afternoon rather than a sprint. Pull a feature table from your lakehouse, pick a question you never got around to modeling, and run it against both a tuned gradient boosted baseline and a tabular foundation model. That comparison tells you more about your organization's next two years of prediction work than any benchmark chart.
 

@@ -15,13 +15,12 @@ slug: 2025-04-sampling-and-prompts-in-mcp
 draft: false
 image: "/images/blog.png"
 ---
-
-## Free Resources  
-- **[Free Apache Iceberg Course](https://hello.dremio.com/webcast-an-apache-iceberg-lakehouse-crash-course-reg.html?utm_source=ev_external_blog&utm_medium=influencer&utm_campaign=AItoLLMS&utm_content=alexmerced&utm_term=external_blog)**  
-- **[Free Copy of “Apache Iceberg: The Definitive Guide”](https://hello.dremio.com/wp-apache-iceberg-the-definitive-guide-reg.html?utm_source=ev_external_blog&utm_medium=influencer&utm_campaign=AItoLLMS&utm_content=alexmerced&utm_term=external_blog)**  
-- **[2025 Apache Iceberg Architecture Guide](https://medium.com/data-engineering-with-dremio/2025-guide-to-architecting-an-iceberg-lakehouse-9b19ed42c9de)**  
-- **[How to Join the Iceberg Community](https://medium.alexmerced.blog/guide-to-finding-apache-iceberg-events-near-you-and-being-part-of-the-greater-iceberg-community-0c38ae785ddb)**  
-- **[Iceberg Lakehouse Engineering Video Playlist](https://youtube.com/playlist?list=PLsLAVBjQJO0p0Yq1fLkoHvt2lEJj5pcYe&si=WTSnqjXZv6Glkc3y)**  
+## Free Resources 
+- **[Free Apache Iceberg Course](https://hello.dremio.com/webcast-an-apache-iceberg-lakehouse-crash-course-reg.html?utm_source=ev_external_blog&utm_medium=influencer&utm_campaign=AItoLLMS&utm_content=alexmerced&utm_term=external_blog)** 
+- **[Free Copy of “Apache Iceberg: The Definitive Guide”](https://hello.dremio.com/wp-apache-iceberg-the-definitive-guide-reg.html?utm_source=ev_external_blog&utm_medium=influencer&utm_campaign=AItoLLMS&utm_content=alexmerced&utm_term=external_blog)** 
+- **[2025 Apache Iceberg Architecture Guide](https://medium.com/data-engineering-with-dremio/2025-guide-to-architecting-an-iceberg-lakehouse-9b19ed42c9de)** 
+- **[How to Join the Iceberg Community](https://medium.alexmerced.blog/guide-to-finding-apache-iceberg-events-near-you-and-being-part-of-the-greater-iceberg-community-0c38ae785ddb)** 
+- **[Iceberg Lakehouse Engineering Video Playlist](https://youtube.com/playlist?list=PLsLAVBjQJO0p0Yq1fLkoHvt2lEJj5pcYe&si=WTSnqjXZv6Glkc3y)** 
 - **[Ultimate Apache Iceberg Resource Guide](https://medium.com/data-engineering-with-dremio/ultimate-directory-of-apache-iceberg-resources-e3e02efac62e)** 
 
 
@@ -76,18 +75,13 @@ Here’s an example `sampling/createMessage` request:
 
 ```json
 {
-  "messages": [
-    {
-      "role": "user",
-      "content": {
-        "type": "text",
-        "text": "Please summarize this log file."
-      }
-    }
-  ],
-  "systemPrompt": "You are a helpful developer assistant.",
-  "includeContext": "thisServer",
-  "maxTokens": 300
+ "messages": [
+ {
+ "role": "user", "content": {
+ "type": "text", "text": "Please summarize this log file."
+ }
+ }
+ ], "systemPrompt": "You are a helpful developer assistant.", "includeContext": "thisServer", "maxTokens": 300
 }
 ```
 
@@ -96,12 +90,9 @@ The host chooses which model to use, what context to include, and whether to sho
 Response:
 ```json
 {
-  "model": "claude-3-sonnet",
-  "role": "assistant",
-  "content": {
-    "type": "text",
-    "text": "The log file contains several timeout errors and warnings related to database connections."
-  }
+ "model": "claude-3-sonnet", "role": "assistant", "content": {
+ "type": "text", "text": "The log file contains several timeout errors and warnings related to database connections."
+ }
 }
 ```
 Now the server can act on that response - log it, return it as tool output, or chain it into another step.
@@ -143,20 +134,13 @@ Prompts have:
 Example:
 ```json
 {
-  "name": "explain-code",
-  "description": "Explain how this code works",
-  "arguments": [
-    {
-      "name": "language",
-      "description": "Programming language",
-      "required": true
-    },
-    {
-      "name": "code",
-      "description": "The code to analyze",
-      "required": true
-    }
-  ]
+ "name": "explain-code", "description": "Explain how this code works", "arguments": [
+ {
+ "name": "language", "description": "Programming language", "required": true
+ }, {
+ "name": "code", "description": "The code to analyze", "required": true
+ }
+ ]
 }
 ```
 
@@ -171,21 +155,18 @@ A server might expose:
 
 ```json
 {
-  "name": "analyze-logs",
-  "description": "Summarize recent logs and detect anomalies",
-  "arguments": [
-    {
-      "name": "timeframe",
-      "required": true
-    }
-  ]
+ "name": "analyze-logs", "description": "Summarize recent logs and detect anomalies", "arguments": [
+ {
+ "name": "timeframe", "required": true
+ }
+ ]
 }
 ```
 When the user (or LLM) runs it with:
 
 ```json
 {
-  "timeframe": "1h"
+ "timeframe": "1h"
 }
 ```
 The resolved prompt could include:
@@ -221,40 +202,40 @@ All controlled via:
 
 ### 🔐 Security and Control
 
-| Feature               | How It's Handled                              |
-|-----------------------|-----------------------------------------------|
-| Prompt visibility     | Clients decide which prompts to expose        |
-| Sampling review       | Hosts can show/reject sampling requests       |
-| Input validation      | Servers validate prompt arguments             |
-| Model usage control   | Hosts select models and limit token costs     |
+| Feature | How It's Handled |
+|------------|------------------------|
+| Prompt visibility | Clients decide which prompts to expose |
+| Sampling review | Hosts can show/reject sampling requests |
+| Input validation | Servers validate prompt arguments |
+| Model usage control | Hosts select models and limit token costs |
 | Prompt injection risks| Validate user inputs, escape content if needed|
 
----
+--
 
 ### 🧠 Why These Matter for AI Agents
 
-| Capability        | Sampling Provides              | Prompts Provide                    |
-|------------------|---------------------------------|------------------------------------|
-| Decision-making   | Dynamic LLM completions         | Guided, structured input           |
-| Flexibility       | Server can request help anytime| Users can run reusable workflows   |
-| Interactivity     | Chain actions with feedback     | Improve LLM collaboration          |
-| Composability     | Mix prompts + tools + resources | Enable custom interfaces           |
+| Capability | Sampling Provides | Prompts Provide |
+|---------|-----------------|------------------|
+| Decision-making | Dynamic LLM completions | Guided, structured input |
+| Flexibility | Server can request help anytime| Users can run reusable workflows |
+| Interactivity | Chain actions with feedback | Improve LLM collaboration |
+| Composability | Mix prompts + tools + resources | Enable custom interfaces |
 
----
+--
 
 ### 🧩 Wrapping It All Together
 
 Over this 10-part series, we’ve explored the full landscape of AI agent development using **MCP**:
 
-✅ LLMs and how they work  
-✅ Fine-tuning, prompting, and RAG  
-✅ Agent frameworks and limitations  
-✅ MCP’s architecture and interoperability  
-✅ Resources and tools  
-✅ Prompts and sampling  
+✅ LLMs and how they work 
+✅ Fine-tuning, prompting, and RAG 
+✅ Agent frameworks and limitations 
+✅ MCP’s architecture and interoperability 
+✅ Resources and tools 
+✅ Prompts and sampling 
 
 MCP gives us standardized, modular building blocks for creating AI agents that are:
 
-- **Portable across environments**  
-- **Decoupled from model providers**  
+- **Portable across environments** 
+- **Decoupled from model providers** 
 - **Secure, observable, and controlled**

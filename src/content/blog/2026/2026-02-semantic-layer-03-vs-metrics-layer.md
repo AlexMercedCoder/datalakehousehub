@@ -15,9 +15,10 @@ draft: false
 image: "/images/blog.png"
 canonical: "https://iceberglakehouse.com/posts/2026-02-sl-semantic-layer-vs-metrics-layer/"
 ---
-> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-02-sl-semantic-layer-vs-metrics-layer/).
 
 ![Semantic layer vs metrics layer : the metrics layer is a subset](/images/blog/semantic-layer/semantic-vs-metrics.png)
+
+> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-02-sl-semantic-layer-vs-metrics-layer/).
 
 Both terms appear in every modern data architecture diagram. They're used interchangeably in conference talks, Slack threads, and vendor marketing. And almost nobody defines them precisely.
 
@@ -44,7 +45,7 @@ This is valuable. But it's incomplete.
 A semantic layer does everything a metrics layer does, plus more. It covers the full abstraction between raw data and the people (and machines) querying it.
 
 | Capability | Metrics Layer | Semantic Layer |
-|---|---|---|
+|--|--|--|
 | Metric definitions (KPI calculations) | Yes | Yes |
 | Documentation (table/column descriptions) | Sometimes | Yes |
 | Labels and tags (governance, discoverability) | No | Yes |

@@ -11,12 +11,14 @@ slug: "conversational-ai-managed-iceberg-s3-tables-mcp-server"
 draft: false
 image: "/images/blog.png"
 canonical: https://iceberglakehouse.com/posts/conversational-ai-managed-iceberg-s3-tables-mcp-server/
+description: "The most interesting part of conversational analytics is not the chat box. The chat box is just the surface area."
 ---
-> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/conversational-ai-managed-iceberg-s3-tables-mcp-server/).
 
 # Conversational AI on Managed Iceberg: Exposing Amazon S3 Tables through MCP
 
 The most interesting part of conversational analytics is not the chat box. The chat box is just the surface area. The harder question is what happens after a person asks a question, especially when that question touches governed data, shared definitions, cloud storage, and production systems that cannot afford sloppy access patterns.
+
+> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/conversational-ai-managed-iceberg-s3-tables-mcp-server/).
 
 That is why I find the combination of managed Iceberg tables and MCP-style tool access worth paying attention to. Amazon S3 Tables gives teams a managed path for Apache Iceberg tables on S3. The Model Context Protocol gives AI applications a common way to call tools and read resources. Put those ideas together carefully and you get a useful architecture pattern: conversational AI that does not rummage through raw files, does not bypass governance, and does not depend on copying every dataset into a closed analytical silo before people can ask questions.
 

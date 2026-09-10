@@ -14,11 +14,12 @@ draft: false
 image: "/images/blog/apache-iceberg-masterclass/09-storage-degradation-storage-degradation-timeline.png"
 canonical: "https://iceberglakehouse.com/posts/2026-04-29-iceberg-masterclass-09/"
 ---
-> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-04-29-iceberg-masterclass-09/).
 
-<!-- Meta Description: Iceberg tables degrade through small files, orphan files, metadata bloat, sort order decay, and partition skew. Here is how to diagnose each problem. -->
-<!-- Primary Keyword: Iceberg storage degradation -->
-<!-- Secondary Keywords: small file problem, orphan files, Iceberg table maintenance -->
+<!- Meta Description: Iceberg tables degrade through small files, orphan files, metadata bloat, sort order decay, and partition skew. Here is how to diagnose each problem. ->
+<!- Primary Keyword: Iceberg storage degradation ->
+<!- Secondary Keywords: small file problem, orphan files, Iceberg table maintenance ->
+
+> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-04-29-iceberg-masterclass-09/).
 
 *Read the complete Apache Iceberg Masterclass series:*
 * [Part 1: What Are Table Formats and Why Were They Needed?](/blog/2026-04-29-apache-iceberg-masterclass-01-table-formats)
@@ -50,9 +51,9 @@ An Iceberg table that works well on day one will not work well on day 365 withou
 
 This is the most common and most impactful degradation. Streaming ingestion, micro-batch pipelines, and frequent INSERT operations each create new data files. If these operations produce many small files (under 32 MB), the table accumulates thousands of files where dozens would suffice.
 
-**Impact:** Each file becomes a manifest entry. A table with 10,000 small files has 10,000 entries that the query planner must evaluate, compared to 40 entries for the same data in properly-sized 256 MB files. Planning time increases linearly with file count.
+**Impact:** Each file becomes a manifest entry. A table with 10, 000 small files has 10, 000 entries that the query planner must evaluate, compared to 40 entries for the same data in properly-sized 256 MB files. Planning time increases linearly with file count.
 
-**Cause:** Frequent commits with small amounts of data. A streaming pipeline committing every 30 seconds might add 2-3 files per commit, producing 5,000+ files per day.
+**Cause:** Frequent commits with small amounts of data. A streaming pipeline committing every 30 seconds might add 2-3 files per commit, producing 5, 000+ files per day.
 
 ### 2. Orphan Files
 
@@ -68,9 +69,9 @@ Orphan files are data files that exist in storage but are not referenced by any 
 
 Every commit creates a new snapshot in `metadata.json`. Over time, the metadata file grows as the snapshot list lengthens. The manifest list for each snapshot may also reference many manifest files, especially if the table has been modified in many different partitions.
 
-**Impact:** The `metadata.json` file becomes large, taking longer to download from object storage. At 10,000+ snapshots, the metadata file itself can exceed 100 MB, adding seconds to every query's planning phase. The manifest list grows, making scan planning slower because there are more manifests to evaluate.
+**Impact:** The `metadata.json` file becomes large, taking longer to download from object storage. At 10, 000+ snapshots, the metadata file itself can exceed 100 MB, adding seconds to every query's planning phase. The manifest list grows, making scan planning slower because there are more manifests to evaluate.
 
-**How to detect it:** Check the snapshot count using [metadata tables](/blog/2026-04-29-apache-iceberg-masterclass-11-metadata-tables). If it exceeds 1,000, configure snapshot expiry to keep the count manageable.
+**How to detect it:** Check the snapshot count using [metadata tables](/blog/2026-04-29-apache-iceberg-masterclass-11-metadata-tables). If it exceeds 1, 000, configure snapshot expiry to keep the count manageable.
 
 ### 4. Sort Order Decay
 
@@ -91,9 +92,9 @@ Some partitions grow much larger than others. An event table partitioned by `day
 Consider a table receiving 100 small appends per day from a streaming pipeline:
 
 - **Day 1:** 100 small files (3 MB each), 300 MB total. Queries are fast.
-- **Day 30:** 3,000 small files, 9 GB total. Query planning starts to slow noticeably.
-- **Day 90:** 9,000 small files, 27 GB total. Every query scans all 9,000 manifest entries. Dashboard queries that took 2 seconds now take 15 seconds.
-- **Day 180:** 18,000 small files plus thousands of orphan files from expired snapshots. Metadata file is 50+ MB. Planning alone takes 10 seconds before any data is read.
+- **Day 30:** 3, 000 small files, 9 GB total. Query planning starts to slow noticeably.
+- **Day 90:** 9, 000 small files, 27 GB total. Every query scans all 9, 000 manifest entries. Dashboard queries that took 2 seconds now take 15 seconds.
+- **Day 180:** 18, 000 small files plus thousands of orphan files from expired snapshots. Metadata file is 50+ MB. Planning alone takes 10 seconds before any data is read.
 
 Without compaction, the table becomes nearly unusable for interactive analytics within 6 months. With daily compaction, the same table stays at 40-50 well-sized files regardless of how many commits happen each day.
 
@@ -106,7 +107,7 @@ Iceberg provides [metadata tables](/blog/2026-04-29-apache-iceberg-masterclass-1
 ### Check File Sizes (Dremio / Spark)
 
 ```sql
--- Average file size
+- Average file size
 SELECT AVG(file_size_in_bytes) / 1024 / 1024 AS avg_mb
 FROM TABLE(table_files('analytics.orders'))
 ```
@@ -116,17 +117,17 @@ If average file size is below 32 MB, you have a small file problem. Target: 128-
 ### Check Snapshot Count
 
 ```sql
--- How many snapshots exist?
+- How many snapshots exist?
 SELECT COUNT(*) AS snapshot_count
 FROM TABLE(table_snapshot('analytics.orders'))
 ```
 
-If snapshot count exceeds 1,000, you should expire older snapshots.
+If snapshot count exceeds 1, 000, you should expire older snapshots.
 
 ### Check File Count Growth
 
 ```sql
--- Files per partition
+- Files per partition
 SELECT partition, COUNT(*) AS file_count
 FROM TABLE(table_files('analytics.orders'))
 GROUP BY partition

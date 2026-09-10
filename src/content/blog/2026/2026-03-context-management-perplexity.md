@@ -16,9 +16,10 @@ draft: false
 image: "/images/blog.png"
 canonical: "https://iceberglakehouse.com/posts/2026-03-context-perplexity/"
 ---
-> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-03-context-perplexity/).
 
 Perplexity AI occupies a unique position in the AI landscape: it is a research-first tool that combines conversational AI with real-time web search to produce answers grounded in current sources. Unlike coding-focused tools or general chatbots, Perplexity is built for information retrieval, analysis, and synthesis. Its context management is designed around Spaces (persistent research workspaces), Focus Modes (search scope control), and an elastic context window that adapts to the complexity of your query.
+
+> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-03-context-perplexity/).
 
 This guide covers how to manage context effectively in Perplexity for everything from quick fact-checking to sustained research projects.
 
@@ -74,7 +75,7 @@ You are a market research assistant focused on renewable energy.
 Spaces support various file types for persistent reference:
 
 | File Type | Use Case |
-|---|---|
+|--|--|
 | **PDF** | Research papers, reports, whitepapers |
 | **Documents** | Analysis templates, style guides |
 | **Spreadsheets** | Data for analysis and comparison |
@@ -94,7 +95,7 @@ Files in a Space are available across all conversations in that Space. This mean
 Focus Modes let you control where Perplexity searches for information:
 
 | Focus Mode | Sources | Best For |
-|---|---|---|
+|--|--|--|
 | **All** | Entire web | General research, broad questions |
 | **Academic** | Google Scholar, research databases | Scientific research, literature reviews |
 | **Writing** | No web search (uses training data) | Content creation, drafting, brainstorming |

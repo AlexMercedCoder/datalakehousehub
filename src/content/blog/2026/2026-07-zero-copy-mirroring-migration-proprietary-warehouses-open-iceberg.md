@@ -14,9 +14,10 @@ draft: false
 image: "/images/blog.png"
 canonical: "https://iceberglakehouse.com/posts/zero-copy-mirroring-migration-proprietary-warehouses-open-iceberg/"
 ---
-> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/zero-copy-mirroring-migration-proprietary-warehouses-open-iceberg/).
 
 The most expensive part of moving off a proprietary warehouse is usually not the compute contract. It is the copy. Rewriting terabytes of data into a new format means paying twice for storage during the transition, burning compute on the rewrite, and holding your breath during a cutover window while every downstream consumer waits. "Zero-copy mirroring" promises to skip most of that: point [Apache Iceberg](https://iceberg.apache.org/spec/) metadata at your existing data files, expose them as open tables, and migrate the definition instead of the data.
+
+> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/zero-copy-mirroring-migration-proprietary-warehouses-open-iceberg/).
 
 It is a genuinely good pattern. It is also oversold. True zero-copy only works when the physical and metadata conditions line up, and a lot of proprietary warehouses do not meet those conditions. So the useful framing is not "zero-copy or bust." It is a staged migration that copies as little as possible while never giving up validation and rollback. Let me define the terms honestly, then walk the actual playbook: assess, translate, rebuild business logic, validate, and cut over.
 
@@ -35,7 +36,7 @@ The determining factors are concrete: is the underlying data already Parquet, ar
 The table below lays out how the three modes differ on the dimensions that actually drive cost and risk.
 
 | Dimension | True zero-copy | Minimal-copy | Phased-copy |
-| --- | --- | --- | --- |
+| -- | -- | -- | -- |
 | Source format | Already Parquet | Mostly Parquet, some fixes | Proprietary or inaccessible |
 | Data rewritten | None | Selected tables or partitions | All or most data |
 | Duplicate storage cost | Near zero | Partial | Full during transition |
@@ -81,7 +82,7 @@ Once metadata is built and the table validates, register it in a catalog so engi
 
 Data files are the easy part. The business logic sitting on top of them, the views, the metric definitions, the joins that everyone's dashboards assume, is what makes the migration feel disruptive to users if you get it wrong.
 
-The warehouse's views and materialized views encode definitions people depend on. "Net revenue," "active accounts," "quarterly cohort retention": these are not columns, they are logic. That logic has to be recreated in the lakehouse, and the cleanest place to put it is a semantic layer of views over the Iceberg tables. Rebuilding rather than blindly copying is actually an opportunity, because it forces you to write down what each definition means, which is exactly the documentation that tends to be missing in the source system.
+The warehouse's views and materialized views encode definitions people depend on. "Net revenue, " "active accounts, " "quarterly cohort retention": these are not columns, they are logic. That logic has to be recreated in the lakehouse, and the cleanest place to put it is a semantic layer of views over the Iceberg tables. Rebuilding rather than blindly copying is actually an opportunity, because it forces you to write down what each definition means, which is exactly the documentation that tends to be missing in the source system.
 
 The goal during transition is continuity. If an analyst's dashboard references a view called `finance.net_revenue`, they should be able to keep referencing something with that name and meaning after migration, even though the physical tables underneath moved to Iceberg. A semantic layer lets you preserve the business-facing contract while the physical implementation changes underneath. Users query the same concepts; the plumbing changed without breaking their queries.
 

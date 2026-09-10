@@ -1,6 +1,6 @@
 ---
 title: "Iceberg's Next Version Depends on Decisions Being Made in Parquet"
-description: "The Iceberg and Parquet specifications are co-evolving. Several of the most consequential Iceberg v4 proposals are waiting on Parquet work, and practitioners should read both dev lists."
+description: "The Iceberg and Parquet specifications are co-evolving. Several of the most consequential Iceberg v4 proposals are waiting on Parquet work."
 date: 2026-07-25T09:00:00Z
 author: "Alex Merced"
 category: "Data Engineering"
@@ -16,9 +16,9 @@ image: "/images/blog.png"
 canonical: https://iceberglakehouse.com/posts/parquet-constrains-iceberg/
 ---
 
-> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/parquet-constrains-iceberg/).
-
 Follow an Apache Iceberg design discussion about column-level updates long enough and it stops being an Iceberg discussion. The question of whether a writer can replace one column in an existing file, without rewriting the other thirty-nine, turns on whether the file format underneath supports the idea of a logical file assembled from pieces. Iceberg cannot decide that alone. The answer lives in Apache Parquet.
+
+> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/parquet-constrains-iceberg/).
 
 This happens repeatedly, and most coverage of the lakehouse misses it because the two projects get discussed separately. Iceberg gets written about as the table format that won. Parquet gets treated as settled infrastructure that stopped being interesting in 2015. In 2026 both framings are wrong in the same way: the two specifications are co-evolving, decisions in one constrain the other, and several of the most consequential Iceberg v4 proposals are waiting on Parquet work.
 
@@ -66,7 +66,7 @@ The generalizable lesson: a type in the table format is a data modeling feature.
 
 This is the live one, and it is the clearest case of Iceberg waiting on Parquet.
 
-The problem is concrete. A machine learning feature table has 2,000 columns and a billion rows. One feature gets recomputed. Under current mechanics, updating that column means rewriting every file that contains it, which means rewriting all 2,000 columns of data to change one. The write amplification is roughly 2,000 to 1 against the actual change.
+The problem is concrete. A machine learning feature table has 2, 000 columns and a billion rows. One feature gets recomputed. Under current mechanics, updating that column means rewriting every file that contains it, which means rewriting all 2, 000 columns of data to change one. The write amplification is roughly 2, 000 to 1 against the actual change.
 
 Every proposed fix requires the ability to store a replacement column chunk somewhere and have readers assemble a logical row group from pieces that live in more than one physical file. That is a file format concept. Parquet today defines a file as a self-contained unit with a footer describing its own column chunks. A logical-file concept, where a footer references column chunks in other files, changes that contract.
 
@@ -149,16 +149,11 @@ print("num_row_groups:", meta.num_row_groups)
 print("format_version:", meta.format_version)
 
 for i in range(meta.num_row_groups):
-    rg = meta.row_group(i)
-    for c in range(rg.num_columns):
-        col = rg.column(c)
-        print(
-            col.path_in_schema,
-            col.physical_type,
-            col.encodings,
-            col.compression,
-            "stats" if col.is_stats_set else "NO STATS",
-        )
+ rg = meta.row_group(i)
+ for c in range(rg.num_columns):
+ col = rg.column(c)
+ print(
+ col.path_in_schema, col.physical_type, col.encodings, col.compression, "stats" if col.is_stats_set else "NO STATS", )
 ```
 
 Three things to look for in that output.
@@ -172,16 +167,13 @@ The `encodings` list tells you whether the writer used anything an older reader 
 Then check the table side for how those files are being described:
 
 ```sql
--- Which format version and file formats does this table actually use?
+- Which format version and file formats does this table actually use?
 SELECT * FROM lakehouse.events.web_events.metadata_log_entries
 ORDER BY timestamp DESC LIMIT 5;
 
--- Per-file record, including format and column-level statistics coverage.
+- Per-file record, including format and column-level statistics coverage.
 SELECT
-    file_format,
-    COUNT(*)                                        AS files,
-    CAST(AVG(file_size_in_bytes)/1048576 AS INT)    AS avg_mb,
-    SUM(CASE WHEN lower_bounds IS NULL THEN 1 ELSE 0 END) AS files_without_bounds
+ file_format, COUNT(*) AS files, CAST(AVG(file_size_in_bytes)/1048576 AS INT) AS avg_mb, SUM(CASE WHEN lower_bounds IS NULL THEN 1 ELSE 0 END) AS files_without_bounds
 FROM lakehouse.events.web_events.files
 GROUP BY file_format;
 ```
@@ -194,21 +186,12 @@ When the matrix checks out, adopting the new types is straightforward and worth 
 
 ```sql
 CREATE TABLE lakehouse.events.web_events (
-    event_id     BIGINT,
-    occurred_at  TIMESTAMP,
-    user_id      STRING,
-    location     GEOGRAPHY,
-    payload      VARIANT
+ event_id BIGINT, occurred_at TIMESTAMP, user_id STRING, location GEOGRAPHY, payload VARIANT
 )
 USING iceberg
 PARTITIONED BY (days(occurred_at))
 TBLPROPERTIES (
-    'format-version'                       = '3',
-    'write.parquet.compression-codec'      = 'zstd',
-    'write.parquet.compression-level'      = '3',
-    'write.metadata.metrics.default'       = 'truncate(16)',
-    'write.metadata.metrics.column.user_id' = 'full',
-    'write.target-file-size-bytes'         = '536870912'
+ 'format-version' = '3', 'write.parquet.compression-codec' = 'zstd', 'write.parquet.compression-level' = '3', 'write.metadata.metrics.default' = 'truncate(16)', 'write.metadata.metrics.column.user_id' = 'full', 'write.target-file-size-bytes' = '536870912'
 );
 ```
 

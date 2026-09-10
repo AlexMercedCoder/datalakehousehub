@@ -1,7 +1,7 @@
 ---
 title: "What is Prefect?"
 meta_title: "What is Prefect? | Expert Data Lakehouse & AI Glossary"
-description: "A workflow orchestration tool empowering developers to build, observe, and react to data pipelines seamlessly. Learn the architecture, mechanics, and real-world value of Prefect in the modern data stack."
+description: "A workflow orchestration tool empowering developers to build, observe, and react to data pipelines seamlessly."
 ---
 
 ## What is Prefect?

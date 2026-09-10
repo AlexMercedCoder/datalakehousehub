@@ -1,6 +1,6 @@
 ---
 title: "Table Maintenance Stopped Being a Product"
-description: "Iceberg table maintenance commoditized when every platform started shipping it. What the six operations are, what they cost, and the observability you should keep even when the work is managed."
+description: "Iceberg table maintenance commoditized when every platform started shipping it. What the six operations are, what they cost, and the observability you."
 date: 2026-07-25T09:00:00Z
 author: "Alex Merced"
 category: "Data Engineering"
@@ -16,9 +16,9 @@ image: "/images/blog.png"
 canonical: https://iceberglakehouse.com/posts/table-maintenance-economics/
 ---
 
-> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/table-maintenance-economics/).
+A team I worked with had a dashboard that loaded in three seconds in January and forty seconds in June. Data volume grew 20 percent over that period. Nobody changed the query, the engine, or the cluster size. The table had 340, 000 data files where it should have had about 900, and 61, 000 snapshots where 100 was the sane number. The query was not slow. The planning was slow, and the planning was slow because nobody had run compaction since the table was created.
 
-A team I worked with had a dashboard that loaded in three seconds in January and forty seconds in June. Data volume grew 20 percent over that period. Nobody changed the query, the engine, or the cluster size. The table had 340,000 data files where it should have had about 900, and 61,000 snapshots where 100 was the sane number. The query was not slow. The planning was slow, and the planning was slow because nobody had run compaction since the table was created.
+> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/table-maintenance-economics/).
 
 That story is common enough to be boring. What is more interesting is what happened to the market around it. In April 2026, Cyera, a data security company valued in the billions, paid somewhere between 100 and 130 million dollars for Ryft, a two-year-old startup whose product was automated Apache Iceberg table maintenance. Ryft had raised eight million dollars. It employed about fifteen people. Its technology scheduled compaction based on observed query and ingestion behavior, handled retention and compliance deletion, and kept tables optimized without an engineer writing cron jobs.
 
@@ -48,7 +48,7 @@ Two more sit alongside these on modern platforms: statistics and Puffin file gen
 
 The workloads changed and the maintenance requirement changed with them.
 
-Streaming ingestion is the dominant new writer. Confluent Tableflow materializes Kafka topics into Iceberg tables. Redpanda writes Iceberg files at the broker. Snowflake Datastream, Flink, Spark Structured Streaming, and every CDC pipeline commit continuously. A writer committing every ten seconds produces 8,640 commits a day per table. Each commit produces at least one metadata file and usually several small data files. Multiply by the number of tables in a real estate and the metadata layer grows faster than the data layer.
+Streaming ingestion is the dominant new writer. Confluent Tableflow materializes Kafka topics into Iceberg tables. Redpanda writes Iceberg files at the broker. Snowflake Datastream, Flink, Spark Structured Streaming, and every CDC pipeline commit continuously. A writer committing every ten seconds produces 8, 640 commits a day per table. Each commit produces at least one metadata file and usually several small data files. Multiply by the number of tables in a real estate and the metadata layer grows faster than the data layer.
 
 Change data capture makes it worse. CDC produces updates and deletes, not just appends. On merge-on-read tables, every update writes a delete plus a new record, and readers pay for both until compaction folds them together.
 
@@ -60,7 +60,7 @@ And the read side got more demanding. Agents issue far more queries than analyst
 
 Compaction cost is predictable enough to plan, and the math is worth internalizing because it drives every decision in this space.
 
-Start with the input. A streaming writer targeting one commit per minute on a table receiving 50 GB a day produces roughly 1,440 commits and, at a typical few files per commit, several thousand files a day. Average file size lands in the low tens of megabytes.
+Start with the input. A streaming writer targeting one commit per minute on a table receiving 50 GB a day produces roughly 1, 440 commits and, at a typical few files per commit, several thousand files a day. Average file size lands in the low tens of megabytes.
 
 Compaction reads those files and writes larger ones. Read volume equals the volume being compacted. Write volume equals roughly the same, since compression ratios stay similar. So a day's compaction on 50 GB of new data moves about 100 GB through compute. If you compact the same data twice because your scheduler runs on a fixed interval rather than on file-count triggers, you paid twice for no benefit.
 
@@ -115,36 +115,27 @@ The recommendation that holds in most cases: buy the maintenance, keep the obser
 Iceberg exposes metadata tables that answer every maintenance question directly. These four queries belong on a dashboard.
 
 ```sql
--- 1. File size distribution per partition. The primary health metric.
+- 1. File size distribution per partition. The primary health metric.
 SELECT
-    partition,
-    COUNT(*)                                   AS file_count,
-    CAST(AVG(file_size_in_bytes) / 1048576 AS INT) AS avg_mb,
-    CAST(SUM(file_size_in_bytes) / 1073741824 AS DECIMAL(10,2)) AS total_gb,
-    SUM(CASE WHEN file_size_in_bytes < 33554432 THEN 1 ELSE 0 END) AS files_under_32mb
+ partition, COUNT(*) AS file_count, CAST(AVG(file_size_in_bytes) / 1048576 AS INT) AS avg_mb, CAST(SUM(file_size_in_bytes) / 1073741824 AS DECIMAL(10, 2)) AS total_gb, SUM(CASE WHEN file_size_in_bytes < 33554432 THEN 1 ELSE 0 END) AS files_under_32mb
 FROM lakehouse.sales.orders.files
 GROUP BY partition
 ORDER BY file_count DESC
 LIMIT 20;
 
--- 2. Snapshot accumulation and commit cadence.
+- 2. Snapshot accumulation and commit cadence.
 SELECT
-    COUNT(*)                                  AS snapshot_count,
-    MIN(committed_at)                         AS oldest_snapshot,
-    MAX(committed_at)                         AS newest_snapshot
+ COUNT(*) AS snapshot_count, MIN(committed_at) AS oldest_snapshot, MAX(committed_at) AS newest_snapshot
 FROM lakehouse.sales.orders.snapshots;
 
--- 3. Delete file debt on merge-on-read tables.
+- 3. Delete file debt on merge-on-read tables.
 SELECT
-    COUNT(*)                                  AS delete_file_count,
-    CAST(SUM(file_size_in_bytes) / 1048576 AS INT) AS delete_mb
+ COUNT(*) AS delete_file_count, CAST(SUM(file_size_in_bytes) / 1048576 AS INT) AS delete_mb
 FROM lakehouse.sales.orders.delete_files;
 
--- 4. Manifest sprawl, which drives planning time.
+- 4. Manifest sprawl, which drives planning time.
 SELECT
-    COUNT(*)                                  AS manifest_count,
-    CAST(AVG(length) / 1024 AS INT)           AS avg_kb,
-    SUM(added_snapshot_id IS NOT NULL)        AS with_snapshot
+ COUNT(*) AS manifest_count, CAST(AVG(length) / 1024 AS INT) AS avg_kb, SUM(added_snapshot_id IS NOT NULL) AS with_snapshot
 FROM lakehouse.sales.orders.manifests;
 ```
 
@@ -154,45 +145,34 @@ The second query catches expiration failures. Snapshot count growing without bou
 
 The third catches merge-on-read decay, where read latency degrades steadily between compaction runs.
 
-The fourth catches the subtler problem. Manifest count grows with commit frequency independent of data volume, and planning walks manifests. A table with modest data and 40,000 manifests plans slowly for reasons that have nothing to do with its size.
+The fourth catches the subtler problem. Manifest count grows with commit frequency independent of data volume, and planning walks manifests. A table with modest data and 40, 000 manifests plans slowly for reasons that have nothing to do with its size.
 
 ## Scheduling It Properly
 
 The operations themselves are straightforward. The scheduling logic is where the savings live.
 
 ```sql
--- Compact only recent partitions, only when file counts justify it.
+- Compact only recent partitions, only when file counts justify it.
 CALL lakehouse.system.rewrite_data_files(
-    table             => 'sales.orders',
-    strategy          => 'sort',
-    sort_order        => 'customer_id ASC NULLS LAST, order_date ASC',
-    where             => 'order_date >= current_date() - INTERVAL 2 DAYS',
-    options           => map(
-        'min-input-files',            '25',
-        'target-file-size-bytes',     '536870912',
-        'max-concurrent-file-group-rewrites', '8',
-        'partial-progress.enabled',   'true',
-        'partial-progress.max-commits', '10'
-    )
+ table => 'sales.orders', strategy => 'sort', sort_order => 'customer_id ASC NULLS LAST, order_date ASC', where => 'order_date >= current_date() - INTERVAL 2 DAYS', options => map(
+ 'min-input-files', '25', 'target-file-size-bytes', '536870912', 'max-concurrent-file-group-rewrites', '8', 'partial-progress.enabled', 'true', 'partial-progress.max-commits', '10'
+ )
 );
 
--- Fold accumulated deletes back into data files.
+- Fold accumulated deletes back into data files.
 CALL lakehouse.system.rewrite_position_delete_files(table => 'sales.orders');
 
--- Keep the metadata tree shallow.
+- Keep the metadata tree shallow.
 CALL lakehouse.system.rewrite_manifests(table => 'sales.orders');
 
--- Bound history and let storage reclamation happen.
+- Bound history and let storage reclamation happen.
 CALL lakehouse.system.expire_snapshots(
-    table       => 'sales.orders',
-    older_than  => current_timestamp() - INTERVAL 7 DAYS,
-    retain_last => 50
+ table => 'sales.orders', older_than => current_timestamp() - INTERVAL 7 DAYS, retain_last => 50
 );
 
--- Weekly, not hourly. This one lists storage and is slow.
+- Weekly, not hourly. This one lists storage and is slow.
 CALL lakehouse.system.remove_orphan_files(
-    table      => 'sales.orders',
-    older_than => current_timestamp() - INTERVAL 3 DAYS
+ table => 'sales.orders', older_than => current_timestamp() - INTERVAL 3 DAYS
 );
 ```
 
@@ -215,10 +195,10 @@ One scheduling rule that prevents most incidents: never run compaction and a hea
 Maintenance without targets turns into either neglect or over-provisioning. Four thresholds cover almost everything, and each maps to a query above.
 
 | Metric | Healthy | Investigate | Act now |
-|---|---|---|---|
+|--|--|--|--|
 | Files under 32 MB per active partition | Under 50 | 50 to 300 | Above 300 |
-| Snapshots per table | Under 500 | 500 to 5,000 | Above 5,000 |
-| Manifest count per table | Under 1,000 | 1,000 to 10,000 | Above 10,000 |
+| Snapshots per table | Under 500 | 500 to 5, 000 | Above 5, 000 |
+| Manifest count per table | Under 1, 000 | 1, 000 to 10, 000 | Above 10, 000 |
 | Delete file size as share of data size | Under 2 percent | 2 to 10 percent | Above 10 percent |
 
 Those numbers are starting points rather than laws. Tables with extreme partition counts tolerate different values, and a table nobody queries tolerates almost anything. Set them per table class, write them down, and alert on the "act now" column.
@@ -233,7 +213,7 @@ Abstract advice about compaction rarely survives contact with a budget conversat
 
 **Medium estate: 600 tables, 80 TB, mixed batch and streaming, roughly 30 tables receiving continuous writes.** The 30 streaming tables generate almost all the work. They need compaction every few hours, delete file rewriting daily, expiration daily, and manifest rewriting weekly. The other 570 need expiration and little else. Maintenance compute runs 10 to 20 percent of query compute, concentrated on a small fraction of tables. This is the scale where home-built schedulers start failing, not because the code is hard but because table discovery, per-table policy, and failure handling stop being a side project.
 
-**Large estate: 15,000 tables, multiple petabytes, hundreds of streaming writers, several engines.** Nothing hand-scheduled survives here. Maintenance becomes a platform service with its own capacity, its own queue, and its own priority scheme, because you cannot compact everything and have to decide what matters. The decision function is the product. This is where usage-aware scheduling stops being a nice feature and becomes the only workable approach, and where the money in this category actually is.
+**Large estate: 15, 000 tables, multiple petabytes, hundreds of streaming writers, several engines.** Nothing hand-scheduled survives here. Maintenance becomes a platform service with its own capacity, its own queue, and its own priority scheme, because you cannot compact everything and have to decide what matters. The decision function is the product. This is where usage-aware scheduling stops being a nice feature and becomes the only workable approach, and where the money in this category actually is.
 
 The lesson across the three is that maintenance cost concentrates. In every estate I have seen, somewhere between 2 and 10 percent of tables generate 80 percent of the maintenance need. Find those tables first, tune them properly, and treat the long tail with a simple expiration policy. Teams that apply uniform maintenance policy across every table spend far more than necessary and still miss the tables that need attention most.
 
@@ -307,7 +287,7 @@ The clean pattern that emerges from all of this: put the policy in the catalog, 
 
 **Sort order that nobody validated.** Symptom: compaction runs, costs a lot, and queries do not get faster. Cause: sorting on columns that queries do not filter on. Fix: derive the sort order from actual query predicates in the query log rather than from intuition. This is where usage-aware optimization earns its keep.
 
-**Managed maintenance assumed rather than verified.** Symptom: a table on a managed platform with 200,000 files. Cause: the managed optimizer excluded that table for a reason nobody noticed, often an unsupported configuration or a paused optimization setting. Fix: your own monitoring, even on managed platforms.
+**Managed maintenance assumed rather than verified.** Symptom: a table on a managed platform with 200, 000 files. Cause: the managed optimizer excluded that table for a reason nobody noticed, often an unsupported configuration or a paused optimization setting. Fix: your own monitoring, even on managed platforms.
 
 ## Questions to Ask a Vendor About Maintenance
 

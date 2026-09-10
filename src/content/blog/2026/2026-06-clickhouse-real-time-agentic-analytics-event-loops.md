@@ -1,6 +1,6 @@
 ---
 title: "Real-Time Agentic Analytics with ClickHouse"
-description: "ClickHouse has become the leading real-time analytics engine for AI agent workloads, with event-loop architectures that let agents query and act at sub-second speeds."
+description: "ClickHouse has become the leading real-time analytics engine for AI agent workloads, with event-loop architectures that let agents query and act."
 date: 2026-06-08T09:00:00Z
 slug: "clickhouse-real-time-agentic-analytics-event-loops"
 draft: false
@@ -15,7 +15,6 @@ tags:
   - "streaming ingestion"
   - "Iceberg query engine"
 ---
-
 ## The Agent Query Wave
 
 In February 2025, a ClickHouse engineer noticed something strange in the production metrics. Query volume had spiked 10x in under an hour. The first assumption was a DDoS attack. The actual cause was simpler. The company had deployed a fleet of autonomous AI agents that were monitoring and optimizing business metrics. The agents were running dozens of exploratory queries per second, each one probing a different slice of the data.
@@ -24,7 +23,7 @@ This story, recounted in the ClickHouse blog post "Agent-Facing Analytics" (Ryad
 
 Each loop can generate 5 to 20 SQL queries. An agent monitoring customer churn might query active subscriptions, then segment by region, then check historical trends, then correlate with support tickets, then calculate a retention offer budget. All within seconds. All without a human looking at intermediate results.
 
-ClickHouse at Open House 2026 announced $250M+ ARR (more than triple a year ago), 4,000 total customers, and the ClickHouse Agents service powered by Anthropic's Claude (source: HPCwire AIwire, May 2026). The company has positioned itself as the real-time analytics engine for AI workloads, and the numbers suggest the market agrees.
+ClickHouse at Open House 2026 announced $250M+ ARR (more than triple a year ago), 4, 000 total customers, and the ClickHouse Agents service powered by Anthropic's Claude (source: HPCwire AIwire, May 2026). The company has positioned itself as the real-time analytics engine for AI workloads, and the numbers suggest the market agrees.
 
 ## Why Real-Time Analytics Databases Fit AI Agents
 
@@ -91,9 +90,9 @@ The key architectural decision is whether data flows through ClickHouse as a hot
 
 ClickHouse and Dremio both query Iceberg tables, but they target different workload patterns.
 
-ClickHouse excels at high-throughput ingest and sub-second analytical queries on structured data. Its columnar engine is optimized for single-table aggregates with filter predicates. The MergeTree engine family provides native performance that handily beats Iceberg table functions. If your workload is "ingest millions of events per second and query them in real time," ClickHouse wins.
+ClickHouse excels at high-throughput ingest and sub-second analytical queries on structured data. Its columnar engine is optimized for single-table aggregates with filter predicates. The MergeTree engine family provides native performance that handily beats Iceberg table functions. If your workload is "ingest millions of events per second and query them in real time, " ClickHouse wins.
 
-Dremio excels at multi-source federation and semantic layer queries. Its query engine optimizes across Iceberg tables, relational databases, and file stores without moving data. The built-in semantic layer means analysts and AI agents query business metrics instead of raw column names. If your workload is "query Iceberg tables across multiple catalogs and expose governed metrics to AI agents," Dremio wins.
+Dremio excels at multi-source federation and semantic layer queries. Its query engine optimizes across Iceberg tables, relational databases, and file stores without moving data. The built-in semantic layer means analysts and AI agents query business metrics instead of raw column names. If your workload is "query Iceberg tables across multiple catalogs and expose governed metrics to AI agents, " Dremio wins.
 
 The two systems are complementary. A common architecture uses ClickHouse for the real-time ingestion and hot query tier, Iceberg for the open storage tier, and Dremio for the federation and semantic layer tier. Each system does what it does best.
 
@@ -111,7 +110,7 @@ The debate between specialized engines and federated query is not settled by one
 
 ## The Bottom Line
 
-ClickHouse has become the real-time analytics engine for the agentic era. Its $250M ARR, 4,000 customers, and Open House 2026 announcements confirm the market trajectory. The event loop architecture of AI agents maps naturally to ClickHouse's query model, and the Iceberg integration means data does not have to move to be analyzed.
+ClickHouse has become the real-time analytics engine for the agentic era. Its $250M ARR, 4, 000 customers, and Open House 2026 announcements confirm the market trajectory. The event loop architecture of AI agents maps naturally to ClickHouse's query model, and the Iceberg integration means data does not have to move to be analyzed.
 
 The key architectural decision is whether agents query native MergeTree tables for speed or Iceberg tables for openness. The answer depends on the workload. But the pattern is clear. Agents query. ClickHouse answers. The loop repeats. And the gap between data ingestion and data action shrinks to milliseconds.
 
@@ -125,6 +124,6 @@ The entire loop runs without human intervention. The agent senses, thinks, and a
 
 This is the practical difference between agentic analytics and traditional business intelligence. BI dashboards show what happened yesterday. Agentic analytics triggers actions on what is happening now. The database is not just a reporting tool. It is the agent's environment for continuous decision-making.
 
----
+--
 
 **Ready to build agentic analytics on your Iceberg lakehouse?** Dremio combines Apache Iceberg-native storage with a semantic layer that makes your data AI-ready. Query Iceberg tables across clouds and catalogs without moving data, and expose governed business metrics to any AI agent through SQL or MCP. [Learn more at dremio.com](https://www.dremio.com).

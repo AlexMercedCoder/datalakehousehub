@@ -13,20 +13,21 @@ draft: false
 image: "/images/blog.png"
 canonical: "https://iceberglakehouse.com/posts/2024-8-acid-guarantees-and-apache-iceberg/"
 ---
-> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2024-8-acid-guarantees-and-apache-iceberg/).
 
 Apache Iceberg has become a prominent name in the data world, with numerous platforms integrating support for Iceberg tables as part of the growing open data lakehouse ecosystem. A key feature often highlighted is Iceberg's ability to enable ACID transactions. In this blog, I will explore what ACID guarantees mean and how Iceberg delivers them, to help you better understand the value Apache Iceberg brings to the table.
+
+> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2024-8-acid-guarantees-and-apache-iceberg/).
 
 ## What are ACID Guarantees?
 
 ACID is an acronym that outlines the key guarantees a data system should provide - guarantees that are typically offered by most SQL-based databases and data warehouses. These guarantees include:
 
 - **Atomicity**: This ensures that when a change is made, it either completes successfully or doesn't occur at all. This prevents partial changes, which can be difficult and time-consuming to resolve. If a change doesn't succeed, you can simply retry it without worry.
-  
+ 
 - **Consistency**: This ensures that everyone accessing the data sees the same version of it, maintaining uniformity across the system.
-  
+ 
 - **Isolation**: This allows multiple users to make updates or query data simultaneously without interfering with one another.
-  
+ 
 - **Durability**: This guarantees that once data is stored, it remains available for future access.
 
 ## How Databases and Data Warehouses Do ACID

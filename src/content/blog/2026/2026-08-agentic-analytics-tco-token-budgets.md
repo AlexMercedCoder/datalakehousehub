@@ -1,7 +1,7 @@
 ---
 title: "Budgeting for Agentic Analytics When Every Question Costs Something Different"
 date: 2026-08-04T09:00:00Z
-description: "Budgeting for agentic analytics when every question costs something different: token economics, query economics, instrumentation, and the cost controls that actually return."
+description: "Budgeting for agentic analytics when every question costs something different: token economics, query economics, instrumentation, and the cost controls."
 author: "Alex Merced"
 category: "AI & Agents"
 tags:
@@ -16,11 +16,11 @@ image: "/images/blog.png"
 canonical: "https://iceberglakehouse.com/posts/agentic-analytics-tco-token-budgets/"
 ---
 
-> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/agentic-analytics-tco-token-budgets/).
-
 # Budgeting for Agentic Analytics When Every Question Costs Something Different
 
 *By Alex Merced, Data Lakehouse and AI Evangelist*
+
+> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/agentic-analytics-tco-token-budgets/).
 
 The pilot ran for six weeks with forty users and cost less than a team lunch. Someone approved rolling it out to eight hundred people. The first full month's bill arrived with two line items that nobody had modeled: a model provider invoice several times the projection, and a lakehouse compute figure that had roughly tripled.
 
@@ -77,7 +77,7 @@ Conversation history compounds. Turn ten re-sends turns one through nine. Summar
 The practical structure that minimizes cost looks like this.
 
 | Context component | Cost behavior | Control |
-|---|---|---|
+|--|--|--|
 | System prompt | Fixed per call, cacheable | Keep stable so it caches |
 | Tool definitions | Fixed per call, cacheable | Minimize tool count, keep schemas terse |
 | Metric definitions | Fetched per call, cacheable | Serve from a cached discovery endpoint |
@@ -111,26 +111,9 @@ You cannot control what you have not measured, and retrofitting instrumentation 
 
 ```sql
 CREATE TABLE ops.agents.invocations (
-    invocation_id       STRING,
-    session_id          STRING,
-    principal           STRING,
-    surface             STRING,   -- which app or loop originated it
-    started_at          TIMESTAMP,
-    duration_ms         BIGINT,
-
-    model_id            STRING,
-    input_tokens        BIGINT,
-    cached_input_tokens BIGINT,
-    output_tokens       BIGINT,
-
-    tool_calls          INT,
-    data_queries        INT,
-    rows_returned       BIGINT,
-    engine_ms           BIGINT,
-
-    outcome             STRING,   -- answered, abstained, error, budget_exceeded
-    retries             INT,
-    question_category   STRING
+ invocation_id STRING, session_id STRING, principal STRING, surface STRING, which app or loop originated it
+ started_at TIMESTAMP, duration_ms BIGINT, model_id STRING, input_tokens BIGINT, cached_input_tokens BIGINT, output_tokens BIGINT, tool_calls INT, data_queries INT, rows_returned BIGINT, engine_ms BIGINT, outcome STRING, answered, abstained, error, budget_exceeded
+ retries INT, question_category STRING
 )
 USING iceberg
 PARTITIONED BY (days(started_at))
@@ -146,15 +129,10 @@ Two fields deserve emphasis.
 From that table, three queries answer the questions people actually ask.
 
 ```sql
--- Cost drivers by question category
+- Cost drivers by question category
 SELECT
-    question_category,
-    COUNT(*)                                  AS invocations,
-    ROUND(AVG(input_tokens), 0)               AS avg_input_tokens,
-    ROUND(AVG(cached_input_tokens) * 100.0
-          / NULLIF(AVG(input_tokens), 0), 1)  AS cache_hit_pct,
-    ROUND(AVG(data_queries), 1)               AS avg_queries,
-    ROUND(AVG(engine_ms) / 1000.0, 2)         AS avg_engine_sec
+ question_category, COUNT(*) AS invocations, ROUND(AVG(input_tokens), 0) AS avg_input_tokens, ROUND(AVG(cached_input_tokens) * 100.0
+ / NULLIF(AVG(input_tokens), 0), 1) AS cache_hit_pct, ROUND(AVG(data_queries), 1) AS avg_queries, ROUND(AVG(engine_ms) / 1000.0, 2) AS avg_engine_sec
 FROM ops.agents.invocations
 WHERE started_at >= current_date - INTERVAL '30' DAY
 GROUP BY question_category
@@ -162,15 +140,10 @@ ORDER BY invocations DESC;
 ```
 
 ```sql
--- Sessions that ran away
+- Sessions that ran away
 SELECT
-    session_id,
-    principal,
-    COUNT(*)                AS invocations,
-    SUM(tool_calls)         AS total_tool_calls,
-    SUM(input_tokens
-      + output_tokens)      AS total_tokens,
-    SUM(retries)            AS retries
+ session_id, principal, COUNT(*) AS invocations, SUM(tool_calls) AS total_tool_calls, SUM(input_tokens
+ + output_tokens) AS total_tokens, SUM(retries) AS retries
 FROM ops.agents.invocations
 WHERE started_at >= current_date - INTERVAL '7' DAY
 GROUP BY session_id, principal
@@ -181,11 +154,9 @@ ORDER BY total_tokens DESC;
 That second query is the one to run first. Every deployment I have seen has a small number of sessions consuming a disproportionate share, and they are almost always agents looping without converging rather than users doing anything unusual.
 
 ```sql
--- Abstention and error rate over time
+- Abstention and error rate over time
 SELECT
-    date_trunc('day', started_at) AS day,
-    outcome,
-    COUNT(*)                      AS n
+ date_trunc('day', started_at) AS day, outcome, COUNT(*) AS n
 FROM ops.agents.invocations
 WHERE started_at >= current_date - INTERVAL '30' DAY
 GROUP BY 1, 2
@@ -234,12 +205,8 @@ Before tuning anything else, look at what your agents are asking for and how oft
 
 ```sql
 SELECT
-    question_category,
-    normalized_question,
-    COUNT(*)                          AS asks,
-    COUNT(DISTINCT principal)         AS askers,
-    ROUND(AVG(input_tokens
-            + output_tokens), 0)      AS avg_tokens
+ question_category, normalized_question, COUNT(*) AS asks, COUNT(DISTINCT principal) AS askers, ROUND(AVG(input_tokens
+ + output_tokens), 0) AS avg_tokens
 FROM ops.agents.invocations
 WHERE started_at >= current_date - INTERVAL '30' DAY
 GROUP BY question_category, normalized_question

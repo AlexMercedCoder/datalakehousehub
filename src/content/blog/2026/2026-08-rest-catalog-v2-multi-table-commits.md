@@ -16,11 +16,11 @@ image: "/images/blog.png"
 canonical: "https://iceberglakehouse.com/posts/rest-catalog-v2-multi-table-commits/"
 ---
 
-> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/rest-catalog-v2-multi-table-commits/).
-
 # How the Iceberg REST Catalog Turned Into the Lakehouse Control Plane
 
 *By Alex Merced, Data Lakehouse and AI Evangelist*
+
+> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/rest-catalog-v2-multi-table-commits/).
 
 A dbt run updates a fact table and two dimension tables. The fact table commit succeeds. The second dimension commit fails on a conflict. For the next four minutes, every dashboard reading those three tables sees a fact table that references dimension rows that do not exist yet.
 
@@ -76,30 +76,21 @@ Here is what the payload looks like in shape. Real clients build this through th
 
 ```json
 {
-  "table-changes": [
-    {
-      "identifier": { "namespace": ["sales"], "name": "fct_orders" },
-      "requirements": [
-        { "type": "assert-ref-snapshot-id", "ref": "main", "snapshot-id": 8271639 }
-      ],
-      "updates": [
-        { "action": "add-snapshot", "snapshot": { "snapshot-id": 8271640 } },
-        { "action": "set-snapshot-ref", "ref-name": "main",
-          "type": "branch", "snapshot-id": 8271640 }
-      ]
-    },
-    {
-      "identifier": { "namespace": ["sales"], "name": "dim_customer" },
-      "requirements": [
-        { "type": "assert-ref-snapshot-id", "ref": "main", "snapshot-id": 5510022 }
-      ],
-      "updates": [
-        { "action": "add-snapshot", "snapshot": { "snapshot-id": 5510023 } },
-        { "action": "set-snapshot-ref", "ref-name": "main",
-          "type": "branch", "snapshot-id": 5510023 }
-      ]
-    }
-  ]
+ "table-changes": [
+ {
+ "identifier": { "namespace": ["sales"], "name": "fct_orders" }, "requirements": [
+ { "type": "assert-ref-snapshot-id", "ref": "main", "snapshot-id": 8271639 }
+ ], "updates": [
+ { "action": "add-snapshot", "snapshot": { "snapshot-id": 8271640 } }, { "action": "set-snapshot-ref", "ref-name": "main", "type": "branch", "snapshot-id": 8271640 }
+ ]
+ }, {
+ "identifier": { "namespace": ["sales"], "name": "dim_customer" }, "requirements": [
+ { "type": "assert-ref-snapshot-id", "ref": "main", "snapshot-id": 5510022 }
+ ], "updates": [
+ { "action": "add-snapshot", "snapshot": { "snapshot-id": 5510023 } }, { "action": "set-snapshot-ref", "ref-name": "main", "type": "branch", "snapshot-id": 5510023 }
+ ]
+ }
+ ]
 }
 ```
 
@@ -113,25 +104,20 @@ On the client side in Java, the code is unremarkable, which is the point.
 
 ```java
 Catalog catalog = CatalogUtil.loadCatalog(
-    "org.apache.iceberg.rest.RESTCatalog",
-    "prod",
-    Map.of(
-        "uri", "https://catalog.internal.example.com/api/catalog",
-        "warehouse", "analytics",
-        "credential", System.getenv("CATALOG_CREDENTIAL")
-    ),
-    new Configuration());
+ "org.apache.iceberg.rest.RESTCatalog", "prod", Map.of(
+ "uri", "https://catalog.internal.example.com/api/catalog", "warehouse", "analytics", "credential", System.getenv("CATALOG_CREDENTIAL")
+ ), new Configuration());
 
 Transaction fact = catalog.loadTable(
-    TableIdentifier.of("sales", "fct_orders")).newTransaction();
+ TableIdentifier.of("sales", "fct_orders")).newTransaction();
 Transaction dim = catalog.loadTable(
-    TableIdentifier.of("sales", "dim_customer")).newTransaction();
+ TableIdentifier.of("sales", "dim_customer")).newTransaction();
 
 fact.newAppend().appendFile(orderFile).commit();
 dim.newAppend().appendFile(customerFile).commit();
 
 ((RESTSessionCatalog) catalog).commitTransaction(
-    List.of(fact, dim));
+ List.of(fact, dim));
 ```
 
 The individual `commit()` calls stage changes inside each transaction object. Nothing reaches the catalog. The final `commitTransaction` sends both change sets in one request. Either both tables advance or neither does.
@@ -154,15 +140,9 @@ The load response carries the credential alongside the metadata.
 
 ```json
 {
-  "metadata-location": "s3://lake/warehouse/sales/fct_orders/metadata/00042.json",
-  "metadata": { "format-version": 3, "table-uuid": "..." },
-  "config": {
-    "s3.access-key-id": "ASIA...",
-    "s3.secret-access-key": "...",
-    "s3.session-token": "...",
-    "s3.remote-signing-enabled": "false",
-    "client.region": "us-east-1"
-  }
+ "metadata-location": "s3://lake/warehouse/sales/fct_orders/metadata/00042.json", "metadata": { "format-version": 3, "table-uuid": "..." }, "config": {
+ "s3.access-key-id": "ASIA...", "s3.secret-access-key": "...", "s3.session-token": "...", "s3.remote-signing-enabled": "false", "client.region": "us-east-1"
+ }
 }
 ```
 
@@ -191,7 +171,7 @@ If you are choosing a catalog today, ask how it handles version negotiation and 
 The ecosystem has consolidated around the REST protocol faster than most people expected, and the implementations differ in ways worth understanding.
 
 | Catalog | Position | Notable characteristics |
-|---|---|---|
+|--|--|--|
 | Apache Polaris | Open source, ASF Top-Level Project since February 18, 2026 | Co-created with Snowflake and donated to the ASF, full REST implementation, credential vending, multi-table transaction work demonstrated here |
 | Project Nessie | Open source, Git-style branching model | Implements its own variant of atomic multi-table commits through branch semantics |
 | Apache Gravitino | Open source, incubating | Broader metadata scope than tables alone, implements multi-table commit variants |
@@ -254,22 +234,17 @@ Registration does not move data. An Iceberg table is defined by its current `met
 
 ```java
 Catalog target = CatalogUtil.loadCatalog(
-    "org.apache.iceberg.rest.RESTCatalog",
-    "prod",
-    Map.of(
-        "uri", "https://catalog.internal.example.com/api/catalog",
-        "warehouse", "analytics",
-        "credential", System.getenv("CATALOG_CREDENTIAL")
-    ),
-    new Configuration());
+ "org.apache.iceberg.rest.RESTCatalog", "prod", Map.of(
+ "uri", "https://catalog.internal.example.com/api/catalog", "warehouse", "analytics", "credential", System.getenv("CATALOG_CREDENTIAL")
+ ), new Configuration());
 
 HiveCatalog source = new HiveCatalog();
 source.initialize("legacy", Map.of("uri", "thrift://metastore:9083"));
 
 for (TableIdentifier id : source.listTables(Namespace.of("sales"))) {
-    String metadataLocation = ((BaseTable) source.loadTable(id))
-        .operations().current().metadataFileLocation();
-    target.registerTable(id, metadataLocation);
+ String metadataLocation = ((BaseTable) source.loadTable(id))
+ .operations().current().metadataFileLocation();
+ target.registerTable(id, metadataLocation);
 }
 ```
 
@@ -286,11 +261,11 @@ Permissions do not come along. Grants in a Hive Metastore or Glue do not transla
 The engine side is configuration only. Spark, for instance, needs the catalog implementation, the endpoint, the warehouse, and credentials.
 
 ```
-spark.sql.catalog.prod                   = org.apache.iceberg.spark.SparkCatalog
-spark.sql.catalog.prod.type              = rest
-spark.sql.catalog.prod.uri               = https://catalog.internal.example.com/api/catalog
-spark.sql.catalog.prod.warehouse         = analytics
-spark.sql.catalog.prod.credential        = <client-id>:<client-secret>
+spark.sql.catalog.prod = org.apache.iceberg.spark.SparkCatalog
+spark.sql.catalog.prod.type = rest
+spark.sql.catalog.prod.uri = https://catalog.internal.example.com/api/catalog
+spark.sql.catalog.prod.warehouse = analytics
+spark.sql.catalog.prod.credential = <client-id>:<client-secret>
 spark.sql.catalog.prod.header.X-Iceberg-Access-Delegation = vended-credentials
 ```
 

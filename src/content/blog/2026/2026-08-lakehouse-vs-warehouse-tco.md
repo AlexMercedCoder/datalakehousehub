@@ -1,7 +1,7 @@
 ---
 title: "Building an Honest TCO Model for Open Lakehouses and Proprietary Warehouses"
 date: 2026-08-04T09:00:00Z
-description: "An honest TCO framework for open lakehouses versus proprietary warehouses: five cost categories, measured numbers, sensitivity analysis, and where each side still wins."
+description: "An honest TCO framework for open lakehouses versus proprietary warehouses: five cost categories, measured numbers, sensitivity analysis, and where each."
 author: "Alex Merced"
 category: "Data Lakehouse"
 tags:
@@ -16,11 +16,11 @@ image: "/images/blog.png"
 canonical: "https://iceberglakehouse.com/posts/lakehouse-vs-warehouse-tco/"
 ---
 
-> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/lakehouse-vs-warehouse-tco/).
-
 # Building an Honest TCO Model for Open Lakehouses and Proprietary Warehouses
 
 *By Alex Merced, Data Lakehouse and AI Evangelist*
+
+> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/lakehouse-vs-warehouse-tco/).
 
 Someone in finance forwards the cloud data warehouse invoice with a one-line question: why is this number growing faster than our data. An architect pulls up a comparison showing object storage at a fraction of the warehouse's per-terabyte rate, and the migration proposal writes itself.
 
@@ -125,7 +125,7 @@ Published estimates of lakehouse consolidation savings cluster in the thirty to 
 Here is the structure for a 100 TB comparison. Substitute your own measured numbers for every figure.
 
 | Cost category | Proprietary warehouse | Open lakehouse | Notes |
-|---|---|---|---|
+|--|--|--|--|
 | Storage | Blended rate on compressed size | Object storage rate on Parquet, plus snapshot overhead | Measure your actual compression, do not assume parity |
 | Query compute | Vendor credits or slots | Engine pricing or instance cost | Model by workload, include idle |
 | Ingestion compute | Vendor units | Separate engine or service | Streaming ingest often cheaper outside a warehouse |
@@ -149,9 +149,7 @@ Start with actual stored bytes on the lakehouse side, including the snapshot ove
 
 ```sql
 SELECT
-    ROUND(SUM(file_size_in_bytes) / 1099511627776.0, 2) AS current_tb,
-    COUNT(*)                                            AS file_count,
-    ROUND(AVG(file_size_in_bytes) / 1048576.0, 1)       AS avg_file_mb
+ ROUND(SUM(file_size_in_bytes) / 1099511627776.0, 2) AS current_tb, COUNT(*) AS file_count, ROUND(AVG(file_size_in_bytes) / 1048576.0, 1) AS avg_file_mb
 FROM prod.sales.orders.files;
 ```
 
@@ -159,10 +157,8 @@ That gives you the current snapshot. Now compare it against everything storage i
 
 ```sql
 SELECT
-    COUNT(DISTINCT snapshot_id)                          AS retained_snapshots,
-    MIN(committed_at)                                    AS oldest_retained,
-    ROUND(SUM(CAST(summary['total-files-size'] AS DOUBLE))
-          / 1099511627776.0, 2)                          AS sum_across_snapshots
+ COUNT(DISTINCT snapshot_id) AS retained_snapshots, MIN(committed_at) AS oldest_retained, ROUND(SUM(CAST(summary['total-files-size'] AS DOUBLE))
+ / 1099511627776.0, 2) AS sum_across_snapshots
 FROM prod.sales.orders.snapshots;
 ```
 
@@ -172,10 +168,8 @@ Next, get compression reality rather than assumption.
 
 ```sql
 SELECT
-    ROUND(SUM(file_size_in_bytes) / 1099511627776.0, 3)  AS compressed_tb,
-    SUM(record_count)                                    AS rows_stored,
-    ROUND(SUM(file_size_in_bytes)
-          / NULLIF(SUM(record_count), 0), 1)             AS bytes_per_row
+ ROUND(SUM(file_size_in_bytes) / 1099511627776.0, 3) AS compressed_tb, SUM(record_count) AS rows_stored, ROUND(SUM(file_size_in_bytes)
+ / NULLIF(SUM(record_count), 0), 1) AS bytes_per_row
 FROM prod.sales.orders.files;
 ```
 

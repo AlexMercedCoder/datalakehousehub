@@ -17,11 +17,11 @@ image: "/images/blog.png"
 canonical: "https://iceberglakehouse.com/posts/building-air-gapped-iceberg-lakehouse/"
 ---
 
-> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/building-air-gapped-iceberg-lakehouse/).
-
 # Building Apache Iceberg Lakehouses That Run Without an Internet Connection
 
 *By Alex Merced, Data Lakehouse and AI Evangelist*
+
+> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/building-air-gapped-iceberg-lakehouse/).
 
 A hospital system wants a lakehouse. Their security review says patient data never leaves facilities they control. A defense contractor wants the same architecture inside an enclave with no route to the public internet. A bank in a jurisdiction with data residency law wants it inside one country's borders, on hardware they own.
 
@@ -54,7 +54,7 @@ Everything sits on S3-compatible object storage. Iceberg does not care whose imp
 The options changed meaningfully in the last two years, mostly because MinIO moved to maintenance mode and its AGPL licensing pushed some organizations to look elsewhere. Here is the honest state of the field.
 
 | Option | License | Fit | Cautions |
-|---|---|---|---|
+|--|--|--|--|
 | MinIO | AGPL | Proven at scale, widely deployed, well understood | Maintenance mode, AGPL review required, some admin functions moved to CLI |
 | Ceph RADOS Gateway | LGPL | Block, file, and object in one system, strong operational track record | Lower object throughput per node than dedicated object stores |
 | SeaweedFS | Apache 2.0 | Billions of files with constant-time lookup, strong on small objects, cloud tiering, Kubernetes CSI driver | Fewer enterprise appliance integrations |
@@ -107,25 +107,25 @@ Here is the structure of a working stack. Adapt the specifics to your platform.
 ```yaml
 # Object storage: S3-compatible, erasure coded across nodes
 storage:
-  endpoint: https://objects.internal.acme.local
-  region: us-internal-1
-  path_style_access: true          # required by most self-hosted stores
-  tls_ca_bundle: /etc/pki/acme-internal-ca.pem
+ endpoint: https://objects.internal.acme.local
+ region: us-internal-1
+ path_style_access: true # required by most self-hosted stores
+ tls_ca_bundle: /etc/pki/acme-internal-ca.pem
 
 # Catalog: Iceberg REST, backed by an internal Postgres cluster
 catalog:
-  image: internal-registry.acme.local/lakekeeper/lakekeeper:pinned-tag
-  database_url: postgresql://catalog-db.internal.acme.local:5432/catalog
-  openid_provider_uri: https://sso.internal.acme.local/auth/data
-  s3_endpoint: https://objects.internal.acme.local
-  s3_path_style_access: true
-  enable_vended_credentials: true
+ image: internal-registry.acme.local/lakekeeper/lakekeeper:pinned-tag
+ database_url: postgresql://catalog-db.internal.acme.local:5432/catalog
+ openid_provider_uri: https://sso.internal.acme.local/auth/data
+ s3_endpoint: https://objects.internal.acme.local
+ s3_path_style_access: true
+ enable_vended_credentials: true
 
 # Engine: connects only to the catalog, never directly to storage config
 engine:
-  catalog_uri: https://catalog.internal.acme.local/catalog
-  warehouse: acme_lakehouse
-  access_delegation: vended-credentials
+ catalog_uri: https://catalog.internal.acme.local/catalog
+ warehouse: acme_lakehouse
+ access_delegation: vended-credentials
 ```
 
 Several details in that configuration are the ones that break first-time deployments.
@@ -166,7 +166,7 @@ For incremental transfer, snapshot-based export is the right shape. Track the la
 SELECT f.file_path, f.file_size_in_bytes
 FROM prod.clinical.encounters.files f
 JOIN prod.clinical.encounters.snapshots s
-  ON f.snapshot_id = s.snapshot_id
+ ON f.snapshot_id = s.snapshot_id
 WHERE s.committed_at > TIMESTAMP '2026-07-01 00:00:00'
 ORDER BY s.committed_at;
 ```

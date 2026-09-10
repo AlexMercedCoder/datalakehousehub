@@ -15,9 +15,10 @@ draft: false
 image: "/images/blog.png"
 canonical: https://iceberglakehouse.com/posts/data-team-of-the-agentic-era/
 ---
-> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/data-team-of-the-agentic-era/).
 
 The standard data team was assembled around a set of scarcities. Writing production pipelines required someone who knew Spark internals, so there was a data engineer. Building models required someone who knew statistics and Python, so there was a data scientist. Answering business questions required someone who knew SQL and the warehouse, so there was an analyst. Running the platform required someone who knew Kubernetes and cost management, so there was a platform engineer. Each role existed because the skill was hard to acquire and the work was too much for one person to hold.
+
+> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/data-team-of-the-agentic-era/).
 
 Coding agents have not removed those skills from the work. They have changed how much of the work each skill gates. Someone who understands what a pipeline should do can now produce one without having memorized the Spark API. Someone who understands what a dashboard should show can build it without having specialized in the BI tool. The specialist's knowledge still matters, and it matters differently: as judgment about whether the output is right, rather than as the throughput constraint on producing it.
 
@@ -231,7 +232,7 @@ The specialist data team was a response to skills being expensive and tools bein
 
 The counterarguments are real. Depth does not compress, agents fail worst where correctness matters most, breadth has a ceiling, and dissolving specialization stops producing specialists. A team that adopts the generalist model without a platform underneath it, without mechanical verification, and without protecting the path to depth will be worse off than the handoff-heavy structure it replaced.
 
-The version that works keeps the specialists and changes their job, invests in the platform first, makes verification a standard practice rather than a review step, and measures whether any of it helped. That is a less dramatic conclusion than either "AI changes everything" or "nothing has changed," and it is the one the evidence supports.
+The version that works keeps the specialists and changes their job, invests in the platform first, makes verification a standard practice rather than a review step, and measures whether any of it helped. That is a less dramatic conclusion than either "AI changes everything" or "nothing has changed, " and it is the one the evidence supports.
 
 ## Keep Going
 

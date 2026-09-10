@@ -16,13 +16,14 @@ draft: false
 image: "/images/blog.png"
 canonical: "https://iceberglakehouse.com/posts/2026-03-connector-apache-druid/"
 ---
-> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-03-connector-apache-druid/).
 
 Apache Druid is a real-time analytics database designed for sub-second queries on high-ingestion-rate event data. Clickstream analytics, application monitoring, IoT telemetry, and ad-tech workloads rely on Druid's columnar storage and inverted indexes for instantaneous queries.
 
+> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-03-connector-apache-druid/).
+
 Dremio Cloud connects to Druid as a federated data source, giving you the ability to join Druid event data with relational databases, data lakes, and cloud warehouses. Dremio adds governance (column masking, row-level filtering), Reflection-based acceleration, and AI capabilities (AI Agent, MCP Server, AI SQL Functions) that Druid doesn't provide natively.
 
-Druid excels at one thing: fast aggregation queries on time-series event data. But production analytics rarely involve just one data source. When a product manager asks "Show me user engagement metrics correlated with support ticket volume and revenue impact," that query requires joining Druid's event data with a CRM database and a financial system. Druid can't do these joins natively : it doesn't support standard SQL JOINs. Dremio bridges this gap by reading Druid data and joining it with any other source in a single SQL query.
+Druid excels at one thing: fast aggregation queries on time-series event data. But production analytics rarely involve just one data source. When a product manager asks "Show me user engagement metrics correlated with support ticket volume and revenue impact, " that query requires joining Druid's event data with a CRM database and a financial system. Druid can't do these joins natively : it doesn't support standard SQL JOINs. Dremio bridges this gap by reading Druid data and joining it with any other source in a single SQL query.
 
 But Druid has fundamental limitations that become painful as analytics needs grow. It doesn't support traditional SQL joins between datasources. It doesn't connect to external databases. Its query model is optimized for aggregations on its own ingested segments, not for the kind of cross-source, enriched analytics modern organizations need.
 
@@ -44,7 +45,7 @@ Dremio's federation provides that enrichment without duplicating dimensional dat
 
 ### Historical Analysis Across Time Ranges
 
-Druid is optimized for recent data (hot segments). Historical analysis across months or years :  trend analysis, year-over-year comparisons ,  often hits cold segments that are slower to query. Dremio's Reflections cache aggregated historical results, providing fast access to time-series trends without depending on Druid's tiered storage.
+Druid is optimized for recent data (hot segments). Historical analysis across months or years : trend analysis, year-over-year comparisons, often hits cold segments that are slower to query. Dremio's Reflections cache aggregated historical results, providing fast access to time-series trends without depending on Druid's tiered storage.
 
 ### Unified Governance
 
@@ -82,13 +83,9 @@ Set Reflection Refresh, Metadata refresh intervals, and any connection propertie
 ## Query Real-Time Druid Data
 
 ```sql
--- Real-time page view metrics
+- Real-time page view metrics
 SELECT
-  DATE_TRUNC('hour', __time) AS event_hour,
-  page,
-  COUNT(*) AS page_views,
-  COUNT(DISTINCT user_id) AS unique_visitors,
-  ROUND(COUNT(*) * 1.0 / COUNT(DISTINCT user_id), 2) AS views_per_visitor
+ DATE_TRUNC('hour', __time) AS event_hour, page, COUNT(*) AS page_views, COUNT(DISTINCT user_id) AS unique_visitors, ROUND(COUNT(*) * 1.0 / COUNT(DISTINCT user_id), 2) AS views_per_visitor
 FROM "druid-realtime".druid.pageviews
 WHERE __time > CURRENT_TIMESTAMP - INTERVAL '24' HOUR
 GROUP BY 1, 2
@@ -99,27 +96,19 @@ LIMIT 20;
 ## Federate: Enrich Real-Time Data with Business Context
 
 ```sql
--- Join Druid real-time events with PostgreSQL user segments and S3 product data
+- Join Druid real-time events with PostgreSQL user segments and S3 product data
 SELECT
-  d.event_hour,
-  c.user_segment,
-  p.product_category,
-  SUM(d.page_views) AS total_views,
-  COUNT(DISTINCT d.user_id) AS unique_users,
-  CASE
-    WHEN c.user_segment = 'Enterprise' THEN ROUND(SUM(d.page_views) * 2.5, 2)
-    WHEN c.user_segment = 'Pro' THEN ROUND(SUM(d.page_views) * 1.5, 2)
-    ELSE ROUND(SUM(d.page_views) * 0.5, 2)
-  END AS estimated_value
+ d.event_hour, c.user_segment, p.product_category, SUM(d.page_views) AS total_views, COUNT(DISTINCT d.user_id) AS unique_users, CASE
+ WHEN c.user_segment = 'Enterprise' THEN ROUND(SUM(d.page_views) * 2.5, 2)
+ WHEN c.user_segment = 'Pro' THEN ROUND(SUM(d.page_views) * 1.5, 2)
+ ELSE ROUND(SUM(d.page_views) * 0.5, 2)
+ END AS estimated_value
 FROM (
-  SELECT
-    DATE_TRUNC('hour', __time) AS event_hour,
-    user_id,
-    page,
-    COUNT(*) AS page_views
-  FROM "druid-realtime".druid.pageviews
-  WHERE __time > CURRENT_TIMESTAMP - INTERVAL '24' HOUR
-  GROUP BY 1, 2, 3
+ SELECT
+ DATE_TRUNC('hour', __time) AS event_hour, user_id, page, COUNT(*) AS page_views
+ FROM "druid-realtime".druid.pageviews
+ WHERE __time > CURRENT_TIMESTAMP - INTERVAL '24' HOUR
+ GROUP BY 1, 2, 3
 ) d
 LEFT JOIN "postgres-crm".public.users c ON d.user_id = c.user_id
 LEFT JOIN "s3-catalog".products.page_mappings p ON d.page = p.page_url
@@ -134,17 +123,12 @@ Druid handles the real-time event aggregation, PostgreSQL provides user context,
 ```sql
 CREATE VIEW analytics.gold.realtime_engagement AS
 SELECT
-  DATE_TRUNC('hour', __time) AS event_hour,
-  page,
-  COUNT(*) AS page_views,
-  COUNT(DISTINCT user_id) AS unique_visitors,
-  ROUND(COUNT(*) * 1.0 / COUNT(DISTINCT user_id), 2) AS views_per_visitor,
-  CASE
-    WHEN COUNT(*) > 10000 THEN 'Trending'
-    WHEN COUNT(*) > 1000 THEN 'Active'
-    WHEN COUNT(*) > 100 THEN 'Normal'
-    ELSE 'Low Traffic'
-  END AS traffic_tier
+ DATE_TRUNC('hour', __time) AS event_hour, page, COUNT(*) AS page_views, COUNT(DISTINCT user_id) AS unique_visitors, ROUND(COUNT(*) * 1.0 / COUNT(DISTINCT user_id), 2) AS views_per_visitor, CASE
+ WHEN COUNT(*) > 10000 THEN 'Trending'
+ WHEN COUNT(*) > 1000 THEN 'Active'
+ WHEN COUNT(*) > 100 THEN 'Normal'
+ ELSE 'Low Traffic'
+ END AS traffic_tier
 FROM "druid-realtime".druid.pageviews
 WHERE __time > CURRENT_TIMESTAMP - INTERVAL '7' DAY
 GROUP BY 1, 2;
@@ -175,26 +159,19 @@ A marketing team lead can ask Claude "Show me our highest-traffic pages from Dru
 Use AI to classify and analyze real-time event patterns:
 
 ```sql
--- Classify page traffic patterns with AI
+- Classify page traffic patterns with AI
 SELECT
-  page,
-  page_views,
-  unique_visitors,
-  AI_CLASSIFY(
-    'Based on this web traffic pattern, classify the likely content type',
-    'Page: ' || page || ', Views: ' || CAST(page_views AS VARCHAR) || ', Unique visitors: ' || CAST(unique_visitors AS VARCHAR) || ', Views per visitor: ' || CAST(views_per_visitor AS VARCHAR),
-    ARRAY['Product Page', 'Blog Content', 'Landing Page', 'Documentation', 'Support']
-  ) AS inferred_content_type
+ page, page_views, unique_visitors, AI_CLASSIFY(
+ 'Based on this web traffic pattern, classify the likely content type', 'Page: ' || page || ', Views: ' || CAST(page_views AS VARCHAR) || ', Unique visitors: ' || CAST(unique_visitors AS VARCHAR) || ', Views per visitor: ' || CAST(views_per_visitor AS VARCHAR), ARRAY['Product Page', 'Blog Content', 'Landing Page', 'Documentation', 'Support']
+ ) AS inferred_content_type
 FROM analytics.gold.realtime_engagement
 WHERE traffic_tier = 'Trending';
 
--- Generate real-time traffic summaries
+- Generate real-time traffic summaries
 SELECT
-  event_hour,
-  AI_GENERATE(
-    'Write a brief traffic summary for this hour',
-    'Hour: ' || CAST(event_hour AS VARCHAR) || ', Total Views: ' || CAST(SUM(page_views) AS VARCHAR) || ', Unique Visitors: ' || CAST(SUM(unique_visitors) AS VARCHAR) || ', Trending Pages: ' || CAST(COUNT(CASE WHEN traffic_tier = 'Trending' THEN 1 END) AS VARCHAR)
-  ) AS hourly_summary
+ event_hour, AI_GENERATE(
+ 'Write a brief traffic summary for this hour', 'Hour: ' || CAST(event_hour AS VARCHAR) || ', Total Views: ' || CAST(SUM(page_views) AS VARCHAR) || ', Unique Visitors: ' || CAST(SUM(unique_visitors) AS VARCHAR) || ', Trending Pages: ' || CAST(COUNT(CASE WHEN traffic_tier = 'Trending' THEN 1 END) AS VARCHAR)
+ ) AS hourly_summary
 FROM analytics.gold.realtime_engagement
 GROUP BY event_hour
 ORDER BY event_hour DESC
@@ -261,7 +238,7 @@ Daily batch jobs move yesterday's data from Druid into Iceberg tables in Dremio'
 Older data stays in Iceberg cold storage (S3 Infrequent Access). Compliance and audit queries use time travel against archived snapshots.
 
 ```sql
--- Dremio view that combines real-time and historical data
+- Dremio view that combines real-time and historical data
 CREATE VIEW analytics.gold.unified_events AS
 SELECT event_type, user_id, event_timestamp, 'real-time' AS data_tier
 FROM "druid-cluster".clickstream.events
@@ -270,7 +247,7 @@ UNION ALL
 SELECT event_type, user_id, event_timestamp, 'historical' AS data_tier
 FROM analytics.silver.events_archive
 WHERE event_timestamp < CURRENT_TIMESTAMP - INTERVAL '24' HOUR
-  AND event_timestamp >= CURRENT_TIMESTAMP - INTERVAL '90' DAY;
+ AND event_timestamp >= CURRENT_TIMESTAMP - INTERVAL '90' DAY;
 ```
 
 ## Event Pipeline Integration

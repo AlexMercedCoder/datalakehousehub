@@ -15,9 +15,10 @@ draft: false
 image: "/images/blog.png"
 canonical: https://iceberglakehouse.com/posts/synthetic-data-in-the-lakehouse/
 ---
-> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/synthetic-data-in-the-lakehouse/).
 
 A team needs to test a new pipeline against a year of production orders. Production has the data. Production also has names, addresses, payment tokens, and enough behavioral history that a single row identifies a customer. So the team does what teams do: they take a sample, run a script that replaces names with "Test User" and emails with `user{n}@example.com`, and load it into staging. The pipeline passes. In production it fails, because the masked data lost the correlation between region and payment method that a join depended on, and because nobody masked the free-text notes field, which still contains three customers' phone numbers.
+
+> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/synthetic-data-in-the-lakehouse/).
 
 Synthetic data is the attempt to do this properly: generate data that behaves like production for the purpose at hand, without being production. In a lakehouse the question has more surface than it used to, because the data is larger, the consumers are more numerous, and one of the consumers is now a model being trained or an agent being evaluated. It also has better tooling, because Apache Iceberg gives synthetic data somewhere to live with the same schema, statistics, partitioning, and governance as the real thing.
 
@@ -127,13 +128,7 @@ A synthetic table in a lakehouse has one hard requirement above all others: nobo
 
 ```sql
 ALTER TABLE synthetic.orders SET TBLPROPERTIES (
-  'data.classification'      = 'synthetic',
-  'synthetic.method'         = 'sdv-gaussian-copula',
-  'synthetic.source_table'   = 'analytics.orders',
-  'synthetic.source_snapshot'= '7168742983117921046',
-  'synthetic.generated_at'   = '2026-09-01T04:00:00Z',
-  'synthetic.generator_version' = 'gen-orders:2.4.1',
-  'synthetic.fidelity_report'= 's3://lake/synthetic/reports/orders/2026-09-01.json'
+ 'data.classification' = 'synthetic', 'synthetic.method' = 'sdv-gaussian-copula', 'synthetic.source_table' = 'analytics.orders', 'synthetic.source_snapshot'= '7168742983117921046', 'synthetic.generated_at' = '2026-09-01T04:00:00Z', 'synthetic.generator_version' = 'gen-orders:2.4.1', 'synthetic.fidelity_report'= 's3://lake/synthetic/reports/orders/2026-09-01.json'
 );
 ```
 
@@ -158,18 +153,9 @@ catalog = load_catalog("polaris")
 source = catalog.load_table("analytics.orders")
 
 synthetic = catalog.create_table(
-    "synthetic.orders",
-    schema=source.schema(),
-    partition_spec=source.spec(),
-    sort_order=source.sort_order(),
-    properties={
-        **{k: v for k, v in source.properties().items()
-           if k.startswith("write.") or k == "format-version"},
-        "data.classification": "synthetic",
-        "synthetic.source_table": "analytics.orders",
-        "synthetic.source_snapshot": str(source.current_snapshot().snapshot_id),
-    },
-)
+ "synthetic.orders", schema=source.schema(), partition_spec=source.spec(), sort_order=source.sort_order(), properties={
+ **{k: v for k, v in source.properties().items()
+ if k.startswith("write.") or k == "format-version"}, "data.classification": "synthetic", "synthetic.source_table": "analytics.orders", "synthetic.source_snapshot": str(source.current_snapshot().snapshot_id), }, )
 ```
 
 Copying the partition spec, sort order, and write properties means the synthetic table produces files with the same sizing, compression, and metrics as production, which is what makes performance testing meaningful.
@@ -197,70 +183,51 @@ source = catalog.load_table("analytics.orders")
 snapshot = source.current_snapshot()
 
 # 1. Read distribution hints from metadata, not from the rows.
-#    Row count, null counts, and value bounds come from manifests.
+# Row count, null counts, and value bounds come from manifests.
 row_count = int(snapshot.summary.get("total-records", 0))
 null_rates, bounds = {}, {}
 for task in source.scan().plan_files():
-    f = task.file
-    for fid, nulls in (f.null_value_counts or {}).items():
-        null_rates[fid] = null_rates.get(fid, 0) + nulls
+ f = task.file
+ for fid, nulls in (f.null_value_counts or {}).items():
+ null_rates[fid] = null_rates.get(fid, 0) + nulls
 null_rates = {fid: n / row_count for fid, n in null_rates.items()}
 
 # 2. Create the synthetic table from the source's schema and layout.
 try:
-    target = catalog.load_table("synthetic.orders")
+ target = catalog.load_table("synthetic.orders")
 except Exception:
-    target = catalog.create_table(
-        "synthetic.orders",
-        schema=source.schema(),
-        partition_spec=source.spec(),
-        sort_order=source.sort_order(),
-        properties={
-            "format-version": "3",
-            "data.classification": "synthetic",
-            "synthetic.method": "rule-based-v2",
-            "synthetic.source_table": "analytics.orders",
-        },
-    )
+ target = catalog.create_table(
+ "synthetic.orders", schema=source.schema(), partition_spec=source.spec(), sort_order=source.sort_order(), properties={
+ "format-version": "3", "data.classification": "synthetic", "synthetic.method": "rule-based-v2", "synthetic.source_table": "analytics.orders", }, )
 
 # 3. Generate in batches, with deliberate skew and edge cases.
 rng = np.random.default_rng(20260901)
 CUSTOMERS = 2_000_000
-HOT_CUSTOMER = 1                      # gets a disproportionate share
+HOT_CUSTOMER = 1 # gets a disproportionate share
 
 def batch(n, start_ts, end_ts):
-    hot = rng.random(n) < 0.20
-    customer_id = np.where(hot, HOT_CUSTOMER, rng.integers(2, CUSTOMERS, n))
-    placed_at = rng.integers(start_ts, end_ts, n).astype("datetime64[s]")
-    amount = np.round(rng.lognormal(3.4, 0.9, n), 2)
-    amount[rng.random(n) < null_rates.get(4, 0.0)] = np.nan   # match source null rate
-    status = rng.choice(["placed", "shipped", "delivered", "cancelled"],
-                        n, p=[0.05, 0.10, 0.80, 0.05])
-    return pa.table({
-        "order_id": pa.array(rng.integers(0, 2**62, n)),
-        "customer_id": pa.array(customer_id),
-        "placed_at": pa.array(placed_at),
-        "amount": pa.array(amount),
-        "status": pa.array(status),
-    }, schema=target.schema().as_arrow())
+ hot = rng.random(n) < 0.20
+ customer_id = np.where(hot, HOT_CUSTOMER, rng.integers(2, CUSTOMERS, n))
+ placed_at = rng.integers(start_ts, end_ts, n).astype("datetime64[s]")
+ amount = np.round(rng.lognormal(3.4, 0.9, n), 2)
+ amount[rng.random(n) < null_rates.get(4, 0.0)] = np.nan # match source null rate
+ status = rng.choice(["placed", "shipped", "delivered", "cancelled"], n, p=[0.05, 0.10, 0.80, 0.05])
+ return pa.table({
+ "order_id": pa.array(rng.integers(0, 2**62, n)), "customer_id": pa.array(customer_id), "placed_at": pa.array(placed_at), "amount": pa.array(amount), "status": pa.array(status), }, schema=target.schema().as_arrow())
 
 for day_start, day_end in day_ranges("2025-09-01", "2026-09-01"):
-    target.append(batch(rows_for_day(day_start), day_start, day_end))
+ target.append(batch(rows_for_day(day_start), day_start, day_end))
 
 # 4. Record provenance and fidelity.
-report = fidelity_report(source, target)          # marginals, correlations, constraints
+report = fidelity_report(source, target) # marginals, correlations, constraints
 with open_report_path() as f:
-    json.dump(report, f)
+ json.dump(report, f)
 
 target.transaction().set_properties({
-    "synthetic.source_snapshot": str(snapshot.snapshot_id),
-    "synthetic.generated_at": now_iso(),
-    "synthetic.generator_version": "gen-orders:2.4.1",
-    "synthetic.fidelity_report": report_path,
-}).commit_transaction()
+ "synthetic.source_snapshot": str(snapshot.snapshot_id), "synthetic.generated_at": now_iso(), "synthetic.generator_version": "gen-orders:2.4.1", "synthetic.fidelity_report": report_path, }).commit_transaction()
 
 if report["constraint_violations"] > 0 or report["max_marginal_ks"] > 0.15:
-    raise SystemExit("fidelity thresholds not met")
+ raise SystemExit("fidelity thresholds not met")
 ```
 
 Several choices in that job are deliberate.

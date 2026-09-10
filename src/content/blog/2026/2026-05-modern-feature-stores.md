@@ -2,7 +2,7 @@
 title: "Modern Feature Stores Beyond Batch Pipelines"
 date: 2026-05-24T11:05:00Z
 pubDatetime: 2026-05-24T11:05:00Z
-description: "Feature stores like Feast now support streaming feature views from Kafka and Kinesis alongside batch pipelines. Learn how to build real-time features that maintain training-serving consistency."
+description: "Feature stores like Feast now support streaming feature views from Kafka and Kinesis alongside batch pipelines."
 author: "Alex Merced"
 category: "AI"
 tags:
@@ -17,7 +17,6 @@ slug: 2026-05-modern-feature-stores
 draft: false
 image: "/images/blog/modern-feature-stores/feature-store-offline-online-architecture.png"
 ---
-
 # Modern Feature Stores Beyond Batch Pipelines
 
 The original value proposition of a feature store was straightforward: define features once, use them in both training and serving. The feature engineering logic that computed the `user_30d_purchase_count` feature for training data would be the same logic that computed it for inference, no more training-serving skew where the model trains on slightly different features than it receives in production.
@@ -26,7 +25,7 @@ That problem is real and important. But the batch-only feature store has a signi
 
 The next generation of feature stores adds streaming feature views: feature computations that run continuously against Kafka or Kinesis event streams, populating an online store with features that are seconds-fresh rather than hours-fresh. Feast, the most widely-used open-source feature store, supports streaming feature views natively, with event sources from Kafka and Kinesis and online store backends including Redis, DynamoDB, and Bigtable.
 
----
+--
 
 ## The Two-Store Model
 
@@ -40,7 +39,7 @@ The **online store** is a low-latency key-value store (Redis, DynamoDB) that hol
 
 The feature registry is the central registry of feature definitions. The same YAML or Python definition that configures how a feature is computed in the offline store also configures how it's computed in streaming. This is the mechanism that ensures training-serving consistency: there is one definition of `user_30d_purchase_count`, and both stores compute it the same way.
 
----
+--
 
 ## Streaming Feature Views in Feast
 
@@ -56,34 +55,23 @@ user = Entity(name="user_id", join_keys=["user_id"])
 
 # Define a streaming source from Kafka
 kafka_source = KafkaSource(
-    name="user_actions_kafka",
-    kafka_bootstrap_servers="localhost:9092",
-    topic="user_actions",
-    batch_source=FileSource(path="s3://features/user_actions/"),  # Fallback for training
-    message_format=JsonFormat(
-        schema_json='{"user_id": "string", "action_type": "string", "amount": "double"}'
-    ),
-    timestamp_field="event_timestamp"
+ name="user_actions_kafka", kafka_bootstrap_servers="localhost:9092", topic="user_actions", batch_source=FileSource(path="s3://features/user_actions/"), # Fallback for training
+ message_format=JsonFormat(
+ schema_json='{"user_id": "string", "action_type": "string", "amount": "double"}'
+ ), timestamp_field="event_timestamp"
 )
 
 # Define a streaming feature view with window aggregations
 user_activity_fv = FeatureView(
-    name="user_activity_features",
-    entities=[user],
-    ttl=timedelta(days=7),
-    schema=[
-        Field(name="purchase_count_1h", dtype=Int64),
-        Field(name="purchase_amount_1h", dtype=Float64),
-        Field(name="session_count_24h", dtype=Int64)
-    ],
-    online=True,  # Materialize to online store
-    source=kafka_source,
-)
+ name="user_activity_features", entities=[user], ttl=timedelta(days=7), schema=[
+ Field(name="purchase_count_1h", dtype=Int64), Field(name="purchase_amount_1h", dtype=Float64), Field(name="session_count_24h", dtype=Int64)
+ ], online=True, # Materialize to online store
+ source=kafka_source, )
 ```
 
 The streaming processor computes window aggregations (purchase count in the last hour, purchase amount in the last hour) from the event stream and writes results to the online store continuously. The offline store receives a batch version of the same computation for training data generation.
 
----
+--
 
 ## The Training-Serving Skew Problem
 
@@ -100,29 +88,24 @@ from feast import FeatureStore
 store = FeatureStore(repo_path="./feature_repo")
 
 training_df = store.get_historical_features(
-    entity_df=pd.DataFrame({
-        "user_id": user_ids,
-        "event_timestamp": training_cutoff_dates
-    }),
-    features=[
-        "user_activity_features:purchase_count_1h",
-        "user_activity_features:session_count_24h"
-    ]
+ entity_df=pd.DataFrame({
+ "user_id": user_ids, "event_timestamp": training_cutoff_dates
+ }), features=[
+ "user_activity_features:purchase_count_1h", "user_activity_features:session_count_24h"
+ ]
 ).to_df()
 
 # Inference: retrieve online features for real-time scoring
 online_features = store.get_online_features(
-    features=[
-        "user_activity_features:purchase_count_1h",
-        "user_activity_features:session_count_24h"
-    ],
-    entity_rows=[{"user_id": user_id}]
+ features=[
+ "user_activity_features:purchase_count_1h", "user_activity_features:session_count_24h"
+ ], entity_rows=[{"user_id": user_id}]
 ).to_dict()
 ```
 
 The same feature names, the same registry, the same underlying computation logic, just different execution contexts (historical scan vs online store lookup).
 
----
+--
 
 ## Modern Feature Store Architecture
 
@@ -132,7 +115,7 @@ The integration of Feast into Kubeflow MLOps pipelines has made feature stores m
 
 For data engineering teams, the practical implication is that feature engineering is no longer purely a data pipeline concern. Features that were previously computed ad-hoc in Spark notebooks for training and re-implemented in application code for serving now have a shared definition layer. Data engineering involvement in feature definition and maintenance is expected, not optional.
 
----
+--
 
 ## Using Apache Iceberg as the Feature Offline Store
 
@@ -153,17 +136,17 @@ registry: s3://feature-registry/registry.db
 provider: local
 
 offline_store:
-    type: feast_iceberg.IcebergOfflineStore
-    catalog_name: my_catalog
-    catalog_type: rest
-    uri: https://polaris.example.com/api/catalog
-    warehouse: s3://features/iceberg-warehouse/
-    token: <token>
+ type: feast_iceberg.IcebergOfflineStore
+ catalog_name: my_catalog
+ catalog_type: rest
+ uri: https://polaris.example.com/api/catalog
+ warehouse: s3://features/iceberg-warehouse/
+ token: <token>
 ```
 
 With Iceberg as the offline store, feature retrieval for training uses Iceberg's predicate pushdown for efficient scan performance, and the feature history is preserved through Iceberg snapshots rather than requiring separate time-partitioned Parquet directories.
 
----
+--
 
 ## Feature Governance and Discovery
 
@@ -179,7 +162,7 @@ Effective feature governance requires:
 
 **Cross-team discoverability.** The feature registry is only valuable if teams can find features they need instead of recomputing them. A searchable registry with human-readable descriptions, entity types, and sample values reduces duplicate feature engineering work across teams.
 
----
+--
 
 ## On-Demand Features and Real-Time Transformations
 
@@ -192,38 +175,34 @@ import pandas as pd
 
 # Define request data schema (available at inference time from the request context)
 request_source = RequestSource(
-    name="request_features",
-    schema=[
-        Field(name="user_lat", dtype=Float64),
-        Field(name="user_lon", dtype=Float64),
-    ]
+ name="request_features", schema=[
+ Field(name="user_lat", dtype=Float64), Field(name="user_lon", dtype=Float64), ]
 )
 
 @on_demand_feature_view(
-    sources=[request_source, restaurant_feature_view],
-    schema=[Field(name="distance_km", dtype=Float64)]
+ sources=[request_source, restaurant_feature_view], schema=[Field(name="distance_km", dtype=Float64)]
 )
 def compute_distance(inputs: pd.DataFrame) -> pd.DataFrame:
-    """Haversine distance from user location to restaurant."""
-    R = 6371  # Earth radius in km
-    lat1 = inputs["user_lat"].values
-    lon1 = inputs["user_lon"].values
-    lat2 = inputs["restaurant_lat"].values
-    lon2 = inputs["restaurant_lon"].values
-    
-    dlat = lat2 - lat1
-    dlon = lon2 - lon1
-    a = (dlat/2).map(lambda x: x**2) + (dlon/2).map(lambda x: x**2)
-    # Simplified haversine
-    c = 2 * (a**0.5).map(lambda x: min(x, 1.0))
-    outputs = pd.DataFrame()
-    outputs["distance_km"] = R * c
-    return outputs
+ """Haversine distance from user location to restaurant."""
+ R = 6371 # Earth radius in km
+ lat1 = inputs["user_lat"].values
+ lon1 = inputs["user_lon"].values
+ lat2 = inputs["restaurant_lat"].values
+ lon2 = inputs["restaurant_lon"].values
+ 
+ dlat = lat2 - lat1
+ dlon = lon2 - lon1
+ a = (dlat/2).map(lambda x: x**2) + (dlon/2).map(lambda x: x**2)
+ # Simplified haversine
+ c = 2 * (a**0.5).map(lambda x: min(x, 1.0))
+ outputs = pd.DataFrame()
+ outputs["distance_km"] = R * c
+ return outputs
 ```
 
 On-demand features combine with pre-computed online features in a single retrieval call, giving model serving both the pre-computed aggregations (purchase history, session count) and the request-time computations (current distance, real-time price delta) in one unified feature vector.
 
----
+--
 
 ## Enterprise Feature Stores: Databricks Feature Store and Vertex AI Feature Store
 
@@ -235,7 +214,7 @@ Beyond open-source Feast, major cloud platforms provide managed feature store se
 
 Both managed services trade flexibility for operational simplicity. Teams that are deeply invested in a single cloud provider benefit from the reduced operational overhead. Teams that need cross-cloud model serving, or that use Feast for portability, should weigh the managed service benefits against the coupling to a single provider.
 
----
+--
 
 ## When to Introduce a Feature Store
 
@@ -249,7 +228,7 @@ Feature stores solve real problems, but they add complexity. Teams should consid
 
 For small teams with a handful of models and no real-time serving requirements, the overhead of running a feature store may not be justified. A well-organized set of dbt models producing feature tables can serve many of the same purposes with less infrastructure complexity.
 
----
+--
 
 ## Conclusion
 
@@ -259,7 +238,7 @@ Using Apache Iceberg as the offline store backend brings additional benefits: ti
 
 For data engineering teams, the operational responsibility is maintaining the streaming infrastructure that feeds streaming feature views (Kafka topics with the right schemas, Flink or Feast streaming processors), the batch pipelines that populate the offline store for training data generation, and the governance discipline that keeps the feature registry current and discoverable.
 
----
+--
 
 ## Feature Store Governance: The Metadata Layer
 
@@ -275,7 +254,7 @@ Effective feature store governance requires:
 
 **Cross-team discoverability.** The feature registry's primary value proposition is reuse, a fraud detection team's transaction velocity features might also be valuable for a credit risk team's model. This reuse only happens if teams can discover what features exist. Investing in feature documentation (including example values, distributions, and known caveats) dramatically improves cross-team reuse rates.
 
----
+--
 
 ## The Training-Serving Skew Problem
 
@@ -291,7 +270,7 @@ The causes of training-serving skew:
 
 Feature stores address training-serving skew by centralizing feature computation in a single pipeline that serves both offline and online stores. When both the training dataset generation and the real-time inference path read features from the same computation logic, the risk of skew from code divergence is eliminated. Point-in-time retrieval is handled natively by the feature store's training dataset generation API.
 
----
+--
 
 ### Build ML-Ready Data Platforms
 

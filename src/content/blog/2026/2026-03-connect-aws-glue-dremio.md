@@ -16,9 +16,10 @@ draft: false
 image: "/images/blog.png"
 canonical: "https://iceberglakehouse.com/posts/2026-03-connector-aws-glue/"
 ---
-> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-03-connector-aws-glue/).
 
 AWS Glue Data Catalog is AWS's managed metadata service for data lakes. It stores table definitions, schemas, partition information, and statistics for data stored in Amazon S3. If you've built your data lake on AWS using Apache Spark (on EMR), AWS Glue ETL jobs, or Amazon Athena, your table metadata lives in Glue. But Glue is just a catalog : a registry of what's where. To actually query the data, you need Athena (per-TB pricing), EMR clusters (infrastructure management), or Redshift Spectrum (additional cost).
+
+> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-03-connector-aws-glue/).
 
 Dremio Cloud connects to your Glue Data Catalog and queries the underlying Iceberg tables with full read and write support. You get enterprise-grade SQL, Reflections for query acceleration, governance, and AI analytics : all on top of your existing Glue-managed lakehouse.
 
@@ -77,30 +78,27 @@ Set Reflection Refresh, Metadata refresh intervals, and click **Save**.
 ## Query and Write to Glue Iceberg Tables
 
 ```sql
--- Query a Glue-cataloged Iceberg table
+- Query a Glue-cataloged Iceberg table
 SELECT product_id, product_name, category, price, inventory_count
 FROM "glue-catalog".ecommerce.products
 WHERE category = 'Electronics' AND price > 50 AND inventory_count > 0
 ORDER BY price ASC;
 
--- Write to Glue Iceberg tables
+- Write to Glue Iceberg tables
 INSERT INTO "glue-catalog".analytics.daily_summary
 SELECT
-  DATE_TRUNC('day', order_date) AS day,
-  COUNT(*) AS order_count,
-  SUM(total) AS revenue,
-  AVG(total) AS avg_order_value
+ DATE_TRUNC('day', order_date) AS day, COUNT(*) AS order_count, SUM(total) AS revenue, AVG(total) AS avg_order_value
 FROM "glue-catalog".ecommerce.orders
 WHERE order_date = CURRENT_DATE - INTERVAL '1' DAY
 GROUP BY 1;
 
--- MERGE for upserts
+- MERGE for upserts
 MERGE INTO "glue-catalog".analytics.product_metrics AS target
 USING (
-  SELECT product_id, COUNT(*) AS orders, SUM(quantity) AS units_sold
-  FROM "glue-catalog".ecommerce.order_items
-  WHERE order_date >= CURRENT_DATE - INTERVAL '7' DAY
-  GROUP BY product_id
+ SELECT product_id, COUNT(*) AS orders, SUM(quantity) AS units_sold
+ FROM "glue-catalog".ecommerce.order_items
+ WHERE order_date >= CURRENT_DATE - INTERVAL '7' DAY
+ GROUP BY product_id
 ) AS source
 ON target.product_id = source.product_id
 WHEN MATCHED THEN UPDATE SET orders = source.orders, units_sold = source.units_sold
@@ -110,15 +108,9 @@ WHEN NOT MATCHED THEN INSERT (product_id, orders, units_sold) VALUES (source.pro
 ## Federate with Non-AWS Sources
 
 ```sql
--- Join Glue products with external review and supplier data
+- Join Glue products with external review and supplier data
 SELECT
-  g.product_name,
-  g.price,
-  g.category,
-  pg.avg_rating,
-  pg.review_count,
-  sf.supplier_name,
-  sf.lead_time_days
+ g.product_name, g.price, g.category, pg.avg_rating, pg.review_count, sf.supplier_name, sf.lead_time_days
 FROM "glue-catalog".ecommerce.products g
 LEFT JOIN "postgres-reviews".public.product_reviews pg ON g.product_id = pg.product_id
 LEFT JOIN "snowflake-supply".PUBLIC.SUPPLIERS sf ON g.supplier_id = sf.supplier_id
@@ -131,17 +123,11 @@ ORDER BY pg.avg_rating DESC;
 ```sql
 CREATE VIEW analytics.gold.product_performance AS
 SELECT
-  g.product_id,
-  g.product_name,
-  g.category,
-  g.price,
-  SUM(oi.quantity) AS units_sold,
-  SUM(oi.quantity * g.price) AS revenue,
-  CASE
-    WHEN SUM(oi.quantity) > 1000 THEN 'Best Seller'
-    WHEN SUM(oi.quantity) > 100 THEN 'Popular'
-    ELSE 'Niche'
-  END AS popularity_tier
+ g.product_id, g.product_name, g.category, g.price, SUM(oi.quantity) AS units_sold, SUM(oi.quantity * g.price) AS revenue, CASE
+ WHEN SUM(oi.quantity) > 1000 THEN 'Best Seller'
+ WHEN SUM(oi.quantity) > 100 THEN 'Popular'
+ ELSE 'Niche'
+ END AS popularity_tier
 FROM "glue-catalog".ecommerce.products g
 LEFT JOIN "glue-catalog".ecommerce.order_items oi ON g.product_id = oi.product_id
 GROUP BY g.product_id, g.product_name, g.category, g.price;
@@ -168,27 +154,19 @@ A product manager asks ChatGPT "Show me niche electronics products with high rat
 ### AI SQL Functions
 
 ```sql
--- Generate product descriptions from catalog data
+- Generate product descriptions from catalog data
 SELECT
-  product_name,
-  category,
-  price,
-  AI_GENERATE(
-    'Write a one-sentence marketing description for this product',
-    'Product: ' || product_name || ', Category: ' || category || ', Price: $' || CAST(price AS VARCHAR) || ', Popularity: ' || popularity_tier
-  ) AS marketing_description
+ product_name, category, price, AI_GENERATE(
+ 'Write a one-sentence marketing description for this product', 'Product: ' || product_name || ', Category: ' || category || ', Price: $' || CAST(price AS VARCHAR) || ', Popularity: ' || popularity_tier
+ ) AS marketing_description
 FROM analytics.gold.product_performance
 WHERE popularity_tier = 'Best Seller';
 
--- Classify inventory risk
+- Classify inventory risk
 SELECT
-  product_name,
-  inventory_count,
-  AI_CLASSIFY(
-    'Based on inventory levels and sales velocity, classify the reorder urgency',
-    'Product: ' || product_name || ', Stock: ' || CAST(inventory_count AS VARCHAR) || ', Units Sold (7d): ' || CAST(units_sold AS VARCHAR),
-    ARRAY['Order Now', 'Order Soon', 'Adequate Stock', 'Overstocked']
-  ) AS reorder_urgency
+ product_name, inventory_count, AI_CLASSIFY(
+ 'Based on inventory levels and sales velocity, classify the reorder urgency', 'Product: ' || product_name || ', Stock: ' || CAST(inventory_count AS VARCHAR) || ', Units Sold (7d): ' || CAST(units_sold AS VARCHAR), ARRAY['Order Now', 'Order Soon', 'Adequate Stock', 'Overstocked']
+ ) AS reorder_urgency
 FROM "glue-catalog".ecommerce.products g
 JOIN analytics.gold.product_performance pp ON g.product_id = pp.product_id;
 ```
@@ -211,20 +189,17 @@ Dashboard queries from Tableau, Power BI, or Looker connected via Arrow Flight h
 Iceberg tables cataloged in Glue support time travel through Dremio:
 
 ```sql
--- Query a table as it existed 7 days ago
+- Query a table as it existed 7 days ago
 SELECT product_id, price, inventory_count
 FROM "glue-catalog".ecommerce.products
 AT TIMESTAMP '2024-06-01 00:00:00';
 
--- Compare current state to a historical snapshot
+- Compare current state to a historical snapshot
 SELECT
-  curr.product_name,
-  curr.price AS current_price,
-  hist.price AS previous_price,
-  ROUND((curr.price - hist.price) / hist.price * 100, 2) AS price_change_pct
+ curr.product_name, curr.price AS current_price, hist.price AS previous_price, ROUND((curr.price - hist.price) / hist.price * 100, 2) AS price_change_pct
 FROM "glue-catalog".ecommerce.products curr
 JOIN "glue-catalog".ecommerce.products AT TIMESTAMP '2024-01-01 00:00:00' hist
-  ON curr.product_id = hist.product_id
+ ON curr.product_id = hist.product_id
 WHERE curr.price != hist.price
 ORDER BY ABS(price_change_pct) DESC;
 ```
@@ -259,7 +234,7 @@ Dremio's VS Code extension with Copilot integration lets developers query Glue-c
 ## Glue vs. Athena vs. Dremio: When to Use Each
 
 | Feature | AWS Glue | Amazon Athena | Dremio Cloud |
-|---|---|---|---|
+|--|--|--|--|
 | **Purpose** | Metadata catalog | Serverless SQL | Federated analytics + catalog |
 | **Pricing** | Free (metadata) | Per TB scanned | Compute-based |
 | **Write support** | Via ETL jobs | Limited | Full DML |
@@ -283,7 +258,7 @@ You can use both simultaneously : Glue for your existing AWS lakehouse, Dremio's
 Both Dremio and Athena can query tables registered in the Glue Data Catalog. Key differences:
 
 | Feature | Dremio Cloud | Amazon Athena |
-|---|---|---|
+|--|--|--|
 | **Pricing** | Compute-based | $5/TB scanned |
 | **Reflections** | ✅ Cache results | ❌ Scans every time |
 | **Federation** | PostgreSQL, MongoDB, BigQuery, etc. | S3 + federated queries (limited) |

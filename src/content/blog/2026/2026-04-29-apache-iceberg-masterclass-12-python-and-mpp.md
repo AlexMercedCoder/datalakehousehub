@@ -14,11 +14,12 @@ draft: false
 image: "/images/blog/apache-iceberg-masterclass/12-python-and-mpp-python-iceberg-stack.png"
 canonical: "https://iceberglakehouse.com/posts/2026-04-29-iceberg-masterclass-12/"
 ---
-> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-04-29-iceberg-masterclass-12/).
 
-<!-- Meta Description: Access Iceberg tables from Python with PyIceberg, DuckDB, and Polars, or through MPP engines like Dremio, Spark, and Trino. Here is how each approach works. -->
-<!-- Primary Keyword: Python Apache Iceberg -->
-<!-- Secondary Keywords: PyIceberg, DuckDB Iceberg, Dremio Arrow Flight, MPP query engine -->
+<!- Meta Description: Access Iceberg tables from Python with PyIceberg, DuckDB, and Polars, or through MPP engines like Dremio, Spark, and Trino. Here is how each approach works. ->
+<!- Primary Keyword: Python Apache Iceberg ->
+<!- Secondary Keywords: PyIceberg, DuckDB Iceberg, Dremio Arrow Flight, MPP query engine ->
+
+> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-04-29-iceberg-masterclass-12/).
 
 *Read the complete Apache Iceberg Masterclass series:*
 * [Part 1: What Are Table Formats and Why Were They Needed?](/blog/2026-04-29-apache-iceberg-masterclass-01-table-formats)
@@ -51,9 +52,7 @@ from pyiceberg.catalog import load_catalog
 
 # Connect to a REST catalog
 catalog = load_catalog("my_catalog", **{
-    "type": "rest",
-    "uri": "https://catalog.example.com",
-})
+ "type": "rest", "uri": "https://catalog.example.com", })
 
 # Load and scan a table
 table = catalog.load_table("analytics.orders")
@@ -78,9 +77,9 @@ conn = duckdb.connect()
 conn.execute("INSTALL iceberg; LOAD iceberg;")
 
 df = conn.execute("""
-    SELECT customer_id, SUM(amount) as total
-    FROM iceberg_scan('s3://warehouse/orders')
-    GROUP BY customer_id
+ SELECT customer_id, SUM(amount) as total
+ FROM iceberg_scan('s3://warehouse/orders')
+ GROUP BY customer_id
 """).fetchdf()
 ```
 
@@ -96,7 +95,7 @@ Polars can read Iceberg tables through its `scan_iceberg` method, providing lazy
 import polars as pl
 
 df = pl.scan_iceberg("s3://warehouse/orders").filter(
-    pl.col("amount") > 100
+ pl.col("amount") > 100
 ).collect()
 ```
 
@@ -111,10 +110,7 @@ import pyarrow as pa
 
 # Create an Arrow table with new data
 new_data = pa.table({
-    "order_id": [1001, 1002, 1003],
-    "amount": [150.00, 275.50, 89.99],
-    "order_date": ["2024-03-15", "2024-03-15", "2024-03-16"],
-})
+ "order_id": [1001, 1002, 1003], "amount": [150.00, 275.50, 89.99], "order_date": ["2024-03-15", "2024-03-15", "2024-03-16"], })
 
 # Append to the Iceberg table
 table.append(new_data)
@@ -164,7 +160,7 @@ Several other engines provide Iceberg support: AWS Athena (serverless, AWS-nativ
 ### Choosing the Right Approach
 
 | Scenario | Recommended |
-|---|---|
+|--|--|
 | Quick analysis of a table subset | PyIceberg or DuckDB |
 | Production dashboards and reports | [Dremio](https://www.dremio.com/platform/) |
 | Batch ETL pipelines | Spark |

@@ -16,9 +16,10 @@ draft: false
 image: "/images/blog.png"
 canonical: https://iceberglakehouse.com/posts/opentelemetry-data-lake-on-iceberg/
 ---
-> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/opentelemetry-data-lake-on-iceberg/).
 
 An engineering organization pays its observability vendor by the gigabyte ingested and keeps thirty days of logs because ninety triples the bill. When an incident's root cause turns out to be a change deployed six weeks ago, the logs from that deploy are gone. The traces that show the latency regression starting were sampled at one percent to control cost. The metrics are there, downsampled to one point per hour after two weeks, which is too coarse to see the five-minute spike that started it.
+
+> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/opentelemetry-data-lake-on-iceberg/).
 
 None of that is a technology limit. Logs, traces, and metrics are the highest-volume, most append-only, most time-partitioned data most organizations produce, which is exactly the shape that Apache Iceberg on object storage handles best and cheapest. A terabyte of compressed telemetry on object storage costs a few dollars a month. The same terabyte in a hosted observability platform costs orders of magnitude more, and the platform decides what you can retain and how you can query it.
 
@@ -58,46 +59,13 @@ The design below uses one table per signal, with resource and scope attributes d
 
 ```sql
 CREATE TABLE otel.spans (
-  trace_id            BINARY        NOT NULL,   -- 16 bytes
-  span_id             BINARY        NOT NULL,   -- 8 bytes
-  parent_span_id      BINARY,
-  start_time          TIMESTAMP_NS  NOT NULL,
-  end_time            TIMESTAMP_NS  NOT NULL,
-  duration_ns         BIGINT        NOT NULL,
-  name                STRING        NOT NULL,
-  kind                STRING        NOT NULL,
-  status_code         STRING        NOT NULL,
-  status_message      STRING,
-  service_name        STRING        NOT NULL,
-  service_version     STRING,
-  deployment_env      STRING,
-  scope_name          STRING,
-  scope_version       STRING,
-  http_method         STRING,
-  http_route          STRING,
-  http_status_code    INT,
-  db_system           STRING,
-  rpc_service         STRING,
-  attributes          VARIANT,
-  resource_attributes VARIANT,
-  events              ARRAY<STRUCT<time: TIMESTAMP_NS, name: STRING, attributes: VARIANT>>,
-  links               ARRAY<STRUCT<trace_id: BINARY, span_id: BINARY, attributes: VARIANT>>
+ trace_id BINARY NOT NULL, 16 bytes
+ span_id BINARY NOT NULL, 8 bytes
+ parent_span_id BINARY, start_time TIMESTAMP_NS NOT NULL, end_time TIMESTAMP_NS NOT NULL, duration_ns BIGINT NOT NULL, name STRING NOT NULL, kind STRING NOT NULL, status_code STRING NOT NULL, status_message STRING, service_name STRING NOT NULL, service_version STRING, deployment_env STRING, scope_name STRING, scope_version STRING, http_method STRING, http_route STRING, http_status_code INT, db_system STRING, rpc_service STRING, attributes VARIANT, resource_attributes VARIANT, events ARRAY<STRUCT<time: TIMESTAMP_NS, name: STRING, attributes: VARIANT>>, links ARRAY<STRUCT<trace_id: BINARY, span_id: BINARY, attributes: VARIANT>>
 ) USING iceberg
 PARTITIONED BY (hours(start_time), bucket(32, trace_id))
 TBLPROPERTIES (
-  'format-version' = '3',
-  'write.parquet.shred-variants' = 'true',
-  'write.target-file-size-bytes' = '268435456',
-  'write.metadata.metrics.default' = 'counts',
-  'write.metadata.metrics.column.start_time' = 'full',
-  'write.metadata.metrics.column.service_name' = 'full',
-  'write.metadata.metrics.column.http_status_code' = 'full',
-  'write.metadata.metrics.column.status_code' = 'full',
-  'write.parquet.bloom-filter-enabled.column.trace_id' = 'true',
-  'write.parquet.bloom-filter-enabled.column.span_id' = 'true',
-  'commit.manifest.min-count-to-merge' = '20',
-  'write.metadata.delete-after-commit.enabled' = 'true',
-  'history.expire.max-snapshot-age-ms' = '86400000'
+ 'format-version' = '3', 'write.parquet.shred-variants' = 'true', 'write.target-file-size-bytes' = '268435456', 'write.metadata.metrics.default' = 'counts', 'write.metadata.metrics.column.start_time' = 'full', 'write.metadata.metrics.column.service_name' = 'full', 'write.metadata.metrics.column.http_status_code' = 'full', 'write.metadata.metrics.column.status_code' = 'full', 'write.parquet.bloom-filter-enabled.column.trace_id' = 'true', 'write.parquet.bloom-filter-enabled.column.span_id' = 'true', 'commit.manifest.min-count-to-merge' = '20', 'write.metadata.delete-after-commit.enabled' = 'true', 'history.expire.max-snapshot-age-ms' = '86400000'
 );
 
 ALTER TABLE otel.spans WRITE ORDERED BY service_name, start_time;
@@ -123,38 +91,11 @@ The decisions in that DDL, in order of importance.
 
 ```sql
 CREATE TABLE otel.logs (
-  time                TIMESTAMP_NS  NOT NULL,
-  observed_time       TIMESTAMP_NS,
-  trace_id            BINARY,
-  span_id             BINARY,
-  severity_number     INT,
-  severity_text       STRING,
-  body                STRING,
-  body_structured     VARIANT,
-  service_name        STRING        NOT NULL,
-  service_version     STRING,
-  deployment_env      STRING,
-  host_name           STRING,
-  k8s_namespace       STRING,
-  k8s_pod             STRING,
-  scope_name          STRING,
-  attributes          VARIANT,
-  resource_attributes VARIANT
+ time TIMESTAMP_NS NOT NULL, observed_time TIMESTAMP_NS, trace_id BINARY, span_id BINARY, severity_number INT, severity_text STRING, body STRING, body_structured VARIANT, service_name STRING NOT NULL, service_version STRING, deployment_env STRING, host_name STRING, k8s_namespace STRING, k8s_pod STRING, scope_name STRING, attributes VARIANT, resource_attributes VARIANT
 ) USING iceberg
 PARTITIONED BY (hours(time), bucket(32, trace_id))
 TBLPROPERTIES (
-  'format-version' = '3',
-  'write.parquet.shred-variants' = 'true',
-  'write.metadata.metrics.default' = 'counts',
-  'write.metadata.metrics.column.time' = 'full',
-  'write.metadata.metrics.column.service_name' = 'full',
-  'write.metadata.metrics.column.severity_number' = 'full',
-  'write.parquet.bloom-filter-enabled.column.trace_id' = 'true',
-  'write.parquet.compression-codec' = 'zstd',
-  'write.parquet.compression-level' = '6',
-  'commit.manifest.min-count-to-merge' = '20',
-  'write.metadata.delete-after-commit.enabled' = 'true',
-  'history.expire.max-snapshot-age-ms' = '86400000'
+ 'format-version' = '3', 'write.parquet.shred-variants' = 'true', 'write.metadata.metrics.default' = 'counts', 'write.metadata.metrics.column.time' = 'full', 'write.metadata.metrics.column.service_name' = 'full', 'write.metadata.metrics.column.severity_number' = 'full', 'write.parquet.bloom-filter-enabled.column.trace_id' = 'true', 'write.parquet.compression-codec' = 'zstd', 'write.parquet.compression-level' = '6', 'commit.manifest.min-count-to-merge' = '20', 'write.metadata.delete-after-commit.enabled' = 'true', 'history.expire.max-snapshot-age-ms' = '86400000'
 );
 
 ALTER TABLE otel.logs WRITE ORDERED BY service_name, time;
@@ -168,46 +109,14 @@ Full-text search over log bodies is the one capability the lakehouse does not pr
 
 ```sql
 CREATE TABLE otel.metrics (
-  time                TIMESTAMP_NS  NOT NULL,
-  start_time          TIMESTAMP_NS,
-  metric_name         STRING        NOT NULL,
-  metric_type         STRING        NOT NULL,   -- gauge, sum, histogram, exp_histogram, summary
-  unit                STRING,
-  is_monotonic        BOOLEAN,
-  temporality         STRING,                   -- cumulative, delta
-  service_name        STRING        NOT NULL,
-  service_version     STRING,
-  deployment_env      STRING,
-  host_name           STRING,
-  attributes          VARIANT,                  -- the dimensions
-  resource_attributes VARIANT,
-  value_double        DOUBLE,
-  value_int           BIGINT,
-  hist_count          BIGINT,
-  hist_sum            DOUBLE,
-  hist_min            DOUBLE,
-  hist_max            DOUBLE,
-  hist_bounds         ARRAY<DOUBLE>,
-  hist_counts         ARRAY<BIGINT>,
-  exp_hist_scale      INT,
-  exp_hist_zero_count BIGINT,
-  exp_hist_pos_offset INT,
-  exp_hist_pos_counts ARRAY<BIGINT>,
-  exp_hist_neg_offset INT,
-  exp_hist_neg_counts ARRAY<BIGINT>,
-  exemplars           ARRAY<STRUCT<time: TIMESTAMP_NS, value: DOUBLE, trace_id: BINARY, span_id: BINARY>>
+ time TIMESTAMP_NS NOT NULL, start_time TIMESTAMP_NS, metric_name STRING NOT NULL, metric_type STRING NOT NULL, gauge, sum, histogram, exp_histogram, summary
+ unit STRING, is_monotonic BOOLEAN, temporality STRING, cumulative, delta
+ service_name STRING NOT NULL, service_version STRING, deployment_env STRING, host_name STRING, attributes VARIANT, the dimensions
+ resource_attributes VARIANT, value_double DOUBLE, value_int BIGINT, hist_count BIGINT, hist_sum DOUBLE, hist_min DOUBLE, hist_max DOUBLE, hist_bounds ARRAY<DOUBLE>, hist_counts ARRAY<BIGINT>, exp_hist_scale INT, exp_hist_zero_count BIGINT, exp_hist_pos_offset INT, exp_hist_pos_counts ARRAY<BIGINT>, exp_hist_neg_offset INT, exp_hist_neg_counts ARRAY<BIGINT>, exemplars ARRAY<STRUCT<time: TIMESTAMP_NS, value: DOUBLE, trace_id: BINARY, span_id: BINARY>>
 ) USING iceberg
 PARTITIONED BY (hours(time), metric_name)
 TBLPROPERTIES (
-  'format-version' = '3',
-  'write.parquet.shred-variants' = 'true',
-  'write.metadata.metrics.default' = 'counts',
-  'write.metadata.metrics.column.time' = 'full',
-  'write.metadata.metrics.column.service_name' = 'full',
-  'write.metadata.metrics.column.metric_name' = 'full',
-  'commit.manifest.min-count-to-merge' = '20',
-  'write.metadata.delete-after-commit.enabled' = 'true',
-  'history.expire.max-snapshot-age-ms' = '86400000'
+ 'format-version' = '3', 'write.parquet.shred-variants' = 'true', 'write.metadata.metrics.default' = 'counts', 'write.metadata.metrics.column.time' = 'full', 'write.metadata.metrics.column.service_name' = 'full', 'write.metadata.metrics.column.metric_name' = 'full', 'commit.manifest.min-count-to-merge' = '20', 'write.metadata.delete-after-commit.enabled' = 'true', 'history.expire.max-snapshot-age-ms' = '86400000'
 );
 
 ALTER TABLE otel.metrics WRITE ORDERED BY metric_name, service_name, time;
@@ -241,58 +150,58 @@ There is, as of this writing, no Iceberg exporter in the Collector contrib distr
 
 **Emerging: direct OTLP-to-Iceberg writers.** Community tools such as otlp2parquet and otlp2pipeline receive OTLP and write Parquet or Iceberg directly, and a few cloud services accept OTLP and land it in their managed Iceberg tables with maintenance included. These remove the middle tier and are earlier in maturity.
 
-Whichever path, three settings determine table health. The commit interval, sixty seconds being a reasonable default that yields 1,440 snapshots a day and files that reach a useful size at moderate volume. The file size target, which the sink honors per partition and which at hourly-by-bucket partitioning needs volume per partition-hour to reach, so low-volume environments should use daily partitions. And compaction, which for telemetry is a bin-packing rewrite on a schedule of every few hours for the current day's partitions and once for each closed day, after which the partition is never touched again.
+Whichever path, three settings determine table health. The commit interval, sixty seconds being a reasonable default that yields 1, 440 snapshots a day and files that reach a useful size at moderate volume. The file size target, which the sink honors per partition and which at hourly-by-bucket partitioning needs volume per partition-hour to reach, so low-volume environments should use daily partitions. And compaction, which for telemetry is a bin-packing rewrite on a schedule of every few hours for the current day's partitions and once for each closed day, after which the partition is never touched again.
 
 A Collector configuration for path one, abbreviated to the relevant parts:
 
 ```yaml
 receivers:
-  otlp:
-    protocols:
-      grpc: { endpoint: 0.0.0.0:4317 }
-      http: { endpoint: 0.0.0.0:4318 }
+ otlp:
+ protocols:
+ grpc: { endpoint: 0.0.0.0:4317 }
+ http: { endpoint: 0.0.0.0:4318 }
 
 processors:
-  batch:
-    send_batch_size: 8192
-    timeout: 5s
-  resource:
-    attributes:
-      - key: deployment.environment
-        action: upsert
-        value: prod
-  tail_sampling:
-    decision_wait: 10s
-    policies:
-      - name: errors
-        type: status_code
-        status_code: { status_codes: [ERROR] }
-      - name: slow
-        type: latency
-        latency: { threshold_ms: 2000 }
-      - name: baseline
-        type: probabilistic
-        probabilistic: { sampling_percentage: 10 }
+ batch:
+ send_batch_size: 8192
+ timeout: 5s
+ resource:
+ attributes:
+ - key: deployment.environment
+ action: upsert
+ value: prod
+ tail_sampling:
+ decision_wait: 10s
+ policies:
+ - name: errors
+ type: status_code
+ status_code: { status_codes: [ERROR] }
+ - name: slow
+ type: latency
+ latency: { threshold_ms: 2000 }
+ - name: baseline
+ type: probabilistic
+ probabilistic: { sampling_percentage: 10 }
 
 exporters:
-  kafka/traces:
-    brokers: [kafka:9092]
-    topic: otel.traces
-    encoding: otlp_proto
-  kafka/logs:
-    brokers: [kafka:9092]
-    topic: otel.logs
-    encoding: otlp_proto
-  kafka/metrics:
-    brokers: [kafka:9092]
-    topic: otel.metrics
-    encoding: otlp_proto
+ kafka/traces:
+ brokers: [kafka:9092]
+ topic: otel.traces
+ encoding: otlp_proto
+ kafka/logs:
+ brokers: [kafka:9092]
+ topic: otel.logs
+ encoding: otlp_proto
+ kafka/metrics:
+ brokers: [kafka:9092]
+ topic: otel.metrics
+ encoding: otlp_proto
 
 service:
-  pipelines:
-    traces:  { receivers: [otlp], processors: [resource, tail_sampling, batch], exporters: [kafka/traces] }
-    logs:    { receivers: [otlp], processors: [resource, batch], exporters: [kafka/logs] }
-    metrics: { receivers: [otlp], processors: [resource, batch], exporters: [kafka/metrics] }
+ pipelines:
+ traces: { receivers: [otlp], processors: [resource, tail_sampling, batch], exporters: [kafka/traces] }
+ logs: { receivers: [otlp], processors: [resource, batch], exporters: [kafka/logs] }
+ metrics: { receivers: [otlp], processors: [resource, batch], exporters: [kafka/metrics] }
 ```
 
 Tail sampling keeps every error and every slow trace and ten percent of the rest, which is the sampling policy that makes trace storage tractable without losing the traces that matter. The sampling decision is one of the largest cost levers in the whole design, and the lakehouse's cheap storage means it can be far more generous than a hosted platform's per-gigabyte pricing allows.
@@ -301,23 +210,9 @@ The sink side, for the spans topic:
 
 ```json
 {
-  "name": "otel-spans-sink",
-  "config": {
-    "connector.class": "org.apache.iceberg.connect.IcebergSinkConnector",
-    "tasks.max": "8",
-    "topics": "otel.traces",
-    "iceberg.catalog.type": "rest",
-    "iceberg.catalog.uri": "https://polaris.internal/api/catalog",
-    "iceberg.catalog.warehouse": "observability",
-    "iceberg.catalog.credential": "client-id:client-secret",
-    "iceberg.catalog.header.X-Iceberg-Access-Delegation": "vended-credentials",
-    "iceberg.tables": "otel.spans",
-    "iceberg.control.commit.interval-ms": "60000",
-    "iceberg.tables.evolve-schema-enabled": "false",
-    "value.converter": "com.example.otel.OtlpSpansConverter",
-    "transforms": "flatten",
-    "transforms.flatten.type": "com.example.otel.OtlpSpanFlattenTransform"
-  }
+ "name": "otel-spans-sink", "config": {
+ "connector.class": "org.apache.iceberg.connect.IcebergSinkConnector", "tasks.max": "8", "topics": "otel.traces", "iceberg.catalog.type": "rest", "iceberg.catalog.uri": "https://polaris.internal/api/catalog", "iceberg.catalog.warehouse": "observability", "iceberg.catalog.credential": "client-id:client-secret", "iceberg.catalog.header.X-Iceberg-Access-Delegation": "vended-credentials", "iceberg.tables": "otel.spans", "iceberg.control.commit.interval-ms": "60000", "iceberg.tables.evolve-schema-enabled": "false", "value.converter": "com.example.otel.OtlpSpansConverter", "transforms": "flatten", "transforms.flatten.type": "com.example.otel.OtlpSpanFlattenTransform"
+ }
 }
 ```
 
@@ -330,14 +225,11 @@ The three signals have characteristic queries, and the schema above is built so 
 **Error rate for a service over time**, from spans:
 
 ```sql
-SELECT date_trunc('minute', start_time) AS minute,
-       count(*)                                          AS requests,
-       count_if(status_code = 'ERROR')                   AS errors,
-       approx_percentile(duration_ns, 0.99) / 1e6        AS p99_ms
+SELECT date_trunc('minute', start_time) AS minute, count(*) AS requests, count_if(status_code = 'ERROR') AS errors, approx_percentile(duration_ns, 0.99) / 1e6 AS p99_ms
 FROM otel.spans
 WHERE service_name = 'checkout'
-  AND kind = 'SERVER'
-  AND start_time >= now() - INTERVAL 6 HOURS
+ AND kind = 'SERVER'
+ AND start_time >= now() - INTERVAL 6 HOURS
 GROUP BY 1
 ORDER BY 1;
 ```
@@ -348,18 +240,17 @@ The hour partition prunes to six partitions, `service_name` bounds prune to the 
 
 ```sql
 WITH t AS (
-  SELECT * FROM otel.spans
-  WHERE trace_id = unhex('4bf92f3577b34da6a3ce929d0e0e4736')
-    AND start_time >= TIMESTAMP '2026-09-01 14:00:00'
-    AND start_time <  TIMESTAMP '2026-09-01 15:00:00'
+ SELECT * FROM otel.spans
+ WHERE trace_id = unhex('4bf92f3577b34da6a3ce929d0e0e4736')
+ AND start_time >= TIMESTAMP '2026-09-01 14:00:00'
+ AND start_time < TIMESTAMP '2026-09-01 15:00:00'
 )
-SELECT t.name, t.service_name, t.start_time, t.duration_ns / 1e6 AS ms,
-       t.status_code, l.severity_text, l.body
+SELECT t.name, t.service_name, t.start_time, t.duration_ns / 1e6 AS ms, t.status_code, l.severity_text, l.body
 FROM t
 LEFT JOIN otel.logs l
-  ON l.trace_id = t.trace_id AND l.span_id = t.span_id
-  AND l.time >= TIMESTAMP '2026-09-01 14:00:00'
-  AND l.time <  TIMESTAMP '2026-09-01 15:00:00'
+ ON l.trace_id = t.trace_id AND l.span_id = t.span_id
+ AND l.time >= TIMESTAMP '2026-09-01 14:00:00'
+ AND l.time < TIMESTAMP '2026-09-01 15:00:00'
 ORDER BY t.start_time;
 ```
 
@@ -368,13 +259,11 @@ The `trace_id` equality projects through the bucket transform to one bucket in b
 **Latency percentiles from exponential histograms**:
 
 ```sql
-SELECT date_trunc('minute', time) AS minute,
-       exp_hist_percentile(exp_hist_scale, exp_hist_zero_count,
-                           exp_hist_pos_offset, exp_hist_pos_counts, 0.99) AS p99
+SELECT date_trunc('minute', time) AS minute, exp_hist_percentile(exp_hist_scale, exp_hist_zero_count, exp_hist_pos_offset, exp_hist_pos_counts, 0.99) AS p99
 FROM otel.metrics
 WHERE metric_name = 'http.server.request.duration'
-  AND service_name = 'checkout'
-  AND time >= now() - INTERVAL 1 DAY
+ AND service_name = 'checkout'
+ AND time >= now() - INTERVAL 1 DAY
 GROUP BY 1
 ORDER BY 1;
 ```
@@ -388,9 +277,9 @@ SELECT e.trace_id, e.value, e.time
 FROM otel.metrics m
 CROSS JOIN UNNEST(m.exemplars) AS e
 WHERE m.metric_name = 'http.server.request.duration'
-  AND m.service_name = 'checkout'
-  AND m.time BETWEEN TIMESTAMP '2026-09-01 14:03:00' AND TIMESTAMP '2026-09-01 14:08:00'
-  AND e.value > 2.0
+ AND m.service_name = 'checkout'
+ AND m.time BETWEEN TIMESTAMP '2026-09-01 14:03:00' AND TIMESTAMP '2026-09-01 14:08:00'
+ AND e.value > 2.0
 ORDER BY e.value DESC
 LIMIT 20;
 ```
@@ -403,9 +292,9 @@ Exemplars carry the `trace_id` of a representative request in each bucket, which
 SELECT time, severity_text, body
 FROM otel.logs
 WHERE service_name = 'payments'
-  AND time >= now() - INTERVAL 2 HOURS
-  AND severity_number >= 17          -- ERROR and above
-  AND attributes:exception.type = 'TimeoutException'
+ AND time >= now() - INTERVAL 2 HOURS
+ AND severity_number >= 17, ERROR and above
+ AND attributes:exception.type = 'TimeoutException'
 ORDER BY time DESC
 LIMIT 200;
 ```
@@ -452,7 +341,7 @@ Telemetry retention on Iceberg is a partition lifecycle, and it is cheap enough 
 
 **Compaction for the current day, then never.** Partitions for the current day receive small files every minute and are compacted every few hours. Once a day closes, one final compaction produces target-sized files, and the partition is immutable until it is dropped. The compaction job filters on the partition column so that closed days are never rewritten, which keeps the maintenance cost proportional to daily volume rather than total volume.
 
-**Snapshot expiry, aggressive.** One-day retention. With 1,440 commits a day per table, anything longer accumulates metadata that nobody uses. Incident investigations that need a stable view take a tag before they start and drop it after.
+**Snapshot expiry, aggressive.** One-day retention. With 1, 440 commits a day per table, anything longer accumulates metadata that nobody uses. Incident investigations that need a stable view take a tag before they start and drop it after.
 
 **Cost arithmetic.** At a compression ratio of ten to one, a service fleet emitting ten terabytes of raw telemetry a day stores a terabyte a day. At object storage prices, a year of that is 365 terabytes at roughly seven to nine thousand dollars a month across the whole year's data, with query compute on top and paid only when queries run. The equivalent ingestion volume at hosted-platform per-gigabyte rates is a number with two more digits. The lake design's cost is dominated by query compute for heavy investigations and by the hot tier, not by storage.
 

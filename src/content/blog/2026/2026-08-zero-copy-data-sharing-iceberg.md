@@ -1,7 +1,7 @@
 ---
 title: "What Zero-Copy Data Sharing Actually Does Between Salesforce, Snowflake, and Databricks"
 date: 2026-08-04T09:00:00Z
-description: "What zero-copy data sharing actually does across Salesforce, Snowflake, and Databricks: query federation, file federation, catalog federation, and when copying still wins."
+description: "What zero-copy data sharing actually does across Salesforce, Snowflake, and Databricks: query federation, file federation, catalog federation, and when."
 author: "Alex Merced"
 category: "Apache Iceberg"
 tags:
@@ -18,11 +18,11 @@ image: "/images/blog.png"
 canonical: "https://iceberglakehouse.com/posts/zero-copy-data-sharing-iceberg/"
 ---
 
-> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/zero-copy-data-sharing-iceberg/).
-
 # What Zero-Copy Data Sharing Actually Does Between Salesforce, Snowflake, and Databricks
 
 *By Alex Merced, Data Lakehouse and AI Evangelist*
+
+> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/zero-copy-data-sharing-iceberg/).
 
 A customer abandons a cart at 8 PM. That event lands in a warehouse table. A marketing platform needs it to trigger a journey, and a service platform needs it for context on the next support call. Under the architecture most enterprises still run, the event reaches those platforms after a nightly extract, a transform job, and a load into a third system that now holds its own copy.
 
@@ -93,7 +93,7 @@ File federation is the right mechanism when volumes are large, when the source e
 ## Comparing the mechanisms
 
 | Property | Query federation | File federation | Catalog federation |
-|---|---|---|---|
+|--|--|--|--|
 | Where compute runs | Source platform | Consuming platform | Neither, metadata only |
 | Who pays for compute | Source owner | Consumer | Neither |
 | Data moved | Result set | Files read after pruning | Metadata |
@@ -119,32 +119,19 @@ Registering an external catalog looks like this.
 
 ```bash
 curl -X POST https://polaris.internal.example.com/api/management/v1/catalogs \
-  -H "Authorization: Bearer $POLARIS_TOKEN" \
-  -H "Content-Type: application/json" \
-  -d '{
-    "name": "warehouse_federated",
-    "type": "EXTERNAL",
-    "properties": {
-      "default-base-location": "s3://partner-lake/warehouse"
-    },
-    "connectionConfigInfo": {
-      "connectionType": "ICEBERG_REST",
-      "uri": "https://partner-catalog.example.com/api/catalog",
-      "remoteCatalogName": "analytics",
-      "authenticationParameters": {
-        "authenticationType": "OAUTH",
-        "tokenUri": "https://partner-catalog.example.com/api/catalog/v1/oauth/tokens",
-        "clientId": "acme-federation",
-        "clientSecret": "<secret>",
-        "scopes": ["PRINCIPAL_ROLE:ALL"]
-      }
-    },
-    "storageConfigInfo": {
-      "storageType": "S3",
-      "roleArn": "arn:aws:iam::123456789012:role/PartnerLakeRead",
-      "allowedLocations": ["s3://partner-lake/warehouse/"]
-    }
-  }'
+ -H "Authorization: Bearer $POLARIS_TOKEN" \
+ -H "Content-Type: application/json" \
+ -d '{
+ "name": "warehouse_federated", "type": "EXTERNAL", "properties": {
+ "default-base-location": "s3://partner-lake/warehouse"
+ }, "connectionConfigInfo": {
+ "connectionType": "ICEBERG_REST", "uri": "https://partner-catalog.example.com/api/catalog", "remoteCatalogName": "analytics", "authenticationParameters": {
+ "authenticationType": "OAUTH", "tokenUri": "https://partner-catalog.example.com/api/catalog/v1/oauth/tokens", "clientId": "acme-federation", "clientSecret": "<secret>", "scopes": ["PRINCIPAL_ROLE:ALL"]
+ }
+ }, "storageConfigInfo": {
+ "storageType": "S3", "roleArn": "arn:aws:iam::123456789012:role/PartnerLakeRead", "allowedLocations": ["s3://partner-lake/warehouse/"]
+ }
+ }'
 ```
 
 `type: EXTERNAL` tells Polaris this catalog's tables live elsewhere and are managed by the remote system. Polaris does not accept writes it does not own.

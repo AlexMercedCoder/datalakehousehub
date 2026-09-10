@@ -1,6 +1,6 @@
 ---
 title: "The Parquet Versioning Problem, and Why Iceberg Cares About It"
-description: "Parquet files have a version field that doesn't reliably signal feature requirements. A new versioning discipline is coming, borrowing from Iceberg's format version model."
+description: "Parquet files have a version field that doesn't reliably signal feature requirements. A new versioning discipline is coming, borrowing from Iceberg's."
 date: 2026-07-28T09:00:00Z
 author: "Alex Merced"
 category: "Apache Iceberg"
@@ -15,11 +15,11 @@ image: "/images/blog.png"
 canonical: "https://iceberglakehouse.com/posts/parquet-versioning-iceberg-v4/"
 ---
 
-> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/parquet-versioning-iceberg-v4/).
-
 # The Parquet Versioning Problem, and Why Iceberg Cares About It
 
 A Spark job writes a table. A Trino query against the same table fails with a decoding error on one column. Nothing in the Iceberg metadata looks wrong. The schema matches, the snapshot is current, the manifest lists the file. The file itself is fine, and Spark reads it back without complaint.
+
+> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/parquet-versioning-iceberg-v4/).
 
 The problem is that Spark wrote a Parquet encoding that this Trino build does not implement, and nothing in the system was designed to tell you that in advance. Not the table format, not the catalog, not the file. You found out by running a query in production.
 
@@ -48,7 +48,7 @@ Data Page V2 headers are the other big one. A reader that only understands `Data
 Here is how the two categories break down across real features.
 
 | Feature | Category | First in format release |
-|---|---|---|
+|--|--|--|
 | Page index | Forward compatible | 2.4.0 |
 | xxHash bloom filters | Forward compatible | 2.7.0 |
 | FLOAT16 logical type | Forward compatible | 2.10.0 |
@@ -75,53 +75,41 @@ Parquet metadata records, per column chunk, which encodings were used and which 
 import pyarrow.parquet as pq
 
 def describe_requirements(path: str) -> dict:
-    """Report the encodings, codecs, and page types a file requires."""
-    pf = pq.ParquetFile(path)
-    meta = pf.metadata
+ """Report the encodings, codecs, and page types a file requires."""
+ pf = pq.ParquetFile(path)
+ meta = pf.metadata
 
-    encodings = set()
-    codecs = set()
+ encodings = set()
+ codecs = set()
 
-    for rg in range(meta.num_row_groups):
-        row_group = meta.row_group(rg)
-        for c in range(row_group.num_columns):
-            col = row_group.column(c)
-            codecs.add(col.compression)
-            for enc in col.encodings:
-                encodings.add(enc)
+ for rg in range(meta.num_row_groups):
+ row_group = meta.row_group(rg)
+ for c in range(row_group.num_columns):
+ col = row_group.column(c)
+ codecs.add(col.compression)
+ for enc in col.encodings:
+ encodings.add(enc)
 
-    return {
-        "path": path,
-        "declared_version_field": meta.format_version,
-        "created_by": meta.created_by,
-        "num_row_groups": meta.num_row_groups,
-        "num_rows": meta.num_rows,
-        "encodings": sorted(encodings),
-        "codecs": sorted(codecs),
-    }
+ return {
+ "path": path, "declared_version_field": meta.format_version, "created_by": meta.created_by, "num_row_groups": meta.num_row_groups, "num_rows": meta.num_rows, "encodings": sorted(encodings), "codecs": sorted(codecs), }
 
 
 FORWARD_INCOMPATIBLE_ENCODINGS = {
-    "RLE_DICTIONARY",
-    "DELTA_BINARY_PACKED",
-    "DELTA_LENGTH_BYTE_ARRAY",
-    "DELTA_BYTE_ARRAY",
-    "BYTE_STREAM_SPLIT",
-}
+ "RLE_DICTIONARY", "DELTA_BINARY_PACKED", "DELTA_LENGTH_BYTE_ARRAY", "DELTA_BYTE_ARRAY", "BYTE_STREAM_SPLIT", }
 
 FORWARD_INCOMPATIBLE_CODECS = {"ZSTD", "BROTLI", "LZ4", "LZ4_RAW"}
 
 
 def risk_report(path: str) -> None:
-    info = describe_requirements(path)
-    risky_enc = set(info["encodings"]) & FORWARD_INCOMPATIBLE_ENCODINGS
-    risky_codec = set(info["codecs"]) & FORWARD_INCOMPATIBLE_CODECS
+ info = describe_requirements(path)
+ risky_enc = set(info["encodings"]) & FORWARD_INCOMPATIBLE_ENCODINGS
+ risky_codec = set(info["codecs"]) & FORWARD_INCOMPATIBLE_CODECS
 
-    print(f"{path}")
-    print(f"  written by: {info['created_by']}")
-    print(f"  version field says: {info['declared_version_field']}")
-    print(f"  forward-incompatible encodings: {sorted(risky_enc) or 'none'}")
-    print(f"  forward-incompatible codecs:    {sorted(risky_codec) or 'none'}")
+ print(f"{path}")
+ print(f" written by: {info['created_by']}")
+ print(f" version field says: {info['declared_version_field']}")
+ print(f" forward-incompatible encodings: {sorted(risky_enc) or 'none'}")
+ print(f" forward-incompatible codecs: {sorted(risky_codec) or 'none'}")
 ```
 
 Run that across a sample of files from a table and the answer stops being a guess.
@@ -180,7 +168,7 @@ The vote is to adopt versioned releases for breaking changes. The mechanics are 
 
 The core of the change is a promise. A version number that means something a reader can rely on gives three things nobody has today.
 
-**A declaration a reader checks cheaply.** If a file or a table declares "requires format version N," a reader supporting up to N minus 1 fails fast with an accurate message. That turns a decoding error deep in a scan into a planning-time rejection with a name attached.
+**A declaration a reader checks cheaply.** If a file or a table declares "requires format version N, " a reader supporting up to N minus 1 fails fast with an accurate message. That turns a decoding error deep in a scan into a planning-time rejection with a name attached.
 
 **A negotiation point.** Writers that know their readers pick a version everyone handles. A pipeline writing for a mixed fleet targets the lowest version in the fleet. Today the equivalent is disabling specific encodings by name in writer configuration, which requires knowing which encodings to worry about.
 
@@ -255,54 +243,24 @@ import pyarrow as pa
 import pyarrow.parquet as pq
 
 schema = pa.schema([
-    ("id", pa.int64()),
-    ("name", pa.string()),
-    ("price", pa.float64()),
-    ("small_float", pa.float16()),
-    ("ts_nanos", pa.timestamp("ns")),
-    ("uid", pa.uuid()),
-])
+ ("id", pa.int64()), ("name", pa.string()), ("price", pa.float64()), ("small_float", pa.float16()), ("ts_nanos", pa.timestamp("ns")), ("uid", pa.uuid()), ])
 
 table = pa.table(
-    {
-        "id": pa.array(range(1000), type=pa.int64()),
-        "name": pa.array([f"item-{i}" for i in range(1000)]),
-        "price": pa.array([float(i) * 1.5 for i in range(1000)]),
-        "small_float": pa.array([float(i) for i in range(1000)],
-                                type=pa.float16()),
-        "ts_nanos": pa.array([1_700_000_000_000_000_000 + i
-                              for i in range(1000)],
-                             type=pa.timestamp("ns")),
-        "uid": pa.array([bytes(range(16))] * 1000, type=pa.uuid()),
-    },
-    schema=schema,
-)
+ {
+ "id": pa.array(range(1000), type=pa.int64()), "name": pa.array([f"item-{i}" for i in range(1000)]), "price": pa.array([float(i) * 1.5 for i in range(1000)]), "small_float": pa.array([float(i) for i in range(1000)], type=pa.float16()), "ts_nanos": pa.array([1_700_000_000_000_000_000 + i
+ for i in range(1000)], type=pa.timestamp("ns")), "uid": pa.array([bytes(range(16))] * 1000, type=pa.uuid()), }, schema=schema, )
 
 # One file per configuration you want to test
 configs = {
-    "v1_snappy_plain": dict(
-        version="1.0", compression="snappy",
-        use_dictionary=False, data_page_version="1.0",
-    ),
-    "v2_zstd_dict": dict(
-        version="2.6", compression="zstd",
-        use_dictionary=True, data_page_version="2.0",
-    ),
-    "v2_bytestreamsplit": dict(
-        version="2.6", compression="zstd",
-        column_encoding={"price": "BYTE_STREAM_SPLIT"},
-        data_page_version="2.0",
-    ),
-    "v2_bloom": dict(
-        version="2.6", compression="zstd",
-        write_bloom_filter=["id", "name"],
-        data_page_version="2.0",
-    ),
-}
+ "v1_snappy_plain": dict(
+ version="1.0", compression="snappy", use_dictionary=False, data_page_version="1.0", ), "v2_zstd_dict": dict(
+ version="2.6", compression="zstd", use_dictionary=True, data_page_version="2.0", ), "v2_bytestreamsplit": dict(
+ version="2.6", compression="zstd", column_encoding={"price": "BYTE_STREAM_SPLIT"}, data_page_version="2.0", ), "v2_bloom": dict(
+ version="2.6", compression="zstd", write_bloom_filter=["id", "name"], data_page_version="2.0", ), }
 
 for name, opts in configs.items():
-    pq.write_table(table, f"/tmp/compat_{name}.parquet", **opts)
-    print(f"wrote {name}")
+ pq.write_table(table, f"/tmp/compat_{name}.parquet", **opts)
+ print(f"wrote {name}")
 ```
 
 Each configuration isolates one axis. `v1_snappy_plain` is the maximally conservative baseline every reader in existence handles. `v2_zstd_dict` combines Data Page V2, ZSTD compression, and dictionary encoding, all forward incompatible individually. `v2_bytestreamsplit` targets the encoding that landed most recently in the forward incompatible category. `v2_bloom` tests a forward compatible feature, and any reader that fails on it has a bug rather than a version gap.
@@ -310,11 +268,8 @@ Each configuration isolates one axis. `v1_snappy_plain` is the maximally conserv
 Then read every file from every engine and record the outcome:
 
 ```sql
--- Run this from each engine against each file
-SELECT count(*)          AS row_count,
-       sum(id)           AS id_checksum,
-       min(ts_nanos)     AS min_ts,
-       max(small_float)  AS max_f16
+- Run this from each engine against each file
+SELECT count(*) AS row_count, sum(id) AS id_checksum, min(ts_nanos) AS min_ts, max(small_float) AS max_f16
 FROM parquet_scan('/tmp/compat_v2_bytestreamsplit.parquet');
 ```
 
@@ -409,16 +364,13 @@ The abstract version of this problem is interesting. The version where a pipelin
 The rewrite looks like this, using whatever engine can read the files:
 
 ```sql
--- Set conservative writer settings BEFORE rewriting
+- Set conservative writer settings BEFORE rewriting
 ALTER TABLE catalog.sales.orders SET TBLPROPERTIES (
-  'write.parquet.compression-codec' = 'snappy',
-  'write.parquet.page-version'      = 'v1'
+ 'write.parquet.compression-codec' = 'snappy', 'write.parquet.page-version' = 'v1'
 );
 
 CALL catalog.system.rewrite_data_files(
-  table   => 'sales.orders',
-  where   => 'event_date >= cast(:cutoff as date)',
-  options => map('min-input-files', '1')
+ table => 'sales.orders', where => 'event_date >= cast(:cutoff as date)', options => map('min-input-files', '1')
 );
 ```
 

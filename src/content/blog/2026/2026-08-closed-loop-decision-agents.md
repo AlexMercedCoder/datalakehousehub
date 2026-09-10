@@ -1,7 +1,7 @@
 ---
 title: "Wiring Analytical Queries to Transactional APIs in Closed-Loop Decision Agents"
 date: 2026-08-04T09:00:00Z
-description: "Wiring analytical queries to transactional APIs in closed-loop decision agents: conditional writes, sagas with compensations, decision records, and blast radius controls."
+description: "Wiring analytical queries to transactional APIs in closed-loop decision agents: conditional writes, sagas with compensations, decision records, and blast."
 author: "Alex Merced"
 category: "AI & Agents"
 tags:
@@ -16,11 +16,11 @@ image: "/images/blog.png"
 canonical: "https://iceberglakehouse.com/posts/closed-loop-decision-agents/"
 ---
 
-> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/closed-loop-decision-agents/).
-
 # Wiring Analytical Queries to Transactional APIs in Closed-Loop Decision Agents
 
 *By Alex Merced, Data Lakehouse and AI Evangelist*
+
+> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/closed-loop-decision-agents/).
 
 An agent reads a table, decides something, and calls an API that changes the world. That sentence contains a distributed systems problem that most teams discover in production.
 
@@ -37,7 +37,7 @@ A disclosure. I work for Dremio, which was acquired by SAP and now sits within S
 Laying the mismatch out explicitly is worth the space, because most integration bugs trace directly to one row of this table.
 
 | Property | Analytical read side | Transactional write side |
-|---|---|---|
+|--|--|--|
 | Consistency | Eventually consistent, snapshot-based | Strongly consistent |
 | Freshness | Seconds to hours behind | Current by definition |
 | Concurrency control | Optimistic, snapshot isolation | Locks, serializable transactions |
@@ -63,20 +63,11 @@ Three mitigations work, and they compose.
 
 ```json
 {
-  "name": "release_shipment_hold",
-  "inputSchema": {
-    "type": "object",
-    "properties": {
-      "shipment_id":      { "type": "string" },
-      "expected_status":  { "type": "string", "enum": ["on_hold"] },
-      "expected_version": { "type": "integer" },
-      "rationale":        { "type": "string", "minLength": 50 },
-      "decision_id":      { "type": "string" },
-      "idempotency_key":  { "type": "string" }
-    },
-    "required": ["shipment_id", "expected_status", "expected_version",
-                 "rationale", "decision_id", "idempotency_key"]
-  }
+ "name": "release_shipment_hold", "inputSchema": {
+ "type": "object", "properties": {
+ "shipment_id": { "type": "string" }, "expected_status": { "type": "string", "enum": ["on_hold"] }, "expected_version": { "type": "integer" }, "rationale": { "type": "string", "minLength": 50 }, "decision_id": { "type": "string" }, "idempotency_key": { "type": "string" }
+ }, "required": ["shipment_id", "expected_status", "expected_version", "rationale", "decision_id", "idempotency_key"]
+ }
 }
 ```
 
@@ -104,36 +95,15 @@ Write compensations as first-class tools with the same rigor as forward actions.
 
 ```python
 STEPS = [
-    Step(
-        name="create_replenishment_request",
-        forward=lambda ctx: ops.create_request(
-            sku=ctx.sku, qty=ctx.qty,
-            idempotency_key=f"{ctx.decision_id}:req"),
-        compensate=lambda ctx, res: ops.cancel_request(
-            request_id=res.request_id,
-            reason=f"compensating for decision {ctx.decision_id}",
-            idempotency_key=f"{ctx.decision_id}:req:comp"),
-        reversible=True,
-    ),
-    Step(
-        name="reserve_inventory",
-        forward=lambda ctx: wms.reserve(
-            sku=ctx.sku, qty=ctx.qty, site=ctx.site,
-            idempotency_key=f"{ctx.decision_id}:res"),
-        compensate=lambda ctx, res: wms.release_reservation(
-            reservation_id=res.reservation_id,
-            idempotency_key=f"{ctx.decision_id}:res:comp"),
-        reversible=True,
-    ),
-    Step(
-        name="notify_supplier",
-        forward=lambda ctx: edi.send_forecast_update(
-            supplier=ctx.supplier, sku=ctx.sku, qty=ctx.qty,
-            idempotency_key=f"{ctx.decision_id}:edi"),
-        compensate=None,
-        reversible=False,
-    ),
-]
+ Step(
+ name="create_replenishment_request", forward=lambda ctx: ops.create_request(
+ sku=ctx.sku, qty=ctx.qty, idempotency_key=f"{ctx.decision_id}:req"), compensate=lambda ctx, res: ops.cancel_request(
+ request_id=res.request_id, reason=f"compensating for decision {ctx.decision_id}", idempotency_key=f"{ctx.decision_id}:req:comp"), reversible=True, ), Step(
+ name="reserve_inventory", forward=lambda ctx: wms.reserve(
+ sku=ctx.sku, qty=ctx.qty, site=ctx.site, idempotency_key=f"{ctx.decision_id}:res"), compensate=lambda ctx, res: wms.release_reservation(
+ reservation_id=res.reservation_id, idempotency_key=f"{ctx.decision_id}:res:comp"), reversible=True, ), Step(
+ name="notify_supplier", forward=lambda ctx: edi.send_forecast_update(
+ supplier=ctx.supplier, sku=ctx.sku, qty=ctx.qty, idempotency_key=f"{ctx.decision_id}:edi"), compensate=None, reversible=False, ), ]
 ```
 
 Three things in that structure matter.
@@ -154,34 +124,17 @@ A decision record captures, at the moment of decision, everything needed to expl
 
 ```sql
 CREATE TABLE ops.agents.decisions (
-    decision_id        STRING,
-    loop_name          STRING,
-    principal          STRING,
-    triggered_by       STRING,
-    started_at         TIMESTAMP,
-    completed_at       TIMESTAMP,
-
-    inputs_snapshot    VARIANT,   -- metrics read, with as-of timestamps
-    context_versions   VARIANT,   -- metric contract versions used
-    reasoning          STRING,    -- the agent's articulated rationale
-    alternatives       VARIANT,   -- options considered and why rejected
-    chosen_action      STRING,
-    action_parameters  VARIANT,
-
-    approval_required  BOOLEAN,
-    approved_by        STRING,
-    approved_at        TIMESTAMP,
-
-    outcome            STRING,    -- executed, compensated, rejected, expired
-    saga_state         VARIANT,
-    model_id           STRING,
-    tokens_consumed    BIGINT
+ decision_id STRING, loop_name STRING, principal STRING, triggered_by STRING, started_at TIMESTAMP, completed_at TIMESTAMP, inputs_snapshot VARIANT, metrics read, with as-of timestamps
+ context_versions VARIANT, metric contract versions used
+ reasoning STRING, the agent's articulated rationale
+ alternatives VARIANT, options considered and why rejected
+ chosen_action STRING, action_parameters VARIANT, approval_required BOOLEAN, approved_by STRING, approved_at TIMESTAMP, outcome STRING, executed, compensated, rejected, expired
+ saga_state VARIANT, model_id STRING, tokens_consumed BIGINT
 )
 USING iceberg
 PARTITIONED BY (days(started_at))
 TBLPROPERTIES (
-    'format-version'    = '3',
-    'write.update.mode' = 'merge-on-read'
+ 'format-version' = '3', 'write.update.mode' = 'merge-on-read'
 );
 ```
 

@@ -13,9 +13,10 @@ draft: false
 image: "/images/blog.png"
 canonical: "https://iceberglakehouse.com/posts/dremio-state-data-lakehouse-ai-report-agentic-lakehouse/"
 ---
-> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/dremio-state-data-lakehouse-ai-report-agentic-lakehouse/).
 
 Most lakehouse roadmaps written in the last few years had the same top items: migrate off the expensive warehouse, cut storage costs, consolidate on open table formats. Those are still reasonable goals. They are also no longer the whole story, because the thing pulling on data platforms hardest right now is not cost. It is agents. The direction that data leaders are signaling, and that Dremio's [state of the data lakehouse and AI findings](https://www.dremio.com/resources/) point at, is a shift from the lakehouse as a place to store and query data toward the lakehouse as an operating foundation for AI.
+
+> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/dremio-state-data-lakehouse-ai-report-agentic-lakehouse/).
 
 I want to be careful with how I treat the report itself. Rather than quote survey percentages I cannot stand behind precisely, I am going to treat the findings as directional market signals: the shape of where enterprise priorities are moving, not a claim about an exact share of respondents. The signals are consistent and they line up with what teams are actually building. What they tell you is that the requirements for a lakehouse change once agents start doing real work on it, and that the platforms worth investing in now are the ones designed for that change.
 
@@ -84,7 +85,7 @@ The report's directional signal here is that data leaders increasingly recognize
 The gap between where many lakehouses are and where agent-readiness requires them to be is easier to see laid out directly.
 
 | Capability | Standard lakehouse | Agentic lakehouse requirement |
-| --- | --- | --- |
+| -- | -- | -- |
 | Primary consumer | Human analysts and dashboards | Agents plus humans across many interfaces |
 | Query latency tolerance | Seconds are fine | Must stay interactive; latency compounds in agent loops |
 | Metric definitions | Often per-tool, divergent | One semantic layer resolved by every interface |
@@ -105,7 +106,7 @@ None of this argues for a rip-and-replace. It argues for a staged path, and the 
 
 **Build the semantic layer before giving agents broad query access.** This is the step teams are most tempted to skip, and skipping it is where agentic analytics projects go wrong. Define the metrics, the joins, and the business context as virtual datasets before the agents arrive. Giving agents broad raw SQL access to un-modeled data is how you get inconsistent numbers at scale. The semantic layer is the guardrail, and it needs to exist first.
 
-**Add observability for query cost, lineage, and agent behavior.** Once agents are working, you need to see what they are doing: which queries they run, what they cost, where the data came from, and how the agents behave over time. Agents can generate a lot of query volume quickly, and without observability, a misbehaving agent is an unbounded cost and an unaudited actor. Lineage lets you answer "where did this answer come from," which is the question that follows every agent-produced number.
+**Add observability for query cost, lineage, and agent behavior.** Once agents are working, you need to see what they are doing: which queries they run, what they cost, where the data came from, and how the agents behave over time. Agents can generate a lot of query volume quickly, and without observability, a misbehaving agent is an unbounded cost and an unaudited actor. Lineage lets you answer "where did this answer come from, " which is the question that follows every agent-produced number.
 
 The staging is deliberate. Each step makes the next one safe. Inventory before migration so you migrate the right things. Open tables before semantics so the semantic layer sits on a stable foundation. Semantics before agent access so the agents have guardrails. Observability alongside agent access so nothing runs unwatched. A roadmap that skips a step does not save time; it moves the failure later, where it is more expensive to fix.
 

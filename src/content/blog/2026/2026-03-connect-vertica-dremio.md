@@ -16,9 +16,10 @@ draft: false
 image: "/images/blog.png"
 canonical: "https://iceberglakehouse.com/posts/2026-03-connector-vertica/"
 ---
-> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-03-connector-vertica/).
 
 Vertica is a columnar analytics database engineered for fast aggregate queries on large datasets. It was built from the ground up for analytical workloads : column-oriented storage, massively parallel processing, and automatic database design optimization. Organizations running Vertica typically have years of investment in analytics infrastructure: curated schemas, optimized projections, and sophisticated workloads that depend on Vertica's high-performance query engine.
+
+> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-03-connector-vertica/).
 
 But Vertica has limitations that become more painful as data ecosystems grow. Licensing costs scale with data volume. Federation with non-Vertica sources requires complex ETL. And connecting Vertica data to modern cloud tools, AI platforms, and cross-cloud architectures requires exporting data or building custom connectors.
 
@@ -71,7 +72,7 @@ Provide the username and password for a Vertica user with read access. You can a
 ### 4. Configure Advanced Options
 
 | Setting | Purpose | Default |
-|---|---|---|
+|--|--|--|
 | **Record fetch size** | Rows per batch from Vertica | 200 |
 | **Maximum Idle Connections** | Idle connection pool size | 8 |
 | **Connection Idle Time (s)** | Seconds before idle connections close | 60 |
@@ -84,8 +85,7 @@ Configure how often Reflections refresh (re-query Vertica) and how often Dremio 
 ## Query Vertica Data from Dremio
 
 ```sql
-SELECT device_type, COUNT(*) AS sessions, AVG(session_duration_seconds) AS avg_duration, 
-  SUM(page_views) AS total_page_views
+SELECT device_type, COUNT(*) AS sessions, AVG(session_duration_seconds) AS avg_duration, SUM(page_views) AS total_page_views
 FROM "analytics-vertica".web.sessions
 WHERE session_date >= '2024-01-01' AND session_date < '2024-07-01'
 GROUP BY device_type
@@ -97,14 +97,9 @@ Dremio pushes the date filter and aggregation to Vertica's columnar engine, whic
 ## Federate Vertica with Other Sources
 
 ```sql
--- Join Vertica web analytics with PostgreSQL CRM and S3 marketing data
+- Join Vertica web analytics with PostgreSQL CRM and S3 marketing data
 SELECT
-  c.customer_segment,
-  COUNT(v.session_id) AS total_sessions,
-  AVG(v.session_duration_seconds) AS avg_session_duration,
-  COUNT(DISTINCT v.user_id) AS unique_visitors,
-  SUM(s3.ad_spend) AS marketing_spend,
-  ROUND(COUNT(v.session_id) / NULLIF(SUM(s3.ad_spend), 0) * 1000, 2) AS sessions_per_thousand_dollars
+ c.customer_segment, COUNT(v.session_id) AS total_sessions, AVG(v.session_duration_seconds) AS avg_session_duration, COUNT(DISTINCT v.user_id) AS unique_visitors, SUM(s3.ad_spend) AS marketing_spend, ROUND(COUNT(v.session_id) / NULLIF(SUM(s3.ad_spend), 0) * 1000, 2) AS sessions_per_thousand_dollars
 FROM "analytics-vertica".web.sessions v
 JOIN "postgres-crm".public.customers c ON v.user_id = c.customer_id
 LEFT JOIN "s3-marketing".campaigns.spend_by_segment s3 ON c.customer_segment = s3.segment
@@ -120,18 +115,11 @@ Vertica handles the session aggregation, PostgreSQL handles the customer lookup,
 ```sql
 CREATE VIEW analytics.gold.web_performance AS
 SELECT
-  v.device_type,
-  v.session_date,
-  COUNT(*) AS sessions,
-  AVG(v.session_duration_seconds) AS avg_duration_seconds,
-  SUM(v.page_views) AS total_page_views,
-  SUM(CASE WHEN v.converted = true THEN 1 ELSE 0 END) AS conversions,
-  ROUND(SUM(CASE WHEN v.converted = true THEN 1 ELSE 0 END) * 100.0 / COUNT(*), 2) AS conversion_rate_pct,
-  CASE
-    WHEN AVG(v.session_duration_seconds) > 300 THEN 'High Engagement'
-    WHEN AVG(v.session_duration_seconds) > 120 THEN 'Moderate Engagement'
-    ELSE 'Low Engagement'
-  END AS engagement_tier
+ v.device_type, v.session_date, COUNT(*) AS sessions, AVG(v.session_duration_seconds) AS avg_duration_seconds, SUM(v.page_views) AS total_page_views, SUM(CASE WHEN v.converted = true THEN 1 ELSE 0 END) AS conversions, ROUND(SUM(CASE WHEN v.converted = true THEN 1 ELSE 0 END) * 100.0 / COUNT(*), 2) AS conversion_rate_pct, CASE
+ WHEN AVG(v.session_duration_seconds) > 300 THEN 'High Engagement'
+ WHEN AVG(v.session_duration_seconds) > 120 THEN 'Moderate Engagement'
+ ELSE 'Low Engagement'
+ END AS engagement_tier
 FROM "analytics-vertica".web.sessions v
 GROUP BY v.device_type, v.session_date;
 ```
@@ -161,17 +149,11 @@ Now your team can ask Claude "Analyze our web engagement trends from Vertica dat
 Use AI SQL functions directly in queries to enrich Vertica data:
 
 ```sql
--- Classify web sessions by potential value
+- Classify web sessions by potential value
 SELECT
-  session_id,
-  device_type,
-  page_views,
-  session_duration_seconds,
-  AI_CLASSIFY(
-    'Based on this browsing behavior, classify the user intent',
-    'Device: ' || device_type || ', Pages: ' || CAST(page_views AS VARCHAR) || ', Duration: ' || CAST(session_duration_seconds AS VARCHAR) || 's',
-    ARRAY['Purchase Intent', 'Research', 'Browsing', 'Bounced']
-  ) AS predicted_intent
+ session_id, device_type, page_views, session_duration_seconds, AI_CLASSIFY(
+ 'Based on this browsing behavior, classify the user intent', 'Device: ' || device_type || ', Pages: ' || CAST(page_views AS VARCHAR) || ', Duration: ' || CAST(session_duration_seconds AS VARCHAR) || 's', ARRAY['Purchase Intent', 'Research', 'Browsing', 'Bounced']
+ ) AS predicted_intent
 FROM "analytics-vertica".web.sessions
 WHERE session_date = CURRENT_DATE;
 ```
@@ -233,7 +215,7 @@ Vertica has two deployment modes, both compatible with Dremio:
 Traditional deployment with local storage. Dremio connects via JDBC and pushes SQL operations to Vertica's engine when possible. Reflections are particularly valuable here : they offload analytical queries and reduce the on-premises compute needed.
 
 ### EON Mode (Cloud-Optimized)
-Vertica's compute-storage separation architecture on AWS, Azure, or GCP. Dremio connects the same way, but EON mode's elastic compute makes Reflections' cost-saving impact even more significant , when Dremio serves cached results, EON subclusters can scale down.
+Vertica's compute-storage separation architecture on AWS, Azure, or GCP. Dremio connects the same way, but EON mode's elastic compute makes Reflections' cost-saving impact even more significant, when Dremio serves cached results, EON subclusters can scale down.
 
 ## Vertica-Specific SQL Considerations
 

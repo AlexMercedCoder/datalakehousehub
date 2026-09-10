@@ -14,9 +14,10 @@ tags:
 slug: "serverless-iceberg-ingestion-pyiceberg-duckdb"
 draft: false
 ---
-> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/serverless-iceberg-ingestion-pyiceberg-duckdb/).
 
 The most common ingestion job in most companies is small. A vendor drops a CSV in a bucket every hour. A webhook delivers a few thousand JSON events a minute. A SaaS export lands nightly at a few hundred megabytes. For years, the standard answer to "get this into the lakehouse" was the same regardless of size: stand up a Spark job, or buy a managed pipeline tool, and accept that the smallest task in the platform runs on the heaviest machinery.
+
+> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/serverless-iceberg-ingestion-pyiceberg-duckdb/).
 
 That answer is obsolete, and the tools that obsoleted it matured fast enough that many teams have not noticed. PyIceberg, the pure-Python implementation of Apache Iceberg, writes tables directly from any Python runtime, no JVM, no cluster. DuckDB, the in-process analytical engine, now reads and writes Iceberg tables through a REST catalog, with MERGE INTO and v3 table support landing in its recent extension releases. Between them, a complete ingestion pipeline fits inside a serverless function that runs for seconds and bills for seconds.
 
@@ -53,7 +54,7 @@ Two neighbors of this toolkit deserve a sentence each, so their absence reads as
 Choosing among the compositions is mostly reading the task:
 
 | Pipeline shape | Right tool | Reason |
-|---|---|---|
+|--|--|--|
 | Clean append, light reshaping | PyIceberg alone | Fewest moving parts, fastest start |
 | Dedup, joins, aggregation before write | PyIceberg reads input, DuckDB transforms and writes | SQL where SQL wins |
 | Upserts on business keys | DuckDB MERGE INTO | One atomic set-based statement |
@@ -87,34 +88,25 @@ CATALOG_URI = "https://catalog.example.com/api/catalog"
 TABLE_NAME = "sales.vendor_orders"
 
 def handler(event, context):
-    record = event["Records"][0]
-    bucket = record["s3"]["bucket"]["name"]
-    key = record["s3"]["object"]["key"]
+ record = event["Records"][0]
+ bucket = record["s3"]["bucket"]["name"]
+ key = record["s3"]["object"]["key"]
 
-    catalog = load_catalog(
-        "lakehouse",
-        **{
-            "type": "rest",
-            "uri": CATALOG_URI,
-            "warehouse": "prod",
-            "credential": "CLIENT_ID:CLIENT_SECRET",
-        },
-    )
-    table = catalog.load_table(TABLE_NAME)
+ catalog = load_catalog(
+ "lakehouse", **{
+ "type": "rest", "uri": CATALOG_URI, "warehouse": "prod", "credential": "CLIENT_ID:CLIENT_SECRET", }, )
+ table = catalog.load_table(TABLE_NAME)
 
-    s3 = pafs.S3FileSystem()
-    with s3.open_input_stream(f"{bucket}/{key}") as stream:
-        arrow_table = pv.read_csv(stream)
+ s3 = pafs.S3FileSystem()
+ with s3.open_input_stream(f"{bucket}/{key}") as stream:
+ arrow_table = pv.read_csv(stream)
 
-    arrow_table = arrow_table.cast(table.schema().as_arrow())
+ arrow_table = arrow_table.cast(table.schema().as_arrow())
 
-    table.append(arrow_table)
+ table.append(arrow_table)
 
-    return {
-        "status": "committed",
-        "rows": arrow_table.num_rows,
-        "source": key,
-    }
+ return {
+ "status": "committed", "rows": arrow_table.num_rows, "source": key, }
 ```
 
 Walk the load-bearing lines. The catalog configuration authenticates the function's identity to the REST catalog, and the credential shown as a placeholder belongs in your secret manager, injected at runtime, never in code. From that point, storage access flows through credentials the catalog vends for this table, scoped and short-lived, which is why the function's IAM role needs no direct grant on the warehouse bucket at all. The CSV is read straight into Arrow, cast against the table's schema, which is the cheapest validation gate you will ever install, because a column drift or type change fails loudly here instead of landing silently as bad data. The append writes Parquet into the table's location and commits a new snapshot through the catalog in one atomic step. If anything above the append raises, nothing committed, and the object storage event redelivers for retry.
@@ -133,37 +125,32 @@ import duckdb
 con = duckdb.connect()
 con.execute("INSTALL iceberg; LOAD iceberg;")
 con.execute("""
-    CREATE SECRET catalog_auth (
-        TYPE iceberg,
-        CLIENT_ID 'CLIENT_ID',
-        CLIENT_SECRET 'CLIENT_SECRET',
-        OAUTH2_SERVER_URI 'https://catalog.example.com/api/catalog/v1/oauth/tokens'
-    )
+ CREATE SECRET catalog_auth (
+ TYPE iceberg, CLIENT_ID 'CLIENT_ID', CLIENT_SECRET 'CLIENT_SECRET', OAUTH2_SERVER_URI 'https://catalog.example.com/api/catalog/v1/oauth/tokens'
+ )
 """)
 con.execute("""
-    ATTACH 'prod' AS lakehouse (
-        TYPE iceberg,
-        ENDPOINT 'https://catalog.example.com/api/catalog'
-    )
+ ATTACH 'prod' AS lakehouse (
+ TYPE iceberg, ENDPOINT 'https://catalog.example.com/api/catalog'
+ )
 """)
 
 con.register("incoming", arrow_table)
 
 con.execute("""
-    MERGE INTO lakehouse.sales.vendor_orders t
-    USING (
-        SELECT * EXCLUDE (rn) FROM (
-            SELECT *, row_number() OVER (
-                PARTITION BY order_id ORDER BY updated_at DESC
-            ) AS rn
-            FROM incoming
-        ) WHERE rn = 1
-    ) s
-    ON t.order_id = s.order_id
-    WHEN MATCHED THEN UPDATE SET
-        status = s.status,
-        updated_at = s.updated_at
-    WHEN NOT MATCHED THEN INSERT *
+ MERGE INTO lakehouse.sales.vendor_orders t
+ USING (
+ SELECT * EXCLUDE (rn) FROM (
+ SELECT *, row_number() OVER (
+ PARTITION BY order_id ORDER BY updated_at DESC
+ ) AS rn
+ FROM incoming
+ ) WHERE rn = 1
+ ) s
+ ON t.order_id = s.order_id
+ WHEN MATCHED THEN UPDATE SET
+ status = s.status, updated_at = s.updated_at
+ WHEN NOT MATCHED THEN INSERT *
 """)
 ```
 

@@ -1,7 +1,7 @@
 ---
 title: "A Tour of Specialized AI Tools: Music, Video, Images, and More"
 date: 2026-06-01T09:00:00Z
-description: "Beyond chatbots lie specialized AI tools for creating music, generating videos, and editing images. Here is a tour of the best tools in 2026 and how they fit into daily productivity."
+description: "Beyond chatbots lie specialized AI tools for creating music, generating videos, and editing images."
 author: "Alex Merced"
 category: "Artificial Intelligence"
 tags:
@@ -14,7 +14,6 @@ slug: ai-for-all-levels-4-specialized-ai-tools
 draft: false
 image: "/images/blog.png"
 ---
-
 The first three parts of this series covered general purpose AI assistants: the chatbots and writing tools that handle text based tasks. But AI in 2026 extends far beyond chat windows. A whole ecosystem of specialized tools creates original music, generates cinematic video, produces professional images, and designs presentations.
 
 This is Part 4 of "Catching Up with Using AI for All Levels." If you are new here, start with Part 1 for the fundamentals and Part 2 for the free tools, then Part 3 for ChatGPT and Claude. This post covers the creative side: what the tools are, what they cost, how good the output actually is, and when they make sense for daily productivity rather than just artistic projects.
@@ -27,7 +26,7 @@ This is Part 4 of "Catching Up with Using AI for All Levels." If you are new her
 
 [Skip to Part 5: Going Advanced: Open Source, Local Models, and Agent Tools](/blog/ai-for-all-levels-5-going-advanced/)
 
----
+--
 
 ## Image Generation: The Mature Category
 
@@ -71,7 +70,7 @@ Business use cases include: product mockups for proposals, custom illustrations 
 
 The quality is good enough for professional use in most contexts, but you should still use real photography for anything that represents an actual product, person, or location. AI generated images have subtle tells that trained eyes notice.
 
----
+--
 
 ## Video Generation: The Fastest Evolving Category
 
@@ -113,7 +112,7 @@ A non obvious productivity use: creating quick tutorial videos for your team. In
 
 The current limitations are real. Videos longer than 30 seconds still struggle with consistency. Characters in the first frame may change appearance by the tenth frame. Complex action sequences produce artifacts. Text rendering in video is unreliable. You should budget time for multiple attempts and manual editing to get a usable result.
 
----
+--
 
 ## Music Generation: From Novelty to Useful
 
@@ -123,7 +122,7 @@ AI music generation has come into its own in 2026. The tools produce genuinely l
 
 Suno is the leading AI music generator. It generates complete songs with lyrics, vocals, and instrumentation from a text prompt. You describe the genre, mood, and subject, and Suno produces a full track with verses, choruses, and a bridge.
 
-Suno's free tier gives you a limited number of generations per day, enough for experimentation. The Pro plan at $10 per month gives 500 generations and commercial usage rights. The Premier plan at $30 per month gives 2,000 generations and priority processing.
+Suno's free tier gives you a limited number of generations per day, enough for experimentation. The Pro plan at $10 per month gives 500 generations and commercial usage rights. The Premier plan at $30 per month gives 2, 000 generations and priority processing.
 
 The output quality varies by genre. Pop, rock, electronic, and hip hop work well. Classical and jazz are less convincing. The vocals sound synthetic on close listening but pass for casual listening in the background. The instrumental quality is generally strong.
 
@@ -147,7 +146,7 @@ Music generation is the most situational of the creative AI tools. If you create
 
 The hidden productivity use is inspiration and mood setting. Generate a few short musical pieces for a creative project and use them as background while you work. The music sets a tone that helps you get into the right mental state for the task.
 
----
+--
 
 ## Presentation and Design Tools
 
@@ -175,7 +174,7 @@ Canva's AI features are available on the free tier with usage limits. The Pro pl
 
 Canva AI is the most practical choice for non designers who need to create visual content regularly. The learning curve is minimal, the output quality is good, and the integrations with social media platforms streamline publishing.
 
----
+--
 
 ## Audio: Transcription, Voice, and Sound
 
@@ -205,7 +204,7 @@ Productivity use cases include: generating voiceovers for videos and presentatio
 
 Voice cloning raises obvious ethical concerns. You should only clone a voice with the person's explicit consent. Using ElevenLabs to impersonate someone without permission is not just unethical. It could be illegal in some jurisdictions. The platform has safety measures in place, including voice authentication and content moderation, but the responsibility ultimately rests with the user.
 
----
+--
 
 ### Adobe Firefly and the Creative Suite Integration
 
@@ -215,7 +214,7 @@ Firefly is notable because it is trained on Adobe Stock images and openly licens
 
 Firefly is included in existing Creative Cloud subscriptions. Photoshop users with a subscription get a certain number of generative credits per month. Additional credits are available for purchase.
 
----
+--
 
 ## Putting It All Together: A Creative AI Workflow
 
@@ -247,7 +246,7 @@ You are preparing a client proposal. Write the content in ChatGPT or Claude. Gen
 
 For personal use, the free tiers of these tools cover most needs. Edit family photos with Photoshop's Generative Fill to remove photobombers or improve composition. Use Google Photos AI to organize and search your library. Use Suno's free tier to generate a custom song for a friend's birthday. Use Canva AI to design invitations, cards, and social media posts for personal events.
 
----
+--
 
 ## The Real Productivity Question
 

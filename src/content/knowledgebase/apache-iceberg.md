@@ -1,7 +1,8 @@
 ---
 title: "What is Apache Iceberg?"
 meta_title: "What is Apache Iceberg? | Expert Data Lakehouse Architecture Guide"
-description: "A comprehensive guide to Apache Iceberg. Learn about its hidden partitioning, time travel capabilities, open REST catalog architecture, and modern data lakehouse integration."
+description: "A comprehensive guide to Apache Iceberg. Learn about its hidden partitioning, time travel capabilities, open REST catalog architecture, and modern data."
+canonical: "https://iceberglakehouse.com/apache-iceberg/"
 ---
 
 # What is Apache Iceberg?

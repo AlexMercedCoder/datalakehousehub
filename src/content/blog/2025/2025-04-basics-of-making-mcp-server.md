@@ -16,15 +16,16 @@ draft: false
 image: "/images/blog.png"
 canonical: "https://iceberglakehouse.com/posts/2025-04-basics-of-making-mcp-server/"
 ---
-> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2025-04-basics-of-making-mcp-server/).
 
 ## Free Resources  
-- **[Free Apache Iceberg Course](https://hello.dremio.com/webcast-an-apache-iceberg-lakehouse-crash-course-reg.html?utm_source=ev_external_blog&utm_medium=influencer&utm_campaign=mcp_basic&utm_content=alexmerced&utm_term=external_blog)**  
-- **[Free Copy of “Apache Iceberg: The Definitive Guide”](https://hello.dremio.com/wp-apache-iceberg-the-definitive-guide-reg.html?utm_source=ev_external_blog&utm_medium=influencer&utm_campaign=mcp_basic&utm_content=alexmerced&utm_term=external_blog)**  
-- **[2025 Apache Iceberg Architecture Guide](https://medium.com/data-engineering-with-dremio/2025-guide-to-architecting-an-iceberg-lakehouse-9b19ed42c9de)**  
-- **[How to Join the Iceberg Community](https://medium.alexmerced.blog/guide-to-finding-apache-iceberg-events-near-you-and-being-part-of-the-greater-iceberg-community-0c38ae785ddb)**  
-- **[Iceberg Lakehouse Engineering Video Playlist](https://youtube.com/playlist?list=PLsLAVBjQJO0p0Yq1fLkoHvt2lEJj5pcYe&si=WTSnqjXZv6Glkc3y)**  
-- **[Ultimate Apache Iceberg Resource Guide](https://medium.com/data-engineering-with-dremio/ultimate-directory-of-apache-iceberg-resources-e3e02efac62e)**  
+- **[Free Apache Iceberg Course](https://hello.dremio.com/webcast-an-apache-iceberg-lakehouse-crash-course-reg.html?utm_source=ev_external_blog&utm_medium=influencer&utm_campaign=mcp_basic&utm_content=alexmerced&utm_term=external_blog)** 
+- **[Free Copy of “Apache Iceberg: The Definitive Guide”](https://hello.dremio.com/wp-apache-iceberg-the-definitive-guide-reg.html?utm_source=ev_external_blog&utm_medium=influencer&utm_campaign=mcp_basic&utm_content=alexmerced&utm_term=external_blog)** 
+- **[2025 Apache Iceberg Architecture Guide](https://medium.com/data-engineering-with-dremio/2025-guide-to-architecting-an-iceberg-lakehouse-9b19ed42c9de)** 
+- **[How to Join the Iceberg Community](https://medium.alexmerced.blog/guide-to-finding-apache-iceberg-events-near-you-and-being-part-of-the-greater-iceberg-community-0c38ae785ddb)** 
+- **[Iceberg Lakehouse Engineering Video Playlist](https://youtube.com/playlist?list=PLsLAVBjQJO0p0Yq1fLkoHvt2lEJj5pcYe&si=WTSnqjXZv6Glkc3y)** 
+- **[Ultimate Apache Iceberg Resource Guide](https://medium.com/data-engineering-with-dremio/ultimate-directory-of-apache-iceberg-resources-e3e02efac62e)**
+
+> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2025-04-basics-of-making-mcp-server/).
 
 If you’ve ever wished you could ask an AI model like Claude to interact with your local files or run custom code - good news: **you can.** That’s exactly what the **Model Context Protocol (MCP)** makes possible.
 
@@ -34,12 +35,12 @@ Here’s what we’ll build:
 
 - A small server using Python and the **MCP SDK**
 - Two useful **tools** that read data from:
-  - A **CSV file** (great for spreadsheets and tabular data)
-  - A **Parquet file** (a format often used in data engineering and analytics)
+ - A **CSV file** (great for spreadsheets and tabular data)
+ - A **Parquet file** (a format often used in data engineering and analytics)
 - A clean folder structure that makes it easy to add new tools or features later
 - A working connection to **Claude for Desktop**, so you can ask things like:
-  > “Summarize the contents of my data file”  
-  > “How many rows and columns are in this CSV?”
+ > “Summarize the contents of my data file” 
+ > “How many rows and columns are in this CSV?”
 
 ### Why Start Here?
 
@@ -101,7 +102,7 @@ Then restart your terminal so the uv command is available.
 You can check that it's working with:
 
 ```bash
-uv --version
+uv -version
 ```
 
 ### Step 2: Create the Project
@@ -147,15 +148,15 @@ We’ll use the following layout to stay organized:
 ```bash
 mix_server/
 │
-├── data/                 # Sample CSV and Parquet files
+├── data/ # Sample CSV and Parquet files
 │
-├── tools/                # MCP tool definitions
+├── tools/ # MCP tool definitions
 │
-├── utils/                # Reusable file reading logic
+├── utils/ # Reusable file reading logic
 │
-├── server.py             # Creates the Server
-├── main.py             # Entry point for the MCP server
-└── README.md             # Optional documentation
+├── server.py # Creates the Server
+├── main.py # Entry point for the MCP server
+└── README.md # Optional documentation
 ```
 
 Create the folders:
@@ -196,12 +197,12 @@ data/sample.csv
 And paste the following into it:
 
 ```csv
-id,name,email,signup_date
-1,Alice Johnson,alice@example.com,2023-01-15
-2,Bob Smith,bob@example.com,2023-02-22
-3,Carol Lee,carol@example.com,2023-03-10
-4,David Wu,david@example.com,2023-04-18
-5,Eva Brown,eva@example.com,2023-05-30
+id, name, email, signup_date
+1, Alice Johnson, alice@example.com, 2023-01-15
+2, Bob Smith, bob@example.com, 2023-02-22
+3, Carol Lee, carol@example.com, 2023-03-10
+4, David Wu, david@example.com, 2023-04-18
+5, Eva Brown, eva@example.com, 2023-05-30
 ```
 
 This file gives us structured, readable data - perfect for a tool to analyze.
@@ -280,32 +281,32 @@ from pathlib import Path
 DATA_DIR = Path(__file__).resolve().parent.parent / "data"
 
 def read_csv_summary(filename: str) -> str:
-    """
-    Read a CSV file and return a simple summary.
+ """
+ Read a CSV file and return a simple summary.
 
-    Args:
-        filename: Name of the CSV file (e.g. 'sample.csv')
+ Args:
+ filename: Name of the CSV file (e.g. 'sample.csv')
 
-    Returns:
-        A string describing the file's contents.
-    """
-    file_path = DATA_DIR / filename
-    df = pd.read_csv(file_path)
-    return f"CSV file '{filename}' has {len(df)} rows and {len(df.columns)} columns."
+ Returns:
+ A string describing the file's contents.
+ """
+ file_path = DATA_DIR / filename
+ df = pd.read_csv(file_path)
+ return f"CSV file '{filename}' has {len(df)} rows and {len(df.columns)} columns."
 
 def read_parquet_summary(filename: str) -> str:
-    """
-    Read a Parquet file and return a simple summary.
+ """
+ Read a Parquet file and return a simple summary.
 
-    Args:
-        filename: Name of the Parquet file (e.g. 'sample.parquet')
+ Args:
+ filename: Name of the Parquet file (e.g. 'sample.parquet')
 
-    Returns:
-        A string describing the file's contents.
-    """
-    file_path = DATA_DIR / filename
-    df = pd.read_parquet(file_path)
-    return f"Parquet file '{filename}' has {len(df)} rows and {len(df.columns)} columns."
+ Returns:
+ A string describing the file's contents.
+ """
+ file_path = DATA_DIR / filename
+ df = pd.read_parquet(file_path)
+ return f"Parquet file '{filename}' has {len(df)} rows and {len(df.columns)} columns."
 ```
 
 #### How This Works
@@ -353,7 +354,7 @@ from server import mcp
 
 # Entry point to run the server
 if __name__ == "__main__":
-    mcp.run()
+ mcp.run()
 ```
 
 This creates a named server called "mix_server" and exposes a simple run command.
@@ -378,16 +379,16 @@ from utils.file_reader import read_csv_summary
 
 @mcp.tool()
 def summarize_csv_file(filename: str) -> str:
-    """
-    Summarize a CSV file by reporting its number of rows and columns.
+ """
+ Summarize a CSV file by reporting its number of rows and columns.
 
-    Args:
-        filename: Name of the CSV file in the /data directory (e.g., 'sample.csv')
+ Args:
+ filename: Name of the CSV file in the /data directory (e.g., 'sample.csv')
 
-    Returns:
-        A string describing the file's dimensions.
-    """
-    return read_csv_summary(filename)
+ Returns:
+ A string describing the file's dimensions.
+ """
+ return read_csv_summary(filename)
 ```
 
 ### Step 3: Create the Parquet Tool
@@ -409,16 +410,16 @@ from utils.file_reader import read_parquet_summary
 
 @mcp.tool()
 def summarize_parquet_file(filename: str) -> str:
-    """
-    Summarize a Parquet file by reporting its number of rows and columns.
+ """
+ Summarize a Parquet file by reporting its number of rows and columns.
 
-    Args:
-        filename: Name of the Parquet file in the /data directory (e.g., 'sample.parquet')
+ Args:
+ filename: Name of the Parquet file in the /data directory (e.g., 'sample.parquet')
 
-    Returns:
-        A string describing the file's dimensions.
-    """
-    return read_parquet_summary(filename)
+ Returns:
+ A string describing the file's dimensions.
+ """
+ return read_parquet_summary(filename)
 ```
 
 ### Step 4: Register the Tools
@@ -435,7 +436,7 @@ import tools.parquet_tools
 
 # Entry point to run the server
 if __name__ == "__main__":
-    mcp.run()
+ mcp.run()
 ```
 
 Now, whenever the server runs, it automatically registers all tools via the @mcp.tool() decorators.
@@ -488,17 +489,13 @@ Paste the following JSON into the file, replacing the "/ABSOLUTE/PATH/..." with 
 
 ```json
 {
-  "mcpServers": {
-    "mix_server": {
-      "command": "uv",
-      "args": [
-        "--directory",
-        "/ABSOLUTE/PATH/TO/mix_server",
-        "run",
-        "main.py"
-      ]
-    }
-  }
+ "mcpServers": {
+ "mix_server": {
+ "command": "uv", "args": [
+ "-directory", "/ABSOLUTE/PATH/TO/mix_server", "run", "main.py"
+ ]
+ }
+ }
 ```
 
 Tip: To find the absolute path:
@@ -552,8 +549,8 @@ By following this guide, you now have a fully working **MCP server** that:
 - Uses Python and the official `mcp` SDK
 - Reads real data from both **CSV** and **Parquet** files
 - Exposes two custom **MCP tools** that Claude for Desktop can call:
-  - `summarize_csv_file`
-  - `summarize_parquet_file`
+ - `summarize_csv_file`
+ - `summarize_parquet_file`
 - Follows a clean, modular folder structure
 - Runs locally using `uv` and connects seamlessly to Claude for natural language interaction
 

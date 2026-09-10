@@ -1,6 +1,6 @@
 ---
 title: "Apache Iceberg v3 Deletion Vectors on Snowflake"
-description: "Apache Iceberg v3 deletion vectors replace positional delete files with binary bitmaps in Puffin files, delivering up to 10x faster DML on Snowflake. Deep dive into architecture, benchmarks, and migration."
+description: "Apache Iceberg v3 deletion vectors replace positional delete files with binary bitmaps in Puffin files, delivering up to 10x faster DML on Snowflake."
 date: 2026-06-08T09:00:00Z
 slug: "iceberg-v3-deletion-vectors-snowflake-dml"
 draft: false
@@ -16,9 +16,10 @@ tags:
   - "Iceberg v3 performance"
 canonical: "https://iceberglakehouse.com/posts/2026-05-22-apache-iceberg-catalogs-explained/"
 ---
-> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-05-22-apache-iceberg-catalogs-explained/).
 
 A single row-level DELETE or UPDATE against a 2 TB fact table should not require rewriting hundreds of megabytes of Parquet files. That is the problem Apache Iceberg v3 deletion vectors solve, and it is the most consequential performance change to the Iceberg specification since the format was created.
+
+> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-05-22-apache-iceberg-catalogs-explained/).
 
 Deletion vectors became generally available on Snowflake on May 7, 2026, alongside Databricks Runtime 18.0+ and Amazon EMR 7.11. Early benchmarks from AWS show delete operations running 55% faster and consuming 73% less storage than the v2 positional delete approach. The mechanism is simple in concept (binary bitmaps stored in Puffin files) but the implications for merge-on-read performance, compaction strategy, and multi-engine interoperability are worth understanding in detail before you upgrade.
 
@@ -46,16 +47,16 @@ Anton Okolnychyi, the Databricks engineer who finalized the deletion vectors spe
 
 ## Performance Benchmarks: v2 vs v3
 
-The AWS Big Data Blog published detailed benchmarks comparing Iceberg v2 positional delete files against Iceberg v3 deletion vectors on Amazon EMR 7.10 with Spark 3.5.5 and Iceberg 1.9.2. The test used an identical dataset of 10,000 rows, a targeted DELETE of 100 rows (IDs 1000-1099), and measured four metrics.
+The AWS Big Data Blog published detailed benchmarks comparing Iceberg v2 positional delete files against Iceberg v3 deletion vectors on Amazon EMR 7.10 with Spark 3.5.5 and Iceberg 1.9.2. The test used an identical dataset of 10, 000 rows, a targeted DELETE of 100 rows (IDs 1000-1099), and measured four metrics.
 
 | Metric | Iceberg v2 (Parquet) | Iceberg v3 (Puffin) | Improvement |
-|--------|---------------------|-------------------|-------------|
+|----|-----------|----------|-------|
 | Delete operation time | 3.126 seconds | 1.407 seconds | 55% faster |
-| Delete file size | 1,801 bytes | 475 bytes | 73.6% smaller |
+| Delete file size | 1, 801 bytes | 475 bytes | 73.6% smaller |
 | Full table read time | Baseline | 28.5% faster | 28.5% |
 | Filtered read time | Baseline | 23% faster | 23% |
 
-The delete file size reduction is the most important number. The v2 position delete file at 1.8 KB encodes each deleted row as a file path and row position pair. The v3 bitmap at 475 bytes encodes the same information as a compressed integer range. Over thousands of delete operations, this difference compounds dramatically. A table with 10,000 delete operations in v2 would have roughly 18 MB of delete files to scan at read time. The same table in v3 would have roughly 4.7 MB of bitmaps, and those bitmaps would be consolidated into fewer Puffin files.
+The delete file size reduction is the most important number. The v2 position delete file at 1.8 KB encodes each deleted row as a file path and row position pair. The v3 bitmap at 475 bytes encodes the same information as a compressed integer range. Over thousands of delete operations, this difference compounds dramatically. A table with 10, 000 delete operations in v2 would have roughly 18 MB of delete files to scan at read time. The same table in v3 would have roughly 4.7 MB of bitmaps, and those bitmaps would be consolidated into fewer Puffin files.
 
 Snowflake's implementation shows similar characteristics. Snowflake engineers confirmed in their v3 announcement that deletion vectors deliver "up to 10x faster DML" compared to copy-on-write, which rewrites entire data files on every mutation. The 10x figure is workload-dependent and applies most directly to small DELETE and UPDATE operations against large files, which are the worst case for copy-on-write.
 
@@ -97,7 +98,7 @@ Compaction is more important with deletion vectors, not less. Even though the bi
 
 The compaction best practice for v3 is to run periodic rewrite_data_file operations that materialize the deletion vectors into the base data files. When a file is rewritten, the active (non-deleted) rows are written to a new Parquet file with no deletion vector. The old file and its bitmap are garbage-collected by the next VACUUM operation.
 
-Snowflake recommends scheduling compaction jobs at a frequency proportional to your write volume. A table with 10,000 DELETEs per day should compact at least daily. A table with 100 DELETEs per day can compact weekly. The tradeoff is compute cost: compaction rewrites data files, which consumes warehouse credits. The metric to track is the ratio of deletion vector bytes to data file bytes. When that ratio exceeds 5% of the data file total, compaction is worth running.
+Snowflake recommends scheduling compaction jobs at a frequency proportional to your write volume. A table with 10, 000 DELETEs per day should compact at least daily. A table with 100 DELETEs per day can compact weekly. The tradeoff is compute cost: compaction rewrites data files, which consumes warehouse credits. The metric to track is the ratio of deletion vector bytes to data file bytes. When that ratio exceeds 5% of the data file total, compaction is worth running.
 
 Databricks uses an identical binary format for its deletion vectors in Delta Lake and Apache Iceberg. This cross-format alignment means that a table written by Databricks Delta Lake can be read by Snowflake Iceberg with the same deletion vector semantics. The Databricks blog post on Iceberg v3 specifically calls this out: "Deletion vectors use the same binary encodings in Iceberg and Delta. Customers can interoperate freely between Delta and Iceberg on one copy of data, no rewriting needed."
 
@@ -144,6 +145,6 @@ The adoption risk is engine compatibility. Snowflake and Databricks both support
 
 For teams that need row-level mutations at scale across a multi-engine lakehouse, Apache Iceberg v3 deletion vectors are the right technical choice. The format is standardized, the implementations are mature, and the performance data supports the claims.
 
----
+--
 
 *For more background on Apache Iceberg catalogs, governance, and multi-engine architectures, explore the open source Apache Polaris project at [polaris.apache.org](https://polaris.apache.org). If you want to test Iceberg v3 deletion vectors with a governed, multi-engine lakehouse platform, start a free trial at [dremio.com/get-started](https://www.dremio.com/get-started).*

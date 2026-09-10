@@ -16,11 +16,12 @@ draft: false
 image: "/images/blog.png"
 canonical: "https://iceberglakehouse.com/posts/2026-03-connector-iceberg-rest-catalog/"
 ---
+
+The Apache Iceberg REST Catalog specification defines a standard HTTP API for managing Iceberg table metadata. Any catalog implementation that conforms to this specification : Apache Polaris, Amazon S3 Tables, Confluent Tableflow, Tabular, Apache Gravitino, and custom-built services, can connect to Dremio Cloud through a single connector type.
+
 > **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-03-connector-iceberg-rest-catalog/).
 
-The Apache Iceberg REST Catalog specification defines a standard HTTP API for managing Iceberg table metadata. Any catalog implementation that conforms to this specification :  Apache Polaris, Amazon S3 Tables, Confluent Tableflow, Tabular, Apache Gravitino, and custom-built services ,  can connect to Dremio Cloud through a single connector type.
-
-This is the most flexible catalog connector Dremio offers. Instead of needing a purpose-built connector for every catalog vendor, the Iceberg REST Catalog connector works with any compliant implementation. As new catalogs emerge :  and they're emerging rapidly in the open lakehouse ecosystem ,  this connector ensures Dremio supports them from day one.
+This is the most flexible catalog connector Dremio offers. Instead of needing a purpose-built connector for every catalog vendor, the Iceberg REST Catalog connector works with any compliant implementation. As new catalogs emerge : and they're emerging rapidly in the open lakehouse ecosystem, this connector ensures Dremio supports them from day one.
 
 The Iceberg REST specification is becoming the universal standard for lakehouse catalog interoperability. AWS launched Amazon S3 Tables (a fully managed Iceberg catalog with REST API) in late 2024, Confluent released Tableflow for streaming-to-Iceberg ingestion, and Apache Gravitino provides multi-catalog governance. All of these work with Dremio's REST Catalog connector without any Dremio-side code changes.
 
@@ -35,7 +36,7 @@ Many REST catalogs support credential vending : the ability to issue temporary, 
 The Iceberg REST Catalog connector works with any catalog implementation that conforms to the Iceberg REST API spec. This includes:
 
 | Catalog | Type | Credential Vending |
-|---|---|---|
+|--|--|--|
 | Apache Polaris | Open source | Yes |
 | Amazon S3 Tables | AWS managed | Yes |
 | Confluent Tableflow | Confluent managed | Yes |
@@ -105,30 +106,27 @@ If credential vending is supported, Dremio receives temporary credentials automa
 ## Query and Write to REST Catalog Tables
 
 ```sql
--- Query Iceberg tables from a REST catalog
+- Query Iceberg tables from a REST catalog
 SELECT order_id, customer_id, order_total, order_date
 FROM "rest-catalog".ecommerce.orders
 WHERE order_date >= '2024-01-01' AND order_total > 100
 ORDER BY order_total DESC;
 
--- Write to the catalog
+- Write to the catalog
 INSERT INTO "rest-catalog".analytics.daily_summary
 SELECT
-  DATE_TRUNC('day', order_date) AS day,
-  COUNT(*) AS order_count,
-  SUM(order_total) AS revenue,
-  AVG(order_total) AS avg_order_value
+ DATE_TRUNC('day', order_date) AS day, COUNT(*) AS order_count, SUM(order_total) AS revenue, AVG(order_total) AS avg_order_value
 FROM "rest-catalog".ecommerce.orders
 WHERE order_date = CURRENT_DATE - INTERVAL '1' DAY
 GROUP BY 1;
 
--- MERGE for upserts
+- MERGE for upserts
 MERGE INTO "rest-catalog".analytics.customer_metrics AS target
 USING (
-  SELECT customer_id, COUNT(*) AS orders, SUM(order_total) AS total_spent
-  FROM "rest-catalog".ecommerce.orders
-  WHERE order_date >= CURRENT_DATE - INTERVAL '30' DAY
-  GROUP BY customer_id
+ SELECT customer_id, COUNT(*) AS orders, SUM(order_total) AS total_spent
+ FROM "rest-catalog".ecommerce.orders
+ WHERE order_date >= CURRENT_DATE - INTERVAL '30' DAY
+ GROUP BY customer_id
 ) AS source
 ON target.customer_id = source.customer_id
 WHEN MATCHED THEN UPDATE SET orders = source.orders, total_spent = source.total_spent
@@ -138,13 +136,9 @@ WHEN NOT MATCHED THEN INSERT (customer_id, orders, total_spent) VALUES (source.c
 ## Federate with Other Sources
 
 ```sql
--- Join REST catalog data with PostgreSQL and S3
+- Join REST catalog data with PostgreSQL and S3
 SELECT
-  rc.order_id,
-  rc.order_total,
-  pg.customer_name,
-  pg.region,
-  s3.support_tickets
+ rc.order_id, rc.order_total, pg.customer_name, pg.region, s3.support_tickets
 FROM "rest-catalog".ecommerce.orders rc
 JOIN "postgres-crm".public.customers pg ON rc.customer_id = pg.customer_id
 LEFT JOIN "s3-support".tickets.customer_counts s3 ON rc.customer_id = s3.customer_id
@@ -157,18 +151,12 @@ ORDER BY rc.order_total DESC;
 ```sql
 CREATE VIEW analytics.gold.customer_value AS
 SELECT
-  rc.customer_id,
-  pg.customer_name,
-  pg.region,
-  SUM(rc.order_total) AS lifetime_value,
-  COUNT(*) AS total_orders,
-  ROUND(AVG(rc.order_total), 2) AS avg_order_value,
-  CASE
-    WHEN SUM(rc.order_total) > 50000 THEN 'Platinum'
-    WHEN SUM(rc.order_total) > 10000 THEN 'Gold'
-    WHEN SUM(rc.order_total) > 1000 THEN 'Silver'
-    ELSE 'Bronze'
-  END AS value_tier
+ rc.customer_id, pg.customer_name, pg.region, SUM(rc.order_total) AS lifetime_value, COUNT(*) AS total_orders, ROUND(AVG(rc.order_total), 2) AS avg_order_value, CASE
+ WHEN SUM(rc.order_total) > 50000 THEN 'Platinum'
+ WHEN SUM(rc.order_total) > 10000 THEN 'Gold'
+ WHEN SUM(rc.order_total) > 1000 THEN 'Silver'
+ ELSE 'Bronze'
+ END AS value_tier
 FROM "rest-catalog".ecommerce.orders rc
 JOIN "postgres-crm".public.customers pg ON rc.customer_id = pg.customer_id
 GROUP BY rc.customer_id, pg.customer_name, pg.region;
@@ -180,7 +168,7 @@ In the **Catalog**, click **Edit** → **Generate Wiki** and **Generate Tags**.
 
 ### Dremio AI Agent
 
-Ask "Who are our Platinum customers?" and the AI Agent generates SQL from your semantic layer. The wiki descriptions you attached explain what "Platinum" means (lifetime value > $50,000), so the Agent produces accurate results.
+Ask "Who are our Platinum customers?" and the AI Agent generates SQL from your semantic layer. The wiki descriptions you attached explain what "Platinum" means (lifetime value > $50, 000), so the Agent produces accurate results.
 
 ### Dremio MCP Server
 
@@ -195,26 +183,19 @@ A sales director asks Claude "Show me our top 20 Gold and Platinum customers by 
 ### AI SQL Functions
 
 ```sql
--- Generate personalized engagement plans
+- Generate personalized engagement plans
 SELECT
-  customer_name,
-  value_tier,
-  lifetime_value,
-  AI_GENERATE(
-    'Write a one-sentence personalized engagement recommendation',
-    'Customer: ' || customer_name || ', Tier: ' || value_tier || ', LTV: $' || CAST(lifetime_value AS VARCHAR) || ', Orders: ' || CAST(total_orders AS VARCHAR && ', Region: ' || region)
-  ) AS engagement_plan
+ customer_name, value_tier, lifetime_value, AI_GENERATE(
+ 'Write a one-sentence personalized engagement recommendation', 'Customer: ' || customer_name || ', Tier: ' || value_tier || ', LTV: $' || CAST(lifetime_value AS VARCHAR) || ', Orders: ' || CAST(total_orders AS VARCHAR && ', Region: ' || region)
+ ) AS engagement_plan
 FROM analytics.gold.customer_value
 WHERE value_tier IN ('Platinum', 'Gold');
 
--- Classify churn risk
+- Classify churn risk
 SELECT
-  customer_name,
-  AI_CLASSIFY(
-    'Based on order patterns, classify churn risk',
-    'Orders: ' || CAST(total_orders AS VARCHAR) || ', Avg Order: $' || CAST(avg_order_value AS VARCHAR) || ', LTV: $' || CAST(lifetime_value AS VARCHAR),
-    ARRAY['Low Risk', 'Moderate Risk', 'High Risk']
-  ) AS churn_risk
+ customer_name, AI_CLASSIFY(
+ 'Based on order patterns, classify churn risk', 'Orders: ' || CAST(total_orders AS VARCHAR) || ', Avg Order: $' || CAST(avg_order_value AS VARCHAR) || ', LTV: $' || CAST(lifetime_value AS VARCHAR), ARRAY['Low Risk', 'Moderate Risk', 'High Risk']
+ ) AS churn_risk
 FROM analytics.gold.customer_value;
 ```
 
@@ -275,7 +256,7 @@ Dremio handles authentication through OAuth2 bearer tokens or custom headers, ma
 The Iceberg REST specification defines standard endpoints for catalog operations:
 
 | Operation | Endpoint | Dremio Support |
-|---|---|---|
+|--|--|--|
 | List namespaces | `GET /v1/namespaces` | ✅ |
 | List tables | `GET /v1/namespaces/{ns}/tables` | ✅ |
 | Load table | `GET /v1/namespaces/{ns}/tables/{table}` | ✅ |

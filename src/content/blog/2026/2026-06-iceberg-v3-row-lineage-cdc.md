@@ -1,6 +1,6 @@
 ---
 title: "CDC Without Complexity Using Iceberg v3 Row Lineage"
-description: "Iceberg v3 row lineage adds _row_id and _last_updated_sequence_number to every table, enabling native change data capture without Debezium or Kafka. Technical deep dive with Snowflake and Databricks examples."
+description: "Iceberg v3 row lineage adds _row_id and _last_updated_sequence_number to every table, enabling native change data capture without Debezium or Kafka."
 date: 2026-06-08T09:00:00Z
 slug: "iceberg-v3-row-lineage-cdc"
 draft: false
@@ -14,7 +14,6 @@ tags:
   - "Change Data Capture lakehouse"
   - "incremental processing Iceberg"
 ---
-
 Change data capture (CDC) has traditionally meant running a separate infrastructure stack. You install Debezium for MySQL or PostgreSQL, configure Kafka Connect, set up topics, tune the consumer lag, and then write a streaming pipeline that materializes the change events into your data lake. The operational burden is real: topic partitioning, schema registry compatibility, offset management, replay semantics, and the ever-present risk of a consumer falling behind and needing a full re-snapshot.
 
 Apache Iceberg v3 row lineage eliminates most of that complexity. By assigning a unique, immutable `_row_id` and a monotonically increasing `_last_updated_sequence_number` to every row in every table, Iceberg gives you native CDC without any external tooling. The change tracking is built into the table format itself, readable by any engine that supports Iceberg v3.
@@ -84,10 +83,10 @@ The most practical use case for row lineage is incremental processing. Batch ETL
 With row lineage, you can replace full scans with incremental queries:
 
 ```sql
--- Instead of reading the full source table every hour:
--- SELECT * FROM source_table
+- Instead of reading the full source table every hour:
+- SELECT * FROM source_table
 
--- Read only rows that changed since last poll:
+- Read only rows that changed since last poll:
 SELECT * FROM source_table
 WHERE _last_updated_sequence_number > 1570000
 ```
@@ -148,6 +147,6 @@ The technology is mature enough for production use. Snowflake and Databricks bot
 
 For source-to-lakehouse replication, you still need a CDC tool. But once the data is in Iceberg, row lineage replaces the Kafka-to-Iceberg pipeline, the debezium-to-iceberg connector, and the incremental processing framework. That is a significant simplification for any team managing data pipelines at scale.
 
----
+--
 
 *For more on Apache Iceberg v3, row lineage, and the Iceberg specification, visit [iceberg.apache.org](https://iceberg.apache.org). To try Iceberg v3 with row lineage in a governed multi-engine lakehouse, start a free trial at [dremio.com/get-started](https://www.dremio.com/get-started).*

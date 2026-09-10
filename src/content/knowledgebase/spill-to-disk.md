@@ -1,7 +1,7 @@
 ---
 title: "What is Spill to Disk?"
 meta_title: "What is Spill to Disk? | Expert Data Lakehouse & AI Glossary"
-description: "A memory management behavior where engines temporarily write excess data to storage drives when available RAM is completely exhausted. Learn the architecture, mechanics, and real-world value of Spill to Disk in the modern data stack."
+description: "A memory management behavior where engines temporarily write excess data to storage drives when available RAM is completely exhausted."
 ---
 
 ## What is Spill to Disk?

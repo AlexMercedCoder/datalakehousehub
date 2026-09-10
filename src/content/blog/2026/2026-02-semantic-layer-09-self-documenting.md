@@ -15,9 +15,10 @@ draft: false
 image: "/images/blog.png"
 canonical: "https://iceberglakehouse.com/posts/2026-02-sl-self-documenting-semantic-layer/"
 ---
-> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-02-sl-self-documenting-semantic-layer/).
 
 ![Self-documenting semantic layer : AI generating descriptions and labels automatically](/images/blog/semantic-layer/self-documenting.png)
+
+> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-02-sl-self-documenting-semantic-layer/).
 
 Every data team knows documentation is important. And almost every data team has a backlog of undocumented tables, unlabeled columns, and outdated descriptions that nobody has time to fix. The problem isn't motivation. It's that manual documentation doesn't scale.
 
@@ -88,7 +89,7 @@ This propagation is especially valuable for join columns, filter columns, and co
 The impact on data team productivity is measurable:
 
 | Documentation Task | Manual Approach | Self-Documenting |
-|---|---|---|
+|--|--|--|
 | Column descriptions | Write each by hand | AI generates draft, human refines |
 | Governance labels | Manual tagging sprint | AI suggests from data patterns |
 | Downstream view docs | Re-write for each view | Propagated from upstream |
@@ -101,6 +102,6 @@ For AI agents, this improvement is material. A richer, more accurate semantic la
 
 ## What to Do Next
 
-Pick your most-used table. Open it in your data platform. How many columns have descriptions? How many have governance labels? If the answer is "not many," calculate how long it would take to document the entire table manually. Then consider a platform that does 70% of that work for you.
+Pick your most-used table. Open it in your data platform. How many columns have descriptions? How many have governance labels? If the answer is "not many, " calculate how long it would take to document the entire table manually. Then consider a platform that does 70% of that work for you.
 
 [Try Dremio Cloud free for 30 days](https://www.dremio.com/get-started?utm_source=ev_buffer&utm_medium=influencer&utm_campaign=next-gen-dremio&utm_term=blog-021826-02-18-2026&utm_content=alexmerced)

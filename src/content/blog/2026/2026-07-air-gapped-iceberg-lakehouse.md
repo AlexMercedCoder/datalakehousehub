@@ -1,6 +1,6 @@
 ---
 title: "Running an Apache Iceberg Lakehouse With No Internet Connection"
-description: "A practical guide to deploying an Iceberg lakehouse in air-gapped environments: component choices, artifact pipelines, identity without a cloud, and the operational realities that surprise teams."
+description: "A practical guide to deploying an Iceberg lakehouse in air-gapped environments: component choices, artifact pipelines, identity without a cloud."
 date: 2026-07-28T09:00:00Z
 author: "Alex Merced"
 category: "Apache Iceberg"
@@ -15,11 +15,11 @@ image: "/images/blog.png"
 canonical: "https://iceberglakehouse.com/posts/air-gapped-iceberg-lakehouse/"
 ---
 
-> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/air-gapped-iceberg-lakehouse/).
-
 # Running an Apache Iceberg Lakehouse With No Internet Connection
 
 An engineer runs `pip install pyiceberg` on a classified network and it fails. There is no PyPI. There is no Maven Central, no Docker Hub, no GitHub. The deployment guide they are following assumes all four, on the first page, without saying so.
+
+> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/air-gapped-iceberg-lakehouse/).
 
 That is the first hour of every air-gapped lakehouse project, and it sets the tone. Nothing about the architecture is exotic. Iceberg on object storage with a REST catalog and a query engine is the same design everywhere. What changes is that every assumption about reaching the outside gets tested, and most of them are load-bearing without anyone having noticed.
 
@@ -48,7 +48,7 @@ A second question with the same weight: what is the approved software intake pro
 The isolation level determines what your dependency strategy has to be.
 
 | | Fully air-gapped | One-way transfer | Controlled egress | Isolated network |
-|---|---|---|---|---|
+|--|--|--|--|--|
 | Package mirror | Physical media, batched | Physical media, batched | Allowlisted proxy | Shared internal mirror |
 | Update cadence | Weeks to months | Weeks to months | Days | Continuous |
 | Telemetry out | None | Possible | Possible | Yes |
@@ -86,27 +86,27 @@ The word that causes trouble is complete. A build works on a connected machine, 
 ```bash
 # Maven: resolve everything into a clean local repository, then transfer it
 mvn -Dmaven.repo.local=./offline-repo \
-    dependency:go-offline \
-    de.qaware.maven:go-offline-maven-plugin:resolve-dependencies
+ dependency:go-offline \
+ de.qaware.maven:go-offline-maven-plugin:resolve-dependencies
 
 # Python: download wheels for the exact platform, not the build machine's
 pip download -r requirements.txt \
-    -d ./offline-wheels \
-    --platform manylinux2014_x86_64 \
-    --python-version 3.11 \
-    --only-binary=:all:
+ -d ./offline-wheels \
+ -platform manylinux2014_x86_64 \
+ -python-version 3.11 \
+ -only-binary=:all:
 
 # Container images: save with all layers
 docker save \
-    apache/polaris:1.5.0 \
-    minio/minio:latest \
-    postgres:16 \
-    -o lakehouse-images.tar
+ apache/polaris:1.5.0 \
+ minio/minio:latest \
+ postgres:16 \
+ -o lakehouse-images.tar
 ```
 
 Two details in there that people get wrong.
 
-The `--platform` and `--python-version` flags on `pip download` matter because pip defaults to the machine you are running on. A wheel downloaded on a developer laptop is frequently the wrong architecture or ABI for the target, and the failure appears after transfer when fixing it is expensive.
+The `-platform` and `-python-version` flags on `pip download` matter because pip defaults to the machine you are running on. A wheel downloaded on a developer laptop is frequently the wrong architecture or ABI for the target, and the failure appears after transfer when fixing it is expensive.
 
 Container images need every layer, and `docker save` on an image built from a base you have not also saved leaves you with a reference to something that does not exist inside.
 
@@ -153,15 +153,9 @@ This is why the relative-path direction in the Iceberg V4 discussion matters dis
 The pattern that works: write the exportable result to a dedicated table in a dedicated location, so the export boundary is explicit in the storage layout rather than implicit in a process. Whatever review the organization requires operates on that table. Nothing is exported from anywhere else.
 
 ```sql
--- Export staging: everything leaving the environment lands here first
+- Export staging: everything leaving the environment lands here first
 CREATE TABLE export.staging.weekly_metrics (
-    period_start   date,
-    metric_name    string,
-    metric_value   double,
-    row_count      bigint,
-    generated_at   timestamp,
-    generated_by   string,
-    review_status  string
+ period_start date, metric_name string, metric_value double, row_count bigint, generated_at timestamp, generated_by string, review_status string
 )
 USING iceberg
 PARTITIONED BY (period_start)
@@ -182,12 +176,7 @@ Iceberg's design gives you several properties these environments need without ex
 
 ```sql
 SELECT
-    committed_at,
-    snapshot_id,
-    parent_id,
-    operation,
-    summary['added-records']   AS added,
-    summary['deleted-records'] AS deleted
+ committed_at, snapshot_id, parent_id, operation, summary['added-records'] AS added, summary['deleted-records'] AS deleted
 FROM catalog.secure.observations.snapshots
 ORDER BY committed_at DESC;
 ```
@@ -270,10 +259,10 @@ Software development inside an isolated environment is slower than outside, and 
 
 ```bash
 # Verify the offline build genuinely has no external dependencies
-docker run --rm --network none     -v "$PWD":/work -v "$PWD/offline-repo":/root/.m2/repository     -w /work maven:3.9-eclipse-temurin-17     mvn -o clean verify
+docker run -rm -network none -v "$PWD":/work -v "$PWD/offline-repo":/root/.m2/repository -w /work maven:3.9-eclipse-temurin-17 mvn -o clean verify
 ```
 
-The `--network none` and the `-o` offline flag together are the test. A build that passes this passes inside.
+The `-network none` and the `-o` offline flag together are the test. A build that passes this passes inside.
 
 **Keep a representative test dataset inside.** Real production data is frequently not usable for development, and synthetic data that does not resemble it produces tests that pass on shapes you do not have. Generating a good synthetic dataset that matches the real distributions is worth a week of someone's time, and it pays back on every subsequent piece of work.
 

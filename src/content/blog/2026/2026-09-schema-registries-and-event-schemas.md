@@ -16,9 +16,10 @@ draft: false
 image: "/images/blog.png"
 canonical: https://iceberglakehouse.com/posts/schema-registries-and-event-schemas/
 ---
-> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/schema-registries-and-event-schemas/).
 
 A Kafka topic carries order events. A producer team adds a field. Downstream, three consumers keep working because the serialization format tolerates an unknown field, and a fourth crashes because it validates strictly. The Iceberg sink writing that topic to the lakehouse adds a column, which is the correct behavior. Two weeks later a producer changes a field's type from string to integer, and the sink cannot add that as a promotion, so it either fails the connector or coerces the column to string, and every downstream query that cast it breaks.
+
+> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/schema-registries-and-event-schemas/).
 
 None of that is a Kafka problem or an Iceberg problem. It is a schema governance gap between two systems that both have schema evolution rules, and different ones. Kafka's schema registry governs what a producer is allowed to publish. Iceberg's spec governs what a table's schema is allowed to become. The rules overlap and do not match, and the sink between them is where the mismatch surfaces.
 
@@ -65,7 +66,7 @@ A schema registry stores schemas, assigns them IDs, and enforces compatibility r
 The compatibility modes are the part everyone half-remembers, and the definitions matter because they determine which changes reach the lakehouse.
 
 | Mode | Check | Allowed changes | Upgrade first |
-|---|---|---|---|
+|--|--|--|--|
 | `BACKWARD` | New schema can read data written with the previous version | Delete a field, add an optional field (with a default) | Consumers |
 | `BACKWARD_TRANSITIVE` | Same, against all previous versions | Same | Consumers |
 | `FORWARD` | Previous schema can read data written with the new version | Add a field, delete an optional field | Producers |
@@ -101,7 +102,7 @@ The sink writing to Iceberg has to turn a decoded message into rows in a table w
 Avro is the closest fit, because Iceberg itself uses Avro for manifests and the reference implementation has a well-tested conversion.
 
 | Avro | Iceberg |
-|---|---|
+|--|--|
 | `null` | not a type on its own, appears in unions |
 | `boolean` | `boolean` |
 | `int` | `int` |
@@ -121,7 +122,7 @@ Avro is the closest fit, because Iceberg itself uses Avro for manifests and the 
 | logical `time-micros` | `time` |
 | logical `timestamp-micros` | `timestamp` or `timestamptz` |
 | logical `timestamp-millis` | `timestamp`, with precision loss |
-| logical `decimal(P,S)` | `decimal(P,S)` |
+| logical `decimal(P, S)` | `decimal(P, S)` |
 | logical `uuid` | `uuid` |
 
 Three items need decisions. Enums become strings, which loses the constraint, so a table that wants it enforced needs a validation check rather than a type. Millisecond timestamps map to Iceberg's microsecond `timestamp` with the low digits zero, which is lossless in value and misleading in precision. And unions of several non-null types have no Iceberg equivalent: the options are separate nullable columns per branch, a `variant` column on v3, or a string holding the serialized value. Multi-branch unions are rare in practice and are worth avoiding at the schema design stage.
@@ -131,12 +132,12 @@ The timestamp with or without zone question is the one that causes the most down
 ### Protobuf to Iceberg
 
 | Protobuf | Iceberg |
-|---|---|
+|--|--|
 | `bool` | `boolean` |
 | `int32`, `sint32`, `sfixed32` | `int` |
 | `uint32`, `fixed32` | `long` (to hold the full unsigned range) |
 | `int64`, `sint64`, `sfixed64` | `long` |
-| `uint64`, `fixed64` | `decimal(20,0)` or `long` with overflow risk |
+| `uint64`, `fixed64` | `decimal(20, 0)` or `long` with overflow risk |
 | `float` | `float` |
 | `double` | `double` |
 | `string` | `string` |
@@ -144,20 +145,20 @@ The timestamp with or without zone question is the one that causes the most down
 | `enum` | `string` (the name) or `int` (the number) |
 | `message` | `struct` |
 | `repeated T` | `list<T>` |
-| `map<K,V>` | `map<K,V>` |
+| `map<K, V>` | `map<K, V>` |
 | `oneof` | struct of nullable fields, one populated |
 | `google.protobuf.Timestamp` | `timestamptz` |
 | `google.protobuf.Duration` | `long` nanoseconds, or a struct |
 | `google.protobuf.StringValue` and wrappers | nullable primitive |
 
-The unsigned integers are the trap. Protobuf's `uint64` covers a range Iceberg's `long` cannot, and a value above 2^63 silently becomes negative. Most producers never emit values that large, and the ones that do (certain IDs and hashes) are exactly the fields where the corruption matters. Mapping `uint64` to `decimal(20,0)` or to a string is the safe choice for those fields.
+The unsigned integers are the trap. Protobuf's `uint64` covers a range Iceberg's `long` cannot, and a value above 2^63 silently becomes negative. Most producers never emit values that large, and the ones that do (certain IDs and hashes) are exactly the fields where the corruption matters. Mapping `uint64` to `decimal(20, 0)` or to a string is the safe choice for those fields.
 
 The proto3 zero-default behavior is the other one. Without explicit `optional` markers, a field that was not set decodes as its zero value: an unset `int32` is 0, an unset `string` is empty. The sink writing Iceberg cannot distinguish that from an actual zero, so the table's null counts are wrong and `WHERE amount IS NULL` finds nothing. Producers that care about the distinction use `optional` fields (which proto3 reintroduced) or wrapper types, and the sink maps those to nullable columns.
 
 ### JSON Schema to Iceberg
 
 | JSON Schema | Iceberg |
-|---|---|
+|--|--|
 | `boolean` | `boolean` |
 | `integer` | `long` |
 | `number` | `double`, or `decimal` if `multipleOf` implies scale |
@@ -166,14 +167,14 @@ The proto3 zero-default behavior is the other one. Without explicit `optional` m
 | `string` with `format: date-time` | `timestamptz` |
 | `string` with `format: uuid` | `uuid` |
 | `object` with declared properties | `struct` |
-| `object` with `additionalProperties` | `map<string,string>` or `variant` |
+| `object` with `additionalProperties` | `map<string, string>` or `variant` |
 | `array` | `list` |
 | `oneOf` / `anyOf` | `variant` on v3, or a string |
 | absent from the schema | `variant`, or dropped |
 
 JSON Schema's looseness means the mapping involves more judgment. `integer` maps to `long` because JSON does not declare width and a producer that starts emitting values above 2^31 should not break the table. `number` maps to `double` unless the schema constrains it, and monetary values declared as `number` are a well-known source of rounding complaints, which is a schema design problem: money should be `string` with a decimal format, or an integer count of minor units.
 
-The `additionalProperties` case is where Iceberg v3's `variant` type changes the design. Before v3, an open-ended JSON object had to become a `map<string,string>` (losing types) or a JSON string (losing queryability). With `variant` and shredding enabled, the object goes in as semi-structured data, common paths get typed Parquet subcolumns with statistics, and `WHERE payload:customer.tier = 'gold'` prunes. For JSON-based event pipelines this is the single most useful v3 feature.
+The `additionalProperties` case is where Iceberg v3's `variant` type changes the design. Before v3, an open-ended JSON object had to become a `map<string, string>` (losing types) or a JSON string (losing queryability). With `variant` and shredding enabled, the object goes in as semi-structured data, common paths get typed Parquet subcolumns with statistics, and `WHERE payload:customer.tier = 'gold'` prunes. For JSON-based event pipelines this is the single most useful v3 feature.
 
 ## Where the Evolution Rules Agree and Diverge
 
@@ -199,21 +200,7 @@ The Apache Iceberg Kafka Connect sink is the reference implementation for this p
 
 ```json
 {
-  "connector.class": "org.apache.iceberg.connect.IcebergSinkConnector",
-  "topics": "orders",
-  "key.converter": "io.confluent.connect.avro.AvroConverter",
-  "key.converter.schema.registry.url": "https://registry.internal",
-  "value.converter": "io.confluent.connect.avro.AvroConverter",
-  "value.converter.schema.registry.url": "https://registry.internal",
-  "iceberg.catalog.type": "rest",
-  "iceberg.catalog.uri": "https://polaris.internal/api/catalog",
-  "iceberg.catalog.warehouse": "analytics",
-  "iceberg.catalog.header.X-Iceberg-Access-Delegation": "vended-credentials",
-  "iceberg.tables": "raw.orders",
-  "iceberg.tables.auto-create-enabled": "true",
-  "iceberg.tables.evolve-schema-enabled": "true",
-  "iceberg.tables.default-partition-by": "hours(event_time)",
-  "iceberg.control.commit.interval-ms": "60000"
+ "connector.class": "org.apache.iceberg.connect.IcebergSinkConnector", "topics": "orders", "key.converter": "io.confluent.connect.avro.AvroConverter", "key.converter.schema.registry.url": "https://registry.internal", "value.converter": "io.confluent.connect.avro.AvroConverter", "value.converter.schema.registry.url": "https://registry.internal", "iceberg.catalog.type": "rest", "iceberg.catalog.uri": "https://polaris.internal/api/catalog", "iceberg.catalog.warehouse": "analytics", "iceberg.catalog.header.X-Iceberg-Access-Delegation": "vended-credentials", "iceberg.tables": "raw.orders", "iceberg.tables.auto-create-enabled": "true", "iceberg.tables.evolve-schema-enabled": "true", "iceberg.tables.default-partition-by": "hours(event_time)", "iceberg.control.commit.interval-ms": "60000"
 }
 ```
 
@@ -275,17 +262,9 @@ The producer team adds a `promo_code` field to the order event. In Avro:
 
 ```json
 {
-  "type": "record",
-  "name": "OrderPlaced",
-  "namespace": "com.example.orders",
-  "fields": [
-    { "name": "order_id",    "type": "long" },
-    { "name": "customer_id", "type": "long" },
-    { "name": "event_time",  "type": { "type": "long", "logicalType": "timestamp-micros" } },
-    { "name": "amount",      "type": { "type": "bytes", "logicalType": "decimal", "precision": 12, "scale": 2 } },
-    { "name": "status",      "type": "string" },
-    { "name": "promo_code",  "type": ["null", "string"], "default": null }
-  ]
+ "type": "record", "name": "OrderPlaced", "namespace": "com.example.orders", "fields": [
+ { "name": "order_id", "type": "long" }, { "name": "customer_id", "type": "long" }, { "name": "event_time", "type": { "type": "long", "logicalType": "timestamp-micros" } }, { "name": "amount", "type": { "type": "bytes", "logicalType": "decimal", "precision": 12, "scale": 2 } }, { "name": "status", "type": "string" }, { "name": "promo_code", "type": ["null", "string"], "default": null }
+ ]
 }
 ```
 
@@ -301,7 +280,7 @@ Two follow-ups make the change complete rather than merely successful. First, if
 
 ```sql
 ALTER TABLE raw.orders SET TBLPROPERTIES (
-  'write.metadata.metrics.column.promo_code' = 'full'
+ 'write.metadata.metrics.column.promo_code' = 'full'
 );
 ```
 
@@ -310,14 +289,12 @@ Which applies to files written afterward, so a compaction of recent partitions m
 Verifying from the table side, the schema change and its effect are both visible in metadata:
 
 ```sql
--- when did the column appear, and in which snapshot
+- when did the column appear, and in which snapshot
 SELECT snapshot_id, operation, summary['added-data-files'] AS files
 FROM raw.orders.snapshots ORDER BY committed_at DESC LIMIT 5;
 
--- how many rows have it populated, by day
-SELECT date_trunc('day', event_time) AS day,
-       count(*) AS rows,
-       count(promo_code) AS with_promo
+- how many rows have it populated, by day
+SELECT date_trunc('day', event_time) AS day, count(*) AS rows, count(promo_code) AS with_promo
 FROM raw.orders
 WHERE event_time >= now() - INTERVAL 7 DAYS
 GROUP BY 1 ORDER BY 1;
@@ -335,7 +312,7 @@ The day the producer deployed shows the transition from zero to nonzero, which i
 
 **Proto3 zero values read as data.** Unset fields arrive as 0 and empty string, the table's null counts are meaningless, and consumers computing averages include zeros that were absences. Use `optional` or wrapper types for fields where the distinction matters.
 
-**Unsigned 64-bit overflow.** `uint64` values above 2^63 become negative longs. Map those fields to `decimal(20,0)`.
+**Unsigned 64-bit overflow.** `uint64` values above 2^63 become negative longs. Map those fields to `decimal(20, 0)`.
 
 **Millisecond precision presented as microsecond.** Avro `timestamp-millis` into Iceberg `timestamp` produces values whose last three digits are always zero, and consumers assume microsecond precision. Document it or promote precision at the producer.
 

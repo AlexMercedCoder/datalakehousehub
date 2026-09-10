@@ -14,11 +14,12 @@ draft: false
 image: "/images/blog/apache-iceberg-masterclass/06-writing-to-iceberg-write-process-flow.png"
 canonical: "https://iceberglakehouse.com/posts/2026-04-29-iceberg-masterclass-06/"
 ---
-> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-04-29-iceberg-masterclass-06/).
 
-<!-- Meta Description: Here is exactly how an engine writes to an Iceberg table, step by step, from data files through the atomic commit that makes ACID guarantees possible. -->
-<!-- Primary Keyword: writing to Apache Iceberg -->
-<!-- Secondary Keywords: Iceberg ACID transactions, atomic commit, optimistic concurrency -->
+<!- Meta Description: Here is exactly how an engine writes to an Iceberg table, step by step, from data files through the atomic commit that makes ACID guarantees possible. ->
+<!- Primary Keyword: writing to Apache Iceberg ->
+<!- Secondary Keywords: Iceberg ACID transactions, atomic commit, optimistic concurrency ->
+
+> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-04-29-iceberg-masterclass-06/).
 
 *Read the complete Apache Iceberg Masterclass series:*
 * [Part 1: What Are Table Formats and Why Were They Needed?](/blog/2026-04-29-apache-iceberg-masterclass-01-table-formats)
@@ -100,9 +101,9 @@ When two engines write to the same table simultaneously, Iceberg uses optimistic
 
 4. **Writer B retries.** It reads `v2.metadata.json` and checks whether its changes conflict with Writer A's changes:
 
-   - **No conflict (different partitions):** Writer B's new files affect partition `region=west`, and Writer A's changes affected `region=east`. The changes are compatible. Writer B rebases its manifest list to include Writer A's manifests and creates a new `v3.metadata.json` that reflects both writes. The swap from `v2` to `v3` succeeds.
+ - **No conflict (different partitions):** Writer B's new files affect partition `region=west`, and Writer A's changes affected `region=east`. The changes are compatible. Writer B rebases its manifest list to include Writer A's manifests and creates a new `v3.metadata.json` that reflects both writes. The swap from `v2` to `v3` succeeds.
 
-   - **Conflict (same files modified):** Both writers modified the same data files (e.g., both deleted rows from the same file). The changes cannot be automatically merged. Writer B's operation fails with a conflict error.
+ - **Conflict (same files modified):** Both writers modified the same data files (e.g., both deleted rows from the same file). The changes cannot be automatically merged. Writer B's operation fails with a conflict error.
 
 This model works well for append-heavy workloads (multiple jobs writing to different partitions), which is the dominant pattern in data lakes. [Dremio](https://www.dremio.com/blog/compaction-in-apache-iceberg-fine-tuning-your-iceberg-tables-data-files/) handles concurrent writes and automatic retries through its engine, and its [Open Catalog](https://www.dremio.com/platform/open-catalog/) provides the atomic compare-and-swap through the REST catalog protocol.
 
@@ -123,7 +124,7 @@ Instead of rewriting data files, the engine writes a small "position delete file
 Deletion vectors are a compact bitmap representation of deleted rows within a file. They are more storage-efficient than position delete files and faster to evaluate during reads. Engines like [Dremio](https://www.dremio.com/blog/apache-iceberg-101-your-guide-to-learning-apache-iceberg-concepts-and-practices/) and Spark use deletion vectors for row-level updates in production.
 
 | Strategy | Write Cost | Read Cost | Best For |
-|---|---|---|---|
+|--|--|--|--|
 | Copy-on-Write | High (rewrite files) | Low (clean files) | Infrequent bulk updates |
 | Position Deletes | Low (small delete file) | Medium (merge at read) | Frequent targeted deletes |
 | Deletion Vectors | Low (compact bitmap) | Low-Medium (bitmap check) | High-frequency row updates |

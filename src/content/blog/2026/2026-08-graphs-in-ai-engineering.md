@@ -14,9 +14,10 @@ tags:
 slug: "graphs-in-ai-engineering"
 draft: false
 ---
-> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/graphs-in-ai-engineering/).
 
 Ask an agent to ship a feature and watch what it does. It reads some files, decides on an order of operations, writes code, runs tests, fixes what broke, and declares itself done. Somewhere inside that run there was a plan. It had steps, the steps had dependencies, and some steps mattered more than others. You never saw it. It lived in the model's context window for the length of the session and evaporated when the session ended.
+
+> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/graphs-in-ai-engineering/).
 
 That plan was a graph. Every agent harness (the program that runs the model in a loop, manages tools, and enforces policy) builds one, privately, in its own shape, and throws it away. The one artifact that determines whether the tokens you are about to spend are spent well is the one artifact nobody writes down.
 
@@ -72,9 +73,9 @@ So control-flow graphs work. Here is where they stop.
 
 A LangGraph graph is Python code. The plan is expressed as function definitions and `add_edge` calls in a file that only runs inside LangGraph. You cannot hand it to a different harness. You cannot review it in a pull request without reading the whole program. And the nodes are functions, which means the graph decides which model to call, with which prompt, at build time. The person who wrote the graph and the person who runs it have to be the same person, or at least share a codebase.
 
-The bigger limitation is what the graph does not say. It says which node runs next. It does not say what "done" means for that node in terms a machine can check. A node finishes when the function returns. Whether the function's output is correct is the model's claim. There is no field on a LangGraph node for "this task passed when `pytest` exits zero," because LangGraph is a runtime, not a work description.
+The bigger limitation is what the graph does not say. It says which node runs next. It does not say what "done" means for that node in terms a machine can check. A node finishes when the function returns. Whether the function's output is correct is the model's claim. There is no field on a LangGraph node for "this task passed when `pytest` exits zero, " because LangGraph is a runtime, not a work description.
 
-That gap, between "the flow of execution" and "the definition of the work," is the whole reason for the fourth use of graphs.
+That gap, between "the flow of execution" and "the definition of the work, " is the whole reason for the fourth use of graphs.
 
 ## Graphs as Memory: What an Agent Remembers, in a Form You Can Read
 
@@ -84,7 +85,7 @@ Agent memory in most harnesses is an opaque store. A vector index, a SQLite file
 
 MagGraph is an in-process graph database, written in Rust, where knowledge is stored as Markdown files in a Git repository. Each file is a node. Edges come from `[[wikilinks]]` inside the Markdown, the same convention Obsidian users know, so the graph structure emerges from the text rather than from a separate schema. Git handles versioning, branching, and sync. The database ships a Python API, a CLI, and an auto-generated MCP server (Model Context Protocol, the open standard for exposing tools to models), so any agent framework can query it. A lakehouse mode lets nodes point at external Parquet or S3 data instead of holding the data inline.
 
-The queries an agent needs from memory are graph queries. "What do I know about this module" is a neighborhood traversal from the module's node. "What decisions led to this convention" is a backlink walk. "Give me a compact bundle of everything relevant to this task" is a bounded traversal that stops at a token budget. Vector search answers "what is similar." Graph traversal answers "what is connected," and for the accumulated context of a project, connected is what you want.
+The queries an agent needs from memory are graph queries. "What do I know about this module" is a neighborhood traversal from the module's node. "What decisions led to this convention" is a backlink walk. "Give me a compact bundle of everything relevant to this task" is a bounded traversal that stops at a token budget. Vector search answers "what is similar." Graph traversal answers "what is connected, " and for the accumulated context of a project, connected is what you want.
 
 The design choice that matters is that the memory is Markdown in Git. It is diffable. It is reviewable in a pull request. When an agent writes a wrong fact, you edit a file. When it writes a good one, the commit records when and why. That is the same principle as everything else in this article: a graph you can read beats a graph you have to trust.
 
@@ -128,7 +129,7 @@ The tier field is the quiet win. A graph states how hard each piece of work is. 
 
 ## A Complete Graph, Walked Through
 
-Here is a real graph. I validated it with the reference validator, under `--strict`, before putting it in this article. It refreshes public API documentation after a release, with two parallel tracks and a human gate before publish.
+Here is a real graph. I validated it with the reference validator, under `-strict`, before putting it in this article. It refreshes public API documentation after a release, with two parallel tracks and a human gate before publish.
 
 ```yaml
 ags_version: "1.0"
@@ -139,182 +140,182 @@ version: 1.0.0
 requires_conformance: 2
 
 objective: >
-  Bring the API reference and the getting-started guide in line with the
-  code that shipped in the latest tag, and publish only after a human
-  has approved the diff.
+ Bring the API reference and the getting-started guide in line with the
+ code that shipped in the latest tag, and publish only after a human
+ has approved the diff.
 
 constraints:
-  max_cost_usd: 6.0
-  max_wall_clock_seconds: 3600
-  max_parallel_nodes: 2
+ max_cost_usd: 6.0
+ max_wall_clock_seconds: 3600
+ max_parallel_nodes: 2
 
 entrypoints: [inventory_changes]
 
 nodes:
 
-  inventory_changes:
-    type: task
-    title: List public API changes since the last tag
-    description: >
-      Diff the public symbols between the previous tag and HEAD. Produce a
-      list of added, removed, and changed symbols. Change nothing.
-    outputs:
-      changed_symbols:
-        type: array
-        description: Public symbols whose signature or presence changed.
-        schema: { type: array, items: { type: string } }
-    intelligence:
-      tier: minimal
-      hints: [tool_use_heavy, low_cost]
-    requirements:
-      tools: [shell_exec, file_read]
-      permissions: [fs:read:**, shell:exec:git*]
-      workspace: read_only
-    success:
-      summary: A symbol change list exists.
-      criteria:
-        - id: list_present
-          kind: artifact_present
-          description: The change list was produced.
-          output: changed_symbols
+ inventory_changes:
+ type: task
+ title: List public API changes since the last tag
+ description: >
+ Diff the public symbols between the previous tag and HEAD. Produce a
+ list of added, removed, and changed symbols. Change nothing.
+ outputs:
+ changed_symbols:
+ type: array
+ description: Public symbols whose signature or presence changed.
+ schema: { type: array, items: { type: string } }
+ intelligence:
+ tier: minimal
+ hints: [tool_use_heavy, low_cost]
+ requirements:
+ tools: [shell_exec, file_read]
+ permissions: [fs:read:**, shell:exec:git*]
+ workspace: read_only
+ success:
+ summary: A symbol change list exists.
+ criteria:
+ - id: list_present
+ kind: artifact_present
+ description: The change list was produced.
+ output: changed_symbols
 
-  update_reference:
-    type: task
-    title: Update the API reference pages
-    description: >
-      For every symbol in the change list, update or create its reference
-      page under docs/reference. Match the existing page format exactly.
-    depends_on: [inventory_changes]
-    inputs:
-      symbols:
-        type: array
-        description: The symbols to document.
-        from: nodes.inventory_changes.outputs.changed_symbols
-    outputs:
-      touched_pages:
-        type: file_set
-        description: Reference pages written or updated.
-    intelligence:
-      tier: standard
-      hints: [code_comprehension, structured_output]
-    requirements:
-      tools: [file_read, file_write, file_search]
-      permissions: [fs:read:**, fs:write:docs/reference/**]
-      workspace: read_write
-    success:
-      summary: Every changed symbol has a page and the docs still build.
-      criteria:
-        - id: docs_build
-          kind: command
-          description: The documentation site builds without error.
-          run: mkdocs build --strict
-          expect_exit_code: 0
-          timeout_seconds: 600
+ update_reference:
+ type: task
+ title: Update the API reference pages
+ description: >
+ For every symbol in the change list, update or create its reference
+ page under docs/reference. Match the existing page format exactly.
+ depends_on: [inventory_changes]
+ inputs:
+ symbols:
+ type: array
+ description: The symbols to document.
+ from: nodes.inventory_changes.outputs.changed_symbols
+ outputs:
+ touched_pages:
+ type: file_set
+ description: Reference pages written or updated.
+ intelligence:
+ tier: standard
+ hints: [code_comprehension, structured_output]
+ requirements:
+ tools: [file_read, file_write, file_search]
+ permissions: [fs:read:**, fs:write:docs/reference/**]
+ workspace: read_write
+ success:
+ summary: Every changed symbol has a page and the docs still build.
+ criteria:
+ - id: docs_build
+ kind: command
+ description: The documentation site builds without error.
+ run: mkdocs build -strict
+ expect_exit_code: 0
+ timeout_seconds: 600
 
-  update_guide:
-    type: task
-    title: Update the getting-started guide
-    description: >
-      Read the change list and revise docs/getting-started.md so every code
-      sample still runs against the shipped API. Keep the guide under 1,500 words.
-    depends_on: [inventory_changes]
-    inputs:
-      symbols:
-        type: array
-        description: Symbols that changed, to check samples against.
-        from: nodes.inventory_changes.outputs.changed_symbols
-    outputs:
-      guide:
-        type: markdown
-        description: The revised guide.
-        path_hint: docs/getting-started.md
-    intelligence:
-      tier: advanced
-      hints: [code_generation, precision_critical]
-      rationale: >
-        Rewriting samples so they run against a changed API is where
-        silent mistakes are expensive and hard to spot.
-    requirements:
-      tools: [file_read, file_write, shell_exec]
-      permissions: [fs:read:**, fs:write:docs/getting-started.md, shell:exec:python*]
-      workspace: read_write
-    failure:
-      retry:
-        max_attempts: 2
-        backoff: fixed
-        initial_delay_seconds: 1
-        retry_on: [criteria_failed]
-        feedback: failed_criteria
-        escalate_intelligence: true
-      on_exhausted: fail
-    success:
-      summary: The samples run and the guide reads well.
-      evaluation_order: cheapest_first
-      criteria:
-        - id: samples_run
-          kind: command
-          description: Every code sample in the guide executes cleanly.
-          run: python scripts/run_doc_samples.py docs/getting-started.md
-          expect_exit_code: 0
-          timeout_seconds: 900
-        - id: reads_well
-          kind: llm_judge
-          description: The guide is clear to a first-time user.
-          rubric: >
-            Score 1 if a developer new to the library can follow the guide
-            start to finish without outside help. Penalize undefined terms
-            and steps that assume prior context.
-          inputs: [nodes.update_guide.outputs.guide]
-          threshold: 0.8
-          samples: 3
+ update_guide:
+ type: task
+ title: Update the getting-started guide
+ description: >
+ Read the change list and revise docs/getting-started.md so every code
+ sample still runs against the shipped API. Keep the guide under 1, 500 words.
+ depends_on: [inventory_changes]
+ inputs:
+ symbols:
+ type: array
+ description: Symbols that changed, to check samples against.
+ from: nodes.inventory_changes.outputs.changed_symbols
+ outputs:
+ guide:
+ type: markdown
+ description: The revised guide.
+ path_hint: docs/getting-started.md
+ intelligence:
+ tier: advanced
+ hints: [code_generation, precision_critical]
+ rationale: >
+ Rewriting samples so they run against a changed API is where
+ silent mistakes are expensive and hard to spot.
+ requirements:
+ tools: [file_read, file_write, shell_exec]
+ permissions: [fs:read:**, fs:write:docs/getting-started.md, shell:exec:python*]
+ workspace: read_write
+ failure:
+ retry:
+ max_attempts: 2
+ backoff: fixed
+ initial_delay_seconds: 1
+ retry_on: [criteria_failed]
+ feedback: failed_criteria
+ escalate_intelligence: true
+ on_exhausted: fail
+ success:
+ summary: The samples run and the guide reads well.
+ evaluation_order: cheapest_first
+ criteria:
+ - id: samples_run
+ kind: command
+ description: Every code sample in the guide executes cleanly.
+ run: python scripts/run_doc_samples.py docs/getting-started.md
+ expect_exit_code: 0
+ timeout_seconds: 900
+ - id: reads_well
+ kind: llm_judge
+ description: The guide is clear to a first-time user.
+ rubric: >
+ Score 1 if a developer new to the library can follow the guide
+ start to finish without outside help. Penalize undefined terms
+ and steps that assume prior context.
+ inputs: [nodes.update_guide.outputs.guide]
+ threshold: 0.8
+ samples: 3
 
-  approve_publish:
-    type: gate
-    title: Approve the documentation change
-    description: A docs owner reviews the diff before it is published.
-    depends_on: [update_reference, update_guide]
-    join: all
-    gate:
-      mode: approve
-      roles: [docs-owner]
-      prompt: |
-        Publish the refreshed docs for ${{ graph.title }}?
-        Pages touched: ${{ nodes.update_reference.outputs.touched_pages }}
-      present:
-        - nodes.update_guide.outputs.guide
-      timeout_seconds: 172800
-      on_timeout: hold
-      on_reject: fail
+ approve_publish:
+ type: gate
+ title: Approve the documentation change
+ description: A docs owner reviews the diff before it is published.
+ depends_on: [update_reference, update_guide]
+ join: all
+ gate:
+ mode: approve
+ roles: [docs-owner]
+ prompt: |
+ Publish the refreshed docs for ${{ graph.title }}?
+ Pages touched: ${{ nodes.update_reference.outputs.touched_pages }}
+ present:
+ - nodes.update_guide.outputs.guide
+ timeout_seconds: 172800
+ on_timeout: hold
+ on_reject: fail
 
-  publish:
-    type: task
-    title: Publish the docs site
-    description: Run the documented deploy command. Do nothing else.
-    depends_on: [approve_publish]
-    intelligence:
-      tier: minimal
-      hints: [tool_use_heavy]
-    requirements:
-      tools: [shell_exec]
-      permissions: [shell:exec:mkdocs*]
-      workspace: read_only
-    success:
-      summary: The deploy command exited cleanly.
-      criteria:
-        - id: deployed
-          kind: command
-          description: The deploy command succeeded.
-          run: mkdocs gh-deploy --force
-          expect_exit_code: 0
-          timeout_seconds: 600
+ publish:
+ type: task
+ title: Publish the docs site
+ description: Run the documented deploy command. Do nothing else.
+ depends_on: [approve_publish]
+ intelligence:
+ tier: minimal
+ hints: [tool_use_heavy]
+ requirements:
+ tools: [shell_exec]
+ permissions: [shell:exec:mkdocs*]
+ workspace: read_only
+ success:
+ summary: The deploy command exited cleanly.
+ criteria:
+ - id: deployed
+ kind: command
+ description: The deploy command succeeded.
+ run: mkdocs gh-deploy -force
+ expect_exit_code: 0
+ timeout_seconds: 600
 
 success:
-  summary: Docs match the shipped API and were published with approval.
-  criteria:
-    - id: published
-      kind: expression
-      description: The publish node completed.
-      expr: nodes.publish.status == "succeeded"
+ summary: Docs match the shipped API and were published with approval.
+ criteria:
+ - id: published
+ kind: expression
+ description: The publish node completed.
+ expr: nodes.publish.status == "succeeded"
 ```
 
 Read it as a reviewer, top to bottom.
@@ -325,7 +326,7 @@ The header declares `requires_conformance: 2`, which tells a harness up front wh
 
 `update_reference` and `update_guide` both depend on `inventory_changes` and on nothing else, so they run in parallel, up to the `max_parallel_nodes` limit. Each declares a typed input pulled from the upstream node's typed output, so the harness validates the handoff before either starts.
 
-The two tracks are deliberately at different tiers. Updating reference pages to match an existing format is `standard` work: the instruction fully determines the answer, and `mkdocs build --strict` catches most mistakes. Rewriting runnable code samples against a changed API is `advanced`, and the `rationale` field says why: the mistakes are silent and expensive. That rationale is there so a reviewer can push back. If you think the guide rewrite is `standard` work, you change one line and open a pull request.
+The two tracks are deliberately at different tiers. Updating reference pages to match an existing format is `standard` work: the instruction fully determines the answer, and `mkdocs build -strict` catches most mistakes. Rewriting runnable code samples against a changed API is `advanced`, and the `rationale` field says why: the mistakes are silent and expensive. That rationale is there so a reviewer can push back. If you think the guide rewrite is `standard` work, you change one line and open a pull request.
 
 `update_guide` also shows failure handling. If a criterion fails, the node retries up to twice with the failed criteria fed back as context, and `escalate_intelligence: true` means the retry routes one tier higher, at `frontier`. Its two criteria run `cheapest_first`: the command that executes the samples runs before the model-scored rubric, so a broken sample never pays for a judge call. The judge uses three samples and takes the median, which the spec recommends for anything gating an expensive downstream step.
 
@@ -344,7 +345,7 @@ A format with one implementation is a config file. Loro and MagAgent both implem
 ```bash
 python -m pip install mag-agent
 magent configure
-magent graph generate "ship the next API version" --out release.agraph.yaml
+magent graph generate "ship the next API version" -out release.agraph.yaml
 ```
 
 `graph generate` has a model draft a graph from a one-line objective. The draft is review-only. You read it, edit tiers and permissions, and save before anything runs. As of 0.97.0, `magent ui` serves a local browser workspace with a three-column Graph Kanban. It validates the graph, then works every card to completion through a durable executor, keeping dependencies, gates, changed files, and per-card outcomes visible. A graph can start blank, from a hand-written file, or from an AI draft.
@@ -354,15 +355,15 @@ magent graph generate "ship the next API version" --out release.agraph.yaml
 ```bash
 python -m pip install loro-agent
 loro configure
-loro graph generate "Create a release readiness report" --out release.agraph.yaml
-loro graph validate release.agraph.yaml --strict
+loro graph generate "Create a release readiness report" -out release.agraph.yaml
+loro graph validate release.agraph.yaml -strict
 loro graph plan release.agraph.yaml
-loro graph run release.agraph.yaml --dry-run
+loro graph run release.agraph.yaml -dry-run
 loro graph run release.agraph.yaml
 loro audit verify
 ```
 
-The `plan` command renders the resolved dependency order and routing decisions without executing. The `--dry-run` flag walks the whole graph, evaluating what each node is allowed to do, before spending a token. When a graph node names an Open Agent Profile (OAP, my companion specification for durable named agents), Loro intersects the graph's permissions, the profile's permissions, the user's identity, and the managed policy, and runs the node under the narrowest result. Loro's Web UI, `loro web`, exposes the same run under the same policy in a browser.
+The `plan` command renders the resolved dependency order and routing decisions without executing. The `-dry-run` flag walks the whole graph, evaluating what each node is allowed to do, before spending a token. When a graph node names an Open Agent Profile (OAP, my companion specification for durable named agents), Loro intersects the graph's permissions, the profile's permissions, the user's identity, and the managed policy, and runs the node under the narrowest result. Loro's Web UI, `loro web`, exposes the same run under the same policy in a browser.
 
 The point of two harnesses is not that you should use mine. It is that the same 150-line file produced a Kanban board for a developer in one tool and an audited, identity-bound run in another, without editing the file. The graph is the contract. The harness is the implementation. That separation is what a format buys you.
 
@@ -398,7 +399,7 @@ You do not need to adopt a harness to get value from writing the plan down. Here
 python3 -m pip install jsonschema pyyaml
 git clone https://github.com/AlexMercedCoder/agentic-graph-spec
 cd agentic-graph-spec
-python3 tools/validate_agraph.py --strict examples/
+python3 tools/validate_agraph.py -strict examples/
 ```
 
 Six example graphs ship with the repository, from a minimal single-node graph through parallel tracks, decisions, gates, and the test-repair loop. Read them before writing your own. The `conformance` directory holds invalid fixtures that each name the diagnostic they should produce, which is the fastest way to learn what the validator enforces.

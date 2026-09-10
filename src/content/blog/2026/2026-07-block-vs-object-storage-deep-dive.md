@@ -11,12 +11,14 @@ slug: "block-vs-object-storage-deep-dive"
 draft: false
 image: "/images/blog.png"
 canonical: https://iceberglakehouse.com/posts/block-vs-object-storage-deep-dive/
+description: "By Alex Merced, Head of Developer Relations at Dremio"
 ---
-> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/block-vs-object-storage-deep-dive/).
 
 # Block vs. Object Storage: A Deep Dive Into the Foundation of Modern Data, and How the Lakehouse Made the Slow Option Fast
 
 *By Alex Merced, Head of Developer Relations at Dremio*
+
+> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/block-vs-object-storage-deep-dive/).
 
 Here is one of the strangest and most consequential plot twists in the history of data infrastructure: over the past decade, the analytics industry deliberately moved its data onto the slowest storage it could find, and got faster.
 
@@ -28,7 +30,7 @@ This article is the full deep dive. What block and object storage actually are, 
 
 Start with the elder statesman, because everything else is defined against it.
 
-Block storage presents the oldest abstraction in computing: a device that stores fixed-size blocks of bytes, addressable by number, readable and writable in place. It is the disk, virtualized. A block volume knows nothing about files, folders, or meaning. It knows that block 4,000,017 contains these 4,096 bytes, and it will read or overwrite them on demand, fast. Everything humans recognize as files comes from the filesystem, ext4, XFS, NTFS, that the operating system layers on top, translating names and directories into block addresses.
+Block storage presents the oldest abstraction in computing: a device that stores fixed-size blocks of bytes, addressable by number, readable and writable in place. It is the disk, virtualized. A block volume knows nothing about files, folders, or meaning. It knows that block 4, 000, 017 contains these 4, 096 bytes, and it will read or overwrite them on demand, fast. Everything humans recognize as files comes from the filesystem, ext4, XFS, NTFS, that the operating system layers on top, translating names and directories into block addresses.
 
 In the cloud, block storage means network-attached virtual disks: AWS EBS, Azure Managed Disks, Google Persistent Disk. A volume attaches to one server, the server formats and mounts it, and applications get the full POSIX contract: open, seek, read, write, append, modify in place, all at low latency. Top-tier volumes like EBS io2 Block Express deliver latencies under one to two milliseconds with hundreds of thousands of IOPS, and local NVMe instance storage goes lower still, into microseconds, at the price of vanishing when the instance does.
 
@@ -104,13 +106,13 @@ The compressed claim for layer two: Iceberg carries, in metadata, everything ana
 
 Wrinkle five gets invoked so often that its actual arithmetic rarely appears, so let me run the numbers once, because they turn a vague warning into a visceral one, and they explain why compaction is a budget line, not a nicety.
 
-Take one terabyte of table data and store it two ways: as 4,000 well-formed Parquet files of 256 megabytes, or as 4 million small files of 256 kilobytes, the kind a too-eager streaming pipeline mints in a busy month. Now run one full-scan query against each, naively.
+Take one terabyte of table data and store it two ways: as 4, 000 well-formed Parquet files of 256 megabytes, or as 4 million small files of 256 kilobytes, the kind a too-eager streaming pipeline mints in a busy month. Now run one full-scan query against each, naively.
 
-Requests first. The healthy layout needs on the order of one footer read plus a handful of ranged reads per file: call it 20,000 GETs. The small-file layout needs a footer and a data read per file at minimum: 8 million GETs, four hundred times more. At typical request pricing of roughly forty cents per million GETs, the healthy scan's request bill is under a penny, and the small-file scan's is over three dollars, per query, before any compute. Run that dashboard hourly and the request line alone compounds into real money, and this is the cheap dimension.
+Requests first. The healthy layout needs on the order of one footer read plus a handful of ranged reads per file: call it 20, 000 GETs. The small-file layout needs a footer and a data read per file at minimum: 8 million GETs, four hundred times more. At typical request pricing of roughly forty cents per million GETs, the healthy scan's request bill is under a penny, and the small-file scan's is over three dollars, per query, before any compute. Run that dashboard hourly and the request line alone compounds into real money, and this is the cheap dimension.
 
-Latency is the expensive one. Requests overlap under parallelism, but coordination does not: 8 million requests must be planned, issued, tracked, and retried across the fleet, per-prefix rate limits of a few thousand requests per second start throttling exactly this pattern, and footer-to-data ratios collapse, since a 256-kilobyte file spends as many round trips on metadata as on content. Engines report the same shape universally: scan time degrades not linearly but brutally as file counts explode, because the fixed per-object costs, request setup, footer decode, task scheduling, stop amortizing. And the metadata layer above suffers in sympathy: Iceberg manifests tracking 4 million files are themselves a thousand times heavier to read, write, and prune than manifests tracking 4,000.
+Latency is the expensive one. Requests overlap under parallelism, but coordination does not: 8 million requests must be planned, issued, tracked, and retried across the fleet, per-prefix rate limits of a few thousand requests per second start throttling exactly this pattern, and footer-to-data ratios collapse, since a 256-kilobyte file spends as many round trips on metadata as on content. Engines report the same shape universally: scan time degrades not linearly but brutally as file counts explode, because the fixed per-object costs, request setup, footer decode, task scheduling, stop amortizing. And the metadata layer above suffers in sympathy: Iceberg manifests tracking 4 million files are themselves a thousand times heavier to read, write, and prune than manifests tracking 4, 000.
 
-Now the repair math, which is the encouraging half. Compaction rewrites the 4 million files into 4,000 once, at a one-time compute cost roughly comparable to a single full scan, and every subsequent query inherits the four-hundred-fold request reduction forever. That trade, pay one scan's worth of work once to fix every future scan, is among the best returns in data engineering, which is why every serious platform automates it and why I flag unmanaged small files as the number one silent killer of lakehouse performance in the field. The lesson generalizes into a rule of thumb worth memorizing: on object storage, file count is a performance dimension as real as data size, target data files in the low hundreds of megabytes, and treat compaction lag as an alert-worthy health metric, because the arithmetic above is running against you every hour it grows.
+Now the repair math, which is the encouraging half. Compaction rewrites the 4 million files into 4, 000 once, at a one-time compute cost roughly comparable to a single full scan, and every subsequent query inherits the four-hundred-fold request reduction forever. That trade, pay one scan's worth of work once to fix every future scan, is among the best returns in data engineering, which is why every serious platform automates it and why I flag unmanaged small files as the number one silent killer of lakehouse performance in the field. The lesson generalizes into a rule of thumb worth memorizing: on object storage, file count is a performance dimension as real as data size, target data files in the low hundreds of megabytes, and treat compaction lag as an alert-worthy health metric, because the arithmetic above is running against you every hour it grows.
 
 ## Layer Three: The Engine, Where Milliseconds Go to Die
 

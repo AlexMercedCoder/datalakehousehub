@@ -2,7 +2,7 @@
 title: Hidden Pitfalls  – Compaction and Partition Evolution in Apache Iceberg
 date: 2025-09-02T09:00:00Z
 author: Alex Merced
-description: Partition evolution in Apache Iceberg is a powerful feature, but if not managed carefully, it can introduce fragmentation and impact compaction performance. Learn how to handle it effectively.
+description: "Partition evolution in Apache Iceberg is a powerful feature, but if not managed carefully, it can introduce fragmentation and impact compaction."
 slug: iceberg-partition-evolution-compaction
 tags:
   - Apache Iceberg
@@ -16,14 +16,15 @@ category: "Apache Iceberg"
 bannerImage: "https://i.imgur.com/cpoMZQ8.png"
 canonical: "https://iceberglakehouse.com/posts/iceberg-partition-evolution-compaction/"
 ---
-> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/iceberg-partition-evolution-compaction/).
 
-- **[Free Apache Iceberg Course](https://hello.dremio.com/webcast-an-apache-iceberg-lakehouse-crash-course-reg.html?utm_source=ev_external_blog&utm_medium=influencer&utm_campaign=optimization_blogs&utm_content=alexmerced&utm_term=external_blog)**  
-- **[Free Copy of “Apache Iceberg: The Definitive Guide”](https://hello.dremio.com/wp-apache-iceberg-the-definitive-guide-reg.html?utm_source=ev_external_blog&utm_medium=influencer&utm_campaign=optimization_blogs&utm_content=alexmerced&utm_term=external_blog)**  
-- **[Free Copy of “Apache Polaris: The Definitive Guide”](https://hello.dremio.com/wp-apache-polaris-guide-reg.html?utm_source=ev_external_blog&utm_medium=influencer&utm_campaign=optimization_blogs&utm_content=alexmerced&utm_term=external_blog)**  
-- **[2025 Apache Iceberg Architecture Guide](https://medium.com/data-engineering-with-dremio/2025-guide-to-architecting-an-iceberg-lakehouse-9b19ed42c9de)**  
-- **[Iceberg Lakehouse Engineering Video Playlist](https://youtube.com/playlist?list=PLsLAVBjQJO0p0Yq1fLkoHvt2lEJj5pcYe&si=WTSnqjXZv6Glkc3y)**  
-- **[Ultimate Apache Iceberg Resource Guide](https://medium.com/data-engineering-with-dremio/ultimate-directory-of-apache-iceberg-resources-e3e02efac62e)** 
+- **[Free Apache Iceberg Course](https://hello.dremio.com/webcast-an-apache-iceberg-lakehouse-crash-course-reg.html?utm_source=ev_external_blog&utm_medium=influencer&utm_campaign=optimization_blogs&utm_content=alexmerced&utm_term=external_blog)** 
+- **[Free Copy of “Apache Iceberg: The Definitive Guide”](https://hello.dremio.com/wp-apache-iceberg-the-definitive-guide-reg.html?utm_source=ev_external_blog&utm_medium=influencer&utm_campaign=optimization_blogs&utm_content=alexmerced&utm_term=external_blog)** 
+- **[Free Copy of “Apache Polaris: The Definitive Guide”](https://hello.dremio.com/wp-apache-polaris-guide-reg.html?utm_source=ev_external_blog&utm_medium=influencer&utm_campaign=optimization_blogs&utm_content=alexmerced&utm_term=external_blog)** 
+- **[2025 Apache Iceberg Architecture Guide](https://medium.com/data-engineering-with-dremio/2025-guide-to-architecting-an-iceberg-lakehouse-9b19ed42c9de)** 
+- **[Iceberg Lakehouse Engineering Video Playlist](https://youtube.com/playlist?list=PLsLAVBjQJO0p0Yq1fLkoHvt2lEJj5pcYe&si=WTSnqjXZv6Glkc3y)** 
+- **[Ultimate Apache Iceberg Resource Guide](https://medium.com/data-engineering-with-dremio/ultimate-directory-of-apache-iceberg-resources-e3e02efac62e)**
+
+> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/iceberg-partition-evolution-compaction/).
 
 # Hidden Pitfalls : Compaction and Partition Evolution in Apache Iceberg
 
@@ -43,10 +44,10 @@ Unlike traditional systems that enforce a single static layout, Iceberg lets you
 ### Example:
 
 ```sql
--- Original partitioning
+- Original partitioning
 ALTER TABLE sales ADD PARTITION FIELD day(order_date);
 
--- Later evolve to hourly
+- Later evolve to hourly
 ALTER TABLE sales DROP PARTITION FIELD day(order_date);
 ALTER TABLE sales ADD PARTITION FIELD hour(order_date);
 ```

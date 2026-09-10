@@ -12,12 +12,14 @@ slug: "private-air-gapped-data-lakehouses-iceberg-secure-clouds"
 draft: false
 image: "/images/blog.png"
 canonical: https://iceberglakehouse.com/posts/private-air-gapped-data-lakehouses-iceberg-secure-clouds/
+description: "Some of the most important lakehouse work happens in environments that will never look like a simple public-cloud reference architecture."
 ---
-> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/private-air-gapped-data-lakehouses-iceberg-secure-clouds/).
 
 # Designing Private, Air-Gapped Data Lakehouses: Scaling Iceberg in Highly Secure, On-Premises Clouds
 
 Some of the most important lakehouse work happens in environments that will never look like a simple public-cloud reference architecture. Defense, public sector, healthcare, financial services, manufacturing, energy, and research organizations often need private infrastructure, strict network boundaries, controlled software supply chains, and auditability that goes far beyond ordinary dashboard access.
+
+> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/private-air-gapped-data-lakehouses-iceberg-secure-clouds/).
 
 That reality matters for AI. Agentic analytics does not remove security constraints. It makes them sharper. Agents can issue many queries, chain tools, inspect metadata, and request actions. If those systems operate over sensitive data, the platform has to be designed around least privilege, observability, and controlled execution from the start.
 

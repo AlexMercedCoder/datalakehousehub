@@ -15,9 +15,10 @@ draft: false
 image: "/images/blog.png"
 canonical: "https://iceberglakehouse.com/posts/2026-02-dm-data-modeling-lakehouse/"
 ---
-> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-02-dm-data-modeling-lakehouse/).
 
 ![Traditional data warehouse model vs. open lakehouse model with flexible schema and views](/images/blog/data-modeling/lakehouse-data-modeling.png)
+
+> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-02-dm-data-modeling-lakehouse/).
 
 Traditional data modeling assumed you controlled the database. You defined schemas up front, enforced foreign keys at write time, and optimized with indexes. The lakehouse changes every one of those assumptions.
 
@@ -25,7 +26,7 @@ Data lives in open file formats on object storage. Schemas evolve without rewrit
 
 ## What's Different About a Lakehouse
 
-A lakehouse stores data as files :  typically Parquet ,  on object storage like S3 or Azure Blob. An open table format like Apache Iceberg adds structure: schema definitions, partition metadata, snapshot history, and transactional guarantees.
+A lakehouse stores data as files : typically Parquet, on object storage like S3 or Azure Blob. An open table format like Apache Iceberg adds structure: schema definitions, partition metadata, snapshot history, and transactional guarantees.
 
 This architecture gives you more flexibility than a traditional RDBMS, but also more responsibility. There are no foreign key constraints enforced at write time. No triggers. No stored procedures. Referential integrity is your problem to solve in pipelines and views, not something the storage engine handles for you.
 

@@ -16,9 +16,10 @@ draft: false
 image: "/images/blog.png"
 canonical: "https://iceberglakehouse.com/posts/2026-03-aitool-opencode/"
 ---
-> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-03-aitool-opencode/).
 
 OpenCode is an open-source, terminal-based AI coding agent released under the MIT license. It provides a TUI with split panes, uses the Language Server Protocol (LSP) for deep codebase understanding, and maintains persistent project context through file-based memory. Dremio is a unified lakehouse platform built on open standards like Apache Iceberg, Apache Arrow, and Apache Polaris.
+
+> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-03-aitool-opencode/).
 
 The open-source philosophy aligns. Dremio stores data in open formats with no vendor lock-in. OpenCode gives you full control over your AI coding agent with no proprietary restrictions. Connecting them means your open-source agent can query an open lakehouse, validate SQL against real schemas, and generate scripts using your team's actual conventions.
 
@@ -36,10 +37,10 @@ If you do not already have OpenCode installed:
 
 1. **Install Go** (version 1.23 or later) from [go.dev](https://go.dev/dl/).
 2. **Install OpenCode**:
-   ```bash
-   go install github.com/opencode-ai/opencode@latest
-   ```
-   Or use Homebrew: `brew install opencode`.
+ ```bash
+ go install github.com/opencode-ai/opencode@latest
+ ```
+ Or use Homebrew: `brew install opencode`.
 3. **Configure your AI model** by setting the `OPENAI_API_KEY`, `ANTHROPIC_API_KEY`, or other model provider key in your environment.
 4. **Launch OpenCode** by running `opencode` in your terminal from any project directory.
 
@@ -68,15 +69,13 @@ Add the Dremio MCP server to your `opencode.json`:
 
 ```json
 {
-  "mcp": {
-    "dremio": {
-      "url": "https://YOUR_PROJECT_MCP_URL",
-      "auth": {
-        "type": "oauth",
-        "clientId": "YOUR_CLIENT_ID"
-      }
-    }
-  }
+ "mcp": {
+ "dremio": {
+ "url": "https://YOUR_PROJECT_MCP_URL", "auth": {
+ "type": "oauth", "clientId": "YOUR_CLIENT_ID"
+ }
+ }
+ }
 }
 ```
 
@@ -98,23 +97,21 @@ For Dremio Software, use the open-source [dremio-mcp](https://github.com/dremio/
 git clone https://github.com/dremio/dremio-mcp
 cd dremio-mcp
 uv run dremio-mcp-server config create dremioai \
-  --uri https://your-dremio-instance.com \
-  --pat YOUR_PERSONAL_ACCESS_TOKEN
+ -uri https://your-dremio-instance.com \
+ -pat YOUR_PERSONAL_ACCESS_TOKEN
 ```
 
 Then configure OpenCode to run the local server in `opencode.json`:
 
 ```json
 {
-  "mcp": {
-    "dremio": {
-      "command": "uv",
-      "args": [
-        "run", "--directory", "/path/to/dremio-mcp",
-        "dremio-mcp-server", "run"
-      ]
-    }
-  }
+ "mcp": {
+ "dremio": {
+ "command": "uv", "args": [
+ "run", "-directory", "/path/to/dremio-mcp", "dremio-mcp-server", "run"
+ ]
+ }
+ }
 }
 ```
 
@@ -175,10 +172,10 @@ OpenCode supports defining custom agents in `.opencode/agents/`. This is a capab
 Create `.opencode/agents/dremio-analyst.md`:
 
 ```markdown
----
+--
 description: Dremio data analyst agent
 mode: subagent
----
+--
 
 You are a data analyst working with Dremio Cloud. Your job is to:
 1. Explore available tables using the MCP connection
@@ -241,8 +238,8 @@ Create a primary coding agent plus a Dremio-focused subagent:
 
 ```
 .opencode/agents/
-  dremio-analyst.md       # Subagent for SQL and data queries
-  dremio-pipeline.md      # Subagent for ETL/pipeline scripts
+ dremio-analyst.md # Subagent for SQL and data queries
+ dremio-pipeline.md # Subagent for ETL/pipeline scripts
 ```
 
 Each agent gets its own system prompt, model configuration, and tool permissions. The primary agent delegates Dremio tasks to the appropriate subagent, which has the full Dremio context loaded while keeping the primary agent's context window focused on application code.
@@ -255,9 +252,9 @@ Pair your custom agents with reference documentation:
 
 ```
 docs/
-  dremio-sql-reference.md
-  team-schemas.md
-  dremioframe-patterns.md
+ dremio-sql-reference.md
+ team-schemas.md
+ dremioframe-patterns.md
 ```
 
 Reference these in both your `AGENTS.md` and your custom agent prompts. OpenCode's file-based memory system ensures the agent retains context from these references across interactions. Export your actual table schemas from Dremio's catalog and save them as markdown. Include dremioframe code snippets for common operations like querying, creating views, and managing branches. Add REST API call patterns for your CI/CD pipelines.
@@ -330,7 +327,7 @@ OpenCode generates the full API server with the Dremio subagent handling query l
 ## Which Approach Should You Use?
 
 | Approach | Setup Time | What You Get | Best For |
-|----------|-----------|--------------|----------|
+|-----|------|-------|-----|
 | MCP Server | 5 minutes | Live queries, schema browsing, catalog | Data analysis, real-time access |
 | AGENTS.md | 10 minutes | Convention enforcement, portable config | Cross-tool consistency |
 | Pre-Built Skills | 5 minutes | Broad Dremio knowledge | Quick start |

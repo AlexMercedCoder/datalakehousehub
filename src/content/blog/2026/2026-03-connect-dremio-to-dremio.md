@@ -16,9 +16,10 @@ draft: false
 image: "/images/blog.png"
 canonical: "https://iceberglakehouse.com/posts/2026-03-connector-dremio-to-dremio/"
 ---
-> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-03-connector-dremio-to-dremio/).
 
 Dremio Cloud can connect to Dremio Software (self-managed) instances as a federated data source. This creates a hybrid deployment where Dremio Cloud serves as the primary query interface while accessing datasets managed by Dremio Software instances running in your own data centers or private cloud.
+
+> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-03-connector-dremio-to-dremio/).
 
 This connector is designed for organizations that have existing Dremio Software deployments and are adopting Dremio Cloud for new workloads, or that need to federate data across a cloud-managed Dremio platform and on-premises Dremio instances.
 
@@ -26,20 +27,16 @@ This connector is designed for organizations that have existing Dremio Software 
 
 ### Hybrid Federation
 
-Your Dremio Software instance manages on-premises data sources :  Oracle databases, SQL Server, network-attached file storage, and internal data lakes. Dremio Cloud manages cloud-native sources ,  S3, BigQuery, Snowflake, and cloud-hosted databases. By connecting Dremio Software to Dremio Cloud, you can write a single SQL query that joins on-premises data (through Dremio Software) with cloud data (through Dremio Cloud).
+Your Dremio Software instance manages on-premises data sources : Oracle databases, SQL Server, network-attached file storage, and internal data lakes. Dremio Cloud manages cloud-native sources, S3, BigQuery, Snowflake, and cloud-hosted databases. By connecting Dremio Software to Dremio Cloud, you can write a single SQL query that joins on-premises data (through Dremio Software) with cloud data (through Dremio Cloud).
 
 ```sql
--- Join on-premises data via Dremio Software with cloud data in Dremio Cloud
+- Join on-premises data via Dremio Software with cloud data in Dremio Cloud
 SELECT
-  cloud.customer_name,
-  cloud.cloud_revenue,
-  onprem.erp_balance,
-  onprem.last_payment_date,
-  CASE
-    WHEN cloud.cloud_revenue > 100000 AND onprem.erp_balance < 5000 THEN 'Good Standing'
-    WHEN onprem.erp_balance > 50000 THEN 'At Risk'
-    ELSE 'Standard'
-  END AS account_health
+ cloud.customer_name, cloud.cloud_revenue, onprem.erp_balance, onprem.last_payment_date, CASE
+ WHEN cloud.cloud_revenue > 100000 AND onprem.erp_balance < 5000 THEN 'Good Standing'
+ WHEN onprem.erp_balance > 50000 THEN 'At Risk'
+ ELSE 'Standard'
+ END AS account_health
 FROM analytics.gold.cloud_customers cloud
 JOIN "dremio-onprem".onprem.erp_accounts onprem ON cloud.customer_id = onprem.customer_id
 ORDER BY cloud.cloud_revenue DESC;
@@ -61,13 +58,13 @@ Users access both on-premises and cloud data through Dremio Cloud's interface. D
 ## Prerequisites
 
 - **Dremio Software instance** accessible from Dremio Cloud over HTTPS
-  - Version 24.0 or later recommended
-  - Arrow Flight endpoint enabled and accessible (port 32010 or 443 with TLS)
+ - Version 24.0 or later recommended
+ - Arrow Flight endpoint enabled and accessible (port 32010 or 443 with TLS)
 - **Authentication:** Username/password or Personal Access Token for the Dremio Software instance
 - **Network:** The Dremio Software instance must be reachable from Dremio Cloud's network. Options:
-  - Public endpoint with TLS
-  - VPN/VPC peering
-  - AWS PrivateLink or equivalent
+ - Public endpoint with TLS
+ - VPN/VPC peering
+ - AWS PrivateLink or equivalent
 - **Dremio Cloud account** : [sign up free for 30 days](https://www.dremio.com/get-started?utm_source=ev_buffer&utm_medium=influencer&utm_campaign=pag&utm_term=connector-dremio-to-dremio-cloud&utm_content=alexmerced) with $400 in compute credits
 
 ## Step-by-Step: Connect Dremio Software to Dremio Cloud
@@ -102,20 +99,14 @@ Set Reflection Refresh, Metadata refresh intervals, and connection properties. C
 ## Querying Across Deployments
 
 ```sql
--- Query on-premises data through Dremio Software
+- Query on-premises data through Dremio Software
 SELECT
-  department,
-  employee_count,
-  avg_salary
+ department, employee_count, avg_salary
 FROM "dremio-onprem".hr.department_summary;
 
--- Join on-premises HR data with cloud-native analytics
+- Join on-premises HR data with cloud-native analytics
 SELECT
-  d.department,
-  d.employee_count,
-  d.avg_salary,
-  c.department_cloud_spend,
-  ROUND(c.department_cloud_spend / d.employee_count, 2) AS cloud_cost_per_employee
+ d.department, d.employee_count, d.avg_salary, c.department_cloud_spend, ROUND(c.department_cloud_spend / d.employee_count, 2) AS cloud_cost_per_employee
 FROM "dremio-onprem".hr.department_summary d
 JOIN analytics.gold.cloud_infrastructure_costs c ON d.department = c.department
 ORDER BY cloud_cost_per_employee DESC;
@@ -126,17 +117,11 @@ ORDER BY cloud_cost_per_employee DESC;
 ```sql
 CREATE VIEW analytics.gold.enterprise_360 AS
 SELECT
-  onprem.employee_id,
-  onprem.employee_name,
-  onprem.department,
-  onprem.office_location,
-  cloud.cloud_account_id,
-  cloud.monthly_cloud_spend,
-  CASE
-    WHEN cloud.monthly_cloud_spend > 10000 THEN 'Heavy Cloud User'
-    WHEN cloud.monthly_cloud_spend > 1000 THEN 'Moderate'
-    ELSE 'Light'
-  END AS cloud_usage_tier
+ onprem.employee_id, onprem.employee_name, onprem.department, onprem.office_location, cloud.cloud_account_id, cloud.monthly_cloud_spend, CASE
+ WHEN cloud.monthly_cloud_spend > 10000 THEN 'Heavy Cloud User'
+ WHEN cloud.monthly_cloud_spend > 1000 THEN 'Moderate'
+ ELSE 'Light'
+ END AS cloud_usage_tier
 FROM "dremio-onprem".hr.employees onprem
 LEFT JOIN analytics.gold.cloud_accounts cloud ON onprem.employee_id = cloud.owner_id;
 ```
@@ -162,23 +147,16 @@ A CTO asks Claude "Compare cloud infrastructure costs per department with on-pre
 ### AI SQL Functions
 
 ```sql
--- Classify departments by cloud optimization potential
+- Classify departments by cloud optimization potential
 SELECT
-  department,
-  employee_count,
-  cloud_cost_per_employee,
-  AI_CLASSIFY(
-    'Based on cloud spending patterns, classify optimization potential',
-    'Department: ' || department || ', Employees: ' || CAST(employee_count AS VARCHAR) || ', Cloud Cost/Employee: $' || CAST(cloud_cost_per_employee AS VARCHAR),
-    ARRAY['Well Optimized', 'Room for Improvement', 'Over-Provisioned', 'Needs Audit']
-  ) AS optimization_status
+ department, employee_count, cloud_cost_per_employee, AI_CLASSIFY(
+ 'Based on cloud spending patterns, classify optimization potential', 'Department: ' || department || ', Employees: ' || CAST(employee_count AS VARCHAR) || ', Cloud Cost/Employee: $' || CAST(cloud_cost_per_employee AS VARCHAR), ARRAY['Well Optimized', 'Room for Improvement', 'Over-Provisioned', 'Needs Audit']
+ ) AS optimization_status
 FROM (
-  SELECT
-    d.department,
-    d.employee_count,
-    ROUND(c.department_cloud_spend / d.employee_count, 2) AS cloud_cost_per_employee
-  FROM "dremio-onprem".hr.department_summary d
-  JOIN analytics.gold.cloud_infrastructure_costs c ON d.department = c.department
+ SELECT
+ d.department, d.employee_count, ROUND(c.department_cloud_spend / d.employee_count, 2) AS cloud_cost_per_employee
+ FROM "dremio-onprem".hr.department_summary d
+ JOIN analytics.gold.cloud_infrastructure_costs c ON d.department = c.department
 );
 ```
 
@@ -253,7 +231,7 @@ Create Reflections on hybrid views to cache cross-deployment query results:
 2. Create Reflections on those views
 3. Set refresh intervals based on how frequently the underlying on-premises data changes
 
-After creation, dashboard queries that span both deployments are served from Dremio Cloud's Reflection cache , eliminating network latency for repeat queries.
+After creation, dashboard queries that span both deployments are served from Dremio Cloud's Reflection cache, eliminating network latency for repeat queries.
 
 ## Migration Planning: Software to Cloud
 

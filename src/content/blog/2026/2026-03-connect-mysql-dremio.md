@@ -16,9 +16,10 @@ draft: false
 image: "/images/blog.png"
 canonical: "https://iceberglakehouse.com/posts/2026-03-connector-mysql/"
 ---
-> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-03-connector-mysql/).
 
 MySQL runs more web applications, SaaS platforms, and e-commerce backends than any other database. It's fast for transactional reads and writes, but it becomes a bottleneck when your data team needs to run analytical queries, join MySQL data with other sources, or build dashboards that don't compete with application traffic.
+
+> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-03-connector-mysql/).
 
 Dremio Cloud connects directly to MySQL and queries it in place. Your data stays where it is. Dremio pushes filters (called predicate pushdowns) to MySQL when possible, joins MySQL data with any other connected source, and accelerates repeated queries with pre-computed Reflections so your production database isn't hit by every dashboard refresh.
 
@@ -67,7 +68,7 @@ Two options:
 ### 4. Configure Advanced Options
 
 | Setting | What It Does | Default |
-|---|---|---|
+|--|--|--|
 | **Net write timeout (in seconds)** | How long to wait for data from MySQL before dropping the connection. | 60 |
 | **Record fetch size** | Rows per batch. Set to 0 for automatic. | 200 |
 | **Maximum Idle Connections** | Idle connection pool size. | 8 |
@@ -92,7 +93,7 @@ Once connected, browse your MySQL schemas and tables in the SQL Runner:
 SELECT order_id, customer_id, total_amount, order_date, status
 FROM "ecommerce-mysql".shop.orders
 WHERE order_date >= '2024-06-01'
-  AND status = 'completed'
+ AND status = 'completed'
 ORDER BY total_amount DESC;
 ```
 
@@ -104,16 +105,12 @@ Join MySQL order data with S3 clickstream data and PostgreSQL customer profiles 
 
 ```sql
 SELECT
-  c.customer_name,
-  c.region,
-  COUNT(o.order_id) AS total_orders,
-  SUM(o.total_amount) AS total_revenue,
-  COUNT(DISTINCT e.session_id) AS web_sessions
+ c.customer_name, c.region, COUNT(o.order_id) AS total_orders, SUM(o.total_amount) AS total_revenue, COUNT(DISTINCT e.session_id) AS web_sessions
 FROM "postgres-crm".public.customers c
 LEFT JOIN "ecommerce-mysql".shop.orders o
-  ON c.customer_id = o.customer_id
+ ON c.customer_id = o.customer_id
 LEFT JOIN "s3-analytics".clickstream.sessions e
-  ON c.customer_id = e.user_id
+ ON c.customer_id = e.user_id
 GROUP BY c.customer_name, c.region
 ORDER BY total_revenue DESC;
 ```
@@ -127,16 +124,11 @@ Create business-friendly views over MySQL data:
 ```sql
 CREATE VIEW analytics.gold.order_summary AS
 SELECT
-  o.order_id,
-  o.customer_id,
-  o.total_amount,
-  CAST(o.order_date AS TIMESTAMP) AS order_timestamp,
-  o.status AS order_status,
-  CASE
-    WHEN o.total_amount > 500 THEN 'High Value'
-    WHEN o.total_amount > 100 THEN 'Medium Value'
-    ELSE 'Standard'
-  END AS order_tier
+ o.order_id, o.customer_id, o.total_amount, CAST(o.order_date AS TIMESTAMP) AS order_timestamp, o.status AS order_status, CASE
+ WHEN o.total_amount > 500 THEN 'High Value'
+ WHEN o.total_amount > 100 THEN 'Medium Value'
+ ELSE 'Standard'
+ END AS order_tier
 FROM "ecommerce-mysql".shop.orders o
 WHERE o.status IN ('completed', 'shipped');
 ```
@@ -161,7 +153,7 @@ This minimizes data transfer between MySQL and Dremio. Only the results of pushe
 Key MySQL-to-Dremio type conversions:
 
 | MySQL | Dremio | Notes |
-|---|---|---|
+|--|--|--|
 | INT / INTEGER | INTEGER | |
 | BIGINT | BIGINT | UNSIGNED converts to BIGINT |
 | FLOAT | FLOAT | |
@@ -210,28 +202,19 @@ An e-commerce manager asks Claude "What's our average order value by region this
 Use AI directly in queries against MySQL data:
 
 ```sql
--- Classify orders by likely customer intent
+- Classify orders by likely customer intent
 SELECT
-  order_id,
-  total_amount,
-  order_tier,
-  AI_CLASSIFY(
-    'Based on this order, classify the likely purchase motivation',
-    'Amount: $' || CAST(total_amount AS VARCHAR) || ', Status: ' || order_status || ', Tier: ' || order_tier,
-    ARRAY['Impulse Buy', 'Planned Purchase', 'Bulk Order', 'Reorder']
-  ) AS purchase_motivation
+ order_id, total_amount, order_tier, AI_CLASSIFY(
+ 'Based on this order, classify the likely purchase motivation', 'Amount: $' || CAST(total_amount AS VARCHAR) || ', Status: ' || order_status || ', Tier: ' || order_tier, ARRAY['Impulse Buy', 'Planned Purchase', 'Bulk Order', 'Reorder']
+ ) AS purchase_motivation
 FROM analytics.gold.order_summary
 WHERE order_status = 'completed';
 
--- Generate order analysis summaries
+- Generate order analysis summaries
 SELECT
-  DATE_TRUNC('week', order_timestamp) AS week,
-  COUNT(*) AS orders,
-  SUM(total_amount) AS revenue,
-  AI_GENERATE(
-    'Write a one-sentence weekly sales summary',
-    'Orders: ' || CAST(COUNT(*) AS VARCHAR) || ', Revenue: $' || CAST(SUM(total_amount) AS VARCHAR) || ', High Value Orders: ' || CAST(SUM(CASE WHEN order_tier = 'High Value' THEN 1 ELSE 0 END) AS VARCHAR)
-  ) AS weekly_summary
+ DATE_TRUNC('week', order_timestamp) AS week, COUNT(*) AS orders, SUM(total_amount) AS revenue, AI_GENERATE(
+ 'Write a one-sentence weekly sales summary', 'Orders: ' || CAST(COUNT(*) AS VARCHAR) || ', Revenue: $' || CAST(SUM(total_amount) AS VARCHAR) || ', High Value Orders: ' || CAST(SUM(CASE WHEN order_tier = 'High Value' THEN 1 ELSE 0 END) AS VARCHAR)
+ ) AS weekly_summary
 FROM analytics.gold.order_summary
 GROUP BY DATE_TRUNC('week', order_timestamp)
 ORDER BY week DESC

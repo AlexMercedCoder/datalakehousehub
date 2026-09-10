@@ -1,6 +1,6 @@
 ---
 title: "Implementing MCP in the Lakehouse"
-description: "How to build a Model Context Protocol (MCP) server that exposes lakehouse tables and semantic views as AI-accessible tools, with Python implementation patterns and authentication."
+description: "How to build a Model Context Protocol (MCP) server that exposes lakehouse tables and semantic views as AI-accessible tools, with Python implementation."
 date: 2026-06-08T09:00:00Z
 slug: "mcp-lakehouse-semantic-data-layer-python"
 draft: false
@@ -15,7 +15,6 @@ tags:
   - "Dremio MCP server"
   - "lakehouse AI tools"
 ---
-
 When an AI agent needs data, it has two options. It can write raw SQL through an unfiltered connection, which creates security and correctness risks. Or it can call a tool that presents curated, governed data through a clean interface. The Model Context Protocol (MCP) standardizes the second option.
 
 MCP, introduced by Anthropic in November 2024, defines how AI models discover and call external tools, access resources, and use prompts. For the lakehouse, MCP is the gateway through which agents interact with data. An MCP server wraps Iceberg tables, semantic views, and query engines into callable tools that agents can discover and invoke without knowing SQL or internal schema details.
@@ -83,9 +82,9 @@ The `FastMCP` class handles protocol negotiation, capability declaration, and tr
 ```python
 @mcp.tool()
 def list_catalogs() -> list[str]:
-    """List all available catalogs in the lakehouse."""
-    # Returns catalog names from the query engine's metadata
-    return engine.execute("SHOW CATALOGS").fetchall()
+ """List all available catalogs in the lakehouse."""
+ # Returns catalog names from the query engine's metadata
+ return engine.execute("SHOW CATALOGS").fetchall()
 ```
 
 The docstring becomes the tool description sent to the AI model. It must be clear and specific because the AI model uses it to decide whether to call this tool.
@@ -95,21 +94,21 @@ The docstring becomes the tool description sent to the AI model. It must be clea
 ```python
 @mcp.tool()
 def get_table_schema(catalog: str, schema: str, table: str) -> str:
-    """Get the column names and types for a specific table.
+ """Get the column names and types for a specific table.
 
-    Args:
-        catalog: The catalog name (e.g., 'analytics', 'raw')
-        schema: The schema name (e.g., 'gold', 'silver')
-        table: The table name (e.g., 'monthly_revenue')
-    """
-    query = (
-        f"SELECT column_name, data_type "
-        f"FROM {catalog}.information_schema.columns "
-        f"WHERE table_schema = '{schema}' AND table_name = '{table}'"
-    )
-    result = engine.execute(query)
-    columns = [f"{row.column_name} ({row.data_type})" for row in result]
-    return f"Table {catalog}.{schema}.{table} has columns: " + ", ".join(columns)
+ Args:
+ catalog: The catalog name (e.g., 'analytics', 'raw')
+ schema: The schema name (e.g., 'gold', 'silver')
+ table: The table name (e.g., 'monthly_revenue')
+ """
+ query = (
+ f"SELECT column_name, data_type "
+ f"FROM {catalog}.information_schema.columns "
+ f"WHERE table_schema = '{schema}' AND table_name = '{table}'"
+ )
+ result = engine.execute(query)
+ columns = [f"{row.column_name} ({row.data_type})" for row in result]
+ return f"Table {catalog}.{schema}.{table} has columns: " + ", ".join(columns)
 ```
 
 The type annotations and docstring parameters are used by the MCP protocol to generate the JSON Schema for this tool. The AI model sees a tool named `get_table_schema` with parameters `catalog`, `schema`, and `table`, each described by their string type and the parameter descriptions in the docstring.
@@ -119,26 +118,26 @@ The type annotations and docstring parameters are used by the MCP protocol to ge
 ```python
 @mcp.tool()
 def run_query(sql: str, max_rows: int = 1000) -> str:
-    """Execute a read-only SQL query and return results.
+ """Execute a read-only SQL query and return results.
 
-    Use this tool when you need to explore data or answer questions that
-    the semantic tools cannot handle.
+ Use this tool when you need to explore data or answer questions that
+ the semantic tools cannot handle.
 
-    Args:
-        sql: The SQL query to execute. Must be a SELECT statement.
-        max_rows: Maximum number of rows to return (default 1000, max 10000).
-    """
-    # Validate that the query is read-only
-    if not sql.strip().upper().startswith("SELECT"):
-        return "Error: Only SELECT queries are allowed."
+ Args:
+ sql: The SQL query to execute. Must be a SELECT statement.
+ max_rows: Maximum number of rows to return (default 1000, max 10000).
+ """
+ # Validate that the query is read-only
+ if not sql.strip().upper().startswith("SELECT"):
+ return "Error: Only SELECT queries are allowed."
 
-    result = engine.execute(sql, max_rows=min(max_rows, 10000))
+ result = engine.execute(sql, max_rows=min(max_rows, 10000))
 
-    # Format as a simple table
-    headers = [desc[0] for desc in result.description]
-    rows = [dict(zip(headers, row)) for row in result.fetchmany(max_rows)]
+ # Format as a simple table
+ headers = [desc[0] for desc in result.description]
+ rows = [dict(zip(headers, row)) for row in result.fetchmany(max_rows)]
 
-    return str(rows)  # Simplified; production code should paginate and truncate
+ return str(rows) # Simplified; production code should paginate and truncate
 ```
 
 The validation check (`if not sql.strip().upper().startswith("SELECT")`) is a security boundary. The query engine should enforce additional guardrails: a separate catalog principal with read-only privileges, a query timeout (enforced by the engine), and a result size limit (enforced by the server).
@@ -148,11 +147,10 @@ The validation check (`if not sql.strip().upper().startswith("SELECT")`) is a se
 ```python
 @mcp.resource("iceberg://{catalog}/{schema}/{table}/metadata")
 def table_metadata(catalog: str, schema: str, table: str) -> str:
-    """Get Iceberg table metadata including snapshot count, data file count,
-    and partition information."""
-    query = f"DESCRIBE TABLE EXTENDED {catalog}.{schema}.{table}"
-    result = engine.execute(query)
-    return str(result.fetchall())
+ """Get Iceberg table metadata including snapshot count, data file count, and partition information."""
+ query = f"DESCRIBE TABLE EXTENDED {catalog}.{schema}.{table}"
+ result = engine.execute(query)
+ return str(result.fetchall())
 ```
 
 Resources use URI templates. The client asks for `iceberg://analytics/gold/monthly_revenue/metadata`, and the server resolves the template parameters and returns the metadata.
@@ -162,21 +160,21 @@ Resources use URI templates. The client asks for `iceberg://analytics/gold/month
 ```python
 @mcp.prompt()
 def analyze_trend(metric: str, period: str) -> str:
-    """Guide the AI to analyze a business trend.
+ """Guide the AI to analyze a business trend.
 
-    Args:
-        metric: The metric to analyze (e.g., 'revenue', 'customer_count')
-        period: The time period (e.g., 'Q3-2026', 'last_30_days')
-    """
-    return f"""
-    You are analyzing the {metric} trend for {period}.
-    1. First, check which catalogs and schemas are available.
-    2. Find the relevant table or semantic view for {metric}.
-    3. Retrieve the schema to understand available columns.
-    4. Query the data for {period}.
-    5. Compare with the previous period.
-    6. Summarize the findings.
-    """
+ Args:
+ metric: The metric to analyze (e.g., 'revenue', 'customer_count')
+ period: The time period (e.g., 'Q3-2026', 'last_30_days')
+ """
+ return f"""
+ You are analyzing the {metric} trend for {period}.
+ 1. First, check which catalogs and schemas are available.
+ 2. Find the relevant table or semantic view for {metric}.
+ 3. Retrieve the schema to understand available columns.
+ 4. Query the data for {period}.
+ 5. Compare with the previous period.
+ 6. Summarize the findings.
+ """
 ```
 
 Prompts are pre-fabricated instructions that guide the AI model's behavior. They are not required for basic MCP server operation, but they significantly improve the quality of agent interactions by providing a structured reasoning pattern.
@@ -199,16 +197,13 @@ The Dremio MCP server supports all three patterns. The production Helm chart use
 
 ```json
 {
-  "mcpServers": {
-    "lakehouse": {
-      "command": "uv",
-      "args": ["run", "--directory", "/path/to/server", "main.py"],
-      "env": {
-        "DREMIO_URI": "https://dremio.example.com:9047",
-        "DREMIO_PAT": "@~/tokens/dremio.token"
-      }
-    }
-  }
+ "mcpServers": {
+ "lakehouse": {
+ "command": "uv", "args": ["run", "-directory", "/path/to/server", "main.py"], "env": {
+ "DREMIO_URI": "https://dremio.example.com:9047", "DREMIO_PAT": "@~/tokens/dremio.token"
+ }
+ }
+ }
 }
 ```
 
@@ -216,9 +211,9 @@ The Dremio MCP server supports all three patterns. The production Helm chart use
 
 ```bash
 helm install my-mcp-server ./helm/dremio-mcp \
-  --set dremio.uri=https://dremio.example.com:9047 \
-  --set oauth.enabled=true \
-  --set oauth.tokenUrl=https://idp.example.com/token
+ -set dremio.uri=https://dremio.example.com:9047 \
+ -set oauth.enabled=true \
+ -set oauth.tokenUrl=https://idp.example.com/token
 ```
 
 **Tool modes.** The MCP server can operate in different modes that expose different tool sets. The modes are defined in the server configuration:
@@ -245,11 +240,11 @@ After the inspector confirms that the server responds correctly, configure the A
 
 **Unvalidated parameters lead to engine errors.** If the AI model passes a nonexistent catalog name to `list_tables()`, the engine returns an error. Mitigate by wrapping engine calls in try/except blocks that return clear error messages.
 
-**Large result sets overwhelm the context window.** The AI model has a limited context window (varying by model, typically 8K to 200K tokens). A query returning 10,000 rows exceeds most context windows. Mitigate by limiting results (max 1000 rows default, configurable) and truncating large cells.
+**Large result sets overwhelm the context window.** The AI model has a limited context window (varying by model, typically 8K to 200K tokens). A query returning 10, 000 rows exceeds most context windows. Mitigate by limiting results (max 1000 rows default, configurable) and truncating large cells.
 
 **Slow queries timeout.** The AI model may call a full-scan query on a 10-billion-row table. The query runs for 5 minutes and the agent assumes the tool is broken. Mitigate by setting query timeouts at the engine level (30 seconds for interactive agents) and returning a timeout error message that the AI model can interpret.
 
-**Tool descriptions are too vague.** If a tool description says "Get data," the AI model does not know when to call it. Mitigate by writing specific, action-oriented descriptions. "Get monthly revenue for a given period and region" is specific. "Query data" is not.
+**Tool descriptions are too vague.** If a tool description says "Get data, " the AI model does not know when to call it. Mitigate by writing specific, action-oriented descriptions. "Get monthly revenue for a given period and region" is specific. "Query data" is not.
 
 ## Summary
 

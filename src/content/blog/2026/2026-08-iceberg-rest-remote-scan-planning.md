@@ -14,9 +14,10 @@ tags:
 slug: "iceberg-rest-remote-scan-planning"
 draft: false
 ---
-> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/iceberg-rest-remote-scan-planning/).
 
 Most of the coverage of Apache Iceberg 1.11 treats remote scan planning as a performance feature. The catalog plans the scan instead of the engine, the engine downloads less metadata, queries start faster. All of that is true, and for some workloads the numbers are meaningful. But the performance framing undersells what actually happened. When the catalog server decides which files a query is allowed to see, the catalog stops being a directory of table pointers and starts being an enforcement point. That is an architectural shift, not an optimization.
+
+> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/iceberg-rest-remote-scan-planning/).
 
 I want to walk through this carefully, because the details matter. Remote scan planning changes who holds metadata, who evaluates policy, how much intelligence an engine needs to carry, and what a "thin" Iceberg client can be. It changes what a catalog vendor sells. It changes what a compromised engine can learn about your storage layout. And it introduces new operational questions that client-side planning never had to answer, like what happens to your entire query fleet when the planning service has a bad day.
 
@@ -28,7 +29,7 @@ To understand what changed, you need to understand the job scan planning does. W
 
 The traditional flow looks like this. The engine asks the catalog for the table, and the catalog returns a pointer to the current metadata file, a JSON document in object storage. The engine reads that file to learn the schema, the partition spec, and the current snapshot. The snapshot points to a manifest list, an Avro file enumerating the manifests in that snapshot along with partition-level summaries. The engine reads the manifest list, prunes manifests whose partition ranges cannot match the filter, then reads the surviving manifests. Each manifest lists data files with per-file statistics: record counts, column lower and upper bounds, null counts. The engine applies the filter against those statistics, discards files that cannot contain matching rows, and emits the survivors as file scan tasks. Only then does any data get read.
 
-Notice where all of this work happens. The catalog answers one small question, "where is the current metadata file," and then steps out of the way. Everything else is the engine talking directly to object storage. The engine downloads the metadata JSON, the manifest list, and every relevant manifest. For a small table this is a handful of requests. For a table with hundreds of thousands of data files, the manifests alone run into hundreds of megabytes, and the engine holds a large portion of that in memory while it plans.
+Notice where all of this work happens. The catalog answers one small question, "where is the current metadata file, " and then steps out of the way. Everything else is the engine talking directly to object storage. The engine downloads the metadata JSON, the manifest list, and every relevant manifest. For a small table this is a handful of requests. For a table with hundreds of thousands of data files, the manifests alone run into hundreds of megabytes, and the engine holds a large portion of that in memory while it plans.
 
 This design has real strengths. It scales horizontally, because every engine plans its own queries and the catalog never becomes a bottleneck. It works identically for every engine, because the metadata format is the contract. It keeps the catalog simple, which is part of why so many catalog implementations exist.
 
@@ -42,7 +43,7 @@ But the protocol was never just a compatibility layer. From early on, it added c
 
 Each of these moved a responsibility from the engine to the catalog. Each one made the catalog a little less like a phone book and a little more like a service. Scan planning is the biggest step yet in that same direction, because it moves the read path itself.
 
-The groundwork is older than most people realize. The scan planning endpoints entered the REST OpenAPI specification in September 2024. What took time was the client and server machinery: a reference client in the Java library, capability discovery so clients know whether a server supports planning, alignment fixes between implementations and the spec, and hardening around plan lifecycle states. That work landed across 2025 and culminated in the 1.11.0 release, which shipped on the 19th of May, 2026, with over 1,000 commits from more than 200 contributors. The release included the REST scan planning client in core, Spark integration with backports to Spark 3.4 and 3.5, and a stream of spec clarifications, like marking the plan ID as required whenever a plan is in submitted status.
+The groundwork is older than most people realize. The scan planning endpoints entered the REST OpenAPI specification in September 2024. What took time was the client and server machinery: a reference client in the Java library, capability discovery so clients know whether a server supports planning, alignment fixes between implementations and the spec, and hardening around plan lifecycle states. That work landed across 2025 and culminated in the 1.11.0 release, which shipped on the 19th of May, 2026, with over 1, 000 commits from more than 200 contributors. The release included the REST scan planning client in core, Spark integration with backports to Spark 3.4 and 3.5, and a stream of spec clarifications, like marking the plan ID as required whenever a plan is in submitted status.
 
 The Python side moved in parallel. PyIceberg 0.11.0 added synchronous scan planning, where the client sends a scan request and the server returns file scan tasks directly. It also added endpoint discovery through the catalog's configuration response, so a client checks what the server supports and falls back to defaults for older servers instead of failing with a cryptic error.
 
@@ -54,7 +55,7 @@ The protocol supports two modes. In synchronous planning, the server does the wo
 
 For very large results, the protocol splits output into plan tasks. A plan task is an opaque handle representing a chunk of the overall plan. The client exchanges each plan task for its concrete file scan tasks through a separate tasks endpoint. This matters because a scan of a petabyte table can produce hundreds of thousands of file scan tasks, and streaming them in pages keeps both sides within memory limits. Distributed engines take advantage of this by fetching different plan tasks on different workers, so result retrieval parallelizes just like the scan itself.
 
-The request side gained refinements in 1.11 too. A client can pass a minimum row count hint, added to the plan request schema during the 1.11 cycle, which tells the server how much data the client actually needs. A dashboard preview fetching 1,000 rows has no reason to receive a plan covering ten billion.
+The request side gained refinements in 1.11 too. A client can pass a minimum row count hint, added to the plan request schema during the 1.11 cycle, which tells the server how much data the client actually needs. A dashboard preview fetching 1, 000 rows has no reason to receive a plan covering ten billion.
 
 Remote planning did not arrive alone in 1.11, and its neighbors reinforce the same theme. The release added a partition statistics scan API, giving optimizers a supported way to read a table's shape, partition row counts and sizes, without scraping metadata files directly. It stabilized v3 features like deletion vectors as production defaults, which raises the stakes for delete file association during planning. And it laid foundational interfaces for the v4 manifest work aimed at tables with millions of files, exactly the scale where server-side planning stops being optional and starts being the only sane read path. Read together, the release describes a format preparing for tables too large for any client to plan comfortably.
 
@@ -71,14 +72,9 @@ Authorization: Bearer <token>
 Content-Type: application/json
 
 {
-  "snapshot-id": 8271744332764321989,
-  "select": ["order_id", "customer_id", "total"],
-  "filter": {
-    "type": "eq",
-    "term": "order_date",
-    "value": "2026-08-01"
-  },
-  "case-sensitive": true
+ "snapshot-id": 8271744332764321989, "select": ["order_id", "customer_id", "total"], "filter": {
+ "type": "eq", "term": "order_date", "value": "2026-08-01"
+ }, "case-sensitive": true
 }
 ```
 
@@ -86,20 +82,13 @@ The filter is an Iceberg expression serialized as JSON, not a SQL string. The ca
 
 ```json
 {
-  "plan-status": "completed",
-  "file-scan-tasks": [
-    {
-      "data-file": {
-        "content": "data",
-        "file-path": "s3://lake/sales/orders/data/00042-a1.parquet",
-        "file-format": "parquet",
-        "record-count": 481923,
-        "file-size-in-bytes": 104857600
-      },
-      "delete-files": [],
-      "residual-filter": { "type": "true" }
-    }
-  ]
+ "plan-status": "completed", "file-scan-tasks": [
+ {
+ "data-file": {
+ "content": "data", "file-path": "s3://lake/sales/orders/data/00042-a1.parquet", "file-format": "parquet", "record-count": 481923, "file-size-in-bytes": 104857600
+ }, "delete-files": [], "residual-filter": { "type": "true" }
+ }
+ ]
 }
 ```
 
@@ -131,16 +120,16 @@ Read each piece of that response schema again, because two fields carry the arch
 
 ## Counting the Round Trips
 
-Abstract descriptions hide the magnitude of the change, so let me count. Take a realistic table: 200,000 data files, 400 manifests averaging 4 MB each, one manifest list, one metadata file. A query filters on a partition column and matches 2 percent of the files.
+Abstract descriptions hide the magnitude of the change, so let me count. Take a realistic table: 200, 000 data files, 400 manifests averaging 4 MB each, one manifest list, one metadata file. A query filters on a partition column and matches 2 percent of the files.
 
-Client-side planning performs one catalog request for the table pointer, one storage read for the metadata JSON, one for the manifest list, then reads every manifest the partition summaries cannot exclude. Suppose partition pruning eliminates half the manifests. The engine still downloads 200 manifests, roughly 800 MB of Avro, parses them, evaluates statistics for around 100,000 file entries, and keeps 4,000 file scan tasks. That is 203 storage round trips and close to a gigabyte over the network before the first data byte, repeated by every engine instance that plans this query, on every execution, for every user.
+Client-side planning performs one catalog request for the table pointer, one storage read for the metadata JSON, one for the manifest list, then reads every manifest the partition summaries cannot exclude. Suppose partition pruning eliminates half the manifests. The engine still downloads 200 manifests, roughly 800 MB of Avro, parses them, evaluates statistics for around 100, 000 file entries, and keeps 4, 000 file scan tasks. That is 203 storage round trips and close to a gigabyte over the network before the first data byte, repeated by every engine instance that plans this query, on every execution, for every user.
 
-Remote planning performs one HTTP request. The catalog, which has likely planned this exact snapshot and filter combination before, returns 4,000 file scan tasks, a response measured in single-digit megabytes, possibly from cache in a few milliseconds. If the result were huge, it arrives as plan task pages instead. The engine's planning cost became one round trip and a JSON parse.
+Remote planning performs one HTTP request. The catalog, which has likely planned this exact snapshot and filter combination before, returns 4, 000 file scan tasks, a response measured in single-digit megabytes, possibly from cache in a few milliseconds. If the result were huge, it arrives as plan task pages instead. The engine's planning cost became one round trip and a JSON parse.
 
 The comparison across the dimensions that matter:
 
 | Dimension | Client-side planning | Remote scan planning |
-|---|---|---|
+|--|--|--|
 | Metadata transferred to engine | Full manifest set for candidate partitions | Only matched file scan tasks |
 | Round trips before data read | Proportional to manifest count | One, plus paging for huge plans |
 | Planning logic location | Every engine, every language | Catalog server, once |
@@ -263,16 +252,11 @@ In Python, the client side of that rig is short, since PyIceberg 0.11 negotiates
 from pyiceberg.catalog import load_catalog
 
 catalog = load_catalog(
-    "prod",
-    uri="https://catalog.example.com",
-    token="<token>",
-)
+ "prod", uri="https://catalog.example.com", token="<token>", )
 
 table = catalog.load_table("sales.orders")
 scan = table.scan(
-    row_filter="order_date = '2026-08-01'",
-    selected_fields=("order_id", "customer_id", "total"),
-)
+ row_filter="order_date = '2026-08-01'", selected_fields=("order_id", "customer_id", "total"), )
 tasks = scan.plan_files()
 print(len(list(tasks)))
 ```

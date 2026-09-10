@@ -2,7 +2,7 @@
 title: "How dbt Fusion Reshapes Analytics Engineering"
 date: 2026-05-24T10:25:00Z
 pubDatetime: 2026-05-24T10:25:00Z
-description: "dbt Fusion entered public beta in May 2025 with a Rust-powered runtime that changes how analytics engineers develop, validate, and deploy SQL models. Here's what changed."
+description: "dbt Fusion entered public beta in May 2025 with a Rust-powered runtime that changes how analytics engineers develop, validate, and deploy SQL models."
 author: "Alex Merced"
 category: "Data Engineering"
 tags:
@@ -17,27 +17,25 @@ draft: false
 image: "/images/blog/dbt-fusion-analytics-engineering/dbt-fusion-rust-lifecycle.png"
 canonical: "https://iceberglakehouse.com/posts/2026-05-24-dbt-fusion-analytics-engineering/"
 ---
-> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-05-24-dbt-fusion-analytics-engineering/).
 
 # How dbt Fusion Reshapes Analytics Engineering
 
 The dbt Core engine that analytics engineering teams have relied on since 2017 was built in Python at a time when the job of the tool was to template SQL and run it against a warehouse. It worked well for that job. It also inherited the constraints of a text-template system: SQL was a string to be rendered, not code to be analyzed. The engine had no understanding of column references, type compatibility, or cross-model dependencies beyond the explicit `ref()` calls that connected models in the DAG.
 
+> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-05-24-dbt-fusion-analytics-engineering/).
+
 dbt Fusion, launched as a public beta on May 28, 2025, is a ground-up rewrite of the dbt execution engine in Rust. It isn't a version update or a performance patch, it's a different execution model. SQL is now treated as an abstract syntax tree (AST) that the engine understands statically, before any query reaches the warehouse. The downstream effects of this architectural change touch everything from local development experience to CI pipeline cost.
 
----
+--
 
 ## The Python Era: SQL as Text
 
 In dbt Core, a model like this:
 
 ```sql
--- models/fct_revenue.sql
+- models/fct_revenue.sql
 select
-    o.order_id,
-    o.customer_id,
-    c.region,
-    o.amount as revenue
+ o.order_id, o.customer_id, c.region, o.amount as revenue
 from {{ ref('stg_orders') }} o
 join {{ ref('stg_customers') }} c on o.customer_id = c.id
 where o.status = 'completed'
@@ -47,7 +45,7 @@ is processed by a Jinja2 templating engine that substitutes `{{ ref('stg_orders'
 
 This means errors surface at runtime, after paying for warehouse execution. For a large project with hundreds of models, discovering that a renamed column broke three downstream models requires running the full pipeline, paying for compute, waiting for results, and only then seeing which models failed.
 
----
+--
 
 ## dbt Fusion: SQL as First-Class Code
 
@@ -65,7 +63,7 @@ What this enables:
 
 **Zero Python dependency.** Fusion ships as a standalone Rust binary with no Python runtime requirement. This simplifies CI/CD pipeline setup (no virtual environment management), containerization (smaller images), and deployment to environments where managing Python versions is an operational burden.
 
----
+--
 
 ## State-Aware Orchestration: The Cost Story
 
@@ -79,10 +77,10 @@ State-aware orchestration means Fusion tracks which models have actually changed
 
 ```bash
 # Run only models affected by changes since the last successful run
-dbt build --select state:modified+
+dbt build -select state:modified+
 ```
 
----
+--
 
 ## What Doesn't Change
 
@@ -90,19 +88,19 @@ Fusion maintains the dbt authoring layer that analytics engineers already know. 
 
 Adapter macro compatibility is the primary migration concern. Fusion's Rust core handles SQL parsing and compilation, but database-specific adapter macros (the code that translates generic dbt operations into warehouse-specific SQL) still use Python. Teams with heavily customized macros may encounter compatibility issues during migration that require testing before moving production environments to Fusion.
 
----
+--
 
 ## The Development Workflow in Practice
 
 The practical change for an analytics engineer's daily workflow looks like this:
 
-**Before Fusion:** Write SQL, run `dbt compile` to check for Jinja errors, run `dbt run --select my_model` against dev warehouse, check output, iterate. Each iteration requires a warehouse round-trip.
+**Before Fusion:** Write SQL, run `dbt compile` to check for Jinja errors, run `dbt run -select my_model` against dev warehouse, check output, iterate. Each iteration requires a warehouse round-trip.
 
-**With Fusion:** Write SQL, get real-time syntax and column error highlighting in VS Code without leaving the editor, run `dbt run --select my_model` to validate end-to-end results. The first warehouse round-trip happens later in the loop, after local validation has already caught most errors.
+**With Fusion:** Write SQL, get real-time syntax and column error highlighting in VS Code without leaving the editor, run `dbt run -select my_model` to validate end-to-end results. The first warehouse round-trip happens later in the loop, after local validation has already caught most errors.
 
 For teams running CI on every pull request, the state-aware rebuild eliminates full-project rebuild costs for targeted changes. A PR that updates one staging model no longer triggers a full project rebuild; it triggers only the affected downstream models.
 
----
+--
 
 ## Conclusion
 
@@ -110,7 +108,7 @@ dbt Fusion is the biggest change to the dbt ecosystem since the introduction of 
 
 The Rust rewrite and static AST analysis make the feedback loop tighter, CI pipelines cheaper, and error discovery earlier. Teams still need to test Fusion compatibility with their specific adapter macros and warehouse configurations. But for the majority of dbt projects using standard patterns, Fusion represents a meaningful improvement to the analytics engineering experience.
 
----
+--
 
 ## The dbt Semantic Layer and MetricFlow
 
@@ -121,21 +119,21 @@ MetricFlow (the SQL generation engine behind the dbt Semantic Layer) defines met
 ```yaml
 # models/metrics/fct_revenue.yml
 metrics:
-  - name: total_revenue
-    label: Total Revenue
-    description: Gross revenue from completed orders
-    type: simple
-    type_params:
-      measure: revenue_amount
-    filter: |
-      {{ Dimension('status') }} = 'completed'
-    dimensions:
-      - name: region
-        type: categorical
-      - name: order_date
-        type: time
-        type_params:
-          time_granularity: day
+ - name: total_revenue
+ label: Total Revenue
+ description: Gross revenue from completed orders
+ type: simple
+ type_params:
+ measure: revenue_amount
+ filter: |
+ {{ Dimension('status') }} = 'completed'
+ dimensions:
+ - name: region
+ type: categorical
+ - name: order_date
+ type: time
+ type_params:
+ time_granularity: day
 ```
 
 Once defined, this metric is queryable through the dbt Semantic Layer API, with MetricFlow automatically generating the appropriate SQL for the target warehouse:
@@ -145,22 +143,18 @@ Once defined, this metric is queryable through the dbt Semantic Layer API, with 
 from dbt_semantic_interfaces.query_interface import SemanticLayerClient
 
 client = SemanticLayerClient(
-    environment_id="your-env-id",
-    auth_token="your-token",
-    host="semantic-layer.cloud.getdbt.com"
+ environment_id="your-env-id", auth_token="your-token", host="semantic-layer.cloud.getdbt.com"
 )
 
 # MetricFlow generates correct SQL automatically
 results = client.query(
-    metrics=["total_revenue"],
-    group_by=["region", "order_date"],
-    where="order_date >= '2025-01-01'"
+ metrics=["total_revenue"], group_by=["region", "order_date"], where="order_date >= '2025-01-01'"
 )
 ```
 
 This is the governed alternative to every BI tool writing its own revenue calculation SQL, MetricFlow ensures that "total revenue" means the same thing regardless of which tool is asking the question.
 
----
+--
 
 ## dbt Fusion with Apache Iceberg
 
@@ -171,21 +165,13 @@ When dbt models write to Iceberg tables through adapters that support Iceberg (d
 **Incremental models with Iceberg:** Iceberg's merge-on-read and copy-on-write strategies map naturally to dbt's incremental materialization strategies. A dbt incremental model that appends new rows uses Iceberg's ACID append. A model that upserts uses Iceberg's MERGE statement support.
 
 ```sql
--- dbt incremental model targeting an Iceberg table
+- dbt incremental model targeting an Iceberg table
 {{ config(
-    materialized='incremental',
-    unique_key='order_id',
-    on_schema_change='merge',
-    file_format='iceberg',
-    incremental_strategy='merge'
+ materialized='incremental', unique_key='order_id', on_schema_change='merge', file_format='iceberg', incremental_strategy='merge'
 ) }}
 
 SELECT
-    order_id,
-    customer_id,
-    amount,
-    status,
-    updated_at
+ order_id, customer_id, amount, status, updated_at
 FROM {{ ref('stg_orders') }}
 {% if is_incremental() %}
 WHERE updated_at > (SELECT MAX(updated_at) FROM {{ this }})
@@ -194,7 +180,7 @@ WHERE updated_at > (SELECT MAX(updated_at) FROM {{ this }})
 
 **Schema evolution without rebuilds:** Iceberg's schema evolution means adding a column to a dbt model doesn't require dropping and recreating the table. The new column is added to the Iceberg schema metadata, existing data files remain untouched, and the new column shows as NULL for historical rows until backfilled.
 
----
+--
 
 ## Testing Strategies for dbt Projects
 
@@ -205,47 +191,45 @@ dbt's native testing framework has expanded in 2025 to include more sophisticate
 ```yaml
 # schema.yml: comprehensive testing for a fact table
 models:
-  - name: fct_orders
-    columns:
-      - name: order_id
-        tests:
-          - not_null
-          - unique
-      - name: customer_id
-        tests:
-          - not_null
-          - relationships:
-              to: ref('dim_customers')
-              field: customer_id
-      - name: status
-        tests:
-          - accepted_values:
-              values: ['pending', 'processing', 'completed', 'cancelled', 'refunded']
-      - name: amount
-        tests:
-          - not_null
-          - dbt_utils.accepted_range:
-              min_value: 0
-              inclusive: true
+ - name: fct_orders
+ columns:
+ - name: order_id
+ tests:
+ - not_null
+ - unique
+ - name: customer_id
+ tests:
+ - not_null
+ - relationships:
+ to: ref('dim_customers')
+ field: customer_id
+ - name: status
+ tests:
+ - accepted_values:
+ values: ['pending', 'processing', 'completed', 'cancelled', 'refunded']
+ - name: amount
+ tests:
+ - not_null
+ - dbt_utils.accepted_range:
+ min_value: 0
+ inclusive: true
 ```
 
 **Singular tests** express custom business logic that generic tests can't capture:
 
 ```sql
--- tests/assert_revenue_positive.sql
--- Passes if result set is empty (no failing rows)
+- tests/assert_revenue_positive.sql
+- Passes if result set is empty (no failing rows)
 SELECT
-    order_id,
-    amount,
-    'Expected positive revenue for completed orders' AS failure_reason
+ order_id, amount, 'Expected positive revenue for completed orders' AS failure_reason
 FROM {{ ref('fct_orders') }}
 WHERE status = 'completed'
-  AND amount <= 0
+ AND amount <= 0
 ```
 
 Running the full test suite as part of CI with Fusion's state-aware execution means only tests for affected models run on each PR, dramatically reducing CI time for targeted changes.
 
----
+--
 
 ## The Analytics Engineering Role in 2026
 
@@ -259,7 +243,7 @@ The semantic layer's role in this shift is particularly significant for AI use c
 
 Analytics engineering discipline (defining metrics in one place, testing every model, documenting every column) has always been valuable. In the AI-assisted analytics environment of 2026, it's load-bearing infrastructure.
 
----
+--
 
 ## dbt Deployment Best Practices: Environments and Promotion
 
@@ -273,7 +257,7 @@ A production-grade dbt deployment requires at least three environments: developm
 
 The Fusion toolchain's partial parsing capability makes multi-environment deployments faster. When a model's upstream dependencies haven't changed, Fusion skips re-parsing those models during the compile step. For large dbt projects with hundreds of models, this reduces CI compile times from minutes to seconds for typical branch changes.
 
----
+--
 
 ### Go Further with Data Engineering
 

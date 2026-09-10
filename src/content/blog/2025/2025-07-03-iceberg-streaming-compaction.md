@@ -2,7 +2,7 @@
 title: Optimizing Compaction for Streaming Workloads in Apache Iceberg
 date: 2025-07-29T09:00:00Z
 author: Alex Merced
-description: Learn how to design fast, incremental compaction strategies in Apache Iceberg to support high-throughput streaming pipelines without disrupting freshness or performance.
+description: "Learn how to design fast, incremental compaction strategies in Apache Iceberg to support high-throughput streaming pipelines without disrupting freshness."
 slug: iceberg-streaming-compaction
 tags:
   - Apache Iceberg
@@ -16,14 +16,15 @@ category: "Apache Iceberg"
 bannerImage: "https://i.imgur.com/cpoMZQ8.png"
 canonical: "https://iceberglakehouse.com/posts/iceberg-streaming-compaction/"
 ---
-> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/iceberg-streaming-compaction/).
 
-- **[Free Apache Iceberg Course](https://hello.dremio.com/webcast-an-apache-iceberg-lakehouse-crash-course-reg.html?utm_source=ev_external_blog&utm_medium=influencer&utm_campaign=optimization_blogs&utm_content=alexmerced&utm_term=external_blog)**  
-- **[Free Copy of “Apache Iceberg: The Definitive Guide”](https://hello.dremio.com/wp-apache-iceberg-the-definitive-guide-reg.html?utm_source=ev_external_blog&utm_medium=influencer&utm_campaign=optimization_blogs&utm_content=alexmerced&utm_term=external_blog)**  
-- **[Free Copy of “Apache Polaris: The Definitive Guide”](https://hello.dremio.com/wp-apache-polaris-guide-reg.html?utm_source=ev_external_blog&utm_medium=influencer&utm_campaign=optimization_blogs&utm_content=alexmerced&utm_term=external_blog)**  
-- **[2025 Apache Iceberg Architecture Guide](https://medium.com/data-engineering-with-dremio/2025-guide-to-architecting-an-iceberg-lakehouse-9b19ed42c9de)**  
-- **[Iceberg Lakehouse Engineering Video Playlist](https://youtube.com/playlist?list=PLsLAVBjQJO0p0Yq1fLkoHvt2lEJj5pcYe&si=WTSnqjXZv6Glkc3y)**  
-- **[Ultimate Apache Iceberg Resource Guide](https://medium.com/data-engineering-with-dremio/ultimate-directory-of-apache-iceberg-resources-e3e02efac62e)** 
+- **[Free Apache Iceberg Course](https://hello.dremio.com/webcast-an-apache-iceberg-lakehouse-crash-course-reg.html?utm_source=ev_external_blog&utm_medium=influencer&utm_campaign=optimization_blogs&utm_content=alexmerced&utm_term=external_blog)** 
+- **[Free Copy of “Apache Iceberg: The Definitive Guide”](https://hello.dremio.com/wp-apache-iceberg-the-definitive-guide-reg.html?utm_source=ev_external_blog&utm_medium=influencer&utm_campaign=optimization_blogs&utm_content=alexmerced&utm_term=external_blog)** 
+- **[Free Copy of “Apache Polaris: The Definitive Guide”](https://hello.dremio.com/wp-apache-polaris-guide-reg.html?utm_source=ev_external_blog&utm_medium=influencer&utm_campaign=optimization_blogs&utm_content=alexmerced&utm_term=external_blog)** 
+- **[2025 Apache Iceberg Architecture Guide](https://medium.com/data-engineering-with-dremio/2025-guide-to-architecting-an-iceberg-lakehouse-9b19ed42c9de)** 
+- **[Iceberg Lakehouse Engineering Video Playlist](https://youtube.com/playlist?list=PLsLAVBjQJO0p0Yq1fLkoHvt2lEJj5pcYe&si=WTSnqjXZv6Glkc3y)** 
+- **[Ultimate Apache Iceberg Resource Guide](https://medium.com/data-engineering-with-dremio/ultimate-directory-of-apache-iceberg-resources-e3e02efac62e)**
+
+> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/iceberg-streaming-compaction/).
 
 # Optimizing Compaction for Streaming Workloads in Apache Iceberg
 
@@ -91,8 +92,8 @@ Example: Time-Based Compaction Script (Pseudo-code)
 ```python
 # For each partition older than 1 hour with many small files
 for partition in get_partitions_older_than(hours=1):
-    if count_small_files(partition) > threshold:
-        run_compaction(partition)
+ if count_small_files(partition) > threshold:
+ run_compaction(partition)
 ```
 
 This pattern allows incremental, scoped jobs that don’t touch fresh data.
@@ -100,7 +101,7 @@ This pattern allows incremental, scoped jobs that don’t touch fresh data.
 ## Tuning for Performance
 Parallelism: Use high parallelism for wide tables to speed up job runtime
 
-Target file size: Stick to 128MB–256MB range unless your queries benefit from larger files
+Target file size: Stick to 128MB-256MB range unless your queries benefit from larger files
 
 Retries and check-pointing: Make sure jobs are fault-tolerant in production
 

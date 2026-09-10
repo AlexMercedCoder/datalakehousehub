@@ -1,7 +1,7 @@
 ---
 title: "Active Monitoring: How Agentic AI Auto-Heals and Protects Enterprise Data Pipelines"
 date: 2026-05-28T09:00:00Z
-description: "Static alerts miss cascading pipeline failures. Learn how agentic AI monitors, traces root causes, and automatically rolls back broken enterprise data pipelines."
+description: "Static alerts miss cascading pipeline failures. Learn how agentic AI monitors, traces root causes, and automatically rolls back broken enterprise data."
 author: "Alex Merced"
 category: "Agentic Analytics"
 tags:
@@ -10,7 +10,6 @@ slug: "active-monitoring-agentic-ai-pipelines"
 draft: false
 image: "/images/blog.png"
 ---
-
 # Active Monitoring: How Agentic AI Auto-Heals and Protects Enterprise Data Pipelines
 
 Static alert thresholds work until they don't. You configure a row count alert for your daily orders table: fire if today's count is more than 20% below yesterday's count. The threshold is reasonable on average, but on Mondays after long weekends, Tuesday after a sales spike, and the first of every month when batch reprocessing runs, it fires false positives. After three months of false alarms, the team stops responding to alerts promptly. Then a real failure goes undetected for six hours.
@@ -21,7 +20,7 @@ The problem with static alerts is that they can't distinguish expected variation
 
 ## Why Static Alerts Fail at Scale
 
-Enterprise data platforms with hundreds of pipelines generate thousands of alert candidates per day. Static threshold alerts :  row count drops, latency spikes, error rate increases ,  are cheap to configure and cheap to ignore.
+Enterprise data platforms with hundreds of pipelines generate thousands of alert candidates per day. Static threshold alerts : row count drops, latency spikes, error rate increases, are cheap to configure and cheap to ignore.
 
 The limitations:
 
@@ -59,18 +58,18 @@ For a broken daily orders table, the agent traces:
 
 Each check is a SQL query against the relevant metadata or log table. The agent runs them in sequence, stopping when it finds where the chain broke.
 
-This trace analysis takes 30–60 seconds in a well-configured system. A human engineer doing the same investigation manually typically takes 15–30 minutes, assuming they know the lineage well enough to know which logs to check.
+This trace analysis takes 30-60 seconds in a well-configured system. A human engineer doing the same investigation manually typically takes 15-30 minutes, assuming they know the lineage well enough to know which logs to check.
 
 ## Automated Rollback and Recovery
 
-When the agentic system identifies a fixable failure :  a stuck job, a missing file that needs to be re-fetched, a pipeline that needs a re-run from a checkpoint ,  it can take action without human intervention.
+When the agentic system identifies a fixable failure : a stuck job, a missing file that needs to be re-fetched, a pipeline that needs a re-run from a checkpoint, it can take action without human intervention.
 
 **Automatic re-runs:** If the investigation confirms that the pipeline failed due to a transient network error and the source data is still available, the agent triggers a re-run. It monitors the re-run and confirms success.
 
 **Checkpoint rollback:** If a pipeline produced incorrect output (detected through data quality checks), the agent can roll back the Iceberg table to the last valid snapshot, remove the bad data, and trigger a corrective re-run. Iceberg's time travel capability makes the rollback operation safe : the previous valid state is available as a snapshot.
 
 ```sql
--- Rollback an Iceberg table to the last valid snapshot
+- Rollback an Iceberg table to the last valid snapshot
 ROLLBACK TABLE my_catalog.analytics.orders_daily
 TO SNAPSHOT 7234567890123456789;
 ```
@@ -95,7 +94,7 @@ The combination of Dremio's semantic layer (for understanding what the data shou
 
 Agentic auto-healing is not appropriate for all failure modes.
 
-When the root cause is external :  a source system that changed its schema, a third-party API that returned corrupted data, a credential that expired ,  automatic recovery risks hiding the problem rather than fixing it. The pipeline re-runs, fails again, re-runs, and the cycle continues until human intervention.
+When the root cause is external : a source system that changed its schema, a third-party API that returned corrupted data, a credential that expired, automatic recovery risks hiding the problem rather than fixing it. The pipeline re-runs, fails again, re-runs, and the cycle continues until human intervention.
 
 Configure your agentic monitoring to auto-heal only for specific, well-defined failure patterns where automatic recovery is safe. For everything else, use the agent for investigation and notification, but require human approval before executing recovery actions.
 

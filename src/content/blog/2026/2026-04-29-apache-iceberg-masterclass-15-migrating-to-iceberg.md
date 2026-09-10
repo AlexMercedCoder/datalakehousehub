@@ -14,11 +14,12 @@ draft: false
 image: "/images/blog/apache-iceberg-masterclass/15-migrating-to-iceberg-migration-strategies.png"
 canonical: "https://iceberglakehouse.com/posts/2026-04-29-iceberg-masterclass-15/"
 ---
-> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-04-29-iceberg-masterclass-15/).
 
-<!-- Meta Description: Migrate to Iceberg from Hive, data warehouses, or raw files using in-place migration, full rewrite, or the zero-downtime view swap pattern. -->
-<!-- Primary Keyword: migrating to Apache Iceberg -->
-<!-- Secondary Keywords: Hive to Iceberg migration, Iceberg migration strategy, view swap migration -->
+<!- Meta Description: Migrate to Iceberg from Hive, data warehouses, or raw files using in-place migration, full rewrite, or the zero-downtime view swap pattern. ->
+<!- Primary Keyword: migrating to Apache Iceberg ->
+<!- Secondary Keywords: Hive to Iceberg migration, Iceberg migration strategy, view swap migration ->
+
+> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-04-29-iceberg-masterclass-15/).
 
 *Read the complete Apache Iceberg Masterclass series:*
 * [Part 1: What Are Table Formats and Why Were They Needed?](/blog/2026-04-29-apache-iceberg-masterclass-01-table-formats)
@@ -65,13 +66,13 @@ This converts a Hive table to Iceberg by scanning its files and creating the Ice
 A full rewrite reads data from any source and writes it as a new Iceberg table with optimal partitioning and file sizes:
 
 ```sql
--- Spark
+- Spark
 CREATE TABLE iceberg_catalog.analytics.orders
 USING iceberg
 PARTITIONED BY (day(order_date))
 AS SELECT * FROM hive_catalog.legacy.orders
 
--- Dremio
+- Dremio
 CREATE TABLE analytics.orders
 PARTITION BY (day(order_date))
 AS SELECT * FROM legacy_source.public.orders
@@ -100,7 +101,7 @@ Shadow migration builds the Iceberg table alongside the existing source, then sw
 ![Decision tree for selecting the right migration strategy based on downtime tolerance and layout changes](/images/blog/apache-iceberg-masterclass/15-migrating-to-iceberg-migration-decision-tree.png)
 
 | Source | Recommended Strategy |
-|---|---|
+|--|--|
 | Hive table (Parquet files) | In-place migration, then compact |
 | Data warehouse (Snowflake, Redshift) | Full rewrite via [Dremio federation](https://www.dremio.com/platform/federation/) |
 | CSV/JSON files in S3 | Full rewrite with [COPY INTO](https://www.dremio.com/blog/ingesting-data-into-apache-iceberg-tables-with-dremio/) |
@@ -131,14 +132,12 @@ All consumers (dashboards, reports, notebooks) query through these views. They d
 Create and populate the Iceberg table:
 
 ```sql
--- Create the Iceberg table
+- Create the Iceberg table
 CREATE TABLE iceberg_data.analytics.orders (
-    order_id BIGINT, customer_id BIGINT,
-    order_date DATE, amount DECIMAL(10,2),
-    status VARCHAR, region VARCHAR
+ order_id BIGINT, customer_id BIGINT, order_date DATE, amount DECIMAL(10, 2), status VARCHAR, region VARCHAR
 ) PARTITION BY (day(order_date))
 
--- Backfill from the legacy source
+- Backfill from the legacy source
 INSERT INTO iceberg_data.analytics.orders
 SELECT * FROM postgres_source.public.orders
 ```
@@ -149,8 +148,7 @@ Compare the two datasets to confirm data integrity:
 
 ```sql
 SELECT
-  (SELECT COUNT(*) FROM postgres_source.public.orders) AS legacy_count,
-  (SELECT COUNT(*) FROM iceberg_data.analytics.orders) AS iceberg_count
+ (SELECT COUNT(*) FROM postgres_source.public.orders) AS legacy_count, (SELECT COUNT(*) FROM iceberg_data.analytics.orders) AS iceberg_count
 ```
 
 Beyond row counts, validate aggregates (total amounts, distinct customer counts) and spot-check individual records. A comprehensive validation script should compare:

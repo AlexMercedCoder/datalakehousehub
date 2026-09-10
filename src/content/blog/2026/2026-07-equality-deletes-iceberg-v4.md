@@ -1,6 +1,6 @@
 ---
 title: "Why Iceberg V4 Wants to Retire Equality Deletes, and What Streaming Teams Should Do About It"
-description: "Equality deletes made streaming upserts into Iceberg practical at the cost of read performance. V4 proposes retiring them in favor of deletion vectors with an async conversion path."
+description: "Equality deletes made streaming upserts into Iceberg practical at the cost of read performance."
 date: 2026-07-28T09:00:00Z
 author: "Alex Merced"
 category: "Apache Iceberg"
@@ -15,11 +15,11 @@ image: "/images/blog.png"
 canonical: "https://iceberglakehouse.com/posts/equality-deletes-iceberg-v4/"
 ---
 
-> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/equality-deletes-iceberg-v4/).
-
 # Why Iceberg V4 Wants to Retire Equality Deletes, and What Streaming Teams Should Do About It
 
 A Flink job writes upserts into an Apache Iceberg table at a few thousand rows per second. The write side looks healthy. Checkpoints land on time, the sink commits without backpressure, and the ingestion dashboard is a flat green line. Then an analyst runs a count on the same table and waits ninety seconds for a number that used to come back in four.
+
+> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/equality-deletes-iceberg-v4/).
 
 Nothing broke. The table accumulated equality delete files, and every reader now pays for them.
 
@@ -43,7 +43,7 @@ That bargain is sound. The trouble lies in the two very different ways V2 lets a
 
 Iceberg supports three encodings for row-level deletes, and their differences drive everything else in this article.
 
-**Position delete files** mark a row as deleted by naming the data file path and the ordinal position of the row inside it. Row 4,182 of `data-0007.parquet` is gone. This is precise and cheap to apply on read, because a reader that is already scanning `data-0007.parquet` knows its row positions and can skip the marked ones directly.
+**Position delete files** mark a row as deleted by naming the data file path and the ordinal position of the row inside it. Row 4, 182 of `data-0007.parquet` is gone. This is precise and cheap to apply on read, because a reader that is already scanning `data-0007.parquet` knows its row positions and can skip the marked ones directly.
 
 **Equality delete files** mark a row as deleted by column value. Any row where `customer_id = 12345` is gone. The writer does not need to know where that row lives, which is the entire point.
 
@@ -54,7 +54,7 @@ The V3 spec deprecated position delete files outright. New tables on V3 write de
 Here is the comparison that matters operationally.
 
 | | Position delete files | Deletion vectors | Equality delete files |
-|---|---|---|---|
+|--|--|--|--|
 | Introduced | V2 | V3 | V2 |
 | Status | Deprecated in V3 | Current | Deprecation proposed for V4 |
 | Write cost | Requires finding row positions | Requires finding row positions | No lookup needed |
@@ -84,7 +84,7 @@ Iceberg narrows the work with sequence numbers. An equality delete file carries 
 
 Inside those bounds, the reader has to do a join. Every candidate data file gets checked against every applicable equality delete file, matching on the equality columns. Column-level metrics prune some of this, since a delete file recording values between 12000 and 13000 does not apply to a data file whose identifier range runs from 90000 to 91000. Real CDC streams rarely cooperate. Updates scatter across the key space, so the value ranges in delete files overlap nearly every data file in the partition.
 
-The cost grows with the number of accumulated delete files, and streaming jobs create delete files on every checkpoint. A job checkpointing every thirty seconds produces 2,880 delete files per day per partition before any compaction runs. Each one has to be opened, read, and joined.
+The cost grows with the number of accumulated delete files, and streaming jobs create delete files on every checkpoint. A job checkpointing every thirty seconds produces 2, 880 delete files per day per partition before any compaction runs. Each one has to be opened, read, and joined.
 
 Compare that to a deletion vector. The reader opens the data file, opens the one bitmap that references it, and checks whether each row position is set. That is an array lookup. No join, no value comparison, no unbounded fan-out.
 
@@ -96,7 +96,7 @@ The word "vector" makes some engineers assume something exotic. The encoding is 
 
 A deletion vector is a bitmap of row positions, stored as a blob inside a Puffin file. Puffin is Iceberg's container format for auxiliary data that is not table rows, and it already carries things like Theta sketches for distinct counts. A Puffin file holds a sequence of blobs plus a footer describing them, which means one Puffin file holds deletion vectors for many data files.
 
-The bitmap itself uses a roaring bitmap in its 64-bit portable serialization. Roaring bitmaps split a value space into chunks and pick a container type per chunk based on density. A chunk holding a handful of deleted positions stores them as a sorted array of 16-bit values. A chunk where most positions are deleted stores a run-length encoding or a plain bit array. The result stays compact whether you deleted 3 rows out of a million or 900,000 of them.
+The bitmap itself uses a roaring bitmap in its 64-bit portable serialization. Roaring bitmaps split a value space into chunks and pick a container type per chunk based on density. A chunk holding a handful of deleted positions stores them as a sorted array of 16-bit values. A chunk where most positions are deleted stores a run-length encoding or a plain bit array. The result stays compact whether you deleted 3 rows out of a million or 900, 000 of them.
 
 The spec wraps that bitmap with a small envelope: a length, a magic byte sequence identifying the blob type, the serialized bitmap, and a CRC-32C checksum. The checksum matters more than it looks. A corrupted deletion vector produces silently wrong query results rather than an error, so the format checks itself on read.
 
@@ -158,18 +158,18 @@ The maintenance task attaches to the sink. A minimal Flink DataStream setup look
 
 ```java
 TableMaintenance.forChangeStream(changeStream, tableLoader, schema)
-    .uidSuffix("orders-maintenance")
-    .rateLimit(Duration.ofMinutes(5))
-    .lockCheckDelay(Duration.ofSeconds(30))
-    .add(ConvertEqualityDeletes.builder()
-        .stagingBranch("staging")
-        .targetBranch("main")
-        .equalityFieldColumns(Arrays.asList("order_id"))
-        .maxCommitsPerRun(20))
-    .add(ExpireSnapshots.builder()
-        .maxSnapshotAge(Duration.ofDays(3))
-        .retainLast(20))
-    .append();
+ .uidSuffix("orders-maintenance")
+ .rateLimit(Duration.ofMinutes(5))
+ .lockCheckDelay(Duration.ofSeconds(30))
+ .add(ConvertEqualityDeletes.builder()
+ .stagingBranch("staging")
+ .targetBranch("main")
+ .equalityFieldColumns(Arrays.asList("order_id"))
+ .maxCommitsPerRun(20))
+ .add(ExpireSnapshots.builder()
+ .maxSnapshotAge(Duration.ofDays(3))
+ .retainLast(20))
+ .append();
 ```
 
 Taking that apart:
@@ -207,8 +207,7 @@ The count comparison in Spark:
 
 ```sql
 SELECT
-    (SELECT count(*) FROM catalog.sales.orders VERSION AS OF 'staging') AS staging_rows,
-    (SELECT count(*) FROM catalog.sales.orders VERSION AS OF 'main')     AS main_rows;
+ (SELECT count(*) FROM catalog.sales.orders VERSION AS OF 'staging') AS staging_rows, (SELECT count(*) FROM catalog.sales.orders VERSION AS OF 'main') AS main_rows;
 ```
 
 Run this when the converter has caught up, meaning the target branch snapshot timestamp is close to the staging branch snapshot timestamp. Run it while conversion is mid-flight and the counts differ for a benign reason, which will send you chasing a bug that does not exist. Check the lag first:
@@ -242,7 +241,7 @@ table = catalog.load_table("sales.orders")
 delete_files = table.inspect.delete_files().to_pydict()
 by_content = {}
 for c in delete_files["content"]:
-    by_content[c] = by_content.get(c, 0) + 1
+ by_content[c] = by_content.get(c, 0) + 1
 
 print("position deletes:", by_content.get(1, 0))
 print("equality deletes:", by_content.get(2, 0))
@@ -301,10 +300,7 @@ Iceberg exposes delete file counts through metadata tables, and this is the quer
 
 ```sql
 SELECT
-    partition,
-    count(*) AS delete_file_count,
-    sum(file_size_in_bytes) / 1024 / 1024 AS total_mb,
-    max(sequence_number) AS newest_seq
+ partition, count(*) AS delete_file_count, sum(file_size_in_bytes) / 1024 / 1024 AS total_mb, max(sequence_number) AS newest_seq
 FROM catalog.sales.orders.delete_files
 GROUP BY partition
 ORDER BY delete_file_count DESC

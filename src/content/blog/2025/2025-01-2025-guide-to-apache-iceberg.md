@@ -13,6 +13,8 @@ draft: false
 image: "/images/blog.png"
 ---
 
+Apache Iceberg had a monumental 2024, with significant announcements and advancements from major players like Dremio, Snowflake, Databricks, AWS, and other leading data platforms. The Iceberg ecosystem is evolving rapidly, making it essential for professionals to stay up-to-date with the latest innovations. To help navigate this ever-changing space, I’m introducing an annual guide dedicated to Apache Iceberg. This guide aims to provide a comprehensive overview of Iceberg, highlight key resources, and offer valuable insights for anyone looking to deepen their knowledge. Whether you’re just starting with Iceberg or are a seasoned user, this guide will serve as your go-to resource for 2025.
+
 - [Free Apache Iceberg Crash Course](https://university.dremio.com/?utm_source=ev_external_blog&utm_medium=influencer&utm_campaign=2025-iceberg-comp-guide&utm_content=alexmerced&utm_term=external_blog)
 - [Free Copy of “Apache Iceberg: The Definitive Guide”](https://hello.dremio.com/wp-apache-iceberg-the-definitive-guide-reg.html?utm_source=ev_external_blog&utm_medium=influencer&utm_campaign=2025-iceberg-comp-guide&utm_content=alexmerced&utm_term=external_blog)
 - [2025 Apache Iceberg Architecture Guide](https://medium.com/data-engineering-with-dremio/2025-guide-to-architecting-an-iceberg-lakehouse-9b19ed42c9de)
@@ -20,15 +22,13 @@ image: "/images/blog.png"
 - [Iceberg Lakehouse Engineering Video Playlist](https://youtube.com/playlist?list=PLsLAVBjQJO0p0Yq1fLkoHvt2lEJj5pcYe&si=WTSnqjXZv6Glkc3y)
 - [Ultimate Apache Iceberg Resource Guide](https://medium.com/data-engineering-with-dremio/ultimate-directory-of-apache-iceberg-resources-e3e02efac62e)
 
-Apache Iceberg had a monumental 2024, with significant announcements and advancements from major players like Dremio, Snowflake, Databricks, AWS, and other leading data platforms. The Iceberg ecosystem is evolving rapidly, making it essential for professionals to stay up-to-date with the latest innovations. To help navigate this ever-changing space, I’m introducing an annual guide dedicated to Apache Iceberg. This guide aims to provide a comprehensive overview of Iceberg, highlight key resources, and offer valuable insights for anyone looking to deepen their knowledge. Whether you’re just starting with Iceberg or are a seasoned user, this guide will serve as your go-to resource for 2025.
-
 [Read this article for details on migrating to Apache Iceberg.](https://www.dremio.com/blog/migration-guide-for-apache-iceberg-lakehouses/)
 
 ## What is a Table Format?
 
-A table format, often referred to as an “open table format” or “lakehouse table format,” is a foundational component of the data lakehouse architecture. This architecture is gaining popularity for its ability to address the complexities of modern data management. Table formats transform how data stored in collections of analytics-optimized Parquet files is accessed and managed. Instead of treating these files as standalone units to be opened and read individually, a table format enables them to function like traditional database tables, complete with ACID guarantees.
+A table format, often referred to as an “open table format” or “lakehouse table format, ” is a foundational component of the data lakehouse architecture. This architecture is gaining popularity for its ability to address the complexities of modern data management. Table formats transform how data stored in collections of analytics-optimized Parquet files is accessed and managed. Instead of treating these files as standalone units to be opened and read individually, a table format enables them to function like traditional database tables, complete with ACID guarantees.
 
-With a table format, users can interact with data through SQL to create, read, update, and delete records, bringing the functionality of a data warehouse directly to the data lake. This capability allows enterprises to treat their data lake as a unified platform, supporting both data warehousing and data lake use cases. It also enables teams across an organization to work with a single copy of data in their tool of choice :  whether for analytics, machine learning, or operational reporting ,  eliminating redundant data movements, reducing costs, and improving consistency across the enterprise.
+With a table format, users can interact with data through SQL to create, read, update, and delete records, bringing the functionality of a data warehouse directly to the data lake. This capability allows enterprises to treat their data lake as a unified platform, supporting both data warehousing and data lake use cases. It also enables teams across an organization to work with a single copy of data in their tool of choice : whether for analytics, machine learning, or operational reporting, eliminating redundant data movements, reducing costs, and improving consistency across the enterprise.
 
 Currently, there are four primary table formats driving innovation in this space:
 
@@ -57,29 +57,29 @@ While all table formats rely on metadata to bridge the gap between raw files and
 Apache Iceberg’s metadata structure is what enables it to transform raw data files into highly performant and queryable tables. This structure consists of several interrelated components, each designed to provide specific details about the table and optimize query performance. Here’s an overview of Iceberg’s key metadata elements:
 
 - **metadata.json**:
-  - The metadata.json file is the primary entry point for understanding the table.
-  - This semi-structured JSON object contains information about the table’s schema, partitioning scheme, snapshot history, and other critical details.
+ - The metadata.json file is the primary entry point for understanding the table.
+ - This semi-structured JSON object contains information about the table’s schema, partitioning scheme, snapshot history, and other critical details.
 
 - **Manifest List**:
-  - Each snapshot in Iceberg has a corresponding Avro-based “manifest list.” This list contains rows representing each manifest (a group of files) that makes up the snapshot.
-  - Each row includes:
-    - The file location of the manifest.
-    - Partition value information for the files in the manifest.
-  - This information allows query engines to prune unnecessary manifests and avoid scanning irrelevant partitions, improving query efficiency.
+ - Each snapshot in Iceberg has a corresponding Avro-based “manifest list.” This list contains rows representing each manifest (a group of files) that makes up the snapshot.
+ - Each row includes:
+ - The file location of the manifest.
+ - Partition value information for the files in the manifest.
+ - This information allows query engines to prune unnecessary manifests and avoid scanning irrelevant partitions, improving query efficiency.
 
 - **Manifests**:
-  - A manifest lists one or more Parquet files and includes statistics about each file, such as column summaries.
-  - These statistics allow query engines to determine whether a file contains data relevant to the query, enabling file skipping for improved performance.
+ - A manifest lists one or more Parquet files and includes statistics about each file, such as column summaries.
+ - These statistics allow query engines to determine whether a file contains data relevant to the query, enabling file skipping for improved performance.
 
 - **Delete Files**:
-  - Delete files track records that have been deleted as part of “merge-on-read” updates. During queries, the engine reconciles these files with the base data, ensuring that deleted records are ignored.
-  - There is ongoing discussion about transitioning from delete files to a “deletion vector” approach, inspired by Delta Lake, where deletions are tracked using Puffin files. As of this writing, this proposal has not yet been implemented.
+ - Delete files track records that have been deleted as part of “merge-on-read” updates. During queries, the engine reconciles these files with the base data, ensuring that deleted records are ignored.
+ - There is ongoing discussion about transitioning from delete files to a “deletion vector” approach, inspired by Delta Lake, where deletions are tracked using Puffin files. As of this writing, this proposal has not yet been implemented.
 
 - **Puffin Files**:
-  - Puffin files are a format for tracking binary blobs and other metadata, designed to optimize queries for engines that choose to leverage them.
+ - Puffin files are a format for tracking binary blobs and other metadata, designed to optimize queries for engines that choose to leverage them.
 
 - **Partition Stats Files**:
-  - These files summarize statistics at the partition level, enabling even greater optimization for queries that rely on partitioning.
+ - These files summarize statistics at the partition level, enabling even greater optimization for queries that rely on partitioning.
 
 ## The Evolution of Iceberg’s Specification
 
@@ -144,12 +144,12 @@ The first step in reducing storage costs is selecting the right compression algo
 Optimizing performance largely depends on how data is distributed across files. This can be achieved through regular maintenance procedures using tools like Spark or Dremio. These optimizations result in two key outcomes:
 
 - **Compaction**:
-  - Reduces the number of small files and consolidates delete files into fewer, larger files.
-  - Minimizes the number of I/O operations required during query execution, leading to faster reads.
+ - Reduces the number of small files and consolidates delete files into fewer, larger files.
+ - Minimizes the number of I/O operations required during query execution, leading to faster reads.
 
 - **Clustering/Sorting**:
-  - Reorganizes data to co-locate similar records within the same files based on commonly queried fields.
-  - Allows query engines to skip more files during a query, as the data being searched for is concentrated in a smaller subset of files.
+ - Reorganizes data to co-locate similar records within the same files based on commonly queried fields.
+ - Allows query engines to skip more files during a query, as the data being searched for is concentrated in a smaller subset of files.
 
 By leveraging these strategies, Iceberg users can maintain a balance between efficient storage and fast query performance, ensuring their data lakehouse operates at peak efficiency. Regular maintenance is essential for reaping the full benefits of these optimizations.
 

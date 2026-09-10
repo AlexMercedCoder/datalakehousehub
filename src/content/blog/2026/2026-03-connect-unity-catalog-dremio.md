@@ -16,9 +16,10 @@ draft: false
 image: "/images/blog.png"
 canonical: "https://iceberglakehouse.com/posts/2026-03-connector-unity-catalog/"
 ---
-> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-03-connector-unity-catalog/).
 
 Databricks Unity Catalog is Databricks' governance layer for data and AI assets. It manages Delta Lake tables, machine learning models, feature stores, and other data objects across Databricks workspaces. If your data engineering team uses Databricks for ETL and ML, your curated analytical datasets likely live in Unity Catalog as Delta Lake tables.
+
+> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-03-connector-unity-catalog/).
 
 With UniForm, Databricks generates Iceberg-compatible metadata for Delta Lake tables, making them readable by non-Databricks engines without data conversion. This is where Dremio Cloud enters the picture: connect to Unity Catalog through the UniForm Iceberg compatibility layer and query your Delta Lake tables alongside every other data source in your organization : with federation, governance, AI analytics, and performance acceleration that Databricks alone doesn't provide.
 
@@ -61,18 +62,16 @@ Unity Catalog supports credential vending across AWS, Azure, and GCS. This means
 To make Delta Lake tables readable from Dremio, enable UniForm in Databricks:
 
 ```sql
--- In Databricks, enable UniForm when creating a table
+- In Databricks, enable UniForm when creating a table
 CREATE TABLE my_catalog.my_schema.my_table (
-  id BIGINT,
-  name STRING,
-  value DOUBLE
+ id BIGINT, name STRING, value DOUBLE
 ) TBLPROPERTIES (
-  'delta.universalFormat.enabledFormats' = 'iceberg'
+ 'delta.universalFormat.enabledFormats' = 'iceberg'
 );
 
--- Or alter an existing table
+- Or alter an existing table
 ALTER TABLE my_catalog.my_schema.my_table SET TBLPROPERTIES (
-  'delta.universalFormat.enabledFormats' = 'iceberg'
+ 'delta.universalFormat.enabledFormats' = 'iceberg'
 );
 ```
 
@@ -105,12 +104,9 @@ Optionally restrict access, then click **Save**.
 From Dremio's perspective, UniForm tables appear as standard Iceberg tables:
 
 ```sql
--- Query ML model predictions
+- Query ML model predictions
 SELECT
-  customer_id,
-  churn_probability,
-  predicted_ltv,
-  prediction_date
+ customer_id, churn_probability, predicted_ltv, prediction_date
 FROM "unity-catalog".ml_models.customer_predictions
 WHERE churn_probability > 0.7 AND prediction_date >= '2024-06-01'
 ORDER BY churn_probability DESC;
@@ -121,22 +117,14 @@ ORDER BY churn_probability DESC;
 Join Delta Lake model outputs with operational data from other systems:
 
 ```sql
--- Combine ML predictions with CRM data and support logs
+- Combine ML predictions with CRM data and support logs
 SELECT
-  uc.customer_id,
-  uc.churn_probability,
-  uc.predicted_ltv,
-  pg.customer_name,
-  pg.contract_end_date,
-  pg.account_manager,
-  s3.last_login_date,
-  s3.support_tickets_30d,
-  CASE
-    WHEN uc.churn_probability > 0.8 AND pg.contract_end_date < CURRENT_DATE + INTERVAL '90' DAY THEN 'Critical - Immediate Action'
-    WHEN uc.churn_probability > 0.7 THEN 'High Risk - Outreach Needed'
-    WHEN uc.churn_probability > 0.5 THEN 'Watch List'
-    ELSE 'Healthy'
-  END AS action_required
+ uc.customer_id, uc.churn_probability, uc.predicted_ltv, pg.customer_name, pg.contract_end_date, pg.account_manager, s3.last_login_date, s3.support_tickets_30d, CASE
+ WHEN uc.churn_probability > 0.8 AND pg.contract_end_date < CURRENT_DATE + INTERVAL '90' DAY THEN 'Critical - Immediate Action'
+ WHEN uc.churn_probability > 0.7 THEN 'High Risk - Outreach Needed'
+ WHEN uc.churn_probability > 0.5 THEN 'Watch List'
+ ELSE 'Healthy'
+ END AS action_required
 FROM "unity-catalog".ml_models.customer_predictions uc
 JOIN "postgres-crm".public.customers pg ON uc.customer_id = pg.customer_id
 LEFT JOIN "s3-logs".activity.user_activity s3 ON uc.customer_id = s3.user_id
@@ -151,21 +139,15 @@ Three data systems (Databricks, PostgreSQL, S3), one query, and actionable churn
 ```sql
 CREATE VIEW analytics.gold.customer_risk_dashboard AS
 SELECT
-  uc.customer_id,
-  pg.customer_name,
-  pg.region,
-  uc.churn_probability,
-  uc.predicted_ltv,
-  CASE
-    WHEN uc.predicted_ltv > 100000 THEN 'Enterprise'
-    WHEN uc.predicted_ltv > 25000 THEN 'Mid-Market'
-    ELSE 'SMB'
-  END AS value_segment,
-  CASE
-    WHEN uc.churn_probability > 0.7 THEN 'High Risk'
-    WHEN uc.churn_probability > 0.4 THEN 'Moderate Risk'
-    ELSE 'Low Risk'
-  END AS risk_tier
+ uc.customer_id, pg.customer_name, pg.region, uc.churn_probability, uc.predicted_ltv, CASE
+ WHEN uc.predicted_ltv > 100000 THEN 'Enterprise'
+ WHEN uc.predicted_ltv > 25000 THEN 'Mid-Market'
+ ELSE 'SMB'
+ END AS value_segment, CASE
+ WHEN uc.churn_probability > 0.7 THEN 'High Risk'
+ WHEN uc.churn_probability > 0.4 THEN 'Moderate Risk'
+ ELSE 'Low Risk'
+ END AS risk_tier
 FROM "unity-catalog".ml_models.customer_predictions uc
 JOIN "postgres-crm".public.customers pg ON uc.customer_id = pg.customer_id;
 ```
@@ -176,7 +158,7 @@ Navigate to the **Catalog**, click **Edit** (pencil icon), and **Generate Wiki**
 
 ### Dremio AI Agent
 
-The AI Agent lets business users ask questions in plain English: "Which enterprise customers are at high risk of churning?" or "Show me our top 10 customers by predicted lifetime value." The Agent reads your wiki descriptions to understand what "enterprise," "high risk," and "lifetime value" mean in your data context, then generates accurate SQL.
+The AI Agent lets business users ask questions in plain English: "Which enterprise customers are at high risk of churning?" or "Show me our top 10 customers by predicted lifetime value." The Agent reads your wiki descriptions to understand what "enterprise, " "high risk, " and "lifetime value" mean in your data context, then generates accurate SQL.
 
 This is particularly powerful for Delta Lake data because model outputs (churn scores, predictions) often need business interpretation. The semantic layer bridges the gap between ML model outputs and business-friendly analytics.
 
@@ -195,26 +177,19 @@ A customer success manager can ask Claude "Show me all high-risk enterprise cust
 Use AI directly in queries against Unity Catalog data:
 
 ```sql
--- Generate personalized retention messages for at-risk customers
+- Generate personalized retention messages for at-risk customers
 SELECT
-  customer_name,
-  churn_probability,
-  predicted_ltv,
-  AI_GENERATE(
-    'Write a one-sentence personalized retention offer for this at-risk customer',
-    'Customer: ' || customer_name || ', Segment: ' || value_segment || ', Risk: ' || risk_tier || ', LTV: $' || CAST(predicted_ltv AS VARCHAR)
-  ) AS retention_message
+ customer_name, churn_probability, predicted_ltv, AI_GENERATE(
+ 'Write a one-sentence personalized retention offer for this at-risk customer', 'Customer: ' || customer_name || ', Segment: ' || value_segment || ', Risk: ' || risk_tier || ', LTV: $' || CAST(predicted_ltv AS VARCHAR)
+ ) AS retention_message
 FROM analytics.gold.customer_risk_dashboard
 WHERE risk_tier = 'High Risk' AND value_segment = 'Enterprise';
 
--- Classify intervention urgency
+- Classify intervention urgency
 SELECT
-  customer_name,
-  AI_CLASSIFY(
-    'Based on these risk factors, classify the intervention urgency',
-    'Churn probability: ' || CAST(churn_probability AS VARCHAR) || ', LTV: $' || CAST(predicted_ltv AS VARCHAR) || ', Segment: ' || value_segment,
-    ARRAY['Immediate', 'This Week', 'This Month', 'Monitor']
-  ) AS urgency
+ customer_name, AI_CLASSIFY(
+ 'Based on these risk factors, classify the intervention urgency', 'Churn probability: ' || CAST(churn_probability AS VARCHAR) || ', LTV: $' || CAST(predicted_ltv AS VARCHAR) || ', Segment: ' || value_segment, ARRAY['Immediate', 'This Week', 'This Month', 'Monitor']
+ ) AS urgency
 FROM analytics.gold.customer_risk_dashboard
 WHERE risk_tier IN ('High Risk', 'Moderate Risk');
 ```

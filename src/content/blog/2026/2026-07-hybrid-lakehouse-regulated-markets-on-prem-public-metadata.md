@@ -13,11 +13,12 @@ draft: false
 image: "/images/blog.png"
 canonical: "https://iceberglakehouse.com/posts/hybrid-lakehouse-regulated-markets-on-prem-public-metadata/"
 ---
-> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/hybrid-lakehouse-regulated-markets-on-prem-public-metadata/).
 
 A bank, a hospital network, and a defense contractor walk into a cloud migration and all three stop at the same wall: their data is not allowed to move. Not "would be inconvenient to move." Not allowed. A regulator, a national data residency law, or a contractual sovereignty clause says the bytes must stay inside a specific facility, jurisdiction, or network boundary. For teams in these positions, the standard advice to centralize everything in a public cloud data platform is a non-starter, and no amount of enthusiasm about analytics changes that.
 
-The good news is that the lakehouse pattern does not actually require centralization. What it requires is open table formats, an open catalog, and an engine that can query data where it lives. Once you separate those ideas from "put it all in one cloud account," a hybrid design becomes possible: keep regulated data on-prem in private object storage, expose only the metadata and views that policy permits, and let governed analytics run against curated surfaces. This article walks through that design, its moving parts, and its honest limits.
+> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/hybrid-lakehouse-regulated-markets-on-prem-public-metadata/).
+
+The good news is that the lakehouse pattern does not actually require centralization. What it requires is open table formats, an open catalog, and an engine that can query data where it lives. Once you separate those ideas from "put it all in one cloud account, " a hybrid design becomes possible: keep regulated data on-prem in private object storage, expose only the metadata and views that policy permits, and let governed analytics run against curated surfaces. This article walks through that design, its moving parts, and its honest limits.
 
 ## Why Regulated Data Cannot Always Move
 
@@ -71,7 +72,7 @@ Here is where hybrid designs get genuinely tricky, and where a lot of naive impl
 
 Think about what lives in table metadata. Table names can reveal the existence of a program or an investigation. Column names can disclose what you collect about people. Partition values can leak the very facts you are trying to protect: a table partitioned by `patient_country` or `case_classification` exposes the distribution of those values in its partition metadata even if no data rows ever leave. Min and max statistics in Iceberg metadata can reveal ranges, such as the earliest and latest dates in a sensitive dataset. So "we only replicated metadata, not data" is not automatically safe.
 
-This is a failure mode that even careful teams walk into, because metadata feels harmless. It is small, it is not "the data," and the tooling replicates it almost for free. But an adversary who learns that a table named `active_investigations_2026` exists, partitioned by `subject_region`, has learned a great deal without reading a single row. Partition metadata alone can reveal which regions have active cases and roughly how many, because Iceberg tracks per-partition file and record counts. Statistics compound this: a min and max on a date column outlines exactly when activity started and stopped. The lesson is to treat metadata as data for classification purposes. If a table's mere existence or shape is sensitive, its metadata must not cross the boundary, and the thing you expose outward is a curated projection with a neutral name and only the columns cleared for exposure.
+This is a failure mode that even careful teams walk into, because metadata feels harmless. It is small, it is not "the data, " and the tooling replicates it almost for free. But an adversary who learns that a table named `active_investigations_2026` exists, partitioned by `subject_region`, has learned a great deal without reading a single row. Partition metadata alone can reveal which regions have active cases and roughly how many, because Iceberg tracks per-partition file and record counts. Statistics compound this: a min and max on a date column outlines exactly when activity started and stopped. The lesson is to treat metadata as data for classification purposes. If a table's mere existence or shape is sensitive, its metadata must not cross the boundary, and the thing you expose outward is a curated projection with a neutral name and only the columns cleared for exposure.
 
 The discipline for cross-boundary metadata is minimization and control:
 
@@ -84,7 +85,7 @@ The discipline for cross-boundary metadata is minimization and control:
 Here is a compact way to map regulated requirements to design responses. The point of the table is to make the mapping explicit so no requirement is silently unaddressed.
 
 | Regulated requirement | Lakehouse design response |
-| --- | --- |
+| -- | -- |
 | Data must physically reside in-boundary | Iceberg tables on on-prem MinIO or Ceph; raw data never replicated out |
 | No constant internet connectivity | Signed metadata snapshots and local write authority; no per-operation control-plane dependency |
 | Sensitive names or partition values must not leak | Metadata minimization; expose curated projections, not raw table metadata |

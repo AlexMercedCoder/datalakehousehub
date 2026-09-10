@@ -14,9 +14,10 @@ tags:
 slug: "query-routing-lakehouse-engines"
 draft: false
 ---
-> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/query-routing-lakehouse-engines/).
 
 At 9:15 on a Monday morning, a lakehouse receives four kinds of query in the same minute. An executive dashboard fires 40 sub-second lookups against a revenue view. A nightly transformation that ran late is still grinding through a 30-terabyte join. A data scientist submits an ad hoc query that will scan a year of events. And an AI agent, answering a question from a support rep, issues 22 small queries in a loop, each one shaped by the answer to the last. All four arrive at the same SQL endpoint, and the platform has to decide, in milliseconds, where each one runs.
+
+> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/query-routing-lakehouse-engines/).
 
 If everything goes to one engine, the dashboard waits behind the join. If everything goes to a fast interactive engine, the join runs out of memory or crowds out the dashboards for an hour. If a human sorts it out by assigning queues to teams, the agent's 22 queries land in whichever queue the support tool was configured for, which was chosen before agents existed.
 
@@ -55,7 +56,7 @@ The routing decision has to be made before execution, which means the router can
 Here is the signal set, with where each comes from and how expensive it is to obtain:
 
 | Signal | Source | Cost to obtain | Weight in routing |
-|---|---|---|---|
+|--|--|--|--|
 | Tables and predicates | SQL parse | Microseconds | Prerequisite for everything else |
 | Files and bytes after pruning | Iceberg metadata via PyIceberg or REST scan planning | Milliseconds to low seconds on huge tables | Highest |
 | Join and aggregation structure | SQL parse plus table statistics | Microseconds | High |
@@ -73,85 +74,85 @@ With the signals in hand, routing is a decision tree with thresholds that the pl
 ```yaml
 # routing-policy.yaml
 engines:
-  interactive:
-    kind: dremio
-    endpoint: grpc+tls://dremio.example.com:32010
-    max_queue_wait_ms: 2000
-    max_bytes_per_query: 500 GB
-    supports_reflections: true
-  batch:
-    kind: spark
-    endpoint: https://spark-gateway.example.com
-    max_queue_wait_ms: 300000
-    max_bytes_per_query: unlimited
+ interactive:
+ kind: dremio
+ endpoint: grpc+tls://dremio.example.com:32010
+ max_queue_wait_ms: 2000
+ max_bytes_per_query: 500 GB
+ supports_reflections: true
+ batch:
+ kind: spark
+ endpoint: https://spark-gateway.example.com
+ max_queue_wait_ms: 300000
+ max_bytes_per_query: unlimited
 
 rules:
-  # Evaluated in order. First match wins.
+ # Evaluated in order. First match wins.
 
-  - name: accelerated
-    when:
-      reflection_covers_query: true
-    route: interactive
-    reason: "reflection match"
+ - name: accelerated
+ when:
+ reflection_covers_query: true
+ route: interactive
+ reason: "reflection match"
 
-  - name: interactive_small
-    when:
-      estimated_bytes_lt: 50 GB
-      join_tables_lte: 4
-      no_expensive_ops: true
-    route: interactive
-    reason: "small pruned scan"
+ - name: interactive_small
+ when:
+ estimated_bytes_lt: 50 GB
+ join_tables_lte: 4
+ no_expensive_ops: true
+ route: interactive
+ reason: "small pruned scan"
 
-  - name: interactive_medium_if_idle
-    when:
-      estimated_bytes_lt: 500 GB
-      interactive_queue_wait_ms_lt: 500
-      client_tag: [interactive, agent]
-    route: interactive
-    reason: "medium scan, interactive engine idle"
+ - name: interactive_medium_if_idle
+ when:
+ estimated_bytes_lt: 500 GB
+ interactive_queue_wait_ms_lt: 500
+ client_tag: [interactive, agent]
+ route: interactive
+ reason: "medium scan, interactive engine idle"
 
-  - name: agent_over_budget
-    when:
-      principal_class: agent
-      session_bytes_remaining_lt: 0
-    route: reject
-    reason: "agent session byte budget exhausted"
+ - name: agent_over_budget
+ when:
+ principal_class: agent
+ session_bytes_remaining_lt: 0
+ route: reject
+ reason: "agent session byte budget exhausted"
 
-  - name: batch_large
-    when:
-      estimated_bytes_gte: 500 GB
-    route: batch
-    reason: "large scan"
-    notify_client: true
+ - name: batch_large
+ when:
+ estimated_bytes_gte: 500 GB
+ route: batch
+ reason: "large scan"
+ notify_client: true
 
-  - name: batch_expensive
-    when:
-      any_of:
-        - join_tables_gt: 4
-        - has_window_over_large_partition: true
-        - has_udf: true
-    route: batch
-    reason: "expensive plan shape"
+ - name: batch_expensive
+ when:
+ any_of:
+ - join_tables_gt: 4
+ - has_window_over_large_partition: true
+ - has_udf: true
+ route: batch
+ reason: "expensive plan shape"
 
-  - name: interactive_overloaded_spill
-    when:
-      interactive_queue_wait_ms_gte: 2000
-      client_tag: [interactive]
-      estimated_bytes_lt: 500 GB
-    route: batch
-    reason: "interactive queue saturated, spilling to batch"
-    notify_client: true
+ - name: interactive_overloaded_spill
+ when:
+ interactive_queue_wait_ms_gte: 2000
+ client_tag: [interactive]
+ estimated_bytes_lt: 500 GB
+ route: batch
+ reason: "interactive queue saturated, spilling to batch"
+ notify_client: true
 
-  - name: default
-    route: interactive
+ - name: default
+ route: interactive
 
 budgets:
-  agent_session:
-    max_queries: 200
-    max_bytes: 2 TB
-    max_wall_ms: 600000
-  batch_principal:
-    max_concurrent: 4
+ agent_session:
+ max_queries: 200
+ max_bytes: 2 TB
+ max_wall_ms: 600000
+ batch_principal:
+ max_concurrent: 4
 ```
 
 Read the rules in order. A query a reflection can answer goes to the interactive engine regardless of its raw scan size, because the reflection makes it cheap. A small, simple query goes interactive. A medium query goes interactive only if the interactive engine is idle and the client asked for interactive latency. An agent that has exhausted its session budget is rejected with a message, before any engine does work. A large scan goes to batch and the client is told. An expensive plan shape goes to batch. An interactive client whose query is medium-sized but arrives while the interactive queue is saturated spills to batch with a notification. Everything else defaults to interactive.
@@ -169,47 +170,35 @@ from pyiceberg.expressions import parser as ice_expr
 CATALOG = load_catalog("polaris", **catalog_props)
 
 def tables_and_predicates(sql: str):
-    tree = sqlglot.parse_one(sql)
-    tables = {t.sql(): t for t in tree.find_all(exp.Table)}
-    where = tree.find(exp.Where)
-    return tables, (where.this if where else None)
+ tree = sqlglot.parse_one(sql)
+ tables = {t.sql(): t for t in tree.find_all(exp.Table)}
+ where = tree.find(exp.Where)
+ return tables, (where.this if where else None)
 
 def estimate_bytes(sql: str) -> int:
-    """Sum of data file sizes surviving Iceberg pruning, per table in the query."""
-    tables, where = tables_and_predicates(sql)
-    total = 0
-    for name in tables:
-        table = CATALOG.load_table(name)
-        row_filter = to_iceberg_filter(where, table) if where is not None else None
-        scan = table.scan(row_filter=row_filter) if row_filter else table.scan()
-        for task in scan.plan_files():
-            total += task.file.file_size_in_bytes
-    return total
+ """Sum of data file sizes surviving Iceberg pruning, per table in the query."""
+ tables, where = tables_and_predicates(sql)
+ total = 0
+ for name in tables:
+ table = CATALOG.load_table(name)
+ row_filter = to_iceberg_filter(where, table) if where is not None else None
+ scan = table.scan(row_filter=row_filter) if row_filter else table.scan()
+ for task in scan.plan_files():
+ total += task.file.file_size_in_bytes
+ return total
 
 def plan_shape(sql: str) -> dict:
-    tree = sqlglot.parse_one(sql)
-    return {
-        "join_tables": len(list(tree.find_all(exp.Table))),
-        "has_window": tree.find(exp.Window) is not None,
-        "has_udf": any(f.sql().upper().startswith("UDF_") for f in tree.find_all(exp.Anonymous)),
-        "group_by": tree.find(exp.Group) is not None,
-    }
+ tree = sqlglot.parse_one(sql)
+ return {
+ "join_tables": len(list(tree.find_all(exp.Table))), "has_window": tree.find(exp.Window) is not None, "has_udf": any(f.sql().upper().startswith("UDF_") for f in tree.find_all(exp.Anonymous)), "group_by": tree.find(exp.Group) is not None, }
 
 def route(sql: str, principal: str, client_tag: str, engines: dict, policy: dict) -> dict:
-    signals = {
-        "estimated_bytes": estimate_bytes(sql),
-        "reflection_covers_query": engines["interactive"].reflection_matches(sql),
-        "interactive_queue_wait_ms": engines["interactive"].queue_wait_ms(),
-        "principal_class": classify_principal(principal),
-        "client_tag": client_tag,
-        "session_bytes_remaining": budgets.remaining(principal, "bytes"),
-        **plan_shape(sql),
-    }
-    for rule in policy["rules"]:
-        if matches(rule.get("when", {}), signals):
-            return {"engine": rule["route"], "reason": rule["reason"],
-                    "notify": rule.get("notify_client", False), "signals": signals}
-    return {"engine": "interactive", "reason": "default", "signals": signals}
+ signals = {
+ "estimated_bytes": estimate_bytes(sql), "reflection_covers_query": engines["interactive"].reflection_matches(sql), "interactive_queue_wait_ms": engines["interactive"].queue_wait_ms(), "principal_class": classify_principal(principal), "client_tag": client_tag, "session_bytes_remaining": budgets.remaining(principal, "bytes"), **plan_shape(sql), }
+ for rule in policy["rules"]:
+ if matches(rule.get("when", {}), signals):
+ return {"engine": rule["route"], "reason": rule["reason"], "notify": rule.get("notify_client", False), "signals": signals}
+ return {"engine": "interactive", "reason": "default", "signals": signals}
 ```
 
 The `estimate_bytes` function is the heart of it. `table.scan(row_filter=...).plan_files()` runs Iceberg's planning (manifest filtering by partition and column statistics) and yields the files that survive. Summing their sizes gives the pruned scan estimate. On a huge table this reads the manifests, which is the same work the engine does, and it is where the Iceberg v4 columnar manifest work pays off twice: once in the router and once in the engine.
@@ -231,7 +220,7 @@ The agent's 22 queries arrive over 30 seconds from principal `agent-support-assi
 Here is the minute in the router's log:
 
 | Query class | Count | Rule matched | Engine | Estimated bytes | p95 queue wait | Outcome |
-|---|---|---|---|---|---|---|
+|--|--|--|--|--|--|--|
 | Dashboard lookups | 40 | accelerated | interactive | skipped (reflection) | 15 ms | all under 200 ms |
 | Nightly MERGE | 1 | orchestrator (bypassed gateway) | batch | 30 TB | N/A | running, 2 AM start |
 | Ad hoc year scan | 1 | batch_large | batch | 11.4 TB | N/A | 8 min, client notified |
@@ -249,68 +238,59 @@ Here is a translator that handles the predicate shapes that prune, and drops the
 
 ```python
 from pyiceberg.expressions import (
-    And, Or, EqualTo, NotEqualTo, GreaterThan, GreaterThanOrEqual,
-    LessThan, LessThanOrEqual, In, IsNull, NotNull, AlwaysTrue,
-)
+ And, Or, EqualTo, NotEqualTo, GreaterThan, GreaterThanOrEqual, LessThan, LessThanOrEqual, In, IsNull, NotNull, AlwaysTrue, )
 from sqlglot import exp
 
 COMPARISONS = {
-    exp.EQ:  EqualTo,
-    exp.NEQ: NotEqualTo,
-    exp.GT:  GreaterThan,
-    exp.GTE: GreaterThanOrEqual,
-    exp.LT:  LessThan,
-    exp.LTE: LessThanOrEqual,
-}
+ exp.EQ: EqualTo, exp.NEQ: NotEqualTo, exp.GT: GreaterThan, exp.GTE: GreaterThanOrEqual, exp.LT: LessThan, exp.LTE: LessThanOrEqual, }
 
 def to_iceberg_filter(node, table):
-    """Translate a sqlglot WHERE expression to a PyIceberg expression.
-    Anything not translatable becomes AlwaysTrue (no pruning from that clause)."""
-    cols = {f.name for f in table.schema().fields}
+ """Translate a sqlglot WHERE expression to a PyIceberg expression.
+ Anything not translatable becomes AlwaysTrue (no pruning from that clause)."""
+ cols = {f.name for f in table.schema().fields}
 
-    def lit(n):
-        if isinstance(n, exp.Literal):
-            return n.to_py()
-        if isinstance(n, exp.Cast) and isinstance(n.this, exp.Literal):
-            return n.this.to_py()
-        raise ValueError("non-literal")
+ def lit(n):
+ if isinstance(n, exp.Literal):
+ return n.to_py()
+ if isinstance(n, exp.Cast) and isinstance(n.this, exp.Literal):
+ return n.this.to_py()
+ raise ValueError("non-literal")
 
-    def go(n):
-        if isinstance(n, exp.And):
-            return And(go(n.left), go(n.right))
-        if isinstance(n, exp.Or):
-            l, r = go(n.left), go(n.right)
-            # An OR where either side is untranslatable cannot prune at all.
-            if isinstance(l, AlwaysTrue) or isinstance(r, AlwaysTrue):
-                return AlwaysTrue()
-            return Or(l, r)
-        if isinstance(n, exp.Paren):
-            return go(n.this)
-        for sqltype, icetype in COMPARISONS.items():
-            if isinstance(n, sqltype):
-                col, val = n.left, n.right
-                if isinstance(col, exp.Column) and col.name in cols:
-                    try:
-                        return icetype(col.name, lit(val))
-                    except ValueError:
-                        return AlwaysTrue()
-                return AlwaysTrue()   # function on the column, or column vs column
-        if isinstance(n, exp.In) and isinstance(n.this, exp.Column) and n.this.name in cols:
-            try:
-                return In(n.this.name, [lit(v) for v in n.expressions])
-            except ValueError:
-                return AlwaysTrue()
-        if isinstance(n, exp.Between) and isinstance(n.this, exp.Column) and n.this.name in cols:
-            try:
-                return And(GreaterThanOrEqual(n.this.name, lit(n.args["low"])),
-                           LessThanOrEqual(n.this.name, lit(n.args["high"])))
-            except ValueError:
-                return AlwaysTrue()
-        if isinstance(n, exp.Is) and isinstance(n.this, exp.Column):
-            return IsNull(n.this.name) if isinstance(n.expression, exp.Null) else AlwaysTrue()
-        return AlwaysTrue()
+ def go(n):
+ if isinstance(n, exp.And):
+ return And(go(n.left), go(n.right))
+ if isinstance(n, exp.Or):
+ l, r = go(n.left), go(n.right)
+ # An OR where either side is untranslatable cannot prune at all.
+ if isinstance(l, AlwaysTrue) or isinstance(r, AlwaysTrue):
+ return AlwaysTrue()
+ return Or(l, r)
+ if isinstance(n, exp.Paren):
+ return go(n.this)
+ for sqltype, icetype in COMPARISONS.items():
+ if isinstance(n, sqltype):
+ col, val = n.left, n.right
+ if isinstance(col, exp.Column) and col.name in cols:
+ try:
+ return icetype(col.name, lit(val))
+ except ValueError:
+ return AlwaysTrue()
+ return AlwaysTrue() # function on the column, or column vs column
+ if isinstance(n, exp.In) and isinstance(n.this, exp.Column) and n.this.name in cols:
+ try:
+ return In(n.this.name, [lit(v) for v in n.expressions])
+ except ValueError:
+ return AlwaysTrue()
+ if isinstance(n, exp.Between) and isinstance(n.this, exp.Column) and n.this.name in cols:
+ try:
+ return And(GreaterThanOrEqual(n.this.name, lit(n.args["low"])), LessThanOrEqual(n.this.name, lit(n.args["high"])))
+ except ValueError:
+ return AlwaysTrue()
+ if isinstance(n, exp.Is) and isinstance(n.this, exp.Column):
+ return IsNull(n.this.name) if isinstance(n.expression, exp.Null) else AlwaysTrue()
+ return AlwaysTrue()
 
-    return go(node)
+ return go(node)
 ```
 
 Three properties matter.
@@ -338,7 +318,7 @@ In practice the three combine: the orchestrator routes scheduled batch work dire
 Here is how the three compare:
 
 | | Protocol gateway | Engine-native workload management | Orchestrator routing |
-|---|---|---|---|
+|--|--|--|--|
 | Sees every query | Yes | Only those sent to that engine | Only scheduled jobs |
 | Routes across engines | Yes | Within one engine's pools, rejects otherwise | Yes, at job definition time |
 | Uses Iceberg scan planning | Yes, via catalog | Yes, engine's own planner | Rarely, static per job |
@@ -353,7 +333,7 @@ Agents change the routing problem in three ways, and a router built for humans h
 
 Agents are bursty and recursive. A single question produces a sequence of queries, each shaped by the previous result. The first query is a schema probe, the second a sample, the third an aggregate, the fourth a re-aggregate with a different grouping because the third looked wrong. Twenty queries in thirty seconds from one principal is normal, and a router that rate-limits per principal at human scale throttles the agent mid-reasoning and it fails the task.
 
-Agents do not know what they are asking for. A human analyst who writes `SELECT * FROM events` knows it is a bad idea. An agent that writes it is exploring. The query's cost is unbounded and the agent has no intent to wait an hour. Routing it to batch is wrong (the agent will time out and retry). Rejecting it with a reason the agent can read is right: "this query scans 12 terabytes, add a date filter or use the `events_summary` view," and a well-built agent adjusts.
+Agents do not know what they are asking for. A human analyst who writes `SELECT * FROM events` knows it is a bad idea. An agent that writes it is exploring. The query's cost is unbounded and the agent has no intent to wait an hour. Routing it to batch is wrong (the agent will time out and retry). Rejecting it with a reason the agent can read is right: "this query scans 12 terabytes, add a date filter or use the `events_summary` view, " and a well-built agent adjusts.
 
 Agents multiply. One user's question fans out into several agents, each running its own loop. The aggregate query volume from one human interaction is ten to a hundred times what a dashboard load produces, and it arrives at the interactive engine because that is where sub-second answers come from.
 
@@ -361,25 +341,25 @@ The router's answer is a per-session budget, enforced before routing, with rejec
 
 ```python
 class AgentBudget:
-    def __init__(self, max_queries=200, max_bytes=2 * 1024**4, max_wall_ms=600_000):
-        self.max_queries, self.max_bytes, self.max_wall_ms = max_queries, max_bytes, max_wall_ms
+ def __init__(self, max_queries=200, max_bytes=2 * 1024**4, max_wall_ms=600_000):
+ self.max_queries, self.max_bytes, self.max_wall_ms = max_queries, max_bytes, max_wall_ms
 
-    def check(self, session, signals) -> tuple[bool, str]:
-        if session.queries >= self.max_queries:
-            return False, f"Session query budget ({self.max_queries}) exhausted. Summarize what you have."
-        if session.bytes + signals["estimated_bytes"] > self.max_bytes:
-            gb = signals["estimated_bytes"] / 1024**3
-            return False, (f"This query scans about {gb:.0f} GB and exceeds the session's remaining budget. "
-                           f"Add a narrower filter, or query a pre-aggregated view such as "
-                           f"{suggest_summary_view(signals)}.")
-        if session.wall_ms >= self.max_wall_ms:
-            return False, "Session time budget exhausted."
-        return True, ""
+ def check(self, session, signals) -> tuple[bool, str]:
+ if session.queries >= self.max_queries:
+ return False, f"Session query budget ({self.max_queries}) exhausted. Summarize what you have."
+ if session.bytes + signals["estimated_bytes"] > self.max_bytes:
+ gb = signals["estimated_bytes"] / 1024**3
+ return False, (f"This query scans about {gb:.0f} GB and exceeds the session's remaining budget. "
+ f"Add a narrower filter, or query a pre-aggregated view such as "
+ f"{suggest_summary_view(signals)}.")
+ if session.wall_ms >= self.max_wall_ms:
+ return False, "Session time budget exhausted."
+ return True, ""
 ```
 
 The rejection message names the estimated bytes, suggests a narrower filter, and names a summary view. That is what an agent can act on. A generic "query rejected" makes it retry the same query. The `suggest_summary_view` function looks up reflections and semantic layer views over the same tables, which is the same index the routing rule `accelerated` uses.
 
-Budgets also give the platform a circuit breaker. An agent loop that has gone wrong (the same query 50 times, or a query that grows each iteration) hits the query count or byte budget and stops, and the session's log shows the loop. That is the difference between an agent that costs $2 of compute and one that costs $2,000.
+Budgets also give the platform a circuit breaker. An agent loop that has gone wrong (the same query 50 times, or a query that grows each iteration) hits the query count or byte budget and stops, and the session's log shows the loop. That is the difference between an agent that costs $2 of compute and one that costs $2, 000.
 
 For routing itself, agent queries mostly go to the interactive engine, because they are small and latency-sensitive, and the ones that are not small get rejected with guidance rather than sent to batch. The exception is an agent with a batch tag (a scheduled agentic pipeline that expects to wait), which routes like any batch principal.
 

@@ -15,7 +15,6 @@ draft: false
 image: "/images/blog.png"
 canonical: "https://iceberglakehouse.com/posts/2026-03-07-apache-polaris/"
 ---
-> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-03-07-apache-polaris/).
 
 *Read the complete Open Source and the Lakehouse series:*
 * [Part 1: Apache Software Foundation: History, Purpose, and Process](/blog/2026-04-apache-software-foundation)
@@ -25,6 +24,8 @@ canonical: "https://iceberglakehouse.com/posts/2026-03-07-apache-polaris/"
 * [Part 5: What is Apache Arrow?](/blog/2026-04-apache-arrow)
 * [Part 6: Assembling the Apache Lakehouse](/blog/2026-04-assembling-apache-lakehouse)
 * [Part 7: Agentic Analytics on the Apache Lakehouse](/blog/2026-04-agentic-analytics)
+
+> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-03-07-apache-polaris/).
 
 Treating thousands of Parquet files as a unified database table requires a brain. Apache Iceberg provides the metadata structure to do this, but the Iceberg specification alone does not spin up a server, manage security roles, or handle network requests. You need a catalog service to orchestrate those root metadata pointers. 
 

@@ -15,13 +15,14 @@ draft: false
 image: "/images/blog.png"
 canonical: "https://iceberglakehouse.com/posts/2026-02-dm-data-vault-modeling/"
 ---
-> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-02-dm-data-vault-modeling/).
 
 ![Data Vault model showing Hubs, Links, and Satellites as interconnected components](/images/blog/data-modeling/data-vault-overview.png)
 
+> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-02-dm-data-vault-modeling/).
+
 Dimensional modeling works well when your source systems are stable and your business questions are predictable. But what happens when sources change constantly, new systems get added every quarter, and regulatory requirements demand a full audit trail of every attribute change?
 
-Data Vault modeling was designed for exactly this scenario. Created by Dan Linstedt, it separates data into three distinct table types :  Hubs, Links, and Satellites ,  each handling a different concern: identity, relationships, and descriptive context.
+Data Vault modeling was designed for exactly this scenario. Created by Dan Linstedt, it separates data into three distinct table types : Hubs, Links, and Satellites, each handling a different concern: identity, relationships, and descriptive context.
 
 ## What Problem Data Vault Solves
 
@@ -39,10 +40,9 @@ A Hub stores unique business keys : the identifiers that define a business entit
 
 ```sql
 CREATE TABLE hub_customer (
-    customer_hash_key BINARY(32),  -- Hash of the business key
-    customer_id VARCHAR(50),        -- Natural business key
-    load_date TIMESTAMP,
-    record_source VARCHAR(100)
+ customer_hash_key BINARY(32), Hash of the business key
+ customer_id VARCHAR(50), Natural business key
+ load_date TIMESTAMP, record_source VARCHAR(100)
 );
 ```
 
@@ -52,15 +52,11 @@ Hubs are immutable. Once a business key is loaded, it never changes. A customer 
 
 ![Hubs connected by Link tables representing relationships between business entities](/images/blog/data-modeling/hub-link-relationship.png)
 
-A Link stores relationships between Hubs. Every relationship :  customer-to-order, order-to-product, employee-to-department ,  gets its own Link table.
+A Link stores relationships between Hubs. Every relationship : customer-to-order, order-to-product, employee-to-department, gets its own Link table.
 
 ```sql
 CREATE TABLE link_customer_order (
-    link_hash_key BINARY(32),
-    customer_hash_key BINARY(32),
-    order_hash_key BINARY(32),
-    load_date TIMESTAMP,
-    record_source VARCHAR(100)
+ link_hash_key BINARY(32), customer_hash_key BINARY(32), order_hash_key BINARY(32), load_date TIMESTAMP, record_source VARCHAR(100)
 );
 ```
 
@@ -72,14 +68,7 @@ Satellites store the descriptive attributes of a Hub or Link, along with their c
 
 ```sql
 CREATE TABLE sat_customer_details (
-    customer_hash_key BINARY(32),
-    effective_date TIMESTAMP,
-    customer_name VARCHAR(200),
-    email VARCHAR(200),
-    city VARCHAR(100),
-    segment VARCHAR(50),
-    load_date TIMESTAMP,
-    record_source VARCHAR(100)
+ customer_hash_key BINARY(32), effective_date TIMESTAMP, customer_name VARCHAR(200), email VARCHAR(200), city VARCHAR(100), segment VARCHAR(50), load_date TIMESTAMP, record_source VARCHAR(100)
 );
 ```
 
@@ -91,21 +80,17 @@ To reconstruct a business entity (like a current customer profile), you join the
 
 ```sql
 SELECT
-    h.customer_id,
-    s.customer_name,
-    s.email,
-    s.city,
-    s.segment
+ h.customer_id, s.customer_name, s.email, s.city, s.segment
 FROM hub_customer h
 JOIN sat_customer_details s ON h.customer_hash_key = s.customer_hash_key
 WHERE s.effective_date = (
-    SELECT MAX(effective_date)
-    FROM sat_customer_details s2
-    WHERE s2.customer_hash_key = s.customer_hash_key
+ SELECT MAX(effective_date)
+ FROM sat_customer_details s2
+ WHERE s2.customer_hash_key = s.customer_hash_key
 );
 ```
 
-This is more complex than querying `dim_customers` directly. That complexity is the primary criticism of Data Vault. In practice, teams build a presentation layer :  star schema views on top of the vault ,  for business users and BI tools.
+This is more complex than querying `dim_customers` directly. That complexity is the primary criticism of Data Vault. In practice, teams build a presentation layer : star schema views on top of the vault, for business users and BI tools.
 
 Platforms like [Dremio](https://www.dremio.com/blog/agentic-analytics-semantic-layer/?utm_source=ev_buffer&utm_medium=influencer&utm_campaign=next-gen-dremio&utm_term=blog-021826-02-18-2026&utm_content=alexmerced) make this practical. The raw vault tables live in the Bronze layer. Silver-layer views reconstruct business entities by joining Hubs, Links, and Satellites. Gold-layer views present dimensional star schemas for dashboards and AI agents. Users never query the vault tables directly.
 
@@ -125,10 +110,10 @@ Platforms like [Dremio](https://www.dremio.com/blog/agentic-analytics-semantic-l
 
 **Direct BI tool access.** BI tools don't speak Data Vault natively. You always need a presentation layer on top, which means building two models instead of one.
 
-**Speed-to-value projects.** When the goal is "get a dashboard live this sprint," Data Vault's up-front design work slows you down.
+**Speed-to-value projects.** When the goal is "get a dashboard live this sprint, " Data Vault's up-front design work slows you down.
 
 | Factor | Data Vault | Dimensional Model |
-|---|---|---|
+|--|--|--|
 | Source flexibility | High | Moderate |
 | Audit trail | Built-in | Optional (SCDs) |
 | Query simplicity | Low (needs presentation layer) | High |
@@ -140,6 +125,6 @@ Platforms like [Dremio](https://www.dremio.com/blog/agentic-analytics-semantic-l
 
 ![Presentation layer of star schema views built on top of a Data Vault foundation](/images/blog/data-modeling/data-vault-presentation.png)
 
-If you're evaluating Data Vault, start by counting your source systems and estimating how often they change schema. If the answer is "more than five sources" and "at least once a quarter," Data Vault's separation of concerns will likely save you from painful redesign cycles. If your environment is simpler than that, a well-designed dimensional model will get you to production faster.
+If you're evaluating Data Vault, start by counting your source systems and estimating how often they change schema. If the answer is "more than five sources" and "at least once a quarter, " Data Vault's separation of concerns will likely save you from painful redesign cycles. If your environment is simpler than that, a well-designed dimensional model will get you to production faster.
 
 [Try Dremio Cloud free for 30 days](https://www.dremio.com/get-started?utm_source=ev_buffer&utm_medium=influencer&utm_campaign=next-gen-dremio&utm_term=blog-021826-02-18-2026&utm_content=alexmerced)

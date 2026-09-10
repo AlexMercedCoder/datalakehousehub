@@ -15,13 +15,14 @@ draft: false
 image: "/images/blog.png"
 canonical: "https://iceberglakehouse.com/posts/2026-02-dm-slowly-changing-dimensions/"
 ---
-> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-02-dm-slowly-changing-dimensions/).
 
 ![Dimension timeline showing attribute values changing across time periods](/images/blog/data-modeling/slowly-changing-dimensions.png)
 
+> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-02-dm-slowly-changing-dimensions/).
+
 Dimensions change. A customer moves cities. A product gets reclassified. An employee changes departments. How your data model handles these changes determines whether your historical reports are accurate or misleading.
 
-Slowly Changing Dimensions (SCDs) are design patterns for managing dimension attribute changes over time. The three most common types :  overwrite, track history, and track one change ,  each make a different tradeoff between simplicity and historical accuracy.
+Slowly Changing Dimensions (SCDs) are design patterns for managing dimension attribute changes over time. The three most common types : overwrite, track history, and track one change, each make a different tradeoff between simplicity and historical accuracy.
 
 ## Why Dimensions Change
 
@@ -55,10 +56,10 @@ After this update, every historical fact associated with customer 1042 now appea
 Type 2 inserts a new row for each change. The original row is marked as expired, and the new row becomes the current version.
 
 ```sql
--- Original row (now expired)
--- customer_key: 1042, city: New York, effective_date: 2023-01-15, expiry_date: 2025-03-01, is_current: FALSE
+- Original row (now expired)
+- customer_key: 1042, city: New York, effective_date: 2023-01-15, expiry_date: 2025-03-01, is_current: FALSE
 
--- New row
+- New row
 INSERT INTO dim_customers (customer_key, customer_id, city, effective_date, expiry_date, is_current)
 VALUES (5001, 1042, 'Chicago', '2025-03-01', '9999-12-31', TRUE);
 ```
@@ -98,7 +99,7 @@ The table now has both `city = 'Chicago'` and `previous_city = 'New York'`.
 ## Choosing the Right Type
 
 | Factor | Type 1 (Overwrite) | Type 2 (New Row) | Type 3 (New Column) |
-|---|---|---|---|
+|--|--|--|--|
 | History preserved | No | Full | One level |
 | Dimension growth | No growth | Grows over time | No growth |
 | Query complexity | Simple | Moderate (date filtering) | Simple |
@@ -122,6 +123,6 @@ Platforms like [Dremio](https://www.dremio.com/blog/agentic-analytics-semantic-l
 
 ![Choosing between SCD types based on reporting requirements and complexity tolerance](/images/blog/data-modeling/scd-decision-guide.png)
 
-Audit your dimension tables. For each one, decide: Does historical accuracy matter for this attribute? If yes, implement Type 2. If the attribute changes rarely and history doesn't matter, Type 1 is sufficient. Document your choice , when the next engineer encounters the dimension, they need to know whether they're looking at current state or historical versions.
+Audit your dimension tables. For each one, decide: Does historical accuracy matter for this attribute? If yes, implement Type 2. If the attribute changes rarely and history doesn't matter, Type 1 is sufficient. Document your choice, when the next engineer encounters the dimension, they need to know whether they're looking at current state or historical versions.
 
 [Try Dremio Cloud free for 30 days](https://www.dremio.com/get-started?utm_source=ev_buffer&utm_medium=influencer&utm_campaign=next-gen-dremio&utm_term=blog-021826-02-18-2026&utm_content=alexmerced)

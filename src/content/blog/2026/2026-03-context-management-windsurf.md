@@ -16,9 +16,10 @@ draft: false
 image: "/images/blog.png"
 canonical: "https://iceberglakehouse.com/posts/2026-03-context-windsurf/"
 ---
-> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-03-context-windsurf/).
 
-Windsurf is an AI-powered IDE built on the VS Code foundation that introduces the concept of "Flows," a paradigm where the AI maintains deep awareness of your actions, codebase, and development patterns over time. Its context management differentiates from other editors through Cascade (its agentic coding assistant), persistent Rules files, Memories, and a sophisticated context engine that tracks not just what files you are editing, but how you work.
+Windsurf is an AI-powered IDE built on the VS Code foundation that introduces the concept of "Flows, " a paradigm where the AI maintains deep awareness of your actions, codebase, and development patterns over time. Its context management differentiates from other editors through Cascade (its agentic coding assistant), persistent Rules files, Memories, and a sophisticated context engine that tracks not just what files you are editing, but how you work.
+
+> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-03-context-windsurf/).
 
 This guide covers every context management mechanism in Windsurf and explains how to configure them for the most productive development experience.
 
@@ -120,7 +121,7 @@ When you share something important in a conversation ("We decided to switch from
 ### Memories vs. Rules
 
 | Aspect | Rules | Memories |
-|---|---|---|
+|--|--|--|
 | **Creation** | You write them explicitly | Created during conversations or manually |
 | **Scope** | Global or project-level | Cross-project |
 | **Purpose** | Define conventions and constraints | Store facts and decisions |
@@ -157,15 +158,13 @@ Configure MCP servers through Windsurf Settings or in a configuration file:
 
 ```json
 {
-  "mcpServers": {
-    "database": {
-      "command": "npx",
-      "args": ["-y", "@anthropic/mcp-server-postgres"],
-      "env": {
-        "DATABASE_URL": "postgresql://dev@localhost:5432/mydb"
-      }
-    }
-  }
+ "mcpServers": {
+ "database": {
+ "command": "npx", "args": ["-y", "@anthropic/mcp-server-postgres"], "env": {
+ "DATABASE_URL": "postgresql://dev@localhost:5432/mydb"
+ }
+ }
+ }
 }
 ```
 

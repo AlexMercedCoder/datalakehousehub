@@ -13,12 +13,14 @@ slug: "open-source-foundations-explained"
 draft: false
 image: "/images/blog.png"
 canonical: https://iceberglakehouse.com/posts/open-source-foundations-explained/
+description: "By Alex Merced, Head of Developer Relations at Dremio"
 ---
-> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/open-source-foundations-explained/).
 
 # Open Source Foundations, Explained: What Apache, Linux, Eclipse, and Their Peers Actually Do, and Why Governance Differences Matter
 
 *By Alex Merced, Head of Developer Relations at Dremio*
+
+> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/open-source-foundations-explained/).
 
 Writing about open data and AI means repeating the same phrases over and over: donated to the Apache Software Foundation, incubating at the Linux Foundation, graduated to a Top-Level Project, moved to neutral governance. I have used those phrases for years to explain why Iceberg won, why Polaris can be trusted, why Ossie matters, and why A2A consolidated its layer. What I have rarely stopped to explain is the institutions themselves: what a foundation actually is, what it does all day, how the major ones differ, and why those differences change the trajectory of the software you bet your platform on.
 
@@ -32,7 +34,7 @@ Start with the problem, because foundations are a solution and the solution only
 
 A successful open source project accumulates needs that no repository can hold. Legal needs: someone must own the copyright arrangements, accept contributor license agreements, respond when a patent troll or a license violator appears, and be a legal entity that can be sued instead of a maintainer's house. Trademark needs: the project's name and logo are its most valuable asset, and without an owner enforcing them, anyone can ship "CertifiedProjectX Enterprise" and poison the brand. Continuity needs: maintainers burn out, change jobs, and die, and a project whose infrastructure, domains, and decision rights live in one person's accounts is one bus accident from chaos. Financial needs: infrastructure, security audits, and events cost money, and money given directly to individuals creates tax, liability, and fairness nightmares.
 
-And above all, the need that towers over the rest: neutrality. The moment a project matters commercially, every company touching it asks the same question, who controls the roadmap, and if the answer is "our competitor," investment stops. A vendor can open source code, and it cannot credibly promise its own future restraint. Only transferring the assets, trademark, repository control, decision rights, to an entity constitutionally unable to favor anyone converts "trust us" into "verify the bylaws." That transfer is what a donation actually is: not code moving, code was already open, but power moving.
+And above all, the need that towers over the rest: neutrality. The moment a project matters commercially, every company touching it asks the same question, who controls the roadmap, and if the answer is "our competitor, " investment stops. A vendor can open source code, and it cannot credibly promise its own future restraint. Only transferring the assets, trademark, repository control, decision rights, to an entity constitutionally unable to favor anyone converts "trust us" into "verify the bylaws." That transfer is what a donation actually is: not code moving, code was already open, but power moving.
 
 Foundations exist to hold all of these needs at once: a durable legal home, a trademark steward, a continuity guarantee, a treasury, and a constitution. Everything that differentiates the foundations from each other is a different answer to how those functions are governed and funded, which is why governance, the driest word in the announcement, is the entire story.
 

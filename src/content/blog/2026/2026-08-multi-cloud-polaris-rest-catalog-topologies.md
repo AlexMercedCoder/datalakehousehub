@@ -14,9 +14,10 @@ tags:
 slug: "multi-cloud-polaris-rest-catalog-topologies"
 draft: false
 ---
-> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/multi-cloud-polaris-rest-catalog-topologies/).
 
 A global company has analytics data in three places. Its retail arm runs on AWS in Virginia and Frankfurt. An acquisition brought a Google Cloud estate in Belgium. A regulatory requirement put a set of tables on Azure in a sovereign region. Every one of those is an Apache Iceberg lakehouse on the local object store, and every one has its own catalog, its own permissions model, and its own engine fleet. An analyst in the retail team who wants to join her sales table against the acquired company's customer table has to file a ticket, wait for a copy job, and then query a stale replica that nobody is responsible for keeping fresh.
+
+> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/multi-cloud-polaris-rest-catalog-topologies/).
 
 The catalog is the piece that determines whether that situation is a permanent condition or a temporary one. An Iceberg table is a metadata pointer plus files in object storage, and nothing about the format ties it to one cloud. What ties it to one cloud is the catalog that holds the pointer, the credentials the catalog vends, and the network path between the engine and the storage. Get those three right and one catalog can present tables on three clouds to engines anywhere, with the physics of cross-cloud egress as the only remaining cost.
 
@@ -68,7 +69,7 @@ Governance is now defined in two places. The regional Polaris holds the grants f
 
 The second hop adds latency and a failure mode. A federated `loadTable` is two network calls, central-to-regional and regional-to-response, plus the engine's own call. If the central instance is down, every federated table is unreachable even though the regional instances are fine. Engines that need high availability for a specific table should be configured to talk to that table's regional instance directly, with the central instance as the discovery layer rather than the only path.
 
-When to choose this: when you have several regions with meaningful local workloads, when different regions have different operators or compliance boundaries, and when you can accept that governance lives in more than one place. This is the topology that matches the opening scenario, where an acquisition and a sovereign region each came with their own catalog and nobody wants to re-register 10,000 tables.
+When to choose this: when you have several regions with meaningful local workloads, when different regions have different operators or compliance boundaries, and when you can accept that governance lives in more than one place. This is the topology that matches the opening scenario, where an acquisition and a sovereign region each came with their own catalog and nobody wants to re-register 10, 000 tables.
 
 ## Topology Three: Active-Passive With Synchronized Standby
 
@@ -87,7 +88,7 @@ When to choose this: when a regulatory or business requirement says the catalog 
 Here is how the three compare:
 
 | | Single global catalog | Regional catalogs with federation | Active-passive standby |
-|---|---|---|---|
+|--|--|--|--|
 | Namespace view | One | One (via central instance) | One (primary only) |
 | Governance definition | One place | Per region plus central | Primary, synced to standby |
 | Catalog latency for local tables | Cross-region for far regions | Local | Local (primary region) |
@@ -119,48 +120,31 @@ Here is what a catalog's storage configuration looks like for a table on each cl
 
 ```json
 {
-  "name": "retail_us",
-  "type": "INTERNAL",
-  "properties": {
-    "default-base-location": "s3://lake-us-east/retail/"
-  },
-  "storageConfigInfo": {
-    "storageType": "S3",
-    "roleArn": "arn:aws:iam::123456789012:role/polaris-retail-us",
-    "region": "us-east-1",
-    "allowedLocations": ["s3://lake-us-east/retail/"]
-  }
+ "name": "retail_us", "type": "INTERNAL", "properties": {
+ "default-base-location": "s3://lake-us-east/retail/"
+ }, "storageConfigInfo": {
+ "storageType": "S3", "roleArn": "arn:aws:iam::123456789012:role/polaris-retail-us", "region": "us-east-1", "allowedLocations": ["s3://lake-us-east/retail/"]
+ }
 }
 ```
 
 ```json
 {
-  "name": "sovereign_eu",
-  "type": "INTERNAL",
-  "properties": {
-    "default-base-location": "abfss://lake@sovereignlake.dfs.core.windows.net/eu/"
-  },
-  "storageConfigInfo": {
-    "storageType": "AZURE",
-    "tenantId": "00000000-0000-0000-0000-000000000000",
-    "multiTenantAppName": "polaris-sovereign-eu",
-    "allowedLocations": ["abfss://lake@sovereignlake.dfs.core.windows.net/eu/"]
-  }
+ "name": "sovereign_eu", "type": "INTERNAL", "properties": {
+ "default-base-location": "abfss://lake@sovereignlake.dfs.core.windows.net/eu/"
+ }, "storageConfigInfo": {
+ "storageType": "AZURE", "tenantId": "00000000-0000-0000-0000-000000000000", "multiTenantAppName": "polaris-sovereign-eu", "allowedLocations": ["abfss://lake@sovereignlake.dfs.core.windows.net/eu/"]
+ }
 }
 ```
 
 ```json
 {
-  "name": "acquired_gcp",
-  "type": "INTERNAL",
-  "properties": {
-    "default-base-location": "gs://lake-europe-west1/acquired/"
-  },
-  "storageConfigInfo": {
-    "storageType": "GCS",
-    "gcpServiceAccount": "polaris-acquired@project.iam.gserviceaccount.com",
-    "allowedLocations": ["gs://lake-europe-west1/acquired/"]
-  }
+ "name": "acquired_gcp", "type": "INTERNAL", "properties": {
+ "default-base-location": "gs://lake-europe-west1/acquired/"
+ }, "storageConfigInfo": {
+ "storageType": "GCS", "gcpServiceAccount": "polaris-acquired@project.iam.gserviceaccount.com", "allowedLocations": ["gs://lake-europe-west1/acquired/"]
+ }
 }
 ```
 
@@ -193,12 +177,9 @@ The response is where the cloud-specific behavior shows up. Trimmed to the relev
 
 ```json
 {
-  "metadata-location": "gs://lake-europe-west1/acquired/customers/profiles/metadata/00042-....metadata.json",
-  "metadata": { "...": "full table metadata" },
-  "config": {
-    "gcs.oauth2.token": "ya29.....",
-    "gcs.oauth2.token-expires-at": "1756070000000"
-  }
+ "metadata-location": "gs://lake-europe-west1/acquired/customers/profiles/metadata/00042-....metadata.json", "metadata": { "...": "full table metadata" }, "config": {
+ "gcs.oauth2.token": "ya29.....", "gcs.oauth2.token-expires-at": "1756070000000"
+ }
 }
 ```
 
@@ -240,9 +221,9 @@ Same endpoint, same principal, three warehouses. The `warehouse` property select
 SELECT s.order_id, s.amount, c.segment
 FROM retail_us.sales.orders s
 JOIN acquired_gcp.customers.profiles c
-  ON s.customer_id = c.customer_id
+ ON s.customer_id = c.customer_id
 WHERE s.order_date >= DATE '2026-08-01'
-  AND c.country = 'DE';
+ AND c.country = 'DE';
 ```
 
 Spark plans both scans with pushdown, reads the S3 table with an STS credential and the GCS table with a downscoped OAuth token, and joins them in its own executors. The only cross-cloud traffic is the filtered rows from whichever side is remote to the cluster.

@@ -15,9 +15,10 @@ draft: false
 image: "/images/blog.png"
 canonical: https://iceberglakehouse.com/posts/gdpr-hard-deletes-on-iceberg/
 ---
-> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/gdpr-hard-deletes-on-iceberg/).
 
-A privacy team receives an erasure request under Article 17 of the General Data Protection Regulation (GDPR). The customer wants every record about them gone. An engineer runs `DELETE FROM events WHERE user_id = 48213` against the Apache Iceberg table, the query returns "1,204 rows deleted," and the ticket is closed. Three weeks later a compliance audit asks for proof, and the engineer time-travels to the snapshot from the day before the delete. All 1,204 rows are there. So are the ones in the snapshot from a month before, and the ones in the disaster-recovery replica, and the ones in the object store's version history.
+A privacy team receives an erasure request under Article 17 of the General Data Protection Regulation (GDPR). The customer wants every record about them gone. An engineer runs `DELETE FROM events WHERE user_id = 48213` against the Apache Iceberg table, the query returns "1, 204 rows deleted, " and the ticket is closed. Three weeks later a compliance audit asks for proof, and the engineer time-travels to the snapshot from the day before the delete. All 1, 204 rows are there. So are the ones in the snapshot from a month before, and the ones in the disaster-recovery replica, and the ones in the object store's version history.
+
+> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/gdpr-hard-deletes-on-iceberg/).
 
 Nothing about that outcome is a bug. Iceberg is designed so that a delete never destroys data. Every commit produces a new snapshot and leaves the old ones intact, and every data file is immutable. That design is what makes time travel, rollback, and concurrent writes safe. It is also exactly the wrong default for a legal obligation to make information cease to exist.
 
@@ -83,9 +84,7 @@ DELETE FROM events WHERE user_id = 48213;
 
 ```sql
 CALL polaris.system.rewrite_data_files(
-  table   => 'events',
-  where   => 'event_date >= DATE ''2024-01-01''',
-  options => map('rewrite-all', 'true', 'delete-file-threshold', '1')
+ table => 'events', where => 'event_date >= DATE ''2024-01-01''', options => map('rewrite-all', 'true', 'delete-file-threshold', '1')
 );
 ```
 
@@ -97,9 +96,7 @@ The `delete-file-threshold` of 1 tells the compaction to rewrite any file with a
 
 ```sql
 CALL polaris.system.expire_snapshots(
-  table       => 'events',
-  older_than  => current_timestamp(),
-  retain_last => 1
+ table => 'events', older_than => current_timestamp(), retain_last => 1
 );
 ```
 
@@ -111,8 +108,7 @@ Two things stop this step from working. Tags and branches: a snapshot referenced
 
 ```sql
 CALL polaris.system.remove_orphan_files(
-  table      => 'events',
-  older_than => current_timestamp() - INTERVAL 1 HOUR
+ table => 'events', older_than => current_timestamp() - INTERVAL 1 HOUR
 );
 ```
 
@@ -121,10 +117,10 @@ Run this only when no write to the table has been in flight for longer than the 
 **Step 6: Purge object versions.** Every file deleted in steps 4 and 5 is now a non-current version in a versioned bucket. Either wait for the lifecycle rule to expire non-current versions, which means erasure completes on the rule's schedule rather than yours, or delete the versions explicitly:
 
 ```bash
-aws s3api list-object-versions --bucket lake --prefix warehouse/events/ \
-  --query 'Versions[?IsLatest==`false`].[Key,VersionId]' --output text |
+aws s3api list-object-versions -bucket lake -prefix warehouse/events/ \
+ -query 'Versions[?IsLatest==`false`].[Key, VersionId]' -output text |
 while read key version; do
-  aws s3api delete-object --bucket lake --key "$key" --version-id "$version"
+ aws s3api delete-object -bucket lake -key "$key" -version-id "$version"
 done
 ```
 
@@ -190,18 +186,11 @@ The key store is the component that makes crypto-shredding work, and it deserves
 
 ```sql
 CREATE TABLE security.subject_keys (
-  user_id      BIGINT NOT NULL,
-  wrapped_dek  BINARY NOT NULL,
-  kms_key_id   STRING NOT NULL,
-  created_at   TIMESTAMP NOT NULL,
-  erased_at    TIMESTAMP
+ user_id BIGINT NOT NULL, wrapped_dek BINARY NOT NULL, kms_key_id STRING NOT NULL, created_at TIMESTAMP NOT NULL, erased_at TIMESTAMP
 ) USING iceberg
 PARTITIONED BY (bucket(32, user_id))
 TBLPROPERTIES (
-  'history.expire.max-snapshot-age-ms' = '86400000',
-  'write.metadata.delete-after-commit.enabled' = 'true',
-  'write.metadata.previous-versions-max' = '10',
-  'write.delete.mode' = 'copy-on-write'
+ 'history.expire.max-snapshot-age-ms' = '86400000', 'write.metadata.delete-after-commit.enabled' = 'true', 'write.metadata.previous-versions-max' = '10', 'write.delete.mode' = 'copy-on-write'
 );
 ```
 
@@ -222,50 +211,42 @@ spark = SparkSession.builder.getOrCreate()
 table = "polaris.analytics.events"
 subjects = [48213, 77001, 90412]
 
-# Step 1: logical delete. The predicate targets the surrogate key,
-# never an email or other direct identifier, so the delete file and
+# Step 1: logical delete. The predicate targets the surrogate key, # never an email or other direct identifier, so the delete file and
 # the query log contain no personal data.
-ids = ",".join(str(s) for s in subjects)
+ids = ", ".join(str(s) for s in subjects)
 spark.sql(f"DELETE FROM {table} WHERE user_id IN ({ids})")
 
 # Step 2: physically rewrite every file that received a delete.
 spark.sql(f"""
-  CALL polaris.system.rewrite_data_files(
-    table   => 'analytics.events',
-    options => map('rewrite-all', 'false',
-                   'delete-file-threshold', '1',
-                   'target-file-size-bytes', '268435456')
-  )
+ CALL polaris.system.rewrite_data_files(
+ table => 'analytics.events', options => map('rewrite-all', 'false', 'delete-file-threshold', '1', 'target-file-size-bytes', '268435456')
+ )
 """)
 
 # Step 3: confirm no delete files remain.
 remaining = spark.sql(f"""
-  SELECT count(*) AS n FROM {table}.files WHERE content > 0
+ SELECT count(*) AS n FROM {table}.files WHERE content > 0
 """).collect()[0]["n"]
 assert remaining == 0, f"{remaining} delete files still present"
 
-# Step 4: drop any tag or branch that pins pre-erasure snapshots,
-# then expire everything but the current snapshot.
+# Step 4: drop any tag or branch that pins pre-erasure snapshots, # then expire everything but the current snapshot.
 refs = spark.sql(f"SELECT name, type FROM {table}.refs").collect()
 for r in refs:
-    if r["name"] != "main":
-        kind = "TAG" if r["type"] == "TAG" else "BRANCH"
-        spark.sql(f"ALTER TABLE {table} DROP {kind} `{r['name']}`")
+ if r["name"] != "main":
+ kind = "TAG" if r["type"] == "TAG" else "BRANCH"
+ spark.sql(f"ALTER TABLE {table} DROP {kind} `{r['name']}`")
 
 spark.sql(f"""
-  CALL polaris.system.expire_snapshots(
-    table       => 'analytics.events',
-    older_than  => current_timestamp(),
-    retain_last => 1
-  )
+ CALL polaris.system.expire_snapshots(
+ table => 'analytics.events', older_than => current_timestamp(), retain_last => 1
+ )
 """)
 
 # Step 5: orphan cleanup, with a window longer than any running write.
 spark.sql(f"""
-  CALL polaris.system.remove_orphan_files(
-    table      => 'analytics.events',
-    older_than => current_timestamp() - INTERVAL 2 HOURS
-  )
+ CALL polaris.system.remove_orphan_files(
+ table => 'analytics.events', older_than => current_timestamp() - INTERVAL 2 HOURS
+ )
 """)
 
 # Verification at the Iceberg layer: only one snapshot, no rows for

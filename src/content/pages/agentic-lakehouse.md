@@ -2,6 +2,7 @@
 title: "What Is an Agentic Lakehouse?"
 meta_title: "What Is an Agentic Lakehouse? | AI Data Architecture"
 description: "A comprehensive guide to the Agentic Lakehouse architecture, explaining how governed execution and semantic meaning power autonomous AI agents."
+canonical: "https://iceberglakehouse.com/agentic-lakehouse/"
 ---
 
 # What Is an Agentic Lakehouse?

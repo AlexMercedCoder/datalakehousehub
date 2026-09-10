@@ -14,6 +14,11 @@ draft: false
 image: "/images/blog.png"
 canonical: "https://iceberglakehouse.com/posts/2024-10-cdc-when-there-is-no-cdc/"
 ---
+
+## Introduction
+
+### Overview of CDC
+
 > **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2024-10-cdc-when-there-is-no-cdc/).
 
 - [Free Copy of Apache Iceberg: The Definitive Guide](https://hello.dremio.com/wp-apache-iceberg-the-definitive-guide-reg.html?utm_source=alexmerced&utm_medium=external_blog&utm_campaign=cdc_when_there_is_no_cdc)
@@ -22,10 +27,6 @@ canonical: "https://iceberglakehouse.com/posts/2024-10-cdc-when-there-is-no-cdc/
 - [Using Apache Iceberg with Kafka Connect](https://www.dremio.com/blog/ingesting-data-into-nessie-apache-iceberg-with-kafka-connect-and-querying-it-with-dremio/?utm_source=alexmerced&utm_medium=external_blog&utm_campaign=cdc_when_there_is_no_cdc)
 - [Using Apache Iceberg with Flink](https://www.dremio.com/blog/using-flink-with-apache-iceberg-and-nessie/?utm_source=alexmerced&utm_medium=external_blog&utm_campaign=cdc_when_there_is_no_cdc)
 - [Streaming and Batch Data Lakehouses with Apache Iceberg, Dremio and Upsolver](https://www.dremio.com/blog/streaming-and-batch-data-lakehouses-with-apache-iceberg-dremio-and-upsolver/?utm_source=alexmerced&utm_medium=external_blog&utm_campaign=cdc_when_there_is_no_cdc)
-
-## Introduction
-
-### Overview of CDC
 
 Change Data Capture (CDC) is the process of identifying and capturing changes made to data within a database. It's a critical technique in modern data architectures, enabling systems to stay synchronized, whether for analytical purposes, replication, or near-real-time data streaming. CDC helps minimize the need to reprocess entire datasets by focusing on only the incremental changes - new inserts, updates, and deletions.
 
@@ -96,27 +97,27 @@ MERGE INTO target_table AS t
 USING source_table AS s
 ON t.id = s.id
 WHEN MATCHED AND s.updated_at > t.updated_at THEN
-  UPDATE SET t.column1 = s.column1, t.updated_at = s.updated_at
+ UPDATE SET t.column1 = s.column1, t.updated_at = s.updated_at
 WHEN NOT MATCHED THEN
-  INSERT (id, column1, updated_at) 
-  VALUES (s.id, s.column1, s.updated_at);
+ INSERT (id, column1, updated_at) 
+ VALUES (s.id, s.column1, s.updated_at);
 ```
 
 In systems where MERGE isn’t supported, you can use a combination of INSERT and UPDATE queries:
 
 ```sql
--- Update existing records
+- Update existing records
 UPDATE target_table AS t
 SET column1 = s.column1, updated_at = s.updated_at
 FROM source_table AS s
 WHERE t.id = s.id AND s.updated_at > t.updated_at;
 
--- Insert new records
+- Insert new records
 INSERT INTO target_table (id, column1, updated_at)
 SELECT s.id, s.column1, s.updated_at
 FROM source_table AS s
 WHERE NOT EXISTS (
-    SELECT 1 FROM target_table t WHERE t.id = s.id
+ SELECT 1 FROM target_table t WHERE t.id = s.id
 );
 ```
 
@@ -137,27 +138,27 @@ This ensures that if the row already exists, it will be updated rather than thro
 ## Batch Processing and Scheduling Incremental Updates
 
 ### Batching Updates
-To avoid overwhelming your system or locking your database during large updates, batching incremental updates can be an effective strategy. Instead of applying all changes at once, process them in smaller, manageable chunks. For example, you can process updates in batches of 1,000 rows at a time.
+To avoid overwhelming your system or locking your database during large updates, batching incremental updates can be an effective strategy. Instead of applying all changes at once, process them in smaller, manageable chunks. For example, you can process updates in batches of 1, 000 rows at a time.
 
 Here’s how you could implement batch processing in SQL:
 
 ```sql
--- Assume a batch size of 1000 rows
+- Assume a batch size of 1000 rows
 WITH batch AS (
-    SELECT * FROM source_table 
-    WHERE updated_at > :last_processed_time
-    ORDER BY updated_at
-    LIMIT 1000
+ SELECT * FROM source_table 
+ WHERE updated_at > :last_processed_time
+ ORDER BY updated_at
+ LIMIT 1000
 )
--- Apply the batch to the target table
+- Apply the batch to the target table
 MERGE INTO target_table AS t
 USING batch AS b
 ON t.id = b.id
 WHEN MATCHED AND b.updated_at > t.updated_at THEN
-  UPDATE SET t.column1 = b.column1, t.updated_at = b.updated_at
+ UPDATE SET t.column1 = b.column1, t.updated_at = b.updated_at
 WHEN NOT MATCHED THEN
-  INSERT (id, column1, updated_at) 
-  VALUES (b.id, b.column1, b.updated_at);
+ INSERT (id, column1, updated_at) 
+ VALUES (b.id, b.column1, b.updated_at);
 ```
 
 After processing each batch, you can update your tracking mechanism (e.g., the last processed timestamp or version) and continue with the next batch.
@@ -183,9 +184,7 @@ from datetime import datetime
 dag = DAG('incremental_update', start_date=datetime(2023, 1, 1))
 
 run_incremental_update = BashOperator(
-    task_id='run_incremental_update',
-    bash_command='python /path/to/incremental_update.py',
-    dag=dag
+ task_id='run_incremental_update', bash_command='python /path/to/incremental_update.py', dag=dag
 )
 
 run_incremental_update
@@ -202,12 +201,7 @@ For example, you can create a simple audit table to track update operations:
 
 ```sql
 CREATE TABLE update_log (
-    update_id SERIAL PRIMARY KEY,
-    table_name TEXT,
-    rows_updated INT,
-    update_time TIMESTAMP DEFAULT NOW(),
-    status TEXT,
-    error_message TEXT
+ update_id SERIAL PRIMARY KEY, table_name TEXT, rows_updated INT, update_time TIMESTAMP DEFAULT NOW(), status TEXT, error_message TEXT
 );
 ```
 
@@ -229,10 +223,10 @@ VALUES ('target_table', 'failed', 'Error details...');
 Beyond simply logging updates, you should also perform regular validation checks to ensure the correctness of the data. One approach is to compare record counts between the source and target tables to ensure they are in sync:
 
 ```sql
--- Count of records in the source table since last update
+- Count of records in the source table since last update
 SELECT COUNT(*) FROM source_table WHERE updated_at > :last_update_time;
 
--- Count of records updated in the target table
+- Count of records updated in the target table
 SELECT COUNT(*) FROM target_table WHERE updated_at > :last_update_time;
 ```
 
@@ -241,11 +235,11 @@ If the counts don't match, it could indicate a data inconsistency or a problem w
 You can also compute checksums or hash values of critical columns to validate that the data was transferred without corruption:
 
 ```sql
--- Compute checksum on the source
+- Compute checksum on the source
 SELECT MD5(ARRAY_AGG(column1 || column2)) AS checksum
 FROM source_table WHERE updated_at > :last_update_time;
 
--- Compute checksum on the target
+- Compute checksum on the target
 SELECT MD5(ARRAY_AGG(column1 || column2)) AS checksum
 FROM target_table WHERE updated_at > :last_update_time;
 ```
@@ -268,10 +262,7 @@ Ensure the source table includes an `updated_at` column to track when each trans
 
 ```sql
 CREATE TABLE sales_transactions (
-    transaction_id SERIAL PRIMARY KEY,
-    product_id INT,
-    amount DECIMAL(10, 2),
-    updated_at TIMESTAMP DEFAULT NOW()
+ transaction_id SERIAL PRIMARY KEY, product_id INT, amount DECIMAL(10, 2), updated_at TIMESTAMP DEFAULT NOW()
 );
 ```
 
@@ -293,15 +284,15 @@ Use a `MERGE` or `UPSERT` query to update the `product_sales` table with the lat
 ```sql
 MERGE INTO product_sales AS p
 USING (SELECT product_id, SUM(amount) AS total_sales
-       FROM sales_transactions
-       WHERE updated_at > NOW() - INTERVAL '24 hours'
-       GROUP BY product_id) AS s
+ FROM sales_transactions
+ WHERE updated_at > NOW() - INTERVAL '24 hours'
+ GROUP BY product_id) AS s
 ON p.product_id = s.product_id
 WHEN MATCHED THEN
-  UPDATE SET p.total_sales = p.total_sales + s.total_sales, p.last_updated = NOW()
+ UPDATE SET p.total_sales = p.total_sales + s.total_sales, p.last_updated = NOW()
 WHEN NOT MATCHED THEN
-  INSERT (product_id, total_sales, last_updated)
-  VALUES (s.product_id, s.total_sales, NOW());
+ INSERT (product_id, total_sales, last_updated)
+ VALUES (s.product_id, s.total_sales, NOW());
 ```
 ### Handle batching and scheduling:
 
@@ -326,21 +317,15 @@ For example, in PostgreSQL, you can create a trigger to capture changes:
 
 ```sql
 CREATE TABLE change_log (
-    id SERIAL PRIMARY KEY,
-    table_name TEXT,
-    operation_type TEXT,
-    record_id INT,
-    old_data JSONB,
-    new_data JSONB,
-    change_time TIMESTAMP DEFAULT NOW()
+ id SERIAL PRIMARY KEY, table_name TEXT, operation_type TEXT, record_id INT, old_data JSONB, new_data JSONB, change_time TIMESTAMP DEFAULT NOW()
 );
 
 CREATE OR REPLACE FUNCTION log_changes()
 RETURNS TRIGGER AS $$
 BEGIN
-    INSERT INTO change_log (table_name, operation_type, record_id, old_data, new_data)
-    VALUES (TG_TABLE_NAME, TG_OP, NEW.id, OLD, NEW);
-    RETURN NEW;
+ INSERT INTO change_log (table_name, operation_type, record_id, old_data, new_data)
+ VALUES (TG_TABLE_NAME, TG_OP, NEW.id, OLD, NEW);
+ RETURN NEW;
 END;
 $$ LANGUAGE plpgsql;
 

@@ -2,7 +2,7 @@
 title: Managing Large-Scale Optimizations  – Parallelism, Checkpointing, and Fail Recovery
 date: 2025-09-09T09:00:00Z
 author: Alex Merced
-description: Learn how to scale Apache Iceberg table optimizations across large datasets using parallelism, checkpointing, and fail recovery to ensure reliability and performance.
+description: "Learn how to scale Apache Iceberg table optimizations across large datasets using parallelism, checkpointing, and fail recovery to ensure reliability."
 slug: iceberg-large-scale-optimization
 tags:
   - Apache Iceberg
@@ -17,14 +17,15 @@ category: "Apache Iceberg"
 bannerImage: "https://i.imgur.com/cpoMZQ8.png"
 canonical: "https://iceberglakehouse.com/posts/iceberg-large-scale-optimization/"
 ---
-> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/iceberg-large-scale-optimization/).
 
-- **[Free Apache Iceberg Course](https://hello.dremio.com/webcast-an-apache-iceberg-lakehouse-crash-course-reg.html?utm_source=ev_external_blog&utm_medium=influencer&utm_campaign=optimization_blogs&utm_content=alexmerced&utm_term=external_blog)**  
-- **[Free Copy of “Apache Iceberg: The Definitive Guide”](https://hello.dremio.com/wp-apache-iceberg-the-definitive-guide-reg.html?utm_source=ev_external_blog&utm_medium=influencer&utm_campaign=optimization_blogs&utm_content=alexmerced&utm_term=external_blog)**  
-- **[Free Copy of “Apache Polaris: The Definitive Guide”](https://hello.dremio.com/wp-apache-polaris-guide-reg.html?utm_source=ev_external_blog&utm_medium=influencer&utm_campaign=optimization_blogs&utm_content=alexmerced&utm_term=external_blog)**  
-- **[2025 Apache Iceberg Architecture Guide](https://medium.com/data-engineering-with-dremio/2025-guide-to-architecting-an-iceberg-lakehouse-9b19ed42c9de)**  
-- **[Iceberg Lakehouse Engineering Video Playlist](https://youtube.com/playlist?list=PLsLAVBjQJO0p0Yq1fLkoHvt2lEJj5pcYe&si=WTSnqjXZv6Glkc3y)**  
-- **[Ultimate Apache Iceberg Resource Guide](https://medium.com/data-engineering-with-dremio/ultimate-directory-of-apache-iceberg-resources-e3e02efac62e)** 
+- **[Free Apache Iceberg Course](https://hello.dremio.com/webcast-an-apache-iceberg-lakehouse-crash-course-reg.html?utm_source=ev_external_blog&utm_medium=influencer&utm_campaign=optimization_blogs&utm_content=alexmerced&utm_term=external_blog)** 
+- **[Free Copy of “Apache Iceberg: The Definitive Guide”](https://hello.dremio.com/wp-apache-iceberg-the-definitive-guide-reg.html?utm_source=ev_external_blog&utm_medium=influencer&utm_campaign=optimization_blogs&utm_content=alexmerced&utm_term=external_blog)** 
+- **[Free Copy of “Apache Polaris: The Definitive Guide”](https://hello.dremio.com/wp-apache-polaris-guide-reg.html?utm_source=ev_external_blog&utm_medium=influencer&utm_campaign=optimization_blogs&utm_content=alexmerced&utm_term=external_blog)** 
+- **[2025 Apache Iceberg Architecture Guide](https://medium.com/data-engineering-with-dremio/2025-guide-to-architecting-an-iceberg-lakehouse-9b19ed42c9de)** 
+- **[Iceberg Lakehouse Engineering Video Playlist](https://youtube.com/playlist?list=PLsLAVBjQJO0p0Yq1fLkoHvt2lEJj5pcYe&si=WTSnqjXZv6Glkc3y)** 
+- **[Ultimate Apache Iceberg Resource Guide](https://medium.com/data-engineering-with-dremio/ultimate-directory-of-apache-iceberg-resources-e3e02efac62e)**
+
+> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/iceberg-large-scale-optimization/).
 
 # Managing Large-Scale Optimizations : Parallelism, Checkpointing, and Fail Recovery
 
@@ -78,10 +79,10 @@ Use `.option("partial-progress.enabled", true)` for better resilience in Iceberg
 spark.conf.set("spark.sql.shuffle.partitions", "200")
 
 Actions.forTable(spark, table)
-  .rewriteDataFiles()
-  .option("min-input-files", "5")
-  .option("partial-progress.enabled", "true")
-  .execute()
+ .rewriteDataFiles()
+ .option("min-input-files", "5")
+ .option("partial-progress.enabled", "true")
+ .execute()
 ```
 
 In Flink:
@@ -123,10 +124,7 @@ For example, in Airflow:
 
 ```python
 PythonOperator(
-    task_id="compact_partition",
-    python_callable=run_compaction,
-    retries=3,
-    retry_delay=timedelta(minutes=5)
+ task_id="compact_partition", python_callable=run_compaction, retries=3, retry_delay=timedelta(minutes=5)
 )
 ```
 Also consider:
@@ -162,4 +160,3 @@ Scaling Iceberg optimization jobs requires thoughtful execution planning:
 - Automate retries and monitor outcomes
 
 In the final post of this series, we’ll bring it all together - showing how to build a fully autonomous optimization pipeline using orchestration, metadata triggers, and smart defaults.
-

@@ -14,11 +14,12 @@ tags:
 slug: "arrow-flight-sql-adbc-connectivity"
 draft: false
 ---
-> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/arrow-flight-sql-adbc-connectivity/).
 
 Run a query that returns 50 million rows from a fast analytical engine and watch where the time goes. The engine plans the query in 200 milliseconds, scans a few gigabytes of Parquet in 3 seconds, and finishes executing. Then the client waits another 40 seconds. Nothing is wrong with the engine. The client is pulling results through a JDBC or ODBC driver, and that driver is converting every row from the server's wire format into driver objects, one field at a time, and then the application is converting those objects into a DataFrame, one field at a time again.
 
-That last step is invisible in most monitoring, because it happens after the query "finishes" from the server's point of view and before the application code sees any data. It is also frequently the largest single cost in an analytical workload. A 2017 paper from CWI, "Don't Hold My Data Hostage," measured client-side result transfer across common databases and found that serialization and driver overhead dominated end-to-end time for large results, in some cases by an order of magnitude over the query itself.
+> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/arrow-flight-sql-adbc-connectivity/).
+
+That last step is invisible in most monitoring, because it happens after the query "finishes" from the server's point of view and before the application code sees any data. It is also frequently the largest single cost in an analytical workload. A 2017 paper from CWI, "Don't Hold My Data Hostage, " measured client-side result transfer across common databases and found that serialization and driver overhead dominated end-to-end time for large results, in some cases by an order of magnitude over the query itself.
 
 The Apache Arrow community has spent the last seven years building the replacement. Arrow Flight is a transport for columnar data over gRPC. Arrow Flight SQL is a database protocol on top of it. Arrow Database Connectivity (ADBC) is a client API that returns Arrow data from any database, over Flight SQL or anything else. Together they remove the row-by-row conversion entirely: the server produces Arrow batches, the network carries Arrow batches, and the client hands the application Arrow batches with zero copies in between.
 
@@ -101,7 +102,7 @@ The server plans and begins executing. Because the engine is producing results i
 
 The client opens a `DoGet` stream per endpoint. Each stream delivers Arrow IPC messages: a schema message, then record batches. Batches are typically a few thousand to a few hundred thousand rows each, sized by the server to balance latency and throughput.
 
-gRPC delivers the bytes. Because IPC buffers are contiguous and self-describing, the receiving side reads the Flatbuffers header, finds the buffer offsets, and constructs Arrow arrays that point directly at the received memory. No per-value parsing occurs. A batch of 100,000 rows and 20 columns is 20 buffer sets, not 2 million field decodes.
+gRPC delivers the bytes. Because IPC buffers are contiguous and self-describing, the receiving side reads the Flatbuffers header, finds the buffer offsets, and constructs Arrow arrays that point directly at the received memory. No per-value parsing occurs. A batch of 100, 000 rows and 20 columns is 20 buffer sets, not 2 million field decodes.
 
 The application receives an Arrow stream. It can convert to pandas or Polars (both are Arrow-aware and the conversion is cheap or zero-copy for most types), feed it to DuckDB or DataFusion directly, write it to Parquet, or iterate batches and never materialize the whole result.
 
@@ -110,7 +111,7 @@ The costs that disappear are the two row conversions, the per-field serializatio
 Here is how the two paths compare on the properties that matter:
 
 | Property | JDBC / ODBC | Flight SQL + ADBC |
-|---|---|---|
+|--|--|--|
 | Wire format | Row-oriented, per-field framing | Arrow IPC, per-buffer framing |
 | Server-side conversion (columnar engine) | Columns to rows | None |
 | Client-side parsing | Per field, allocates objects | Per buffer, zero copy |
@@ -132,38 +133,31 @@ from adbc_driver_flightsql import DatabaseOptions, ConnectionOptions
 import pyarrow as pa
 
 conn = flight_sql.connect(
-    "grpc+tls://lakehouse.example.com:32010",
-    db_kwargs={
-        DatabaseOptions.AUTHORIZATION_HEADER.value: "Bearer " + TOKEN,
-        DatabaseOptions.TLS_SKIP_VERIFY.value: "false",
-    },
-)
+ "grpc+tls://lakehouse.example.com:32010", db_kwargs={
+ DatabaseOptions.AUTHORIZATION_HEADER.value: "Bearer " + TOKEN, DatabaseOptions.TLS_SKIP_VERIFY.value: "false", }, )
 
 with conn.cursor() as cur:
-    cur.execute("""
-        SELECT region, product_id, sale_date, amount
-        FROM lake.sales
-        WHERE sale_date >= DATE '2026-08-01'
-    """)
-    table = cur.fetch_arrow_table()
+ cur.execute("""
+ SELECT region, product_id, sale_date, amount
+ FROM lake.sales
+ WHERE sale_date >= DATE '2026-08-01'
+ """)
+ table = cur.fetch_arrow_table()
 
 print(table.num_rows, table.schema)
 
 # Stream batches instead of materializing the whole result
 with conn.cursor() as cur:
-    cur.execute("SELECT * FROM lake.events WHERE day = DATE '2026-08-23'")
-    reader = cur.fetch_record_batch()
-    for batch in reader:
-        process(batch)          # each batch is a pyarrow.RecordBatch
+ cur.execute("SELECT * FROM lake.events WHERE day = DATE '2026-08-23'")
+ reader = cur.fetch_record_batch()
+ for batch in reader:
+ process(batch) # each batch is a pyarrow.RecordBatch
 
 # Bulk ingest an Arrow table with one call
 new_rows = pa.table({
-    "region": ["east", "west"],
-    "product_id": [101, 102],
-    "amount": [19.99, 24.50],
-})
+ "region": ["east", "west"], "product_id": [101, 102], "amount": [19.99, 24.50], })
 with conn.cursor() as cur:
-    cur.adbc_ingest("lake.sales_staging", new_rows, mode="append")
+ cur.adbc_ingest("lake.sales_staging", new_rows, mode="append")
 
 conn.close()
 ```
@@ -182,53 +176,51 @@ The Go driver is where the Flight SQL implementation originally matured, and it 
 package main
 
 import (
-    "context"
-    "fmt"
+ "context"
+ "fmt"
 
-    "github.com/apache/arrow-adbc/go/adbc"
-    "github.com/apache/arrow-adbc/go/adbc/driver/flightsql"
-    "github.com/apache/arrow-go/v18/arrow/memory"
+ "github.com/apache/arrow-adbc/go/adbc"
+ "github.com/apache/arrow-adbc/go/adbc/driver/flightsql"
+ "github.com/apache/arrow-go/v18/arrow/memory"
 )
 
 func main() {
-    ctx := context.Background()
-    drv := flightsql.NewDriver(memory.DefaultAllocator)
+ ctx := context.Background()
+ drv := flightsql.NewDriver(memory.DefaultAllocator)
 
-    db, err := drv.NewDatabase(map[string]string{
-        adbc.OptionKeyURI:                        "grpc+tls://lakehouse.example.com:32010",
-        flightsql.OptionAuthorizationHeader:      "Bearer " + token,
-    })
-    if err != nil {
-        panic(err)
-    }
-    defer db.Close()
+ db, err := drv.NewDatabase(map[string]string{
+ adbc.OptionKeyURI: "grpc+tls://lakehouse.example.com:32010", flightsql.OptionAuthorizationHeader: "Bearer " + token, })
+ if err != nil {
+ panic(err)
+ }
+ defer db.Close()
 
-    cnxn, err := db.Open(ctx)
-    if err != nil {
-        panic(err)
-    }
-    defer cnxn.Close()
+ cnxn, err := db.Open(ctx)
+ if err != nil {
+ panic(err)
+ }
+ defer cnxn.Close()
 
-    stmt, err := cnxn.NewStatement()
-    if err != nil {
-        panic(err)
-    }
-    defer stmt.Close()
+ stmt, err := cnxn.NewStatement()
+ if err != nil {
+ panic(err)
+ }
+ defer stmt.Close()
 
-    if err := stmt.SetSqlQuery("SELECT region, SUM(amount) FROM lake.sales GROUP BY region"); err != nil {
-        panic(err)
-    }
-    reader, rows, err := stmt.ExecuteQuery(ctx)
-    if err != nil {
-        panic(err)
-    }
-    defer reader.Release()
+ if err := stmt.SetSqlQuery("SELECT region, SUM(amount) FROM lake.sales GROUP BY region"); err != nil {
+ panic(err)
+ }
+ reader, rows, err := stmt.ExecuteQuery(ctx)
+ if err != nil {
+ panic(err)
+ }
+ defer reader.Release()
 
-    for reader.Next() {
-        rec := reader.Record()
-        fmt.Println(rec.NumRows(), rec.Schema())
-    }
-    _ = rows
+ for reader.Next() {
+ rec := reader.Record()
+ fmt.Println(rec.NumRows(), rec.Schema())
+ }
+ _ = rows
 }
 ```
 
@@ -240,7 +232,7 @@ Rust has two routes. The `adbc_core` crate defines the API traits and `adbc_driv
 
 One capability that gets less attention than result streaming is how Flight SQL binds parameters, and it is the part that changes write-heavy and lookup-heavy workloads most.
 
-In JDBC, a prepared statement takes parameters one row at a time. Batch mode lets you queue many parameter sets, but each set is still marshaled individually, and the wire protocol sends them as a sequence of per-row messages. A lookup of 200,000 keys against a dimension table means either 200,000 round trips, a batch of 200,000 individually encoded parameter rows, or building a giant `IN` list and hoping the parser copes.
+In JDBC, a prepared statement takes parameters one row at a time. Batch mode lets you queue many parameter sets, but each set is still marshaled individually, and the wire protocol sends them as a sequence of per-row messages. A lookup of 200, 000 keys against a dimension table means either 200, 000 round trips, a batch of 200, 000 individually encoded parameter rows, or building a giant `IN` list and hoping the parser copes.
 
 Flight SQL binds parameters as an Arrow record batch. The client creates a prepared statement with `ActionCreatePreparedStatementRequest`, receives a handle plus the expected parameter schema, and then sends a record batch through `DoPut` where each row of the batch is one parameter set. The server executes the statement once per row or, for servers that support it, treats the batch as a relation and joins against it. Either way the parameters cross the wire as columns.
 
@@ -249,17 +241,15 @@ In the Python DB-API this looks like an ordinary `executemany` with an Arrow tab
 ```python
 import pyarrow as pa
 
-keys = pa.table({"customer_id": customer_ids})   # a list of 200,000 ints
+keys = pa.table({"customer_id": customer_ids}) # a list of 200, 000 ints
 
 with conn.cursor() as cur:
-    cur.executemany(
-        "SELECT customer_id, segment, lifetime_value "
-        "FROM lake.customers WHERE customer_id = ?",
-        keys,
-    )
+ cur.executemany(
+ "SELECT customer_id, segment, lifetime_value "
+ "FROM lake.customers WHERE customer_id = ?", keys, )
 ```
 
-The driver creates the prepared statement, binds the whole table in one `DoPut`, and streams the results back. Compared to the same operation through a legacy driver, the parameter transfer is one columnar upload instead of 200,000 marshaled rows, and the result is one Arrow stream instead of 200,000 result sets or one enormous one.
+The driver creates the prepared statement, binds the whole table in one `DoPut`, and streams the results back. Compared to the same operation through a legacy driver, the parameter transfer is one columnar upload instead of 200, 000 marshaled rows, and the result is one Arrow stream instead of 200, 000 result sets or one enormous one.
 
 The same mechanism is what makes `adbc_ingest` fast on servers that lack a dedicated bulk-ingest command. The driver prepares an `INSERT` with one parameter per column and binds the entire input table as the parameter batch. The server sees one statement and one columnar payload.
 
@@ -299,7 +289,7 @@ Flight SQL and ADBC are mature enough that most of what goes wrong is operationa
 
 **Load balancers and gRPC.** Flight runs on HTTP/2 with long-lived streams. Layer 7 load balancers that were configured for short HTTP/1.1 requests will terminate idle streams, fail to route HTTP/2 correctly, or balance connections instead of requests. Symptoms are streams that die mid-result and connections that all land on one backend. Use a load balancer that understands gRPC, or terminate TLS and pass through at layer 4.
 
-**Endpoint locations behind NAT.** When a server returns multiple endpoints with locations pointing at internal node addresses, a client outside the network cannot reach them. The spec allows an empty location list, which means "fetch from the same server you asked," and servers that face the public internet should either do that or return externally routable addresses. If parallel fetch works inside the VPC and fails outside it, check the locations in the `FlightInfo` response.
+**Endpoint locations behind NAT.** When a server returns multiple endpoints with locations pointing at internal node addresses, a client outside the network cannot reach them. The spec allows an empty location list, which means "fetch from the same server you asked, " and servers that face the public internet should either do that or return externally routable addresses. If parallel fetch works inside the VPC and fails outside it, check the locations in the `FlightInfo` response.
 
 **Type mapping surprises.** Arrow has a richer type system than most databases. A server has to choose how to map its types to Arrow types, and the choices differ: decimals with different precisions, timestamps with or without timezone, strings as `utf8` versus `large_utf8` versus `string_view`. Applications that assume a specific Arrow type for a column break when they switch servers. Read the schema from the `FlightInfo` response rather than assuming it, and cast on the client if you need a canonical type.
 

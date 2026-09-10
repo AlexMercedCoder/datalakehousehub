@@ -14,9 +14,10 @@ tags:
 slug: "inside-iceberg-rest-scan-planning"
 draft: false
 ---
-> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/inside-iceberg-rest-scan-planning/).
 
-For as long as Apache Iceberg has existed, one division of labor held constant: catalogs answered "where is the table," and engines figured out everything else. Every query engine that read Iceberg carried its own complete planning machinery, downloading metadata from object storage, pruning it, and deciding which data files to read, while the catalog watched from the sidelines holding a pointer. The Iceberg 1.11 release, the culmination of endpoints added to the REST catalog specification back in 2024 and two years of implementation work, retires that constant. A REST catalog can now plan the scan itself: the engine sends a filter, the catalog walks the metadata, and file scan tasks come back over HTTP.
+For as long as Apache Iceberg has existed, one division of labor held constant: catalogs answered "where is the table, " and engines figured out everything else. Every query engine that read Iceberg carried its own complete planning machinery, downloading metadata from object storage, pruning it, and deciding which data files to read, while the catalog watched from the sidelines holding a pointer. The Iceberg 1.11 release, the culmination of endpoints added to the REST catalog specification back in 2024 and two years of implementation work, retires that constant. A REST catalog can now plan the scan itself: the engine sends a filter, the catalog walks the metadata, and file scan tasks come back over HTTP.
+
+> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/inside-iceberg-rest-scan-planning/).
 
 This article is the mechanics explainer I wish existed when I first traced this protocol. We will walk client-side planning step by step, because you cannot evaluate what moved to the server without knowing exactly what the client did. Then the remote flow, endpoint by endpoint: the plan request and its fields, synchronous and asynchronous modes, the plan lifecycle, task pagination, and capability discovery. Then what a planning server actually does, the trade-offs in a table you can argue with, where engine and catalog support stands in August 2026, and the operational habits that make adoption boring in the good way.
 
@@ -24,7 +25,7 @@ One disclosure up front: I work at Dremio, which builds a query engine and an op
 
 ## The Job Called Scan Planning
 
-Before any flow, fix the job description. A query arrives: read some columns from a table where some predicate holds. Scan planning converts that request into the minimum concrete work list, which files to open, which byte ranges to read, which delete files to apply against them, and which parts of the predicate still need evaluating row by row. Good planning is the difference between a query that reads 40 files and one that reads 40,000, and nothing downstream, no vectorization, no clever join, recovers what bad planning throws away.
+Before any flow, fix the job description. A query arrives: read some columns from a table where some predicate holds. Scan planning converts that request into the minimum concrete work list, which files to open, which byte ranges to read, which delete files to apply against them, and which parts of the predicate still need evaluating row by row. Good planning is the difference between a query that reads 40 files and one that reads 40, 000, and nothing downstream, no vectorization, no clever join, recovers what bad planning throws away.
 
 Iceberg makes planning tractable through statistics that live in its metadata tree. Every data file was described at write time: how many records, which partition it belongs to, and per-column lower bounds, upper bounds, and null counts. Those descriptions roll up through manifests and manifest lists with partition-level summaries at each level. Planning is the act of walking that tree top down, cutting branches the statistics prove irrelevant, and emitting what survives. The tree walk is the same no matter who performs it. The entire question this article examines is where the walker runs.
 
@@ -66,11 +67,11 @@ What disappears from the engine is exactly the expensive middle: manifest downlo
 
 ## The Latency Math
 
-Numbers make the relocation vivid, so run the arithmetic on a mid-sized production table: 80,000 data files, 160 manifests at 3 MB each, object storage answering reads in 40 milliseconds at the median. The query filters on a partitioned date column and matches 1,200 files.
+Numbers make the relocation vivid, so run the arithmetic on a mid-sized production table: 80, 000 data files, 160 manifests at 3 MB each, object storage answering reads in 40 milliseconds at the median. The query filters on a partitioned date column and matches 1, 200 files.
 
 Client-side, the walk costs one catalog call, then storage reads: metadata file, manifest list, and, after partition summaries eliminate half the manifests, 80 manifest reads totaling 240 MB. With eight-way parallel fetches, the manifest stage alone runs 10 rounds of 40 ms plus transfer and decode time, and realistic end-to-end planning lands in the two-to-five second range, engine CPU busy throughout, roughly 300 MB of decoded metadata resident at peak. Every engine instance pays this independently. A dashboard with six charts against this table pays it six times, and pays it again on refresh, because engines cannot share what they planned.
 
-Remotely, the engine pays one HTTP round trip carrying a request measured in hundreds of bytes and a response carrying 1,200 tasks, a couple of megabytes. A pass-through server pays the storage reads the client used to pay, once, from a better seat, then amortizes them across every subsequent plan through its manifest cache. A caching or indexing server answers the second identical plan in single-digit milliseconds. The dashboard's six charts trigger six requests that hit one warm cache, and the refresh hits it again. Client planning cost went from seconds-times-instances to milliseconds-times-one, and client memory went from hundreds of megabytes to roughly the size of the task list.
+Remotely, the engine pays one HTTP round trip carrying a request measured in hundreds of bytes and a response carrying 1, 200 tasks, a couple of megabytes. A pass-through server pays the storage reads the client used to pay, once, from a better seat, then amortizes them across every subsequent plan through its manifest cache. A caching or indexing server answers the second identical plan in single-digit milliseconds. The dashboard's six charts trigger six requests that hit one warm cache, and the refresh hits it again. Client planning cost went from seconds-times-instances to milliseconds-times-one, and client memory went from hundreds of megabytes to roughly the size of the task list.
 
 The arithmetic also locates the break-even honestly. A tiny table with three manifests plans locally in a blink, and the HTTP round trip to a distant catalog buys nothing on it. Remote planning's advantage scales with metadata size, query repetition, and client constraint, which is why the canonical wins are big tables, hot dashboards, and small clients, and why a sensible rollout starts where those three overlap.
 
@@ -86,16 +87,9 @@ Content-Type: application/json
 Authorization: Bearer <token>
 
 {
-  "snapshot-id": 8271744332764321989,
-  "select": ["order_id", "customer_id", "total"],
-  "filter": {
-    "type": "and",
-    "left":  { "type": "eq",  "term": "region",     "value": "EMEA" },
-    "right": { "type": "gt-eq", "term": "order_date", "value": "2026-08-01" }
-  },
-  "case-sensitive": true,
-  "use-snapshot-schema": false,
-  "min-rows-requested": 100000
+ "snapshot-id": 8271744332764321989, "select": ["order_id", "customer_id", "total"], "filter": {
+ "type": "and", "left": { "type": "eq", "term": "region", "value": "EMEA" }, "right": { "type": "gt-eq", "term": "order_date", "value": "2026-08-01" }
+ }, "case-sensitive": true, "use-snapshot-schema": false, "min-rows-requested": 100000
 }
 ```
 
@@ -105,22 +99,13 @@ The response comes in one of two shapes, and the server chooses. A synchronous s
 
 ```json
 {
-  "plan-status": "completed",
-  "file-scan-tasks": [
-    {
-      "data-file": {
-        "content": "data",
-        "file-path": "s3://lake/sales/orders/data/00042-a1.parquet",
-        "file-format": "parquet",
-        "record-count": 481923,
-        "file-size-in-bytes": 104857600,
-        "partition": { "region": "EMEA", "order_date_day": 20666 }
-      },
-      "delete-files": [],
-      "residual-filter": { "type": "gt-eq", "term": "order_date",
-                           "value": "2026-08-01" }
-    }
-  ]
+ "plan-status": "completed", "file-scan-tasks": [
+ {
+ "data-file": {
+ "content": "data", "file-path": "s3://lake/sales/orders/data/00042-a1.parquet", "file-format": "parquet", "record-count": 481923, "file-size-in-bytes": 104857600, "partition": { "region": "EMEA", "order_date_day": 20666 }
+ }, "delete-files": [], "residual-filter": { "type": "gt-eq", "term": "order_date", "value": "2026-08-01" }
+ }
+ ]
 }
 ```
 
@@ -190,7 +175,7 @@ For platform teams, the operational consequence is a credential model worth rede
 Every architectural relocation trades one set of costs for another, and this one deserves an honest ledger rather than advocacy. Here is mine:
 
 | Dimension | Client-side planning | Remote scan planning |
-|---|---|---|
+|--|--|--|
 | Planning round trips | One per metadata file touched | One, plus task pages |
 | Metadata over the network | Manifest sets, repeatedly, per engine | Matched tasks only |
 | Engine memory during planning | Proportional to metadata size | Proportional to task pages |
@@ -223,17 +208,16 @@ The fastest way to internalize a protocol is to speak it, and this one speaks ov
 ```bash
 # 1. What does the server support?
 curl -s -H "Authorization: Bearer $TOKEN" \
-  "https://catalog.example.com/v1/config?warehouse=prod" \
-  | jq '.endpoints'
+ "https://catalog.example.com/v1/config?warehouse=prod" \
+ | jq '.endpoints'
 
 # 2. Plan a filtered scan
 curl -s -X POST -H "Authorization: Bearer $TOKEN" \
-  -H "Content-Type: application/json" \
-  "https://catalog.example.com/v1/prod/namespaces/sales/tables/orders/plan" \
-  -d '{
-        "filter": {"type":"eq","term":"region","value":"EMEA"},
-        "select": ["order_id","total"]
-      }' | jq '."plan-status", (."file-scan-tasks" | length)'
+ -H "Content-Type: application/json" \
+ "https://catalog.example.com/v1/prod/namespaces/sales/tables/orders/plan" \
+ -d '{
+ "filter": {"type":"eq", "term":"region", "value":"EMEA"}, "select": ["order_id", "total"]
+ }' | jq '."plan-status", (."file-scan-tasks" | length)'
 ```
 
 The first command answers the discovery question directly, look for the plan and tasks endpoints in the list. The second returns either a completed plan whose task count you can sanity-check against expectations, or a submitted status with a plan ID to poll, telling you which mode the server chose. Change the filter's selectivity and watch the task count move, which is server-side pruning made visible, the whole feature in one number.
@@ -254,15 +238,11 @@ The Python path is equally short, and usefully different: PyIceberg negotiates c
 ```python
 from pyiceberg.catalog import load_catalog
 
-catalog = load_catalog("prod",
-                       uri="https://catalog.example.com",
-                       token="<token>")
+catalog = load_catalog("prod", uri="https://catalog.example.com", token="<token>")
 
 table = catalog.load_table("sales.orders")
 tasks = table.scan(
-    row_filter="region = 'EMEA' and order_date >= '2026-08-01'",
-    selected_fields=("order_id", "total"),
-).plan_files()
+ row_filter="region = 'EMEA' and order_date >= '2026-08-01'", selected_fields=("order_id", "total"), ).plan_files()
 
 print(sum(1 for _ in tasks))
 ```

@@ -1,6 +1,6 @@
 ---
 title: "The Whole Lakehouse Fits on Your Laptop Now"
-description: "Consumer hardware, columnar formats, single-node engines, and the Iceberg REST catalog crossed a threshold: a large share of cluster work now runs locally against the same governed tables."
+description: "Consumer hardware, columnar formats, single-node engines, and the Iceberg REST catalog crossed a threshold: a large share of cluster work now runs locally."
 date: 2026-07-25T09:00:00Z
 author: "Alex Merced"
 category: "Data Engineering"
@@ -16,9 +16,9 @@ image: "/images/blog.png"
 canonical: https://iceberglakehouse.com/posts/laptop-scale-lakehouse/
 ---
 
-> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/laptop-scale-lakehouse/).
-
 A colleague spent forty minutes last month provisioning a cluster to profile a 90 GB Parquet dataset. Startup, dependency resolution, a permissions error, another restart, then the actual work, which took four minutes. I ran the same profiling on a laptop in under two, including the download.
+
+> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/laptop-scale-lakehouse/).
 
 That is not a story about clever tooling. It is a story about a threshold that got crossed quietly. Consumer hardware now carries 64 to 128 GB of unified memory and NVMe storage that reads several gigabytes per second. Columnar formats mean a query touching four of forty columns reads a tenth of the file. Single-node engines got genuinely fast. And the Iceberg REST catalog turned a laptop into a first-class client of the same governed tables the cluster reads.
 
@@ -53,7 +53,7 @@ Four options, with real differences.
 **PyIceberg** rounds out the set. It is not a query engine, it is the Python client for Iceberg tables: catalog operations, scan planning, and materialization into Arrow, which then hands off to DuckDB, Polars, or pandas.
 
 | Tool | Shape | Best for | Iceberg access |
-|---|---|---|---|
+|--|--|--|--|
 | DuckDB | In-process SQL engine | Interactive analysis, notebooks, CLI work | Extension plus REST catalog |
 | DataFusion | Embeddable engine library | Building data systems and custom tools | `TableProvider` via iceberg-rust |
 | Polars | DataFrame library | Transformations replacing pandas at scale | Through PyIceberg and Arrow |
@@ -69,32 +69,32 @@ The full setup takes about twenty minutes and produces a real lakehouse: object 
 ```yaml
 # docker-compose.yml
 services:
-  minio:
-    image: quay.io/minio/minio:latest
-    command: server /data --console-address ":9001"
-    environment:
-      MINIO_ROOT_USER: local
-      MINIO_ROOT_PASSWORD: localpassword
-    ports: ["9000:9000", "9001:9001"]
-    volumes: ["./minio-data:/data"]
+ minio:
+ image: quay.io/minio/minio:latest
+ command: server /data -console-address ":9001"
+ environment:
+ MINIO_ROOT_USER: local
+ MINIO_ROOT_PASSWORD: localpassword
+ ports: ["9000:9000", "9001:9001"]
+ volumes: ["./minio-data:/data"]
 
-  catalog-db:
-    image: postgres:17
-    environment:
-      POSTGRES_USER: catalog
-      POSTGRES_PASSWORD: catalog
-      POSTGRES_DB: catalog
-    volumes: ["./pg-data:/var/lib/postgresql/data"]
+ catalog-db:
+ image: postgres:17
+ environment:
+ POSTGRES_USER: catalog
+ POSTGRES_PASSWORD: catalog
+ POSTGRES_DB: catalog
+ volumes: ["./pg-data:/var/lib/postgresql/data"]
 
-  lakekeeper:
-    image: quay.io/lakekeeper/catalog:latest
-    depends_on: [catalog-db, minio]
-    environment:
-      LAKEKEEPER__PG_DATABASE_URL_READ: postgres://catalog:catalog@catalog-db:5432/catalog
-      LAKEKEEPER__PG_DATABASE_URL_WRITE: postgres://catalog:catalog@catalog-db:5432/catalog
-      LAKEKEEPER__BASE_URI: http://localhost:8181
-    ports: ["8181:8181"]
-    command: ["serve"]
+ lakekeeper:
+ image: quay.io/lakekeeper/catalog:latest
+ depends_on: [catalog-db, minio]
+ environment:
+ LAKEKEEPER__PG_DATABASE_URL_READ: postgres://catalog:catalog@catalog-db:5432/catalog
+ LAKEKEEPER__PG_DATABASE_URL_WRITE: postgres://catalog:catalog@catalog-db:5432/catalog
+ LAKEKEEPER__BASE_URI: http://localhost:8181
+ ports: ["8181:8181"]
+ command: ["serve"]
 ```
 
 Three components, all of which have production equivalents. MinIO speaks the S3 API, so code written against it works unchanged against cloud object storage. Lakekeeper implements the Iceberg REST specification in Rust, and Apache Polaris substitutes directly if you prefer the catalog that graduated to an Apache Top-Level Project in February 2026. Postgres holds the catalog's own state.
@@ -110,41 +110,25 @@ import pyarrow.parquet as pq
 from pyiceberg.catalog import load_catalog
 from pyiceberg.schema import Schema
 from pyiceberg.types import (
-    NestedField, StringType, LongType, TimestampType, DoubleType,
-)
+ NestedField, StringType, LongType, TimestampType, DoubleType, )
 from pyiceberg.partitioning import PartitionSpec, PartitionField
 from pyiceberg.transforms import DayTransform
 
 catalog = load_catalog(
-    "local",
-    **{
-        "type": "rest",
-        "uri": "http://localhost:8181/catalog",
-        "warehouse": "demo",
-        "s3.endpoint": "http://localhost:9000",
-        "s3.access-key-id": "local",
-        "s3.secret-access-key": "localpassword",
-        "s3.path-style-access": "true",
-    },
-)
+ "local", **{
+ "type": "rest", "uri": "http://localhost:8181/catalog", "warehouse": "demo", "s3.endpoint": "http://localhost:9000", "s3.access-key-id": "local", "s3.secret-access-key": "localpassword", "s3.path-style-access": "true", }, )
 
 catalog.create_namespace_if_not_exists("analytics")
 
 schema = Schema(
-    NestedField(1, "event_id", LongType(), required=True),
-    NestedField(2, "occurred_at", TimestampType(), required=True),
-    NestedField(3, "user_id", StringType(), required=False),
-    NestedField(4, "event_type", StringType(), required=False),
-    NestedField(5, "amount", DoubleType(), required=False),
-)
+ NestedField(1, "event_id", LongType(), required=True), NestedField(2, "occurred_at", TimestampType(), required=True), NestedField(3, "user_id", StringType(), required=False), NestedField(4, "event_type", StringType(), required=False), NestedField(5, "amount", DoubleType(), required=False), )
 
 spec = PartitionSpec(
-    PartitionField(source_id=2, field_id=1000,
-                   transform=DayTransform(), name="occurred_day")
+ PartitionField(source_id=2, field_id=1000, transform=DayTransform(), name="occurred_day")
 )
 
 table = catalog.create_table_if_not_exists(
-    "analytics.events", schema=schema, partition_spec=spec
+ "analytics.events", schema=schema, partition_spec=spec
 )
 
 table.append(pq.read_table("raw/events-2026-07.parquet"))
@@ -156,24 +140,15 @@ Then query it from DuckDB, which reads the same table through the same catalog:
 INSTALL iceberg; LOAD iceberg;
 
 CREATE SECRET local_minio (
-    TYPE s3,
-    KEY_ID 'local',
-    SECRET 'localpassword',
-    ENDPOINT 'localhost:9000',
-    URL_STYLE 'path',
-    USE_SSL false
+ TYPE s3, KEY_ID 'local', SECRET 'localpassword', ENDPOINT 'localhost:9000', URL_STYLE 'path', USE_SSL false
 );
 
 ATTACH 'demo' AS lake (
-    TYPE iceberg,
-    ENDPOINT 'http://localhost:8181/catalog'
+ TYPE iceberg, ENDPOINT 'http://localhost:8181/catalog'
 );
 
 SELECT
-    event_type,
-    date_trunc('day', occurred_at) AS day,
-    COUNT(*)                       AS events,
-    SUM(amount)                    AS total
+ event_type, date_trunc('day', occurred_at) AS day, COUNT(*) AS events, SUM(amount) AS total
 FROM lake.analytics.events
 WHERE occurred_at >= TIMESTAMP '2026-07-01'
 GROUP BY 1, 2
@@ -190,7 +165,7 @@ And for teams with existing Spark code, Sail runs the same logic without a clust
 
 ```bash
 pip install pysail
-sail spark server --port 50051
+sail spark server -port 50051
 ```
 
 ```python
@@ -200,9 +175,9 @@ spark = SparkSession.builder.remote("sc://localhost:50051").getOrCreate()
 
 df = spark.read.parquet("s3://demo/raw/events/")
 result = (
-    df.filter(df.occurred_at >= "2026-07-01")
-      .groupBy("event_type")
-      .agg({"amount": "sum"})
+ df.filter(df.occurred_at >= "2026-07-01")
+ .groupBy("event_type")
+ .agg({"amount": "sum"})
 )
 result.show()
 ```
@@ -271,10 +246,7 @@ table = catalog.load_table("analytics.events")
 snapshot_id = table.current_snapshot().snapshot_id
 
 scan = table.scan(
-    snapshot_id=snapshot_id,
-    row_filter="occurred_at >= '2026-07-01' AND event_type = 'purchase'",
-    selected_fields=("event_id", "occurred_at", "user_id", "amount"),
-)
+ snapshot_id=snapshot_id, row_filter="occurred_at >= '2026-07-01' AND event_type = 'purchase'", selected_fields=("event_id", "occurred_at", "user_id", "amount"), )
 
 arrow = scan.to_arrow()
 print(arrow.num_rows, "rows from snapshot", snapshot_id)
@@ -297,31 +269,31 @@ import duckdb, json
 con = duckdb.connect()
 con.execute("INSTALL iceberg; LOAD iceberg;")
 con.execute("""
-    ATTACH 'demo' AS lake (TYPE iceberg, ENDPOINT 'http://localhost:8181/catalog')
+ ATTACH 'demo' AS lake (TYPE iceberg, ENDPOINT 'http://localhost:8181/catalog')
 """)
 
 ALLOWED_TABLES = {"lake.analytics.events", "lake.analytics.customers"}
 
 def list_tables() -> str:
-    rows = con.execute("""
-        SELECT table_schema, table_name
-        FROM lake.information_schema.tables
-    """).fetchall()
-    return json.dumps([{"schema": r[0], "table": r[1]} for r in rows])
+ rows = con.execute("""
+ SELECT table_schema, table_name
+ FROM lake.information_schema.tables
+ """).fetchall()
+ return json.dumps([{"schema": r[0], "table": r[1]} for r in rows])
 
 def describe_table(name: str) -> str:
-    if name not in ALLOWED_TABLES:
-        return json.dumps({"error": "table not permitted"})
-    rows = con.execute(f"DESCRIBE {name}").fetchall()
-    return json.dumps([{"column": r[0], "type": r[1]} for r in rows])
+ if name not in ALLOWED_TABLES:
+ return json.dumps({"error": "table not permitted"})
+ rows = con.execute(f"DESCRIBE {name}").fetchall()
+ return json.dumps([{"column": r[0], "type": r[1]} for r in rows])
 
 def run_query(sql: str, row_limit: int = 200) -> str:
-    lowered = sql.strip().lower()
-    if not lowered.startswith("select"):
-        return json.dumps({"error": "only SELECT statements are allowed"})
-    rel = con.execute(f"SELECT * FROM ({sql}) LIMIT {row_limit}")
-    cols = [d[0] for d in rel.description]
-    return json.dumps([dict(zip(cols, row)) for row in rel.fetchall()])
+ lowered = sql.strip().lower()
+ if not lowered.startswith("select"):
+ return json.dumps({"error": "only SELECT statements are allowed"})
+ rel = con.execute(f"SELECT * FROM ({sql}) LIMIT {row_limit}")
+ cols = [d[0] for d in rel.description]
+ return json.dumps([dict(zip(cols, row)) for row in rel.fetchall()])
 ```
 
 Three design decisions in that sketch are worth copying.
@@ -376,7 +348,7 @@ EXPLAIN ANALYZE
 SELECT user_id, SUM(amount)
 FROM lake.analytics.events
 WHERE occurred_at >= TIMESTAMP '2026-07-01'
-  AND event_type = 'purchase'
+ AND event_type = 'purchase'
 GROUP BY user_id;
 ```
 

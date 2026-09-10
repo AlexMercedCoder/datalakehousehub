@@ -14,9 +14,10 @@ tags:
 slug: "apache-ossie-polaris-semantic-models"
 draft: false
 ---
-> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/apache-ossie-polaris-semantic-models/).
 
 Ask four systems in the same company what "monthly active users" means and you get four answers. The BI tool counts distinct user IDs with at least one session in the calendar month. The product analytics platform counts users with at least one qualifying event in a trailing 30-day window. The finance model counts billable seats that logged in. The AI agent someone stood up last quarter asked the warehouse for "active users" and got whatever the first table with that column name returned. Every one of those definitions is defensible. Every one of them lives in a different tool, in a different format, and none of them can be read by the others.
+
+> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/apache-ossie-polaris-semantic-models/).
 
 That is the fragmentation problem semantic layers exist to solve, and for a decade the solution has been to pick one vendor's semantic layer and re-implement everything else against it. The metric definitions became a moat. The moment you wanted a second BI tool or a new agent framework, you re-typed the definitions, and they drifted.
 
@@ -28,7 +29,7 @@ This article covers what Ossie standardizes and what it deliberately leaves out,
 
 Semantic layers grew up inside BI tools because that is where the need first appeared. A dashboard needs to know that "revenue" is `SUM(amount)` on the orders table, filtered to completed status, in the customer's currency. Somebody wrote that down once in the BI tool's modeling layer so that every chart used the same formula.
 
-The trouble is that the BI tool's modeling layer is proprietary. Tableau's calculations, Power BI's DAX, Looker's LookML, MicroStrategy's schema, and dbt's semantic layer each express the same idea in an incompatible format. A company with three of those tools has three copies of "revenue," maintained by three teams, and a quarterly reconciliation meeting when the numbers disagree.
+The trouble is that the BI tool's modeling layer is proprietary. Tableau's calculations, Power BI's DAX, Looker's LookML, MicroStrategy's schema, and dbt's semantic layer each express the same idea in an incompatible format. A company with three of those tools has three copies of "revenue, " maintained by three teams, and a quarterly reconciliation meeting when the numbers disagree.
 
 AI agents made the problem worse in a specific way. An agent asked "what was revenue last quarter" has no modeling layer to consult unless someone built one for it. If the agent generates SQL from the raw schema, it re-derives the definition every time, and it re-derives it slightly differently each time. Text-to-SQL grounded in a semantic model is dramatically more accurate than text-to-SQL grounded in a schema, but only if there is a semantic model the agent can read, and the agent frameworks do not speak LookML or DAX.
 
@@ -55,102 +56,102 @@ The best way to understand Ossie is to read a model. Here is one in the 0.2.0 dr
 ```yaml
 version: 0.2.0.dev0
 semantic_model:
-  - name: sales_analytics
-    description: Orders and customers for revenue reporting
-    ai_context:
-      instructions: "Use this model for revenue, order volume, and customer counts."
-      examples:
-        - "What was total revenue last quarter?"
-        - "How many customers ordered in July?"
+ - name: sales_analytics
+ description: Orders and customers for revenue reporting
+ ai_context:
+ instructions: "Use this model for revenue, order volume, and customer counts."
+ examples:
+ - "What was total revenue last quarter?"
+ - "How many customers ordered in July?"
 
-    datasets:
-      - name: orders
-        source: lake.sales.orders
-        primary_key: [order_id]
-        description: One row per order
-        fields:
-          - name: order_id
-            expression:
-              dialects:
-                - dialect: ANSI_SQL
-                  expression: order_id
-            datatype: String
-          - name: customer_id
-            expression:
-              dialects:
-                - dialect: ANSI_SQL
-                  expression: customer_id
-            datatype: String
-          - name: order_date
-            expression:
-              dialects:
-                - dialect: ANSI_SQL
-                  expression: order_date
-            datatype: Date
-            dimension:
-              is_time: true
-          - name: status
-            expression:
-              dialects:
-                - dialect: ANSI_SQL
-                  expression: status
-            datatype: String
-            dimension: {}
-          - name: amount
-            expression:
-              dialects:
-                - dialect: ANSI_SQL
-                  expression: amount
-            datatype: Decimal
+ datasets:
+ - name: orders
+ source: lake.sales.orders
+ primary_key: [order_id]
+ description: One row per order
+ fields:
+ - name: order_id
+ expression:
+ dialects:
+ - dialect: ANSI_SQL
+ expression: order_id
+ datatype: String
+ - name: customer_id
+ expression:
+ dialects:
+ - dialect: ANSI_SQL
+ expression: customer_id
+ datatype: String
+ - name: order_date
+ expression:
+ dialects:
+ - dialect: ANSI_SQL
+ expression: order_date
+ datatype: Date
+ dimension:
+ is_time: true
+ - name: status
+ expression:
+ dialects:
+ - dialect: ANSI_SQL
+ expression: status
+ datatype: String
+ dimension: {}
+ - name: amount
+ expression:
+ dialects:
+ - dialect: ANSI_SQL
+ expression: amount
+ datatype: Decimal
 
-      - name: customers
-        source: lake.sales.customers
-        primary_key: [id]
-        fields:
-          - name: id
-            expression:
-              dialects:
-                - dialect: ANSI_SQL
-                  expression: id
-            datatype: String
-          - name: segment
-            expression:
-              dialects:
-                - dialect: ANSI_SQL
-                  expression: segment
-            datatype: String
-            dimension: {}
+ - name: customers
+ source: lake.sales.customers
+ primary_key: [id]
+ fields:
+ - name: id
+ expression:
+ dialects:
+ - dialect: ANSI_SQL
+ expression: id
+ datatype: String
+ - name: segment
+ expression:
+ dialects:
+ - dialect: ANSI_SQL
+ expression: segment
+ datatype: String
+ dimension: {}
 
-    relationships:
-      - name: orders_to_customers
-        from: orders
-        to: customers
-        from_columns: [customer_id]
-        to_columns: [id]
+ relationships:
+ - name: orders_to_customers
+ from: orders
+ to: customers
+ from_columns: [customer_id]
+ to_columns: [id]
 
-    metrics:
-      - name: total_revenue
-        description: Sum of completed order amounts
-        expression:
-          dialects:
-            - dialect: ANSI_SQL
-              expression: SUM(CASE WHEN orders.status = 'completed' THEN orders.amount ELSE 0 END)
-        datatype: Decimal
-        ai_context:
-          synonyms: ["revenue", "sales", "total sales"]
-      - name: ordering_customers
-        description: Distinct customers with at least one order
-        expression:
-          dialects:
-            - dialect: ANSI_SQL
-              expression: COUNT(DISTINCT orders.customer_id)
-        datatype: Integer
-        ai_context:
-          synonyms: ["active customers", "buyers"]
+ metrics:
+ - name: total_revenue
+ description: Sum of completed order amounts
+ expression:
+ dialects:
+ - dialect: ANSI_SQL
+ expression: SUM(CASE WHEN orders.status = 'completed' THEN orders.amount ELSE 0 END)
+ datatype: Decimal
+ ai_context:
+ synonyms: ["revenue", "sales", "total sales"]
+ - name: ordering_customers
+ description: Distinct customers with at least one order
+ expression:
+ dialects:
+ - dialect: ANSI_SQL
+ expression: COUNT(DISTINCT orders.customer_id)
+ datatype: Integer
+ ai_context:
+ synonyms: ["active customers", "buyers"]
 
-    custom_extensions:
-      - vendor_name: DREMIO
-        data: '{"reflection_hint": "aggregate", "space": "sales"}'
+ custom_extensions:
+ - vendor_name: DREMIO
+ data: '{"reflection_hint": "aggregate", "space": "sales"}'
 ```
 
 The structure has six building blocks.
@@ -180,10 +181,10 @@ The discussion ran through June with participation from Adam Christian, Adnan He
 Here is what the API looks like as merged. The endpoints live under the Polaris-specific path prefix, not the Iceberg REST catalog path, which signals that they are a Polaris extension rather than an Iceberg spec feature:
 
 ```
-POST   /polaris/v1/{prefix}/namespaces/{namespace}/semantic-models
-GET    /polaris/v1/{prefix}/namespaces/{namespace}/semantic-models
-GET    /polaris/v1/{prefix}/namespaces/{namespace}/semantic-models/{name}
-POST   /polaris/v1/{prefix}/namespaces/{namespace}/semantic-models/{name}
+POST /polaris/v1/{prefix}/namespaces/{namespace}/semantic-models
+GET /polaris/v1/{prefix}/namespaces/{namespace}/semantic-models
+GET /polaris/v1/{prefix}/namespaces/{namespace}/semantic-models/{name}
+POST /polaris/v1/{prefix}/namespaces/{namespace}/semantic-models/{name}
 DELETE /polaris/v1/{prefix}/namespaces/{namespace}/semantic-models/{name}
 ```
 
@@ -195,11 +196,9 @@ The request body for create and update wraps the document like this:
 
 ```json
 {
-  "name": "sales_analytics",
-  "document": {
-    "version": "0.1.1",
-    "semantic_model": "{\"name\":\"sales_analytics\",\"datasets\":[...],\"metrics\":[...]}"
-  }
+ "name": "sales_analytics", "document": {
+ "version": "0.1.1", "semantic_model": "{\"name\":\"sales_analytics\", \"datasets\":[...], \"metrics\":[...]}"
+ }
 }
 ```
 
@@ -238,7 +237,7 @@ Polaris fits into this graph as the place the hub document lives. A converter th
 Ossie is not the first attempt at a semantic model format. Here is how it sits against the ones it is meant to interchange with:
 
 | | Apache Ossie | dbt semantic models | LookML | Snowflake Semantic Views | Cube / headless BI |
-|---|---|---|---|---|---|
+|--|--|--|--|--|--|
 | Governance | ASF incubator, vendor-neutral | dbt Labs (open source) | Google (proprietary) | Snowflake (proprietary) | Cube (open core) |
 | Format | YAML and JSON, JSON Schema validated | YAML | LookML DSL | SQL DDL | YAML and JavaScript |
 | Runtime | None (build-time artifact) | dbt Semantic Layer service | Looker | Snowflake | Cube server |
@@ -269,21 +268,17 @@ H = {"Authorization": f"Bearer {TOKEN}", "Content-Type": "application/json"}
 doc = yaml.safe_load(open("semantic/sales_analytics.yaml"))
 model = doc["semantic_model"][0]
 body = {
-    "name": model["name"],
-    "document": {
-        "version": doc["version"],
-        "semantic_model": json.dumps(model),
-    },
-}
+ "name": model["name"], "document": {
+ "version": doc["version"], "semantic_model": json.dumps(model), }, }
 
 url = f"{POLARIS}/polaris/v1/{PREFIX}/namespaces/{NS}/semantic-models"
 existing = requests.get(f"{url}/{model['name']}", headers=H)
 
 if existing.status_code == 404:
-    r = requests.post(url, headers=H, json=body)
+ r = requests.post(url, headers=H, json=body)
 else:
-    body["entity-version"] = existing.json()["entity-version"]
-    r = requests.post(f"{url}/{model['name']}", headers=H, json=body)
+ body["entity-version"] = existing.json()["entity-version"]
+ r = requests.post(f"{url}/{model['name']}", headers=H, json=body)
 
 r.raise_for_status()
 print("published", model["name"], "version", r.json()["entity-version"])
@@ -297,54 +292,54 @@ print("published", model["name"], "version", r.json()["entity-version"])
 
 ```python
 def ossie_to_dremio_views(model: dict, space: str) -> list[str]:
-    """
-    Emit one Dremio view per dataset and one aggregate view per metric.
-    Uses the ANSI_SQL dialect only. Rejects models that lack it.
-    """
-    def ansi(expr_obj):
-        for d in expr_obj["dialects"]:
-            if d["dialect"] == "ANSI_SQL":
-                return d["expression"]
-        raise ValueError("no ANSI_SQL dialect present")
+ """
+ Emit one Dremio view per dataset and one aggregate view per metric.
+ Uses the ANSI_SQL dialect only. Rejects models that lack it.
+ """
+ def ansi(expr_obj):
+ for d in expr_obj["dialects"]:
+ if d["dialect"] == "ANSI_SQL":
+ return d["expression"]
+ raise ValueError("no ANSI_SQL dialect present")
 
-    ds = {d["name"]: d for d in model["datasets"]}
-    rels = {(r["from"], r["to"]): r for r in model.get("relationships", [])}
-    out = []
+ ds = {d["name"]: d for d in model["datasets"]}
+ rels = {(r["from"], r["to"]): r for r in model.get("relationships", [])}
+ out = []
 
-    for name, d in ds.items():
-        cols = ", ".join(f'{ansi(f["expression"])} AS "{f["name"]}"' for f in d["fields"])
-        out.append(f'CREATE OR REPLACE VIEW {space}."{name}" AS SELECT {cols} FROM {d["source"]}')
+ for name, d in ds.items():
+ cols = ", ".join(f'{ansi(f["expression"])} AS "{f["name"]}"' for f in d["fields"])
+ out.append(f'CREATE OR REPLACE VIEW {space}."{name}" AS SELECT {cols} FROM {d["source"]}')
 
-    for m in model.get("metrics", []):
-        expr = ansi(m["expression"])
-        referenced = sorted({t for t in ds if f"{t}." in expr})
-        base = referenced[0]
-        joins = ""
-        for other in referenced[1:]:
-            r = rels.get((base, other)) or rels.get((other, base))
-            if not r:
-                raise ValueError(f"no relationship between {base} and {other}")
-            on = " AND ".join(
-                f'{r["from"]}."{a}" = {r["to"]}."{b}"'
-                for a, b in zip(r["from_columns"], r["to_columns"])
-            )
-            joins += f' JOIN {space}."{other}" AS {other} ON {on}'
-        dims = [
-            f'{t}."{f["name"]}"'
-            for t in referenced
-            for f in ds[t]["fields"]
-            if "dimension" in f
-        ]
-        group = ", ".join(dims)
-        select = ", ".join(dims + [f'{expr} AS "{m["name"]}"'])
-        out.append(
-            f'CREATE OR REPLACE VIEW {space}."metric_{m["name"]}" AS '
-            f'SELECT {select} FROM {space}."{base}" AS {base}{joins} GROUP BY {group}'
-        )
-    return out
+ for m in model.get("metrics", []):
+ expr = ansi(m["expression"])
+ referenced = sorted({t for t in ds if f"{t}." in expr})
+ base = referenced[0]
+ joins = ""
+ for other in referenced[1:]:
+ r = rels.get((base, other)) or rels.get((other, base))
+ if not r:
+ raise ValueError(f"no relationship between {base} and {other}")
+ on = " AND ".join(
+ f'{r["from"]}."{a}" = {r["to"]}."{b}"'
+ for a, b in zip(r["from_columns"], r["to_columns"])
+ )
+ joins += f' JOIN {space}."{other}" AS {other} ON {on}'
+ dims = [
+ f'{t}."{f["name"]}"'
+ for t in referenced
+ for f in ds[t]["fields"]
+ if "dimension" in f
+ ]
+ group = ", ".join(dims)
+ select = ", ".join(dims + [f'{expr} AS "{m["name"]}"'])
+ out.append(
+ f'CREATE OR REPLACE VIEW {space}."metric_{m["name"]}" AS '
+ f'SELECT {select} FROM {space}."{base}" AS {base}{joins} GROUP BY {group}'
+ )
+ return out
 
 for stmt in ossie_to_dremio_views(model, space="semantic.sales"):
-    print(stmt + ";")
+ print(stmt + ";")
 ```
 
 For the example model, that emits a view per dataset with the field expressions applied, and a `metric_total_revenue` view that groups by every dimension in the referenced datasets and computes the metric expression. A production converter does more (handles multiple dialects, respects `is_time` for date grains, applies the custom extension's reflection hint), but the shape is the point: the Ossie document has enough structure to generate the engine's semantic layer without human interpretation.
@@ -354,7 +349,7 @@ For an agent, the consumer is an MCP server that loads the model, exposes `total
 The division of responsibility across the flow, which is what the dev list asked for, looks like this:
 
 | Step | Polaris | Ossie | Publisher (dbt, CI, engine) | Consumer (engine, BI, agent) |
-|---|---|---|---|---|
+|--|--|--|--|--|
 | Define the model | | Format and validation rules | Writes and owns the YAML | |
 | Store and version | Entity, RBAC, entity-version concurrency | | Calls the API on merge | |
 | Validate | Schema validation against the Ossie version | Spec defines what valid means | | |
@@ -403,7 +398,7 @@ The division of responsibility across the flow, which is what the dev list asked
 
 Three developments will turn the registry into the workflow Robert Stupp asked for.
 
-Discovery by source. The obvious next endpoint is "which semantic models reference this table," which lets an engine loading `lake.sales.orders` also load the metrics defined over it, and lets an agent given a table name find its business meaning. Because Ossie's `source` field is a string, this needs either a Polaris-side index over parsed sources or a spec change that lets a source be a catalog identifier. Either is tractable, and the Ossie community lists Polaris integration for catalog-based discovery as an active area.
+Discovery by source. The obvious next endpoint is "which semantic models reference this table, " which lets an engine loading `lake.sales.orders` also load the metrics defined over it, and lets an agent given a table name find its business meaning. Because Ossie's `source` field is a string, this needs either a Polaris-side index over parsed sources or a spec change that lets a source be a catalog identifier. Either is tractable, and the Ossie community lists Polaris integration for catalog-based discovery as an active area.
 
 A semantic query specification. The Ossie roadmap includes a standardized way to ask "give me `total_revenue` by `segment` for last quarter" that any engine can accept. That is the piece that lets a consumer skip the converter entirely and hand the query to an engine that natively understands Ossie models. Dremio, DataFusion-based engines, and the warehouses all have an incentive to implement it, because it makes their engine the execution target for every Ossie-authored model.
 

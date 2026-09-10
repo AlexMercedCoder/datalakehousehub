@@ -14,9 +14,10 @@ tags:
 slug: "variant-shredding-explained"
 draft: false
 ---
-> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/variant-shredding-explained/).
 
 The Variant type in Apache Iceberg v3 gets described in one sentence so often that the sentence has started doing damage: "store JSON without a schema and query it fast." The first half is the type. The second half is shredding, a separate specification with its own file layout, its own reconstruction rules, and its own operational behavior, and if you run Variant tables in production without understanding it, you will eventually stare at a query plan wondering why one table prunes beautifully and its twin scans everything.
+
+> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/variant-shredding-explained/).
 
 This article is the internals piece. We are going below the SQL to the Parquet layer: how a Variant value is physically encoded, how the shredding specification turns one logical column into a tree of physical columns, the exact rules readers follow to reassemble values, how statistics flow from shredded columns up into Iceberg's metadata so scan planning can skip files, who decides what gets shredded and when, and the ways all of this degrades when data misbehaves. By the end you should be able to open a Parquet file from a Variant table, read its schema and column metadata, and explain precisely why a given query is fast or slow.
 
@@ -28,7 +29,7 @@ Start from what the Variant binary encoding already fixes, so we can isolate wha
 
 The binary encoding replaces JSON text with a compact, navigable representation. Field names live once in a dictionary instead of repeating on every row. Values carry type tags, so integers are integers and timestamps are timestamps. Offsets let a reader jump to a requested path instead of parsing an entire document. For point access, extracting a field from a value already in memory, this is a large win over text.
 
-Now put a billion of those binary values in a Parquet column and run an analytical filter over them. The column is a blob column: one binary value per row. Parquet's machinery for making scans fast, dictionary encoding of repeated values, run-length encoding, min and max statistics on pages and row groups, reading only the columns a query projects, operates on columns of typed values. It has nothing to grip on an opaque binary. A filter on `$.event_type` must fetch every byte of every document in every row group, decode each one far enough to find the field, and compare. The offset navigation makes each decode cheap, but nothing makes any decode skippable. There are no statistics saying "this row group contains no purchases," because Parquet sees binary, not purchases. And a query projecting two fields out of a 300-field document still reads and decompresses all 300 fields' worth of bytes, because they travel together in one buffer.
+Now put a billion of those binary values in a Parquet column and run an analytical filter over them. The column is a blob column: one binary value per row. Parquet's machinery for making scans fast, dictionary encoding of repeated values, run-length encoding, min and max statistics on pages and row groups, reading only the columns a query projects, operates on columns of typed values. It has nothing to grip on an opaque binary. A filter on `$.event_type` must fetch every byte of every document in every row group, decode each one far enough to find the field, and compare. The offset navigation makes each decode cheap, but nothing makes any decode skippable. There are no statistics saying "this row group contains no purchases, " because Parquet sees binary, not purchases. And a query projecting two fields out of a 300-field document still reads and decompresses all 300 fields' worth of bytes, because they travel together in one buffer.
 
 That is the gap between a good serialization format and a good analytical format. The Variant encoding, by itself, is the former. Analytical formats win by not reading things, and a self-describing blob gives the reader nothing to not-read. Shredding closes the gap by taking the parts of the data that behave like columns and physically storing them as columns, while keeping the blob as a fallback for the parts that do not. The official specification states the payoff plainly: shredding enables Parquet's columnar representation for more compact encoding, column statistics for data skipping, and partial projections.
 
@@ -58,27 +59,27 @@ The interesting case, and the overwhelmingly common one, is the object expectati
 
 ```
 optional group payload (VARIANT) {
-  required binary metadata;
-  optional binary value;                 // residual: fields not in shred schema
-  optional group typed_value {
-    required group user_id {
-      optional binary value;             // user_id present but not an int64
-      optional int64 typed_value;        // user_id as a real column
-    }
-    required group event_type {
-      optional binary value;
-      optional binary typed_value (STRING);
-    }
-    required group device {
-      optional binary value;             // device present but not an object
-      optional group typed_value {       // recursive: shred inside device
-        required group os {
-          optional binary value;
-          optional binary typed_value (STRING);
-        }
-      }
-    }
-  }
+ required binary metadata;
+ optional binary value; // residual: fields not in shred schema
+ optional group typed_value {
+ required group user_id {
+ optional binary value; // user_id present but not an int64
+ optional int64 typed_value; // user_id as a real column
+ }
+ required group event_type {
+ optional binary value;
+ optional binary typed_value (STRING);
+ }
+ required group device {
+ optional binary value; // device present but not an object
+ optional group typed_value { // recursive: shred inside device
+ required group os {
+ optional binary value;
+ optional binary typed_value (STRING);
+ }
+ }
+ }
+ }
 }
 ```
 
@@ -95,7 +96,7 @@ A shredded file is only useful if every reader reassembles values identically, s
 The rules are best understood as a case analysis on the pair. For a shredded field within an object, per row:
 
 | `typed_value` | `value` | Meaning |
-|---|---|---|
+|--|--|--|
 | non-null | null | Field present, matched the expected type |
 | null | non-null | Field present, did not match, held as Variant binary |
 | null | null | Field absent from this row's object |
@@ -114,17 +115,17 @@ The reconstruction rules also explain why projections are so cheap. A query want
 Rules become intuition when you place real rows, so take four events arriving at the schema above, whose shred schema covers `user_id` as int64, `event_type` as string, and `device.os` as string:
 
 ```json
-{"user_id": 42,   "event_type": "click", "device": {"os": "android"}}
-{"user_id": "n/a","event_type": "view",  "device": {"os": "ios", "jailbroken": false}}
+{"user_id": 42, "event_type": "click", "device": {"os": "android"}}
+{"user_id": "n/a", "event_type": "view", "device": {"os": "ios", "jailbroken": false}}
 {"event_type": "click", "campaign_id": "summer-26"}
-{"user_id": 77,   "event_type": 3}
+{"user_id": 77, "event_type": 3}
 ```
 
 Row one is the citizen every writer loves. All three paths match: 42 into the int64 column, `click` into the string column, `android` into the nested string column. Top-level `value` is null, every per-field `value` is null. The row exists entirely as typed columns, and a whole-document read reconstructs it from them alone.
 
 Row two splits twice, both splits legal. `user_id` arrived as the string `"n/a"`, so the int64 column takes a null and the field's binary `value` takes a Variant-encoded string. The `device` object partially shreds: `os` lands typed, and the unexpected `jailbroken` field cannot, so it lands in `device.value` as an object fragment, the fourth case from the table, both `device.typed_value` and `device.value` non-null. The consistency constraint holds, since the fragment contains only `jailbroken`, never `os`.
 
-Row three exercises absence and residual together. No `user_id` at all, so its typed and binary columns are both null, which reconstruction reads as "field missing," distinct from "field null," a distinction JSON text handles sloppily and this layout handles exactly. `campaign_id` is outside the shred schema entirely, so it rides the top-level `value` as the row's residual fragment.
+Row three exercises absence and residual together. No `user_id` at all, so its typed and binary columns are both null, which reconstruction reads as "field missing, " distinct from "field null, " a distinction JSON text handles sloppily and this layout handles exactly. `campaign_id` is outside the shred schema entirely, so it rides the top-level `value` as the row's residual fragment.
 
 Row four is drift in miniature. `event_type` came as the number 3, type mismatch, so the string column nulls out and the binary catches it. Queries filtering `$.event_type = 'click'` remain correct for this row, contributing a non-match, but note the statistics consequence: the string column's min and max describe only rows one through three, and pruning decisions about `event_type` no longer speak for row four. One row is noise. A producer shipping this shape at volume converts the column's statistics from a pruning asset into decoration.
 
@@ -132,7 +133,7 @@ Sixteen column cells, four rows, and every rule from the specification visible i
 
 ## Who Decides What Gets Shredded
 
-The specification is deliberately silent on the question users ask first: which fields shred? The spec defines the layout and the reconstruction contract, and it explicitly leaves shredding selection to writers, based on access patterns and workload characteristics. That silence is a feature. It puts writers in competition on shredding quality while keeping every file readable by everyone, and it means the answer to "what does my table shred" is always "ask your writer," never "ask the spec."
+The specification is deliberately silent on the question users ask first: which fields shred? The spec defines the layout and the reconstruction contract, and it explicitly leaves shredding selection to writers, based on access patterns and workload characteristics. That silence is a feature. It puts writers in competition on shredding quality while keeping every file readable by everyone, and it means the answer to "what does my table shred" is always "ask your writer, " never "ask the spec."
 
 Writers make the decision through some blend of three strategies, and knowing which blend your engine uses tells you what to expect on disk.
 
@@ -154,7 +155,7 @@ Shredding's speed story has two halves. Partial projection, reading only request
 
 Inside a Parquet file, the story is ordinary, which is the point. `payload.typed_value.event_type.typed_value` is a string column, so its pages and row groups carry min and max bounds, null counts, and encodings like any string column's. An engine evaluating a pushed-down predicate on `$.event_type` consults those statistics and skips row groups whose bounds exclude the match. The Iceberg 1.11 release line included a correctness fix for exactly this machinery, variant type filtering in the Parquet metrics row-group filter, which tells you both that the path is real and that it is young.
 
-Above the file, Iceberg's metadata takes over. Iceberg's planning power has always come from per-file column bounds recorded in manifests, and the v3 specification extends the pattern to Variant: a data file's metrics for a Variant column carry lower and upper bounds keyed by normalized JSON path expressions. The file-level entry does not say "this binary column's bytes range from X to Y," which is meaningless. It says `$.event_type` spans `'click'` to `'view'` and `$.amount` spans 4 to 9750 within this file. Scan planning binds query predicates on those paths against those bounds, and files drop out of the plan before any footer is read. Delta Lake's variant shredding protocol records the equivalent structure, path-keyed min and max values in its per-file statistics, which is worth mentioning for one reason: the statistics vocabulary, like the encoding itself, converged across formats. Normalized JSON paths are becoming how the entire open lakehouse stack talks about locations inside semi-structured data.
+Above the file, Iceberg's metadata takes over. Iceberg's planning power has always come from per-file column bounds recorded in manifests, and the v3 specification extends the pattern to Variant: a data file's metrics for a Variant column carry lower and upper bounds keyed by normalized JSON path expressions. The file-level entry does not say "this binary column's bytes range from X to Y, " which is meaningless. It says `$.event_type` spans `'click'` to `'view'` and `$.amount` spans 4 to 9750 within this file. Scan planning binds query predicates on those paths against those bounds, and files drop out of the plan before any footer is read. Delta Lake's variant shredding protocol records the equivalent structure, path-keyed min and max values in its per-file statistics, which is worth mentioning for one reason: the statistics vocabulary, like the encoding itself, converged across formats. Normalized JSON paths are becoming how the entire open lakehouse stack talks about locations inside semi-structured data.
 
 Follow one predicate through the whole stack and the layering snaps into focus. `WHERE variant_get(payload, '$.amount', 'double') > 500` first meets manifest-level path bounds and eliminates most files. Surviving files' footers expose row-group statistics on the shredded `amount` column, eliminating most row groups. Surviving row groups decode one double column, vectorized, and only matching rows touch anything else. Every layer speaks a different dialect, Iceberg metrics, Parquet footers, page indexes, and the shredded column feeds them all, because it is, physically, just a column.
 
@@ -168,17 +169,13 @@ This is also the right place to be precise about what "engine support" means, be
 
 Theory earns its keep when you can verify it against a real file, so here is the inspection workflow I use, portable to any Parquet tooling.
 
-Dump the schema of a data file from a shredded table and you see the tree from earlier: the VARIANT-annotated group, `metadata`, optional `value`, and the `typed_value` group fanning out into per-field pairs. The schema alone answers "what did the writer shred in this file," no engine required. Your table's DESCRIBE shows one column. The file shows the truth.
+Dump the schema of a data file from a shredded table and you see the tree from earlier: the VARIANT-annotated group, `metadata`, optional `value`, and the `typed_value` group fanning out into per-field pairs. The schema alone answers "what did the writer shred in this file, " no engine required. Your table's DESCRIBE shows one column. The file shows the truth.
 
 Column metadata answers the quality questions. Every Parquet reader that exposes per-column statistics, and DuckDB's `parquet_metadata` function is a convenient one, lets you interrogate the pairs:
 
 ```sql
 SELECT
-  path_in_schema,
-  num_values,
-  stats_null_count,
-  stats_min_value,
-  stats_max_value
+ path_in_schema, num_values, stats_null_count, stats_min_value, stats_max_value
 FROM parquet_metadata('s3://lake/events/data/00042-a1.parquet')
 WHERE path_in_schema LIKE 'payload.typed_value%'
 ORDER BY path_in_schema;

@@ -15,7 +15,6 @@ draft: false
 image: "/images/blog.png"
 canonical: "https://iceberglakehouse.com/posts/2026-03-07-agentic-analytics/"
 ---
-> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-03-07-agentic-analytics/).
 
 *Read the complete Open Source and the Lakehouse series:*
 * [Part 1: Apache Software Foundation: History, Purpose, and Process](/blog/2026-04-apache-software-foundation)
@@ -26,13 +25,15 @@ canonical: "https://iceberglakehouse.com/posts/2026-03-07-agentic-analytics/"
 * [Part 6: Assembling the Apache Lakehouse](/blog/2026-04-assembling-apache-lakehouse)
 * [Part 7: Agentic Analytics on the Apache Lakehouse](/blog/2026-04-agentic-analytics)
 
+> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-03-07-agentic-analytics/).
+
 If you grant a Large Language Model direct access to a raw Amazon S3 bucket filled with Parquet files, it will fail to answer your business questions. AI agents possess immense processing power, but they lack inherent business knowledge. 
 
 To execute agentic analytics safely and accurately, an AI agent requires three things: deep business context, universal governed access, and interactive speed. The Apache open-source data lakehouse stack provides the foundation for those requirements, but you must bridge the gap between raw data and machine intelligence. 
 
 ## The Hallucination Trap
 
-Consider a raw data table containing a column named `cst_act_flg`. A human analyst working at the company for five years knows this stands for "Customer Account Flag." An AI agent does not. If a user asks the agent to "Show me active customers," the agent guesses meaning from the abbreviation. Guessing leads directly to hallucinations.
+Consider a raw data table containing a column named `cst_act_flg`. A human analyst working at the company for five years knows this stands for "Customer Account Flag." An AI agent does not. If a user asks the agent to "Show me active customers, " the agent guesses meaning from the abbreviation. Guessing leads directly to hallucinations.
 
 Raw data lakes optimize for machine storage, not semantic understanding. To prevent hallucinations, you must teach the AI your specific business language. 
 

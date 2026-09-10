@@ -14,9 +14,10 @@ tags:
 slug: "goal-directed-data-quality-agents-iceberg"
 draft: false
 ---
-> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/goal-directed-data-quality-agents-iceberg/).
 
 Every data platform has a quality system, and most of them are the same system: a few hundred rules, written after incidents, checking the failures somebody already lived through. Null checks on the columns that were null that one time. Row-count thresholds tuned to last year's volumes. A freshness alert per table, firing into a channel everyone muted in March. The system catches what it was told to catch, misses everything novel, and decays as the estate outgrows the rules, which is not a criticism of the teams that built it. It is the ceiling of the approach itself: rules encode known failures, and data finds new ways to be wrong faster than humans write rules.
+
+> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/goal-directed-data-quality-agents-iceberg/).
 
 The emerging alternative pairs two technologies that matured separately and compose beautifully. Agents bring goal-directed behavior: instead of executing a fixed rule list, an agent holds quality goals for a dataset, this table should be complete, fresh, consistent with its sources, and stable in its distributions, and plans its own checking and its own response when reality diverges. Apache Iceberg brings the substrate that makes autonomous response safe: snapshot isolation, atomic commits, branches, and rich metadata, which together let an agent quarantine suspect data, propose fixes, and act, all without ever putting a consumer at risk of reading half-applied judgment. The combination turns data quality from a static rulebook into a supervised operations loop, and the quarantine pattern is its centerpiece.
 
@@ -40,7 +41,7 @@ Read the four limits together and the requirement is legible: a system that lear
 
 The word agent is carrying a lot of freight this decade, so this section defines the behavior precisely and keeps the definition honest.
 
-A goal-directed quality system inverts the rulebook's contract. The human input changes from procedures to properties: instead of writing "alert if null_rate(email) > 0.02," the dataset's owner declares goals, completeness on the columns that matter, freshness against the source's cadence, distributional stability on the measures, referential consistency with named related tables, uniqueness on the business keys, each goal a property with a priority, not a threshold with a number. The declarations are small, stable, and owned, living in the dataset's contract beside its schema and its maintenance cadence, in the governance-as-code machinery my other writing describes.
+A goal-directed quality system inverts the rulebook's contract. The human input changes from procedures to properties: instead of writing "alert if null_rate(email) > 0.02, " the dataset's owner declares goals, completeness on the columns that matter, freshness against the source's cadence, distributional stability on the measures, referential consistency with named related tables, uniqueness on the business keys, each goal a property with a priority, not a threshold with a number. The declarations are small, stable, and owned, living in the dataset's contract beside its schema and its maintenance cadence, in the governance-as-code machinery my other writing describes.
 
 The agent supplies the procedures. Against each goal, it derives the concrete checks: profiling the table to learn baselines, choosing statistical detectors suited to each column's type and behavior, setting adaptive bounds that follow seasonality, and revisiting its own choices as the data evolves. When a check fires, the agent plans a response within its authority: investigate first, correlating the anomaly across columns, partitions, and lineage to hypothesize a cause, then contain, quarantine the suspect slice, then propose or apply remediation per its autonomy tier, then verify and report. The loop is sense, diagnose, contain, remediate, verify, and the goal-directedness is that every step is chosen against the declared properties rather than scripted in advance.
 
@@ -54,32 +55,32 @@ The goals need a home and a shape, and both come from the governance-as-code dis
 dataset: sales.orders
 owner: commerce-data
 quality:
-  autonomy_tier: contain_autonomous
-  goals:
-    - property: uniqueness
-      columns: [order_id]
-      priority: critical
-      invariant: true
-    - property: freshness
-      against: source_cdc
-      target: 5m
-      priority: critical
-    - property: volume_stability
-      priority: high
-    - property: distribution_stability
-      columns: [amount, status]
-      priority: high
-    - property: consistency
-      related: [billing.invoices]
-      reconcile: sum(amount) BY order_date
-      priority: high
-  bounds:
-    max_quarantine_pct_per_action: 5
-    min_confidence_to_act: 0.9
-    protected_partitions: [order_date < '2026-01-01']
-  quarantine:
-    table: sales.orders_quarantine
-    review_within: 72h
+ autonomy_tier: contain_autonomous
+ goals:
+ - property: uniqueness
+ columns: [order_id]
+ priority: critical
+ invariant: true
+ - property: freshness
+ against: source_cdc
+ target: 5m
+ priority: critical
+ - property: volume_stability
+ priority: high
+ - property: distribution_stability
+ columns: [amount, status]
+ priority: high
+ - property: consistency
+ related: [billing.invoices]
+ reconcile: sum(amount) BY order_date
+ priority: high
+ bounds:
+ max_quarantine_pct_per_action: 5
+ min_confidence_to_act: 0.9
+ protected_partitions: [order_date < '2026-01-01']
+ quarantine:
+ table: sales.orders_quarantine
+ review_within: 72h
 ```
 
 Read the file's design choices, because each answers a section of this article. Properties, not thresholds: the volume goal carries no number, because the number is the agent's to learn and revise, while the invariant flag marks the constitutional rules that never adapt. Priorities drive the attention budget and the escalation ranking. The bounds block is the tier-two authority's fence, quarantine caps, confidence floors, and the protected history the agent never touches, all reviewable in a diff when anyone proposes changing them. And the quarantine block wires the lifecycle, naming the sibling table and the review clock that keeps containment from becoming landfill.
@@ -107,19 +108,16 @@ Containment is the pattern's heart, so here is quarantine mechanically, in its t
 The first form is the quarantine table: a sibling table receiving rows the agent removes from the primary, with provenance attached. The primary's consumers immediately see a cleaner table, the suspect rows remain queryable for investigation, and reinstatement is a governed move back. The core operation, shaped for an orders table where the agent detected a duplicate surge:
 
 ```sql
--- Stage on a branch: move suspect rows to quarantine
+- Stage on a branch: move suspect rows to quarantine
 INSERT INTO lake.sales.orders_quarantine
-SELECT o.*,
-       'dup_surge_2026_08_18' AS quarantine_batch,
-       'duplicate business key within arrival window' AS reason,
-       current_timestamp() AS quarantined_at
+SELECT o.*, 'dup_surge_2026_08_18' AS quarantine_batch, 'duplicate business key within arrival window' AS reason, current_timestamp() AS quarantined_at
 FROM lake.sales.orders.branch_agent_q o
 WHERE o.order_id IN (SELECT order_id
-                     FROM staging.suspect_order_ids);
+ FROM staging.suspect_order_ids);
 
 DELETE FROM lake.sales.orders.branch_agent_q
 WHERE order_id IN (SELECT order_id
-                   FROM staging.suspect_order_ids);
+ FROM staging.suspect_order_ids);
 ```
 
 The second form is the quarantine partition: for datasets partitioned by arrival or event time, where anomalies typically arrive as a bad batch, the agent quarantines at partition grain, swapping the suspect partition out of the primary path or, in the lighter variant, marking it via a status column that governed views filter. Partition-grain quarantine is dramatically cheaper for batch-shaped incidents, one metadata operation instead of row surgery, and the two forms compose: partition quarantine for containment speed, row-level triage afterward to reinstate the innocent majority.
@@ -129,19 +127,15 @@ Consumers deserve their signal, which completes the pattern's contract with the 
 The verification-and-publish step completes the pattern, and it is where the branch earns its place:
 
 ```sql
--- Agent verifies the branched state before publishing
+- Agent verifies the branched state before publishing
 SELECT
-    (SELECT COUNT(*) FROM lake.sales.orders.branch_agent_q) AS rows_after,
-    (SELECT COUNT(DISTINCT order_id)
-     FROM lake.sales.orders.branch_agent_q) AS distinct_keys,
-    (SELECT SUM(amount) FROM lake.sales.orders.branch_agent_q
-     WHERE order_date = DATE '2026-08-18') AS day_amount;
+ (SELECT COUNT(*) FROM lake.sales.orders.branch_agent_q) AS rows_after, (SELECT COUNT(DISTINCT order_id)
+ FROM lake.sales.orders.branch_agent_q) AS distinct_keys, (SELECT SUM(amount) FROM lake.sales.orders.branch_agent_q
+ WHERE order_date = DATE '2026-08-18') AS day_amount;
 
--- Checks passed: publish atomically
+- Checks passed: publish atomically
 CALL lake.system.fast_forward(
-    table => 'sales.orders',
-    branch => 'main',
-    to => 'agent_q'
+ table => 'sales.orders', branch => 'main', to => 'agent_q'
 );
 ```
 

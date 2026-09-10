@@ -16,9 +16,10 @@ draft: false
 image: "/images/blog.png"
 canonical: "https://iceberglakehouse.com/posts/2026-03-connector-snowflake/"
 ---
-> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-03-connector-snowflake/).
 
 Snowflake is a popular cloud data warehouse known for its separation of storage and compute, near-zero maintenance, and broad ecosystem. Many organizations have made Snowflake their primary analytics platform. But as data ecosystems mature, limitations emerge: Snowflake credits are consumed on every query, connecting Snowflake data to non-Snowflake sources requires data sharing agreements or ETL, and running all workloads in Snowflake means paying Snowflake prices for everything : including repetitive dashboard queries and ad-hoc exploration.
+
+> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-03-connector-snowflake/).
 
 Dremio Cloud connects to Snowflake as a federated data source. You can query Snowflake tables directly, join them with PostgreSQL, S3, MongoDB, BigQuery, and any other connected source in a single SQL query, and accelerate repeated queries with Reflections so they don't burn Snowflake credits on every execution.
 
@@ -75,7 +76,7 @@ Choose from Master Credentials (username/password), OAuth, or key pair authentic
 ### 4. Configure Advanced Settings
 
 | Setting | Purpose |
-|---|---|
+|--|--|
 | **Record fetch size** | Rows per batch from Snowflake |
 | **Maximum Idle Connections** | Connection pool management |
 | **Connection Properties** | Custom Snowflake connection parameters |
@@ -88,10 +89,7 @@ Configure how often Reflections refresh and how often Dremio checks for schema c
 
 ```sql
 SELECT
-  product_category,
-  SUM(sales_amount) AS total_sales,
-  COUNT(DISTINCT customer_id) AS unique_buyers,
-  ROUND(SUM(sales_amount) / COUNT(DISTINCT customer_id), 2) AS avg_spend_per_customer
+ product_category, SUM(sales_amount) AS total_sales, COUNT(DISTINCT customer_id) AS unique_buyers, ROUND(SUM(sales_amount) / COUNT(DISTINCT customer_id), 2) AS avg_spend_per_customer
 FROM "snowflake-warehouse".PUBLIC.SALES_FACT
 WHERE sale_date >= '2024-01-01' AND sale_date < '2024-07-01'
 GROUP BY product_category
@@ -101,20 +99,14 @@ ORDER BY total_sales DESC;
 ## Federate Snowflake with Other Sources
 
 ```sql
--- Join Snowflake sales with PostgreSQL reviews and S3 return data
+- Join Snowflake sales with PostgreSQL reviews and S3 return data
 SELECT
-  sf.product_category,
-  sf.total_sales,
-  sf.unique_buyers,
-  pg.avg_review_score,
-  pg.review_count,
-  s3.return_rate,
-  ROUND(sf.total_sales * (1 - s3.return_rate), 2) AS net_revenue
+ sf.product_category, sf.total_sales, sf.unique_buyers, pg.avg_review_score, pg.review_count, s3.return_rate, ROUND(sf.total_sales * (1 - s3.return_rate), 2) AS net_revenue
 FROM (
-  SELECT product_category, SUM(sales_amount) AS total_sales, COUNT(DISTINCT customer_id) AS unique_buyers
-  FROM "snowflake-warehouse".PUBLIC.SALES_FACT
-  WHERE sale_date >= '2024-01-01'
-  GROUP BY product_category
+ SELECT product_category, SUM(sales_amount) AS total_sales, COUNT(DISTINCT customer_id) AS unique_buyers
+ FROM "snowflake-warehouse".PUBLIC.SALES_FACT
+ WHERE sale_date >= '2024-01-01'
+ GROUP BY product_category
 ) sf
 LEFT JOIN "postgres-reviews".public.product_reviews pg ON sf.product_category = pg.category
 LEFT JOIN "s3-analytics".returns.category_return_rates s3 ON sf.product_category = s3.category
@@ -126,15 +118,11 @@ ORDER BY net_revenue DESC;
 ```sql
 CREATE VIEW analytics.gold.product_health AS
 SELECT
-  sf.product_category,
-  SUM(sf.sales_amount) AS total_revenue,
-  COUNT(DISTINCT sf.customer_id) AS unique_customers,
-  ROUND(SUM(sf.sales_amount) / COUNT(DISTINCT sf.customer_id), 2) AS customer_value,
-  CASE
-    WHEN SUM(sf.sales_amount) > 1000000 THEN 'Category Leader'
-    WHEN SUM(sf.sales_amount) > 250000 THEN 'Growth Category'
-    ELSE 'Emerging'
-  END AS category_tier
+ sf.product_category, SUM(sf.sales_amount) AS total_revenue, COUNT(DISTINCT sf.customer_id) AS unique_customers, ROUND(SUM(sf.sales_amount) / COUNT(DISTINCT sf.customer_id), 2) AS customer_value, CASE
+ WHEN SUM(sf.sales_amount) > 1000000 THEN 'Category Leader'
+ WHEN SUM(sf.sales_amount) > 250000 THEN 'Growth Category'
+ ELSE 'Emerging'
+ END AS category_tier
 FROM "snowflake-warehouse".PUBLIC.SALES_FACT sf
 GROUP BY sf.product_category;
 ```
@@ -160,25 +148,18 @@ A product manager can ask ChatGPT "What are our top 5 product categories by net 
 ### AI SQL Functions
 
 ```sql
--- Generate product insights with AI
+- Generate product insights with AI
 SELECT
-  product_category,
-  total_revenue,
-  customer_value,
-  AI_GENERATE(
-    'Write a one-sentence product strategy recommendation',
-    'Category: ' || product_category || ', Revenue: $' || CAST(total_revenue AS VARCHAR) || ', Customer Value: $' || CAST(customer_value AS VARCHAR) || ', Tier: ' || category_tier
-  ) AS strategy_recommendation
+ product_category, total_revenue, customer_value, AI_GENERATE(
+ 'Write a one-sentence product strategy recommendation', 'Category: ' || product_category || ', Revenue: $' || CAST(total_revenue AS VARCHAR) || ', Customer Value: $' || CAST(customer_value AS VARCHAR) || ', Tier: ' || category_tier
+ ) AS strategy_recommendation
 FROM analytics.gold.product_health;
 
--- Classify product categories
+- Classify product categories
 SELECT
-  product_category,
-  AI_CLASSIFY(
-    'Based on these metrics, classify the investment priority',
-    'Revenue: $' || CAST(total_revenue AS VARCHAR) || ', Customers: ' || CAST(unique_customers AS VARCHAR),
-    ARRAY['High Priority', 'Medium Priority', 'Low Priority', 'Divest']
-  ) AS investment_priority
+ product_category, AI_CLASSIFY(
+ 'Based on these metrics, classify the investment priority', 'Revenue: $' || CAST(total_revenue AS VARCHAR) || ', Customers: ' || CAST(unique_customers AS VARCHAR), ARRAY['High Priority', 'Medium Priority', 'Low Priority', 'Divest']
+ ) AS investment_priority
 FROM analytics.gold.product_health;
 ```
 
@@ -231,9 +212,9 @@ For Snowflake-specific functions not natively supported in Dremio's SQL, use ext
 
 ```sql
 SELECT * FROM TABLE(
-  "snowflake-warehouse".EXTERNAL_QUERY(
-    'SELECT APPROX_COUNT_DISTINCT(customer_id), MEDIAN(sales_amount) FROM PUBLIC.SALES_FACT WHERE sale_date >= ''2024-01-01'''
-  )
+ "snowflake-warehouse".EXTERNAL_QUERY(
+ 'SELECT APPROX_COUNT_DISTINCT(customer_id), MEDIAN(sales_amount) FROM PUBLIC.SALES_FACT WHERE sale_date >= ''2024-01-01'''
+ )
 );
 ```
 
@@ -252,7 +233,7 @@ For data that stays in Snowflake, create manual Reflections to reduce credit con
 ### Credit Consumption by Warehouse Size
 
 | Warehouse Size | Credits/Hour | Dremio Reflection Impact |
-|---|---|---|
+|--|--|--|
 | X-Small | 1 | Reflections serve cached queries : warehouse suspends faster |
 | Small | 2 | Same pattern : faster auto-suspend reduces credit burn |
 | Medium | 4 | Dashboard workloads offloaded : downsize to Small |
@@ -263,9 +244,9 @@ For data that stays in Snowflake, create manual Reflections to reduce credit con
 
 Example calculation for a medium-sized analytics team:
 
-- **Without Dremio:** 50 analysts + 20 dashboards consume ~$15,000/month in Snowflake credits
-- **With Dremio Reflections:** Dashboard queries (60% of total) served from cache → ~$6,000/month savings
-- **Net impact:** $9,000/month Snowflake bill + Dremio costs, typically netting 20-40% total savings
+- **Without Dremio:** 50 analysts + 20 dashboards consume ~$15, 000/month in Snowflake credits
+- **With Dremio Reflections:** Dashboard queries (60% of total) served from cache → ~$6, 000/month savings
+- **Net impact:** $9, 000/month Snowflake bill + Dremio costs, typically netting 20-40% total savings
 
 ### Snowflake Data Cloud Integration
 

@@ -16,9 +16,10 @@ draft: false
 image: "/images/blog.png"
 canonical: "https://iceberglakehouse.com/posts/2026-03-aitool-windsurf/"
 ---
-> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-03-aitool-windsurf/).
 
 Windsurf is an AI-native code editor built as a fork of VS Code. Its standout feature is Cascade, an agentic AI system that plans and executes multi-step coding tasks autonomously. Cascade understands your entire codebase, can chain together multiple file edits, terminal commands, and tool calls in a single flow. Dremio is a unified lakehouse platform that provides business context through its semantic layer, universal data access through query federation, and interactive speed through Reflections and Apache Arrow.
+
+> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-03-aitool-windsurf/).
 
 Connecting them gives Cascade the context it needs to write accurate Dremio SQL, generate data pipelines, and build applications against your lakehouse. Without this connection, Cascade treats Dremio like a generic database. With it, the agent knows your schemas, business logic encoded in views, and the correct Dremio SQL dialect.
 
@@ -71,11 +72,11 @@ Create or edit `~/.codeium/windsurf/mcp_config.json`:
 
 ```json
 {
-  "mcpServers": {
-    "dremio": {
-      "url": "https://YOUR_PROJECT_MCP_URL"
-    }
-  }
+ "mcpServers": {
+ "dremio": {
+ "url": "https://YOUR_PROJECT_MCP_URL"
+ }
+ }
 }
 ```
 
@@ -97,23 +98,21 @@ For Dremio Software deployments, use the open-source [dremio-mcp](https://github
 git clone https://github.com/dremio/dremio-mcp
 cd dremio-mcp
 uv run dremio-mcp-server config create dremioai \
-  --uri https://your-dremio-instance.com \
-  --pat YOUR_PERSONAL_ACCESS_TOKEN
+ -uri https://your-dremio-instance.com \
+ -pat YOUR_PERSONAL_ACCESS_TOKEN
 ```
 
 In `mcp_config.json`:
 
 ```json
 {
-  "mcpServers": {
-    "dremio": {
-      "command": "uv",
-      "args": [
-        "run", "--directory", "/path/to/dremio-mcp",
-        "dremio-mcp-server", "run"
-      ]
-    }
-  }
+ "mcpServers": {
+ "dremio": {
+ "command": "uv", "args": [
+ "run", "-directory", "/path/to/dremio-mcp", "dremio-mcp-server", "run"
+ ]
+ }
+ }
 }
 ```
 
@@ -258,12 +257,12 @@ Create backend services:
 
 > "Build a FastAPI app that queries Dremio gold-layer views via dremioframe. Add endpoints for customer segments, revenue analytics, and cohort retention. Include Pydantic models, caching, and OpenAPI docs."
 
-Cascade generates the complete API project. Run `uvicorn main:app --reload` for a local API connected to your lakehouse.
+Cascade generates the complete API project. Run `uvicorn main:app -reload` for a local API connected to your lakehouse.
 
 ## Which Approach Should You Use?
 
 | Approach | Setup Time | What You Get | Best For |
-|----------|-----------|--------------|----------|
+|-----|------|-------|-----|
 | MCP Server | 5 minutes | Live queries, schema browsing, catalog exploration | Data analysis, SQL generation, real-time access |
 | Windsurf Rules | 10 minutes | Convention enforcement, persistent AI instructions | Teams with specific SQL standards |
 | Pre-Built Skills | 5 minutes | Comprehensive Dremio knowledge (CLI, SDK, SQL, API) | Quick start with broad coverage |

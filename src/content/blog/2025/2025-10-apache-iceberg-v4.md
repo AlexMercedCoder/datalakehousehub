@@ -13,7 +13,6 @@ slug: 2025-10-apache-iceberg-v4-october-2025
 draft: false
 image: "/images/blog.png"
 ---
-
 **Get Data Lakehouse Books:**
 - [Apache Iceberg: The Definitive Guide](https://drmevn.fyi/tableformatblog)
 - [Apache Polaris: The Defintive Guide](https://drmevn.fyi/tableformatblog-62P6t)
@@ -26,7 +25,7 @@ image: "/images/blog.png"
 - [OSS Community Listings](https://osscommunity.com)
 - [Dremio Lakehouse Developer Hub](https://developer.dremio.com)
 
----
+--
 
 Apache Iceberg has come a long way since its early days of bringing reliable ACID transactions and schema evolution to the data lake. It helped teams move beyond brittle Hive tables and built the foundation for modern lakehouse architectures. But with wider adoption came new challenges - especially as workloads shifted from batch-heavy pipelines to streaming ingestion, faster commits, and more interactive use cases.
 
@@ -50,7 +49,7 @@ The proposals in Iceberg v4 address these shifts head-on. Together, they aim to:
 
 In short, Iceberg is being re-tuned for modern workloads - ones that demand both speed and flexibility. The v4 changes aren’t just about performance. They’re about making Iceberg easier to run, easier to optimize, and better suited for the next generation of data systems.
 
-## Proposal 1: Single-File Commits – Cutting Down Metadata Overhead
+## Proposal 1: Single-File Commits - Cutting Down Metadata Overhead
 
 Every commit to an Iceberg table today creates at least two new metadata files: one for the updated manifest list, and another for any changed manifests. In fast-moving environments: like streaming ingestion or micro-batch pipelines, this adds up quickly.
 
@@ -64,7 +63,7 @@ The v4 proposal introduces **Single-File Commits**, a new way to consolidate all
 
 By minimizing I/O and simplifying commit logic, this change unlocks faster ingestion and makes Iceberg friendlier to real-time workflows. It also means fewer moving parts to manage and fewer edge cases to debug in production.
 
-## Proposal 2: Parquet for Metadata – Smarter Query Planning
+## Proposal 2: Parquet for Metadata - Smarter Query Planning
 
 Today, Iceberg stores metadata files: like manifests and manifest lists, in **Apache Avro**, a row-based format. While this made sense early on, it’s become a bottleneck for query performance.
 
@@ -78,7 +77,7 @@ The proposed change in Iceberg v4 is to **use Parquet instead of Avro** for meta
 
 This shift isn’t just about speed - it enables smarter planning. Engines can project just the stats they care about, sort and filter more effectively, and better optimize execution plans. It’s a small architectural change with a big ripple effect across the query lifecycle.
 
-## Proposal 3: Column Statistics Overhaul – Better Skipping, Smarter Queries
+## Proposal 3: Column Statistics Overhaul - Better Skipping, Smarter Queries
 
 Metadata isn't just about file paths - it's also about understanding what’s inside each file. Iceberg uses column-level statistics to help query engines skip files that don’t match filter conditions. But the current stats format has limitations that hold back performance.
 
@@ -96,7 +95,7 @@ The v4 spec proposes a **redesigned statistics format** with:
 
 This richer structure enables more precise file pruning and better cost-based optimization. Engines can make smarter decisions about which files to read and which filters to push down - leading to faster queries, less I/O, and improved overall performance.
 
-## Proposal 4: Relative Paths – Making Tables Portable Again
+## Proposal 4: Relative Paths - Making Tables Portable Again
 
 In current versions of Iceberg, metadata files store **absolute file paths**. That might seem fine at first - until you try to move a table.
 

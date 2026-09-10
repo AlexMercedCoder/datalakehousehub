@@ -14,9 +14,10 @@ draft: false
 image: "/images/blog.png"
 canonical: "https://iceberglakehouse.com/posts/llm-agency-concurrency-isolation-high-frequency-agent-writes-iceberg/"
 ---
-> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/llm-agency-concurrency-isolation-high-frequency-agent-writes-iceberg/).
 
 A single autonomous agent can attempt more table commits in an hour than a team of analysts produces in a week. Multiply that by a fleet of agents running remediation loops, annotation passes, feature backfills, and audit logging, and you get a write pattern that looks nothing like the batch jobs Apache Iceberg was first tuned for. The table format still holds. Iceberg's transactional guarantees are real. But the operational assumptions behind "a handful of well-behaved writers" fall apart when the writers are software that never sleeps and rarely coordinates with each other.
+
+> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/llm-agency-concurrency-isolation-high-frequency-agent-writes-iceberg/).
 
 This post walks through why agentic write workloads stress lakehouse tables, how Iceberg's optimistic concurrency control actually behaves under contention, and the patterns that keep a table healthy: partition-level isolation, server-side commit queues, and ingestion gateways built around idempotency. The short version is that agents should almost never write directly to raw tables. They should write through a controlled path that batches, sequences, and validates their commits.
 
@@ -95,12 +96,12 @@ There is a design decision inside the gateway worth calling out: how you shard t
 Here is the shape of the pattern, described conceptually. Exact APIs and configuration should be verified against your engine and catalog documentation.
 
 ```
-Agents (hundreds)                Commit Gateway                 Iceberg Table
-   |  write(record, key) ---->   [ buffer + dedupe ]
-   |                             [ batch by window/size ]
-   |                             [ validate schema ]
-   |                             [ single committer per partition ]  --> atomic commit
-   |  <---- accepted/rejected    [ retry with backoff on conflict ]
+Agents (hundreds) Commit Gateway Iceberg Table
+ | write(record, key) --> [ buffer + dedupe ]
+ | [ batch by window/size ]
+ | [ validate schema ]
+ | [ single committer per partition ] -> atomic commit
+ | <-- accepted/rejected [ retry with backoff on conflict ]
 ```
 
 The tradeoff is real. A commit queue adds a component you must operate, monitor, and scale. It introduces a small amount of latency between when an agent writes and when the data is visible in the table, because batching means waiting. For workloads where an agent must immediately read back its own write, you either accept that latency, provide a read-your-writes path through the gateway's buffer, or route those specific interactions differently. You are trading a bit of freshness and one more service for dramatically better table health under load. For most agent fleets that is the right trade.
@@ -126,7 +127,7 @@ A related consideration is how long the gateway remembers keys. Deduplication re
 The following table summarizes the concurrency risks and the pattern that addresses each.
 
 | Concurrency risk | What causes it | Mitigation pattern |
-| --- | --- | --- |
+| -- | -- | -- |
 | Metadata churn | Many tiny commits per minute | Batching in a commit queue |
 | Commit conflicts | Overlapping writes to the same partition | Partition-level isolation; single committer per partition |
 | Retry storms | Agents retry conflicts without backoff | Gateway-managed retry with backoff |

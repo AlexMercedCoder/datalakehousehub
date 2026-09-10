@@ -17,9 +17,9 @@ image: "/images/blog.png"
 canonical: https://iceberglakehouse.com/posts/agentic-graph-open-agent-profile-two-open-specs-agent-harnesses/
 ---
 
-> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/agentic-graph-open-agent-profile-two-open-specs-agent-harnesses/).
-
 Every agent harness solves the same two problems, and almost every one of them solves both privately.
+
+> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/agentic-graph-open-agent-profile-two-open-specs-agent-harnesses/).
 
 The first problem is decomposition. A task arrives, the harness breaks it into steps, and those steps live in the harness's own memory in the harness's own shape. You see the plan after the tokens are spent, if you see it at all. When the session ends, the plan is gone.
 
@@ -66,30 +66,30 @@ objective: Expose GET /healthz returning service and dependency status.
 entrypoints: [implement]
 
 nodes:
-  implement:
-    title: Implement /healthz
-    description: >
-      Add a GET /healthz endpoint returning 200 with {"status":"ok"} when the
-      database and cache are both reachable, and 503 with per-dependency detail
-      when either is not.
-    outputs:
-      changed_files:
-        type: file_set
-        description: Source files added or modified.
-    intelligence:
-      tier: standard
-      hints: [code_generation]
-    requirements:
-      tools: [file_read, file_write, shell_exec]
-      permissions: [fs:read:**, fs:write:src/**, shell:exec:pytest*]
-      workspace: read_write
-    success:
-      summary: The endpoint exists and behaves as specified under test.
-      criteria:
-        - id: tests_pass
-          kind: command
-          description: The health-check tests pass.
-          run: pytest tests/test_healthz.py -q
+ implement:
+ title: Implement /healthz
+ description: >
+ Add a GET /healthz endpoint returning 200 with {"status":"ok"} when the
+ database and cache are both reachable, and 503 with per-dependency detail
+ when either is not.
+ outputs:
+ changed_files:
+ type: file_set
+ description: Source files added or modified.
+ intelligence:
+ tier: standard
+ hints: [code_generation]
+ requirements:
+ tools: [file_read, file_write, shell_exec]
+ permissions: [fs:read:**, fs:write:src/**, shell:exec:pytest*]
+ workspace: read_write
+ success:
+ summary: The endpoint exists and behaves as specified under test.
+ criteria:
+ - id: tests_pass
+ kind: command
+ description: The health-check tests pass.
+ run: pytest tests/test_healthz.py -q
 ```
 
 Read that as a contract rather than as a prompt. The interesting part is not the description, it is everything around it.
@@ -103,7 +103,7 @@ Without declared acceptance criteria, completion is whatever the model says it i
 AGS defines nine criterion kinds, and the harness evaluates them, not the model:
 
 | Kind | Passes when |
-| --- | --- |
+| -- | -- |
 | `command` | A command exits with the expected code, optionally matching stdout. |
 | `file_exists` | A workspace path or glob matches at least one file of a minimum size. |
 | `artifact_present` | A declared output was produced and is non-empty. |
@@ -127,7 +127,7 @@ There is one more detail here that changes retry behavior in practice. When a cr
 No vendor, model, or runtime appears anywhere in the normative model. A node declares an `intelligence.tier` on a four point ordered scale:
 
 | Tier | Use when the task is |
-| --- | --- |
+| -- | -- |
 | `minimal` | Mechanical and verifiable at a glance. Mistakes are obvious and cheap. |
 | `standard` | Ordinary single domain work with a known good pattern to follow. |
 | `advanced` | Multi step reasoning or ambiguity resolution within a frame you already understand. |
@@ -150,7 +150,7 @@ The graph is also acyclic by design. Iteration is a node that owns a body, not a
 A harness does not have to implement everything to be useful. AGS defines four levels, and a graph declares what it needs with `requires_conformance`:
 
 | Level | Name | Adds |
-| --- | --- | --- |
+| -- | -- | -- |
 | 0 | Reader | Parse, validate, resolve dependencies, render a plan. No execution. |
 | 1 | Minimal harness | Execute `task` and `gate` nodes, sequence edges, retries, the basic criteria kinds, tier routing. |
 | 2 | Standard harness | Decisions, conditional edges, all joins, the full expression language, budget enforcement, real parallelism, fallback and escalation. |
@@ -169,45 +169,45 @@ oap: "1.0"
 kind: AgentProfile
 
 metadata:
-  name: code-reviewer
-  description: Reviews changed code for correctness, security, and missing tests.
-  revision: 7
+ name: code-reviewer
+ description: Reviews changed code for correctness, security, and missing tests.
+ revision: 7
 
 spec:
-  role:
-    instructions: |
-      You are a code reviewer. You read a diff and report defects. You do not
-      rewrite the change unless you are explicitly asked to.
-    constraints:
-      - Do not edit files. Report only.
+ role:
+ instructions: |
+ You are a code reviewer. You read a diff and report defects. You do not
+ rewrite the change unless you are explicitly asked to.
+ constraints:
+ - Do not edit files. Report only.
 
-  model:
-    provider: anthropic
-    id: claude-sonnet-5
-    tier: advanced
+ model:
+ provider: anthropic
+ id: claude-sonnet-5
+ tier: advanced
 
-  tools:
-    policy: allowlist
-    allow: [read, search, git/diff]
-    deny: [shell, write, edit]
+ tools:
+ policy: allowlist
+ allow: [read, search, git/diff]
+ deny: [shell, write, edit]
 
-  lifecycle:
-    writeback: propose
+ lifecycle:
+ writeback: propose
 
 state:
-  summary: >-
-    Reviewing the platform team's Python services. They autoformat with ruff, so
-    formatting findings are noise.
-  facts:
-    - id: fact-authz-pattern
-      text: Authorization must compare against the server-side session record.
-      confidence: 0.9
-      source: repeated finding across three sessions
-      pinned: true
-  open_threads:
-    - id: thread-flaky-auth-tests
-      title: Auth integration tests are flaky under parallel execution
-      status: blocked
+ summary: >-
+ Reviewing the platform team's Python services. They autoformat with ruff, so
+ formatting findings are noise.
+ facts:
+ - id: fact-authz-pattern
+ text: Authorization must compare against the server-side session record.
+ confidence: 0.9
+ source: repeated finding across three sessions
+ pinned: true
+ open_threads:
+ - id: thread-flaky-auth-tests
+ title: Auth integration tests are flaky under parallel execution
+ status: blocked
 ```
 
 No process is resident. The file is the agent. A harness reads it to start a session, and writes an updated revision back when the session ends.
@@ -249,18 +249,18 @@ Here is what that looks like when a session decides it needs more access:
 
 ```yaml
 proposals:
-  - path: /spec/tools/allow
-    op: replace
-    value: [read, search, git/diff, shell]
-    rationale: Could not verify the flaky test claim without running the suite.
+ - path: /spec/tools/allow
+ op: replace
+ value: [read, search, git/diff, shell]
+ rationale: Could not verify the flaky test claim without running the suite.
 ```
 
 The reference applicator prints it and refuses to apply it:
 
 ```
 1 proposal(s) require human review and were NOT applied:
-  [high] /spec/tools/allow
-      rationale: Could not verify the flaky test claim without running the suite.
+ [high] /spec/tools/allow
+ rationale: Could not verify the flaky test claim without running the suite.
 ```
 
 The `high` risk classification there is computed by the applicator, not read from the document, because a document claiming its own request is low risk is exactly the thing you must not believe.
@@ -302,10 +302,10 @@ Both implement AGS 1.0 through conformance level 3, which is the full surface: l
 In Loro:
 
 ```bash
-loro graph generate "Create a release readiness report" --out release.agraph.yaml
-loro graph validate release.agraph.yaml --strict
+loro graph generate "Create a release readiness report" -out release.agraph.yaml
+loro graph validate release.agraph.yaml -strict
 loro graph plan release.agraph.yaml
-loro graph run release.agraph.yaml --dry-run
+loro graph run release.agraph.yaml -dry-run
 ```
 
 Before any non dry run, Loro renders the node count and worst case execution count and asks you to approve that exact document by digest. Change the document and the approval is void.
@@ -323,7 +323,7 @@ For AGS, the reference validator runs standalone:
 ```bash
 python3 -m pip install jsonschema pyyaml
 python3 tools/validate_agraph.py path/to/graph.agraph.yaml
-python3 tools/validate_agraph.py --strict examples/
+python3 tools/validate_agraph.py -strict examples/
 ```
 
 It implements all three validation layers: JSON Schema, cross reference and topology checks, and expression and dataflow analysis. Writing graphs and validating them is useful even before anything executes them, because the review happens at authoring time.
@@ -332,8 +332,8 @@ For OAP, the reference tools install from the repository:
 
 ```bash
 pip install open-agent-profile
-oap-validate .agents/code-reviewer.agent.yaml --digest
-oap-apply .agents/code-reviewer.agent.yaml session.delta.yaml --approve
+oap-validate .agents/code-reviewer.agent.yaml -digest
+oap-apply .agents/code-reviewer.agent.yaml session.delta.yaml -approve
 ```
 
 There are also two Agent Skills packages in the OAP repository for harnesses without native support. One discovers a profile, assembles the system prompt in the specification's normative order, reports which requested capabilities the harness did not actually grant, and injects learned state as untrusted content. The other turns a finished session into a reviewable delta and applies it.

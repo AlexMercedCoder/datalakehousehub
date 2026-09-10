@@ -16,9 +16,10 @@ draft: false
 image: "/images/blog.png"
 canonical: "https://iceberglakehouse.com/posts/2026-03-connector-postgresql/"
 ---
-> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-03-connector-postgresql/).
 
 PostgreSQL powers more production applications than almost any other open-source database. It's where your customer records, transaction logs, product catalogs, and operational data live. But running analytics directly against PostgreSQL creates problems: heavy analytical queries compete with transactional workloads, cross-database joins require custom ETL, and your data team can't access PostgreSQL data alongside data in S3, Snowflake, or other systems without building pipelines.
+
+> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-03-connector-postgresql/).
 
 Dremio Cloud solves this by connecting directly to PostgreSQL and querying it in place. No data movement, no ETL pipelines, no replica databases. You write SQL in Dremio, and it pushes filtering and aggregation work back to PostgreSQL when possible, fetches only the results, and lets you join that data with any other connected source in the same query.
 
@@ -79,7 +80,7 @@ Choose one of two authentication methods:
 The advanced options let you fine-tune connection behavior:
 
 | Setting | What It Does | Default |
-|---|---|---|
+|--|--|--|
 | **Record fetch size** | Number of rows Dremio fetches per batch. Set to 0 for automatic. | 200 |
 | **Maximum Idle Connections** | How many idle connections Dremio maintains to PostgreSQL. | 8 |
 | **Connection Idle Time** | Seconds before an idle connection is closed. | 60 |
@@ -128,14 +129,10 @@ The real value appears when you combine PostgreSQL data with other sources. Here
 
 ```sql
 SELECT
-  c.customer_id,
-  c.first_name || ' ' || c.last_name AS customer_name,
-  c.segment,
-  COUNT(e.event_id) AS total_events,
-  SUM(CASE WHEN e.event_type = 'purchase' THEN 1 ELSE 0 END) AS purchases
+ c.customer_id, c.first_name || ' ' || c.last_name AS customer_name, c.segment, COUNT(e.event_id) AS total_events, SUM(CASE WHEN e.event_type = 'purchase' THEN 1 ELSE 0 END) AS purchases
 FROM "production-postgres".public.customers c
 LEFT JOIN "s3-clickstream".events.user_events e
-  ON c.customer_id = e.user_id
+ ON c.customer_id = e.user_id
 GROUP BY c.customer_id, c.first_name, c.last_name, c.segment
 ORDER BY purchases DESC;
 ```
@@ -149,16 +146,11 @@ Create views to give your PostgreSQL data business-friendly names and logic:
 ```sql
 CREATE VIEW analytics.gold.customer_overview AS
 SELECT
-  c.customer_id,
-  c.first_name || ' ' || c.last_name AS full_name,
-  c.email,
-  c.segment AS customer_segment,
-  c.signup_date,
-  CASE
-    WHEN c.segment = 'Enterprise' AND c.lifetime_value > 50000 THEN 'Strategic'
-    WHEN c.lifetime_value > 10000 THEN 'High Value'
-    ELSE 'Standard'
-  END AS account_tier
+ c.customer_id, c.first_name || ' ' || c.last_name AS full_name, c.email, c.segment AS customer_segment, c.signup_date, CASE
+ WHEN c.segment = 'Enterprise' AND c.lifetime_value > 50000 THEN 'Strategic'
+ WHEN c.lifetime_value > 10000 THEN 'High Value'
+ ELSE 'Standard'
+ END AS account_tier
 FROM "production-postgres".public.customers c;
 ```
 
@@ -195,7 +187,7 @@ This is particularly valuable for dashboard queries. BI tools like Tableau or Po
 Dremio automatically maps PostgreSQL types to Dremio types. The key mappings to know:
 
 | PostgreSQL | Dremio | Notes |
-|---|---|---|
+|--|--|--|
 | BIGINT / BIGSERIAL | BIGINT | |
 | INT / SERIAL | INTEGER | |
 | NUMERIC | DECIMAL | Preserves precision |
@@ -217,7 +209,7 @@ The built-in AI Agent lets users ask questions about PostgreSQL data in plain En
 
 ### Dremio MCP Server
 
-The [Dremio MCP Server](https://github.com/dremio/dremio-mcp) connects external AI chat clients :  Claude, ChatGPT, and others ,  to your PostgreSQL data through Dremio. The hosted MCP Server provides OAuth authentication that propagates user identity and authorization for every interaction:
+The [Dremio MCP Server](https://github.com/dremio/dremio-mcp) connects external AI chat clients : Claude, ChatGPT, and others, to your PostgreSQL data through Dremio. The hosted MCP Server provides OAuth authentication that propagates user identity and authorization for every interaction:
 
 1. Create a Native OAuth application in Dremio Cloud
 2. Configure redirect URLs for your AI client (e.g., `https://claude.ai/api/mcp/auth_callback`)
@@ -230,26 +222,19 @@ A sales director can ask Claude "Show me our strategic account customers who sig
 Use AI directly in queries against PostgreSQL data:
 
 ```sql
--- Classify customers based on their profile data
+- Classify customers based on their profile data
 SELECT
-  full_name,
-  customer_segment,
-  account_tier,
-  AI_CLASSIFY(
-    'Based on this customer profile, predict their likely next action',
-    'Customer: ' || full_name || ', Segment: ' || customer_segment || ', Tier: ' || account_tier,
-    ARRAY['Upsell Opportunity', 'Renewal Risk', 'Expansion Ready', 'Stable']
-  ) AS predicted_action
+ full_name, customer_segment, account_tier, AI_CLASSIFY(
+ 'Based on this customer profile, predict their likely next action', 'Customer: ' || full_name || ', Segment: ' || customer_segment || ', Tier: ' || account_tier, ARRAY['Upsell Opportunity', 'Renewal Risk', 'Expansion Ready', 'Stable']
+ ) AS predicted_action
 FROM analytics.gold.customer_overview
 WHERE account_tier IN ('Strategic', 'High Value');
 
--- Generate personalized engagement plans
+- Generate personalized engagement plans
 SELECT
-  full_name,
-  AI_GENERATE(
-    'Write a one-sentence personalized engagement recommendation',
-    'Customer: ' || full_name || ', Segment: ' || customer_segment || ', Tier: ' || account_tier || ', Signup: ' || CAST(signup_date AS VARCHAR)
-  ) AS engagement_recommendation
+ full_name, AI_GENERATE(
+ 'Write a one-sentence personalized engagement recommendation', 'Customer: ' || full_name || ', Segment: ' || customer_segment || ', Tier: ' || account_tier || ', Signup: ' || CAST(signup_date AS VARCHAR)
+ ) AS engagement_recommendation
 FROM analytics.gold.customer_overview
 WHERE account_tier = 'Strategic';
 ```

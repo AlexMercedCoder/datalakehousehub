@@ -14,9 +14,10 @@ tags:
 slug: "stop-flattening-your-json-iceberg-variant"
 draft: false
 ---
-> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/stop-flattening-your-json-iceberg-variant/).
 
 Somewhere in your company there is a table with a column named `payload`, `properties`, `raw_event`, or `extra`, and inside it lives JSON stored as a string. Every query that touches it parses text, row by row, to pull out two or three fields. Someone once proposed flattening it into real columns, and the project died when the count came back at 400 columns, half of them null, with new fields arriving weekly. So the string column stayed, the parsing tax stayed, and everyone learned not to filter on anything inside it.
+
+> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/stop-flattening-your-json-iceberg-variant/).
 
 Apache Iceberg v3 ships the type that retires that column. Variant stores semi-structured data in a compact binary encoding that engines navigate without parsing, and an optimization called shredding pulls frequently occurring fields into real columnar storage with real statistics, so filters on JSON paths prune files the same way filters on normal columns do. The flexibility of JSON and the performance of columns stop being a trade-off.
 
@@ -56,7 +57,7 @@ Abstract descriptions of encodings slide off the brain, so walk one small docume
 
 As UTF-8 text, that document costs 68 bytes, and 40 of them are field names and punctuation. Stored a million times, the names alone cost tens of megabytes before compression, and every read pays a full tokenize-and-parse to find anything.
 
-The Variant encoding splits it. The metadata section builds a sorted dictionary of the distinct field names in the value: `device`, `event_type`, `os`, `user_id`, each stored once, referenced by index. The value section then encodes the structure: an object header saying "object with three fields," followed by compact entries pairing a dictionary index with an offset to that field's value. Each value carries a type tag and its data: `user_id` tags as an integer and stores the number 42 in binary, `event_type` tags as a string with its length and bytes, `device` tags as a nested object whose own entries follow the same pattern one level down.
+The Variant encoding splits it. The metadata section builds a sorted dictionary of the distinct field names in the value: `device`, `event_type`, `os`, `user_id`, each stored once, referenced by index. The value section then encodes the structure: an object header saying "object with three fields, " followed by compact entries pairing a dictionary index with an offset to that field's value. Each value carries a type tag and its data: `user_id` tags as an integer and stores the number 42 in binary, `event_type` tags as a string with its length and bytes, `device` tags as a nested object whose own entries follow the same pattern one level down.
 
 Now watch a read of `$.device.os`. The reader consults the object header, binary-searches the field entries for the dictionary index of `device`, jumps by offset directly to the nested object, repeats for `os`, checks the type tag, and returns the string. It touched the header, two field entries, and one value. It never examined `user_id` or `event_type`, never validated punctuation, never allocated a parsed document tree. The work is proportional to the path depth, not the document size, and on wide documents that proportionality is the whole ballgame. A 6 KB document with 200 fields costs the same three jumps for that path as this toy did.
 
@@ -69,7 +70,7 @@ Two encoding details worth knowing because they surface in migrations. Duplicate
 With the mechanism on the table, the comparison becomes concrete. Here is how the five approaches stack up on the dimensions that decide real designs:
 
 | Dimension | JSON string | Wide/flattened | STRUCT | MAP | Variant | Shredded Variant |
-|---|---|---|---|---|---|---|
+|--|--|--|--|--|--|--|
 | Schema flexibility | Total | None | None | Keys only | Total | Total |
 | New fields need schema change | No | Yes | Yes | No | No | No |
 | Typed values | No | Yes | Yes | One type | Yes, tagged | Yes, columnar |
@@ -109,16 +110,16 @@ Below the file level, the shredded Parquet columns carry ordinary row-group and 
 
 ## One Query, Every Layer
 
-To fix the whole stack in your head, trace a single query top to bottom. The table holds 5,000 data files of clickstream events with `event_type` and `amount` shredded. The query:
+To fix the whole stack in your head, trace a single query top to bottom. The table holds 5, 000 data files of clickstream events with `event_type` and `amount` shredded. The query:
 
 ```sql
 SELECT variant_get(payload, '$.user_id', 'bigint') AS user_id
 FROM lake.events
 WHERE variant_get(payload, '$.event_type', 'string') = 'purchase'
-  AND variant_get(payload, '$.amount', 'double') > 500.0;
+ AND variant_get(payload, '$.amount', 'double') > 500.0;
 ```
 
-Layer one, scan planning against manifests. The planner matches the predicates against the path-keyed bounds recorded for the Variant column. Files whose `$.event_type` bounds exclude `'purchase'`, or whose `$.amount` upper bound sits at or below 500, drop out. In clickstream data, purchases are rare, so suppose 4,300 of 5,000 files drop here. No storage read has happened for them beyond the metadata the planner already held.
+Layer one, scan planning against manifests. The planner matches the predicates against the path-keyed bounds recorded for the Variant column. Files whose `$.event_type` bounds exclude `'purchase'`, or whose `$.amount` upper bound sits at or below 500, drop out. In clickstream data, purchases are rare, so suppose 4, 300 of 5, 000 files drop here. No storage read has happened for them beyond the metadata the planner already held.
 
 Layer two, Parquet footers. For each surviving file, the engine reads the footer and finds the Variant column's group: `metadata`, `value`, and the `typed_value` sub-columns for `event_type` and `amount`. Row-group statistics on those typed columns repeat the pruning at finer grain, and half the row groups drop.
 
@@ -126,7 +127,7 @@ Layer three, pages and decoding. Within surviving row groups, the engine reads t
 
 Layer four, result assembly. Matching `user_id` values return as ordinary bigints. Nothing downstream knows the data was semi-structured.
 
-Count what never happened. No JSON parsing, anywhere. No reads of the dozens of other shredded sub-columns. No decompression of 4,300 files and half the row groups of the rest. Now run the same query against the legacy string column: every file opens, every row group decompresses, every row parses in full, and the two predicates evaluate against freshly built document trees a billion times. Same data, same question, and the difference is structural, not incremental, which is why filter-heavy workloads see the largest gains and why "several times faster" is the modest end of reported numbers.
+Count what never happened. No JSON parsing, anywhere. No reads of the dozens of other shredded sub-columns. No decompression of 4, 300 files and half the row groups of the rest. Now run the same query against the legacy string column: every file opens, every row group decompresses, every row parses in full, and the two predicates evaluate against freshly built document trees a billion times. Same data, same question, and the difference is structural, not incremental, which is why filter-heavy workloads see the largest gains and why "several times faster" is the modest end of reported numbers.
 
 The trace also shows where the design spends its correctness insurance. Every step that used shredded columns had the residual `value` as fallback for rows that did not conform, and the merge in layer three is where conforming and non-conforming rows reunite. Fast for the disciplined majority, correct for everything, and the boundary between them decided per row rather than per table.
 
@@ -138,13 +139,10 @@ Create a v3 table with a Variant column and shredding enabled:
 
 ```sql
 CREATE TABLE lake.events (
-  event_id   BIGINT,
-  event_ts   TIMESTAMP,
-  payload    VARIANT
+ event_id BIGINT, event_ts TIMESTAMP, payload VARIANT
 ) USING iceberg
 TBLPROPERTIES (
-  'format-version' = '3',
-  'write.parquet.shred-variants' = 'true'
+ 'format-version' = '3', 'write.parquet.shred-variants' = 'true'
 );
 ```
 
@@ -154,14 +152,9 @@ Ingest JSON by parsing it into the binary encoding at write time:
 
 ```sql
 INSERT INTO lake.events VALUES (
-  1001,
-  TIMESTAMP '2026-08-01 10:00:00',
-  PARSE_JSON('{
-    "user_id": 42,
-    "event_type": "click",
-    "device": { "os": "android", "version": 14 },
-    "tags": ["promo", "mobile"]
-  }')
+ 1001, TIMESTAMP '2026-08-01 10:00:00', PARSE_JSON('{
+ "user_id": 42, "event_type": "click", "device": { "os": "android", "version": 14 }, "tags": ["promo", "mobile"]
+ }')
 );
 ```
 
@@ -171,9 +164,7 @@ Query fields with path extraction:
 
 ```sql
 SELECT
-  variant_get(payload, '$.user_id', 'bigint')      AS user_id,
-  variant_get(payload, '$.device.os', 'string')    AS os,
-  variant_get(payload, '$.tags[0]', 'string')      AS first_tag
+ variant_get(payload, '$.user_id', 'bigint') AS user_id, variant_get(payload, '$.device.os', 'string') AS os, variant_get(payload, '$.tags[0]', 'string') AS first_tag
 FROM lake.events
 WHERE variant_get(payload, '$.event_type', 'string') = 'click';
 ```

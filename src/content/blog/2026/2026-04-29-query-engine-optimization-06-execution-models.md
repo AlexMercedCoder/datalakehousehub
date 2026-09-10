@@ -2,7 +2,7 @@
 title: "Volcano, Vectorized, Compiled: How Engines Execute Your Query"
 date: 2026-04-29T09:06:00Z
 pubDatetime: 2026-04-29T09:06:00Z
-description: "The Volcano model processes one row at a time. Vectorized execution processes batches with SIMD. Code generation fuses operators into compiled code. Here is how each works."
+description: "The Volcano model processes one row at a time. Vectorized execution processes batches with SIMD. Code generation fuses operators into compiled code."
 author: "Alex Merced"
 category: "Data Engineering"
 tags:
@@ -14,11 +14,12 @@ draft: false
 image: "/images/blog/query-engine-optimization/06-execution-models-volcano-iterator-model.png"
 canonical: "https://iceberglakehouse.com/posts/2026-04-29-query-engine-06/"
 ---
-> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-04-29-query-engine-06/).
 
-<!-- Meta Description: The Volcano model processes one row at a time. Vectorized execution processes batches with SIMD. Code generation fuses operators into compiled code. Here is how each works. -->
-<!-- Primary Keyword: query execution models -->
-<!-- Secondary Keywords: vectorized execution, volcano iterator model, query code generation -->
+<!- Meta Description: The Volcano model processes one row at a time. Vectorized execution processes batches with SIMD. Code generation fuses operators into compiled code. Here is how each works. ->
+<!- Primary Keyword: query execution models ->
+<!- Secondary Keywords: vectorized execution, volcano iterator model, query code generation ->
+
+> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-04-29-query-engine-06/).
 
 *Read the complete Query Engine Optimization series:*
 * [Part 1: How Query Engines Think: The Tradeoffs Behind Every Data System](/blog/2026-04-29-query-engine-optimization-01-overview)
@@ -63,7 +64,7 @@ Inside each operator, processing happens one column at a time in tight loops. A 
 
 ```
 for i in 0..batch_size:
-    selection[i] = prices[i] > 100
+ selection[i] = prices[i] > 100
 ```
 
 This loop has three properties that make it fast:
@@ -84,8 +85,8 @@ For a query `SELECT name FROM users WHERE age > 30`, instead of three separate o
 
 ```
 for each row in users_table:
-    if row.age > 30:
-        emit(row.name)
+ if row.age > 30:
+ emit(row.name)
 ```
 
 There are no operator boundaries, no Next() calls, no batch transfers. The data stays in CPU registers as long as possible. The generated code is compiled (JIT or ahead-of-time) into native machine instructions.
@@ -107,7 +108,7 @@ Morsel-driven parallelism works particularly well with vectorized execution: eac
 ![Three execution models compared: Volcano for simplicity, Vectorized for CPU efficiency, Code Generation for maximum performance](/images/blog/query-engine-optimization/06-execution-models-execution-model-comparison.png)
 
 | Model | Data Unit | Overhead | CPU Efficiency | Modularity | Systems |
-|---|---|---|---|---|---|
+|--|--|--|--|--|--|
 | Volcano | 1 row | High (virtual calls) | Low | High | PostgreSQL, MySQL, SQLite |
 | Vectorized | 1024+ rows | Low (batch amortized) | High (SIMD) | High | DuckDB, ClickHouse, Dremio, Snowflake |
 | Code Gen | Continuous stream | Minimal (fused code) | Highest | Low | Spark Tungsten, Hyper |

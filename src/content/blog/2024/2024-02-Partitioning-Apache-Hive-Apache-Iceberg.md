@@ -13,12 +13,13 @@ tags:
   - APache Iceberg
 canonical: "https://iceberglakehouse.com/posts/2024-2-partitioning-in-apache-hive-and-apache-iceberg/"
 ---
-> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2024-2-partitioning-in-apache-hive-and-apache-iceberg/).
 
 # Partitioning Practices in Apache Hive and Apache Iceberg
 
 ## Introduction
 The efficiency of query execution is paramount. One of the key strategies to optimize this efficiency is through the use of partitioning. Partitioning is a technique that can significantly speed up query performance by organizing data in a manner that aligns with how queries are executed. In this blog, we delve into the concept of partitioning, explore traditional partitioning practices and their associated bottlenecks, and compare the partitioning implementations in Apache Hive and Apache Iceberg to highlight the evolution of partitioning strategies.
+
+> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2024-2-partitioning-in-apache-hive-and-apache-iceberg/).
 
 ## What is Partitioning?
 Partitioning is a data organization technique used in database and data management systems to improve query performance. By grouping similar rows together when writing data, partitioning ensures that queries access only the relevant slices of data, thereby reducing the amount of data scanned and speeding up query execution. For instance, consider a database table containing log entries. Queries against this table often search for entries within a specific time range. If the table is partitioned by the date of the event time, the database can quickly locate and access only the data relevant to the query's time range, skipping over unrelated data. This method is especially effective in big data environments where tables can contain billions of rows, making data retrieval efficiency critical.
@@ -40,8 +41,8 @@ For example, when inserting log data into a partitioned table, the insertion que
 
 ```sql
 INSERT INTO logs PARTITION (event_date)
-  SELECT level, message, event_time, format_time(event_time, 'YYYY-MM-dd')
-  FROM unstructured_log_source;
+ SELECT level, message, event_time, format_time(event_time, 'YYYY-MM-dd')
+ FROM unstructured_log_source;
 ```
 
 Queries against partitioned tables must also include the partition column to avoid scanning the entire table. This explicit handling of partitions ensures data is stored and accessed efficiently, but it places the burden of partition management on the user.

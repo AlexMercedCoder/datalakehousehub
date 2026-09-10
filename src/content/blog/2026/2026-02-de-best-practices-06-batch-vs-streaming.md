@@ -15,9 +15,10 @@ draft: false
 image: "/images/blog.png"
 canonical: "https://iceberglakehouse.com/posts/2026-02-debp-batch-vs-streaming/"
 ---
-> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-02-debp-batch-vs-streaming/).
 
 ![Batch processing in scheduled groups vs streaming in continuous flow](/images/blog/debp/batch-vs-streaming.png)
+
+> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-02-debp-batch-vs-streaming/).
 
 "We need real-time data." This is one of the most expensive sentences in data engineering : because it's rarely true, and implementing it when it's not needed multiplies complexity, cost, and operational burden.
 
@@ -81,14 +82,14 @@ Micro-batch processing runs batch jobs at very short intervals : every 1, 5, or 
 Before choosing between batch, micro-batch, and streaming, answer these questions:
 
 | Question | Batch | Micro-batch | Streaming |
-|---|---|---|---|
+|--|--|--|--|
 | Required latency | Hours | Minutes | Seconds |
 | Cost of stale data | Low | Medium | High |
 | Team streaming expertise | Not needed | Not needed | Required |
 | Operational budget | Lowest | Low | Highest |
 | Recovery complexity | Simple rerun | Simple rerun | Complex |
 
-**Start with batch.** If stakeholders say "we need real-time," ask "what's the cost of a 15-minute delay?" If the answer is "that's fine," micro-batch gives you near-real-time at batch-level complexity.
+**Start with batch.** If stakeholders say "we need real-time, " ask "what's the cost of a 15-minute delay?" If the answer is "that's fine, " micro-batch gives you near-real-time at batch-level complexity.
 
 **Upgrade to streaming only when justified.** Sub-second latency requirements, event-driven business logic, and high-volume event processing are legitimate streaming use cases. "I want the dashboard to update faster" is usually not.
 

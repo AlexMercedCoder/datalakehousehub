@@ -1,7 +1,7 @@
 ---
 title: "What is Event Sourcing?"
 meta_title: "What is Event Sourcing? | Expert Data Lakehouse & AI Glossary"
-description: "A software architectural pattern where every change to an application's state is captured in an append-only event log. Learn the architecture, mechanics, and real-world value of Event Sourcing in the modern data stack."
+description: "A software architectural pattern where every change to an application's state is captured in an append-only event log."
 ---
 
 ## What is Event Sourcing?

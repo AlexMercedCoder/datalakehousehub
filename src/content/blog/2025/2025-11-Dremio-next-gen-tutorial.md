@@ -16,9 +16,10 @@ draft: false
 image: "/images/blog.png"
 canonical: "https://iceberglakehouse.com/posts/2025-11-dremio-next-gen-cloud-tutorial/"
 ---
-> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2025-11-dremio-next-gen-cloud-tutorial/).
 
 [Video Playlist of this Walkthough](https://www.youtube.com/playlist?list=PL-gIUf9e9CCvY0bcRBGu2SzFFR-yJGIB6)
+
+> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2025-11-dremio-next-gen-cloud-tutorial/).
 
 On November 13, at the [Subsurface Lakehouse Conference](https://www.dremio.com/subsurface?utm_source=ev_external_blog&utm_medium=influencer&utm_campaign=pag&utm_term=nextgencloudtut&utm_content=alexmerced) in New York City, Dremio announced and released [Dremio Next Gen Cloud](https://www.dremio.com/?utm_source=ev_external_blog&utm_medium=influencer&utm_campaign=pag&utm_term=nextgencloudtut&utm_content=alexmerced), the most complete and accessible version of its Lakehouse Platform to date. This release advances Dremio’s mission to make data lakehouses easy, fast, and affordable for organizations of any size.
 
@@ -56,9 +57,9 @@ Dremio simplifies many of these challenges with a platform that makes your lakeh
 
 - **Integrated Catalog**: Dremio includes a built-in Iceberg catalog, ready to use from day one. This catalog:
 
-    - Is based on Apache Polaris, the community-led standard for lakehouse catalogs  
-    - Automatically optimizes Iceberg table storage, eliminating manual tuning  
-    - Provides governance for both Iceberg tables and SQL views with role-based and fine-grained access controls  
+ - Is based on Apache Polaris, the community-led standard for lakehouse catalogs 
+ - Automatically optimizes Iceberg table storage, eliminating manual tuning 
+ - Provides governance for both Iceberg tables and SQL views with role-based and fine-grained access controls 
 
 - **End-to-End Performance Management**: Managing query performance can be time-consuming. Dremio reduces this burden by automatically clustering Iceberg tables and applying multiple layers of caching. One key feature is Autonomous Reflections, which accelerate queries behind the scenes based on actual usage patterns, improving performance before users even notice a problem.
 
@@ -233,25 +234,19 @@ We found success starting with quite a vague question but working with the AI we
 Using your data to create visualization isn't the only cool AI integration in the Dremio Arsenal. Dremio also has added a variety of new SQL AI Functions which allow you to do a variety of things like turn unstructured data into structured data. Let's see a very simple example you can run right in your SQL runner assuming you have a `dremio` namespace.
 
 ```sql
--- Create the recipes table with an ARRAY column for ingredients (sample rows)
--- Note: this uses CREATE TABLE AS SELECT to create a physical table with sample data.
+- Create the recipes table with an ARRAY column for ingredients (sample rows)
+- Note: this uses CREATE TABLE AS SELECT to create a physical table with sample data.
 CREATE FOLDER IF NOT EXISTS dremio.recipes;
 CREATE TABLE IF NOT EXISTS dremio.recipes.recipes AS
-SELECT 1 AS "id",
-       'Mild Salsa' AS "name",
-       ARRAY['tomato','onion','cilantro','jalapeno','lime'] AS "ingredients",
-       CURRENT_TIMESTAMP AS "created_at"
+SELECT 1 AS "id", 'Mild Salsa' AS "name", ARRAY['tomato', 'onion', 'cilantro', 'jalapeno', 'lime'] AS "ingredients", CURRENT_TIMESTAMP AS "created_at"
 UNION ALL
-SELECT 2, 'Medium Chili', ARRAY['beef','tomato','onion','chili powder','cumin','jalapeno'], CURRENT_TIMESTAMP
+SELECT 2, 'Medium Chili', ARRAY['beef', 'tomato', 'onion', 'chili powder', 'cumin', 'jalapeno'], CURRENT_TIMESTAMP
 UNION ALL
-SELECT 3, 'Spicy Vindaloo', ARRAY['chicken','chili','ginger','garlic','vinegar','habanero'], CURRENT_TIMESTAMP;
+SELECT 3, 'Spicy Vindaloo', ARRAY['chicken', 'chili', 'ginger', 'garlic', 'vinegar', 'habanero'], CURRENT_TIMESTAMP;
 
--- Create View where AI is used to classify each recipe as Mild, Medium or Spicy
-CREATE OR REPLACE VIEW dremio.recipes.recipes_enhanced AS SELECT id,
-       name,
-       ingredients,
-       AI_CLASSIFY('Identify the Spice Level:' || ARRAY_TO_STRING(ingredients, ','), ARRAY [ 'mild', 'medium', 'spicy' ]) AS spice_level
-from   dremio.recipes.recipes;
+- Create View where AI is used to classify each recipe as Mild, Medium or Spicy
+CREATE OR REPLACE VIEW dremio.recipes.recipes_enhanced AS SELECT id, name, ingredients, AI_CLASSIFY('Identify the Spice Level:' || ARRAY_TO_STRING(ingredients, ', '), ARRAY [ 'mild', 'medium', 'spicy' ]) AS spice_level
+from dremio.recipes.recipes;
 ```
 
 - The First SQL statement creates a table of recipes where the ingredients are an array of strings
@@ -280,9 +275,9 @@ If you click on the last menu item, the gear, you'll get two options:
 ![Dremio Project Settings](https://i.imgur.com/YCfoaMz.png)
 
 - You can find project info like:
-  - project name and id (project names are fixed, org names can change)
-  - MCP server url to connect your external AI agent to leverage your Dremio instance
-  - JDBC url to connect to Dremio using external JDBC clients and in custom scripts
+ - project name and id (project names are fixed, org names can change)
+ - MCP server url to connect your external AI agent to leverage your Dremio instance
+ - JDBC url to connect to Dremio using external JDBC clients and in custom scripts
 
 **NOTE:** SQL can be sent to Dremio for execution outside of Dremio's UI using JDBC, ODBC, Apache Arrow Flight and Dremio's REST API. Refer to docs.dremio.com for documentation on how to leverage these interfaces.
 
@@ -321,22 +316,21 @@ Once you create new non-admin users in your Dremio org, they'll have zero access
 While you can do this for an individual user, it will likely be easier to create "roles" you can grant access to groups of users with. Below is the example of the kind of SQL you may use to grant access to a single namespace for a new user.
 
 ```
--- Give Permissions to project
-GRANT SELECT, VIEW REFLECTION, VIEW JOB HISTORY, USAGE, MONITOR,
-       CREATE TABLE, INSERT, UPDATE, DELETE, DROP, ALTER, EXTERNAL QUERY, ALTER REFLECTION, OPERATE
+- Give Permissions to project
+GRANT SELECT, VIEW REFLECTION, VIEW JOB HISTORY, USAGE, MONITOR, CREATE TABLE, INSERT, UPDATE, DELETE, DROP, ALTER, EXTERNAL QUERY, ALTER REFLECTION, OPERATE
 ON PROJECT
 TO USER "alphatest2user@alexmerced.com";
 
--- Give Permissions to Namespace in Catalog
+- Give Permissions to Namespace in Catalog
 GRANT ALTER, USAGE, SELECT, WRITE, DROP on FOLDER "dremio" to USER "alphatest2user@alexmerced.com";
 
--- Give Permissions to a Folder in the namespace
+- Give Permissions to a Folder in the namespace
 GRANT ALTER, USAGE, SELECT, WRITE, DROP on FOLDER dremio.recipes to USER "alphatest2user@alexmerced.com";
 ```
 
 ## Connecting your Dremio Catalog to Other Engines Like Spark
 
-Now you can connect to the Dremio Platform using JDBC/ODBC/ADBC-Flight/REST and send SQL to Dremio for Dremio to execute which I hope you take full advantage of. Although, sometimes you are sharing a dataset in your catalog with someone else who wants to use their preferred compute tool. Dremio Catalog bein  Apache Polaris based supports the Apache Iceberg REST Catalog SPEC meaning it can connect to pretty much to any Apache Iceberg supporting tool. Below is an example of how you'd connect in Spark.
+Now you can connect to the Dremio Platform using JDBC/ODBC/ADBC-Flight/REST and send SQL to Dremio for Dremio to execute which I hope you take full advantage of. Although, sometimes you are sharing a dataset in your catalog with someone else who wants to use their preferred compute tool. Dremio Catalog bein Apache Polaris based supports the Apache Iceberg REST Catalog SPEC meaning it can connect to pretty much to any Apache Iceberg supporting tool. Below is an example of how you'd connect in Spark.
 
 Run a local spark envrionment using the following command:
 
@@ -357,31 +351,31 @@ DREMIO_PAT = os.environ.get('DREMIO_PAT')
 CATALOG_NAME = "first-project" # should be project name
 
 if not DREMIO_CATALOG_URI or not CATALOG_NAME or not DREMIO_AUTH_URI or not DREMIO_PAT:
-    raise ValueError("Please set environment variables DREMIO_CATALOG_URI, DREMIO_AUTH_URI and DREMIO_PAT.")
+ raise ValueError("Please set environment variables DREMIO_CATALOG_URI, DREMIO_AUTH_URI and DREMIO_PAT.")
 
 # Configure Spark session with Iceberg and Dremio catalog settings
 conf = (
-    pyspark.SparkConf()
-        .setAppName('DremioIcebergSparkApp')
-        # Required external packages For FILEIO (org.apache.iceberg:iceberg-azure-bundle:1.9.2, org.apache.iceberg:iceberg-aws-bundle:1.9.2, org.apache.iceberg:iceberg-azure-bundle:1.9.2, org.apache.iceberg:iceberg-gcp-bundle:1.9.2)
-        .set('spark.jars.packages', 'org.apache.iceberg:iceberg-spark-runtime-3.5_2.12:1.9.2,com.dremio.iceberg.authmgr:authmgr-oauth2-runtime:0.0.5,org.apache.iceberg:iceberg-aws-bundle:1.9.2')
-        # Enable Iceberg Spark extensions
-        .set('spark.sql.extensions', 'org.apache.iceberg.spark.extensions.IcebergSparkSessionExtensions')
-        # Define Dremio catalog configuration using RESTCatalog
-        .set('spark.sql.catalog.dremio', 'org.apache.iceberg.spark.SparkCatalog')
-        .set('spark.sql.catalog.dremio.catalog-impl', 'org.apache.iceberg.rest.RESTCatalog')
-        .set('spark.sql.catalog.dremio.uri', DREMIO_CATALOG_URI)
-        .set('spark.sql.catalog.dremio.warehouse', CATALOG_NAME)  # Not used but required by Spark
-        .set('spark.sql.catalog.dremio.cache-enabled', 'false')
-        .set('spark.sql.catalog.dremio.header.X-Iceberg-Access-Delegation', 'vended-credentials')
-        # Configure OAuth2 authentication using PAT
-        .set('spark.sql.catalog.dremio.rest.auth.type', 'com.dremio.iceberg.authmgr.oauth2.OAuth2Manager')
-        .set('spark.sql.catalog.dremio.rest.auth.oauth2.token-endpoint', DREMIO_AUTH_URI)
-        .set('spark.sql.catalog.dremio.rest.auth.oauth2.grant-type', 'token_exchange')
-        .set('spark.sql.catalog.dremio.rest.auth.oauth2.client-id', 'dremio')
-        .set('spark.sql.catalog.dremio.rest.auth.oauth2.scope', 'dremio.all')
-        .set('spark.sql.catalog.dremio.rest.auth.oauth2.token-exchange.subject-token', DREMIO_PAT)
-        .set('spark.sql.catalog.dremio.rest.auth.oauth2.token-exchange.subject-token-type', 'urn:ietf:params:oauth:token-type:dremio:personal-access-token')
+ pyspark.SparkConf()
+ .setAppName('DremioIcebergSparkApp')
+ # Required external packages For FILEIO (org.apache.iceberg:iceberg-azure-bundle:1.9.2, org.apache.iceberg:iceberg-aws-bundle:1.9.2, org.apache.iceberg:iceberg-azure-bundle:1.9.2, org.apache.iceberg:iceberg-gcp-bundle:1.9.2)
+ .set('spark.jars.packages', 'org.apache.iceberg:iceberg-spark-runtime-3.5_2.12:1.9.2, com.dremio.iceberg.authmgr:authmgr-oauth2-runtime:0.0.5, org.apache.iceberg:iceberg-aws-bundle:1.9.2')
+ # Enable Iceberg Spark extensions
+ .set('spark.sql.extensions', 'org.apache.iceberg.spark.extensions.IcebergSparkSessionExtensions')
+ # Define Dremio catalog configuration using RESTCatalog
+ .set('spark.sql.catalog.dremio', 'org.apache.iceberg.spark.SparkCatalog')
+ .set('spark.sql.catalog.dremio.catalog-impl', 'org.apache.iceberg.rest.RESTCatalog')
+ .set('spark.sql.catalog.dremio.uri', DREMIO_CATALOG_URI)
+ .set('spark.sql.catalog.dremio.warehouse', CATALOG_NAME) # Not used but required by Spark
+ .set('spark.sql.catalog.dremio.cache-enabled', 'false')
+ .set('spark.sql.catalog.dremio.header.X-Iceberg-Access-Delegation', 'vended-credentials')
+ # Configure OAuth2 authentication using PAT
+ .set('spark.sql.catalog.dremio.rest.auth.type', 'com.dremio.iceberg.authmgr.oauth2.OAuth2Manager')
+ .set('spark.sql.catalog.dremio.rest.auth.oauth2.token-endpoint', DREMIO_AUTH_URI)
+ .set('spark.sql.catalog.dremio.rest.auth.oauth2.grant-type', 'token_exchange')
+ .set('spark.sql.catalog.dremio.rest.auth.oauth2.client-id', 'dremio')
+ .set('spark.sql.catalog.dremio.rest.auth.oauth2.scope', 'dremio.all')
+ .set('spark.sql.catalog.dremio.rest.auth.oauth2.token-exchange.subject-token', DREMIO_PAT)
+ .set('spark.sql.catalog.dremio.rest.auth.oauth2.token-exchange.subject-token-type', 'urn:ietf:params:oauth:token-type:dremio:personal-access-token')
 )
 
 # Initialize Spark session
@@ -396,18 +390,14 @@ print("✅ Namespaces Created")
 # Step 2: Create sample Iceberg tables in the Dremio catalog
 spark.sql("""
 CREATE TABLE IF NOT EXISTS dremio.db.customers (
-    id INT,
-    name STRING,
-    email STRING
+ id INT, name STRING, email STRING
 )
 USING iceberg
 """)
 
 spark.sql("""
 CREATE TABLE IF NOT EXISTS dremio.db.orders (
-    order_id INT,
-    customer_id INT,
-    amount DOUBLE
+ order_id INT, customer_id INT, amount DOUBLE
 )
 USING iceberg
 """)
@@ -416,13 +406,11 @@ print("✅ Tables Created")
 
 # Step 3: Insert sample data into the tables
 customers_data = [
-    Row(id=1, name="Alice", email="alice@example.com"),
-    Row(id=2, name="Bob", email="bob@example.com")
+ Row(id=1, name="Alice", email="alice@example.com"), Row(id=2, name="Bob", email="bob@example.com")
 ]
 
 orders_data = [
-    Row(order_id=101, customer_id=1, amount=250.50),
-    Row(order_id=102, customer_id=2, amount=99.99)
+ Row(order_id=101, customer_id=1, amount=250.50), Row(order_id=102, customer_id=2, amount=99.99)
 ]
 
 print("✅ Dataframes Generated")

@@ -15,7 +15,6 @@ draft: false
 image: "/images/blog.png"
 canonical: "https://iceberglakehouse.com/posts/2026-03-07-apache-parquet/"
 ---
-> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-03-07-apache-parquet/).
 
 *Read the complete Open Source and the Lakehouse series:*
 * [Part 1: Apache Software Foundation: History, Purpose, and Process](/blog/2026-04-apache-software-foundation)
@@ -26,6 +25,8 @@ canonical: "https://iceberglakehouse.com/posts/2026-03-07-apache-parquet/"
 * [Part 6: Assembling the Apache Lakehouse](/blog/2026-04-assembling-apache-lakehouse)
 * [Part 7: Agentic Analytics on the Apache Lakehouse](/blog/2026-04-agentic-analytics)
 
+> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-03-07-apache-parquet/).
+
 If you ask a data analyst to calculate the average transaction amount for the month of July using a massive CSV file, the compute engine must read every single line of that file. It reads the customer name, the address, the item SKUs, and the timestamps, just to find the single column it actually needs. At the petabyte scale, this row-based reading pattern guarantees slow analytics and high compute bills.
 
 In 2013, engineers at Twitter and Cloudera collaborated to solve this fundamental storage bottleneck. Inspired by Google's Dremel paper on querying nested data, they created Apache Parquet. Since becoming a top-level project at the Apache Software Foundation in 2015, Parquet has emerged as the baseline storage format for the modern data lakehouse. 
@@ -34,7 +35,7 @@ In 2013, engineers at Twitter and Cloudera collaborated to solve this fundamenta
 
 Unlike CSV or JSON files that store data row by row, Apache Parquet heavily reorganizes data horizontally to support parallel analytics. 
 
-When a query engine writes a Parquet file, it horizontally slices the table into "Row Groups" (typically between 128 MB and 1 GB in size). Within each row group, the data is physically stored column by column. A "Column Chunk" holds all the values for a single column within that row group. Finally, the column chunk is split into smaller "Pages," which serve as the base unit for compression.
+When a query engine writes a Parquet file, it horizontally slices the table into "Row Groups" (typically between 128 MB and 1 GB in size). Within each row group, the data is physically stored column by column. A "Column Chunk" holds all the values for a single column within that row group. Finally, the column chunk is split into smaller "Pages, " which serve as the base unit for compression.
 
 ![Diagram showing Row-Based vs Column-Based physical storage on disk](/images/blog/apache-lakehouse-row-vs-columnar-storage.png)
 

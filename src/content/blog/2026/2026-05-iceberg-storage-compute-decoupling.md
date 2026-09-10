@@ -11,11 +11,12 @@ draft: false
 image: "/images/blog.png"
 canonical: "https://iceberglakehouse.com/posts/iceberg-storage-compute-decoupling/"
 ---
-> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/iceberg-storage-compute-decoupling/).
 
 # Decoupling Storage and Compute in Apache Iceberg: A Cost Optimization Deep Dive
 
 Most proprietary data warehouses bundle their storage and compute into a single product. You buy the system, and you get both : at a price the vendor sets. Apache Iceberg breaks that model by treating storage and compute as separate, independently scalable concerns. That separation is the technical foundation for most of the cost advantages people attribute to data lakehouses.
+
+> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/iceberg-storage-compute-decoupling/).
 
 This post explains exactly how Iceberg achieves that decoupling, what it costs to maintain (because there are real operational requirements), and how to route workloads across engines to get the best cost-to-performance ratio.
 
@@ -25,7 +26,7 @@ This post explains exactly how Iceberg achieves that decoupling, what it costs t
 
 Traditional warehouses store data in proprietary formats tied to their internal engine. If you want to run Spark, you copy the data. If you want Snowflake and BigQuery on the same dataset, you maintain two copies. That's expensive, and keeping them in sync requires pipelines that add latency.
 
-Iceberg stores data in open file formats :  primarily Parquet ,  on commodity object storage (S3, GCS, Azure Data Lake Storage). The Iceberg spec defines a metadata layer on top of those files. Every engine that reads the metadata understands the table structure, partition layout, schema history, and file locations. Spark, Trino, Flink, Dremio, and Snowflake can all read the same Iceberg tables without any data movement.
+Iceberg stores data in open file formats : primarily Parquet, on commodity object storage (S3, GCS, Azure Data Lake Storage). The Iceberg spec defines a metadata layer on top of those files. Every engine that reads the metadata understands the table structure, partition layout, schema history, and file locations. Spark, Trino, Flink, Dremio, and Snowflake can all read the same Iceberg tables without any data movement.
 
 The metadata layer is what makes this work. It tracks:
 
@@ -41,7 +42,7 @@ When a query engine plans a query, it reads the metadata to identify exactly whi
 
 With Iceberg decoupling storage from compute, you can route different workloads to the engine that processes them most cost-effectively.
 
-**Heavy batch ELT:** Use Apache Spark on spot instances. Spot pricing runs 70–90% cheaper than on-demand for batch workloads that can tolerate interruption. Spark on object storage with Iceberg is a standard pattern for this.
+**Heavy batch ELT:** Use Apache Spark on spot instances. Spot pricing runs 70-90% cheaper than on-demand for batch workloads that can tolerate interruption. Spark on object storage with Iceberg is a standard pattern for this.
 
 **Interactive SQL and dashboards:** Use a high-performance engine like Dremio with its Columnar Cloud Cache (C3) and Reflections. Sub-second queries on the same Parquet files that Spark wrote. No copying.
 
@@ -49,7 +50,7 @@ With Iceberg decoupling storage from compute, you can route different workloads 
 
 **Data science:** Python notebooks via PyIceberg read the same tables directly. No exports to CSV or separate data marts.
 
-Every engine reads from the same underlying files in your S3 bucket. You pay object storage rates (roughly $0.02–$0.025 per GB/month), not the compute markup that proprietary warehouses build into their storage tiers.
+Every engine reads from the same underlying files in your S3 bucket. You pay object storage rates (roughly $0.02-$0.025 per GB/month), not the compute markup that proprietary warehouses build into their storage tiers.
 
 The tradeoff: you're now responsible for choosing and configuring multiple engines. That operational overhead is real. If your team has 10 people and needs one SQL tool that works, a fully managed warehouse might be simpler. If you're running petabytes with diverse workload types, the cost savings from multi-engine routing are substantial.
 
@@ -59,7 +60,7 @@ Decoupling isn't free. The storage layer requires active maintenance to avoid "m
 
 **Small files:** Every streaming micro-batch write generates small Parquet files. Reading thousands of 10 MB files is slower than reading dozens of 1 GB files, and each file adds metadata overhead. Left unaddressed, small file accumulation causes query planning time to grow even on the same data volume. Run periodic compaction to merge small files.
 
-**Snapshot bloat:** Every write to an Iceberg table creates a new snapshot. Snapshots let you time travel and roll back, but they accumulate. A table that takes 100 writes per day has 36,500 snapshots after a year. Expire snapshots older than your retention window. A 7-day window with a floor of 10 retained snapshots is a common starting point.
+**Snapshot bloat:** Every write to an Iceberg table creates a new snapshot. Snapshots let you time travel and roll back, but they accumulate. A table that takes 100 writes per day has 36, 500 snapshots after a year. Expire snapshots older than your retention window. A 7-day window with a floor of 10 retained snapshots is a common starting point.
 
 **Orphan files:** Compaction rewrites files but the old files aren't deleted until you run orphan file cleanup. Run `remove_orphan_files` weekly with a 3-day safety buffer to avoid deleting files currently being written.
 
@@ -73,7 +74,7 @@ If you don't run these maintenance jobs, your storage costs grow and your query 
 
 To compare an Iceberg-based lakehouse against a proprietary warehouse, measure these four components:
 
-**Storage cost:** Object storage at market rates vs. the vendor's per-TB storage price. Most proprietary warehouses charge 3–5x the raw S3 rate.
+**Storage cost:** Object storage at market rates vs. the vendor's per-TB storage price. Most proprietary warehouses charge 3-5x the raw S3 rate.
 
 **Compute cost:** Engine-specific compute rates for your workload mix. Interactive queries, batch jobs, and streaming have different compute profiles. Route each to the cheapest engine that meets the SLA.
 
@@ -95,7 +96,7 @@ Storage-compute decoupling delivers real cost advantages at scale, but there are
 
 **Small datasets under 500 GB:** The operational overhead of running Iceberg maintenance, configuring multiple engines, and managing catalog infrastructure is a fixed cost. At small data volumes, a managed cloud warehouse often costs less in total : especially when engineering time is factored in. Iceberg decoupling starts showing ROI at the terabyte scale.
 
-**Single-engine shops:** If your entire workload is interactive SQL queries run by business analysts, you don't need multi-engine routing. You pay for one engine, and that engine handles everything. The decoupling benefit :  routing different workloads to different engines ,  doesn't apply. In this case, evaluate whether the Iceberg format still makes sense for future flexibility, but don't architect for multi-engine routing you won't use.
+**Single-engine shops:** If your entire workload is interactive SQL queries run by business analysts, you don't need multi-engine routing. You pay for one engine, and that engine handles everything. The decoupling benefit : routing different workloads to different engines, doesn't apply. In this case, evaluate whether the Iceberg format still makes sense for future flexibility, but don't architect for multi-engine routing you won't use.
 
 **Teams without operational capacity:** Running Iceberg without automated maintenance requires someone who understands the metadata model and can monitor table health. If no one on your team has Iceberg expertise, factor in the learning curve and operational risk before committing to the architecture.
 

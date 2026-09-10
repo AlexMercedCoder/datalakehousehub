@@ -14,9 +14,10 @@ tags:
 slug: "multi-branch-iceberg-merge-automation"
 draft: false
 ---
-> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/multi-branch-iceberg-merge-automation/).
 
 A data engineering team of 30 has adopted Apache Iceberg's branching for everything. Each ingestion stream writes to its own branch. Each transformation job stages output on a branch and publishes to main after validation. Each engineer gets a branch per feature. On a busy day there are 40 active branches on the core fact tables, and the merge queue into main has become the bottleneck: publishes wait behind each other, a validation that ran on a branch is stale by the time the branch merges, and twice a week somebody fast-forwards over a change they did not know about.
+
+> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/multi-branch-iceberg-merge-automation/).
 
 Iceberg's branching primitives are sound. What the team is missing is the layer above them: a merge policy, an automated conflict check, a validation step that runs against the actual merge result, and a commit queue that keeps 40 writers from turning main's optimistic concurrency into a retry storm. Git solved this decade ago for source code with rebase, merge queues, and required checks. The same ideas apply to Iceberg, with one important difference: an Iceberg branch is a pointer to a snapshot, and "merging" two snapshots is not a three-way textual merge but a decision about which files and which deletes end up in the result.
 
@@ -69,7 +70,7 @@ Not every pair of concurrent changes conflicts, and the merge layer's first job 
 Here is how the three levels map to detection and resolution:
 
 | Conflict level | Example | Detected by | Resolution |
-|---|---|---|---|
+|--|--|--|--|
 | File-level | Branch overwrote a partition that `main` compacted | Iceberg cherry-pick validation | Rebase: re-run the branch's logical operation against `main`'s head |
 | Partition overlap | Two branches appended to the same partition | Merge layer, by comparing changed partitions | Per-table rule: allow, or allow with dedup check on merge result, or refuse |
 | Schema or spec | Branch renamed a column, `main` added a column with that name | Merge layer, by inspecting snapshot metadata changes | Serialize through a reviewed path, never auto-merge |
@@ -98,70 +99,70 @@ spark = SparkSession.builder.getOrCreate()
 TABLE = "lake.sales.orders"
 
 def head(branch):
-    return spark.sql(f"SELECT snapshot_id FROM {TABLE}.refs WHERE name = '{branch}'").first()[0]
+ return spark.sql(f"SELECT snapshot_id FROM {TABLE}.refs WHERE name = '{branch}'").first()[0]
 
 def ancestor(a, b):
-    """Common ancestor of two snapshots via the snapshots metadata table."""
-    rows = spark.sql(f"SELECT snapshot_id, parent_id FROM {TABLE}.snapshots").collect()
-    parent = {r.snapshot_id: r.parent_id for r in rows}
-    seen = set()
-    while a is not None:
-        seen.add(a); a = parent.get(a)
-    while b is not None:
-        if b in seen: return b
-        b = parent.get(b)
-    return None
+ """Common ancestor of two snapshots via the snapshots metadata table."""
+ rows = spark.sql(f"SELECT snapshot_id, parent_id FROM {TABLE}.snapshots").collect()
+ parent = {r.snapshot_id: r.parent_id for r in rows}
+ seen = set()
+ while a is not None:
+ seen.add(a); a = parent.get(a)
+ while b is not None:
+ if b in seen: return b
+ b = parent.get(b)
+ return None
 
 def snapshots_after(branch_head, base):
-    rows = spark.sql(f"SELECT snapshot_id, parent_id, operation, summary FROM {TABLE}.snapshots").collect()
-    parent = {r.snapshot_id: r for r in rows}
-    chain = []
-    s = branch_head
-    while s is not None and s != base:
-        chain.append(parent[s]); s = parent[s].parent_id
-    return list(reversed(chain))
+ rows = spark.sql(f"SELECT snapshot_id, parent_id, operation, summary FROM {TABLE}.snapshots").collect()
+ parent = {r.snapshot_id: r for r in rows}
+ chain = []
+ s = branch_head
+ while s is not None and s != base:
+ chain.append(parent[s]); s = parent[s].parent_id
+ return list(reversed(chain))
 
 def touched_partitions(snapshot_id):
-    return {r.partition for r in spark.sql(f"""
-        SELECT DISTINCT partition FROM {TABLE}.entries VERSION AS OF {snapshot_id}
-        WHERE status IN (1, 2)   -- ADDED or DELETED in this snapshot
-    """).collect()}
+ return {r.partition for r in spark.sql(f"""
+ SELECT DISTINCT partition FROM {TABLE}.entries VERSION AS OF {snapshot_id}
+ WHERE status IN (1, 2), ADDED or DELETED in this snapshot
+ """).collect()}
 
 def classify(branch):
-    m, b = head("main"), head(branch)
-    base = ancestor(m, b)
-    if base == m:
-        return "fast_forward", []
-    main_parts = set().union(*[touched_partitions(s.snapshot_id) for s in snapshots_after(m, base)])
-    branch_snaps = snapshots_after(b, base)
-    structural = any(s.summary.get("schema-id-changed") or s.summary.get("spec-id-changed") for s in branch_snaps)
-    if structural:
-        return "structural", branch_snaps
-    overlap = any(touched_partitions(s.snapshot_id) & main_parts for s in branch_snaps)
-    return ("rebase" if overlap else "cherry_pick"), branch_snaps
+ m, b = head("main"), head(branch)
+ base = ancestor(m, b)
+ if base == m:
+ return "fast_forward", []
+ main_parts = set().union(*[touched_partitions(s.snapshot_id) for s in snapshots_after(m, base)])
+ branch_snaps = snapshots_after(b, base)
+ structural = any(s.summary.get("schema-id-changed") or s.summary.get("spec-id-changed") for s in branch_snaps)
+ if structural:
+ return "structural", branch_snaps
+ overlap = any(touched_partitions(s.snapshot_id) & main_parts for s in branch_snaps)
+ return ("rebase" if overlap else "cherry_pick"), branch_snaps
 
 def rebase(branch, branch_snaps):
-    """Re-run each recorded operation against a fresh branch off main's head."""
-    tmp = f"{branch}_rebased"
-    spark.sql(f"ALTER TABLE {TABLE} CREATE OR REPLACE BRANCH {tmp}")
-    for s in branch_snaps:
-        op = load_recorded_operation(TABLE, s.snapshot_id)   # from the side table
-        op.replay(spark, TABLE, target_branch=tmp)            # append / overwrite / merge into tmp
-    return tmp
+ """Re-run each recorded operation against a fresh branch off main's head."""
+ tmp = f"{branch}_rebased"
+ spark.sql(f"ALTER TABLE {TABLE} CREATE OR REPLACE BRANCH {tmp}")
+ for s in branch_snaps:
+ op = load_recorded_operation(TABLE, s.snapshot_id) # from the side table
+ op.replay(spark, TABLE, target_branch=tmp) # append / overwrite / merge into tmp
+ return tmp
 
 def merge_to_main(branch):
-    kind, snaps = classify(branch)
-    if kind == "structural":
-        raise RuntimeError(f"{branch} changes schema or spec. Route to reviewed merge.")
-    if kind == "rebase":
-        branch = rebase(branch, snaps)
-        kind, snaps = classify(branch)          # after rebase it should be fast_forward
-    validate_merge_result(TABLE, branch)        # runs against the candidate, not the old branch head
-    if kind == "fast_forward":
-        spark.sql(f"CALL lake.system.fast_forward('{TABLE}', 'main', '{branch}')")
-    else:
-        for s in snaps:
-            spark.sql(f"CALL lake.system.cherrypick_snapshot('{TABLE}', {s.snapshot_id})")
+ kind, snaps = classify(branch)
+ if kind == "structural":
+ raise RuntimeError(f"{branch} changes schema or spec. Route to reviewed merge.")
+ if kind == "rebase":
+ branch = rebase(branch, snaps)
+ kind, snaps = classify(branch) # after rebase it should be fast_forward
+ validate_merge_result(TABLE, branch) # runs against the candidate, not the old branch head
+ if kind == "fast_forward":
+ spark.sql(f"CALL lake.system.fast_forward('{TABLE}', 'main', '{branch}')")
+ else:
+ for s in snaps:
+ spark.sql(f"CALL lake.system.cherrypick_snapshot('{TABLE}', {s.snapshot_id})")
 ```
 
 Walk through the decision. `classify` finds the common ancestor and checks whether `main` has moved. If it has not, fast-forward. If the branch changed schema or spec, refuse and route to a human. If the branch's touched partitions overlap `main`'s since the ancestor, rebase by replaying the recorded operations on a fresh branch off `main`'s head, then re-classify (which should now yield fast-forward, because the rebased branch descends from `main`'s head). Otherwise cherry-pick each snapshot. In every path, validation runs on the candidate that will actually become `main`, not on the branch as it was.
@@ -181,34 +182,29 @@ The validation step is where most WAP implementations are weaker than they look,
 Here is the validation as a set of scoped queries against a candidate branch:
 
 ```sql
--- Touched partitions for the candidate since main's head, from the entries metadata table
+- Touched partitions for the candidate since main's head, from the entries metadata table
 WITH touched AS (
-  SELECT DISTINCT partition."day" AS day
-  FROM lake.sales.orders.entries VERSION AS OF <candidate_head>
-  WHERE status = 1
-),
-
--- Duplicate check scoped to touched partitions
+ SELECT DISTINCT partition."day" AS day
+ FROM lake.sales.orders.entries VERSION AS OF <candidate_head>
+ WHERE status = 1
+), - Duplicate check scoped to touched partitions
 dupes AS (
-  SELECT order_id, COUNT(*) AS n
-  FROM lake.sales.orders VERSION AS OF <candidate_head>
-  WHERE order_date IN (SELECT day FROM touched)
-  GROUP BY order_id HAVING COUNT(*) > 1
-),
-
--- Row count and measure sum on the candidate, for reconciliation
+ SELECT order_id, COUNT(*) AS n
+ FROM lake.sales.orders VERSION AS OF <candidate_head>
+ WHERE order_date IN (SELECT day FROM touched)
+ GROUP BY order_id HAVING COUNT(*) > 1
+), - Row count and measure sum on the candidate, for reconciliation
 candidate_agg AS (
-  SELECT order_date AS day, COUNT(*) AS rows, SUM(amount_usd) AS amount
-  FROM lake.sales.orders VERSION AS OF <candidate_head>
-  WHERE order_date IN (SELECT day FROM touched)
-  GROUP BY order_date
+ SELECT order_date AS day, COUNT(*) AS rows, SUM(amount_usd) AS amount
+ FROM lake.sales.orders VERSION AS OF <candidate_head>
+ WHERE order_date IN (SELECT day FROM touched)
+ GROUP BY order_date
 )
 
 SELECT
-  (SELECT COUNT(*) FROM dupes)                                         AS duplicate_keys,
-  (SELECT COUNT(*) FROM candidate_agg c
-     JOIN upstream.orders_daily_totals u ON u.day = c.day
-     WHERE c.rows <> u.rows OR ABS(c.amount - u.amount) > 0.01)        AS reconciliation_mismatches;
+ (SELECT COUNT(*) FROM dupes) AS duplicate_keys, (SELECT COUNT(*) FROM candidate_agg c
+ JOIN upstream.orders_daily_totals u ON u.day = c.day
+ WHERE c.rows <> u.rows OR ABS(c.amount - u.amount) > 0.01) AS reconciliation_mismatches;
 ```
 
 Both counts must be zero for the merge to proceed. The queries are scoped to the touched partitions so that validating a branch that changed one day does not scan five years.
@@ -233,30 +229,30 @@ Here is the queue's admission loop:
 
 ```python
 def merge_worker(queue, table, batch_size=8):
-    while True:
-        batch = queue.take(batch_size)               # in arrival order
-        main_head = head("main")
-        candidates = []
-        for req in batch:
-            kind, snaps = classify(req.branch)
-            if kind == "structural":
-                queue.route_to_review(req); continue
-            if kind == "rebase":
-                req.branch = rebase(req.branch, snaps)
-                kind, snaps = classify(req.branch)
-            candidates.append((req, kind, snaps))
+ while True:
+ batch = queue.take(batch_size) # in arrival order
+ main_head = head("main")
+ candidates = []
+ for req in batch:
+ kind, snaps = classify(req.branch)
+ if kind == "structural":
+ queue.route_to_review(req); continue
+ if kind == "rebase":
+ req.branch = rebase(req.branch, snaps)
+ kind, snaps = classify(req.branch)
+ candidates.append((req, kind, snaps))
 
-        results = run_validations_concurrently([c[0].branch for c in candidates])
+ results = run_validations_concurrently([c[0].branch for c in candidates])
 
-        for (req, kind, snaps), ok in zip(candidates, results):
-            if not ok:
-                queue.fail(req, reason="validation"); continue
-            if head("main") != main_head:
-                # a manual commit slipped in (or a previous batch member moved main); reclassify
-                queue.requeue(req); continue
-            commit(table, req.branch, kind, snaps)
-            main_head = head("main")
-            queue.succeed(req)
+ for (req, kind, snaps), ok in zip(candidates, results):
+ if not ok:
+ queue.fail(req, reason="validation"); continue
+ if head("main") != main_head:
+ # a manual commit slipped in (or a previous batch member moved main); reclassify
+ queue.requeue(req); continue
+ commit(table, req.branch, kind, snaps)
+ main_head = head("main")
+ queue.succeed(req)
 ```
 
 The `head("main") != main_head` check after each commit within the batch is there because each successful commit moves `main`, and the next candidate in the batch was classified against the old head. For disjoint candidates the cherry-pick is still valid, and the check is conservative. A production worker tracks the partitions committed so far in the batch and only requeues a candidate that overlaps them.
@@ -280,13 +276,13 @@ The backfill touches everything and overlaps every other branch. The age-based p
 Here is the day's queue summary, the artifact the team reads the next morning:
 
 | Request class | Count | Classification | Median wait | Median merge time | Failures |
-|---|---|---|---|---|---|
-| Ingestion shard append | 1,340 | cherry-pick (batched) | 40 s | 22 s | 3 (duplicate check) |
+|--|--|--|--|--|--|
+| Ingestion shard append | 1, 340 | cherry-pick (batched) | 40 s | 22 s | 3 (duplicate check) |
 | Transformation overwrite | 96 | rebase then fast-forward | 3 min | 2.5 min | 1 (reconciliation) |
 | Feature branch | 3 | 2 cherry-pick, 1 structural | 1 min | 25 s | 0 (1 routed to review) |
 | Backfill | 1 | rebase then fast-forward | 15 min | 24 min | 0 |
 
-Four failures out of 1,440 requests, each with a recorded reason, each fixable by the pipeline owner without touching `main`. No retry storms. No fast-forward over an unknown change. The engineer who owned the structural change got a review instead of a surprise.
+Four failures out of 1, 440 requests, each with a recorded reason, each fixable by the pipeline owner without touching `main`. No retry storms. No fast-forward over an unknown change. The engineer who owned the structural change got a review instead of a surprise.
 
 ## Where Table Branches End and Catalog Branches Begin
 

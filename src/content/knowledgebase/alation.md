@@ -1,7 +1,7 @@
 ---
 title: "What is Alation?"
 meta_title: "What is Alation? | Expert Data Lakehouse Architecture Guide"
-description: "A comprehensive guide to Alation. Learn how this massive Enterprise Data Catalog utilizes behavioral machine learning to bring strict governance to chaotic data lakes."
+description: "A comprehensive guide to Alation. Learn how this massive Enterprise Data Catalog utilizes behavioral machine learning to bring strict governance."
 ---
 
 # What is Alation?

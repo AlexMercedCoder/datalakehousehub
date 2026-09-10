@@ -14,8 +14,7 @@ slug: ai-for-all-levels-1-what-ai-is-and-isnt
 draft: false
 image: "/images/blog.png"
 ---
-
-Welcome to "Catching Up with Using AI for All Levels," a five-part series designed to take you from confused observer to confident AI user. This first post tackles the biggest problem with AI today: almost nobody understands what it actually is.
+Welcome to "Catching Up with Using AI for All Levels, " a five-part series designed to take you from confused observer to confident AI user. This first post tackles the biggest problem with AI today: almost nobody understands what it actually is.
 
 You have probably seen the headlines. AI will replace your job. AI is a stupid autocomplete machine. AI is sentient. AI is just statistics. None of these capture the full picture, and the gap between what AI can do and what people think it can do keeps growing.
 
@@ -79,7 +78,7 @@ When you type a sentence into an LLM, the model converts each word into its vect
 
 You may hear the term "token" in AI discussions. Tokens are how the model actually sees text. Instead of processing word by word, most modern models break text into subword tokens. The word "unbelievable" might become ["un", "believe", "able"]. Common words like "the" get their own token. Rare words break into multiple tokens.
 
-On average, one English word equals roughly 1.3 tokens. This matters for two reasons. First, models have a maximum context window measured in tokens, not words. Second, API pricing is usually per token. A model with a 128,000 token context window can handle roughly 96,000 words, or about 190 pages of text. When you see a model advertised with a 1 million token context window, that is roughly 750,000 words. But bigger is not always better. Larger context windows use more memory and computation, and models sometimes struggle to find relevant information buried in very long contexts.
+On average, one English word equals roughly 1.3 tokens. This matters for two reasons. First, models have a maximum context window measured in tokens, not words. Second, API pricing is usually per token. A model with a 128, 000 token context window can handle roughly 96, 000 words, or about 190 pages of text. When you see a model advertised with a 1 million token context window, that is roughly 750, 000 words. But bigger is not always better. Larger context windows use more memory and computation, and models sometimes struggle to find relevant information buried in very long contexts.
 
 ## The Architecture: How Transformers Changed Everything
 
@@ -91,7 +90,7 @@ The transformer is the architectural backbone of every major LLM today. GPT, Cla
 
 ### Self Attention: The Secret Sauce
 
-Self attention lets the model weigh the importance of every word in the input relative to every other word. When the model processes the sentence "The cat sat on the mat because it was tired," self attention helps the model figure out that "it" refers to "the cat" not "the mat." It does this by calculating attention scores: how strongly does each word relate to each other word?
+Self attention lets the model weigh the importance of every word in the input relative to every other word. When the model processes the sentence "The cat sat on the mat because it was tired, " self attention helps the model figure out that "it" refers to "the cat" not "the mat." It does this by calculating attention scores: how strongly does each word relate to each other word?
 
 Think of it this way. When you read a sentence, you subconsciously connect pronouns to their referents, adjectives to the nouns they modify, and verbs to their subjects. Self attention does the same thing mathematically. The model computes a score for every pair of words in the input, determining how much attention each word should pay to every other word.
 
@@ -149,7 +148,7 @@ Lets address the most common misunderstandings directly.
 
 **Misconception: AI understands what it is saying.**
 
-The model does not understand anything in the human sense. It has no consciousness, no beliefs, no preferences. When it says "I think" or "In my opinion," those are linguistic patterns it has learned from human text. The model has no thoughts or opinions to express. It is generating text that matches the pattern of a human giving an opinion.
+The model does not understand anything in the human sense. It has no consciousness, no beliefs, no preferences. When it says "I think" or "In my opinion, " those are linguistic patterns it has learned from human text. The model has no thoughts or opinions to express. It is generating text that matches the pattern of a human giving an opinion.
 
 **Misconception: AI is just autocomplete.**
 
@@ -175,7 +174,7 @@ The most popular AI applications today Chrome, Gmail, Google Docs, Microsoft Off
 
 **Misconception: AI is getting smarter every day.**
 
-This one partially true but misleading. The AI you use today is the same AI you used last month. Models do not learn from your conversations. They are frozen snapshots of a training process that happened months ago. When you hear about AI "improving," it usually means a new model version was released, not that the model you are using got smarter on its own.
+This one partially true but misleading. The AI you use today is the same AI you used last month. Models do not learn from your conversations. They are frozen snapshots of a training process that happened months ago. When you hear about AI "improving, " it usually means a new model version was released, not that the model you are using got smarter on its own.
 
 The rapid pace of new model releases creates the illusion of continuous improvement. OpenAI releases GPT 5.1, then 5.2, then 5.3. Anthropic releases Claude Opus 4.5, then 4.6. Each version is a new frozen model with better training, not the same model learning over time.
 

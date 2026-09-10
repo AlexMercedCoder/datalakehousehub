@@ -13,12 +13,13 @@ draft: false
 image: "/images/blog.png"
 canonical: "https://iceberglakehouse.com/posts/2024-8-data-lakehouses-101/"
 ---
+
+The scale of data is growing every day, with storage now reaching petabyte and exabyte levels that need to be utilized in increasingly diverse ways. This evolution's cost and practicality make the old paradigm: using data lakes to store both structured and unstructured data, then moving portions of that structured data into data warehouses for reporting, analytics, dashboards, and more, full of friction. The friction arises from storing multiple copies of data for each system used, keeping this data in sync and consistent, and delivering it at the high speeds modern data needs demand. Addressing these challenges is where a new architecture called data lakehouses comes into play.
+
 > **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2024-8-data-lakehouses-101/).
 
 - [Sign-up for this free Apache Iceberg Crash Course](https://bit.ly/am-2024-iceberg-live-crash-course-1)
 - [Get a free copy of Apache Iceberg the Definitive Guide](https://bit.ly/am-iceberg-book)
-
-The scale of data is growing every day, with storage now reaching petabyte and exabyte levels that need to be utilized in increasingly diverse ways. This evolution's cost and practicality make the old paradigm: using data lakes to store both structured and unstructured data, then moving portions of that structured data into data warehouses for reporting, analytics, dashboards, and more, full of friction. The friction arises from storing multiple copies of data for each system used, keeping this data in sync and consistent, and delivering it at the high speeds modern data needs demand. Addressing these challenges is where a new architecture called data lakehouses comes into play.
 
 ## WHAT is a Data Lakehouse?
 
@@ -40,35 +41,35 @@ By using a storage layer like Hadoop or object storage and leveraging the techno
 At this point, you can use various tools like Dremio, Snowflake, Apache Spark, Apache Flink, and more to run workloads on your data lakehouse without duplicating your data across each platform you use.
 
 ```
-            +----------------------------+
-            |      Data Lakehouse        |
-            +----------------------------+
-                           |
-           +------------------------------------+
-           |           Storage Layer            |
-           |  (Hadoop, Object Storage, etc.)    |
-           +------------------------------------+
-                           |
-           +------------------------------------+
-           |         File Formats               |
-           |      (Apache Parquet, etc.)        |
-           +------------------------------------+
-                           |
-           +------------------------------------+
-           |           Table Formats            |
-           |      (Apache Iceberg, etc.)        |
-           +------------------------------------+
-                           |
-           +------------------------------------+
-           |         Metadata Catalogs          |
-           |      (Nessie, Polaris, etc.)       |
-           +------------------------------------+
-                           |
-           +------------------------------------+
-           |         Data Processing            |
-           | (Dremio, Snowflake, Apache Spark,  |
-           |        Apache Flink, etc.)         |
-           +------------------------------------+
+ +--------------+
+ | Data Lakehouse |
+ +--------------+
+ |
+ +------------------+
+ | Storage Layer |
+ | (Hadoop, Object Storage, etc.) |
+ +------------------+
+ |
+ +------------------+
+ | File Formats |
+ | (Apache Parquet, etc.) |
+ +------------------+
+ |
+ +------------------+
+ | Table Formats |
+ | (Apache Iceberg, etc.) |
+ +------------------+
+ |
+ +------------------+
+ | Metadata Catalogs |
+ | (Nessie, Polaris, etc.) |
+ +------------------+
+ |
+ +------------------+
+ | Data Processing |
+ | (Dremio, Snowflake, Apache Spark, |
+ | Apache Flink, etc.) |
+ +------------------+
 
 ```
 
@@ -96,71 +97,71 @@ Once the data migration is complete, you can retire your old systems. Thanks to 
 Dremio's power lies in providing a central, unified interface across all your data lakes, data warehouses, lakehouse catalogs, and databases. This means your end users don't have to worry about where the data lives, allowing them to focus on deriving insights and driving value from the data.
 
 ```
-+-------------------------------------------------------+
-|           Migration to a Data Lakehouse               |
-+-------------------------------------------------------+
-|                                                       |
-| Step 1: Apply Dremio Over Legacy System               |
-|   +---------------------------------------------+     |
-|   |          Legacy System                      |     |
-|   |---------------------------------------------|     |
-|   |                                             |     |
-|   | +-------------+    +-------------+          |     |
-|   | |  Data Store |    |  Data Store |          |     |
-|   | +-------------+    +-------------+          |     |
-|   +---------------------------------------------+     |
-|                         |                             |
-|                         |                             |
-|                         v                             |
-|                  +-------------+                      |
-|                  |    Dremio   |                      |
-|                  +-------------+                      |
-|                                                       |
-+-------------------------------------------------------+
-|                                                       |
-| Step 2: Connect Both Old and New Systems to Dremio    |
-|   +---------------------------------------------+     |
-|   |          Legacy System                      |     |
-|   |---------------------------------------------|     |
-|   |                                             |     |
-|   | +-------------+    +-------------+          |     |
-|   | |  Data Store |    |  Data Store |          |     |
-|   | +-------------+    +-------------+          |     |
-|   +---------------------------------------------+     |
-|                         |                             |
-|                         v                             |
-|                  +-------------+                      |
-|                  |    Dremio   |                      |
-|                  +-------------+                      |
-|                         |                             |
-|                         v                             |
-|   +---------------------------------------------+     |
-|   |           New Data Lakehouse                |     |
-|   |---------------------------------------------|     |
-|   |                                             |     |
-|   | +-------------+    +-------------+          |     |
-|   | |  Data Store |    |  Data Store |          |     |
-|   | +-------------+    +-------------+          |     |
-|   +---------------------------------------------+     |
-|                                                       |
-+-------------------------------------------------------+
-|                                                       |
-| Step 3: Retire Old Systems After Data Migration       |
-|   +---------------------------------------------+     |
-|   |           New Data Lakehouse                |     |
-|   |---------------------------------------------|     |
-|   |                                             |     |
-|   | +-------------+    +-------------+          |     |
-|   | |  Data Store |    |  Data Store |          |     |
-|   | +-------------+    +-------------+          |     |
-|   +---------------------------------------------+     |
-|                         |                             |
-|                         v                             |
-|                  +-------------+                      |
-|                  |    Dremio   |                      |
-|                  +-------------+                      |
-|                                                       |
-+-------------------------------------------------------+
++----------------------------+
+| Migration to a Data Lakehouse |
++----------------------------+
+| |
+| Step 1: Apply Dremio Over Legacy System |
+| +-----------------------+ |
+| | Legacy System | |
+| |-----------------------| |
+| | | |
+| | +-------+ +-------+ | |
+| | | Data Store | | Data Store | | |
+| | +-------+ +-------+ | |
+| +-----------------------+ |
+| | |
+| | |
+| v |
+| +-------+ |
+| | Dremio | |
+| +-------+ |
+| |
++----------------------------+
+| |
+| Step 2: Connect Both Old and New Systems to Dremio |
+| +-----------------------+ |
+| | Legacy System | |
+| |-----------------------| |
+| | | |
+| | +-------+ +-------+ | |
+| | | Data Store | | Data Store | | |
+| | +-------+ +-------+ | |
+| +-----------------------+ |
+| | |
+| v |
+| +-------+ |
+| | Dremio | |
+| +-------+ |
+| | |
+| v |
+| +-----------------------+ |
+| | New Data Lakehouse | |
+| |-----------------------| |
+| | | |
+| | +-------+ +-------+ | |
+| | | Data Store | | Data Store | | |
+| | +-------+ +-------+ | |
+| +-----------------------+ |
+| |
++----------------------------+
+| |
+| Step 3: Retire Old Systems After Data Migration |
+| +-----------------------+ |
+| | New Data Lakehouse | |
+| |-----------------------| |
+| | | |
+| | +-------+ +-------+ | |
+| | | Data Store | | Data Store | | |
+| | +-------+ +-------+ | |
+| +-----------------------+ |
+| | |
+| v |
+| +-------+ |
+| | Dremio | |
+| +-------+ |
+| |
++----------------------------+
 
 ```
 

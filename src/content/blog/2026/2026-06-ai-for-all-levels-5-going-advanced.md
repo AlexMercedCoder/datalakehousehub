@@ -1,7 +1,7 @@
 ---
 title: "Going Advanced: Open Source Models, Hermes Agent, and Local AI"
 date: 2026-06-01T09:00:00Z
-description: "Tired of subscriptions and privacy concerns? Open source models and agent frameworks let you run AI on your own hardware. Here is how to get started with Hermes Agent, OpenCode, DeepSeek, and local Llama models."
+description: "Tired of subscriptions and privacy concerns? Open source models and agent frameworks let you run AI on your own hardware."
 author: "Alex Merced"
 category: "Artificial Intelligence"
 tags:
@@ -14,7 +14,6 @@ slug: ai-for-all-levels-5-going-advanced
 draft: false
 image: "/images/blog.png"
 ---
-
 This is the final installment of "Catching Up with Using AI for All Levels." Parts 1 through 4 covered the fundamentals, free tools, paid services, and specialized creative tools. This post goes deeper. We will explore the open source ecosystem: models you can download and run on your own computer, agent frameworks that automate complex tasks, and coding tools that work entirely offline.
 
 This is the most technical post in the series, but do not let that scare you. The tools have matured significantly in 2026. Installing and running a local AI model is easier than it was six months ago, and the benefits are real: privacy, offline access, no subscription fees, and unlimited usage after the initial hardware investment.
@@ -27,7 +26,7 @@ This is the most technical post in the series, but do not let that scare you. Th
 
 [Return to Part 4: Specialized AI Tools for Creation](/blog/ai-for-all-levels-4-specialized-ai-tools/)
 
----
+--
 
 ## Why Run AI on Your Own Hardware
 
@@ -37,7 +36,7 @@ Before we get into the tools, it is worth understanding why someone would choose
 
 **Offline access.** Cloud services require an internet connection. Local models work anywhere: on a plane, in a remote area, in a secure facility with no external network access. If connectivity is unreliable where you live or work, local AI is the only option.
 
-**No subscription fees.** The cloud services cost $20 or $200 per month. Local models cost nothing to use after you buy the hardware. If you do the math over three years, a $2,000 computer running local models is cheaper than $720 of ChatGPT Plus or $7,200 of Claude Max.
+**No subscription fees.** The cloud services cost $20 or $200 per month. Local models cost nothing to use after you buy the hardware. If you do the math over three years, a $2, 000 computer running local models is cheaper than $720 of ChatGPT Plus or $7, 200 of Claude Max.
 
 **Unlimited usage.** Cloud subscriptions have rate limits. Pro users hit them regularly. Local models have no rate limits. You can use them as much as you want, as fast as your hardware allows.
 
@@ -45,7 +44,7 @@ Before we get into the tools, it is worth understanding why someone would choose
 
 The tradeoffs are performance and capability. Local models are slower than cloud models. They are less capable, especially at complex reasoning tasks. A 7 billion parameter model running on a laptop cannot match GPT 5.4 or Claude Opus. But the gap has narrowed significantly, and for many everyday tasks, local models are good enough.
 
----
+--
 
 ## The Hardware You Need
 
@@ -75,7 +74,7 @@ If you do not have a GPU, you can still run local models on CPU. The experience 
 
 The CPU path is worth trying to understand the ecosystem before investing in a GPU. Install Ollama, download a small model, and see what local AI feels like.
 
----
+--
 
 ## Ollama: The Easiest Way to Run Local Models
 
@@ -119,7 +118,7 @@ Install Ollama, download Llama 4 8B, and start using it as a local assistant. As
 
 For better quality, try DeepSeek R1 14B. The chain of thought reasoning makes it more thorough for complex questions, and it runs well on 12GB of VRAM.
 
----
+--
 
 ## LM Studio: A Graphical Interface for Local Models
 
@@ -129,7 +128,7 @@ LM Studio also serves an OpenAI compatible API endpoint, just like Ollama. You c
 
 The key advantage of LM Studio is LM Link, a feature that lets you access a model running on one computer from other devices on your network. You can run a large model on your powerful desktop and access it from your laptop. This uses Tailscale for secure tunneling and works across networks.
 
----
+--
 
 ## DeepSeek: The Open Weight Powerhouse
 
@@ -141,7 +140,7 @@ DeepSeek V4 is available through various providers. You can access it through ch
 
 The pricing advantage is substantial. DeepSeek's API costs roughly 10 to 20 times less than OpenAI's API for comparable quality. This makes it attractive for developers building applications that make many API calls, and for users who want to experiment with advanced models without committing to a $200 per month subscription.
 
----
+--
 
 ## OpenCode: Terminal Based Coding Agent
 
@@ -157,21 +156,17 @@ OpenCode works out of the box with cloud providers by default. To use it with a 
 
 ```json
 {
-  "provider": {
-    "local": {
-      "name": "Local Model",
-      "npm": "@ai-sdk/openai-compatible",
-      "options": {
-        "baseURL": "http://localhost:11434/v1"
-      },
-      "models": {
-        "deepseek-r1-14b": {
-          "name": "DeepSeek R1 14B",
-          "modalities": { "input": ["text"], "output": ["text"] }
-        }
-      }
-    }
-  }
+ "provider": {
+ "local": {
+ "name": "Local Model", "npm": "@ai-sdk/openai-compatible", "options": {
+ "baseURL": "http://localhost:11434/v1"
+ }, "models": {
+ "deepseek-r1-14b": {
+ "name": "DeepSeek R1 14B", "modalities": { "input": ["text"], "output": ["text"] }
+ }
+ }
+ }
+ }
 }
 ```
 
@@ -185,7 +180,7 @@ For developers, OpenCode replaces or supplements GitHub Copilot and Claude Code.
 
 For non developers, OpenCode is less directly useful. But it powers other applications that may benefit you indirectly, such as automated document processing pipelines and data transformation tools.
 
----
+--
 
 ## Hermes Agent: The AI Orchestrator
 
@@ -234,7 +229,7 @@ For readers who are not developers, Hermes might sound like a developer tool. It
 
 **The key insight is that Hermes remembers.** Unlike ChatGPT or Claude, which start fresh each conversation, Hermes saves skills and memories. Every hour you invest in setting up skills pays back in future sessions as tasks that used to take ten minutes now take one.
 
----
+--
 
 ## Privacy First: The Local AI Stack
 
@@ -250,7 +245,7 @@ The result is a fully private AI setup. Your data never leaves your machine. No 
 
 The author of a popular blog post about this setup summarized it well: "Hermes has an OpenCode skill, which means it can fire up OpenCode and interact with it." The orchestrator delegates complex tasks to the specialized tool, and the whole system works together.
 
----
+--
 
 ## Open Source Image Generation
 
@@ -262,7 +257,7 @@ Local AI is not limited to text. Image generation models also run on your own ha
 
 Running image generation locally requires a GPU with sufficient VRAM. 8GB handles Stable Diffusion and Flux Schnell. 16GB handles Flux Dev and higher resolution outputs.
 
----
+--
 
 ## The Bottom Line
 
@@ -281,7 +276,7 @@ The best approach is hybrid. Use cloud services for the hard stuff: complex reas
 ### Quick Decision Guide
 
 | Goal | Recommendation |
-|------|----------------|
+|---|--------|
 | Best quality, no setup | ChatGPT Plus ($20/mo) or Claude Pro ($20/mo) |
 | Best quality, remote desktop control | Claude Max ($200/mo) for Dispatch and Cowork |
 | Privacy, offline, zero recurring cost | Ollama + local models, free after hardware |
@@ -293,7 +288,7 @@ The best approach is hybrid. Use cloud services for the hard stuff: complex reas
 
 You do not need to choose one approach exclusively. The best AI setup in 2026 uses multiple tools for different tasks. Free Google services for everyday queries. A $20 subscription for hard problems. Local models for sensitive work. Specialized tools for creative projects. The ecosystem is broad enough that there is a right tool for every task and a price point for every budget.
 
----
+--
 
 ## Where to Go From Here
 

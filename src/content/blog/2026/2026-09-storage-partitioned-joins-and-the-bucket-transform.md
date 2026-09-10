@@ -15,9 +15,10 @@ draft: false
 image: "/images/blog.png"
 canonical: https://iceberglakehouse.com/posts/storage-partitioned-joins-and-the-bucket-transform/
 ---
-> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/storage-partitioned-joins-and-the-bucket-transform/).
 
 A nightly job joins a 3-billion-row orders table to a 400-million-row customers table on `customer_id`. Both are Apache Iceberg tables. Both are large enough that neither side fits in a broadcast. The engine does what engines do: it reads both tables, hashes every row by `customer_id`, shuffles both sides across the network so that matching keys land on the same worker, sorts, and merges. The shuffle moves close to a terabyte. The job takes ninety minutes and most of that time is spent moving data that is already sitting in files, waiting to be rearranged.
+
+> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/storage-partitioned-joins-and-the-bucket-transform/).
 
 Now suppose both tables had been written with `bucket(64, customer_id)` as a partition field. Every row with a given `customer_id` in the orders table sits in one of 64 buckets, and every row with that same `customer_id` in the customers table sits in the bucket with the same number, because both tables computed the bucket with the same hash function on the same value. The engine can read bucket 17 from both tables and join them on one worker without a shuffle. It can do that for all 64 buckets in parallel. No exchange, no sort, and the job finishes in the time it takes to read the files once.
 
@@ -52,10 +53,10 @@ Three details in that line carry the whole design.
 **The input bytes are specified per type.** Hashing a value requires deciding what bytes to hash, and the spec's Appendix B fixes this for every bucketable type:
 
 | Type | Bytes hashed | Test value from the spec |
-|---|---|---|
+|--|--|--|
 | `int` | as a `long`, 8 bytes little-endian | `34` hashes to `2017239379` |
 | `long` | 8 bytes little-endian | `34L` hashes to `2017239379` |
-| `decimal(P,S)` | unscaled value as minimal big-endian two's complement | `14.20` hashes to `-500754589` |
+| `decimal(P, S)` | unscaled value as minimal big-endian two's complement | `14.20` hashes to `-500754589` |
 | `date` | days from epoch, hashed as `int` | `2017-11-16` hashes to `-653330422` |
 | `time` | microseconds from midnight, as `long` | `22:31:08` hashes to `-662762989` |
 | `timestamp`, `timestamptz` | microseconds from epoch, as `long` | `2017-11-16T22:31:08` hashes to `-2047944441` |
@@ -91,7 +92,7 @@ import org.apache.iceberg.transforms.Transforms;
 import org.apache.iceberg.types.Types;
 
 int b = Transforms.bucket(64).bind(Types.StringType.get()).apply("iceberg");
-System.out.println(b);   // 25
+System.out.println(b); // 25
 ```
 
 In Python with PyIceberg, as shown earlier, the same call returns 25. In Rust with iceberg-rust:
@@ -116,13 +117,9 @@ A partition spec with a bucket field looks like this in the table metadata:
 
 ```json
 {
-  "spec-id": 0,
-  "fields": [
-    { "source-id": 2, "field-id": 1000, "name": "customer_id_bucket",
-      "transform": "bucket[64]" },
-    { "source-id": 3, "field-id": 1001, "name": "placed_at_day",
-      "transform": "day" }
-  ]
+ "spec-id": 0, "fields": [
+ { "source-id": 2, "field-id": 1000, "name": "customer_id_bucket", "transform": "bucket[64]" }, { "source-id": 3, "field-id": 1001, "name": "placed_at_day", "transform": "day" }
+ ]
 }
 ```
 
@@ -132,10 +129,7 @@ Creating it in Spark SQL:
 
 ```sql
 CREATE TABLE sales.orders (
-  order_id    BIGINT NOT NULL,
-  customer_id BIGINT NOT NULL,
-  placed_at   TIMESTAMP NOT NULL,
-  amount      DECIMAL(12,2)
+ order_id BIGINT NOT NULL, customer_id BIGINT NOT NULL, placed_at TIMESTAMP NOT NULL, amount DECIMAL(12, 2)
 ) USING iceberg
 PARTITIONED BY (bucket(64, customer_id), days(placed_at));
 ```
@@ -208,7 +202,7 @@ The output of the join inherits the partitioning. A `MERGE INTO` from a bucketed
 
 Bucketing is one of three layout tools Iceberg offers for clustering related rows, and the three answer different questions.
 
-**Partition-level bucketing** places rows in separate partitions by hash. It bounds partition count, supports equality pruning at the manifest level, and enables storage-partitioned joins. Its weakness is that it says nothing about ordering within a bucket, and it adds a partition dimension that multiplies file count when combined with time partitioning. A table with 365 days and 64 buckets has at least 23,360 partitions per year.
+**Partition-level bucketing** places rows in separate partitions by hash. It bounds partition count, supports equality pruning at the manifest level, and enables storage-partitioned joins. Its weakness is that it says nothing about ordering within a bucket, and it adds a partition dimension that multiplies file count when combined with time partitioning. A table with 365 days and 64 buckets has at least 23, 360 partitions per year.
 
 **Sort order** arranges rows within files and, with a range distribution, across files. A table sorted by `customer_id` within each day partition has files whose min/max bounds on `customer_id` are narrow, so the same equality lookup prunes at the file level via column statistics rather than at the partition level. It also supports range predicates, which bucketing does not. Its weakness is that it does not help joins, because the planner has no guarantee that a given key is in a predictable file, and it requires a sort on write, which costs a shuffle.
 
@@ -217,7 +211,7 @@ Bucketing is one of three layout tools Iceberg offers for clustering related row
 The decision comes down to the query pattern:
 
 | Query pattern | Best layout |
-|---|---|
+|--|--|
 | Equality lookups on one high-cardinality key, plus joins on that key | Bucket on the key |
 | Range and equality lookups on one key, no large joins | Sort on the key |
 | Lookups on several unrelated columns | Z-order on those columns |
@@ -233,18 +227,18 @@ Bucketing inside a sort order is a fourth option that the ecosystem is starting 
 Spark supports SPJ through its DataSource V2 interface, and Iceberg has reported partitioning to it since Iceberg 1.2 and Spark 3.3. The feature is off by default because it changes plans, and turning it on requires several flags. This is the full set as of Spark 3.5 and 4.x:
 
 ```sql
--- Report Iceberg partitioning to Spark and keep partitions together in tasks
+- Report Iceberg partitioning to Spark and keep partitions together in tasks
 SET spark.sql.sources.v2.bucketing.enabled = true;
 SET spark.sql.iceberg.planning.preserve-data-grouping = true;
 
--- Allow SPJ when join keys are a subset of partition keys
+- Allow SPJ when join keys are a subset of partition keys
 SET spark.sql.requireAllClusterKeysForCoPartition = false;
 
--- Let the planner prune empty buckets on the other side and handle skew
+- Let the planner prune empty buckets on the other side and handle skew
 SET spark.sql.sources.v2.bucketing.pushPartValues.enabled = true;
 SET spark.sql.sources.v2.bucketing.partiallyClusteredDistribution.enabled = true;
 
--- Optional: prefer hash join over sort-merge so no sort is added
+- Optional: prefer hash join over sort-merge so no sort is added
 SET spark.sql.join.preferSortMergeJoin = false;
 ```
 
@@ -271,10 +265,7 @@ For writes, the same bucketing helps. A `MERGE INTO sales.orders t USING staging
 Before relying on SPJ, it is worth confirming that the buckets are balanced, because the join's runtime is the runtime of its slowest bucket. The `files` metadata table exposes each file's partition tuple, so bucket sizes are one query away:
 
 ```sql
-SELECT partition.customer_id_bucket AS bucket,
-       count(*)                       AS files,
-       sum(record_count)              AS rows,
-       round(sum(file_size_in_bytes) / 1048576) AS mb
+SELECT partition.customer_id_bucket AS bucket, count(*) AS files, sum(record_count) AS rows, round(sum(file_size_in_bytes) / 1048576) AS mb
 FROM sales.orders.files
 WHERE content = 0
 GROUP BY partition.customer_id_bucket
@@ -297,8 +288,7 @@ New writes land under the new spec. Existing files remain under the old one, and
 
 ```sql
 CALL polaris.system.rewrite_data_files(
-  table   => 'sales.customers',
-  options => map('rewrite-all', 'true', 'target-file-size-bytes', '268435456')
+ table => 'sales.customers', options => map('rewrite-all', 'true', 'target-file-size-bytes', '268435456')
 );
 ```
 

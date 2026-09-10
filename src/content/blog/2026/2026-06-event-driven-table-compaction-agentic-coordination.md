@@ -13,7 +13,6 @@ slug: event-driven-table-compaction-agentic-coordination
 draft: false
 image: "/images/blog.png"
 ---
-
 # Event-Driven Table Compaction with Agents
 
 
@@ -89,7 +88,7 @@ I would also require a visible refusal path. If active writers are detected, the
 ## Operational Checklist
 
 | Area | Question to answer | Why it matters |
-|---|---|---|
+|--|--|--|
 | Ownership | Who owns the table, catalog path, and compaction policy? | Incidents need named owners, not shared confusion. |
 | Scope | Which partitions and tables are in scope for this rollout? | A narrow launch is easier to test and govern. |
 | Identity | Which service identity triggers compaction and holds the write permission? | Machine-speed maintenance needs machine-enforced policy. |

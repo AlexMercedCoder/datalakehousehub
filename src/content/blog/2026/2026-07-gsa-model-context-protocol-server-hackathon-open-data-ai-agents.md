@@ -14,9 +14,10 @@ draft: false
 image: "/images/blog.png"
 canonical: "https://iceberglakehouse.com/posts/gsa-model-context-protocol-server-hackathon-open-data-ai-agents/"
 ---
-> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/gsa-model-context-protocol-server-hackathon-open-data-ai-agents/).
 
 The U.S. government publishes hundreds of thousands of datasets through [Data.gov](https://data.gov/) and agency portals, and almost none of them are shaped for an AI agent to use directly. An agent can download a CSV, but it cannot ask that CSV what columns it has, what the units are, which rows it is allowed to see, or how to filter for the answer a person actually wants. That gap between "public data exists" and "an agent can use public data responsibly" is the interesting problem, and it is the reason the [Model Context Protocol](https://modelcontextprotocol.io/) (MCP) has become a useful way to think about open data.
+
+> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/gsa-model-context-protocol-server-hackathon-open-data-ai-agents/).
 
 Reports of a [General Services Administration](https://www.gsa.gov/) AI hackathon centered on MCP servers point at this shift. I want to be careful here: at the time of writing I have not independently confirmed the official GSA announcement, the exact dates, the challenge scope, or whether an MCP server was a hard requirement. Treat the hackathon as a signal of direction rather than a settled fact, and treat the architecture below as the durable lesson regardless of any single event. The strategic point holds either way: if agents are going to work with public or private datasets, someone has to turn those datasets into governed tools first.
 
@@ -53,18 +54,12 @@ Here is a conceptual sketch of what a read-only tool definition looks like. This
 ```python
 # Conceptual MCP tool definition (illustrative, not tied to one framework)
 tool(
-  name="find_federal_grants",
-  description=(
-    "Search awarded federal grants by state and fiscal year. "
-    "Read-only. Returns up to 100 rows. "
-    "Example: state='CA', fiscal_year=2024 returns California grants for FY2024."
-  ),
-  parameters={
-    "state": {"type": "string", "enum": US_STATE_CODES, "required": True},
-    "fiscal_year": {"type": "integer", "minimum": 2010, "maximum": 2026, "required": True},
-    "max_rows": {"type": "integer", "default": 50, "maximum": 100},
-  },
-  handler=run_governed_query,  # applies row/column policy, limits, logging
+ name="find_federal_grants", description=(
+ "Search awarded federal grants by state and fiscal year. "
+ "Read-only. Returns up to 100 rows. "
+ "Example: state='CA', fiscal_year=2024 returns California grants for FY2024."
+ ), parameters={
+ "state": {"type": "string", "enum": US_STATE_CODES, "required": True}, "fiscal_year": {"type": "integer", "minimum": 2010, "maximum": 2026, "required": True}, "max_rows": {"type": "integer", "default": 50, "maximum": 100}, }, handler=run_governed_query, # applies row/column policy, limits, logging
 )
 ```
 
@@ -87,7 +82,7 @@ The interesting thing about the public-data version of this problem is that priv
 The copyable pattern is a sequence, and the order matters:
 
 1. **Start with read-only datasets.** Do not begin by giving agents write access to anything. Read-only is where the value is and where the risk is lowest.
-2. **Expose certified metrics, not raw tables.** If your company has a governed definition of "net revenue," the agent should call a tool backed by that definition, not compute revenue itself from raw ledgers. This is how you keep agents on the same numbers as your dashboards.
+2. **Expose certified metrics, not raw tables.** If your company has a governed definition of "net revenue, " the agent should call a tool backed by that definition, not compute revenue itself from raw ledgers. This is how you keep agents on the same numbers as your dashboards.
 3. **Restrict sensitive columns at the source.** Column masking and row filters should be enforced by the layer behind the tool, not by trusting the agent to avoid sensitive fields.
 4. **Log every tool call.** Treat agent access to data with the same audit rigor you would apply to a human analyst querying production, and arguably more, since agents act quickly and at scale.
 

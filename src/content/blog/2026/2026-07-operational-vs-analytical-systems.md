@@ -13,12 +13,14 @@ slug: "operational-vs-analytical-systems"
 draft: false
 image: "/images/blog.png"
 canonical: https://iceberglakehouse.com/posts/operational-vs-analytical-systems/
+description: "By Alex Merced, Head of Developer Relations at Dremio"
 ---
-> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/operational-vs-analytical-systems/).
 
 # Operational vs. Analytical Systems: Why the Oldest Divide in Data Exists, What Physics Enforces It, and the Honest Truth About Hybrid Systems
 
 *By Alex Merced, Head of Developer Relations at Dremio*
+
+> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/operational-vs-analytical-systems/).
 
 Every data architecture ever drawn contains the same fault line, so old and so universal that most engineers stop seeing it: on one side, the systems that run the business, and on the other, the systems that understand it. The database behind your checkout page and the warehouse behind your dashboards. OLTP and OLAP, in the acronyms the industry has used since the 1990s.
 
@@ -108,7 +110,7 @@ Compress the whole history into the constraint that survives it, because it is t
 
 Every architecture on this map is choosing among three goods: workload isolation, so each side performs and neither can hurt the other, data freshness across the divide, so analytics sees operational truth quickly, and copy economy, so you store, govern, and reconcile as few copies as possible. The classical two-system stack maximized isolation, sacrificed freshness, and paid for two copies. HTAP maximized copy economy and freshness and sacrificed isolation, which is the sacrifice buyers refused. Zero-ETL keeps isolation, buys freshness down to seconds, and openly pays the two-copy bill with vendor-managed plumbing. The shared-substrate frontier keeps isolation at the compute layer, aims freshness at near-zero, and attacks the copy bill at storage, paying instead in engineering novelty and, for now, platform coupling.
 
-No corner of the triangle is free, and the mature question is never "which architecture wins" but "which good does this workload value least," because that is the one you trade. It is the same style of reasoning that governs streaming freshness floors and storage latency trades, and it is the reason to insist on physics-first explanations: the physics is what the marketing cycle cannot change.
+No corner of the triangle is free, and the mature question is never "which architecture wins" but "which good does this workload value least, " because that is the one you trade. It is the same style of reasoning that governs streaming freshness floors and storage latency trades, and it is the reason to insist on physics-first explanations: the physics is what the marketing cycle cannot change.
 
 ## A Decision Framework for 2026
 

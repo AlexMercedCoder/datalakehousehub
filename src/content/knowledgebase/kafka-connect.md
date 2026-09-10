@@ -1,7 +1,7 @@
 ---
 title: "What is Kafka Connect?"
 meta_title: "What is Kafka Connect? | Expert Data Lakehouse & AI Glossary"
-description: "A framework included in Apache Kafka that integrates Kafka with other systems such as databases, key-value stores, and file systems. Learn the architecture, mechanics, and real-world value of Kafka Connect in the modern data stack."
+description: "A framework included in Apache Kafka that integrates Kafka with other systems such as databases, key-value stores, and file systems."
 ---
 
 ## What is Kafka Connect?

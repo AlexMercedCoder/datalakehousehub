@@ -2,7 +2,7 @@
 title: "Inside the Query Optimizer: How Engines Pick a Plan"
 date: 2026-04-29T09:05:00Z
 pubDatetime: 2026-04-29T09:05:00Z
-description: "Query optimizers transform SQL into execution plans using rule-based rewrites, cost-based search, and adaptive runtime adjustments. Here is how each approach works."
+description: "Query optimizers transform SQL into execution plans using rule-based rewrites, cost-based search, and adaptive runtime adjustments."
 author: "Alex Merced"
 category: "Data Engineering"
 tags:
@@ -14,11 +14,12 @@ draft: false
 image: "/images/blog/query-engine-optimization/05-query-optimizer-sql-to-execution-plan.png"
 canonical: "https://iceberglakehouse.com/posts/2026-04-29-query-engine-05/"
 ---
-> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-04-29-query-engine-05/).
 
-<!-- Meta Description: Query optimizers transform SQL into execution plans using rule-based rewrites, cost-based search, and adaptive runtime adjustments. Here is how each approach works. -->
-<!-- Primary Keyword: query optimizer -->
-<!-- Secondary Keywords: cost-based optimization, query planning, adaptive query execution -->
+<!- Meta Description: Query optimizers transform SQL into execution plans using rule-based rewrites, cost-based search, and adaptive runtime adjustments. Here is how each approach works. ->
+<!- Primary Keyword: query optimizer ->
+<!- Secondary Keywords: cost-based optimization, query planning, adaptive query execution ->
+
+> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-04-29-query-engine-05/).
 
 *Read the complete Query Engine Optimization series:*
 * [Part 1: How Query Engines Think: The Tradeoffs Behind Every Data System](/blog/2026-04-29-query-engine-optimization-01-overview)
@@ -86,7 +87,7 @@ For a query joining three tables (Orders: 1B rows, Products: 100K rows, Customer
 - **Bad order**: Join Orders with Products first. The intermediate result is up to 1B rows. Then join with Customers.
 - **Good order**: Join Products with Customers first. The intermediate result is at most 100K rows. Then join with Orders.
 
-The second plan produces a 10,000x smaller intermediate result. For queries with 5-10 joins, the number of possible orderings grows factorially, and the performance gap between the best and worst order can exceed 1000x.
+The second plan produces a 10, 000x smaller intermediate result. For queries with 5-10 joins, the number of possible orderings grows factorially, and the performance gap between the best and worst order can exceed 1000x.
 
 This is why cost-based optimization exists. Rule-based optimization cannot determine join order because the "best" order depends on the actual data sizes, which require statistics.
 
@@ -116,7 +117,7 @@ The tradeoff: adaptive execution adds overhead at stage boundaries (must collect
 ## Where Real Systems Land
 
 | System | Rule-Based | Cost-Based | Adaptive | Statistics Source |
-|---|---|---|---|---|
+|--|--|--|--|--|
 | PostgreSQL | Yes | Yes (advanced) | Limited | `ANALYZE` command |
 | MySQL | Yes | Yes | Limited | `ANALYZE TABLE` |
 | Dremio | Yes | Yes | Yes | Automatic collection |

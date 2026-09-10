@@ -13,7 +13,6 @@ slug: iceberg-v4-performance-root-manifests-combined-calls
 draft: false
 image: "/images/blog.png"
 ---
-
 # Iceberg v4 Performance: Root Manifests and Calls
 
 
@@ -89,7 +88,7 @@ I would also require a visible latency contract on agent tools. A tool that quer
 ## Operational Checklist
 
 | Area | Question to answer | Why it matters |
-|---|---|---|
+|--|--|--|
 | Ownership | Who owns the table and its maintenance schedule? | Metadata health requires active ownership. |
 | Scope | Which tables are included in the performance optimization effort? | A narrow scope is easier to profile and tune. |
 | Engine | Which engine version and catalog implementation are in use? | Planning behavior is engine and catalog specific. |

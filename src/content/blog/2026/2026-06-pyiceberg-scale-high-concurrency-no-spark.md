@@ -13,7 +13,6 @@ slug: pyiceberg-scale-high-concurrency-no-spark
 draft: false
 image: "/images/blog.png"
 ---
-
 # PyIceberg at Scale Without Apache Spark
 
 
@@ -89,7 +88,7 @@ I would also require a visible refusal path for agentic Python writers. If the w
 ## Operational Checklist
 
 | Area | Question to answer | Why it matters |
-|---|---|---|
+|--|--|--|
 | Ownership | Who owns the table, catalog path, and write pipeline? | Incidents need named owners, not shared confusion. |
 | Scope | Which write operations are in scope for Python workers? | A narrow scope prevents Python from doing work it should not. |
 | Concurrency | What is the maximum concurrent worker count hitting the catalog? | Connection exhaustion needs an explicit limit. |
@@ -136,7 +135,7 @@ The next step is to define the dimensions that actually change behavior: batch s
 
 ## Review Questions Worth Asking
 
-The first question is simple: what is the maximum batch size and concurrency limit for Python writers on this table? If the answer is "unlimited," the pipeline is not production-ready.
+The first question is simple: what is the maximum batch size and concurrency limit for Python writers on this table? If the answer is "unlimited, " the pipeline is not production-ready.
 
 The second question: what happens when a Python write fails after the first OCC conflict? If the retry logic is not idempotent, the answer to this question reveals a potential data duplication risk.
 

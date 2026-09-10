@@ -14,20 +14,19 @@ draft: false
 image: "/images/blog.png"
 canonical: "https://iceberglakehouse.com/posts/2024-10-github-actions-dbt-airflow-data/"
 ---
+
+Maintaining a persistent Airflow deployment can often add significant overhead to data engineering teams, especially when orchestrating tasks across diverse systems. While Airflow is a powerful orchestration tool, the infrastructure required to keep it running 24/7 may not always be necessary, particularly for workflows that can be triggered on demand.
+
 > **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2024-10-github-actions-dbt-airflow-data/).
 
 - [Free Copy of Apache Iceberg the Definitive Guide](https://hello.dremio.com/wp-apache-iceberg-the-definitive-guide-reg.html?utm_source=alexmerced&utm_medium=external_blog&utm_campaign=githubactionsairflow)
 - [Free Apache Iceberg Crash Course](https://hello.dremio.com/webcast-an-apache-iceberg-lakehouse-crash-course-reg.html?utm_source=alexmerced&utm_medium=external_blog&utm_campaign=githubactionsairflow)
 - [Iceberg Lakehouse Engineering Video Playlist](https://www.youtube.com/watch?v=SIriNcVIGJQ&list=PLsLAVBjQJO0p0Yq1fLkoHvt2lEJj5pcYe)
 
-Maintaining a persistent Airflow deployment can often add significant overhead to data engineering teams, especially when orchestrating tasks across diverse systems. While Airflow is a powerful orchestration tool, the infrastructure required to keep it running 24/7 may not always be necessary, particularly for workflows that can be triggered on demand.
-
 In this blog, we'll explore how to use **GitHub Actions** as a lightweight alternative to trigger **Airflow DAGs**. By leveraging GitHub Actions, we avoid the need for a persistent Airflow deployment while still orchestrating complex data pipelines across external systems like **Apache Spark**, **Dremio**, and **Snowflake**.
 
 The example we'll walk through involves:
-- Ingesting raw data into a data lake with Spark,
-- Using **Dremio** and **dbt** to create bronze, silver, and gold layers for your data without data replication,
-- Accelerating access to the gold layer using **Dremio Reflections**, and
+- Ingesting raw data into a data lake with Spark, - Using **Dremio** and **dbt** to create bronze, silver, and gold layers for your data without data replication, - Accelerating access to the gold layer using **Dremio Reflections**, and
 - Ingesting the final gold-layer data into **Snowflake** for further analysis.
 
 This approach allows you to curate data efficiently while reducing operational complexity, making it ideal for teams looking to streamline their data orchestration without sacrificing flexibility or performance.
@@ -61,19 +60,18 @@ from airflow.operators.python_operator import PythonOperator
 from datetime import datetime
 
 def run_spark_job():
-    # Logic for running the Spark job
-    pass
+ # Logic for running the Spark job
+ pass
 
 def run_dbt_task():
-    # Logic for running dbt transformations in Dremio
-    pass
+ # Logic for running dbt transformations in Dremio
+ pass
 
 def load_into_snowflake():
-    # Logic for loading the gold layer into Snowflake
-    pass
+ # Logic for loading the gold layer into Snowflake
+ pass
 
-dag = DAG('example_dag', description='A sample DAG',
-          schedule_interval='@once', start_date=datetime(2024, 10, 1), catchup=False)
+dag = DAG('example_dag', description='A sample DAG', schedule_interval='@once', start_date=datetime(2024, 10, 1), catchup=False)
 
 start = DummyOperator(task_id='start', dag=dag)
 spark_task = PythonOperator(task_id='run_spark_job', python_callable=run_spark_job, dag=dag)
@@ -92,32 +90,32 @@ Here’s an example of a GitHub Actions workflow file (`.github/workflows/trigge
 name: Trigger Airflow DAG
 
 on:
-  push:
-    branches:
-      - main
+ push:
+ branches:
+ - main
 
 jobs:
-  trigger-airflow:
-    runs-on: ubuntu-latest
+ trigger-airflow:
+ runs-on: ubuntu-latest
 
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
+ steps:
+ - name: Checkout repository
+ uses: actions/checkout@v3
 
-      - name: Set up Docker
-        uses: docker/setup-buildx-action@v2
+ - name: Set up Docker
+ uses: docker/setup-buildx-action@v2
 
-      - name: Start Airflow with Docker
-        run: |
-          docker-compose up -d  # Start Airflow containers defined in a docker-compose.yml file
+ - name: Start Airflow with Docker
+ run: |
+ docker-compose up -d # Start Airflow containers defined in a docker-compose.yml file
 
-      - name: Trigger Airflow DAG
-        run: |
-          docker exec -ti <airflow-webserver-container> airflow dags trigger example_dag
+ - name: Trigger Airflow DAG
+ run: |
+ docker exec -ti <airflow-webserver-container> airflow dags trigger example_dag
 
-      - name: Clean up
-        run: |
-          docker-compose down  # Stop and remove Airflow containers
+ - name: Clean up
+ run: |
+ docker-compose down # Stop and remove Airflow containers
 ```
 
 ### Step 3: Docker Compose for Airflow
@@ -126,20 +124,20 @@ You’ll also need a `docker-compose.yml` file in your repository to define how 
 ```yaml
 version: '3'
 services:
-  postgres:
-    image: postgres:13
-    environment:
-      POSTGRES_USER: airflow
-      POSTGRES_PASSWORD: airflow
-      POSTGRES_DB: airflow
-  webserver:
-    image: apache/airflow:2.5.1
-    environment:
-      - AIRFLOW__CORE__SQL_ALCHEMY_CONN=postgresql+psycopg2://airflow:airflow@postgres/airflow
-    ports:
-      - "8080:8080"
-    depends_on:
-      - postgres
+ postgres:
+ image: postgres:13
+ environment:
+ POSTGRES_USER: airflow
+ POSTGRES_PASSWORD: airflow
+ POSTGRES_DB: airflow
+ webserver:
+ image: apache/airflow:2.5.1
+ environment:
+ - AIRFLOW__CORE__SQL_ALCHEMY_CONN=postgresql+psycopg2://airflow:airflow@postgres/airflow
+ ports:
+ - "8080:8080"
+ depends_on:
+ - postgres
 ```
 
 With this setup, the Airflow instance will run only when triggered by GitHub Actions, allowing you to execute your DAG tasks without maintaining a permanent deployment.
@@ -161,23 +159,23 @@ Here’s an example of the `run_spark_job` function that sends the Spark job to 
 
 ```python
 def run_spark_job():
-    # Example of a Spark job for data ingestion
-    from pyspark.sql import SparkSession
+ # Example of a Spark job for data ingestion
+ from pyspark.sql import SparkSession
 
-    # Connect to a remote Spark cluster (e.g., AWS EMR, Databricks)
-    spark = SparkSession.builder \
-        .master("spark://<remote-spark-master>:7077") \
-        .appName("DataIngestion") \
-        .getOrCreate()
+ # Connect to a remote Spark cluster (e.g., AWS EMR, Databricks)
+ spark = SparkSession.builder \
+ .master("spark://<remote-spark-master>:7077") \
+ .appName("DataIngestion") \
+ .getOrCreate()
 
-    # Read data from an external source (e.g., S3 bucket)
-    raw_data = spark.read.format("csv").option("header", "true").load("s3://my-bucket/raw-data")
+ # Read data from an external source (e.g., S3 bucket)
+ raw_data = spark.read.format("csv").option("header", "true").load("s3://my-bucket/raw-data")
 
-    # Write the data to the "bronze" layer of the data lake in Parquet format
-    raw_data.write.format("parquet").save("s3://my-data-lake/bronze/raw_data")
+ # Write the data to the "bronze" layer of the data lake in Parquet format
+ raw_data.write.format("parquet").save("s3://my-data-lake/bronze/raw_data")
 
-    # Stop the Spark session
-    spark.stop()
+ # Stop the Spark session
+ spark.stop()
 ```
 In this example:
 
@@ -195,19 +193,19 @@ Here’s how you can adjust the Spark connection in Airflow for AWS EMR:
 
 ```python
 spark = SparkSession.builder \
-    .master("yarn") \
-    .config("spark.yarn.access.hadoopFileSystems", "s3://<my-s3-bucket>") \
-    .appName("DataIngestion") \
-    .getOrCreate()
+ .master("yarn") \
+ .config("spark.yarn.access.hadoopFileSystems", "s3://<my-s3-bucket>") \
+ .appName("DataIngestion") \
+ .getOrCreate()
 ```
 
 For Databricks, you might use:
 
 ```python
 spark = SparkSession.builder \
-    .master("databricks") \
-    .config("spark.databricks.service.token", "<your-databricks-token>") \
-    .getOrCreate()
+ .master("databricks") \
+ .config("spark.databricks.service.token", "<your-databricks-token>") \
+ .getOrCreate()
 ```
 
 ### Step 3: Automating Spark Job Submission via Airflow
@@ -245,20 +243,17 @@ We’ll use dbt (data build tool) to define the transformations that move data f
 Example dbt model for transforming bronze to silver:
 
 ```sql
--- models/silver_layer.sql
+- models/silver_layer.sql
 WITH bronze_data AS (
-  SELECT *
-  FROM my_lake.bronze.raw_data
+ SELECT *
+ FROM my_lake.bronze.raw_data
 )
 SELECT 
-  customer_id,
-  order_date,
-  total_amount,
-  -- Additional transformations
-  CASE 
-    WHEN total_amount > 100 THEN 'high_value'
-    ELSE 'regular'
-  END AS customer_value_category
+ customer_id, order_date, total_amount, Additional transformations
+ CASE 
+ WHEN total_amount > 100 THEN 'high_value'
+ ELSE 'regular'
+ END AS customer_value_category
 FROM bronze_data
 WHERE order_status = 'completed';
 ```
@@ -276,12 +271,12 @@ In your Airflow DAG, you can add a task to trigger dbt transformations:
 
 ```python
 def run_dbt_task():
-    import subprocess
-    # Run the dbt transformation
-    subprocess.run(["dbt", "run"], check=True)
+ import subprocess
+ # Run the dbt transformation
+ subprocess.run(["dbt", "run"], check=True)
 ```
 
-This Airflow task will run the dbt transformation, applying changes to your Dremio virtual datasets, curating the data from bronze to silver, and then from silver to gold. _(Note: Make sure your dbt project is copied to  your Airflow environment, and that the dbt command is run in the directory where your dbt project is located.)_
+This Airflow task will run the dbt transformation, applying changes to your Dremio virtual datasets, curating the data from bronze to silver, and then from silver to gold. _(Note: Make sure your dbt project is copied to your Airflow environment, and that the dbt command is run in the directory where your dbt project is located.)_
 
 ### Step 4: Accelerating Queries with Dremio Reflections
 To ensure fast access to the gold layer, you can enable Dremio Reflections. Reflections are Dremio’s optimization mechanism that pre-computes and caches the results of expensive queries, significantly improving query performance on large datasets.
@@ -290,9 +285,9 @@ In your pipeline, after creating the gold layer with dbt, configure Dremio to cr
 
 ```sql
 ALTER TABLE my_lake.gold_data
-  CREATE RAW REFLECTION gold_accelerator USING DISPLAY (id,lastName,firstName,address,country)
-    PARTITION BY (country)
-    LOCALSORT BY (lastName);
+ CREATE RAW REFLECTION gold_accelerator USING DISPLAY (id, lastName, firstName, address, country)
+ PARTITION BY (country)
+ LOCALSORT BY (lastName);
 ```
 This ensures that queries on the gold layer are accelerated, reducing response times and improving the performance of downstream analytics tasks.
 
@@ -317,47 +312,42 @@ The Airflow task will connect to Dremio, retrieve the gold-layer dataset using *
 
 ```python
 def load_into_snowflake():
-    import snowflake.connector
-    from dremio_simple_query.connect import DremioConnection
-    import pandas as pd
+ import snowflake.connector
+ from dremio_simple_query.connect import DremioConnection
+ import pandas as pd
 
-    # Dremio connection details
-    token = "<your_dremio_token>"
-    arrow_endpoint = "grpc://<dremio_instance>:32010"
+ # Dremio connection details
+ token = "<your_dremio_token>"
+ arrow_endpoint = "grpc://<dremio_instance>:32010"
 
-    # Establish connection with Dremio via Apache Arrow Flight
-    dremio = DremioConnection(token, arrow_endpoint)
+ # Establish connection with Dremio via Apache Arrow Flight
+ dremio = DremioConnection(token, arrow_endpoint)
 
-    # Query to fetch the gold layer dataset from Dremio
-    df = dremio.toPandas("SELECT * FROM my_lake.gold.final_data;")
+ # Query to fetch the gold layer dataset from Dremio
+ df = dremio.toPandas("SELECT * FROM my_lake.gold.final_data;")
 
-    # Connect to Snowflake
-    conn = snowflake.connector.connect(
-        user='<your_user>',
-        password='<your_password>',
-        account='<your_account>',
-        warehouse='<your_warehouse>',
-        database='<your_database>',
-        schema='<your_schema>'
-    )
+ # Connect to Snowflake
+ conn = snowflake.connector.connect(
+ user='<your_user>', password='<your_password>', account='<your_account>', warehouse='<your_warehouse>', database='<your_database>', schema='<your_schema>'
+ )
 
-    # Write the gold layer data to Snowflake
-    cursor = conn.cursor()
+ # Write the gold layer data to Snowflake
+ cursor = conn.cursor()
 
-    # Ingest the data using Snowflake's PUT and COPY INTO
-    # Convert the DataFrame to a CSV for ingestion (or another format supported by Snowflake)
-    df.to_csv("/tmp/gold_data.csv", index=False)
+ # Ingest the data using Snowflake's PUT and COPY INTO
+ # Convert the DataFrame to a CSV for ingestion (or another format supported by Snowflake)
+ df.to_csv("/tmp/gold_data.csv", index=False)
 
-    cursor.execute("PUT file:///tmp/gold_data.csv @my_stage")
-    cursor.execute("""
-        COPY INTO snowflake_table
-        FROM @my_stage/gold_data.csv
-        FILE_FORMAT = (TYPE = 'CSV', FIELD_OPTIONALLY_ENCLOSED_BY = '"');
-    """)
+ cursor.execute("PUT file:///tmp/gold_data.csv @my_stage")
+ cursor.execute("""
+ COPY INTO snowflake_table
+ FROM @my_stage/gold_data.csv
+ FILE_FORMAT = (TYPE = 'CSV', FIELD_OPTIONALLY_ENCLOSED_BY = '"');
+ """)
 
-    conn.commit()
-    cursor.close()
-    conn.close()
+ conn.commit()
+ cursor.close()
+ conn.close()
 ```
 ### Step 2: Fetching Data from Dremio with Apache Arrow Flight
 The key to this approach is using Apache Arrow Flight to pull data from Dremio efficiently. The dremio-simple-query library allows you to run SQL queries against Dremio and fetch results in formats that are easy to manipulate in Python, such as Arrow Tables or Pandas DataFrames.
@@ -382,10 +372,9 @@ The ingestion process involves:
 ```python
 cursor.execute("PUT file:///tmp/gold_data.csv @my_stage")
 cursor.execute("""
-    COPY INTO snowflake_table
-    FROM @my_stage/gold_data.csv
-    FILE_FORMAT = (TYPE = 'CSV', 
-    FIELD_OPTIONALLY_ENCLOSED_BY = '"');
+ COPY INTO snowflake_table
+ FROM @my_stage/gold_data.csv
+ FILE_FORMAT = (TYPE = 'CSV', FIELD_OPTIONALLY_ENCLOSED_BY = '"');
 """)
 ```
 
@@ -432,25 +421,25 @@ In your `docker-compose.yml file`, reference this custom image to ensure the Air
 ```yaml
 version: '3'
 services:
-  webserver:
-    build: 
-      context: .
-      dockerfile: Dockerfile  # Use the custom Dockerfile for the Airflow container
-    environment:
-      - LOAD_EXAMPLES=no
-      - EXECUTOR=LocalExecutor
-    ports:
-      - "8080:8080"
-    volumes:
-      - ./dags:/opt/airflow/dags  # Mount the DAGs from the local folder
-    depends_on:
-      - postgres
-  postgres:
-    image: postgres:13
-    environment:
-      POSTGRES_USER: airflow
-      POSTGRES_PASSWORD: airflow
-      POSTGRES_DB: airflow
+ webserver:
+ build: 
+ context: .
+ dockerfile: Dockerfile # Use the custom Dockerfile for the Airflow container
+ environment:
+ - LOAD_EXAMPLES=no
+ - EXECUTOR=LocalExecutor
+ ports:
+ - "8080:8080"
+ volumes:
+ - ./dags:/opt/airflow/dags # Mount the DAGs from the local folder
+ depends_on:
+ - postgres
+ postgres:
+ image: postgres:13
+ environment:
+ POSTGRES_USER: airflow
+ POSTGRES_PASSWORD: airflow
+ POSTGRES_DB: airflow
 ```
 
 This ensures that all required Python libraries and the dbt project are installed in the Airflow container, allowing it to execute tasks involving Dremio, Spark, Snowflake, and dbt.
@@ -467,36 +456,36 @@ Here’s an example of how to pass environment variables using GitHub Actions:
 
 ```yaml
 jobs:
-  trigger-airflow:
-    runs-on: ubuntu-latest
+ trigger-airflow:
+ runs-on: ubuntu-latest
 
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
+ steps:
+ - name: Checkout repository
+ uses: actions/checkout@v3
 
-      - name: Set up Docker
-        uses: docker/setup-buildx-action@v2
+ - name: Set up Docker
+ uses: docker/setup-buildx-action@v2
 
-      - name: Run Airflow containers
-        run: |
-          docker-compose up -d
-        env:
-          DREMIO_TOKEN: ${{ secrets.DREMIO_TOKEN }}
-          SNOWFLAKE_USER: ${{ secrets.SNOWFLAKE_USER }}
-          SNOWFLAKE_PASSWORD: ${{ secrets.SNOWFLAKE_PASSWORD }}
-          SPARK_MASTER: ${{ secrets.SPARK_MASTER }}
+ - name: Run Airflow containers
+ run: |
+ docker-compose up -d
+ env:
+ DREMIO_TOKEN: ${{ secrets.DREMIO_TOKEN }}
+ SNOWFLAKE_USER: ${{ secrets.SNOWFLAKE_USER }}
+ SNOWFLAKE_PASSWORD: ${{ secrets.SNOWFLAKE_PASSWORD }}
+ SPARK_MASTER: ${{ secrets.SPARK_MASTER }}
 ```
 
 In your `docker-compose.yml`, ensure the container receives these environment variables:
 
 ```yaml
 services:
-  webserver:
-    environment:
-      - DREMIO_TOKEN=${DREMIO_TOKEN}
-      - SNOWFLAKE_USER=${SNOWFLAKE_USER}
-      - SNOWFLAKE_PASSWORD=${SNOWFLAKE_PASSWORD}
-      - SPARK_MASTER=${SPARK_MASTER}
+ webserver:
+ environment:
+ - DREMIO_TOKEN=${DREMIO_TOKEN}
+ - SNOWFLAKE_USER=${SNOWFLAKE_USER}
+ - SNOWFLAKE_PASSWORD=${SNOWFLAKE_PASSWORD}
+ - SPARK_MASTER=${SPARK_MASTER}
 ```
 
 This ensures that all required credentials and tokens are securely passed to the container environment and accessible during Airflow task execution.
@@ -508,19 +497,19 @@ Example configuration:
 
 ```yaml
 services:
-  webserver:
-    volumes:
-      - ./dags:/opt/airflow/dags  # Mounts the local DAGs folder into the Airflow container
+ webserver:
+ volumes:
+ - ./dags:/opt/airflow/dags # Mounts the local DAGs folder into the Airflow container
 ```
 This ensures that any DAGs in your GitHub repository are made available to the Airflow container and can be automatically picked up for execution. In GitHub Actions, ensure that the repository is checked out before running the docker-compose up command to make sure the latest DAGs are present.
 
 ```yaml
 - name: Checkout repository
-  uses: actions/checkout@v3
+ uses: actions/checkout@v3
 
 - name: Run Airflow containers
-  run: |
-    docker-compose up -d
+ run: |
+ docker-compose up -d
 ```
 
 ### Step 4: Copying the dbt Project and Creating dbt Profiles Using Environment Variables
@@ -542,21 +531,21 @@ Example of creating a dbt `profiles.yml` file:
 
 ```python
 def create_dbt_profile():
-    profiles_content = f"""
-    dremio:
-      target: dev
-      outputs:
-        dev:
-          type: odbc
-          driver: Dremio ODBC Driver
-          host: {os.getenv('DREMIO_HOST')}
-          port: 31010
-          user: {os.getenv('DREMIO_USER')}
-          password: {os.getenv('DREMIO_PASSWORD')}
-          database: {os.getenv('DREMIO_DB')}
-    """
-    with open('/usr/local/airflow/dbt_project/profiles.yml', 'w') as file:
-        file.write(profiles_content)
+ profiles_content = f"""
+ dremio:
+ target: dev
+ outputs:
+ dev:
+ type: odbc
+ driver: Dremio ODBC Driver
+ host: {os.getenv('DREMIO_HOST')}
+ port: 31010
+ user: {os.getenv('DREMIO_USER')}
+ password: {os.getenv('DREMIO_PASSWORD')}
+ database: {os.getenv('DREMIO_DB')}
+ """
+ with open('/usr/local/airflow/dbt_project/profiles.yml', 'w') as file:
+ file.write(profiles_content)
 ```
 
 Ensure this function is called before running any dbt models in your Airflow DAG to dynamically create the profiles.yml with the correct environment variables for each environment.
@@ -588,22 +577,22 @@ Example using Docker layer caching in GitHub Actions:
 
 ```yaml
 jobs:
-  build:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v2
+ build:
+ runs-on: ubuntu-latest
+ steps:
+ - name: Set up Docker Buildx
+ uses: docker/setup-buildx-action@v2
 
-      - name: Cache Docker layers
-        uses: actions/cache@v3
-        with:
-          path: /tmp/.buildx-cache
-          key: ${{ runner.os }}-buildx-${{ github.sha }}
-          restore-keys: |
-            ${{ runner.os }}-buildx-
+ - name: Cache Docker layers
+ uses: actions/cache@v3
+ with:
+ path: /tmp/.buildx-cache
+ key: ${{ runner.os }}-buildx-${{ github.sha }}
+ restore-keys: |
+ ${{ runner.os }}-buildx-
 
-      - name: Build and push Docker image
-        run: docker-compose build --cache-from type=local,src=/tmp/.buildx-cache
+ - name: Build and push Docker image
+ run: docker-compose build -cache-from type=local, src=/tmp/.buildx-cache
 ```
 
 #### Benefits:
@@ -618,12 +607,12 @@ Example of filtering based on path:
 
 ```yaml
 on:
-  push:
-    branches:
-      - main
-    paths:
-      - 'dags/**'
-      - 'dbt/**'
+ push:
+ branches:
+ - main
+ paths:
+ - 'dags/**'
+ - 'dbt/**'
 ```
 
 #### Benefits:
@@ -642,12 +631,12 @@ from airflow.operators.python_operator import PythonOperator
 from datetime import datetime
 
 def task_1():
-    # Task 1 logic here
-    pass
+ # Task 1 logic here
+ pass
 
 def task_2():
-    # Task 2 logic here
-    pass
+ # Task 2 logic here
+ pass
 
 dag = DAG('my_dag', start_date=datetime(2024, 1, 1), schedule_interval='@daily')
 
@@ -673,9 +662,9 @@ Example of creating a Dremio Reflection:
 
 ```sql
 ALTER TABLE my_lake.gold.final_dataset
-  CREATE RAW REFLECTION gold_accelerator USING DISPLAY (id,lastName,firstName,address,country)
-    PARTITION BY (country)
-    LOCALSORT BY (lastName);
+ CREATE RAW REFLECTION gold_accelerator USING DISPLAY (id, lastName, firstName, address, country)
+ PARTITION BY (country)
+ LOCALSORT BY (lastName);
 ```
 
 #### Benefits:
@@ -690,8 +679,8 @@ Example of limiting concurrency in GitHub Actions:
 
 ```yaml
 concurrency:
-  group: my-workflow-${{ github.ref }}
-  cancel-in-progress: true
+ group: my-workflow-${{ github.ref }}
+ cancel-in-progress: true
 ```
 
 #### Benefits:
@@ -712,10 +701,10 @@ One of the most common issues in Dockerized Airflow environments is missing Pyth
 
 **Steps to Troubleshoot:**
 - **Check Dockerfile**: Ensure all required Python libraries are listed in your `Dockerfile`. If a package is missing, add it and rebuild the Docker image.
-  
-  Example:
+ 
+ Example:
 ```Dockerfile
-  RUN pip install dremio-simple-query==<version> snowflake-connector-python==<version> pandas==<version>
+ RUN pip install dremio-simple-query==<version> snowflake-connector-python==<version> pandas==<version>
 ```
 #### Common Gotchas:
 
@@ -733,9 +722,9 @@ Example:
 
 ```yaml
 environment:
-  - DREMIO_TOKEN=${DREMIO_TOKEN}
-  - SNOWFLAKE_USER=${SNOWFLAKE_USER}
-  - SNOWFLAKE_PASSWORD=${SNOWFLAKE_PASSWORD}
+ - DREMIO_TOKEN=${DREMIO_TOKEN}
+ - SNOWFLAKE_USER=${SNOWFLAKE_USER}
+ - SNOWFLAKE_PASSWORD=${SNOWFLAKE_PASSWORD}
 ```
 
 **Check GitHub Secrets:** Verify that GitHub Secrets are correctly passed to the workflow. If a secret is missing, update the GitHub repository's Secrets settings and ensure they are referenced properly in the GitHub Actions workflow.
@@ -744,8 +733,8 @@ Example:
 
 ```yaml
 env:
-  DREMIO_TOKEN: ${{ secrets.DREMIO_TOKEN }}
-  SNOWFLAKE_USER: ${{ secrets.SNOWFLAKE_USER }}
+ DREMIO_TOKEN: ${{ secrets.DREMIO_TOKEN }}
+ SNOWFLAKE_USER: ${{ secrets.SNOWFLAKE_USER }}
 ```
 
 **Log Environment Variables:** Temporarily log environment variables in the Airflow task to verify that they are being passed correctly:
@@ -771,9 +760,9 @@ Example:
 
 ```yaml
 services:
-  webserver:
-    volumes:
-      - ./dags:/opt/airflow/dags
+ webserver:
+ volumes:
+ - ./dags:/opt/airflow/dags
 ```
 
 **Check DAG Folder Structure:** Ensure that your DAGs are in the correct folder structure inside the repository. The dags directory should be at the root level of your project and contain .py files defining the DAGs.
@@ -796,9 +785,9 @@ Example:
 
 ```python
 spark = SparkSession.builder \
-  .master("spark://<remote-spark-master>:7077") \
-  .appName("MyApp") \
-  .getOrCreate()
+ .master("spark://<remote-spark-master>:7077") \
+ .appName("MyApp") \
+ .getOrCreate()
 ```
 
 **Pass Spark Configuration via Environment Variables:** If you’re dynamically assigning the Spark master or other settings, ensure that these values are passed as environment variables:

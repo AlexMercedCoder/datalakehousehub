@@ -15,9 +15,10 @@ draft: false
 image: "/images/blog.png"
 canonical: https://iceberglakehouse.com/posts/moving-iceberg-tables-between-catalogs/
 ---
-> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/moving-iceberg-tables-between-catalogs/).
 
-A platform team has 3,000 Iceberg tables in a Hive Metastore and 900 terabytes of Parquet behind them. They are moving to a REST catalog. Someone on the team asks how long the copy will take, and someone else starts pricing out the egress. Both questions are the wrong questions. An Iceberg table is not stored in its catalog. The catalog stores one string per table: the path of the current metadata file. Moving a table between catalogs means writing that string into a new catalog and deleting it from the old one. The 900 terabytes do not move.
+A platform team has 3, 000 Iceberg tables in a Hive Metastore and 900 terabytes of Parquet behind them. They are moving to a REST catalog. Someone on the team asks how long the copy will take, and someone else starts pricing out the egress. Both questions are the wrong questions. An Iceberg table is not stored in its catalog. The catalog stores one string per table: the path of the current metadata file. Moving a table between catalogs means writing that string into a new catalog and deleting it from the old one. The 900 terabytes do not move.
+
+> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/moving-iceberg-tables-between-catalogs/).
 
 That is the whole idea, and it is simple enough that people distrust it. The distrust is healthy, because while the operation is a pointer copy, the surrounding protocol has real hazards. Register a table in two catalogs at once and two engines commit divergent metadata to the same directory. Drop the table from the old catalog with the wrong flag and the catalog deletes every data file. Pick the wrong metadata file to register and the new catalog starts from a snapshot that is three days stale.
 
@@ -32,7 +33,7 @@ The catalog's job is narrower than most people assume. The spec describes it as 
 Different catalog implementations store the pointer in different places, and this is the detail that matters for migration.
 
 | Catalog | Where the pointer lives | Atomicity mechanism |
-|---|---|---|
+|--|--|--|
 | Hive Metastore | Table parameter `metadata_location`, with `previous_metadata_location` alongside | HMS table lock or `alter_table` with expected value |
 | AWS Glue | Table parameter `metadata_location` | Glue `UpdateTable` with version ID check |
 | JDBC | A row in the `iceberg_tables` table with `metadata_location` | SQL transaction with expected old value |
@@ -52,8 +53,7 @@ In the Java API, the `Catalog` interface has `registerTable`:
 
 ```java
 Table table = targetCatalog.registerTable(
-    TableIdentifier.of("sales", "orders"),
-    "s3://lake/warehouse/sales.db/orders/metadata/00212-6f1c-...-a9e2.metadata.json"
+ TableIdentifier.of("sales", "orders"), "s3://lake/warehouse/sales.db/orders/metadata/00212-6f1c-...-a9e2.metadata.json"
 );
 ```
 
@@ -61,8 +61,7 @@ In Spark SQL with the Iceberg extensions, it is a procedure:
 
 ```sql
 CALL polaris.system.register_table(
-  table         => 'sales.orders',
-  metadata_file => 's3://lake/warehouse/sales.db/orders/metadata/00212-6f1c-...-a9e2.metadata.json'
+ table => 'sales.orders', metadata_file => 's3://lake/warehouse/sales.db/orders/metadata/00212-6f1c-...-a9e2.metadata.json'
 );
 ```
 
@@ -72,10 +71,7 @@ Trino has its own procedure with a different signature. It takes the table locat
 
 ```sql
 CALL iceberg.system.register_table(
-  schema_name        => 'sales',
-  table_name         => 'orders',
-  table_location     => 's3://lake/warehouse/sales.db/orders',
-  metadata_file_name => '00212-6f1c-...-a9e2.metadata.json'
+ schema_name => 'sales', table_name => 'orders', table_location => 's3://lake/warehouse/sales.db/orders', metadata_file_name => '00212-6f1c-...-a9e2.metadata.json'
 );
 ```
 
@@ -88,9 +84,7 @@ from pyiceberg.catalog import load_catalog
 
 target = load_catalog("polaris")
 table = target.register_table(
-    "sales.orders",
-    "s3://lake/warehouse/sales.db/orders/metadata/00212-6f1c-...-a9e2.metadata.json",
-)
+ "sales.orders", "s3://lake/warehouse/sales.db/orders/metadata/00212-6f1c-...-a9e2.metadata.json", )
 print(table.current_snapshot().snapshot_id)
 ```
 
@@ -102,8 +96,7 @@ Authorization: Bearer <token>
 Content-Type: application/json
 
 {
-  "name": "orders",
-  "metadata-location": "s3://lake/warehouse/sales.db/orders/metadata/00212-6f1c-...-a9e2.metadata.json"
+ "name": "orders", "metadata-location": "s3://lake/warehouse/sales.db/orders/metadata/00212-6f1c-...-a9e2.metadata.json"
 }
 ```
 
@@ -147,7 +140,7 @@ The window between step 4 and step 6 is the two-pointer window. Step 1 makes it 
 
 ## Bulk Migration and the Iceberg Catalog Migrator
 
-Running the protocol above by hand for 3,000 tables is not realistic, and the community has a tool for it. The Iceberg Catalog Migrator lives in the `apache/polaris-tools` repository, and despite the home it works with every Iceberg catalog as source and target, not only Polaris.
+Running the protocol above by hand for 3, 000 tables is not realistic, and the community has a tool for it. The Iceberg Catalog Migrator lives in the `apache/polaris-tools` repository, and despite the home it works with every Iceberg catalog as source and target, not only Polaris.
 
 It has two commands. `register` reads every table in the source catalog (or a selected namespace or identifier list), and registers each one in the target with the same identifier. It leaves the source entries in place, which means every table is in the two-pointer state until you clean up. `migrate` does the same registration and then deletes each table's entry from the source after the target registration succeeds, which closes the window per table. The README says what the Spark warning says: operating the same table from both catalogs corrupts it, so use `migrate`, or if you use `register`, never write through the source again.
 
@@ -155,17 +148,17 @@ A typical invocation moving a Hive Metastore's tables into a Polaris REST catalo
 
 ```bash
 java -jar iceberg-catalog-migrator-cli.jar migrate \
-  --source-catalog-type HIVE \
-  --source-catalog-properties \
-    uri=thrift://hms.internal:9083,warehouse=s3a://lake/warehouse/,io-impl=org.apache.iceberg.aws.s3.S3FileIO \
-  --target-catalog-type REST \
-  --target-catalog-properties \
-    uri=https://polaris.internal/api/catalog,warehouse=analytics,token=$TOKEN \
-  --identifiers-from-file tables-batch-01.txt \
-  --output-dir ./migration-logs
+ -source-catalog-type HIVE \
+ -source-catalog-properties \
+ uri=thrift://hms.internal:9083, warehouse=s3a://lake/warehouse/, io-impl=org.apache.iceberg.aws.s3.S3FileIO \
+ -target-catalog-type REST \
+ -target-catalog-properties \
+ uri=https://polaris.internal/api/catalog, warehouse=analytics, token=$TOKEN \
+ -identifiers-from-file tables-batch-01.txt \
+ -output-dir ./migration-logs
 ```
 
-The tool writes a log of successes and failures per identifier and can be rerun against the failure list. Run it in batches, not all at once, so a configuration problem shows up on the first hundred tables rather than the first three thousand. The `--dry-run` flag lists what it will do without doing it, and the first run should always be a dry run.
+The tool writes a log of successes and failures per identifier and can be rerun against the failure list. Run it in batches, not all at once, so a configuration problem shows up on the first hundred tables rather than the first three thousand. The `-dry-run` flag lists what it will do without doing it, and the first run should always be a dry run.
 
 Two Polaris-specific settings come up on nearly every HMS-to-Polaris migration. Hive-created namespaces produce directories with a `.db` suffix, such as `sales.db/orders`, and Polaris by default expects table locations to sit under `<catalog-location>/<namespace>/<table>`. Set `ALLOW_UNSTRUCTURED_TABLE_LOCATION` on the Polaris server to accept the Hive layout. And the Polaris catalog's storage configuration must list the source warehouse prefix in `allowedLocations`, or every registration fails with a forbidden error naming the location. Both are one-time configuration on the target, and both are documented in the migrator's examples.
 
@@ -214,20 +207,19 @@ import json
 import fsspec
 
 def preflight(metadata_location):
-    with fsspec.open(metadata_location, "rb") as f:
-        meta = json.load(f)
-    print("format-version:", meta["format-version"])
-    print("table-uuid:", meta["table-uuid"])
-    print("location:", meta["location"])
-    print("current-snapshot-id:", meta.get("current-snapshot-id"))
-    print("refs:", list(meta.get("refs", {}).keys()))
-    print("statistics files:", len(meta.get("statistics", [])))
-    print("metadata-log entries:", len(meta.get("metadata-log", [])))
-    props = meta.get("properties", {})
-    for k in ("write.data.path", "write.metadata.path",
-              "schema.name-mapping.default", "encryption.key-id"):
-        if k in props:
-            print("property", k, "=", props[k][:80])
+ with fsspec.open(metadata_location, "rb") as f:
+ meta = json.load(f)
+ print("format-version:", meta["format-version"])
+ print("table-uuid:", meta["table-uuid"])
+ print("location:", meta["location"])
+ print("current-snapshot-id:", meta.get("current-snapshot-id"))
+ print("refs:", list(meta.get("refs", {}).keys()))
+ print("statistics files:", len(meta.get("statistics", [])))
+ print("metadata-log entries:", len(meta.get("metadata-log", [])))
+ props = meta.get("properties", {})
+ for k in ("write.data.path", "write.metadata.path", "schema.name-mapping.default", "encryption.key-id"):
+ if k in props:
+ print("property", k, "=", props[k][:80])
 
 preflight("s3://lake/warehouse/sales.db/orders/metadata/00212-6f1c-...-a9e2.metadata.json")
 ```
@@ -242,50 +234,40 @@ This script moves every table in one namespace from a Glue catalog to a Polaris 
 from pyiceberg.catalog import load_catalog
 
 source = load_catalog(
-    "glue",
-    **{"type": "glue", "glue.region": "us-east-1"},
-)
+ "glue", **{"type": "glue", "glue.region": "us-east-1"}, )
 target = load_catalog(
-    "polaris",
-    **{
-        "type": "rest",
-        "uri": "https://polaris.internal/api/catalog",
-        "warehouse": "analytics",
-        "credential": "client-id:client-secret",
-        "scope": "PRINCIPAL_ROLE:ALL",
-        "header.X-Iceberg-Access-Delegation": "vended-credentials",
-    },
-)
+ "polaris", **{
+ "type": "rest", "uri": "https://polaris.internal/api/catalog", "warehouse": "analytics", "credential": "client-id:client-secret", "scope": "PRINCIPAL_ROLE:ALL", "header.X-Iceberg-Access-Delegation": "vended-credentials", }, )
 
-namespace = ("sales",)
+namespace = ("sales", )
 if not target.namespace_exists(namespace):
-    target.create_namespace(namespace)
+ target.create_namespace(namespace)
 
 report = []
 for identifier in source.list_tables(namespace):
-    src_table = source.load_table(identifier)
-    metadata_location = src_table.metadata_location
-    src_snapshot = src_table.current_snapshot()
-    src_snapshot_id = src_snapshot.snapshot_id if src_snapshot else None
+ src_table = source.load_table(identifier)
+ metadata_location = src_table.metadata_location
+ src_snapshot = src_table.current_snapshot()
+ src_snapshot_id = src_snapshot.snapshot_id if src_snapshot else None
 
-    # Register the exact file the source points at. Never construct a path.
-    tgt_table = target.register_table(identifier, metadata_location)
-    tgt_snapshot = tgt_table.current_snapshot()
-    tgt_snapshot_id = tgt_snapshot.snapshot_id if tgt_snapshot else None
+ # Register the exact file the source points at. Never construct a path.
+ tgt_table = target.register_table(identifier, metadata_location)
+ tgt_snapshot = tgt_table.current_snapshot()
+ tgt_snapshot_id = tgt_snapshot.snapshot_id if tgt_snapshot else None
 
-    if tgt_snapshot_id != src_snapshot_id:
-        report.append((identifier, "MISMATCH", src_snapshot_id, tgt_snapshot_id))
-        continue
+ if tgt_snapshot_id != src_snapshot_id:
+ report.append((identifier, "MISMATCH", src_snapshot_id, tgt_snapshot_id))
+ continue
 
-    # Read-side check through the target: a scan plan should resolve every file.
-    files = list(tgt_table.scan().plan_files())
+ # Read-side check through the target: a scan plan should resolve every file.
+ files = list(tgt_table.scan().plan_files())
 
-    # Close the two-pointer window. drop_table in PyIceberg does not purge.
-    source.drop_table(identifier)
-    report.append((identifier, "OK", src_snapshot_id, len(files)))
+ # Close the two-pointer window. drop_table in PyIceberg does not purge.
+ source.drop_table(identifier)
+ report.append((identifier, "OK", src_snapshot_id, len(files)))
 
 for row in report:
-    print(row)
+ print(row)
 ```
 
 Each part of this does a specific job. Loading the source table and reading `metadata_location` gets the real pointer rather than a guess. Capturing the snapshot ID before registering gives a value to compare against. `register_table` on the target is the pointer write. Comparing snapshot IDs catches both a stale registration and a concurrent commit. Planning a scan through the target exercises the target's credentials against every manifest and data file path, which is where a missing allowed-location or an under-scoped vended credential shows up. And dropping from the source only after all of that passes means a table that fails any check stays in the source, untouched, for a retry.
@@ -302,9 +284,7 @@ The `rewrite_table_path` procedure exists for this. It stages a copy of every me
 
 ```sql
 CALL source_catalog.system.rewrite_table_path(
-  table         => 'sales.orders',
-  source_prefix => 's3://old-lake/warehouse/sales.db/orders',
-  target_prefix => 's3://new-lake/warehouse/sales/orders'
+ table => 'sales.orders', source_prefix => 's3://old-lake/warehouse/sales.db/orders', target_prefix => 's3://new-lake/warehouse/sales/orders'
 );
 ```
 
@@ -346,7 +326,7 @@ A migration that goes well is one where the verification was designed before the
 
 **Migrate in batches by namespace.** A namespace is usually a team or a domain, which means one group of pipeline owners to coordinate the write freeze with. Batch size of a few hundred tables keeps each run short enough to redo.
 
-**Rehearse on a copy, not on the table.** The temptation during planning is to register a production table into the new catalog "just to see if it works" and drop it afterward. That creates the two-pointer state on a live table, and a stray write through either side during the test is a real divergence. The safe rehearsal uses `rewrite_table_path` to stage a full copy of one representative table at a scratch prefix, copies the files, and registers the copy under a scratch identifier in the target. Every check in the cutover protocol can be run against the copy: credential vending on the target, scan planning, a test write, snapshot expiry, compaction. The copy has its own UUID only if you rewrite it, so use a distinct identifier and a distinct location, and drop the copy with purge when done, since nothing else references its files. A rehearsal on a 50-gigabyte table takes an hour and surfaces every configuration gap that a 3,000-table run finds on table one.
+**Rehearse on a copy, not on the table.** The temptation during planning is to register a production table into the new catalog "just to see if it works" and drop it afterward. That creates the two-pointer state on a live table, and a stray write through either side during the test is a real divergence. The safe rehearsal uses `rewrite_table_path` to stage a full copy of one representative table at a scratch prefix, copies the files, and registers the copy under a scratch identifier in the target. Every check in the cutover protocol can be run against the copy: credential vending on the target, scan planning, a test write, snapshot expiry, compaction. The copy has its own UUID only if you rewrite it, so use a distinct identifier and a distinct location, and drop the copy with purge when done, since nothing else references its files. A rehearsal on a 50-gigabyte table takes an hour and surfaces every configuration gap that a 3, 000-table run finds on table one.
 
 **Do the first real batch with the smallest namespace.** After the rehearsal, pick the namespace with the fewest tables and the fewest downstream consumers, and run the full protocol on it end to end, including redirecting its clients and re-enabling maintenance on the target. Let it run for a day. Confirm that scheduled jobs commit through the target, that BI dashboards resolve, and that the source shows no activity. That day of observation is what tells you the client redirect actually reached everyone.
 
@@ -378,7 +358,7 @@ Catalog migration is getting easier, mostly because the catalog layer is converg
 
 ## Conclusion
 
-An Iceberg catalog owns one thing per table: the location of the current metadata file, and the ability to swap it atomically. Everything else about the table lives on storage in a self-describing tree of files. That is why moving a table between catalogs is a pointer operation, and why 900 terabytes stay exactly where they are while 3,000 tables change catalogs.
+An Iceberg catalog owns one thing per table: the location of the current metadata file, and the ability to swap it atomically. Everything else about the table lives on storage in a self-describing tree of files. That is why moving a table between catalogs is a pointer operation, and why 900 terabytes stay exactly where they are while 3, 000 tables change catalogs.
 
 The register operation is the same across the Java API, PyIceberg, Spark SQL, and the REST protocol. What differs is the protocol around it. Freeze writes so no two catalogs ever both accept a commit. Read the pointer from the source at the moment of registration. Verify snapshot ID, record count, and file resolution through the target. Drop from the source without purging. Configure the target's storage access before the first registration, not after the first failure. For storage moves, rewrite paths first or wait for v4 relative paths. For thousands of tables, use the Iceberg Catalog Migrator in batches with dry runs.
 

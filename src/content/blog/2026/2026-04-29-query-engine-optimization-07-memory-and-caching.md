@@ -2,7 +2,7 @@
 title: "Buffer Pools, Caches, and the Memory Hierarchy"
 date: 2026-04-29T09:07:00Z
 pubDatetime: 2026-04-29T09:07:00Z
-description: "Databases use buffer pools, column caches, and result caches to keep hot data in RAM. Here is how each caching strategy works and what happens when data does not fit."
+description: "Databases use buffer pools, column caches, and result caches to keep hot data in RAM. Here is how each caching strategy works and what happens when data."
 author: "Alex Merced"
 category: "Data Engineering"
 tags:
@@ -14,11 +14,12 @@ draft: false
 image: "/images/blog/query-engine-optimization/07-memory-and-caching-cache-hit-miss-latency.png"
 canonical: "https://iceberglakehouse.com/posts/2026-04-29-query-engine-07/"
 ---
-> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-04-29-query-engine-07/).
 
-<!-- Meta Description: Databases use buffer pools, column caches, and result caches to keep hot data in RAM. Here is how each caching strategy works and what happens when data does not fit. -->
-<!-- Primary Keyword: database caching -->
-<!-- Secondary Keywords: buffer pool, cache eviction, memory management database -->
+<!- Meta Description: Databases use buffer pools, column caches, and result caches to keep hot data in RAM. Here is how each caching strategy works and what happens when data does not fit. ->
+<!- Primary Keyword: database caching ->
+<!- Secondary Keywords: buffer pool, cache eviction, memory management database ->
+
+> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-04-29-query-engine-07/).
 
 *Read the complete Query Engine Optimization series:*
 * [Part 1: How Query Engines Think: The Tradeoffs Behind Every Data System](/blog/2026-04-29-query-engine-optimization-01-overview)
@@ -33,7 +34,7 @@ canonical: "https://iceberglakehouse.com/posts/2026-04-29-query-engine-07/"
 * [Part 10: Concurrency, Isolation, and MVCC: How Engines Handle Contention](/blog/2026-04-29-query-engine-optimization-10-concurrency-control)
 This is Part 7 of a 10-part series on query engine design. [Part 6](/blog/2026-04-29-query-engine-optimization-06-execution-models) covered execution models. This article covers how engines manage their most precious resource: memory.
 
-RAM is 1,000x faster than SSD and 100,000x faster than HDD. The difference between a query that hits cached data and one that reads from disk is the difference between sub-second and minutes. Every database engine invests heavily in keeping the right data in memory and handling the cases where data does not fit.
+RAM is 1, 000x faster than SSD and 100, 000x faster than HDD. The difference between a query that hits cached data and one that reads from disk is the difference between sub-second and minutes. Every database engine invests heavily in keeping the right data in memory and handling the cases where data does not fit.
 
 ## The Memory Hierarchy
 
@@ -42,12 +43,12 @@ RAM is 1,000x faster than SSD and 100,000x faster than HDD. The difference betwe
 The latency gap between memory tiers is not linear. It is exponential:
 
 | Storage Tier | Latency | Relative Speed |
-|---|---|---|
+|--|--|--|
 | L1 CPU cache | ~1 ns | 1x |
 | L3 CPU cache | ~10 ns | 10x slower |
 | Main memory (RAM) | ~100 ns | 100x slower |
-| NVMe SSD | ~100,000 ns (100 us) | 100,000x slower |
-| HDD | ~10,000,000 ns (10 ms) | 10,000,000x slower |
+| NVMe SSD | ~100, 000 ns (100 us) | 100, 000x slower |
+| HDD | ~10, 000, 000 ns (10 ms) | 10, 000, 000x slower |
 
 This hierarchy is why caching strategies dominate database engineering. A well-tuned cache turns expensive disk reads into cheap memory lookups for the most frequently accessed data.
 
@@ -109,7 +110,7 @@ All major engines support spill-to-disk: PostgreSQL, Spark, Dremio, DuckDB, Snow
 ## Where Real Systems Land
 
 | System | Primary Cache | Eviction Policy | Spill Strategy | Cloud Cache |
-|---|---|---|---|---|
+|--|--|--|--|--|
 | PostgreSQL | Buffer pool (pages) | Clock | External sort, hash spill | N/A |
 | MySQL/InnoDB | Buffer pool (pages) | LRU with young/old sublists | External sort | N/A |
 | DuckDB | OS page cache | OS-managed | External sort, hash spill | N/A |

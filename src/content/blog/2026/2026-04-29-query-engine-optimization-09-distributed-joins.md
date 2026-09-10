@@ -14,11 +14,12 @@ draft: false
 image: "/images/blog/query-engine-optimization/09-distributed-joins-shuffle-join.png"
 canonical: "https://iceberglakehouse.com/posts/2026-04-29-query-engine-09/"
 ---
-> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-04-29-query-engine-09/).
 
-<!-- Meta Description: Distributed joins move data across the network using shuffle, broadcast, or co-location strategies. Here is how each works and when engines choose which. -->
-<!-- Primary Keyword: distributed join algorithms -->
-<!-- Secondary Keywords: shuffle join, broadcast join, hash join database -->
+<!- Meta Description: Distributed joins move data across the network using shuffle, broadcast, or co-location strategies. Here is how each works and when engines choose which. ->
+<!- Primary Keyword: distributed join algorithms ->
+<!- Secondary Keywords: shuffle join, broadcast join, hash join database ->
+
+> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-04-29-query-engine-09/).
 
 *Read the complete Query Engine Optimization series:*
 * [Part 1: How Query Engines Think: The Tradeoffs Behind Every Data System](/blog/2026-04-29-query-engine-optimization-01-overview)
@@ -124,7 +125,7 @@ Once matching rows are on the same node (via shuffle, broadcast, or co-location)
 The optimizer selects a join strategy based on table sizes, data distribution, and available resources:
 
 | Decision | Condition | Strategy |
-|---|---|---|
+|--|--|--|
 | One side is small (< broadcast threshold) | Dimension table < 100 MB | **Broadcast join** |
 | Both sides are large, not co-located | Fact-to-fact join | **Shuffle + hash join** |
 | Both sides bucketed by join key | Pre-planned layout | **Co-located join** |

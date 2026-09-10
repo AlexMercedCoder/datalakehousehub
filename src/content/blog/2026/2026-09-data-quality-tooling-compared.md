@@ -15,9 +15,10 @@ draft: false
 image: "/images/blog.png"
 canonical: https://iceberglakehouse.com/posts/data-quality-tooling-compared/
 ---
-> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/data-quality-tooling-compared/).
 
 A revenue dashboard shows a 40 percent drop for yesterday. Every pipeline reported success. Every dbt test passed. The orders table has a fresh snapshot with a plausible row count. Three hours of investigation later, the cause is a source system that started sending amounts in cents instead of dollars after an upgrade nobody announced. No test checked that. No test was going to, because nobody knew to write it.
+
+> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/data-quality-tooling-compared/).
 
 That story has two halves, and data quality tooling has split along the same line. The first half is validation: rules written in advance, evaluated after a load, that fail when the data violates them. Great Expectations, Soda, and dbt tests are validation tools, and they catch what someone anticipated. The second half is anomaly detection: statistical monitoring of volume, freshness, distribution, and schema over time, that alerts when the data departs from its own history. Elementary, Monte Carlo, Anomalo, Bigeye, and the observability features in the major platforms are detection tools, and they catch what nobody anticipated.
 
@@ -79,18 +80,18 @@ Soda takes the opposite approach to expressiveness: a small, readable checks lan
 
 ```yaml
 checks for orders:
-  - row_count > 0
-  - missing_count(customer_id) = 0
-  - duplicate_count(order_id) = 0
-  - invalid_percent(status) < 1%:
-      valid values: [placed, shipped, delivered, cancelled]
-  - freshness(placed_at) < 2h
-  - avg(amount) between 20 and 500
-  - schema:
-      fail:
-        when required column missing: [order_id, customer_id, amount]
-        when wrong column type:
-          amount: decimal
+ - row_count > 0
+ - missing_count(customer_id) = 0
+ - duplicate_count(order_id) = 0
+ - invalid_percent(status) < 1%:
+ valid values: [placed, shipped, delivered, cancelled]
+ - freshness(placed_at) < 2h
+ - avg(amount) between 20 and 500
+ - schema:
+ fail:
+ when required column missing: [order_id, customer_id, amount]
+ when wrong column type:
+ amount: decimal
 ```
 
 Metrics, thresholds, and a handful of check types cover the common cases. Custom SQL checks handle the rest. Anomaly checks, which apply a model to a metric's history, are available in the commercial product.
@@ -111,19 +112,19 @@ dbt's testing is part of the transformation tool rather than a separate product,
 
 ```yaml
 models:
-  - name: fct_orders
-    columns:
-      - name: order_id
-        data_tests: [unique, not_null]
-      - name: status
-        data_tests:
-          - accepted_values:
-              values: [placed, shipped, delivered, cancelled]
-      - name: amount
-        data_tests:
-          - dbt_expectations.expect_column_values_to_be_between:
-              min_value: 0
-              max_value: 100000
+ - name: fct_orders
+ columns:
+ - name: order_id
+ data_tests: [unique, not_null]
+ - name: status
+ data_tests:
+ - accepted_values:
+ values: [placed, shipped, delivered, cancelled]
+ - name: amount
+ data_tests:
+ - dbt_expectations.expect_column_values_to_be_between:
+ min_value: 0
+ max_value: 100000
 ```
 
 **Where it runs.** Wherever dbt runs, against whatever adapter the project uses. On an Iceberg lakehouse that is Spark, Trino, Dremio, Athena, or DuckDB. A test is a query against the model's table.
@@ -140,17 +141,17 @@ dbt 1.8 added unit tests, and they are worth separating from data tests because 
 
 ```yaml
 unit_tests:
-  - name: test_fct_orders_status_mapping
-    model: fct_orders
-    given:
-      - input: ref('stg_orders')
-        rows:
-          - {order_id: 1, raw_status: "SHIPPED"}
-          - {order_id: 2, raw_status: "unknown_code"}
-    expect:
-      rows:
-        - {order_id: 1, status: "shipped"}
-        - {order_id: 2, status: "other"}
+ - name: test_fct_orders_status_mapping
+ model: fct_orders
+ given:
+ - input: ref('stg_orders')
+ rows:
+ - {order_id: 1, raw_status: "SHIPPED"}
+ - {order_id: 2, raw_status: "unknown_code"}
+ expect:
+ rows:
+ - {order_id: 1, status: "shipped"}
+ - {order_id: 2, status: "other"}
 ```
 
 Unit tests run in CI on every pull request, cost nothing in platform compute beyond a trivial query, and are the reason a logic bug never reaches the lakehouse. They are also entirely unaware of Iceberg, which is fine, because they test the SQL and not the table. A dbt project on Iceberg should have unit tests for models with non-trivial logic, data tests for the constraints on their output, and the layers described here for everything the models do not cover.
@@ -186,7 +187,7 @@ The consistency question is subtler than the cost. A cross-table check reads two
 ## Comparison
 
 | | Great Expectations | Soda | dbt tests | Elementary | Commercial detection |
-|---|---|---|---|---|---|
+|--|--|--|--|--|--|
 | Kind | Validation | Validation, plus detection in Cloud | Validation, plus unit tests | Detection as dbt tests | Detection with lineage |
 | Check language | Python Expectations | SodaCL YAML | YAML generic tests and SQL | dbt test configs | UI and API |
 | Expressiveness | Highest | Medium, custom SQL for the rest | Medium, packages extend | Metric-based | Metric-based, automated |
@@ -220,7 +221,7 @@ from pyiceberg.catalog import load_catalog
 
 EXPECTED_OPERATION = "overwrite"
 MIN_ADDED_RECORDS = 10_000
-REQUIRED_NON_NULL = {"order_id": 1, "customer_id": 2}   # name -> field id
+REQUIRED_NON_NULL = {"order_id": 1, "customer_id": 2} # name -> field id
 
 catalog = load_catalog("polaris")
 table = catalog.load_table("analytics.fct_orders")
@@ -229,19 +230,19 @@ summary = snapshot.summary
 
 failures = []
 if summary.get("operation") != EXPECTED_OPERATION:
-    failures.append(f"operation was {summary.get('operation')}")
+ failures.append(f"operation was {summary.get('operation')}")
 if int(summary.get("added-records", 0)) < MIN_ADDED_RECORDS:
-    failures.append(f"only {summary.get('added-records')} records added")
+ failures.append(f"only {summary.get('added-records')} records added")
 
 for entry in table.scan(snapshot_id=snapshot.snapshot_id).plan_files():
-    nulls = entry.file.null_value_counts or {}
-    for col, fid in REQUIRED_NON_NULL.items():
-        if nulls.get(fid, 0) > 0:
-            failures.append(f"{entry.file.file_path} has nulls in {col}")
-            break
+ nulls = entry.file.null_value_counts or {}
+ for col, fid in REQUIRED_NON_NULL.items():
+ if nulls.get(fid, 0) > 0:
+ failures.append(f"{entry.file.file_path} has nulls in {col}")
+ break
 
 if failures:
-    raise SystemExit("metadata checks failed: " + "; ".join(failures))
+ raise SystemExit("metadata checks failed: " + "; ".join(failures))
 print(f"snapshot {snapshot.snapshot_id} passed metadata checks")
 ```
 
@@ -250,13 +251,12 @@ The snapshot summary check confirms the pipeline did what it intended. The added
 The same checks in a dbt singular test, for a dbt-built model on Spark:
 
 ```sql
--- tests/assert_fct_orders_latest_snapshot_healthy.sql
+- tests/assert_fct_orders_latest_snapshot_healthy.sql
 WITH latest AS (
-  SELECT operation,
-         CAST(summary['added-records'] AS BIGINT) AS added_records
-  FROM {{ ref('fct_orders') }}.snapshots
-  ORDER BY committed_at DESC
-  LIMIT 1
+ SELECT operation, CAST(summary['added-records'] AS BIGINT) AS added_records
+ FROM {{ ref('fct_orders') }}.snapshots
+ ORDER BY committed_at DESC
+ LIMIT 1
 )
 SELECT * FROM latest
 WHERE operation <> 'overwrite' OR added_records < 10000
@@ -266,11 +266,11 @@ And a layer-two Soda scan against a branch, which on Spark uses the branch selec
 
 ```yaml
 checks for analytics.fct_orders:
-  - row_count > 10000
-  - duplicate_count(order_id) = 0
-  - missing_count(customer_id) = 0
-  - avg(amount) between 20 and 500
-  - freshness(placed_at) < 26h
+ - row_count > 10000
+ - duplicate_count(order_id) = 0
+ - missing_count(customer_id) = 0
+ - avg(amount) between 20 and 500
+ - freshness(placed_at) < 26h
 ```
 
 run with `soda scan -d spark -c config.yml checks.yml` after setting the Spark session's read branch to the audit branch. The scan's exit code is the gate.

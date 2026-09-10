@@ -2,7 +2,7 @@
 title: "Clean Rooms for Privacy-Preserving Analytics"
 date: 2026-05-24T10:10:00Z
 pubDatetime: 2026-05-24T10:10:00Z
-description: "Data clean rooms enable secure multi-party analytics without sharing raw data. Learn how Databricks Clean Rooms, AWS Clean Rooms, and BigQuery differential privacy work."
+description: "Data clean rooms enable secure multi-party analytics without sharing raw data. Learn how Databricks Clean Rooms, AWS Clean Rooms, and BigQuery."
 author: "Alex Merced"
 category: "Data Engineering"
 tags:
@@ -17,17 +17,18 @@ draft: false
 image: "/images/blog/clean-rooms-privacy/data-clean-room-architecture.png"
 canonical: "https://iceberglakehouse.com/posts/2026-05-24-clean-rooms-privacy/"
 ---
-> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-05-24-clean-rooms-privacy/).
 
 # Clean Rooms for Privacy-Preserving Analytics
 
 Every organization that wants to collaborate on data faces the same tension. The analysis is valuable, matching your customer purchase history against a partner's ad impression data reveals attribution patterns that neither party could see alone. The data is sensitive, sharing raw customer records with an external party creates PII exposure risk, regulatory compliance problems, and the permanent problem of data copies that live outside your control.
 
+> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-05-24-clean-rooms-privacy/).
+
 The historical solutions to this tension have been inadequate. You can share nothing, and lose the analytical value. You can share everything, and accept the compliance and security risks. You can negotiate a complex data contract that creates a one-time data copy under strict terms, and hope neither party violates them.
 
 Data clean rooms offer a fourth path. They create an isolated computational environment where both parties contribute data, queries run against the combined dataset inside the environment, and only aggregated, policy-filtered results leave. No raw row-level data from either party is ever accessible to the other.
 
----
+--
 
 ## The Core Guarantee
 
@@ -42,7 +43,7 @@ The mechanics vary by platform, but the core model is consistent:
 3. A privacy budget (often implemented via differential privacy) limits the total amount of information that can be extracted through repeated queries, preventing statistical re-identification attacks.
 4. Only aggregated, noise-added results leave the environment.
 
----
+--
 
 ## Databricks Clean Rooms
 
@@ -58,13 +59,11 @@ client = WorkspaceClient()
 
 # Create the clean room
 clean_room = client.clean_rooms.create(
-    name="partner_attribution_analysis",
-    remote_detailed_info={
-        "collaborators": [
-            {"global_metastore_id": "partner_metastore_id",
-             "invite_recipient_email": "admin@partner.com"}
-        ]
-    }
+ name="partner_attribution_analysis", remote_detailed_info={
+ "collaborators": [
+ {"global_metastore_id": "partner_metastore_id", "invite_recipient_email": "admin@partner.com"}
+ ]
+ }
 )
 
 # Define an approved output schema (only aggregations allowed)
@@ -75,7 +74,7 @@ clean_room = client.clean_rooms.create(
 
 The separation is architectural. The partner's Databricks workspace never has credentials to read your underlying Delta Lake tables. Delta Sharing issues time-limited, scoped access tokens for the specific tables and operations the clean room requires.
 
----
+--
 
 ## AWS Clean Rooms
 
@@ -89,40 +88,36 @@ Analysis rules in AWS Clean Rooms can be configured in three modes:
 The Differential Privacy feature in AWS Clean Rooms adds mathematically bounded noise to query results, providing formal privacy guarantees at the expense of some accuracy:
 
 ```sql
--- AWS Clean Rooms query with differential privacy enabled
--- Results will have noise added based on configured epsilon value
+- AWS Clean Rooms query with differential privacy enabled
+- Results will have noise added based on configured epsilon value
 SELECT 
-    campaign_id,
-    COUNT(DISTINCT customer_id) AS attributed_customers,
-    SUM(purchase_amount) AS total_attributed_revenue
+ campaign_id, COUNT(DISTINCT customer_id) AS attributed_customers, SUM(purchase_amount) AS total_attributed_revenue
 FROM collaboration.matched_customers
 GROUP BY campaign_id
-HAVING COUNT(DISTINCT customer_id) >= 100;  -- Minimum count threshold enforced
+HAVING COUNT(DISTINCT customer_id) >= 100;, Minimum count threshold enforced
 ```
 
 The minimum count threshold (`HAVING COUNT >= 100`) prevents queries that isolate small groups from extracting information about individuals within those groups, even with noise addition.
 
----
+--
 
 ## BigQuery Differential Privacy
 
 BigQuery implements differential privacy natively in SQL through the `DIFFERENTIAL_PRIVACY` clause, available in queries run against BigQuery datasets. This allows organizations to expose analytical views of sensitive datasets with formal privacy guarantees, without requiring a separate clean room environment.
 
 ```sql
--- BigQuery differential privacy query
+- BigQuery differential privacy query
 SELECT
-    region,
-    WITH DIFFERENTIAL_PRIVACY
-        OPTIONS (epsilon = 1.0, delta = 1e-6, max_groups_contributed = 5)
-        COUNT(DISTINCT user_id, contribution_bounds => (0, 1)) AS unique_users,
-        AVG(purchase_amount, contribution_bounds => (0, 10000)) AS avg_purchase
+ region, WITH DIFFERENTIAL_PRIVACY
+ OPTIONS (epsilon = 1.0, delta = 1e-6, max_groups_contributed = 5)
+ COUNT(DISTINCT user_id, contribution_bounds => (0, 1)) AS unique_users, AVG(purchase_amount, contribution_bounds => (0, 10000)) AS avg_purchase
 FROM my_dataset.transactions
 GROUP BY region;
 ```
 
 The `epsilon` parameter (ε) controls the privacy-accuracy tradeoff. Smaller epsilon values add more noise, providing stronger privacy guarantees at the cost of result accuracy. The `delta` parameter bounds the probability that the privacy guarantee fails. `max_groups_contributed` limits how much any individual can affect the results by appearing in many groups.
 
----
+--
 
 ## Privacy Budget: The Finite Resource
 
@@ -134,7 +129,7 @@ Practical privacy budget management requires tracking consumption across all que
 
 In production clean room environments, this means instrumenting query execution to track epsilon consumption and building budget management tooling that enforces limits before queries run.
 
----
+--
 
 ## Clean Rooms vs Direct Data Sharing
 
@@ -144,7 +139,7 @@ The comparison isn't purely about privacy. Direct data sharing creates data gove
 
 For GDPR and CCPA compliance specifically, clean rooms provide a more defensible data processing arrangement than bilateral data transfers. The legal basis for processing partner data within a clean room (where the data never leaves the contributor's control and cannot be accessed by the collaborator) is cleaner than the legal basis for a data copy transferred to a partner's environment.
 
----
+--
 
 ## Conclusion
 
@@ -152,7 +147,7 @@ Data clean rooms have moved from an enterprise niche (primarily advertising attr
 
 The governance discipline required is not primarily technical. It's about defining the right approved query templates, maintaining privacy budget controls, and treating clean room access as a governed capability with review processes for adding new queries to the approved template library.
 
----
+--
 
 ## Real-World Use Cases Beyond Ad Attribution
 
@@ -168,7 +163,7 @@ The media and advertising industry pioneered clean room adoption for campaign me
 
 In each case, the value of the combined dataset analysis exceeds the value of what either party can analyze independently, and the privacy-preserving architecture makes the collaboration legally and ethically feasible.
 
----
+--
 
 ## Legal Framework: Why Clean Rooms Simplify Compliance
 
@@ -183,7 +178,7 @@ Clean rooms change this legal picture. When Party B never receives raw personal 
 
 This simplified legal basis makes the data sharing arrangement easier to approve through legal review and easier to audit for compliance. The clean room audit log provides documentary evidence that no individual records were transferred and that only approved query templates were executed.
 
----
+--
 
 ## Beyond Differential Privacy: Other Privacy-Preserving Techniques
 
@@ -197,7 +192,7 @@ Differential privacy is the most mathematically rigorous privacy technique and t
 
 For most enterprise cross-party analytics, differential privacy in a clean room environment provides the best balance of analytical utility and privacy guarantee. The other techniques are valuable for specific workloads where the operational overhead is justified.
 
----
+--
 
 ## Clean Room Adoption: Industry Use Cases
 
@@ -213,7 +208,7 @@ Clean room technology has seen practical adoption across several industries wher
 
 Across all these use cases, the pattern is the same: two or more parties with valuable, sensitive datasets need to compute aggregate statistics that require combining their data, without exposing the underlying records. Clean rooms make this tractable where it was previously either legally or technically impossible.
 
----
+--
 
 ## The Business Case for Privacy-Preserving Infrastructure
 
@@ -223,7 +218,7 @@ For organizations that receive data from partners, the ability to offer clean ro
 
 The investment in differential privacy primitives and clean room infrastructure also serves the organization's internal governance. The privacy accounting techniques used in clean rooms (tracking how much information is revealed by each query) are directly applicable to internal privacy governance for customer data. Organizations that build clean room expertise develop internal capabilities that improve their handling of first-party customer data.
 
----
+--
 
 ### Build Privacy-First Data Platforms
 

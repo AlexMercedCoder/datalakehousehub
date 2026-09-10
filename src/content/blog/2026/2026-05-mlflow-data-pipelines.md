@@ -2,7 +2,7 @@
 title: "Bringing MLflow and Data Pipelines Closer Together"
 date: 2026-05-24T11:00:00Z
 pubDatetime: 2026-05-24T11:00:00Z
-description: "MLflow 3 extends observability from classic ML experiments to GenAI tracing and data pipeline lineage. Learn how to connect data quality monitoring with model performance tracking."
+description: "MLflow 3 extends observability from classic ML experiments to GenAI tracing and data pipeline lineage."
 author: "Alex Merced"
 category: "AI"
 tags:
@@ -17,17 +17,18 @@ draft: false
 image: "/images/blog/mlflow-data-pipelines/mlflow3-training-to-inference-lineage.png"
 canonical: "https://iceberglakehouse.com/posts/2026-05-24-mlflow-data-pipelines/"
 ---
-> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-05-24-mlflow-data-pipelines/).
 
 # Bringing MLflow and Data Pipelines Closer Together
 
 The boundary between data engineering and ML engineering has always been somewhat artificial. A model degrades in production. Is it a model problem? The data feeding it changed. Is it a data pipeline problem? The features it receives don't match what it was trained on. Is it a feature store problem? These questions point to the same underlying issue: the observability tools for data pipelines and the observability tools for ML models are separate, making cross-boundary diagnosis difficult.
 
+> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-05-24-mlflow-data-pipelines/).
+
 MLflow 3, released in 2025, moved toward addressing this by expanding its scope beyond experiment tracking into GenAI tracing, agent evaluation, and closer integration with data quality monitoring. Databricks' Data Quality Monitoring feature provides a framework for applying model-style monitoring (drift detection, statistical distribution tracking) to datasets and pipeline outputs, not just model inference results.
 
 Together, these capabilities push toward a vision where data lineage, feature freshness, model performance, and inference quality are visible through a single observability surface rather than four separate tools.
 
----
+--
 
 ## MLflow 3: What Changed
 
@@ -45,22 +46,22 @@ mlflow.langchain.autolog()
 
 # Or manual tracing for custom pipelines
 with mlflow.start_span(name="document_retrieval") as span:
-    docs = vector_store.similarity_search(query, k=5)
-    span.set_attribute("num_docs_retrieved", len(docs))
-    span.set_attribute("query", query)
+ docs = vector_store.similarity_search(query, k=5)
+ span.set_attribute("num_docs_retrieved", len(docs))
+ span.set_attribute("query", query)
 
 with mlflow.start_span(name="llm_generation") as span:
-    response = llm.invoke(prompt)
-    span.set_attribute("model", "gpt-4o")
-    span.set_attribute("input_tokens", response.usage.prompt_tokens)
-    span.set_attribute("output_tokens", response.usage.completion_tokens)
+ response = llm.invoke(prompt)
+ span.set_attribute("model", "gpt-4o")
+ span.set_attribute("input_tokens", response.usage.prompt_tokens)
+ span.set_attribute("output_tokens", response.usage.completion_tokens)
 ```
 
 **Agent evaluation.** MLflow provides `mlflow.evaluate()` with built-in metrics for RAG and agent workflows: answer relevance, faithfulness (does the answer reflect the retrieved context?), context recall, and hallucination detection. This brings the same experiment comparison discipline that works for classical ML metrics to GenAI quality evaluation.
 
 **Dataset tracking.** MLflow 3 extends the `mlflow.log_dataset()` API to record not just the name and version of training datasets, but their statistical properties: row counts, column distributions, null rates. This creates a traceable link from training data quality to model performance.
 
----
+--
 
 ## Training Data Lineage in Practice
 
@@ -73,28 +74,25 @@ import mlflow
 import pandas as pd
 
 with mlflow.start_run(run_name="churn_v12_training"):
-    # Log the training dataset with metadata
-    training_data = load_from_iceberg("training_features", snapshot_id=102345)
-    
-    dataset = mlflow.data.from_pandas(
-        training_data,
-        source="s3://data-lake/iceberg/training_features/",
-        name="training_features",
-        targets="is_churned"
-    )
-    mlflow.log_input(dataset, context="training")
-    
-    # Train model
-    model = train_xgboost(training_data)
-    
-    # Log metrics and model
-    mlflow.log_metric("auc", evaluate_auc(model, validation_data))
-    mlflow.xgboost.log_model(model, "model")
+ # Log the training dataset with metadata
+ training_data = load_from_iceberg("training_features", snapshot_id=102345)
+ 
+ dataset = mlflow.data.from_pandas(
+ training_data, source="s3://data-lake/iceberg/training_features/", name="training_features", targets="is_churned"
+ )
+ mlflow.log_input(dataset, context="training")
+ 
+ # Train model
+ model = train_xgboost(training_data)
+ 
+ # Log metrics and model
+ mlflow.log_metric("auc", evaluate_auc(model, validation_data))
+ mlflow.xgboost.log_model(model, "model")
 ```
 
 Now when investigating a model degradation, you can trace the MLflow run for the current production model, check which dataset snapshot it was trained on, compare the statistical profile of that snapshot against the current training features table, and identify whether the training distribution has drifted.
 
----
+--
 
 ## Data Quality Monitoring for ML Inputs
 
@@ -111,22 +109,17 @@ client = WorkspaceClient()
 
 # Create a data quality monitor for a feature table
 client.quality_monitors.create(
-    table_name="prod_catalog.features.user_activity_features",
-    assets_dir=f"/Shared/monitors/user_activity_features",
-    output_schema_name="prod_catalog.data_quality_metrics",
-    time_series=MonitorTimeSeries(
-        timestamp_col="feature_timestamp",
-        granularities=["1 day"]
-    ),
-    baseline=MonitorBaseline(
-        table_name="prod_catalog.features.user_activity_features_baseline"
-    )
+ table_name="prod_catalog.features.user_activity_features", assets_dir=f"/Shared/monitors/user_activity_features", output_schema_name="prod_catalog.data_quality_metrics", time_series=MonitorTimeSeries(
+ timestamp_col="feature_timestamp", granularities=["1 day"]
+ ), baseline=MonitorBaseline(
+ table_name="prod_catalog.features.user_activity_features_baseline"
+ )
 )
 ```
 
 The generated quality metrics (column-level drift scores, null rate changes, distribution summaries) are written to a Unity Catalog table. They can be joined with MLflow experiment data to correlate data quality events with model performance changes.
 
----
+--
 
 ## Unified Observability Architecture
 
@@ -144,7 +137,7 @@ An on-call engineer investigating a model quality alert can navigate this chain:
 
 This investigation path is possible today with a combination of tools. The direction of both MLflow 3 and Databricks' monitoring features is to reduce the manual connection between these layers.
 
----
+--
 
 ## Distinguishing Model Drift from Data Drift
 
@@ -169,30 +162,28 @@ import pandas as pd
 
 # Load data quality monitor output
 drift_metrics = pd.read_parquet(
-    "s3://monitoring/data_quality_metrics/user_activity_features/"
+ "s3://monitoring/data_quality_metrics/user_activity_features/"
 )
 
 # Load MLflow experiment runs for the production model
 client = mlflow.MlflowClient()
 runs = client.search_runs(
-    experiment_ids=["churn_prediction"],
-    filter_string="tags.env = 'production'",
-    order_by=["start_time DESC"]
+ experiment_ids=["churn_prediction"], filter_string="tags.env = 'production'", order_by=["start_time DESC"]
 )
 
 # Check correlation between feature drift and model AUC
 for run in runs:
-    run_date = pd.Timestamp(run.info.start_time, unit="ms").date()
-    feature_drift = drift_metrics[
-        drift_metrics["date"] == str(run_date)
-    ]["session_count_drift_score"].values
-    
-    if len(feature_drift) > 0:
-        print(f"Date: {run_date}, AUC: {run.data.metrics.get('auc', 'N/A')}, "
-              f"Session Count Drift: {feature_drift[0]:.3f}")
+ run_date = pd.Timestamp(run.info.start_time, unit="ms").date()
+ feature_drift = drift_metrics[
+ drift_metrics["date"] == str(run_date)
+ ]["session_count_drift_score"].values
+ 
+ if len(feature_drift) > 0:
+ print(f"Date: {run_date}, AUC: {run.data.metrics.get('auc', 'N/A')}, "
+ f"Session Count Drift: {feature_drift[0]:.3f}")
 ```
 
----
+--
 
 ## CI/CD for ML Pipelines: Where MLflow Fits
 
@@ -204,41 +195,37 @@ MLflow's model registry provides the infrastructure for this gate. A CI pipeline
 import mlflow
 
 def validate_and_promote_model(run_id: str, min_auc: float = 0.90) -> bool:
-    """
-    Validate a model run and promote to production if metrics pass.
-    Used in CI/CD pipeline gate.
-    """
-    client = mlflow.MlflowClient()
-    run = client.get_run(run_id)
-    
-    auc = run.data.metrics.get("auc", 0.0)
-    if auc < min_auc:
-        print(f"FAIL: AUC {auc:.3f} below threshold {min_auc}")
-        return False
-    
-    # Check data quality metrics from the training run
-    training_dataset = client.get_run(run_id).inputs.dataset_inputs[0]
-    
-    # Promote to candidate stage if metrics pass
-    model_version = client.create_model_version(
-        name="churn_predictor",
-        source=f"runs:/{run_id}/model",
-        run_id=run_id
-    )
-    
-    client.transition_model_version_stage(
-        name="churn_predictor",
-        version=model_version.version,
-        stage="Staging"
-    )
-    
-    print(f"PASS: Model v{model_version.version} promoted to Staging")
-    return True
+ """
+ Validate a model run and promote to production if metrics pass.
+ Used in CI/CD pipeline gate.
+ """
+ client = mlflow.MlflowClient()
+ run = client.get_run(run_id)
+ 
+ auc = run.data.metrics.get("auc", 0.0)
+ if auc < min_auc:
+ print(f"FAIL: AUC {auc:.3f} below threshold {min_auc}")
+ return False
+ 
+ # Check data quality metrics from the training run
+ training_dataset = client.get_run(run_id).inputs.dataset_inputs[0]
+ 
+ # Promote to candidate stage if metrics pass
+ model_version = client.create_model_version(
+ name="churn_predictor", source=f"runs:/{run_id}/model", run_id=run_id
+ )
+ 
+ client.transition_model_version_stage(
+ name="churn_predictor", version=model_version.version, stage="Staging"
+ )
+ 
+ print(f"PASS: Model v{model_version.version} promoted to Staging")
+ return True
 ```
 
 The CI pipeline calls `validate_and_promote_model()` after each training run. If the model passes, it enters Staging for integration testing. Human approval then promotes it to Production, MLflow's stage transitions support this workflow directly.
 
----
+--
 
 ## MLflow with Airflow: Scheduling Training and Monitoring Together
 
@@ -251,37 +238,35 @@ from airflow.sensors.base import BaseSensorOperator
 from datetime import datetime, timedelta
 
 def check_feature_drift():
-    """Check if feature drift exceeds retraining threshold."""
-    drift_scores = load_drift_metrics("user_activity_features", days_back=1)
-    max_drift = max(drift_scores.values())
-    if max_drift > 0.15:  # PSI threshold for significant drift
-        raise ValueError(f"Feature drift detected: {max_drift:.3f}")
+ """Check if feature drift exceeds retraining threshold."""
+ drift_scores = load_drift_metrics("user_activity_features", days_back=1)
+ max_drift = max(drift_scores.values())
+ if max_drift > 0.15: # PSI threshold for significant drift
+ raise ValueError(f"Feature drift detected: {max_drift:.3f}")
 
 def retrain_model():
-    """Retrain and log to MLflow."""
-    with mlflow.start_run(run_name=f"auto_retrain_{datetime.now().date()}"):
-        training_data = load_latest_training_data()
-        model = train_xgboost(training_data)
-        mlflow.log_metric("auc", evaluate_auc(model, validation_data))
-        mlflow.xgboost.log_model(model, "model")
+ """Retrain and log to MLflow."""
+ with mlflow.start_run(run_name=f"auto_retrain_{datetime.now().date()}"):
+ training_data = load_latest_training_data()
+ model = train_xgboost(training_data)
+ mlflow.log_metric("auc", evaluate_auc(model, validation_data))
+ mlflow.xgboost.log_model(model, "model")
 
 with DAG("ml_retraining_pipeline", schedule_interval="@daily") as dag:
-    check_drift = PythonOperator(
-        task_id="check_feature_drift",
-        python_callable=check_feature_drift
-    )
-    
-    retrain = PythonOperator(
-        task_id="retrain_model",
-        python_callable=retrain_model
-    )
-    
-    check_drift >> retrain
+ check_drift = PythonOperator(
+ task_id="check_feature_drift", python_callable=check_feature_drift
+ )
+ 
+ retrain = PythonOperator(
+ task_id="retrain_model", python_callable=retrain_model
+ )
+ 
+ check_drift >> retrain
 ```
 
 This pattern (drift-triggered retraining with MLflow experiment logging) creates a self-maintaining ML system that responds to data pipeline changes without manual intervention from the ML team.
 
----
+--
 
 ## The MLflow Model Registry and Production Deployment
 
@@ -293,7 +278,7 @@ For regulated industries, this controlled promotion process with full MLflow run
 
 MLflow's Model Registry also integrates with feature stores. When a model is registered, the registry can record which feature view and which point-in-time cutoff was used to generate training features. This integration is critical for detecting training-serving skew, if the feature engineering logic changes between training and serving, the model inputs no longer match what the model was trained on, often causing silent performance degradation without triggering obvious errors.
 
----
+--
 
 ## Experiment Tracking at Scale: Managing Model Development Velocity
 
@@ -316,21 +301,18 @@ import mlflow
 
 # Find all runs from the last 30 days that beat the baseline
 runs = mlflow.search_runs(
-    experiment_names=["customer-churn/gradient-boosting/v2-features"],
-    filter_string="metrics.val_auc > 0.89 AND tags.dataset_version = 'v2025-05'",
-    order_by=["metrics.val_auc DESC"],
-    max_results=50
+ experiment_names=["customer-churn/gradient-boosting/v2-features"], filter_string="metrics.val_auc > 0.89 AND tags.dataset_version = 'v2025-05'", order_by=["metrics.val_auc DESC"], max_results=50
 )
 
 # Compare against the current production model's metrics
 production_auc = 0.876
-candidates = runs[runs["metrics.val_auc"] > production_auc * 1.02]  # 2% improvement threshold
+candidates = runs[runs["metrics.val_auc"] > production_auc * 1.02] # 2% improvement threshold
 print(f"Found {len(candidates)} candidates exceeding the promotion threshold")
 ```
 
 This programmatic experiment comparison enables automated model evaluation pipelines that trigger promotion reviews when new training runs exceed the promotion threshold.
 
----
+--
 
 ## Conclusion
 
@@ -340,7 +322,7 @@ The practical work for data engineering teams is instrumenting pipelines to emit
 
 The most valuable operational improvement from integrated observability is faster root cause analysis for model degradations. Distinguishing data drift from model drift, correlating feature distribution changes with model performance drops, and tracing data quality issues back to specific pipeline runs: all of this is possible today with MLflow 3, Databricks Data Quality Monitoring, and OpenLineage. The tools exist and are stable enough for production use.
 
----
+--
 
 ### Build Observable ML Platforms
 

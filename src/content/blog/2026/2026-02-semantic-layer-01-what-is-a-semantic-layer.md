@@ -15,9 +15,10 @@ draft: false
 image: "/images/blog.png"
 canonical: "https://iceberglakehouse.com/posts/2026-02-sl-what-is-a-semantic-layer/"
 ---
-> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-02-sl-what-is-a-semantic-layer/).
 
 ![Semantic layer concept : translating raw data into business terms](/images/blog/semantic-layer/semantic-layer-concept.png)
+
+> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-02-sl-what-is-a-semantic-layer/).
 
 Ask three teams in your company how they calculate "revenue" and you'll get three answers. Sales counts bookings. Finance counts recognized revenue. Marketing counts pipeline value. All three call it "revenue." All three get different numbers. Nobody knows which one is right.
 
@@ -25,7 +26,7 @@ This is the problem a semantic layer solves.
 
 ## What a Semantic Layer Actually Is
 
-A semantic layer is a logical abstraction between your raw data and the people (or AI agents) querying it. It maps technical database objects :  tables, columns, join paths ,  to business-friendly terms like "Revenue," "Active Customer," or "Churn Rate."
+A semantic layer is a logical abstraction between your raw data and the people (or AI agents) querying it. It maps technical database objects : tables, columns, join paths, to business-friendly terms like "Revenue, " "Active Customer, " or "Churn Rate."
 
 It's not a database. It doesn't store data. It's a layer of definitions, calculations, and context that ensures every query against your data produces consistent results, regardless of which tool or person runs it.
 
@@ -38,7 +39,7 @@ The concept isn't new. Business Objects introduced "universes" in the 1990s : me
 A complete semantic layer includes six components:
 
 | Component | What It Does |
-|---|---|
+|--|--|
 | **Virtual datasets (Views)** | SQL-defined business logic applied once and reused everywhere |
 | **Metric definitions** | Canonical calculations for KPIs (e.g., MRR = SUM of active subscription revenue) |
 | **Documentation** | Human- and machine-readable descriptions of tables, columns, and relationships |
@@ -54,9 +55,9 @@ Here's what happens when someone queries data through a semantic layer:
 
 1. A user (or AI agent) asks: "What was revenue by region last quarter?"
 2. The semantic layer translates:
-   - "Revenue" → `SUM(orders.total) WHERE orders.status = 'completed'`
-   - "Region" → `customers.region`
-   - "Last quarter" → `WHERE order_date BETWEEN '2025-10-01' AND '2025-12-31'`
+ - "Revenue" → `SUM(orders.total) WHERE orders.status = 'completed'`
+ - "Region" → `customers.region`
+ - "Last quarter" → `WHERE order_date BETWEEN '2025-10-01' AND '2025-12-31'`
 3. The query engine generates optimized SQL against the underlying data sources
 4. Results are returned using business terms, not raw column names
 

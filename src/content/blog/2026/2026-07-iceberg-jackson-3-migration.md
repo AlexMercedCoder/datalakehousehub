@@ -1,6 +1,6 @@
 ---
 title: "The Jackson 3 Problem in Apache Iceberg, and What It Means for Your Code"
-description: "Jackson 3 changes everything: package names, unchecked exceptions, flipped defaults. Here's what breaks, why the engines are fine and your service isn't, and how to migrate safely."
+description: "Jackson 3 changes everything: package names, unchecked exceptions, flipped defaults. Here's what breaks, why the engines are fine and your service isn't."
 date: 2026-07-28T09:00:00Z
 author: "Alex Merced"
 category: "Apache Iceberg"
@@ -15,11 +15,11 @@ image: "/images/blog.png"
 canonical: "https://iceberglakehouse.com/posts/iceberg-jackson-3-migration/"
 ---
 
-> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/iceberg-jackson-3-migration/).
-
 # The Jackson 3 Problem in Apache Iceberg, and What It Means for Your Code
 
 A team upgrades to Spring Boot 4. The build breaks in a place nobody expected: a service that reads Iceberg table metadata through `iceberg-core`. Spring Boot 4 ships Jackson 3 as its default JSON library. Iceberg's core module is built against Jackson 2, and Jackson types appear in the signatures the service calls.
+
+> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/iceberg-jackson-3-migration/).
 
 Two Jackson versions on one classpath is not itself fatal, because Jackson 3 changed its Maven coordinates specifically so both can coexist. What breaks is the code sitting between them, which has to decide which Jackson a given object belongs to.
 
@@ -48,7 +48,7 @@ The stated motivation was that checked exceptions became an inconvenience once l
 Several defaults flipped, and these are the ones that change your output without changing your code.
 
 | Setting | Jackson 2 default | Jackson 3 default |
-|---|---|---|
+|--|--|--|
 | `WRITE_DATES_AS_TIMESTAMPS` | true | false |
 | `SORT_PROPERTIES_ALPHABETICALLY` | false | true |
 | `INTERN_FIELD_NAMES` | true | false |
@@ -144,7 +144,7 @@ Whatever the Iceberg community decides, your application's Jackson migration is 
 mvn dependency:tree | grep -i jackson
 
 # Gradle
-./gradlew dependencies --configuration runtimeClasspath | grep -i jackson
+./gradlew dependencies -configuration runtimeClasspath | grep -i jackson
 ```
 
 Check each library's changelog for explicit Jackson 3 support. Libraries that pull Jackson 2 transitively break silently under a version mismatch rather than failing at build time, which is the worst failure shape.
@@ -153,15 +153,15 @@ Check each library's changelog for explicit Jackson 3 support. Libraries that pu
 
 ```xml
 <dependencyManagement>
-  <dependencies>
-    <dependency>
-      <groupId>tools.jackson</groupId>
-      <artifactId>jackson-bom</artifactId>
-      <version>3.0.0</version>
-      <scope>import</scope>
-      <type>pom</type>
-    </dependency>
-  </dependencies>
+ <dependencies>
+ <dependency>
+ <groupId>tools.jackson</groupId>
+ <artifactId>jackson-bom</artifactId>
+ <version>3.0.0</version>
+ <scope>import</scope>
+ <type>pom</type>
+ </dependency>
+ </dependencies>
 </dependencyManagement>
 ```
 
@@ -176,20 +176,20 @@ The recipe handles the mechanical majority. It leaves TODO comments where no aut
 ```java
 // Jackson 2: this catch was required and worked
 try {
-    TableMetadata metadata = TableMetadataParser.fromJson(json);
-    return metadata;
-} catch (JsonProcessingException e) {          // checked, extends IOException
-    LOG.warn("malformed metadata", e);
-    return null;
+ TableMetadata metadata = TableMetadataParser.fromJson(json);
+ return metadata;
+} catch (JsonProcessingException e) { // checked, extends IOException
+ LOG.warn("malformed metadata", e);
+ return null;
 }
 
 // Jackson 3: compiles, catches nothing, exception escapes
 try {
-    TableMetadata metadata = TableMetadataParser.fromJson(json);
-    return metadata;
-} catch (JacksonException e) {                 // unchecked, extends RuntimeException
-    LOG.warn("malformed metadata", e);
-    return null;
+ TableMetadata metadata = TableMetadataParser.fromJson(json);
+ return metadata;
+} catch (JacksonException e) { // unchecked, extends RuntimeException
+ LOG.warn("malformed metadata", e);
+ return null;
 }
 ```
 
@@ -202,10 +202,10 @@ The second version is correct. The dangerous case is code that caught `IOExcepti
 ```java
 // Jackson 3
 JsonMapper mapper = JsonMapper.builder()
-    .enable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)
-    .disable(MapperFeature.SORT_PROPERTIES_ALPHABETICALLY)  // restore 2.x behavior
-    .enable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS) // restore 2.x behavior
-    .build();
+ .enable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)
+ .disable(MapperFeature.SORT_PROPERTIES_ALPHABETICALLY) // restore 2.x behavior
+ .enable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS) // restore 2.x behavior
+ .build();
 ```
 
 Those two explicit settings restore the Jackson 2 output shape. Include them if anything downstream depends on the old format, and remove them deliberately once you have confirmed nothing does.
@@ -270,14 +270,14 @@ The discipline that matters: when one fails, investigate before regenerating. A 
 ```java
 @Test
 void roundTripTableMetadataIsStable() throws Exception {
-    String original = Files.readString(
-        Path.of("src/test/resources/metadata/v3-table-with-dvs.json"));
+ String original = Files.readString(
+ Path.of("src/test/resources/metadata/v3-table-with-dvs.json"));
 
-    TableMetadata parsed = TableMetadataParser.fromJson(original);
-    String reserialized = TableMetadataParser.toJson(parsed);
+ TableMetadata parsed = TableMetadataParser.fromJson(original);
+ String reserialized = TableMetadataParser.toJson(parsed);
 
-    // Compare parsed trees, not raw strings: key order is not semantic
-    assertThat(normalize(reserialized)).isEqualTo(normalize(original));
+ // Compare parsed trees, not raw strings: key order is not semantic
+ assertThat(normalize(reserialized)).isEqualTo(normalize(original));
 }
 ```
 

@@ -14,11 +14,12 @@ draft: false
 image: "/images/blog/query-engine-optimization/10-concurrency-control-locking-vs-mvcc.png"
 canonical: "https://iceberglakehouse.com/posts/2026-04-29-query-engine-10/"
 ---
-> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-04-29-query-engine-10/).
 
-<!-- Meta Description: Databases handle concurrent access using locks, MVCC, or optimistic concurrency control. Here is how each approach works and what tradeoffs each creates. -->
-<!-- Primary Keyword: database concurrency control -->
-<!-- Secondary Keywords: MVCC database, isolation levels, optimistic concurrency control -->
+<!- Meta Description: Databases handle concurrent access using locks, MVCC, or optimistic concurrency control. Here is how each approach works and what tradeoffs each creates. ->
+<!- Primary Keyword: database concurrency control ->
+<!- Secondary Keywords: MVCC database, isolation levels, optimistic concurrency control ->
+
+> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-04-29-query-engine-10/).
 
 *Read the complete Query Engine Optimization series:*
 * [Part 1: How Query Engines Think: The Tradeoffs Behind Every Data System](/blog/2026-04-29-query-engine-optimization-01-overview)
@@ -84,7 +85,7 @@ PostgreSQL, Oracle, MySQL/InnoDB, SQL Server, CockroachDB, DuckDB, Snowflake, an
 The SQL standard defines four isolation levels that control what anomalies a transaction can observe:
 
 | Level | Prevents | Allows | Performance |
-|---|---|---|---|
+|--|--|--|--|
 | **Read Uncommitted** | Nothing | Dirty reads, non-repeatable reads, phantoms | Fastest |
 | **Read Committed** | Dirty reads | Non-repeatable reads, phantoms | Fast |
 | **Repeatable Read** | Dirty reads, non-repeatable reads | Phantoms (in some systems) | Moderate |
@@ -125,7 +126,7 @@ This model is why lakehouse engines like Dremio, Spark, and Trino can run long a
 ## Where Real Systems Land
 
 | System | Primary Mechanism | Default Isolation | Write Conflicts | Garbage Collection |
-|---|---|---|---|---|
+|--|--|--|--|--|
 | PostgreSQL | MVCC (heap-stored versions) | Read Committed | Row-level locking | VACUUM (autovacuum) |
 | MySQL/InnoDB | MVCC (undo log) + row locks | Repeatable Read | Row-level locking | Purge thread |
 | Oracle | MVCC (undo tablespace) | Read Committed | Row-level locking | Automatic undo management |

@@ -1,7 +1,7 @@
 ---
 title: "What is Partitioning?"
 meta_title: "What is Partitioning? | Expert Data Lakehouse & AI Glossary"
-description: "A database optimization and management strategy breaking extensive tables into smaller easily managed file components. Learn the architecture, mechanics, and real-world value of Partitioning in the modern data stack."
+description: "A database optimization and management strategy breaking extensive tables into smaller easily managed file components."
 ---
 
 ## What is Partitioning?

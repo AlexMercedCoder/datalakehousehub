@@ -1,6 +1,6 @@
 ---
 title: "Every AI Model Family That Matters in Mid-2026"
-description: "A full survey of the AI model landscape in mid-2026: frontier families, open-weight labs, local inference, specialists, and how to build a routing layer instead of a dependency."
+description: "A full survey of the AI model landscape in mid-2026: frontier families, open-weight labs, local inference, specialists, and how to build a routing layer."
 date: 2026-07-25T09:00:00Z
 author: "Alex Merced"
 category: "AI & Agents"
@@ -14,7 +14,6 @@ slug: "ai-model-families-2026"
 draft: false
 image: "/images/blog.png"
 ---
-
 A team I talked with recently had hardcoded one model name into forty places in their codebase. The model was deprecated with sixty days notice. They spent three weeks on a migration that produced no new features, and then the replacement model's pricing changed the economics of their cheapest feature. Nobody made a bad decision. They just treated a model as a permanent dependency in a market where the average flagship stays flagship for about ten weeks.
 
 Picking an AI model in 2026 is a routing problem, not a purchasing decision. There is no single best model, and the labs stopped pretending otherwise. What exists is a field of roughly a dozen serious families, each with a capability tier, a license, a price curve, a jurisdiction, and a set of tasks where it genuinely leads. Building against that field means knowing what is in it.
@@ -164,7 +163,7 @@ On phones and laptops, on-device inference has quietly become normal. Apple expo
 ## The Field on One Page
 
 | Family | Builder | Current generation | Weights | Where it leads |
-|---|---|---|---|---|
+|--|--|--|--|--|
 | GPT-5 | OpenAI | 5.6 Sol, Terra, Luna (July 9, 2026) | Closed, plus gpt-oss open tier | Breadth of product surface, coding agents, release cadence |
 | Claude | Anthropic | Opus 5, Sonnet 5, Haiku 4.5, Opus 4.8, Fable 5 and Mythos 5 above them | Closed | Coding, long agentic chains, writing quality |
 | Gemini | Google DeepMind | 3.1 Pro, 3 Deep Think, 3.6 Flash (July 21, 2026) | Closed, plus Gemma 4 open | Long multimodal context, price and efficiency at the Flash tier |
@@ -211,40 +210,35 @@ from typing import Callable
 
 @dataclass(frozen=True)
 class ModelSpec:
-    name: str            # provider model identifier, read from config
-    tier: str            # "frontier" | "balanced" | "efficient" | "local"
-    input_cost: float    # dollars per million input tokens
-    output_cost: float   # dollars per million output tokens
-    context: int         # advertised context window in tokens
-    call: Callable       # provider-specific invocation function
+ name: str # provider model identifier, read from config
+ tier: str # "frontier" | "balanced" | "efficient" | "local"
+ input_cost: float # dollars per million input tokens
+ output_cost: float # dollars per million output tokens
+ context: int # advertised context window in tokens
+ call: Callable # provider-specific invocation function
 
 ROUTES = {
-    "code_review":   ["frontier", "balanced"],
-    "summarize":     ["efficient", "local"],
-    "classify":      ["local", "efficient"],
-    "long_document": ["balanced"],
-    "agentic_task":  ["frontier", "balanced"],
-}
+ "code_review": ["frontier", "balanced"], "summarize": ["efficient", "local"], "classify": ["local", "efficient"], "long_document": ["balanced"], "agentic_task": ["frontier", "balanced"], }
 
 def route(task: str, prompt_tokens: int, registry: dict[str, list[ModelSpec]]):
-    for tier in ROUTES[task]:
-        for spec in registry[tier]:
-            if prompt_tokens < spec.context * 0.7:
-                yield spec
+ for tier in ROUTES[task]:
+ for spec in registry[tier]:
+ if prompt_tokens < spec.context * 0.7:
+ yield spec
 
 def invoke(task, prompt, registry, budget_usd=0.05):
-    tokens = estimate_tokens(prompt)
-    last_error = None
-    for spec in route(task, tokens, registry):
-        projected = (tokens / 1_000_000) * spec.input_cost
-        if projected > budget_usd:
-            continue
-        try:
-            return spec.call(prompt), spec.name
-        except (RateLimitError, ModelUnavailableError, TimeoutError) as e:
-            last_error = e
-            continue
-    raise NoViableModelError(last_error)
+ tokens = estimate_tokens(prompt)
+ last_error = None
+ for spec in route(task, tokens, registry):
+ projected = (tokens / 1_000_000) * spec.input_cost
+ if projected > budget_usd:
+ continue
+ try:
+ return spec.call(prompt), spec.name
+ except (RateLimitError, ModelUnavailableError, TimeoutError) as e:
+ last_error = e
+ continue
+ raise NoViableModelError(last_error)
 ```
 
 Five design decisions in that sketch carry the weight.

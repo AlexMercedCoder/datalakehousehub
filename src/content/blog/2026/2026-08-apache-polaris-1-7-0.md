@@ -16,11 +16,11 @@ image: "/images/blog.png"
 canonical: "https://iceberglakehouse.com/posts/apache-polaris-1-7-0/"
 ---
 
-> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/apache-polaris-1-7-0/).
-
 # Apache Polaris 1.7.0 and the Quiet Work of Making a Catalog Trustworthy
 
 A Spark job commits a table update. The catalog writes the change to Postgres. Then the network drops between the catalog and the client, and the client never sees the response. The client does the sensible thing and retries. This time the catalog sees that the table has already moved past the base snapshot in the request, so it returns 409 Conflict. The client reads that 409 as a failed commit and deletes the metadata files it just wrote. The commit is now recorded in the catalog, and the files it points at are gone.
+
+> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/apache-polaris-1-7-0/).
 
 That is data loss. It comes from a network blip, not from a bug in anyone's query engine.
 
@@ -45,7 +45,7 @@ Because the catalog owns the pointer swap, catalog bugs have a nasty property. T
 Here is the shape of what changed, before the details.
 
 | Area | What 1.7.0 adds | Who feels it |
-|---|---|---|
+|--|--|--|
 | Write idempotency | Retry-safe `createTable` and `updateTable`, advertised through the config endpoint | Anyone running writers over flaky networks |
 | Semantic models | Beta OSI semantic-model API scaffolding, plus a catalog config endpoint registry | Platform teams and BI/AI tooling authors |
 | Storage security | GCS Workload Identity attribution, prefix boundary fix, re-validation of allowed locations | Anyone using credential vending |
@@ -74,16 +74,13 @@ A response now carries something in this shape:
 
 ```json
 {
-  "defaults": {
-    "clients": "4"
-  },
-  "overrides": {
-    "idempotency-key-lifetime": "PT30M"
-  },
-  "endpoints": [
-    "GET /v1/{prefix}/namespaces/{namespace}/tables/{table}",
-    "POST /v1/{prefix}/namespaces/{namespace}/tables/{table}"
-  ]
+ "defaults": {
+ "clients": "4"
+ }, "overrides": {
+ "idempotency-key-lifetime": "PT30M"
+ }, "endpoints": [
+ "GET /v1/{prefix}/namespaces/{namespace}/tables/{table}", "POST /v1/{prefix}/namespaces/{namespace}/tables/{table}"
+ ]
 }
 ```
 
@@ -223,7 +220,7 @@ The JDBC persistence layer, which for most people means Postgres, got a focused 
 
 Every one of these is the same mistake in a different place. The code needed one small fact, a version number or a yes/no answer, and asked the database for entire rows to get it. On a catalog with a few thousand entities nobody notices. On a catalog with hundreds of thousands, resolving principal roles on every single request while reading full rows is how a p99 latency graph develops a shelf.
 
-`hasChildren` is the clearest example. The question is "does this namespace contain anything," and the answer is yes the moment one row exists. Without a `LIMIT`, the database happily returns all of them, and the cost of asking scales with the size of the namespace instead of staying constant.
+`hasChildren` is the clearest example. The question is "does this namespace contain anything, " and the answer is yes the moment one row exists. Without a `LIMIT`, the database happily returns all of them, and the cost of asking scales with the size of the namespace instead of staying constant.
 
 One more in the same family: [#5027](https://github.com/apache/polaris/pull/5027) made `TreeMapMetaStore` range reads return copies. Returning live references from an in-memory store lets a caller mutate state it does not own, and the resulting bugs are the kind that reproduce once a month in production and never in a test.
 
@@ -256,7 +253,7 @@ Operationally useful odds and ends:
 - [#4996](https://github.com/apache/polaris/pull/4996) made admin tool bootstrap idempotent for already-bootstrapped realms, so rerunning bootstrap in automation stops being dangerous.
 - [#5044](https://github.com/apache/polaris/pull/5044) removed the schema version option from the admin bootstrap command.
 - [#4772](https://github.com/apache/polaris/pull/4772) and [#4770](https://github.com/apache/polaris/pull/4770) fixed credential exposure in Python CLI debug logs and hardened profile secret handling and config storage.
-- [#4936](https://github.com/apache/polaris/pull/4936) added `--catalog-url` for custom Iceberg REST base URIs, and [#5043](https://github.com/apache/polaris/pull/5043) added non-HTTP scheme support to the CLI.
+- [#4936](https://github.com/apache/polaris/pull/4936) added `-catalog-url` for custom Iceberg REST base URIs, and [#5043](https://github.com/apache/polaris/pull/5043) added non-HTTP scheme support to the CLI.
 - [#4849](https://github.com/apache/polaris/pull/4849) added a Trino guide, contributed by a first-time contributor.
 
 That Python CLI credential fix deserves emphasis. Secrets in debug logs are how credentials end up in log aggregation systems with different retention and access rules than your secret store. If anyone on your team has ever run the Polaris CLI with debug logging on, rotate those credentials.
@@ -271,15 +268,15 @@ Here is the order I recommend, with the reasoning attached rather than left impl
 
 ```bash
 # List every catalog and its configured base location
-polaris catalogs list --output json \
-  | jq -r '.[] | [.name, .properties["default-base-location"]] | @tsv'
+polaris catalogs list -output json \
+ | jq -r '.[] | [.name, .properties["default-base-location"]] | @tsv'
 
 # For one catalog, list tables and their metadata locations
-polaris tables list --catalog analytics --output json \
-  | jq -r '.[] | [.name, .metadataLocation] | @tsv'
+polaris tables list -catalog analytics -output json \
+ | jq -r '.[] | [.name, .metadataLocation] | @tsv'
 ```
 
-What you are looking for is any metadata location that sits outside the catalog's configured base location and outside the storage config's allowed locations. Those are the entries that start failing on update or registration. The `--catalog-url` flag added in 1.7.0 helps here if your Polaris sits behind a path-rewriting proxy.
+What you are looking for is any metadata location that sits outside the catalog's configured base location and outside the storage config's allowed locations. Those are the entries that start failing on update or registration. The `-catalog-url` flag added in 1.7.0 helps here if your Polaris sits behind a path-rewriting proxy.
 
 If you find violations, decide deliberately. Either widen the allowed locations to legitimately include those paths, or move the tables. Do not upgrade first and discover it through a failed production write.
 
@@ -294,9 +291,9 @@ The 1.7.0 artifacts are signed and checksummed like every Apache release. Verify
 
 ```bash
 curl https://downloads.apache.org/polaris/KEYS -o KEYS
-gpg --import KEYS
-gpg --verify apache-polaris-1.7.0.tar.gz.asc
-shasum -a 512 --check apache-polaris-1.7.0.tar.gz.sha512
+gpg -import KEYS
+gpg -verify apache-polaris-1.7.0.tar.gz.asc
+shasum -a 512 -check apache-polaris-1.7.0.tar.gz.sha512
 ```
 
 ### Step 3: bootstrap safely
@@ -304,9 +301,9 @@ shasum -a 512 --check apache-polaris-1.7.0.tar.gz.sha512
 Admin bootstrap is now idempotent for already-bootstrapped realms, which makes it safe to leave in a deployment pipeline. Note that the schema version option was removed from the bootstrap command, so pipelines that pass it need editing.
 
 ```bash
-docker run --rm apache/polaris-admin:1.7.0 bootstrap \
-  --realm my-realm \
-  --credential my-realm,root,secret
+docker run -rm apache/polaris-admin:1.7.0 bootstrap \
+ -realm my-realm \
+ -credential my-realm, root, secret
 ```
 
 ### Step 4: configure the pieces you want
@@ -315,35 +312,35 @@ A Helm values file covering the areas this release touched looks roughly like th
 
 ```yaml
 image:
-  tag: "1.7.0"
+ tag: "1.7.0"
 
 # Persistence. Postgres is the common choice for production.
 persistence:
-  type: relational-jdbc
+ type: relational-jdbc
 
 # Event listeners. Multiple listeners run side by side.
 # The OpenTelemetry and Kafka destinations are new in 1.7.0.
 polarisServerConfig:
-  polaris:
-    event-listener:
-      types: "opentelemetry,kafka"
+ polaris:
+ event-listener:
+ types: "opentelemetry, kafka"
 
 # HTTP latency histograms rather than averages.
-    metrics:
-      http:
-        histogram-buckets: "50ms,100ms,250ms,500ms,1s,2s,5s"
+ metrics:
+ http:
+ histogram-buckets: "50ms, 100ms, 250ms, 500ms, 1s, 2s, 5s"
 
 # Delegate authorization decisions to Open Policy Agent.
 # The realm identifier is now part of the input document.
-    authorization:
-      type: opa
-      opa:
-        base-uri: "http://opa.data-platform.svc:8181"
+ authorization:
+ type: opa
+ opa:
+ base-uri: "http://opa.data-platform.svc:8181"
 
 # Async cleanup task sizing. A non-positive batch size
 # no longer loops forever, but set a sane value anyway.
-    tasks:
-      metadata-cleanup-batch-size: 100
+ tasks:
+ metadata-cleanup-batch-size: 100
 ```
 
 The event listener line is the one people get wrong. `types` takes a comma-separated list, and support for multiple simultaneous listeners arrived in an earlier release, so adding OpenTelemetry alongside an existing listener does not displace it.
@@ -354,8 +351,8 @@ After the rollout, ask the catalog what it thinks it supports. This is the same 
 
 ```bash
 curl -s -H "Authorization: Bearer $TOKEN" \
-  "https://polaris.example.com/api/catalog/v1/config?warehouse=analytics" \
-  | jq
+ "https://polaris.example.com/api/catalog/v1/config?warehouse=analytics" \
+ | jq
 ```
 
 Look for the idempotency key lifetime in the returned properties. If it is absent, either the feature is not enabled in your configuration or you are not running what you think you are running. Checking the advertised capability beats checking the deployed tag, because the advertisement is what clients act on.
@@ -413,6 +410,5 @@ The unglamorous truth about catalogs is that the best possible outcome is that n
 
 If this piece was useful, I have written a lot more on catalogs and lakehouse architecture.
 *Apache Polaris: The Definitive Guide*, which I co-authored for O'Reilly, covers the access control model, credential vending, and federation in the depth a release note cannot.
-You can find every book I have written, across lakehouse architecture,
-Apache Iceberg, Apache Polaris, and AI, at
+You can find every book I have written, across lakehouse architecture, Apache Iceberg, Apache Polaris, and AI, at
 [books.alexmerced.com](https://books.alexmerced.com).

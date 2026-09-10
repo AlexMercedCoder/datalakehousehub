@@ -1,6 +1,6 @@
 ---
 title: "Anatomy of an Agentic Lakehouse"
-description: "The four-layer architecture of the agentic lakehouse: object storage, Apache Iceberg table format, Apache Polaris catalog, and the semantic/agent layer. How each layer provides guarantees for AI agent access."
+description: "The four-layer architecture of the agentic lakehouse: object storage, Apache Iceberg table format, Apache Polaris catalog, and the semantic/agent layer."
 date: 2026-06-08T09:00:00Z
 slug: "anatomy-agentic-lakehouse-four-layers"
 draft: false
@@ -15,8 +15,7 @@ tags:
   - "Iceberg table format"
   - "AI semantic layer"
 ---
-
-The term "agentic lakehouse" gets thrown around a lot in 2026. Most references describe it as a data platform that AI agents can query. That description is technically true and practically useless. A chatbot wired directly to Parquet files on S3 can "query data," but it will produce wrong answers, bypass security controls, and degrade under load.
+The term "agentic lakehouse" gets thrown around a lot in 2026. Most references describe it as a data platform that AI agents can query. That description is technically true and practically useless. A chatbot wired directly to Parquet files on S3 can "query data, " but it will produce wrong answers, bypass security controls, and degrade under load.
 
 The agentic lakehouse is a four-layer architecture where each layer provides a specific guarantee that makes AI agent access reliable, auditable, and performant. The layers are object storage, the Iceberg table format, the catalog (Apache Polaris or compatible), and the semantic/agent interface layer. Decisions made at each layer propagate upward and constrain what agents can safely do.
 
@@ -30,7 +29,7 @@ The choice of storage class matters more for agent workloads than for batch ETL.
 
 Namespace layout is another architectural decision with long tail effects. Organize storage paths by business domain, not by tool or team. A path like `s3://data/finance/revenue/` is stable across catalog migrations and engine swaps. A path like `s3://data/alexmerced-iceberg-test/` is not. Agent catalogs register namespace paths once and expect them to persist.
 
-The storage layer also hosts the Iceberg metadata tree. This tree is not an index or a cache. It is the authoritative record of every valid snapshot, every data file, and every column statistic. When an agent asks "what data exists for this date range and product category," the answer comes from pruning the metadata tree, not from scanning data files. The storage layer must provide consistent read-after-write for metadata files. S3's strong consistency (announced in 2020 and generally available since 2021) meets this requirement. ADLS's hierarchical namespace guarantees it natively. GCS's strong consistency covers it.
+The storage layer also hosts the Iceberg metadata tree. This tree is not an index or a cache. It is the authoritative record of every valid snapshot, every data file, and every column statistic. When an agent asks "what data exists for this date range and product category, " the answer comes from pruning the metadata tree, not from scanning data files. The storage layer must provide consistent read-after-write for metadata files. S3's strong consistency (announced in 2020 and generally available since 2021) meets this requirement. ADLS's hierarchical namespace guarantees it natively. GCS's strong consistency covers it.
 
 IAM at the storage layer should be minimal. Give broad storage access only to the catalog service. Engines and agents receive short-lived, table-scoped credentials via credential vending. This is the zero-trust storage model: no agent directly touches S3. Every read goes through the catalog, the engine, and the semantic layer.
 
@@ -136,7 +135,7 @@ If any layer were missing, the system would degrade. Without the catalog, the ag
 
 **Semantic layer.** Create semantic views for every gold-layer table. Include metric definitions, dimension hierarchies, and business rules in the semantic model. Test each semantic view by asking an agent to produce a known-correct answer and verifying the output.
 
-**Agent interface.** Deploy an MCP server that exposes semantic views as tools. Use OAuth 2.0 for authentication. Log every tool call. Set query timeout limits (30 seconds for interactive agents, 5 minutes for analytical agents). Set result size limits (10,000 rows default, configurable).
+**Agent interface.** Deploy an MCP server that exposes semantic views as tools. Use OAuth 2.0 for authentication. Log every tool call. Set query timeout limits (30 seconds for interactive agents, 5 minutes for analytical agents). Set result size limits (10, 000 rows default, configurable).
 
 ## Why Four Layers Instead of Three or Five
 

@@ -14,13 +14,14 @@ draft: false
 image: "/images/blog.png"
 canonical: "https://iceberglakehouse.com/posts/2024-10-all-about-parquet-part-06/"
 ---
+
+In the last blog, we explored the various compression techniques supported by Parquet to reduce file size and improve query performance. But compression alone isn’t enough to maximize storage efficiency. Parquet also utilizes **encoding techniques** to further optimize how data is stored, especially for columns with repetitive or predictable patterns. In this post, we’ll dive into how encoding works in Parquet, the different types of encoding it supports, and how to use them to reduce storage footprint while maintaining performance.
+
 > **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2024-10-all-about-parquet-part-06/).
 
 - [Free Copy of Apache Iceberg the Definitive Guide](https://hello.dremio.com/wp-apache-iceberg-the-definitive-guide-reg.html?utm_source=alexmerced&utm_medium=external_blog&utm_campaign=allaboutparquet)
 - [Free Apache Iceberg Crash Course](https://hello.dremio.com/webcast-an-apache-iceberg-lakehouse-crash-course-reg.html?utm_source=alexmerced&utm_medium=external_blog&utm_campaign=allaboutparquet)
 - [Iceberg Lakehouse Engineering Video Playlist](https://www.youtube.com/watch?v=SIriNcVIGJQ&list=PLsLAVBjQJO0p0Yq1fLkoHvt2lEJj5pcYe)
-
-In the last blog, we explored the various compression techniques supported by Parquet to reduce file size and improve query performance. But compression alone isn’t enough to maximize storage efficiency. Parquet also utilizes **encoding techniques** to further optimize how data is stored, especially for columns with repetitive or predictable patterns. In this post, we’ll dive into how encoding works in Parquet, the different types of encoding it supports, and how to use them to reduce storage footprint while maintaining performance.
 
 ## What is Encoding in Parquet?
 
@@ -36,8 +37,8 @@ Parquet supports several encoding techniques, each designed for specific types o
 
 **Dictionary encoding** is one of the most effective techniques for columns that contain repeated values. It works by creating a dictionary of unique values and then replacing each value in the column with a reference to the dictionary. This significantly reduces the amount of data stored, especially for categorical data.
 
-- **How It Works**: For a column that contains many repeated values (e.g., a "Department" column with repeated entries like "Sales," "Marketing," etc.), Parquet creates a dictionary of these unique values. Each value in the original column is then replaced with a small integer that refers to its position in the dictionary. The dictionary itself is stored once per column, making it very efficient.
-  
+- **How It Works**: For a column that contains many repeated values (e.g., a "Department" column with repeated entries like "Sales, " "Marketing, " etc.), Parquet creates a dictionary of these unique values. Each value in the original column is then replaced with a small integer that refers to its position in the dictionary. The dictionary itself is stored once per column, making it very efficient.
+ 
 - **Use Case**: Dictionary encoding is highly effective for columns with a limited number of unique values (e.g., categorical data, zip codes, or status flags).
 
 - **Pros**: Reduces storage size significantly for columns with repeated values, especially when paired with compression algorithms like Gzip or Brotli.
@@ -48,7 +49,7 @@ Parquet supports several encoding techniques, each designed for specific types o
 **Run-Length Encoding (RLE)** is another powerful technique for compressing columns with consecutive repeating values. It works by storing the value once along with the number of times it repeats, instead of storing the repeated value multiple times.
 
 - **How It Works**: If a column contains long sequences of the same value (e.g., a "Status" column where many consecutive rows have the status "Active"), RLE stores the value once and records the number of times it repeats, rather than writing the value for each row. For example, instead of storing "Active" 100 times, RLE stores "Active: 100".
-  
+ 
 - **Use Case**: RLE is ideal for columns with consecutive repeated values, such as status flags, binary values, or sorted columns.
 
 - **Pros**: Very effective at reducing file size for columns with repeated or sorted data.
@@ -70,7 +71,7 @@ Parquet supports several encoding techniques, each designed for specific types o
 **Delta encoding** is used to store differences between consecutive values rather than storing the full values themselves. This works well for columns where values are close together or follow a predictable pattern, such as timestamps, IDs, or monotonically increasing numbers.
 
 - **How It Works**: Instead of storing the full value for each row, delta encoding stores the difference between each consecutive value and the previous one. For example, if a timestamp column contains values like 10, 12, 14, 16, delta encoding would store 10, 2, 2, 2, where each subsequent value is the difference from the previous one.
-  
+ 
 - **Use Case**: Delta encoding is effective for columns with ordered or predictable data patterns, such as timestamps, sequence numbers, or sorted columns.
 
 - **Pros**: Greatly reduces file size for columns with predictable patterns or ordered values.
@@ -81,7 +82,7 @@ Parquet supports several encoding techniques, each designed for specific types o
 **Plain encoding** is the default encoding method in Parquet and is used for columns where no other encoding is more effective. It simply stores the values as they are, without any additional compression or optimization.
 
 - **How It Works**: For columns where values vary greatly or where no pattern is detectable, plain encoding stores the values as-is. This encoding method is often used for strings, floating-point numbers, and other complex data types that do not benefit from the other encoding techniques.
-  
+ 
 - **Use Case**: Plain encoding is used for columns where no significant reduction in size can be achieved through other encoding methods.
 
 - **Pros**: Simple and effective when no patterns or repetition exist in the data.

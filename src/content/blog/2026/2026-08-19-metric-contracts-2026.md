@@ -14,9 +14,10 @@ tags:
 slug: "metric-contracts-2026"
 draft: false
 ---
-> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/metric-contracts-2026/).
 
 For twenty years, the cost of an ambiguous metric was a meeting. Two dashboards disagreed, two teams defended their numbers, someone scheduled the reconciliation call, and the organization paid in hours and mild embarrassment. In 2026 the cost structure changed, because the consumers changed: business logic is now executed by agents, dozens of them, built on different frameworks, answering thousands of questions a day, each one an opportunity to re-derive "revenue" slightly differently at machine speed for an audience that cannot check the work. The ambiguous metric stopped being a meeting and became a defect generator, and the artifact that fixes it has a name worth taking seriously: the metric contract.
+
+> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/metric-contracts-2026/).
 
 A metric contract is to business logic what a schema contract is to data and an API contract is to services: a versioned, owned, testable declaration of exactly what a business measure means, complete enough that any consumer, human, dashboard, or agent on any framework, computes it identically or does not compute it at all. The concept is not new, semantic layers have carried metric definitions for years, and 2026 is the year it hardened into a discipline, driven by the multi-agent estates that made informal definitions untenable and enabled by the interchange standards that made formal ones portable.
 
@@ -66,33 +67,33 @@ version: 3.2.0
 status: active
 owner: finance-data
 description: >
-  Revenue recognized under the company's revenue recognition
-  policy, net of refunds and credits. Use for financial
-  reporting questions. Not bookings, not billings, not GMV:
-  those are separate metrics with their own contracts.
+ Revenue recognized under the company's revenue recognition
+ policy, net of refunds and credits. Use for financial
+ reporting questions. Not bookings, not billings, not GMV:
+ those are separate metrics with their own contracts.
 measure:
-  aggregation: sum
-  field: recognized_amount
-  entity: finance.revenue_facts
+ aggregation: sum
+ field: recognized_amount
+ entity: finance.revenue_facts
 grain: revenue_event
 dimensions:
-  allowed: [region, product_line, segment, recognition_month]
+ allowed: [region, product_line, segment, recognition_month]
 filters:
-  - exclude: is_test_account
-  - exclude: is_internal_transfer
-  - net_of: [refunds, credits]
+ - exclude: is_test_account
+ - exclude: is_internal_transfer
+ - net_of: [refunds, credits]
 time:
-  calendar: fiscal_4_4_5
-  timezone: America/New_York
-  accumulation: additive
-  partial_period: labeled_incomplete
+ calendar: fiscal_4_4_5
+ timezone: America/New_York
+ accumulation: additive
+ partial_period: labeled_incomplete
 lineage:
-  upstream: [billing.invoices, finance.rev_rec_schedule]
+ upstream: [billing.invoices, finance.rev_rec_schedule]
 governance:
-  classification: financial_reporting
-  consumer_tiers: [internal_bi, governed_agents]
-  approved_by: metrics-council/2026-05-14
-  supersedes: 3.1.2
+ classification: financial_reporting
+ consumer_tiers: [internal_bi, governed_agents]
+ approved_by: metrics-council/2026-05-14
+ supersedes: 3.1.2
 ```
 
 Two design notes on the artifact. The contract declares, and the semantic layer's compiler implements: the YAML is the negotiated truth, the compiled SQL per platform is derived from it, and the direction never reverses, because a contract reverse-engineered from an implementation inherits the implementation's accidents. And the near-neighbor disambiguation in the description, naming what this metric is not, is there for the machine consumers: agent selection errors concentrate among sibling metrics, and the contracts that name their siblings measurably select better, which makes the paragraph a functional component, not documentation courtesy.

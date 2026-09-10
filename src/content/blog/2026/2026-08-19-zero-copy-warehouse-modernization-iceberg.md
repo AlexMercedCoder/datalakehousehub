@@ -1,7 +1,7 @@
 ---
 title: "Zero-Copy Warehouse Modernization: Moving to Apache Iceberg Without Downtime"
 date: 2026-08-19T09:00:00Z
-description: "A practical guide to modernizing a data warehouse to Apache Iceberg without downtime, using federation first, then redirecting new data, then materializing what earns a migration."
+description: "A practical guide to modernizing a data warehouse to Apache Iceberg without downtime, using federation first, then redirecting new data, then."
 author: "Alex Merced"
 category: "Apache Iceberg"
 image: "/images/blog.png"
@@ -14,9 +14,10 @@ tags:
 slug: "zero-copy-warehouse-modernization-iceberg"
 draft: false
 ---
-> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/zero-copy-warehouse-modernization-iceberg/).
 
 Warehouse migrations have a reputation, and the reputation is earned. The classic project copies everything: export the tables, rebuild the schemas, port the pipelines, recreate the reports, run both systems in parallel until trust transfers, then cut over. Industry analyses of these projects find the same pattern year after year: significant delays in a large share of them, parallel-run periods that stretch from months into years, and organizations paying two full infrastructure bills long past the date the business case promised one. The migration becomes a residency.
+
+> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/zero-copy-warehouse-modernization-iceberg/).
 
 The failure is not in the destination. Open lakehouse architectures on Apache Iceberg deliver what they promise. The failure is in the verb. Copying an estate means recreating every dependency the estate accumulated over a decade, all at once, under a project deadline, while the business keeps changing the source. There is a different verb available now, and this article is about it: connect first, copy last, and only copy what earns it.
 
@@ -91,7 +92,7 @@ With the inflow redirected and the dependency map accumulating, history moves, a
 The disposition framework deserves writing down formally, because it is the artifact that keeps the program governed. Every table in the legacy estate gets exactly one disposition, recorded with an owner and a review date:
 
 | Disposition | Criteria | Destination |
-|---|---|---|
+|--|--|--|
 | Migrate hot | Frequent queries, expensive workloads, active writers | Native Iceberg, prioritized |
 | Migrate warm | Regular but modest use | Native Iceberg, scheduled |
 | Federate indefinitely | Rare queries, no performance pressure | Served in place through federation |
@@ -117,13 +118,13 @@ The CDC apply job is the workhorse of this phase, so here is its core shape, the
 ```sql
 MERGE INTO lake.core.customers t
 USING (
-    SELECT * EXCLUDE (rn) FROM (
-        SELECT *, row_number() OVER (
-            PARTITION BY customer_id
-            ORDER BY source_commit_ts DESC, source_lsn DESC
-        ) AS rn
-        FROM staged_cdc_batch
-    ) WHERE rn = 1
+ SELECT * EXCLUDE (rn) FROM (
+ SELECT *, row_number() OVER (
+ PARTITION BY customer_id
+ ORDER BY source_commit_ts DESC, source_lsn DESC
+ ) AS rn
+ FROM staged_cdc_batch
+ ) WHERE rn = 1
 ) s
 ON t.customer_id = s.customer_id
 WHEN MATCHED AND s.op = 'D' THEN DELETE
@@ -139,7 +140,7 @@ The final phase is where the classic project concentrates its risk and this patt
 
 Read cutover moves consumers from legacy surfaces to the modern platform workload by workload, and the semantic layer does the heavy lifting: dashboards repoint to governed models whose numbers have been reconciling against legacy outputs for weeks, analysts move when their working tables are native and faster, and the federation layer keeps every unmigrated dependency reachable throughout, so no consumer ever faces a gap. Trust transfers the only way it ever does, through accumulated correct answers, and the accumulation runs at each consumer's pace inside a project timeline instead of against it.
 
-The BI estate gets its own sub-plan inside read cutover, because dashboards are where the trust cliff historically lived. The sequence that works: inventory the reports from the legacy side's query logs, rank by audience and refresh cost, and move them in cohorts, each cohort running a reconciliation period where the semantic layer's numbers publish alongside the legacy numbers before the switch. The logic buried in legacy views and stored procedures gets ported once into the semantic layer during this phase, reviewed by the metric's owner, with the legacy definition retired rather than left as a shadow source of truth. Report consumers experience the move as an address change with receipts attached, and the loudest historical objection to warehouse migrations, "the numbers changed," gets answered before it is raised, with a published ledger of the numbers not changing.
+The BI estate gets its own sub-plan inside read cutover, because dashboards are where the trust cliff historically lived. The sequence that works: inventory the reports from the legacy side's query logs, rank by audience and refresh cost, and move them in cohorts, each cohort running a reconciliation period where the semantic layer's numbers publish alongside the legacy numbers before the switch. The logic buried in legacy views and stored procedures gets ported once into the semantic layer during this phase, reviewed by the metric's owner, with the legacy definition retired rather than left as a shadow source of truth. Report consumers experience the move as an address change with receipts attached, and the loudest historical objection to warehouse migrations, "the numbers changed, " gets answered before it is raised, with a published ledger of the numbers not changing.
 
 Writer cutover is the sharper moment per table, and CDC synchronization makes it small: the source writer pauses or drains, the apply job confirms lag at zero, writes redirect to the Iceberg table, and downstream consumers of the legacy copy, if any remain, flip to reading Iceberg externally. Minutes per table, rehearsed on unimportant tables first, with rollback being the mirror procedure while the window stays open. The tables cut over in dependency order, leaves first, and the estate crosses the halfway point without any single day feeling different from the day before.
 
@@ -155,25 +156,19 @@ The reconciliation queries themselves run cheaply through the same federation th
 
 ```sql
 SELECT
-    COALESCE(l.order_month, w.order_month) AS order_month,
-    l.row_ct AS lake_rows,
-    w.row_ct AS wh_rows,
-    l.total_amount AS lake_amount,
-    w.total_amount AS wh_amount
+ COALESCE(l.order_month, w.order_month) AS order_month, l.row_ct AS lake_rows, w.row_ct AS wh_rows, l.total_amount AS lake_amount, w.total_amount AS wh_amount
 FROM (
-    SELECT DATE_TRUNC('month', order_ts) AS order_month,
-           COUNT(*) AS row_ct, SUM(amount) AS total_amount
-    FROM lake.sales.orders
-    GROUP BY 1
+ SELECT DATE_TRUNC('month', order_ts) AS order_month, COUNT(*) AS row_ct, SUM(amount) AS total_amount
+ FROM lake.sales.orders
+ GROUP BY 1
 ) l
 FULL OUTER JOIN (
-    SELECT DATE_TRUNC('month', order_ts) AS order_month,
-           COUNT(*) AS row_ct, SUM(amount) AS total_amount
-    FROM legacy_wh.sales.orders
-    GROUP BY 1
+ SELECT DATE_TRUNC('month', order_ts) AS order_month, COUNT(*) AS row_ct, SUM(amount) AS total_amount
+ FROM legacy_wh.sales.orders
+ GROUP BY 1
 ) w ON l.order_month = w.order_month
 WHERE l.row_ct IS DISTINCT FROM w.row_ct
-   OR l.total_amount IS DISTINCT FROM w.total_amount
+ OR l.total_amount IS DISTINCT FROM w.total_amount
 ```
 
 An empty result is the daily heartbeat of a synchronized table, a non-empty result names the partition to investigate, and the query's history, published where consumers see it, is the trust ledger that makes read cutovers a formality. For CDC-synchronized tables, the same checks run with a lag allowance, and lag itself is a monitored metric with an alert threshold, because a quietly stalled apply job is this pattern's most dangerous silent failure.

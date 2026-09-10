@@ -11,12 +11,14 @@ slug: "decoupled-catalogs-vs-managed-tables-table-format-convergence"
 draft: false
 image: "/images/blog.png"
 canonical: https://iceberglakehouse.com/posts/decoupled-catalogs-vs-managed-tables-table-format-convergence/
+description: "Open table formats have changed buyer expectations. A few years ago, the question was whether an organization should put more analytical data into object."
 ---
-> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/decoupled-catalogs-vs-managed-tables-table-format-convergence/).
 
 # Decoupled Catalogs vs. Managed Tables: Architectural Freedom in the Age of Table Format Convergence
 
 Open table formats have changed buyer expectations. A few years ago, the question was whether an organization should put more analytical data into object storage and query it with modern engines. Today the question is sharper: who controls the table, the catalog, the optimization policy, the credentials, and the engine access path?
+
+> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/decoupled-catalogs-vs-managed-tables-table-format-convergence/).
 
 That is why the debate between decoupled catalogs and managed tables matters. Managed tables can reduce operational burden. Decoupled catalogs can preserve architectural freedom. Neither model is automatically right or wrong. The right choice depends on workload maturity, governance needs, team capacity, compliance requirements, and how much engine choice matters.
 

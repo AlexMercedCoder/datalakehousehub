@@ -15,9 +15,10 @@ draft: false
 image: "/images/blog.png"
 canonical: https://iceberglakehouse.com/posts/dbt-on-iceberg-incremental-models/
 ---
-> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/dbt-on-iceberg-incremental-models/).
 
 A dbt project has a model called `fct_orders` configured as `materialized='incremental'` with `incremental_strategy='merge'` and `unique_key='order_id'`. It runs hourly. On a warehouse it does what the name says: merges the last hour of orders into a managed table. Pointed at an Apache Iceberg table through Spark, Trino, Dremio, or Athena, it still runs and still produces the right rows. What changes is everything underneath. Each run is a snapshot. The merge is a copy-on-write or merge-on-read operation depending on a table property dbt never mentions. The target's history accumulates. Small files pile up. And the `MERGE` scans the whole target table every hour unless someone told it not to.
+
+> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/dbt-on-iceberg-incremental-models/).
 
 dbt is an abstraction over SQL that assumes the platform handles storage. Iceberg is a table format that makes storage decisions explicit. Using them together works well, but only when the person writing the model understands what each dbt configuration compiles to at the Iceberg level. This article maps every dbt materialization and incremental strategy to the Iceberg operation it produces, covers the adapter-specific configuration for the major engines, shows how to bound merge scans and handle schema changes, and lays out the maintenance that dbt does not do. I work at Dremio, which has a dbt adapter, and the material here applies across adapters.
 
@@ -34,7 +35,7 @@ This division means there are two configuration surfaces. dbt's model config con
 Each dbt materialization compiles to a specific Iceberg operation, and knowing the mapping is the foundation for everything else.
 
 | dbt materialization or strategy | SQL emitted | Iceberg result |
-|---|---|---|
+|--|--|--|
 | `table` | `CREATE OR REPLACE TABLE ... AS SELECT` | One `replace` snapshot. Prior snapshot retained, history preserved, atomic swap |
 | `view` | `CREATE OR REPLACE VIEW` | An Iceberg view where the engine and catalog support them, otherwise an engine-local view |
 | `incremental` / `append` | `INSERT INTO` | One `append` snapshot. New data files only, no deletes |
@@ -43,11 +44,11 @@ Each dbt materialization compiles to a specific Iceberg operation, and knowing t
 | `incremental` / `insert_overwrite` | `INSERT OVERWRITE` with dynamic partitions | One `overwrite` snapshot replacing whole partitions |
 | `incremental` / `microbatch` | Per-batch `INSERT OVERWRITE` or `DELETE` plus `INSERT` on an `event_time` range | One snapshot per batch |
 | `snapshot` (dbt SCD Type 2) | `MERGE INTO` with validity columns | One `overwrite` snapshot per run |
-| `--full-refresh` on incremental | `CREATE OR REPLACE TABLE ... AS SELECT` | Same as `table`. History preserved |
+| `-full-refresh` on incremental | `CREATE OR REPLACE TABLE ... AS SELECT` | Same as `table`. History preserved |
 
 Three details in this table have consequences.
 
-**Full refresh does not destroy history.** On a warehouse, `--full-refresh` drops and recreates. On Iceberg, `CREATE OR REPLACE` is an atomic replace that commits a new snapshot and keeps the old ones until expiry. This is good, because a bad full refresh can be rolled back with `rollback_to_snapshot`, and it is surprising, because the table's storage doubles until the old snapshot expires.
+**Full refresh does not destroy history.** On a warehouse, `-full-refresh` drops and recreates. On Iceberg, `CREATE OR REPLACE` is an atomic replace that commits a new snapshot and keeps the old ones until expiry. This is good, because a bad full refresh can be rolled back with `rollback_to_snapshot`, and it is surprising, because the table's storage doubles until the old snapshot expires.
 
 **`delete+insert` is not atomic on most adapters.** dbt emits two statements. Iceberg commits two snapshots. A query that runs between them sees a table with the affected keys missing. Adapters that wrap the two in an engine transaction avoid this, and most do not, because Iceberg's transaction support across statements depends on the engine. On Iceberg, `merge` or `insert_overwrite` is almost always the better choice.
 
@@ -69,11 +70,11 @@ Each adapter exposes Iceberg-specific configuration under slightly different nam
 
 ```yaml
 models:
-  my_project:
-    +file_format: iceberg
-    +table_properties:
-      format-version: "3"
-      write.parquet.compression-codec: zstd
+ my_project:
+ +file_format: iceberg
+ +table_properties:
+ format-version: "3"
+ write.parquet.compression-codec: zstd
 ```
 
 The Spark session must be configured with a Spark catalog pointing at the Iceberg catalog, and model names resolve through it. Incremental strategies available on Iceberg are `append`, `merge`, `insert_overwrite`, and `microbatch`. The `merge` strategy requires a `unique_key`.
@@ -98,10 +99,7 @@ On dbt-spark, `partition_by` accepts Iceberg transform expressions using Spark's
 
 ```sql
 {{ config(
-    materialized='incremental',
-    file_format='iceberg',
-    partition_by=['days(placed_at)', 'bucket(16, customer_id)'],
-    table_properties={'write.distribution-mode': 'hash'}
+ materialized='incremental', file_format='iceberg', partition_by=['days(placed_at)', 'bucket(16, customer_id)'], table_properties={'write.distribution-mode': 'hash'}
 ) }}
 ```
 
@@ -115,12 +113,9 @@ On dbt-trino, both are first-class:
 
 ```sql
 {{ config(
-    materialized='incremental',
-    properties={
-        'partitioning': "ARRAY['day(placed_at)', 'bucket(16, customer_id)']",
-        'sorted_by': "ARRAY['customer_id', 'placed_at']",
-        'format_version': '3'
-    }
+ materialized='incremental', properties={
+ 'partitioning': "ARRAY['day(placed_at)', 'bucket(16, customer_id)']", 'sorted_by': "ARRAY['customer_id', 'placed_at']", 'format_version': '3'
+ }
 ) }}
 ```
 
@@ -136,18 +131,10 @@ dbt's `incremental_predicates` config adds conditions to the `ON` clause that bo
 
 ```sql
 {{ config(
-    materialized='incremental',
-    incremental_strategy='merge',
-    unique_key='order_id',
-    partition_by=['days(placed_at)'],
-    incremental_predicates=[
-        "DBT_INTERNAL_DEST.placed_at >= current_date - interval '3' day"
-    ],
-    table_properties={
-        'format-version': '3',
-        'write.merge.mode': 'merge-on-read',
-        'write.target-file-size-bytes': '268435456',
-    }
+ materialized='incremental', incremental_strategy='merge', unique_key='order_id', partition_by=['days(placed_at)'], incremental_predicates=[
+ "DBT_INTERNAL_DEST.placed_at >= current_date - interval '3' day"
+ ], table_properties={
+ 'format-version': '3', 'write.merge.mode': 'merge-on-read', 'write.target-file-size-bytes': '268435456', }
 ) }}
 
 SELECT order_id, customer_id, placed_at, amount, status
@@ -175,7 +162,7 @@ An incremental model's `SELECT` can gain or lose columns between runs. dbt's `on
 
 **`fail`** stops the run on any change, which is the right setting for models where schema is a contract.
 
-Type changes are the gap. dbt's schema-change handling compares column names, not types. A model whose `amount` column changes from `DECIMAL(10,2)` to `DECIMAL(12,2)` is a legal Iceberg promotion, and no adapter emits it automatically. It has to be done as a manual `ALTER TABLE ... ALTER COLUMN` before the run, or as a pre-hook.
+Type changes are the gap. dbt's schema-change handling compares column names, not types. A model whose `amount` column changes from `DECIMAL(10, 2)` to `DECIMAL(12, 2)` is a legal Iceberg promotion, and no adapter emits it automatically. It has to be done as a manual `ALTER TABLE ... ALTER COLUMN` before the run, or as a pre-hook.
 
 ## dbt Snapshots Versus Iceberg Snapshots
 
@@ -202,7 +189,7 @@ WHERE updated_at > (SELECT max(updated_at) FROM analytics.fct_orders);
 MERGE INTO analytics.fct_orders AS DBT_INTERNAL_DEST
 USING fct_orders__dbt_tmp AS DBT_INTERNAL_SOURCE
 ON DBT_INTERNAL_DEST.order_id = DBT_INTERNAL_SOURCE.order_id
-   AND DBT_INTERNAL_DEST.placed_at >= current_date - interval '3' day
+ AND DBT_INTERNAL_DEST.placed_at >= current_date - interval '3' day
 WHEN MATCHED THEN UPDATE SET *
 WHEN NOT MATCHED THEN INSERT *;
 ```
@@ -212,11 +199,7 @@ The temporary view is dbt's staging step. On dbt-spark it is a view, so nothing 
 The `MERGE` produces one snapshot. Querying the metadata afterward shows what happened:
 
 ```sql
-SELECT snapshot_id, operation,
-       summary['added-data-files']    AS added_files,
-       summary['added-delete-files']  AS added_deletes,
-       summary['deleted-data-files']  AS removed_files,
-       summary['added-records']       AS added_rows
+SELECT snapshot_id, operation, summary['added-data-files'] AS added_files, summary['added-delete-files'] AS added_deletes, summary['deleted-data-files'] AS removed_files, summary['added-records'] AS added_rows
 FROM analytics.fct_orders.snapshots
 ORDER BY committed_at DESC
 LIMIT 1;
@@ -241,7 +224,7 @@ The `microbatch` strategy, added in dbt 1.9, processes an incremental model as a
 
 On Iceberg this aligns naturally with partitioning. A model with `event_time='placed_at'`, `batch_size='day'`, and `partition_by=['days(placed_at)']` processes one partition per batch. The adapter emits, per batch, either an `INSERT OVERWRITE` for the partition or a `DELETE WHERE placed_at IN range` followed by `INSERT`. With `INSERT OVERWRITE` the batch is one atomic snapshot replacing the partition's files. With delete-then-insert it is two.
 
-Microbatch's strengths on Iceberg are that each batch is a partition-sized unit of work, that failed batches retry independently, and that backfills are the same code path as regular runs, with `--event-time-start` and `--event-time-end` bounding the range. Its cost is one snapshot per batch, so a backfill of 365 days produces 365 snapshots and 365 partition-sized rewrites, and the snapshot count needs an expiry job afterward.
+Microbatch's strengths on Iceberg are that each batch is a partition-sized unit of work, that failed batches retry independently, and that backfills are the same code path as regular runs, with `-event-time-start` and `-event-time-end` bounding the range. Its cost is one snapshot per batch, so a backfill of 365 days produces 365 snapshots and 365 partition-sized rewrites, and the snapshot count needs an expiry job afterward.
 
 `microbatch` is the right strategy for append-mostly event data where late arrivals are bounded by the lookback. It is the wrong strategy for slowly changing data where any row can change at any time, which is what `merge` with a bounded predicate is for.
 
@@ -254,20 +237,20 @@ On dbt-spark, the Iceberg Spark integration honors a session property that redir
 ```yaml
 # profiles.yml, for the audit target
 audit:
-  type: spark
-  method: session
-  ...
-  server_side_parameters:
-    "spark.wap.branch": "audit"
+ type: spark
+ method: session
+ ...
+ server_side_parameters:
+ "spark.wap.branch": "audit"
 ```
 
 With that set, every model in the run commits to the `audit` branch of its table. Readers on `main` see nothing. A `dbt test` run against the same target reads the branch too, because reads honor the same property. If tests pass, a `run-operation` macro fast-forwards each table:
 
 ```sql
 {% macro publish_audit_branch(tables) %}
-  {% for t in tables %}
-    {% do run_query("CALL " ~ target.catalog ~ ".system.fast_forward('" ~ t ~ "', 'main', 'audit')") %}
-  {% endfor %}
+ {% for t in tables %}
+ {% do run_query("CALL " ~ target.catalog ~ ".system.fast_forward('" ~ t ~ "', 'main', 'audit')") %}
+ {% endfor %}
 {% endmacro %}
 ```
 
@@ -287,12 +270,10 @@ dbt writes. It does not compact, expire, or clean up. Every hourly incremental r
 
 ```sql
 {{ config(
-    post_hook=[
-      "CALL {{ target.catalog }}.system.expire_snapshots(
-         table => '{{ this.schema }}.{{ this.identifier }}',
-         older_than => current_timestamp() - interval '7' day,
-         retain_last => 24)"
-    ]
+ post_hook=[
+ "CALL {{ target.catalog }}.system.expire_snapshots(
+ table => '{{ this.schema }}.{{ this.identifier }}', older_than => current_timestamp() - interval '7' day, retain_last => 24)"
+ ]
 ) }}
 ```
 
@@ -327,7 +308,7 @@ dbt tests are `SELECT` statements that fail when they return rows. Iceberg's met
 A singular test that fails when a model has accumulated too many delete files:
 
 ```sql
--- tests/assert_fct_orders_delete_files_bounded.sql
+- tests/assert_fct_orders_delete_files_bounded.sql
 SELECT count(*) AS delete_files
 FROM {{ ref('fct_orders') }}.files
 WHERE content > 0
@@ -363,13 +344,13 @@ The dbt profile for it is an ordinary adapter profile pointed at `localhost`:
 
 ```yaml
 local:
-  type: trino
-  host: localhost
-  port: 8080
-  catalog: lake
-  schema: dev_{{ env_var('USER') }}
-  user: dev
-  threads: 4
+ type: trino
+ host: localhost
+ port: 8080
+ catalog: lake
+ schema: dev_{{ env_var('USER') }}
+ user: dev
+ threads: 4
 ```
 
 The per-user schema keeps developers isolated in one catalog. A `seed` run loads fixtures. A first `dbt run` builds every table from scratch. A second `dbt run`, with a few rows changed in the seed, exercises the incremental path, and the metadata tables show exactly what the merge did. This two-run cycle is the test that matters for incremental models, and it takes seconds locally against minutes on shared infrastructure.

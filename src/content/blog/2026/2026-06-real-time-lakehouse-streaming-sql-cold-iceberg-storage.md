@@ -13,7 +13,6 @@ slug: real-time-lakehouse-streaming-sql-cold-iceberg-storage
 draft: false
 image: "/images/blog.png"
 ---
-
 # The Real-Time Lakehouse with Streaming and Iceberg
 
 
@@ -78,7 +77,7 @@ The second mistake is ignoring boundaries. Most streaming-to-Iceberg incidents a
 
 The third mistake is hiding tradeoffs behind category language. Saying "real-time lakehouse" is not a mechanic. What is the actual freshness window measured in minutes? What is the commit interval? What is the small-file count after a busy ingestion day? If the answers are vague, the design is still vague.
 
-The most expensive failures are usually quiet. The streaming job commits every five seconds and creates 3,000 small files per hour on a busy partition. Query latency degrades over the course of a day, but nobody connects it to the commit frequency because the relationship is not documented. That is the most common silent failure in real-time lakehouse designs.
+The most expensive failures are usually quiet. The streaming job commits every five seconds and creates 3, 000 small files per hour on a busy partition. Query latency degrades over the course of a day, but nobody connects it to the commit frequency because the relationship is not documented. That is the most common silent failure in real-time lakehouse designs.
 
 ## Guardrails for Agentic Use
 
@@ -89,7 +88,7 @@ I would also require a visible freshness indicator on every agent tool that read
 ## Operational Checklist
 
 | Area | Question to answer | Why it matters |
-|---|---|---|
+|--|--|--|
 | Ownership | Who owns the streaming job, the table, and the compaction schedule? | Incidents need named owners, not shared confusion. |
 | Freshness | What is the defined freshness window for analytical queries? | A number in minutes is a contract. "Near real-time" is not. |
 | File Management | What is the commit interval and the compaction schedule? | Small-file accumulation degrades query latency over time. |
@@ -136,7 +135,7 @@ The next step is to define the dimensions that actually change behavior: event t
 
 ## Review Questions Worth Asking
 
-The first question is simple: what is the commit interval for each streaming job that writes to Iceberg? If the answer is "as frequent as possible," the small-file risk is not managed.
+The first question is simple: what is the commit interval for each streaming job that writes to Iceberg? If the answer is "as frequent as possible, " the small-file risk is not managed.
 
 The second question: what is the small-file count after a peak ingestion day, and when does compaction run to address it? If those two numbers are not connected to each other, the file management design is incomplete.
 

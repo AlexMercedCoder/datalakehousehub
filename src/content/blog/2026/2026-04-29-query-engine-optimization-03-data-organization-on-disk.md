@@ -2,7 +2,7 @@
 title: "How Databases Organize Data on Disk: Pages, Blocks, and File Formats"
 date: 2026-04-29T09:03:00Z
 pubDatetime: 2026-04-29T09:03:00Z
-description: "Databases structure data on disk as heap files, sorted files, or LSM trees, then wrap it in formats like Parquet with metadata that lets engines skip irrelevant blocks."
+description: "Databases structure data on disk as heap files, sorted files, or LSM trees, then wrap it in formats like Parquet with metadata that lets engines skip."
 author: "Alex Merced"
 category: "Data Engineering"
 tags:
@@ -14,11 +14,12 @@ draft: false
 image: "/images/blog/query-engine-optimization/03-data-organization-on-disk-write-read-spectrum.png"
 canonical: "https://iceberglakehouse.com/posts/2026-04-29-query-engine-03/"
 ---
-> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-04-29-query-engine-03/).
 
-<!-- Meta Description: Databases structure data on disk as heap files, sorted files, or LSM trees, then wrap it in formats like Parquet with metadata that lets engines skip irrelevant blocks. -->
-<!-- Primary Keyword: data file formats -->
-<!-- Secondary Keywords: Parquet file format, database storage internals, predicate pushdown -->
+<!- Meta Description: Databases structure data on disk as heap files, sorted files, or LSM trees, then wrap it in formats like Parquet with metadata that lets engines skip irrelevant blocks. ->
+<!- Primary Keyword: data file formats ->
+<!- Secondary Keywords: Parquet file format, database storage internals, predicate pushdown ->
+
+> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-04-29-query-engine-03/).
 
 *Read the complete Query Engine Optimization series:*
 * [Part 1: How Query Engines Think: The Tradeoffs Behind Every Data System](/blog/2026-04-29-query-engine-optimization-01-overview)
@@ -101,7 +102,7 @@ Every Parquet row group and ORC stripe stores the minimum and maximum value for 
 Consider `SELECT * FROM orders WHERE price > 100` on a file with three row groups:
 
 | Row Group | Price Min | Price Max | Action |
-|---|---|---|---|
+|--|--|--|--|
 | 1 | 10 | 50 | Skip (max 50 < 100) |
 | 2 | 45 | 120 | Scan (range overlaps) |
 | 3 | 200 | 500 | Scan (all values qualify) |
@@ -127,7 +128,7 @@ Apache Iceberg improves on directory-based partitioning with hidden partitioning
 Every organizational choice above is a variation of the same tradeoff: do more work when writing data (sort it, compute statistics, build indexes, organize into optimal row groups) to do less work when reading it.
 
 | Strategy | Write-Time Cost | Read-Time Benefit |
-|---|---|---|
+|--|--|--|
 | Heap file | None | None (full scan) |
 | Sort data | High (maintain order) | Binary search, sequential scans |
 | Compute min/max stats | Low (aggregate per block) | Skip irrelevant blocks |

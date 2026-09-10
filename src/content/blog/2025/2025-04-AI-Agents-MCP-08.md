@@ -15,13 +15,12 @@ slug: 2025-04-resources-in-mcp
 draft: false
 image: "/images/blog.png"
 ---
-
-## Free Resources  
-- **[Free Apache Iceberg Course](https://hello.dremio.com/webcast-an-apache-iceberg-lakehouse-crash-course-reg.html?utm_source=ev_external_blog&utm_medium=influencer&utm_campaign=AItoLLMS&utm_content=alexmerced&utm_term=external_blog)**  
-- **[Free Copy of “Apache Iceberg: The Definitive Guide”](https://hello.dremio.com/wp-apache-iceberg-the-definitive-guide-reg.html?utm_source=ev_external_blog&utm_medium=influencer&utm_campaign=AItoLLMS&utm_content=alexmerced&utm_term=external_blog)**  
-- **[2025 Apache Iceberg Architecture Guide](https://medium.com/data-engineering-with-dremio/2025-guide-to-architecting-an-iceberg-lakehouse-9b19ed42c9de)**  
-- **[How to Join the Iceberg Community](https://medium.alexmerced.blog/guide-to-finding-apache-iceberg-events-near-you-and-being-part-of-the-greater-iceberg-community-0c38ae785ddb)**  
-- **[Iceberg Lakehouse Engineering Video Playlist](https://youtube.com/playlist?list=PLsLAVBjQJO0p0Yq1fLkoHvt2lEJj5pcYe&si=WTSnqjXZv6Glkc3y)**  
+## Free Resources 
+- **[Free Apache Iceberg Course](https://hello.dremio.com/webcast-an-apache-iceberg-lakehouse-crash-course-reg.html?utm_source=ev_external_blog&utm_medium=influencer&utm_campaign=AItoLLMS&utm_content=alexmerced&utm_term=external_blog)** 
+- **[Free Copy of “Apache Iceberg: The Definitive Guide”](https://hello.dremio.com/wp-apache-iceberg-the-definitive-guide-reg.html?utm_source=ev_external_blog&utm_medium=influencer&utm_campaign=AItoLLMS&utm_content=alexmerced&utm_term=external_blog)** 
+- **[2025 Apache Iceberg Architecture Guide](https://medium.com/data-engineering-with-dremio/2025-guide-to-architecting-an-iceberg-lakehouse-9b19ed42c9de)** 
+- **[How to Join the Iceberg Community](https://medium.alexmerced.blog/guide-to-finding-apache-iceberg-events-near-you-and-being-part-of-the-greater-iceberg-community-0c38ae785ddb)** 
+- **[Iceberg Lakehouse Engineering Video Playlist](https://youtube.com/playlist?list=PLsLAVBjQJO0p0Yq1fLkoHvt2lEJj5pcYe&si=WTSnqjXZv6Glkc3y)** 
 - **[Ultimate Apache Iceberg Resource Guide](https://medium.com/data-engineering-with-dremio/ultimate-directory-of-apache-iceberg-resources-e3e02efac62e)** 
 
 In the previous post, we explored the architecture of the **Model Context Protocol (MCP)**: a flexible, standardized way to connect LLMs to tools, data, and workflows. One of MCP’s most powerful capabilities is its ability to expose **resources** to language models in a structured, secure, and controllable way.
@@ -57,14 +56,11 @@ The server responds with an array of structured metadata:
 
 ```json
 {
-  "resources": [
-    {
-      "uri": "file:///logs/app.log",
-      "name": "Application Logs",
-      "description": "Recent server logs",
-      "mimeType": "text/plain"
-    }
-  ]
+ "resources": [
+ {
+ "uri": "file:///logs/app.log", "name": "Application Logs", "description": "Recent server logs", "mimeType": "text/plain"
+ }
+ ]
 }
 ```
 
@@ -75,10 +71,7 @@ In addition to static lists, servers can expose URI templates using RFC 6570 syn
 
 ```json
 {
-  "uriTemplate": "file:///logs/{date}.log",
-  "name": "Log by Date",
-  "description": "Access logs by date (e.g., 2024-04-01)",
-  "mimeType": "text/plain"
+ "uriTemplate": "file:///logs/{date}.log", "name": "Log by Date", "description": "Access logs by date (e.g., 2024-04-01)", "mimeType": "text/plain"
 }
 ```
 
@@ -91,7 +84,7 @@ To retrieve the content of a resource, clients use:
 
 ```json
 {
-  "uri": "file:///logs/app.log"
+ "uri": "file:///logs/app.log"
 }
 ```
 The server responds with the content in one of two formats:
@@ -99,26 +92,22 @@ The server responds with the content in one of two formats:
 #### Text Resource
 ```json
 {
-  "contents": [
-    {
-      "uri": "file:///logs/app.log",
-      "mimeType": "text/plain",
-      "text": "Error: Timeout on request...\n"
-    }
-  ]
+ "contents": [
+ {
+ "uri": "file:///logs/app.log", "mimeType": "text/plain", "text": "Error: Timeout on request...\n"
+ }
+ ]
 }
 ```
 
 #### Binary Resource (e.g. image, PDF)
 ```json
 {
-  "contents": [
-    {
-      "uri": "screen://localhost/display1",
-      "mimeType": "image/png",
-      "blob": "iVBORw0KGgoAAAANSUhEUgAAA..."
-    }
-  ]
+ "contents": [
+ {
+ "uri": "screen://localhost/display1", "mimeType": "image/png", "blob": "iVBORw0KGgoAAAANSUhEUgAAA..."
+ }
+ ]
 }
 ```
 
@@ -173,32 +162,28 @@ Exposing resources to models requires careful control. MCP includes flexible pat
 #### Example: Safe Log Server
 ```ts
 server.setRequestHandler(ListResourcesRequestSchema, async () => {
-  return {
-    resources: [
-      {
-        uri: "file:///logs/app.log",
-        name: "App Logs",
-        mimeType: "text/plain"
-      }
-    ]
-  };
+ return {
+ resources: [
+ {
+ uri: "file:///logs/app.log", name: "App Logs", mimeType: "text/plain"
+ }
+ ]
+ };
 });
 
 server.setRequestHandler(ReadResourceRequestSchema, async (request) => {
-  const uri = request.params.uri;
+ const uri = request.params.uri;
 
-  if (!uri.startsWith("file:///logs/")) {
-    throw new Error("Access denied");
-  }
+ if (!uri.startsWith("file:///logs/")) {
+ throw new Error("Access denied");
+ }
 
-  const content = await readFile(uri); // Add sanitization here
-  return {
-    contents: [{
-      uri,
-      mimeType: "text/plain",
-      text: content
-    }]
-  };
+ const content = await readFile(uri); // Add sanitization here
+ return {
+ contents: [{
+ uri, mimeType: "text/plain", text: content
+ }]
+ };
 });
 ```
 

@@ -14,9 +14,10 @@ tags:
 slug: "seven-rest-catalogs-one-duckdb-script"
 draft: false
 ---
-> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/seven-rest-catalogs-one-duckdb-script/).
 
 A question has been making the rounds in lakehouse circles this year, usually phrased with some disbelief: someone points DuckDB, the in-process analytical database, at an Apache Iceberg REST catalog, creates a table, inserts rows, runs an update, and then repoints the same script at a completely different catalog from a completely different vendor, and it mostly just works. Practitioners have been trading notes on running near-identical DuckDB code against a half dozen or more catalog implementations, open source and commercial, self-hosted and managed. The disbelief is earned. Five years ago, "same code, different catalog" was not a claim anyone in this ecosystem made with a straight face, and the people making it now include the maintainers of the client itself.
+
+> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/seven-rest-catalogs-one-duckdb-script/).
 
 So this article takes the question seriously and rigorously. What exactly is the same across catalogs, what quietly differs, and what does a fair seven-catalog test actually measure? We will look at what DuckDB's Iceberg extension can genuinely do in 2026, write the common code, then walk seven REST catalog implementations, Apache Polaris, Lakekeeper, Apache Gravitino, Nessie, AWS Glue, Databricks Unity Catalog, and Snowflake Open Catalog, through the places where sameness holds and the places where it ends. I will also lay out the test matrix worth running yourself, because the most useful output of this exercise is a repeatable protocol, not a screenshot.
 
@@ -56,7 +57,7 @@ DuckDB carries no platform allegiance. It ships from an independent foundation, 
 
 It is also the minimal sufficient client. A Spark cluster brings a JVM, a distribution's patches, a session's worth of configuration, and a hundred places for environmental variance to hide. DuckDB brings a single process reading a SQL script, which makes runs reproducible to a degree cluster-based tests never reach: same binary, same script, same laptop, seven endpoints. Experimental hygiene favors small instruments.
 
-And it represents the future population of clients better than the incumbents do. The growth in Iceberg consumers is not more thousand-node clusters. It is embedded engines, notebooks, serverless functions, browser runtimes, and agent processes, small clients, numerous, short-lived, speaking REST. Testing catalog interoperability with the archetype of that population answers the question the next five years will actually ask, which is not "does Spark work everywhere," a settled matter, but "does everything else."
+And it represents the future population of clients better than the incumbents do. The growth in Iceberg consumers is not more thousand-node clusters. It is embedded engines, notebooks, serverless functions, browser runtimes, and agent processes, small clients, numerous, short-lived, speaking REST. Testing catalog interoperability with the archetype of that population answers the question the next five years will actually ask, which is not "does Spark work everywhere, " a settled matter, but "does everything else."
 
 The instrument has one known bias, stated earlier and worth repeating in this context: no scan planning client yet, so the probe under-measures catalogs whose richest governance rides that endpoint. A perfect instrument this is not. An honest and improving one, it is, and re-running the same matrix on each extension release turns even its limitations into a longitudinal record of how fast the client side of this ecosystem closes gaps.
 
@@ -68,34 +69,25 @@ Here is the script at the center of the question, in the shape the DuckDB docume
 INSTALL iceberg;
 LOAD iceberg;
 
--- Authentication: OAuth2 client credentials via DuckDB's secret workflow
+- Authentication: OAuth2 client credentials via DuckDB's secret workflow
 CREATE SECRET catalog_auth (
-    TYPE iceberg,
-    CLIENT_ID '<client-id>',
-    CLIENT_SECRET '<client-secret>',
-    OAUTH2_SERVER_URI '<token-endpoint>'
+ TYPE iceberg, CLIENT_ID '<client-id>', CLIENT_SECRET '<client-secret>', OAUTH2_SERVER_URI '<token-endpoint>'
 );
 
--- Mount the catalog; ask it to vend storage credentials
+- Mount the catalog; ask it to vend storage credentials
 ATTACH '<warehouse>' AS lake (
-    TYPE iceberg,
-    ENDPOINT '<catalog-rest-endpoint>',
-    ACCESS_DELEGATION_MODE 'vended_credentials'
+ TYPE iceberg, ENDPOINT '<catalog-rest-endpoint>', ACCESS_DELEGATION_MODE 'vended_credentials'
 );
 
--- From here on, it is just SQL against an attached database
+- From here on, it is just SQL against an attached database
 CREATE SCHEMA IF NOT EXISTS lake.demo;
 
 CREATE TABLE lake.demo.orders (
-    order_id   BIGINT,
-    region     VARCHAR,
-    amount     DOUBLE,
-    order_date DATE
+ order_id BIGINT, region VARCHAR, amount DOUBLE, order_date DATE
 );
 
 INSERT INTO lake.demo.orders VALUES
-    (1, 'EMEA', 120.50, DATE '2026-08-01'),
-    (2, 'APAC',  75.00, DATE '2026-08-02');
+ (1, 'EMEA', 120.50, DATE '2026-08-01'), (2, 'APAC', 75.00, DATE '2026-08-02');
 
 UPDATE lake.demo.orders SET amount = 130.00 WHERE order_id = 1;
 
@@ -142,7 +134,7 @@ The second cluster of differences appears after authentication succeeds, and it 
 
 Credential vending behavior tops the list. The common script requests vended credentials, and the catalogs differ in what they vend, scoped cloud-native tokens against S3, Azure, or GCS, how briefly the credentials live, and whether vending is on by default, opt-in per warehouse, or gated by the storage configuration the warehouse was bootstrapped with. When the seven-catalog experiment fails mid-script, the failure usually traces here: the table created fine, catalog conversation, but the INSERT's Parquet write hit storage with credentials the catalog declined to vend or scoped differently than expected. Reading each catalog's storage configuration documentation before testing saves an afternoon of misattributing storage errors to the protocol.
 
-Managed versus external tables is the deeper split. Some platforms distinguish tables whose storage and maintenance they own from tables merely registered with them, and the distinction governs what external writers are allowed to do. A catalog can serve reads on a table it manages while restricting external commits to it, or accept external writes only into designated locations, or expose some tables read-only through the REST interface because their lifecycle belongs to the platform's own engine. The same CREATE TABLE, pointed at different namespaces of the same catalog, can succeed in one and be refused in the other, correctly, by policy. Cross-catalog testing has surfaced real confusion here, and the confusion is vocabulary, not protocol: "managed," "external," "foreign," and "federated" mean different things per platform, and the test write-up has to record which kind of table each catalog was asked to create. My working advice is to make the distinction a first-class column in your matrix rather than a footnote, because half the disagreements in community threads about whether a given platform "really supports external writes" dissolve the moment both parties state which table kind they tested.
+Managed versus external tables is the deeper split. Some platforms distinguish tables whose storage and maintenance they own from tables merely registered with them, and the distinction governs what external writers are allowed to do. A catalog can serve reads on a table it manages while restricting external commits to it, or accept external writes only into designated locations, or expose some tables read-only through the REST interface because their lifecycle belongs to the platform's own engine. The same CREATE TABLE, pointed at different namespaces of the same catalog, can succeed in one and be refused in the other, correctly, by policy. Cross-catalog testing has surfaced real confusion here, and the confusion is vocabulary, not protocol: "managed, " "external, " "foreign, " and "federated" mean different things per platform, and the test write-up has to record which kind of table each catalog was asked to create. My working advice is to make the distinction a first-class column in your matrix rather than a footnote, because half the disagreements in community threads about whether a given platform "really supports external writes" dissolve the moment both parties state which table kind they tested.
 
 Maintenance expectations follow from that split. A managed table on a platform with automatic compaction and snapshot expiration behaves differently over a long test than a table on a bring-your-own-maintenance catalog, not in correctness but in file counts and metadata growth. A fair multi-catalog comparison either disables such automation where possible or notes it, because otherwise the comparison partly measures janitorial services rather than protocol conformance.
 
@@ -171,7 +163,7 @@ Step back from the seven sketches and one composite fact stands out: DuckDB's ow
 For the write-up on your wall, the seven compress into a reference card:
 
 | Catalog | What it is | Hosting | Auth idiom | Bootstrap unit | Distinctive trait |
-|---|---|---|---|---|---|
+|--|--|--|--|--|--|
 | Apache Polaris | ASF Top-Level Project REST catalog | Self-hosted | OAuth2 client credentials | Catalog, principal, roles | Full-spec reference point, RBAC, vending, federation |
 | Lakekeeper | Minimal Rust REST catalog | Self-hosted | OAuth2 | Project, warehouse | Single binary, external authz via OpenFGA and policy engines |
 | Apache Gravitino | Federated metadata service with an Iceberg REST face | Self-hosted | OAuth2 and platform options | Metalake, catalog | Iceberg alongside non-Iceberg metadata under one roof |
@@ -204,7 +196,7 @@ First, it means the REST protocol succeeded at the thing protocols are for. The 
 
 Second, it means the remaining differentiation moved up the stack, into identity, governance, tenancy, and managed semantics, exactly where platforms want to differentiate and exactly where standardization was never on offer. Choosing among the seven is now a control plane decision, and the matrix quantifies the control planes rather than the table format.
 
-Third, it sharpens what "supports Iceberg" must mean in vendor conversations. Every one of the seven "supports Iceberg," and they still differ in external write posture, managed-table restrictions, vending behavior, and fine-grained policy reach. The matrix's four-way scoring, works, configured, refused, fails, is a vocabulary for those conversations, and insisting on it converts marketing claims into rows.
+Third, it sharpens what "supports Iceberg" must mean in vendor conversations. Every one of the seven "supports Iceberg, " and they still differ in external write posture, managed-table restrictions, vending behavior, and fine-grained policy reach. The matrix's four-way scoring, works, configured, refused, fails, is a vocabulary for those conversations, and insisting on it converts marketing claims into rows.
 
 And fourth, it locates the frontier precisely. The current same-code boundary for DuckDB runs along scan planning: catalogs enforcing fine-grained policy at plan time serve every engine that speaks the 1.11 planning client and not yet this one. That boundary is a tracked feature request away from moving, which is the healthiest kind of limitation a young integration can have.
 

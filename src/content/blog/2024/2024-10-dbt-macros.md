@@ -14,14 +14,15 @@ draft: false
 image: "/images/blog.png"
 canonical: "https://iceberglakehouse.com/posts/2024-10-a-guide-to-dbt-macros/"
 ---
+
+When working with dbt, one of the most powerful features available to you is **macros**. Macros allow you to write reusable code that can be used throughout your dbt project, helping you optimize development, reduce redundancy, and standardize common patterns. In this post, we will explore the purpose of dbt macros, how they can help you streamline your data transformation workflows, and how to use them effectively.
+
 > **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2024-10-a-guide-to-dbt-macros/).
 
 - [Apache Iceberg 101](https://www.dremio.com/lakehouse-deep-dives/apache-iceberg-101/?utm_source=ev_external_blog&utm_medium=influencer&utm_campaign=dbtmacros&utm_content=alexmerced&utm_term=external_blog)
 - [Hands-on Intro with Apache iceberg](https://www.dremio.com/blog/intro-to-dremio-nessie-and-apache-iceberg-on-your-laptop/?utm_source=ev_external_blog&utm_medium=influencer&utm_campaign=dbtmacros&utm_content=alexmerced&utm_term=external_blog)
 - [Free Apache Iceberg Crash Course](https://hello.dremio.com/webcast-an-apache-iceberg-lakehouse-crash-course-reg.html?utm_source=ev_external_blog&utm_medium=influencer&utm_campaign=dbtmacros&utm_content=alexmerced&utm_term=external_blog)
 - [Free Copy Of Apache Iceberg: The Definitive Guide](https://hello.dremio.com/wp-apache-iceberg-the-definitive-guide-reg.html?utm_source=ev_external_blog&utm_medium=influencer&utm_campaign=dbtmacros&utm_content=alexmerced&utm_term=external_blog)
-
-When working with dbt, one of the most powerful features available to you is **macros**. Macros allow you to write reusable code that can be used throughout your dbt project, helping you optimize development, reduce redundancy, and standardize common patterns. In this post, we will explore the purpose of dbt macros, how they can help you streamline your data transformation workflows, and how to use them effectively.
 
 ## What Are dbt Macros?
 
@@ -55,10 +56,10 @@ Once a macro is defined, it can be used in multiple models, ensuring that any up
 Macros are typically defined in a `.sql` file within the `macros/` directory of your dbt project. Here's an example of a simple macro that calculates the average of a column:
 
 ```sql
--- macros/calculate_average.sql
+- macros/calculate_average.sql
 
 {% macro calculate_average(column_name) %}
-    AVG({{ column_name }})
+ AVG({{ column_name }})
 {% endmacro %}
 ```
 
@@ -68,15 +69,14 @@ In this example, the macro calculate_average accepts a column name as a paramete
 Once you've defined the macro, you can call it within any model by using the following syntax:
 
 ```sql
--- models/my_model.sql
+- models/my_model.sql
 
 SELECT
-    {{ calculate_average('price') }} AS avg_price,
-    category
+ {{ calculate_average('price') }} AS avg_price, category
 FROM
-    {{ ref('products') }}
+ {{ ref('products') }}
 GROUP BY
-    category
+ category
 ```
 
 Here, we’re using the calculate_average macro in the SELECT statement to calculate the average price in the products table, without needing to manually repeat the logic.
@@ -85,17 +85,17 @@ Here, we’re using the calculate_average macro in the SELECT statement to calcu
 Macros can also be combined with variables to add more flexibility. For example, let’s define a macro that dynamically builds a WHERE clause based on a variable:
 
 ```sql
--- macros/filter_by_status.sql
+- macros/filter_by_status.sql
 
 {% macro filter_by_status(status) %}
-    WHERE status = '{{ status }}'
+ WHERE status = '{{ status }}'
 {% endmacro %}
 ```
 
 You can now use this macro to filter data based on a variable like so:
 
 ```sql
--- models/orders.sql
+- models/orders.sql
 
 SELECT *
 FROM {{ ref('orders') }}
@@ -108,25 +108,24 @@ In this case, `filter_by_status` dynamically adds a `WHERE` clause that filters 
 Here’s an example of a more advanced macro that creates a dynamic join based on parameters passed to it:
 
 ```sql
--- macros/join_tables.sql
+- macros/join_tables.sql
 
 {% macro join_tables(left_table, right_table, join_key) %}
-    SELECT
-        left.*,
-        right.*
-    FROM
-        {{ ref(left_table) }} AS left
-    INNER JOIN
-        {{ ref(right_table) }} AS right
-    ON
-        left.{{ join_key }} = right.{{ join_key }}
+ SELECT
+ left.*, right.*
+ FROM
+ {{ ref(left_table) }} AS left
+ INNER JOIN
+ {{ ref(right_table) }} AS right
+ ON
+ left.{{ join_key }} = right.{{ join_key }}
 {% endmacro %}
 ```
 
 This macro takes two table names and a join key, then dynamically creates an INNER JOIN between the tables:
 
 ```sql
--- models/joined_data.sql
+- models/joined_data.sql
 
 {{ join_tables('customers', 'orders', 'customer_id') }}
 ```

@@ -16,15 +16,16 @@ draft: false
 image: "/images/blog.png"
 canonical: "https://iceberglakehouse.com/posts/2026-03-context-chatgpt/"
 ---
-> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-03-context-chatgpt/).
 
 Getting consistently useful results from ChatGPT requires more than writing good prompts. The real differentiator is how you manage context: the background information, instructions, documents, and accumulated knowledge that shapes every response ChatGPT generates. Without deliberate context management, you end up repeating yourself, getting generic answers, and wasting time course-correcting the AI.
+
+> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-03-context-chatgpt/).
 
 This guide covers every context management tool ChatGPT offers in 2026, from basic custom instructions to advanced Project workflows, and explains when to use each one.
 
 ## What Is Context Management and Why Does It Matter?
 
-Context management is the practice of controlling what information an AI model has access to when generating a response. Every time you interact with ChatGPT, the model processes a "context window," basically the sum of all text it can see at once, including your conversation history, uploaded files, system instructions, and memory. The quality of the response depends directly on how well you curate that window.
+Context management is the practice of controlling what information an AI model has access to when generating a response. Every time you interact with ChatGPT, the model processes a "context window, " basically the sum of all text it can see at once, including your conversation history, uploaded files, system instructions, and memory. The quality of the response depends directly on how well you curate that window.
 
 Poor context management looks like this:
 
@@ -53,7 +54,7 @@ For ongoing projects, research, or multi-session work, use ChatGPT's structured 
 
 ### How to Decide
 
-Ask yourself: "If I handed this task to a knowledgeable colleague, what would I need to tell them before they could start?" If the answer is "nothing, just the question," use minimal context. If you would need to hand them a style guide, a codebase overview, and three reference documents, set up a Project.
+Ask yourself: "If I handed this task to a knowledgeable colleague, what would I need to tell them before they could start?" If the answer is "nothing, just the question, " use minimal context. If you would need to hand them a style guide, a codebase overview, and three reference documents, set up a Project.
 
 ## Custom Instructions: Your Global Defaults
 
@@ -84,7 +85,7 @@ ChatGPT's Memory feature allows the model to remember facts, preferences, and co
 
 ### How Memory Works
 
-When enabled (Settings > Personalization > Memory), ChatGPT can save information you share during conversations. It stores these as discrete facts: "User prefers Python over JavaScript," "User's company uses PostgreSQL 15," "User is writing a book about data engineering."
+When enabled (Settings > Personalization > Memory), ChatGPT can save information you share during conversations. It stores these as discrete facts: "User prefers Python over JavaScript, " "User's company uses PostgreSQL 15, " "User is writing a book about data engineering."
 
 You can explicitly tell ChatGPT to remember things: "Remember that my team uses the Google style guide for Python." You can also ask it what it remembers ("What do you know about me?") and delete specific memories or clear them all.
 
@@ -133,7 +134,7 @@ Think of Custom Instructions as your personal defaults and Project Instructions 
 You can upload various file types to a Project's knowledge base:
 
 | File Type | Best For |
-|---|---|
+|--|--|
 | **PDF** | Reference documentation, research papers, specifications |
 | **CSV/Excel** | Data samples, structured reference data |
 | **Text/Markdown** | Style guides, code snippets, outlines, notes |
@@ -167,7 +168,7 @@ CustomGPTs let you create purpose-built AI assistants with specific instructions
 ### When to Use a CustomGPT vs. a Project
 
 | Feature | Project | CustomGPT |
-|---|---|---|
+|--|--|--|
 | **Best for** | Extended work on a specific project | Repeatable tasks across different projects |
 | **Context scope** | One body of work | One type of task |
 | **Shareable** | Yes (collaborators) | Yes (public or private) |
@@ -208,7 +209,7 @@ MCP in ChatGPT goes beyond read-only data access. It supports both read and writ
 ### MCP vs. CustomGPT Actions
 
 | Feature | MCP Servers | CustomGPT Actions |
-|---|---|---|
+|--|--|--|
 | **Protocol** | Standardized (MCP) | Custom API definitions |
 | **Setup** | Configure via Developer Mode | Build into a CustomGPT |
 | **Portability** | Works across MCP-compatible tools | ChatGPT only |

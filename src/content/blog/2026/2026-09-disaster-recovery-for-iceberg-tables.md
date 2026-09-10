@@ -15,9 +15,10 @@ draft: false
 image: "/images/blog.png"
 canonical: https://iceberglakehouse.com/posts/disaster-recovery-for-iceberg-tables/
 ---
-> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/disaster-recovery-for-iceberg-tables/).
 
 A region goes dark on a Tuesday. The catalog service is unreachable, the object store returns errors, and the executive dashboard that reads from the lakehouse is blank. The team has a replicated bucket in a second region that they set up eighteen months ago. Someone points an engine at it and the first query fails, because every manifest in the replicated metadata still names files in the original region. The second query fails because the replicated catalog database restored from a nightly dump points at a metadata file that was written six hours after the dump was taken. The third query works, on one table, after someone finds the right metadata file by hand.
+
+> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/disaster-recovery-for-iceberg-tables/).
 
 That sequence is the normal outcome of a disaster recovery (DR) plan for Apache Iceberg that was designed as if Iceberg were a pile of Parquet files. It is not. An Iceberg table is three things with three different failure modes: a catalog pointer, a tree of metadata files linked by absolute paths, and a set of data files. Protecting one without the others produces a backup that cannot be restored, and the gap only becomes visible during the restore.
 
@@ -38,7 +39,7 @@ DR planning starts with an inventory of what can be lost. For an Iceberg table t
 The disasters map onto these four in different combinations:
 
 | Disaster | Catalog | Metadata | Data | Location |
-|---|---|---|---|---|
+|--|--|--|--|--|
 | Bad `DELETE` or `MERGE` commits wrong rows | intact | intact | intact | intact |
 | `DROP TABLE PURGE` by mistake | entry gone | deleted | deleted | intact |
 | Overly aggressive `remove_orphan_files` | intact | intact | some deleted | intact |
@@ -64,8 +65,8 @@ This is also where tags earn their keep. A tag is a named reference to a snapsho
 
 ```sql
 ALTER TABLE sales.orders CREATE TAG `quarter-close-2026q2`
-  AS OF VERSION 7168742983117921046
-  RETAIN 3650 DAYS;
+ AS OF VERSION 7168742983117921046
+ RETAIN 3650 DAYS;
 ```
 
 Snapshot expiration respects tag retention. The quarter-close snapshot and every file it references survive for ten years regardless of the table's default `history.expire.max-snapshot-age-ms`. Tagging is how you turn "we can recover to any point in the last five days" into "we can recover to every month-end for a decade" without a separate backup system. Data files shared between the tagged snapshot and later ones are stored once.
@@ -96,20 +97,20 @@ First, confirm what happened. Listing object versions under the prefix shows eve
 
 ```bash
 aws s3api list-object-versions \
-  --bucket lake-primary \
-  --prefix warehouse/sales/orders/ \
-  --query 'DeleteMarkers[?IsLatest==`true`].[Key,VersionId]' \
-  --output text | wc -l
+ -bucket lake-primary \
+ -prefix warehouse/sales/orders/ \
+ -query 'DeleteMarkers[?IsLatest==`true`].[Key, VersionId]' \
+ -output text | wc -l
 ```
 
 That count is the number of objects the purge removed. Second, remove the delete markers, which makes the most recent real version current again. For a table with thousands of files this is a loop over the marker list:
 
 ```bash
 aws s3api list-object-versions \
-  --bucket lake-primary --prefix warehouse/sales/orders/ \
-  --query 'DeleteMarkers[?IsLatest==`true`].[Key,VersionId]' --output text |
+ -bucket lake-primary -prefix warehouse/sales/orders/ \
+ -query 'DeleteMarkers[?IsLatest==`true`].[Key, VersionId]' -output text |
 while read key version; do
-  aws s3api delete-object --bucket lake-primary --key "$key" --version-id "$version"
+ aws s3api delete-object -bucket lake-primary -key "$key" -version-id "$version"
 done
 ```
 
@@ -117,8 +118,7 @@ Deleting a delete marker is the object-store idiom for "undelete." Every data fi
 
 ```sql
 CALL polaris.system.register_table(
-  table         => 'sales.orders',
-  metadata_file => 's3://lake-primary/warehouse/sales/orders/metadata/00212-6f1c-...-a9e2.metadata.json'
+ table => 'sales.orders', metadata_file => 's3://lake-primary/warehouse/sales/orders/metadata/00212-6f1c-...-a9e2.metadata.json'
 );
 ```
 
@@ -145,20 +145,16 @@ from pyiceberg.catalog import load_catalog
 catalog = load_catalog("polaris")
 ledger = []
 for namespace in catalog.list_namespaces():
-    for identifier in catalog.list_tables(namespace):
-        table = catalog.load_table(identifier)
-        snapshot = table.current_snapshot()
-        ledger.append({
-            "identifier": ".".join(identifier),
-            "metadata_location": table.metadata_location,
-            "snapshot_id": snapshot.snapshot_id if snapshot else None,
-            "recorded_at": int(time.time() * 1000),
-        })
+ for identifier in catalog.list_tables(namespace):
+ table = catalog.load_table(identifier)
+ snapshot = table.current_snapshot()
+ ledger.append({
+ "identifier": ".".join(identifier), "metadata_location": table.metadata_location, "snapshot_id": snapshot.snapshot_id if snapshot else None, "recorded_at": int(time.time() * 1000), })
 
 stamp = time.strftime("%Y%m%dT%H%M%SZ", time.gmtime())
 for prefix in ("s3://lake-primary/dr/ledger/", "s3://lake-dr/dr/ledger/"):
-    with fsspec.open(f"{prefix}{stamp}.json", "w") as f:
-        json.dump(ledger, f)
+ with fsspec.open(f"{prefix}{stamp}.json", "w") as f:
+ json.dump(ledger, f)
 ```
 
 Run every fifteen minutes, this produces a record that says, for every table, which metadata file was current as of a known time. Catalog restore becomes: read the latest ledger, register every table at its recorded metadata location. The ledger is small, it is stored on the same replicated storage as the tables, and it does not depend on the catalog's own backup mechanism. When the catalog is a REST service in another team's control, the ledger is also the only catalog backup you can take yourself.
@@ -193,12 +189,7 @@ There are three strategies for making the replica's paths resolve, and the choic
 
 ```sql
 CALL polaris.system.rewrite_table_path(
-  table            => 'sales.orders',
-  source_prefix    => 's3://lake-primary/warehouse/sales/orders',
-  target_prefix    => 's3://lake-dr/warehouse/sales/orders',
-  start_version    => '00210-....metadata.json',
-  end_version      => '00212-....metadata.json',
-  staging_location => 's3://lake-primary/dr/staging/sales/orders'
+ table => 'sales.orders', source_prefix => 's3://lake-primary/warehouse/sales/orders', target_prefix => 's3://lake-dr/warehouse/sales/orders', start_version => '00210-....metadata.json', end_version => '00212-....metadata.json', staging_location => 's3://lake-primary/dr/staging/sales/orders'
 );
 ```
 
@@ -206,7 +197,7 @@ The procedure returns the rewritten latest metadata file name and a CSV of sourc
 
 **Strategy three: use format version 4 relative paths.** v4 stores data and metadata file paths relative to the table location and joins them at read time. A v4 table with relative paths can be copied byte-for-byte to another prefix and registered there with no rewrite, because the paths inside the metadata are `data/00042.parquet` rather than a full URI. This is the long-term answer. It applies to tables created on v4 or rewritten after upgrade, and engine support for v4 is still arriving, so most production tables today are on strategies one or two.
 
-Whatever the strategy, replication has an ordering problem that DR plans routinely miss. Iceberg writes data files first, then manifests, then the manifest list, then the metadata file, and finally swaps the catalog pointer. Asynchronous replication does not preserve that order. The replica can hold a metadata file whose manifests have not arrived, or manifests whose data files have not arrived. A DR-side reader that opens that metadata file gets a missing-file error. The fix is to record in the DR ledger only metadata files whose entire tree has been verified present in the replica, which is what the verification script in the next section does. The DR recovery point is then "the latest fully-replicated snapshot," which is a precise and honest statement rather than "whatever replicated."
+Whatever the strategy, replication has an ordering problem that DR plans routinely miss. Iceberg writes data files first, then manifests, then the manifest list, then the metadata file, and finally swaps the catalog pointer. Asynchronous replication does not preserve that order. The replica can hold a metadata file whose manifests have not arrived, or manifests whose data files have not arrived. A DR-side reader that opens that metadata file gets a missing-file error. The fix is to record in the DR ledger only metadata files whose entire tree has been verified present in the replica, which is what the verification script in the next section does. The DR recovery point is then "the latest fully-replicated snapshot, " which is a precise and honest statement rather than "whatever replicated."
 
 ### Why Replicated Metadata Is Not a Consistent Snapshot
 
@@ -232,36 +223,36 @@ from pyiceberg.manifest import read_manifest_list, ManifestFile
 io = PyArrowFileIO(properties={"s3.region": "us-west-2"})
 
 def exists(path):
-    try:
-        io.new_input(path).open().close()
-        return True
-    except FileNotFoundError:
-        return False
+ try:
+ io.new_input(path).open().close()
+ return True
+ except FileNotFoundError:
+ return False
 
 def verify_tree(metadata_location):
-    with io.new_input(metadata_location).open() as f:
-        meta = json.load(f)
-    current = meta.get("current-snapshot-id")
-    snapshot = next(s for s in meta["snapshots"] if s["snapshot-id"] == current)
-    manifest_list = snapshot["manifest-list"]
-    missing = []
-    if not exists(manifest_list):
-        return [manifest_list]
-    for manifest in read_manifest_list(io.new_input(manifest_list)):
-        if not exists(manifest.manifest_path):
-            missing.append(manifest.manifest_path)
-            continue
-        for entry in manifest.fetch_manifest_entry(io, discard_deleted=True):
-            if not exists(entry.data_file.file_path):
-                missing.append(entry.data_file.file_path)
-    return missing
+ with io.new_input(metadata_location).open() as f:
+ meta = json.load(f)
+ current = meta.get("current-snapshot-id")
+ snapshot = next(s for s in meta["snapshots"] if s["snapshot-id"] == current)
+ manifest_list = snapshot["manifest-list"]
+ missing = []
+ if not exists(manifest_list):
+ return [manifest_list]
+ for manifest in read_manifest_list(io.new_input(manifest_list)):
+ if not exists(manifest.manifest_path):
+ missing.append(manifest.manifest_path)
+ continue
+ for entry in manifest.fetch_manifest_entry(io, discard_deleted=True):
+ if not exists(entry.data_file.file_path):
+ missing.append(entry.data_file.file_path)
+ return missing
 
 candidate = "s3://lake-dr/warehouse/sales/orders/metadata/00212-6f1c-...-a9e2.metadata.json"
 missing = verify_tree(candidate)
 if missing:
-    print(f"NOT READY: {len(missing)} files missing, first: {missing[0]}")
+ print(f"NOT READY: {len(missing)} files missing, first: {missing[0]}")
 else:
-    print("READY to register")
+ print("READY to register")
 ```
 
 The script opens the metadata file, finds the current snapshot, reads its manifest list, reads each manifest, and checks that every live data file and delete file exists. It checks only the current snapshot, because that is what a restore needs to serve queries. A fuller check for time-travel readiness walks every retained snapshot, which is the same loop over `meta["snapshots"]`.
@@ -329,7 +320,7 @@ The ways DR plans for Iceberg fall short are consistent enough to list.
 Putting the tiers together produces a short, defensible plan.
 
 | Tier | Protects against | Setting or job | Recovery time |
-|---|---|---|---|
+|--|--|--|--|
 | Snapshots and tags | bad commits | retention of 7 to 14 days on critical tables, tags on milestone snapshots | seconds |
 | Object versioning | accidental deletion, purge, bad orphan cleanup | versioning on, lifecycle expiry of non-current versions at 30 days, object lock on regulated buckets | minutes per table |
 | Catalog ledger | catalog loss | ledger job every 15 minutes, written to both regions | minutes for hundreds of tables |

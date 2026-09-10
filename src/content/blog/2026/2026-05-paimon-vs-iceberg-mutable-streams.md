@@ -16,17 +16,18 @@ draft: false
 image: "/images/blog/paimon-vs-iceberg-mutable-streams/paimon-vs-iceberg-workload-decision-matrix.png"
 canonical: "https://iceberglakehouse.com/posts/2026-05-24-paimon-vs-iceberg-mutable-streams/"
 ---
-> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-05-24-paimon-vs-iceberg-mutable-streams/).
 
 # When Paimon Beats Iceberg for Mutable Streams
 
 Most lakehouse format comparisons skip the part that actually matters for streaming teams: how the format handles mutations. Apache Iceberg is excellent for append-heavy analytics, schema evolution, and multi-engine compatibility. But feed a high-churn CDC stream of updates and deletes into Iceberg using merge-on-read (MoR), and you're managing a growing pile of delete files that accumulate between compaction runs.
 
+> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-05-24-paimon-vs-iceberg-mutable-streams/).
+
 Apache Paimon takes a different approach. Its Log-Structured Merge-tree (LSM-tree) architecture is designed from the ground up for continuous upserts. For the right workload (high-frequency mutations, Flink-native execution, real-time table freshness requirements) Paimon produces a cleaner operational profile than Iceberg. For the wrong workload, it's an unnecessary complexity burden.
 
 This post defines the specific conditions where Paimon wins, where Iceberg remains the better default, and what you actually need to configure to use either effectively.
 
----
+--
 
 ## What Paimon Is and Where It Came From
 
@@ -36,7 +37,7 @@ Paimon distinguishes itself from Iceberg and Delta Lake through its choice of st
 
 The choice of LSM-tree is not incidental. It's a direct response to the specific access pattern of high-frequency updates.
 
----
+--
 
 ## How the LSM-Tree Handles Updates Differently
 
@@ -50,26 +51,18 @@ Iceberg's approach is different. Under MoR semantics, an update to a row in Iceb
 
 This works fine when updates are infrequent. When a table receives thousands of updates per second across a high-cardinality key space, delete files accumulate faster than compaction can remove them. Query performance degrades because the engine must read and reconcile more and more file pairs. The recommended remediation is more frequent compaction, which adds operational overhead and resource contention.
 
----
+--
 
 ## Paimon's Primary Key Table: The Core Streaming Primitive
 
 The central concept in Paimon for streaming workloads is the primary key table. When you define a table with a primary key, Paimon routes all writes for that key through the LSM-tree, resolving conflicts using the configured merge engine.
 
 ```sql
--- Create a Paimon primary key table for CDC ingestion from MySQL
+- Create a Paimon primary key table for CDC ingestion from MySQL
 CREATE TABLE customer_orders (
-    order_id    BIGINT PRIMARY KEY NOT ENFORCED,
-    customer_id BIGINT,
-    status      STRING,
-    amount      DECIMAL(10, 2),
-    updated_at  TIMESTAMP(3)
+ order_id BIGINT PRIMARY KEY NOT ENFORCED, customer_id BIGINT, status STRING, amount DECIMAL(10, 2), updated_at TIMESTAMP(3)
 ) WITH (
-    'connector'                 = 'paimon',
-    'path'                      = 's3://data-lake/paimon/customer_orders',
-    'bucket'                    = '8',
-    'changelog-producer'        = 'lookup',
-    'merge-engine'              = 'deduplicate'
+ 'connector' = 'paimon', 'path' = 's3://data-lake/paimon/customer_orders', 'bucket' = '8', 'changelog-producer' = 'lookup', 'merge-engine' = 'deduplicate'
 );
 ```
 
@@ -81,7 +74,7 @@ The `changelog-producer` property controls how Paimon generates downstream chang
 
 The `merge-engine` property controls how conflicts for the same primary key are resolved. `deduplicate` keeps the last write. For aggregation use cases (such as a running balance or session counter) `aggregation` allows you to define column-level merge functions like `sum`, `max`, or `last_non_null`.
 
----
+--
 
 ## The Changelog Stream Feature: Why Paimon Tables Are Different from Iceberg Tables
 
@@ -91,7 +84,7 @@ When a Flink job reads a Paimon primary key table as a streaming source, it does
 
 Iceberg can serve as a streaming source in Flink through incremental reads, but its model is snapshot-based. Flink reads successive Iceberg snapshots and emits new or deleted rows detected between them. This works for append-only tables and bounded update patterns, but doesn't produce the full changelog semantics that Paimon emits natively. Building an accurate changelog from Iceberg incremental reads requires additional logic to handle updates that touch the same row across multiple snapshots.
 
----
+--
 
 ## Where Paimon Falls Short
 
@@ -103,7 +96,7 @@ Paimon does offer an Iceberg-compatible read path, which exposes Paimon tables a
 
 Another constraint is operational maturity. Iceberg has a larger user base, more documented failure patterns, and more tooling for maintenance, governance, and catalog integration. Teams evaluating Paimon for production use should plan for less community documentation on edge cases and a steeper learning curve on tuning the LSM-tree parameters.
 
----
+--
 
 ## The Workload Decision Matrix
 
@@ -117,7 +110,7 @@ The decision between Paimon and Iceberg narrows to two dimensions: how frequentl
 
 **Mixed workload, multi-engine access, moderate update frequency:** Both work. For teams with existing Iceberg infrastructure and moderate CDC volume, tuning Iceberg's compaction settings and using copy-on-write (CoW) for large-batch updates is often simpler than introducing a second table format. Adopt Paimon selectively for the tables where it demonstrably helps, rather than as a wholesale platform replacement.
 
----
+--
 
 ## Practical Configuration for High-Churn Paimon Tables
 
@@ -130,15 +123,13 @@ When tuning a Paimon primary key table for a high-churn CDC source, three settin
 **Full-compaction interval:** For tables serving changelog consumers, schedule periodic full compaction to ensure that changelog events are complete and accurate. Lookup-mode changelog producers generate accurate changelogs on individual writes, but full compaction provides a consistency checkpoint that catches any drift between levels.
 
 ```sql
--- Configure a high-churn Paimon table with aggressive compaction settings
+- Configure a high-churn Paimon table with aggressive compaction settings
 ALTER TABLE customer_orders SET (
-    'num-sorted-run.compaction-trigger' = '3',
-    'full-compaction.delta-commits'     = '20',
-    'write.merge-engine'                = 'deduplicate'
+ 'num-sorted-run.compaction-trigger' = '3', 'full-compaction.delta-commits' = '20', 'write.merge-engine' = 'deduplicate'
 );
 ```
 
----
+--
 
 ## Conclusion
 
@@ -148,7 +139,7 @@ For append-heavy pipelines, mixed-engine analytics, or organizations that have a
 
 The clearest signal that Paimon is worth evaluating is mounting operational complexity around Iceberg compaction on high-churn tables. If you're spending more time managing delete file accumulation and compaction schedules than building pipeline features, Paimon's LSM-tree model is worth testing against your specific throughput numbers.
 
----
+--
 
 ## Paimon Tags: Batch-Compatible Snapshots for CDC Tables
 
@@ -157,19 +148,19 @@ One of Paimon's useful operational features is the Tag system. Unlike Iceberg's 
 Tags are particularly valuable for CDC tables where you want to support both the streaming changelog use case and the batch analytics use case simultaneously:
 
 ```sql
--- Create a daily tag for batch processing access
+- Create a daily tag for batch processing access
 CALL sys.create_tag('my_catalog.default.customer_orders', '2025-05-24', 2 /*snapshot-id*/);
 
--- Read from a tagged version for batch analytics
+- Read from a tagged version for batch analytics
 SELECT * FROM customer_orders /*+ OPTIONS('scan.tag-name'='2025-05-24') */;
 
--- Expire snapshots while retaining tags
+- Expire snapshots while retaining tags
 CALL sys.expire_snapshots('my_catalog.default.customer_orders', '2025-05-24 00:00:00', 10 /*retain-latest*/);
 ```
 
 Tags persist independently from snapshots. You can expire Paimon snapshots aggressively to control storage costs while retaining daily or weekly tags for historical analytical access. This gives CDC tables the same time-travel capability that makes Iceberg valuable for audit use cases, without the storage cost of retaining every intermediate snapshot.
 
----
+--
 
 ## Streaming Aggregations with Paimon's Aggregation Merge Engine
 
@@ -178,21 +169,11 @@ One of Paimon's most distinctive features is its native support for streaming ag
 The aggregation merge engine allows defining column-level merge functions that resolve conflicts for the same primary key:
 
 ```sql
--- Paimon table for session-level aggregations
+- Paimon table for session-level aggregations
 CREATE TABLE user_sessions (
-    user_id             BIGINT PRIMARY KEY NOT ENFORCED,
-    session_count       INT,
-    total_purchase_amt  DOUBLE,
-    last_active         TIMESTAMP(3),
-    active_days         BIGINT
+ user_id BIGINT PRIMARY KEY NOT ENFORCED, session_count INT, total_purchase_amt DOUBLE, last_active TIMESTAMP(3), active_days BIGINT
 ) WITH (
-    'connector'     = 'paimon',
-    'path'          = 's3://data-lake/paimon/user_sessions',
-    'merge-engine'  = 'aggregation',
-    'fields.session_count.aggregate-function'         = 'sum',
-    'fields.total_purchase_amt.aggregate-function'    = 'sum',
-    'fields.last_active.aggregate-function'           = 'last_non_null',
-    'fields.active_days.aggregate-function'           = 'count'
+ 'connector' = 'paimon', 'path' = 's3://data-lake/paimon/user_sessions', 'merge-engine' = 'aggregation', 'fields.session_count.aggregate-function' = 'sum', 'fields.total_purchase_amt.aggregate-function' = 'sum', 'fields.last_active.aggregate-function' = 'last_non_null', 'fields.active_days.aggregate-function' = 'count'
 );
 ```
 
@@ -200,20 +181,20 @@ Incoming events contain partial updates: a new session event increments `session
 
 This pattern is particularly efficient for analytics tables that are updated continuously from streaming sources but queried on a batch schedule. The aggregation merge engine handles the incremental state in the table format itself, rather than requiring complex stateful stream processing.
 
----
+--
 
 ## Monitoring Paimon Tables in Production
 
 Paimon doesn't have the same ecosystem of monitoring tooling as Iceberg (which benefits from tools like PyIceberg's table introspection and Spark's `DESCRIBE HISTORY`). But Paimon exposes sufficient system tables for building operational monitoring:
 
 ```sql
--- Check LSM-tree file count across buckets
+- Check LSM-tree file count across buckets
 SELECT bucket, level, count(*) as file_count
 FROM customer_orders$files
 GROUP BY bucket, level
 ORDER BY bucket, level;
 
--- Check snapshot history
+- Check snapshot history
 SELECT snapshot_id, schema_id, commit_time, total-size
 FROM customer_orders$snapshots
 ORDER BY commit_time DESC
@@ -228,7 +209,7 @@ LIMIT 20;
 
 Paimon's Flink integration also exposes JVM metrics for compaction thread pool saturation, which can be monitored through Prometheus/Grafana for operational alerting.
 
----
+--
 
 ### Go Further with Lakehouse Architecture
 

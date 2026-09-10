@@ -16,13 +16,14 @@ draft: false
 image: "/images/blog.png"
 canonical: "https://iceberglakehouse.com/posts/2026-03-connector-snowflake-open-catalog/"
 ---
-> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-03-connector-snowflake-open-catalog/).
 
-Snowflake Open Catalog is Snowflake's managed implementation of the Apache Iceberg REST catalog specification, based on the open-source Apache Polaris project. It serves as a centralized metadata catalog for Apache Iceberg tables, enabling multiple compute engines :  including Dremio, Spark, Trino, and Flink ,  to read from and write to the same Iceberg tables without metadata conflicts.
+Snowflake Open Catalog is Snowflake's managed implementation of the Apache Iceberg REST catalog specification, based on the open-source Apache Polaris project. It serves as a centralized metadata catalog for Apache Iceberg tables, enabling multiple compute engines : including Dremio, Spark, Trino, and Flink, to read from and write to the same Iceberg tables without metadata conflicts.
+
+> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-03-connector-snowflake-open-catalog/).
 
 Dremio Cloud connects to Snowflake Open Catalog as a first-class Iceberg data source. You get full read and write access to Iceberg tables, automatic table maintenance (compaction, manifest optimization, vacuuming), and the ability to federate catalog data with databases, object storage, cloud warehouses, and other catalogs : all through standard SQL.
 
-For organizations already invested in Snowflake, the Open Catalog is a strategic choice for multi-engine interoperability. Unlike Snowflake's proprietary internal catalog (which is only accessible through Snowflake compute), the Open Catalog exposes Iceberg metadata via a standard REST API. This means you're not locked into Snowflake compute for every analytical query :  Dremio can read the same tables at a fraction of the credit cost for repetitive workloads. Dremio also provides its federated engine, Reflections, governance, and AI capabilities ,  all without duplicating data or metadata.
+For organizations already invested in Snowflake, the Open Catalog is a strategic choice for multi-engine interoperability. Unlike Snowflake's proprietary internal catalog (which is only accessible through Snowflake compute), the Open Catalog exposes Iceberg metadata via a standard REST API. This means you're not locked into Snowflake compute for every analytical query : Dremio can read the same tables at a fraction of the credit cost for repetitive workloads. Dremio also provides its federated engine, Reflections, governance, and AI capabilities, all without duplicating data or metadata.
 
 ## Why Snowflake Open Catalog Users Need Dremio
 
@@ -89,18 +90,16 @@ Optionally restrict which Dremio users can access this catalog. Click **Save**.
 ## Query Snowflake Open Catalog Data
 
 ```sql
--- Query an Iceberg table managed by Snowflake Open Catalog
+- Query an Iceberg table managed by Snowflake Open Catalog
 SELECT customer_id, customer_name, total_spend, signup_date
 FROM "sf-open-catalog".analytics.customer_summary
 WHERE total_spend > 10000 AND signup_date >= '2024-01-01'
 ORDER BY total_spend DESC;
 
--- Write to an external catalog
+- Write to an external catalog
 INSERT INTO "sf-open-catalog".analytics.monthly_metrics
 SELECT
-  DATE_TRUNC('month', order_date) AS month,
-  COUNT(*) AS order_count,
-  SUM(total_amount) AS revenue
+ DATE_TRUNC('month', order_date) AS month, COUNT(*) AS order_count, SUM(total_amount) AS revenue
 FROM "sf-open-catalog".ecommerce.orders
 GROUP BY 1;
 ```
@@ -111,17 +110,12 @@ Join catalog data with non-Snowflake sources in a single query:
 
 ```sql
 SELECT
-  soc.customer_name,
-  soc.total_spend AS catalog_spend,
-  pg.region,
-  pg.account_manager,
-  s3.support_ticket_count,
-  CASE
-    WHEN soc.total_spend > 100000 AND s3.support_ticket_count < 3 THEN 'Platinum'
-    WHEN soc.total_spend > 50000 THEN 'Gold'
-    WHEN soc.total_spend > 10000 THEN 'Silver'
-    ELSE 'Standard'
-  END AS customer_tier
+ soc.customer_name, soc.total_spend AS catalog_spend, pg.region, pg.account_manager, s3.support_ticket_count, CASE
+ WHEN soc.total_spend > 100000 AND s3.support_ticket_count < 3 THEN 'Platinum'
+ WHEN soc.total_spend > 50000 THEN 'Gold'
+ WHEN soc.total_spend > 10000 THEN 'Silver'
+ ELSE 'Standard'
+ END AS customer_tier
 FROM "sf-open-catalog".analytics.customer_summary soc
 JOIN "postgres-crm".public.customers pg ON soc.customer_id = pg.customer_id
 LEFT JOIN "s3-support".tickets.customer_tickets s3 ON soc.customer_id = s3.customer_id
@@ -135,16 +129,11 @@ Create views that combine catalog data with business logic:
 ```sql
 CREATE VIEW analytics.gold.customer_health AS
 SELECT
-  soc.customer_id,
-  soc.customer_name,
-  soc.total_spend,
-  soc.signup_date,
-  CASE
-    WHEN soc.total_spend > 100000 THEN 'Enterprise'
-    WHEN soc.total_spend > 25000 THEN 'Mid-Market'
-    ELSE 'SMB'
-  END AS customer_segment,
-  ROUND(soc.total_spend / GREATEST(DATEDIFF('MONTH', soc.signup_date, CURRENT_DATE), 1), 2) AS monthly_spend_rate
+ soc.customer_id, soc.customer_name, soc.total_spend, soc.signup_date, CASE
+ WHEN soc.total_spend > 100000 THEN 'Enterprise'
+ WHEN soc.total_spend > 25000 THEN 'Mid-Market'
+ ELSE 'SMB'
+ END AS customer_segment, ROUND(soc.total_spend / GREATEST(DATEDIFF('MONTH', soc.signup_date, CURRENT_DATE), 1), 2) AS monthly_spend_rate
 FROM "sf-open-catalog".analytics.customer_summary soc;
 ```
 
@@ -172,13 +161,9 @@ Enrich catalog data with AI inline in your queries:
 
 ```sql
 SELECT
-  customer_name,
-  total_spend,
-  AI_CLASSIFY(
-    'Based on spending patterns, classify customer risk of churn',
-    'Customer: ' || customer_name || ', Total Spend: $' || CAST(total_spend AS VARCHAR) || ', Months Active: ' || CAST(months_active AS VARCHAR),
-    ARRAY['Low Risk', 'Moderate Risk', 'High Risk', 'Critical']
-  ) AS churn_risk
+ customer_name, total_spend, AI_CLASSIFY(
+ 'Based on spending patterns, classify customer risk of churn', 'Customer: ' || customer_name || ', Total Spend: $' || CAST(total_spend AS VARCHAR) || ', Months Active: ' || CAST(months_active AS VARCHAR), ARRAY['Low Risk', 'Moderate Risk', 'High Risk', 'Critical']
+ ) AS churn_risk
 FROM "sf-open-catalog".analytics.customer_summary
 WHERE total_spend > 5000;
 ```
@@ -263,7 +248,7 @@ Dremio's unique contribution to this architecture is federation (joining catalog
 Snowflake Open Catalog is based on the open-source Apache Polaris (incubating) project. Key differences:
 
 | Feature | Snowflake Open Catalog | Apache Polaris (self-managed) |
-|---|---|---|
+|--|--|--|
 | **Hosting** | Managed by Snowflake | Self-hosted |
 | **Credential Vending** | Built-in | Requires configuration |
 | **Authentication** | Snowflake OAuth | Custom |

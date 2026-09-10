@@ -14,9 +14,10 @@ draft: false
 image: "/images/blog.png"
 canonical: "https://iceberglakehouse.com/posts/mcp-stateless-specifications-scalable-data-gateways-ai-agents/"
 ---
-> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/mcp-stateless-specifications-scalable-data-gateways-ai-agents/).
 
 A Model Context Protocol server that holds session state in memory is a server you cannot scale by adding replicas. The moment one process remembers which user is on which connection, which query results are cached for whom, and where a multi-step tool interaction left off, you have coupled correctness to a specific instance. Kill that instance and the state is gone. Add another instance and requests routed to it know nothing. This is the core operational problem with stateful gateways, and it is why the direction of travel for enterprise MCP deployments is toward stateless designs.
+
+> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/mcp-stateless-specifications-scalable-data-gateways-ai-agents/).
 
 This post explains why MCP gateways become a bottleneck under agent load, compares stateful and stateless designs honestly, and covers what a stateless data gateway actually requires: credential delegation, per-request context isolation, sane Kubernetes deployment, and guardrails on the database tools it exposes. A note on the spec itself: the [Model Context Protocol](https://modelcontextprotocol.io/) continues to evolve, and where this post describes stateless behavior as a specification feature, treat it as a design direction and proposal that you should verify against the current spec and the [MCP GitHub organization](https://github.com/modelcontextprotocol) before you build to it. The architectural principles hold regardless of exact spec wording.
 
@@ -43,7 +44,7 @@ A **stateless** gateway externalizes all of that. Identity travels with each req
 The tradeoffs line up like this.
 
 | Dimension | Stateful gateway | Stateless gateway |
-| --- | --- | --- |
+| -- | -- | -- |
 | Horizontal scaling | Limited by sticky routing | Add replicas freely behind a load balancer |
 | Failure recovery | Session lost when instance dies | Requests reroute to any healthy replica |
 | Load balancing | Pinned to session-holding instance | Any instance can serve any request |
@@ -87,14 +88,14 @@ The following is a conceptual sketch of the deployment, not production YAML. Exa
 ```
 # Conceptual only - verify against current docs
 Deployment: mcp-data-gateway
-  replicas: N                # scaled by load, no sticky sessions
-  container:
-    image: <mcp-gateway-image>
-    resources:
-      limits: { cpu, memory }
-    env / secrets from: external secret store
-    readinessProbe: can reach IdP + query engine
-    livenessProbe: process healthy
+ replicas: N # scaled by load, no sticky sessions
+ container:
+ image: <mcp-gateway-image>
+ resources:
+ limits: { cpu, memory }
+ env / secrets from: external secret store
+ readinessProbe: can reach IdP + query engine
+ livenessProbe: process healthy
 Service: load-balances across replicas (no session affinity)
 HorizontalPodAutoscaler: target CPU / request rate
 ```

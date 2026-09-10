@@ -16,9 +16,10 @@ draft: false
 image: "/images/blog.png"
 canonical: "https://iceberglakehouse.com/posts/2026-03-connector-microsoft-sql-server/"
 ---
-> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-03-connector-microsoft-sql-server/).
 
 Microsoft SQL Server is one of the most widely deployed enterprise databases in the world. ERP systems, CRM platforms, financial applications, and custom business applications run on SQL Server across on-premises data centers and Azure cloud deployments. But connecting SQL Server data to a modern analytics platform typically requires building ETL pipelines, managing SSIS packages, or purchasing additional SQL Server Enterprise licenses for analytics workloads.
+
+> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-03-connector-microsoft-sql-server/).
 
 Dremio Cloud connects directly to SQL Server and queries it alongside S3, PostgreSQL, Snowflake, BigQuery, MongoDB, and every other connected source in a single SQL query. You don't need to extract data from SQL Server, build staging tables, or manage nightly ETL jobs. Dremio reads SQL Server in place, applies governance, and accelerates repeated queries with Reflections.
 
@@ -75,7 +76,7 @@ Enter SQL Authentication credentials (username/password) or use Secret Resource 
 ### 4. Configure Advanced Options
 
 | Setting | Purpose | Default |
-|---|---|---|
+|--|--|--|
 | **Record fetch size** | Rows per batch from SQL Server | 200 |
 | **Maximum Idle Connections** | Connection pool management | 8 |
 | **Connection Idle Time (s)** | Seconds before idle connections close | 60 |
@@ -89,25 +90,16 @@ Enter SQL Authentication credentials (username/password) or use Secret Resource 
 ## Query SQL Server Data
 
 ```sql
--- Query ERP inventory data
+- Query ERP inventory data
 SELECT
-  product_id,
-  product_name,
-  warehouse_location,
-  quantity_on_hand,
-  reorder_point
+ product_id, product_name, warehouse_location, quantity_on_hand, reorder_point
 FROM "sqlserver-erp".dbo.products
 WHERE quantity_on_hand < reorder_point
 ORDER BY quantity_on_hand ASC;
 
--- Financial reporting
+- Financial reporting
 SELECT
-  department_code,
-  account_category,
-  fiscal_quarter,
-  SUM(actual_amount) AS actual_spend,
-  SUM(budget_amount) AS budgeted,
-  ROUND((SUM(actual_amount) - SUM(budget_amount)) / NULLIF(SUM(budget_amount), 0) * 100, 1) AS variance_pct
+ department_code, account_category, fiscal_quarter, SUM(actual_amount) AS actual_spend, SUM(budget_amount) AS budgeted, ROUND((SUM(actual_amount) - SUM(budget_amount)) / NULLIF(SUM(budget_amount), 0) * 100, 1) AS variance_pct
 FROM "sqlserver-erp".finance.budget_actuals
 WHERE fiscal_year = 2024
 GROUP BY department_code, account_category, fiscal_quarter
@@ -117,24 +109,19 @@ ORDER BY ABS(SUM(actual_amount) - SUM(budget_amount)) DESC;
 ## Federate SQL Server with Other Sources
 
 ```sql
--- Join SQL Server ERP with PostgreSQL CRM and S3 marketing data
+- Join SQL Server ERP with PostgreSQL CRM and S3 marketing data
 SELECT
-  ss.product_name,
-  ss.quantity_on_hand,
-  pg.total_orders,
-  pg.avg_order_value,
-  s3.click_through_rate,
-  CASE
-    WHEN pg.total_orders > 100 AND ss.quantity_on_hand < 50 THEN 'Reorder - High Demand'
-    WHEN pg.total_orders < 10 AND ss.quantity_on_hand > 500 THEN 'Overstock - Reduce'
-    ELSE 'Normal'
-  END AS inventory_action
+ ss.product_name, ss.quantity_on_hand, pg.total_orders, pg.avg_order_value, s3.click_through_rate, CASE
+ WHEN pg.total_orders > 100 AND ss.quantity_on_hand < 50 THEN 'Reorder - High Demand'
+ WHEN pg.total_orders < 10 AND ss.quantity_on_hand > 500 THEN 'Overstock - Reduce'
+ ELSE 'Normal'
+ END AS inventory_action
 FROM "sqlserver-erp".dbo.products ss
 LEFT JOIN (
-  SELECT product_id, COUNT(*) AS total_orders, AVG(order_value) AS avg_order_value
-  FROM "postgres-crm".public.orders
-  WHERE order_date >= '2024-01-01'
-  GROUP BY product_id
+ SELECT product_id, COUNT(*) AS total_orders, AVG(order_value) AS avg_order_value
+ FROM "postgres-crm".public.orders
+ WHERE order_date >= '2024-01-01'
+ GROUP BY product_id
 ) pg ON ss.product_id = pg.product_id
 LEFT JOIN "s3-marketing".analytics.product_clicks s3 ON ss.product_id = s3.product_id
 WHERE ss.quantity_on_hand < ss.reorder_point OR pg.total_orders > 100
@@ -146,18 +133,12 @@ ORDER BY pg.total_orders DESC;
 ```sql
 CREATE VIEW analytics.gold.inventory_management AS
 SELECT
-  p.product_id,
-  p.product_name,
-  p.warehouse_location,
-  p.quantity_on_hand,
-  p.reorder_point,
-  CASE
-    WHEN p.quantity_on_hand = 0 THEN 'Out of Stock'
-    WHEN p.quantity_on_hand < p.reorder_point * 0.5 THEN 'Critical'
-    WHEN p.quantity_on_hand < p.reorder_point THEN 'Low'
-    ELSE 'Adequate'
-  END AS stock_status,
-  ROUND(p.quantity_on_hand * p.unit_cost, 2) AS inventory_value
+ p.product_id, p.product_name, p.warehouse_location, p.quantity_on_hand, p.reorder_point, CASE
+ WHEN p.quantity_on_hand = 0 THEN 'Out of Stock'
+ WHEN p.quantity_on_hand < p.reorder_point * 0.5 THEN 'Critical'
+ WHEN p.quantity_on_hand < p.reorder_point THEN 'Low'
+ ELSE 'Adequate'
+ END AS stock_status, ROUND(p.quantity_on_hand * p.unit_cost, 2) AS inventory_value
 FROM "sqlserver-erp".dbo.products p;
 ```
 
@@ -182,33 +163,24 @@ A warehouse manager asks Claude "Show me all products that need reordering, sort
 ### AI SQL Functions
 
 ```sql
--- Generate reorder recommendations with AI
+- Generate reorder recommendations with AI
 SELECT
-  product_name,
-  stock_status,
-  quantity_on_hand,
-  reorder_point,
-  AI_GENERATE(
-    'Write a one-sentence reorder recommendation based on inventory status',
-    'Product: ' || product_name || ', Stock: ' || CAST(quantity_on_hand AS VARCHAR) || ', Reorder Point: ' || CAST(reorder_point AS VARCHAR) || ', Status: ' || stock_status
-  ) AS reorder_recommendation
+ product_name, stock_status, quantity_on_hand, reorder_point, AI_GENERATE(
+ 'Write a one-sentence reorder recommendation based on inventory status', 'Product: ' || product_name || ', Stock: ' || CAST(quantity_on_hand AS VARCHAR) || ', Reorder Point: ' || CAST(reorder_point AS VARCHAR) || ', Status: ' || stock_status
+ ) AS reorder_recommendation
 FROM analytics.gold.inventory_management
 WHERE stock_status IN ('Critical', 'Out of Stock');
 
--- Classify financial variances
+- Classify financial variances
 SELECT
-  department_code,
-  variance_pct,
-  AI_CLASSIFY(
-    'Based on the budget variance, classify the financial risk level',
-    'Department: ' || department_code || ', Variance: ' || CAST(variance_pct AS VARCHAR) || '%',
-    ARRAY['On Track', 'Minor Variance', 'Significant Overspend', 'Critical Overspend']
-  ) AS financial_risk
+ department_code, variance_pct, AI_CLASSIFY(
+ 'Based on the budget variance, classify the financial risk level', 'Department: ' || department_code || ', Variance: ' || CAST(variance_pct AS VARCHAR) || '%', ARRAY['On Track', 'Minor Variance', 'Significant Overspend', 'Critical Overspend']
+ ) AS financial_risk
 FROM (
-  SELECT department_code, ROUND((SUM(actual_amount) - SUM(budget_amount)) / NULLIF(SUM(budget_amount), 0) * 100, 1) AS variance_pct
-  FROM "sqlserver-erp".finance.budget_actuals
-  WHERE fiscal_year = 2024
-  GROUP BY department_code
+ SELECT department_code, ROUND((SUM(actual_amount) - SUM(budget_amount)) / NULLIF(SUM(budget_amount), 0) * 100, 1) AS variance_pct
+ FROM "sqlserver-erp".finance.budget_actuals
+ WHERE fiscal_year = 2024
+ GROUP BY department_code
 );
 ```
 
@@ -273,7 +245,7 @@ This minimizes data transfer between SQL Server and Dremio, reducing network tra
 SQL Server frequently powers ERP systems (Microsoft Dynamics, custom internal ERPs). Dremio enables analytics that combine ERP data with external sources:
 
 | SQL Server (ERP) | External Source | Analytics Use Case |
-|---|---|---|
+|--|--|--|
 | Inventory levels | S3 demand forecasts | Automated reorder predictions |
 | Purchase orders | PostgreSQL supplier data | Supplier performance scoring |
 | Financial actuals | BigQuery market data | Revenue benchmarking |

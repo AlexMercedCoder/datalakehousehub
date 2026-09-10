@@ -1,6 +1,6 @@
 ---
 title: "The Five Layers Between Your Lakehouse and a Trustworthy Agent"
-description: "Agent reliability is a property of the stack the model sits on. Five layers with distinct owners and failure modes turn the agent is unreliable into a specific diagnosis."
+description: "Agent reliability is a property of the stack the model sits on. Five layers with distinct owners and failure modes turn the agent is unreliable."
 date: 2026-07-28T09:00:00Z
 author: "Alex Merced"
 category: "AI & Agents"
@@ -15,11 +15,11 @@ image: "/images/blog.png"
 canonical: "https://iceberglakehouse.com/posts/five-layer-agentic-lakehouse/"
 ---
 
-> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/five-layer-agentic-lakehouse/).
-
 # The Five Layers Between Your Lakehouse and a Trustworthy Agent
 
 An organization ships an analytics agent. It has access to the warehouse, a good model, and a well-written system prompt. Three weeks in, it has produced two wrong numbers that reached a meeting, one query that scanned a table nobody expected it to touch, and an answer nobody can reconstruct because the logs rolled off.
+
+> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/five-layer-agentic-lakehouse/).
 
 The reaction is usually to blame the model and try a better one. That reliably fails, because none of the three problems was a reasoning failure. The wrong numbers came from a table with an undocumented filter rule. The unexpected scan came from a permission that was broader than anyone had reviewed. The unreconstructible answer came from having no record of what the agent did.
 
@@ -54,7 +54,7 @@ Two properties make it work as an architecture rather than as a diagram.
 A summary you can put on a wall.
 
 | Layer | Provides | Owner | Failure signature |
-|---|---|---|---|
+|--|--|--|--|
 | Data | Datasets with business rules applied | Data engineering | Valid SQL, wrong number |
 | Knowledge | What datasets and columns mean | Analysts | Wrong dataset or column chosen |
 | Agent | Reasoning, planning, execution bounds | Agent team | Loops, gives up, ignores context |
@@ -99,7 +99,7 @@ Two things belong here that are frequently missing.
 
 **Anti-guidance.** The most valuable descriptions name the mistake. "Use net_revenue_usd rather than gross_revenue_usd unless the question specifically says gross" changes behavior in a way that a neutral definition does not. This is prompt engineering applied to metadata, and metadata is a better place for it than a system prompt, because it reaches every consumer through every tool.
 
-**Ownership:** analysts who have watched people get it wrong, with data engineering supplying the mechanical facts and business owners approving metric definitions. The prompt that works in a room is "what has someone gotten wrong with this table," and the answers become descriptions nearly verbatim.
+**Ownership:** analysts who have watched people get it wrong, with data engineering supplying the mechanical facts and business owners approving metric definitions. The prompt that works in a room is "what has someone gotten wrong with this table, " and the answers become descriptions nearly verbatim.
 
 **How you know it is failing:** the agent picks the wrong dataset or the wrong column. It found something plausible and had no basis for choosing correctly among alternatives.
 
@@ -178,7 +178,7 @@ Distractors: gold.sales.orders_legacy, gold.finance.gl_revenue
 
 Question: "how many orders did we take in June"
 Correct: gold.sales.orders
-Distractor: gold.sales.order_lines  (line grain, wrong for counting orders)
+Distractor: gold.sales.order_lines (line grain, wrong for counting orders)
 ```
 
 The distractors are the test. A knowledge layer whose descriptions do not distinguish an order-grain dataset from a line-grain one fails here, and it fails silently in production as a number wrong by a multiple.
@@ -385,7 +385,7 @@ That before-and-after number is what funds the rest. A demonstrated reduction on
 
 The thing that makes this recovery work rather than turning into a rewrite is that it is incremental and subject-area scoped. You are not rebuilding the platform. You are building the missing layers under one slice, proving the effect, and repeating.
 
-One political note. This sequence involves telling stakeholders that the shipped agent needs foundational work, which is an uncomfortable conversation. It goes considerably better with the attributed failure distribution in hand, because it converts "the agent is unreliable" into "sixteen of twenty failures came from two datasets missing business rules," and the second is a work item rather than a verdict.
+One political note. This sequence involves telling stakeholders that the shipped agent needs foundational work, which is an uncomfortable conversation. It goes considerably better with the attributed failure distribution in hand, because it converts "the agent is unreliable" into "sixteen of twenty failures came from two datasets missing business rules, " and the second is a work item rather than a verdict.
 
 ## Where this is heading
 

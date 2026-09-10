@@ -15,7 +15,6 @@ draft: false
 image: "/images/blog.png"
 canonical: "https://iceberglakehouse.com/posts/2026-03-07-apache-software-foundation/"
 ---
-> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-03-07-apache-software-foundation/).
 
 *Read the complete Open Source and the Lakehouse series:*
 * [Part 1: Apache Software Foundation](/blog/2026-04-apache-software-foundation)
@@ -25,6 +24,8 @@ canonical: "https://iceberglakehouse.com/posts/2026-03-07-apache-software-founda
 * [Part 5: What is Apache Arrow?](/blog/2026-04-apache-arrow)
 * [Part 6: Assembling the Apache Lakehouse](/blog/2026-04-assembling-apache-lakehouse)
 * [Part 7: Agentic Analytics on the Apache Lakehouse](/blog/2026-04-agentic-analytics)
+
+> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-03-07-apache-software-foundation/).
 
 If you build a modern data lakehouse, you inevitably stack Apache Iceberg, Apache Parquet, and Apache Arrow. These projects dictate how you store, query, and govern petabytes of data. But the code itself is only half the story. The legal and operational framework supporting that code dictates whether a project survives for decades or gets hijacked by a single vendor. 
 
@@ -65,7 +66,7 @@ The ASF and the Linux Foundation frequently appear alongside each other, but the
 The ASF is a 501(c)(3) public charity focused on grassroots community incubation. The Linux Foundation is a 501(c)(6) trade organization that acts as a consortium for massive industry collaboration. 
 
 | Feature | Apache Software Foundation (ASF) | Linux Foundation (LF) |
-| :--- | :--- | :--- |
+| :-- | :-- | :-- |
 | **Organizational Model** | 501(c)(3) charity | 501(c)(6) trade organization |
 | **Members** | Individuals | Corporations |
 | **Governance** | Decentralized Project Management Committees | Centralized Technical Steering Committees |

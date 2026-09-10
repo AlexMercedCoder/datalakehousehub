@@ -1,6 +1,6 @@
 ---
 title: "Serving Sub-Second Queries Over an Iceberg Lakehouse With a Hot Tier"
-description: "A lakehouse cannot serve sub-second queries over seconds-old data. A hot tier in front solves it, with consequences for consistency, governance, and operational surface."
+description: "A lakehouse cannot serve sub-second queries over seconds-old data. A hot tier in front solves it, with consequences for consistency, governance."
 date: 2026-07-28T09:00:00Z
 author: "Alex Merced"
 category: "Apache Iceberg"
@@ -15,11 +15,11 @@ image: "/images/blog.png"
 canonical: "https://iceberglakehouse.com/posts/hot-tier-iceberg-serving/"
 ---
 
-> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/hot-tier-iceberg-serving/).
-
 # Serving Sub-Second Queries Over an Iceberg Lakehouse With a Hot Tier
 
 A fraud detection agent evaluates a transaction. It needs the customer's activity over the last four hours, their ninety-day baseline, and the merchant's recent decline rate. Two of those live in an Iceberg table refreshed every ten minutes. One needs data from four seconds ago.
+
+> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/hot-tier-iceberg-serving/).
 
 The lakehouse answers two of the three questions well and cannot answer the third at all, because the data has not been committed yet. So the team adds a second store for recent activity, and now they have two systems, two schemas, and application code that knows where the boundary is.
 
@@ -46,7 +46,7 @@ The mistake is expecting one storage layer to serve both a nightly report over t
 The three serving options differ on the axes that decide between them.
 
 | | Lakehouse only | Lakehouse plus engine cache | Lakehouse plus hot tier |
-|---|---|---|---|
+|--|--|--|--|
 | Freshness floor | Commit cadence, minutes | Commit cadence, minutes | Sub-second |
 | Point lookup by key | Poor | Poor | Fast |
 | p99 under high concurrency | Variable | Good on cached results | Good |
@@ -135,24 +135,23 @@ The failure without it: a boundary-spanning query at the exact moment the hot ti
 **Deduplicate on a stable key.** A spanning query that unions both sides gets duplicates in the overlap region. Deduplicate on an event identifier, keeping the hot tier's version, since it is the more recent write.
 
 ```sql
--- Union with overlap and deduplication. The overlap region is
--- deliberately present in both stores.
+- Union with overlap and deduplication. The overlap region is
+- deliberately present in both stores.
 WITH combined AS (
-    SELECT event_id, customer_id, event_time, amount_usd, 'hot' AS src
-    FROM hot.events
-    WHERE event_time >= current_timestamp - INTERVAL '2' HOUR
+ SELECT event_id, customer_id, event_time, amount_usd, 'hot' AS src
+ FROM hot.events
+ WHERE event_time >= current_timestamp - INTERVAL '2' HOUR
 
-    UNION ALL
+ UNION ALL
 
-    SELECT event_id, customer_id, event_time, amount_usd, 'cold' AS src
-    FROM lakehouse.gold.events
-    WHERE event_time >= current_timestamp - INTERVAL '90' DAY
-),
-deduped AS (
-    SELECT *, row_number() OVER (
-        PARTITION BY event_id ORDER BY (src = 'hot') DESC
-    ) AS rn
-    FROM combined
+ SELECT event_id, customer_id, event_time, amount_usd, 'cold' AS src
+ FROM lakehouse.gold.events
+ WHERE event_time >= current_timestamp - INTERVAL '90' DAY
+), deduped AS (
+ SELECT *, row_number() OVER (
+ PARTITION BY event_id ORDER BY (src = 'hot') DESC
+ ) AS rn
+ FROM combined
 )
 SELECT customer_id, count(*) AS events, sum(amount_usd) AS total_usd
 FROM deduped
@@ -212,7 +211,7 @@ Adding a second storage system to a data platform has costs that do not appear i
 
 **Two security reviews.** Access control, encryption, network exposure, and audit for both. The hot tier is frequently the one that gets less attention, which is why it is the one holding the same sensitive records with weaker controls.
 
-**Two backup and recovery stories.** The hot tier's recovery is usually "rebuild from the stream," which is correct and needs to be tested. How long does rebuilding two hours of data take, and what happens to the decision loop meanwhile.
+**Two backup and recovery stories.** The hot tier's recovery is usually "rebuild from the stream, " which is correct and needs to be tested. How long does rebuilding two hours of data take, and what happens to the decision loop meanwhile.
 
 **Doubled write-path complexity.** One write path becomes a fan-out with two sinks, two failure modes, and a consistency requirement between them. Every schema change now touches two systems.
 
@@ -251,12 +250,10 @@ The hot tier holds a window, so something has to remove data leaving it. Getting
 **Verify the cold side before expiring the hot side.** The safest design does not expire on a timer at all. It expires records the lakehouse has confirmed committing. That requires the hot tier to know the lakehouse's watermark, which is a small piece of coordination and worth building.
 
 ```sql
--- Watermark: the newest event time fully committed to the lakehouse.
--- Hot tier expiry should never advance past this minus a safety margin.
+- Watermark: the newest event time fully committed to the lakehouse.
+- Hot tier expiry should never advance past this minus a safety margin.
 SELECT
-    max(event_time)                     AS cold_watermark,
-    max(committed_at)                   AS last_commit,
-    timestampdiff(SECOND, max(committed_at), current_timestamp) AS commit_lag_s
+ max(event_time) AS cold_watermark, max(committed_at) AS last_commit, timestampdiff(SECOND, max(committed_at), current_timestamp) AS commit_lag_s
 FROM lakehouse.gold.events;
 ```
 

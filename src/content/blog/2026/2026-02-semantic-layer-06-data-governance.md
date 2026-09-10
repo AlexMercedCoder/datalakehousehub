@@ -15,9 +15,10 @@ draft: false
 image: "/images/blog.png"
 canonical: "https://iceberglakehouse.com/posts/2026-02-sl-semantic-layer-data-governance/"
 ---
-> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-02-sl-semantic-layer-data-governance/).
 
 ![Data governance through a semantic layer : centralized policies and documentation](/images/blog/semantic-layer/governance-semantic.png)
+
+> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-02-sl-semantic-layer-data-governance/).
 
 Most organizations have a data governance policy. It lives in a Confluence page. It defines who owns what data, what terms mean, and who should have access. And almost nobody follows it, because it's not enforced where queries actually run.
 
@@ -27,7 +28,7 @@ A semantic layer changes that. It moves governance from a document into the quer
 
 Data governance fails when it depends on people doing the right thing manually. A policy says "Revenue means completed orders minus refunds." An analyst writes a slightly different formula. A dashboard uses the wrong table. An AI agent invents its own definition. The governance policy exists. Nobody follows it. And the organization makes decisions on inconsistent data.
 
-The root cause isn't that people are careless. It's that governance is separated from the systems people actually use to query data. Enforcement happens in a side channel :  documentation, review processes, audit logs ,  not in the query itself.
+The root cause isn't that people are careless. It's that governance is separated from the systems people actually use to query data. Enforcement happens in a side channel : documentation, review processes, audit logs, not in the query itself.
 
 ## Centralized Definitions Eliminate Conflicting Metrics
 
@@ -38,9 +39,7 @@ Revenue isn't a paragraph in a wiki. It's a SQL view:
 ```sql
 CREATE VIEW business.revenue AS
 SELECT
-    OrderDate,
-    Region,
-    SUM(OrderTotal) AS Revenue
+ OrderDate, Region, SUM(OrderTotal) AS Revenue
 FROM silver.orders_enriched
 WHERE Status = 'completed' AND Refunded = FALSE
 GROUP BY OrderDate, Region;
@@ -59,7 +58,7 @@ The second governance gap: access control. Most organizations enforce security a
 A semantic layer enforces policies at a lower level. When access control exists in the semantic layer, it applies to every query path:
 
 | Query Path | BI-Level Security | Semantic Layer Security |
-|---|---|---|
+|--|--|--|
 | Dashboard | Enforced | Enforced |
 | SQL notebook | Not enforced | Enforced |
 | AI agent | Not enforced | Enforced |

@@ -1,7 +1,7 @@
 ---
 title: "What is Large Language Model?"
 meta_title: "What is Large Language Model? | Expert Data Lakehouse & AI Glossary"
-description: "An enormously expansive neural architecture consuming incredible textual volumes actively predicting subsequent accurate conversational elements flawlessly. Learn the architecture, mechanics, and real-world value of Large Language Model in the modern data stack."
+description: "An enormously expansive neural architecture consuming incredible textual volumes actively predicting subsequent accurate conversational elements."
 ---
 
 ## What is Large Language Model?

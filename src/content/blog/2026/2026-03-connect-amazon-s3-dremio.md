@@ -16,9 +16,10 @@ draft: false
 image: "/images/blog.png"
 canonical: "https://iceberglakehouse.com/posts/2026-03-connector-amazon-s3/"
 ---
-> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-03-connector-amazon-s3/).
 
 Amazon S3 is the default landing zone for data in the cloud. Log files, Parquet datasets, CSV exports, JSON events, IoT telemetry, and raw data dumps : it all ends up in S3 buckets. But S3 is storage, not an analytics engine. You can't run SQL against S3 natively. To query it, you need Amazon Athena (per-TB pricing), AWS Glue ETL jobs (cluster management), or a data warehouse that imports the data. All add cost, complexity, and latency.
+
+> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-03-connector-amazon-s3/).
 
 Dremio Cloud connects directly to S3 and lets you query files in place using standard SQL. Dremio reads Parquet, CSV, JSON, Delta Lake, and Apache Iceberg table formats. It pushes projection and filter operations into its vectorized query engine and caches frequently accessed data on local NVMe drives (Columnar Cloud Cache, or C3) for near-instantaneous repeat queries.
 
@@ -28,7 +29,7 @@ For organizations with hundreds or thousands of S3 buckets accumulated over year
 
 ### SQL on Your Data Lake Without Athena Costs
 
-Athena charges per terabyte of data scanned. For large datasets queried frequently :  dashboards refreshing every 15 minutes, analysts exploring data, scheduled reports ,  costs grow unpredictably. Dremio's Reflections pre-compute results so repeated queries don't re-scan S3. C3 caching further reduces S3 GET requests. You pay for Dremio compute time, not per-TB scanned.
+Athena charges per terabyte of data scanned. For large datasets queried frequently : dashboards refreshing every 15 minutes, analysts exploring data, scheduled reports, costs grow unpredictably. Dremio's Reflections pre-compute results so repeated queries don't re-scan S3. C3 caching further reduces S3 GET requests. You pay for Dremio compute time, not per-TB scanned.
 
 ### Format Flexibility
 
@@ -67,7 +68,7 @@ Click **"+"** and select **Amazon S3**.
 ### 3. Configure Advanced Options
 
 | Setting | Purpose | When to Use |
-|---|---|---|
+|--|--|--|
 | **Root Path** | Starting path in the bucket | Restrict to subfolder: `/data/analytics/` |
 | **Allowlisted Buckets** | Limit which buckets appear | Multi-bucket accounts |
 | **Enable partition column inference** | Extract partition keys from folders | Hive-style partitioned data |
@@ -82,12 +83,12 @@ Click **"+"** and select **Amazon S3**.
 ## Query S3 Data
 
 ```sql
--- Query Parquet files
+- Query Parquet files
 SELECT event_type, user_id, event_timestamp, page_url
 FROM "s3-datalake".events."user_events.parquet"
 WHERE event_type = 'purchase' AND event_timestamp > '2024-01-01';
 
--- Query partitioned data (e.g., year=2024/month=01/)
+- Query partitioned data (e.g., year=2024/month=01/)
 SELECT region, product_category, SUM(revenue) AS total_revenue
 FROM "s3-datalake".sales.transactions
 GROUP BY region, product_category
@@ -98,11 +99,7 @@ ORDER BY total_revenue DESC;
 
 ```sql
 SELECT
-  c.customer_name,
-  c.segment,
-  COUNT(e.event_id) AS s3_events,
-  SUM(CASE WHEN e.event_type = 'purchase' THEN e.revenue ELSE 0 END) AS s3_revenue,
-  pg.lifetime_value AS crm_lifetime_value
+ c.customer_name, c.segment, COUNT(e.event_id) AS s3_events, SUM(CASE WHEN e.event_type = 'purchase' THEN e.revenue ELSE 0 END) AS s3_revenue, pg.lifetime_value AS crm_lifetime_value
 FROM "postgres-crm".public.customers c
 LEFT JOIN "s3-datalake".events.user_events e ON c.customer_id = e.user_id
 LEFT JOIN "postgres-crm".public.customer_metrics pg ON c.customer_id = pg.customer_id
@@ -137,16 +134,11 @@ Dremio's S3 connector works with S3-compatible storage:
 ```sql
 CREATE VIEW analytics.gold.event_metrics AS
 SELECT
-  DATE_TRUNC('day', CAST(event_timestamp AS TIMESTAMP)) AS event_date,
-  event_type,
-  COUNT(*) AS event_count,
-  COUNT(DISTINCT user_id) AS unique_users,
-  SUM(revenue) AS daily_revenue,
-  CASE
-    WHEN COUNT(*) > 10000 THEN 'High Activity'
-    WHEN COUNT(*) > 1000 THEN 'Normal Activity'
-    ELSE 'Low Activity'
-  END AS activity_level
+ DATE_TRUNC('day', CAST(event_timestamp AS TIMESTAMP)) AS event_date, event_type, COUNT(*) AS event_count, COUNT(DISTINCT user_id) AS unique_users, SUM(revenue) AS daily_revenue, CASE
+ WHEN COUNT(*) > 10000 THEN 'High Activity'
+ WHEN COUNT(*) > 1000 THEN 'Normal Activity'
+ ELSE 'Low Activity'
+ END AS activity_level
 FROM "s3-datalake".events.user_events
 GROUP BY 1, 2;
 ```
@@ -172,26 +164,20 @@ A product analyst asks Claude "Analyze user engagement patterns from S3 event da
 ### AI SQL Functions
 
 ```sql
--- Classify events with AI
+- Classify events with AI
 SELECT
-  event_type,
-  event_count,
-  AI_CLASSIFY(
-    'Based on this event pattern, classify the business impact',
-    'Event: ' || event_type || ', Count: ' || CAST(event_count AS VARCHAR) || ', Revenue: $' || CAST(daily_revenue AS VARCHAR),
-    ARRAY['Revenue Driver', 'Engagement Signal', 'Support Indicator', 'Churn Signal']
-  ) AS business_impact
+ event_type, event_count, AI_CLASSIFY(
+ 'Based on this event pattern, classify the business impact', 'Event: ' || event_type || ', Count: ' || CAST(event_count AS VARCHAR) || ', Revenue: $' || CAST(daily_revenue AS VARCHAR), ARRAY['Revenue Driver', 'Engagement Signal', 'Support Indicator', 'Churn Signal']
+ ) AS business_impact
 FROM analytics.gold.event_metrics
 WHERE event_date = CURRENT_DATE - INTERVAL '1' DAY;
 
--- Process unstructured data from S3
+- Process unstructured data from S3
 SELECT
-  file['path'] AS file_path,
-  AI_GENERATE(
-    'Extract key information from this document',
-    ('Summarize the main topics in this file', file)
-    WITH SCHEMA ROW(summary VARCHAR, category VARCHAR)
-  ) AS extracted_info
+ file['path'] AS file_path, AI_GENERATE(
+ 'Extract key information from this document', ('Summarize the main topics in this file', file)
+ WITH SCHEMA ROW(summary VARCHAR, category VARCHAR)
+ ) AS extracted_info
 FROM TABLE(LIST_FILES('@"s3-datalake"/documents/'))
 WHERE file['path'] LIKE '%.pdf';
 ```
@@ -257,7 +243,7 @@ Avoid over-partitioning (too many small files per partition) or under-partitioni
 ### File Format Recommendations
 
 | Format | Best For | Dremio Support |
-|---|---|---|
+|--|--|--|
 | **Parquet** | Structured analytics data | Full support, columnar optimization |
 | **Apache Iceberg** | ACID transactions, time travel | Full read/write support |
 | **Delta Lake** | Databricks ecosystem compatibility | Read support |

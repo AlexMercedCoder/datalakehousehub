@@ -1,7 +1,7 @@
 ---
 title: "What is Transactional Layer?"
 meta_title: "What is Transactional Layer? | Expert Data Lakehouse & AI Glossary"
-description: "A specialized layer built on top of data lakes that provides ACID transaction guarantees to data operations. Learn the architecture, mechanics, and real-world value of Transactional Layer in the modern data stack."
+description: "A specialized layer built on top of data lakes that provides ACID transaction guarantees to data operations."
 ---
 
 ## What is Transactional Layer?

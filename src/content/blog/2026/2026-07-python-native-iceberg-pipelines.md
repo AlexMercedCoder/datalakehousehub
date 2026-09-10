@@ -1,6 +1,6 @@
 ---
 title: "Building Iceberg Pipelines in Python Without Standing Up Spark"
-description: "A large share of production transformations fit comfortably on one machine. PyIceberg, DuckDB, and branch isolation give you a production path that debugs in an IDE."
+description: "A large share of production transformations fit comfortably on one machine. PyIceberg, DuckDB, and branch isolation give you a production path that debugs."
 date: 2026-07-28T09:00:00Z
 author: "Alex Merced"
 category: "Apache Iceberg"
@@ -15,11 +15,11 @@ image: "/images/blog.png"
 canonical: "https://iceberglakehouse.com/posts/python-native-iceberg-pipelines/"
 ---
 
-> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/python-native-iceberg-pipelines/).
-
 # Building Iceberg Pipelines in Python Without Standing Up Spark
 
 A data scientist has a transformation that takes forty lines of pandas. It reads two Iceberg tables, joins them, applies a scoring function from a library the team maintains, and writes the result back. Getting it into production means learning Spark, packaging the library into a JAR-compatible environment or fighting PySpark's dependency model, and waiting on a platform team to provision a cluster.
+
+> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/python-native-iceberg-pipelines/).
 
 The transformation runs in eight seconds on a laptop against a sample. The path to production takes three weeks.
 
@@ -48,7 +48,7 @@ The honest threshold: if your data fits comfortably in the memory of one reasona
 The three execution options line up like this.
 
 | | Spark or Flink | SQL query engine | Python single-node |
-|---|---|---|---|
+|--|--|--|--|
 | Data larger than one machine | Yes | Yes | No |
 | Wide shuffle joins | Yes | Yes | Poorly |
 | Arbitrary Python logic | With overhead | Via UDFs, awkward | Native |
@@ -71,30 +71,19 @@ from pyiceberg.expressions import GreaterThanOrEqual, EqualTo, And
 import pyarrow.compute as pc
 
 catalog = load_catalog(
-    "prod",
-    **{
-        "type": "rest",
-        "uri": "https://catalog.example.com/api/catalog",
-        "credential": "pipeline-writer:<secret>",
-        "scope": "PRINCIPAL_ROLE:pipeline_writer",
-        "warehouse": "analytics",
-    },
-)
+ "prod", **{
+ "type": "rest", "uri": "https://catalog.example.com/api/catalog", "credential": "pipeline-writer:<secret>", "scope": "PRINCIPAL_ROLE:pipeline_writer", "warehouse": "analytics", }, )
 
 orders = catalog.load_table("silver.sales.orders")
 
 # Predicates push down to scan planning: partitions and files get pruned
 # before any data is read, not filtered afterward in memory.
 scan = orders.scan(
-    row_filter=And(
-        GreaterThanOrEqual("order_date", "2026-07-01"),
-        EqualTo("status", "COMPLETE"),
-    ),
-    selected_fields=("order_id", "customer_id", "order_date", "amount_usd"),
-)
+ row_filter=And(
+ GreaterThanOrEqual("order_date", "2026-07-01"), EqualTo("status", "COMPLETE"), ), selected_fields=("order_id", "customer_id", "order_date", "amount_usd"), )
 
 arrow_table = scan.to_arrow()
-print(f"{arrow_table.num_rows:,} rows, {arrow_table.nbytes / 1e6:.1f} MB")
+print(f"{arrow_table.num_rows:, } rows, {arrow_table.nbytes / 1e6:.1f} MB")
 ```
 
 Two things in that snippet do most of the work.
@@ -112,9 +101,7 @@ import pyarrow as pa
 
 # Transform with whatever Python you want. Nothing here knows about Iceberg.
 scored = arrow_table.append_column(
-    "risk_score",
-    pa.array(score_batch(arrow_table.to_pandas())),
-)
+ "risk_score", pa.array(score_batch(arrow_table.to_pandas())), )
 
 target = catalog.load_table("gold.sales.scored_orders")
 
@@ -144,43 +131,35 @@ branch = f"job_{datetime.utcnow():%Y%m%d}_{uuid.uuid4().hex[:8]}"
 # Zero-copy branch: a new named reference to the current snapshot.
 # No data is duplicated.
 table.manage_snapshots().create_branch(
-    snapshot_id=table.current_snapshot().snapshot_id,
-    branch_name=branch,
-).commit()
+ snapshot_id=table.current_snapshot().snapshot_id, branch_name=branch, ).commit()
 
 try:
-    # All writes land on the branch. Readers on main see nothing.
-    table.append(scored, branch=branch)
+ # All writes land on the branch. Readers on main see nothing.
+ table.append(scored, branch=branch)
 
-    # Validate against the actual written result
-    branch_scan = table.scan(snapshot_id=table.snapshot_by_name(branch).snapshot_id)
-    result = branch_scan.to_arrow()
+ # Validate against the actual written result
+ branch_scan = table.scan(snapshot_id=table.snapshot_by_name(branch).snapshot_id)
+ result = branch_scan.to_arrow()
 
-    checks = {
-        "row_count_nonzero": result.num_rows > 0,
-        "no_null_scores": result.column("risk_score").null_count == 0,
-        "scores_in_range": pc.all(
-            pc.and_(
-                pc.greater_equal(result.column("risk_score"), 0.0),
-                pc.less_equal(result.column("risk_score"), 1.0),
-            )
-        ).as_py(),
-        "no_duplicate_keys": (
-            len(pc.unique(result.column("order_id"))) == result.num_rows
-        ),
-    }
+ checks = {
+ "row_count_nonzero": result.num_rows > 0, "no_null_scores": result.column("risk_score").null_count == 0, "scores_in_range": pc.all(
+ pc.and_(
+ pc.greater_equal(result.column("risk_score"), 0.0), pc.less_equal(result.column("risk_score"), 1.0), )
+ ).as_py(), "no_duplicate_keys": (
+ len(pc.unique(result.column("order_id"))) == result.num_rows
+ ), }
 
-    failed = [name for name, passed in checks.items() if not passed]
-    if failed:
-        raise ValueError(f"validation failed: {failed}")
+ failed = [name for name, passed in checks.items() if not passed]
+ if failed:
+ raise ValueError(f"validation failed: {failed}")
 
-    # Promote atomically. Readers see all of it or none of it.
-    table.manage_snapshots().fast_forward(
-        from_branch="main", to_branch=branch
-    ).commit()
+ # Promote atomically. Readers see all of it or none of it.
+ table.manage_snapshots().fast_forward(
+ from_branch="main", to_branch=branch
+ ).commit()
 
 finally:
-    table.manage_snapshots().remove_branch(branch).commit()
+ table.manage_snapshots().remove_branch(branch).commit()
 ```
 
 Several properties make this worth the extra code.
@@ -207,27 +186,25 @@ The memory ceiling is softer than it appears, because you do not have to materia
 import pyarrow as pa
 
 scan = orders.scan(
-    row_filter=GreaterThanOrEqual("order_date", "2026-01-01"),
-    selected_fields=("order_id", "customer_id", "order_date", "amount_usd"),
-)
+ row_filter=GreaterThanOrEqual("order_date", "2026-01-01"), selected_fields=("order_id", "customer_id", "order_date", "amount_usd"), )
 
 target = catalog.load_table("gold.sales.scored_orders")
 buffer, buffered_rows = [], 0
 TARGET_ROWS_PER_FILE = 2_000_000
 
 for batch in scan.to_arrow_batch_reader():
-    scored_batch = score_arrow_batch(batch)
-    buffer.append(scored_batch)
-    buffered_rows += scored_batch.num_rows
+ scored_batch = score_arrow_batch(batch)
+ buffer.append(scored_batch)
+ buffered_rows += scored_batch.num_rows
 
-    # Accumulate to a sensible file size before writing, so the table
-    # does not end up with one small file per batch.
-    if buffered_rows >= TARGET_ROWS_PER_FILE:
-        target.append(pa.Table.from_batches(buffer), branch=branch)
-        buffer, buffered_rows = [], 0
+ # Accumulate to a sensible file size before writing, so the table
+ # does not end up with one small file per batch.
+ if buffered_rows >= TARGET_ROWS_PER_FILE:
+ target.append(pa.Table.from_batches(buffer), branch=branch)
+ buffer, buffered_rows = [], 0
 
 if buffer:
-    target.append(pa.Table.from_batches(buffer), branch=branch)
+ target.append(pa.Table.from_batches(buffer), branch=branch)
 ```
 
 The accumulation logic is the part people leave out, and leaving it out is how a streaming-style pipeline produces thousands of tiny files. Batches arriving from a scan are sized for reading, not for writing. Buffer until you have enough for a file worth writing.
@@ -246,15 +223,11 @@ con.register("orders", orders.scan(row_filter=recent).to_arrow())
 con.register("customers", customers.scan().to_arrow())
 
 result = con.execute("""
-    SELECT
-        c.region,
-        date_trunc('month', o.order_date)          AS month,
-        count(DISTINCT o.customer_id)              AS active_customers,
-        sum(o.amount_usd)                          AS revenue_usd,
-        sum(o.amount_usd) / count(DISTINCT o.order_id) AS avg_order_value
-    FROM orders o
-    JOIN customers c ON o.customer_id = c.customer_id
-    GROUP BY 1, 2
+ SELECT
+ c.region, date_trunc('month', o.order_date) AS month, count(DISTINCT o.customer_id) AS active_customers, sum(o.amount_usd) AS revenue_usd, sum(o.amount_usd) / count(DISTINCT o.order_id) AS avg_order_value
+ FROM orders o
+ JOIN customers c ON o.customer_id = c.customer_id
+ GROUP BY 1, 2
 """).arrow()
 
 target.append(result, branch=branch)
@@ -277,59 +250,52 @@ import pyarrow as pa
 
 @dataclass
 class Step:
-    name: str
-    depends_on: tuple[str, ...]
-    run: Callable[[dict[str, pa.Table]], pa.Table]
+ name: str
+ depends_on: tuple[str, ...]
+ run: Callable[[dict[str, pa.Table]], pa.Table]
 
 
 def load_orders(_: dict) -> pa.Table:
-    return catalog.load_table("silver.sales.orders").scan(
-        row_filter=GreaterThanOrEqual("order_date", RUN_DATE),
-        selected_fields=("order_id", "customer_id", "order_date", "amount_usd"),
-    ).to_arrow()
+ return catalog.load_table("silver.sales.orders").scan(
+ row_filter=GreaterThanOrEqual("order_date", RUN_DATE), selected_fields=("order_id", "customer_id", "order_date", "amount_usd"), ).to_arrow()
 
 
 def load_customers(_: dict) -> pa.Table:
-    return catalog.load_table("silver.crm.customers").scan(
-        selected_fields=("customer_id", "region", "segment"),
-    ).to_arrow()
+ return catalog.load_table("silver.crm.customers").scan(
+ selected_fields=("customer_id", "region", "segment"), ).to_arrow()
 
 
 def enrich(inputs: dict[str, pa.Table]) -> pa.Table:
-    con = duckdb.connect()
-    con.register("o", inputs["orders"])
-    con.register("c", inputs["customers"])
-    return con.execute(
-        "SELECT o.*, c.region, c.segment FROM o JOIN c USING (customer_id)"
-    ).arrow()
+ con = duckdb.connect()
+ con.register("o", inputs["orders"])
+ con.register("c", inputs["customers"])
+ return con.execute(
+ "SELECT o.*, c.region, c.segment FROM o JOIN c USING (customer_id)"
+ ).arrow()
 
 
 def score(inputs: dict[str, pa.Table]) -> pa.Table:
-    enriched = inputs["enrich"]
-    return enriched.append_column(
-        "risk_score", pa.array(score_batch(enriched.to_pandas()))
-    )
+ enriched = inputs["enrich"]
+ return enriched.append_column(
+ "risk_score", pa.array(score_batch(enriched.to_pandas()))
+ )
 
 
 PIPELINE = [
-    Step("orders",    (),                          load_orders),
-    Step("customers", (),                          load_customers),
-    Step("enrich",    ("orders", "customers"),     enrich),
-    Step("score",     ("enrich",),                 score),
-]
+ Step("orders", (), load_orders), Step("customers", (), load_customers), Step("enrich", ("orders", "customers"), enrich), Step("score", ("enrich", ), score), ]
 
 
 def execute(steps: list[Step]) -> dict[str, pa.Table]:
-    results: dict[str, pa.Table] = {}
-    remaining = list(steps)
-    while remaining:
-        ready = [s for s in remaining if all(d in results for d in s.depends_on)]
-        if not ready:
-            raise RuntimeError("cycle or missing dependency in pipeline")
-        for step in ready:
-            results[step.name] = step.run(results)
-            remaining.remove(step)
-    return results
+ results: dict[str, pa.Table] = {}
+ remaining = list(steps)
+ while remaining:
+ ready = [s for s in remaining if all(d in results for d in s.depends_on)]
+ if not ready:
+ raise RuntimeError("cycle or missing dependency in pipeline")
+ for step in ready:
+ results[step.name] = step.run(results)
+ remaining.remove(step)
+ return results
 ```
 
 That is a working DAG executor in about thirty lines. Wrapped in the branch pattern from earlier, it is a complete production pipeline.
@@ -408,18 +374,14 @@ The strongest argument for Python-native pipelines is not performance or cost. I
 import pyarrow as pa
 
 def test_score_handles_null_amounts():
-    fixture = pa.table({
-        "order_id":    pa.array([1, 2, 3]),
-        "customer_id": pa.array(["a", "b", "c"]),
-        "amount_usd":  pa.array([100.0, None, 50.0]),
-        "region":      pa.array(["EU", "US", "EU"]),
-    })
+ fixture = pa.table({
+ "order_id": pa.array([1, 2, 3]), "customer_id": pa.array(["a", "b", "c"]), "amount_usd": pa.array([100.0, None, 50.0]), "region": pa.array(["EU", "US", "EU"]), })
 
-    result = score({"enrich": fixture})
+ result = score({"enrich": fixture})
 
-    assert result.num_rows == 3
-    assert result.column("risk_score").null_count == 0
-    assert all(0.0 <= v <= 1.0 for v in result.column("risk_score").to_pylist())
+ assert result.num_rows == 3
+ assert result.column("risk_score").null_count == 0
+ assert all(0.0 <= v <= 1.0 for v in result.column("risk_score").to_pylist())
 ```
 
 The null in row two is the point. Production data has nulls in columns your sample did not, and a test that encodes the expectation explicitly is how you find out what your function does with them before the pipeline does.
@@ -430,14 +392,14 @@ The null in row two is the point. Production data has nulls in columns your samp
 
 ```python
 def test_branch_isolation_leaves_main_untouched(scratch_table):
-    before = scratch_table.scan().to_arrow().num_rows
+ before = scratch_table.scan().to_arrow().num_rows
 
-    with pytest.raises(ValueError, match="validation failed"):
-        run_pipeline_with_deliberately_bad_data(scratch_table)
+ with pytest.raises(ValueError, match="validation failed"):
+ run_pipeline_with_deliberately_bad_data(scratch_table)
 
-    after = scratch_table.scan().to_arrow().num_rows
-    assert before == after
-    assert "job_" not in [r for r in scratch_table.refs()]
+ after = scratch_table.scan().to_arrow().num_rows
+ assert before == after
+ assert "job_" not in [r for r in scratch_table.refs()]
 ```
 
 That test asserts the two properties the branch pattern exists to provide: main was untouched, and no branch leaked. Write it once and it protects the pattern across every pipeline that uses it.
@@ -463,15 +425,7 @@ A pipeline that runs on someone's laptop is a script. Making it production infra
 ```python
 run_log = catalog.load_table("ops.pipelines.run_history")
 run_log.append(pa.table({
-    "pipeline":     [PIPELINE_NAME],
-    "run_date":     [RUN_DATE],
-    "started_at":   [started],
-    "finished_at":  [finished],
-    "rows_in":      [rows_in],
-    "rows_out":     [rows_out],
-    "outcome":      [outcome],
-    "branch":       [branch],
-}))
+ "pipeline": [PIPELINE_NAME], "run_date": [RUN_DATE], "started_at": [started], "finished_at": [finished], "rows_in": [rows_in], "rows_out": [rows_out], "outcome": [outcome], "branch": [branch], }))
 ```
 
 That table costs nothing, is append-only so it conflicts with nothing, and answers most operational questions about a fleet of pipelines with a GROUP BY.
@@ -534,14 +488,14 @@ Pin the inputs instead.
 # Capture the snapshot each input was read at, and record it
 input_snapshots = {}
 for name, identifier in INPUT_TABLES.items():
-    tbl = catalog.load_table(identifier)
-    input_snapshots[name] = tbl.current_snapshot().snapshot_id
+ tbl = catalog.load_table(identifier)
+ input_snapshots[name] = tbl.current_snapshot().snapshot_id
 
 # All reads use the captured snapshot, so the run sees one consistent
 # view even if a source table changes mid-run.
 def load_pinned(name: str) -> pa.Table:
-    tbl = catalog.load_table(INPUT_TABLES[name])
-    return tbl.scan(snapshot_id=input_snapshots[name], **SCAN_ARGS[name]).to_arrow()
+ tbl = catalog.load_table(INPUT_TABLES[name])
+ return tbl.scan(snapshot_id=input_snapshots[name], **SCAN_ARGS[name]).to_arrow()
 ```
 
 Two benefits, and the second is the bigger one.

@@ -15,11 +15,11 @@ image: "/images/blog.png"
 canonical: "https://iceberglakehouse.com/posts/data-products-for-ai-agents/"
 ---
 
-> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/data-products-for-ai-agents/).
-
 # Why AI Agents Fail on Raw Data, and What to Give Them Instead
 
 An analytics agent gets read access to the data lake. Someone asks it for last quarter's revenue by region. It finds a table named `fact_orders`, writes a clean SELECT with a SUM and a GROUP BY, and returns a number that is 14 percent too high.
+
+> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/data-products-for-ai-agents/).
 
 The SQL was valid. The table was real. The number was wrong, because `fact_orders` includes cancelled orders, and everyone on the data team knows to filter `status <> 'CANCELLED'`. Nobody wrote that down anywhere the agent looked.
 
@@ -37,7 +37,7 @@ Give a competent human analyst access to a raw lake and they produce correct ans
 
 An agent starts from zero on every session. Whatever it learns about `fact_orders` in one conversation is gone in the next. There is no accumulating mental model unless something in the system holds it.
 
-That difference reframes the problem. The question is not "can the agent figure this out." Sometimes it can. The question is "does the agent have to figure this out every single time," and if the answer is yes, you have built a system where correctness depends on a fresh act of inference on every request. That is not a reliable system, no matter how good the inference usually is.
+That difference reframes the problem. The question is not "can the agent figure this out." Sometimes it can. The question is "does the agent have to figure this out every single time, " and if the answer is yes, you have built a system where correctness depends on a fresh act of inference on every request. That is not a reliable system, no matter how good the inference usually is.
 
 Four specific things raw tables fail to communicate.
 
@@ -75,7 +75,7 @@ That last item is undervalued. An agent that reads "this dataset excludes wholes
 Here is what each layer offers an agent.
 
 | | Bronze | Silver | Gold without semantics | Gold with semantics |
-|---|---|---|---|---|
+|--|--|--|--|--|
 | Types correct | No | Yes | Yes | Yes |
 | Business rules applied | No | No | Yes | Yes |
 | Grain stated | No | No | Sometimes | Yes |
@@ -140,27 +140,18 @@ Start with the table definition itself. This is a gold view with business rules 
 ```sql
 CREATE OR REPLACE VIEW gold.sales.order_lines AS
 SELECT
-    ol.order_line_id,
-    ol.order_id,
-    o.customer_id,
-    o.order_placed_at,
-    d.region_name,
-    p.product_category,
-    ol.quantity,
-    ol.unit_price_usd,
-    ol.quantity * ol.unit_price_usd        AS gross_revenue_usd,
-    ol.quantity * ol.unit_price_usd
-      - coalesce(ol.discount_usd, 0)       AS net_revenue_usd
+ ol.order_line_id, ol.order_id, o.customer_id, o.order_placed_at, d.region_name, p.product_category, ol.quantity, ol.unit_price_usd, ol.quantity * ol.unit_price_usd AS gross_revenue_usd, ol.quantity * ol.unit_price_usd
+ - coalesce(ol.discount_usd, 0) AS net_revenue_usd
 FROM silver.sales.order_lines ol
 JOIN silver.sales.orders o
-  ON ol.order_id = o.order_id
+ ON ol.order_id = o.order_id
 JOIN silver.ref.regions d
-  ON o.region_id = d.region_id
+ ON o.region_id = d.region_id
 JOIN silver.ref.products p
-  ON ol.product_id = p.product_id
+ ON ol.product_id = p.product_id
 WHERE o.order_status <> 'CANCELLED'
-  AND o.is_test_account = false
-  AND o.channel <> 'INTERNAL_TRANSFER';
+ AND o.is_test_account = false
+ AND o.channel <> 'INTERNAL_TRANSFER';
 ```
 
 The three WHERE clauses are the business rules that were previously tribal knowledge. They are now applied once, in one place, and every consumer inherits them.
@@ -169,15 +160,7 @@ Now attach the semantics:
 
 ```sql
 ALTER VIEW gold.sales.order_lines SET TBLPROPERTIES (
-  'grain' = 'One row per order line. An order with 3 products produces 3 rows. Do not count rows to count orders.',
-  'excludes' = 'Cancelled orders, test accounts, internal transfers.',
-  'suitable_for' = 'Revenue analysis, product mix, regional performance.',
-  'not_suitable_for' = 'Order counts (use gold.sales.orders), returns analysis (returns are not reflected here).',
-  'freshness' = 'Updated every 15 minutes from source. Timestamps are UTC.',
-  'owner' = 'sales-analytics-team',
-  'comment.net_revenue_usd' = 'Gross revenue minus line-level discount, in USD. This is the revenue measure for standard reporting.',
-  'comment.gross_revenue_usd' = 'Quantity times unit price before discounts, in USD. Rarely the right measure. Use net_revenue_usd unless specifically asked for gross.',
-  'comment.order_placed_at' = 'When the customer submitted the order, UTC. Not the ship date and not the payment date.'
+ 'grain' = 'One row per order line. An order with 3 products produces 3 rows. Do not count rows to count orders.', 'excludes' = 'Cancelled orders, test accounts, internal transfers.', 'suitable_for' = 'Revenue analysis, product mix, regional performance.', 'not_suitable_for' = 'Order counts (use gold.sales.orders), returns analysis (returns are not reflected here).', 'freshness' = 'Updated every 15 minutes from source. Timestamps are UTC.', 'owner' = 'sales-analytics-team', 'comment.net_revenue_usd' = 'Gross revenue minus line-level discount, in USD. This is the revenue measure for standard reporting.', 'comment.gross_revenue_usd' = 'Quantity times unit price before discounts, in USD. Rarely the right measure. Use net_revenue_usd unless specifically asked for gross.', 'comment.order_placed_at' = 'When the customer submitted the order, UTC. Not the ship date and not the payment date.'
 );
 ```
 
@@ -213,21 +196,21 @@ The fix is to define metrics once, with their own descriptions and ownership, an
 
 ```yaml
 metrics:
-  - name: net_revenue
-    label: Net Revenue
-    expression: sum(net_revenue_usd)
-    dataset: gold.sales.order_lines
-    owner: finance-reporting
-    description: >
-      Revenue after line-level discounts, in USD. This is the standard
-      revenue measure for external reporting. It excludes cancelled
-      orders, test accounts, and internal transfers. It does NOT net
-      out returns; for returns-adjusted revenue use net_revenue_after_returns.
-    dimensions: [region_name, product_category, order_placed_at]
-    grain_note: >
-      Safe to sum at any grain. Do not divide by row count to get
-      average order value; use the avg_order_value metric, which
-      divides by distinct orders.
+ - name: net_revenue
+ label: Net Revenue
+ expression: sum(net_revenue_usd)
+ dataset: gold.sales.order_lines
+ owner: finance-reporting
+ description: >
+ Revenue after line-level discounts, in USD. This is the standard
+ revenue measure for external reporting. It excludes cancelled
+ orders, test accounts, and internal transfers. It does NOT net
+ out returns; for returns-adjusted revenue use net_revenue_after_returns.
+ dimensions: [region_name, product_category, order_placed_at]
+ grain_note: >
+ Safe to sum at any grain. Do not divide by row count to get
+ average order value; use the avg_order_value metric, which
+ divides by distinct orders.
 ```
 
 Read the description field again. It states what the metric is, what it excludes, what it is not, and where to go instead. The grain note names the specific division error an agent makes on line-grain data.
@@ -252,7 +235,7 @@ A workable split:
 
 Data engineers write the grain statement, the freshness statement, and the exclusions. These are facts about the pipeline and the engineer is the authority.
 
-Analysts write the column descriptions and the `not_suitable_for` field. Specifically, they write them by recalling mistakes. The prompt that works in a room is "what has someone gotten wrong with this table," and the answers become descriptions almost verbatim.
+Analysts write the column descriptions and the `not_suitable_for` field. Specifically, they write them by recalling mistakes. The prompt that works in a room is "what has someone gotten wrong with this table, " and the answers become descriptions almost verbatim.
 
 Business owners approve metric definitions and own changes to them. They do not write dataset documentation.
 
@@ -270,19 +253,19 @@ Build an evaluation set. Twenty to fifty questions in the language your users ac
 
 ```
 Q: What was net revenue by region last quarter?
-   Expected: [region: value] from the finance close report.
+ Expected: [region: value] from the finance close report.
 
 Q: How many orders did we take in June?
-   Expected: 48,213. Trap: line grain vs order grain.
+ Expected: 48, 213. Trap: line grain vs order grain.
 
 Q: What is our average order value?
-   Expected: 312.40. Trap: requires order grain, and "average" over lines is wrong.
+ Expected: 312.40. Trap: requires order grain, and "average" over lines is wrong.
 
 Q: Which products had the most returns last month?
-   Expected: a refusal or redirect. Returns are not in this dataset.
+ Expected: a refusal or redirect. Returns are not in this dataset.
 
 Q: What was revenue including wholesale?
-   Expected: a caveat that wholesale is excluded, or a redirect.
+ Expected: a caveat that wholesale is excluded, or a redirect.
 ```
 
 The last two matter as much as the first three. A useful evaluation set measures appropriate refusal, not just correct answering. An agent that answers everything is worse than one that answers 80 percent and declines the rest, because you can build process around a known refusal and you cannot build process around silent wrongness.
@@ -307,7 +290,7 @@ Abstractions land better with a specific case, so here is a composite of failure
 
 **What was actually wrong.** The gold view excludes cancelled orders using `order_status <> 'CANCELLED'`. Three months earlier, the source system added a second cancellation state, `CANCELLED_BY_MERCHANT`, for a new merchant-initiated flow. The filter did not cover it. Roughly 4 percent of orders in Q2 carried the new status.
 
-**Why the agent had no way to catch it.** Nothing in the dataset says the exclusion is enumerated by literal string. The description said "excludes cancelled orders," which the agent had no reason to doubt. The agent was correct to trust the contract. The contract was wrong.
+**Why the agent had no way to catch it.** Nothing in the dataset says the exclusion is enumerated by literal string. The description said "excludes cancelled orders, " which the agent had no reason to doubt. The agent was correct to trust the contract. The contract was wrong.
 
 **Why humans had not caught it.** The finance close does not use this view. It runs from a separate process with its own rules that were updated when the new status shipped. The two paths had diverged and nothing compared them.
 

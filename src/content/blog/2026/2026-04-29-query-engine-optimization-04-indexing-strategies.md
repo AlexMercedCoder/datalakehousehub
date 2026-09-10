@@ -14,11 +14,12 @@ draft: false
 image: "/images/blog/query-engine-optimization/04-indexing-strategies-btree-structure.png"
 canonical: "https://iceberglakehouse.com/posts/2026-04-29-query-engine-04/"
 ---
-> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-04-29-query-engine-04/).
 
-<!-- Meta Description: B-trees balance reads and writes for OLTP. LSM trees maximize write throughput. Bitmap indexes accelerate OLAP filtering. Here is when to use each. -->
-<!-- Primary Keyword: database indexing strategies -->
-<!-- Secondary Keywords: B-tree vs LSM tree, bitmap index, bloom filter database -->
+<!- Meta Description: B-trees balance reads and writes for OLTP. LSM trees maximize write throughput. Bitmap indexes accelerate OLAP filtering. Here is when to use each. ->
+<!- Primary Keyword: database indexing strategies ->
+<!- Secondary Keywords: B-tree vs LSM tree, bitmap index, bloom filter database ->
+
+> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-04-29-query-engine-04/).
 
 *Read the complete Query Engine Optimization series:*
 * [Part 1: How Query Engines Think: The Tradeoffs Behind Every Data System](/blog/2026-04-29-query-engine-optimization-01-overview)
@@ -89,7 +90,7 @@ Dremio automates this through its clustering table maintenance, and Iceberg's ma
 
 ## Inverted Indexes: Full-Text Search
 
-Elasticsearch, Apache Lucene, and Solr use inverted indexes: a mapping from each term to the list of documents containing it. Searching for "query engine optimization" finds the intersection of the posting lists for "query," "engine," and "optimization."
+Elasticsearch, Apache Lucene, and Solr use inverted indexes: a mapping from each term to the list of documents containing it. Searching for "query engine optimization" finds the intersection of the posting lists for "query, " "engine, " and "optimization."
 
 Inverted indexes are the reason text search engines return results in milliseconds across billions of documents. They are highly specialized and not used for general-purpose relational queries.
 
@@ -98,7 +99,7 @@ Inverted indexes are the reason text search engines return results in millisecon
 ![Index type tradeoff matrix comparing read speed, write cost, memory cost, and best use case for B-trees, LSM trees, bitmap indexes, bloom filters, and zone maps](/images/blog/query-engine-optimization/04-indexing-strategies-index-tradeoff-matrix.png)
 
 | Index Type | Read Speed | Write Cost | Best For |
-|---|---|---|---|
+|--|--|--|--|
 | B-tree | O(log n) point + range | Moderate (in-place, splits) | OLTP mixed workloads |
 | LSM tree | Moderate (multi-level search) | Low (sequential flushes) | Write-heavy workloads |
 | Bitmap | Excellent for boolean filters | Very high (locking, rebuild) | Low-cardinality OLAP |
@@ -109,7 +110,7 @@ Inverted indexes are the reason text search engines return results in millisecon
 ## Where Real Systems Land
 
 | System | Primary Index | Secondary Indexes | Workload |
-|---|---|---|---|
+|--|--|--|--|
 | PostgreSQL | B-tree | GIN, GiST, BRIN, hash | OLTP |
 | MySQL/InnoDB | B-tree (clustered) | Secondary B-trees | OLTP |
 | RocksDB | LSM tree | Bloom filters | Write-heavy storage |

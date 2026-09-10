@@ -14,14 +14,14 @@ draft: false
 image: "/images/blog.png"
 canonical: "https://iceberglakehouse.com/posts/2024-10-all-about-parquet-part-04/"
 ---
+
+When working with large datasets, schema changes: whether it’s adding new fields, modifying data types, or removing columns, are inevitable. This is where **schema evolution** comes into play. In this post, we’ll dive into how Parquet handles schema changes and why this flexibility is essential in dynamic data environments. We’ll also explore how Parquet's schema evolution compares to other file formats and the practical implications for data engineers.
+
 > **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2024-10-all-about-parquet-part-04/).
 
 - [Free Copy of Apache Iceberg the Definitive Guide](https://hello.dremio.com/wp-apache-iceberg-the-definitive-guide-reg.html?utm_source=alexmerced&utm_medium=external_blog&utm_campaign=allaboutparquet)
 - [Free Apache Iceberg Crash Course](https://hello.dremio.com/webcast-an-apache-iceberg-lakehouse-crash-course-reg.html?utm_source=alexmerced&utm_medium=external_blog&utm_campaign=allaboutparquet)
 - [Iceberg Lakehouse Engineering Video Playlist](https://www.youtube.com/watch?v=SIriNcVIGJQ&list=PLsLAVBjQJO0p0Yq1fLkoHvt2lEJj5pcYe)
-
-
- When working with large datasets, schema changes: whether it’s adding new fields, modifying data types, or removing columns, are inevitable. This is where **schema evolution** comes into play. In this post, we’ll dive into how Parquet handles schema changes and why this flexibility is essential in dynamic data environments. We’ll also explore how Parquet's schema evolution compares to other file formats and the practical implications for data engineers.
 
 ## What is Schema Evolution?
 
@@ -70,7 +70,7 @@ In Parquet, the order of columns in the schema does not affect the ability to re
 Compared to other file formats like CSV or Avro, Parquet’s schema evolution capabilities are particularly robust:
 
 - **CSV**: Since CSV lacks a formal schema definition, it doesn’t support schema evolution. If the structure of your CSV file changes, you’ll need to rewrite the entire file or deal with errors when parsing the data.
-  
+ 
 - **Avro**: Like Parquet, Avro supports schema evolution. However, Avro focuses on row-based storage, making it more suitable for transactional systems than analytical workloads. Parquet’s columnar nature makes it more efficient for large-scale analytics, particularly when the schema evolves over time.
 
 - **ORC**: ORC, another columnar storage format, also supports schema evolution. However, Parquet is generally considered more flexible and is widely used in a variety of data processing systems.
@@ -79,20 +79,20 @@ Compared to other file formats like CSV or Avro, Parquet’s schema evolution ca
 
 Here are a few best practices to follow when working with schema evolution in Parquet:
 
-1. **Plan for Schema Changes Early**  
-   It’s always a good idea to anticipate potential schema changes when designing your data models. Adding new columns or changing data types is easier to manage if your data model is flexible from the start.
+1. **Plan for Schema Changes Early** 
+ It’s always a good idea to anticipate potential schema changes when designing your data models. Adding new columns or changing data types is easier to manage if your data model is flexible from the start.
 
-2. **Use Nullable Fields**  
-   Adding new columns to a dataset is one of the most common schema changes. By making new fields nullable, you ensure that old data remains compatible with the updated schema.
+2. **Use Nullable Fields** 
+ Adding new columns to a dataset is one of the most common schema changes. By making new fields nullable, you ensure that old data remains compatible with the updated schema.
 
-3. **Test Schema Changes in Staging Environments**  
-   Before deploying schema changes to production, test them in a staging environment. This allows you to catch potential issues related to backward or forward compatibility before they impact production systems.
+3. **Test Schema Changes in Staging Environments** 
+ Before deploying schema changes to production, test them in a staging environment. This allows you to catch potential issues related to backward or forward compatibility before they impact production systems.
 
-4. **Document Schema Changes**  
-   Keep detailed documentation of schema changes, especially if you are working in a team. This ensures that everyone understands the evolution of the data model and how to handle older versions of the data.
+4. **Document Schema Changes** 
+ Keep detailed documentation of schema changes, especially if you are working in a team. This ensures that everyone understands the evolution of the data model and how to handle older versions of the data.
 
-5. **Leverage Data Catalogs**  
-   Using a data catalog or schema registry can help manage schema evolution across multiple Parquet files and datasets. Tools like Apache Hive Metastore or Nessie Catalog allow you to track schema versions and ensure compatibility.
+5. **Leverage Data Catalogs** 
+ Using a data catalog or schema registry can help manage schema evolution across multiple Parquet files and datasets. Tools like Apache Hive Metastore or Nessie Catalog allow you to track schema versions and ensure compatibility.
 
 ## Conclusion
 

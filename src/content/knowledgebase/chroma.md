@@ -1,7 +1,7 @@
 ---
 title: "What is Chroma?"
 meta_title: "What is Chroma? | Expert Data Lakehouse & AI Glossary"
-description: "The AI-native open-source embedding database designed to make it extremely easy to build LLM applications. Learn the architecture, mechanics, and real-world value of Chroma in the modern data stack."
+description: "The AI-native open-source embedding database designed to make it extremely easy to build LLM applications."
 ---
 
 ## What is Chroma?

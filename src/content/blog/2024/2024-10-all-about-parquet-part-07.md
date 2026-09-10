@@ -14,13 +14,14 @@ draft: false
 image: "/images/blog.png"
 canonical: "https://iceberglakehouse.com/posts/2024-10-all-about-parquet-part-07/"
 ---
+
+In the previous posts, we’ve covered how Parquet optimizes storage through columnar storage, compression, and encoding. Now, let’s explore another essential feature that sets Parquet apart: **metadata**. Metadata in Parquet plays a crucial role in improving data efficiency, enabling faster queries and optimized storage. In this post, we’ll dive into the different types of metadata stored in Parquet files, how metadata improves query performance, and best practices for leveraging metadata in your data pipelines.
+
 > **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2024-10-all-about-parquet-part-07/).
 
 - [Free Copy of Apache Iceberg the Definitive Guide](https://hello.dremio.com/wp-apache-iceberg-the-definitive-guide-reg.html?utm_source=alexmerced&utm_medium=external_blog&utm_campaign=allaboutparquet)
 - [Free Apache Iceberg Crash Course](https://hello.dremio.com/webcast-an-apache-iceberg-lakehouse-crash-course-reg.html?utm_source=alexmerced&utm_medium=external_blog&utm_campaign=allaboutparquet)
 - [Iceberg Lakehouse Engineering Video Playlist](https://www.youtube.com/watch?v=SIriNcVIGJQ&list=PLsLAVBjQJO0p0Yq1fLkoHvt2lEJj5pcYe)
-
-In the previous posts, we’ve covered how Parquet optimizes storage through columnar storage, compression, and encoding. Now, let’s explore another essential feature that sets Parquet apart: **metadata**. Metadata in Parquet plays a crucial role in improving data efficiency, enabling faster queries and optimized storage. In this post, we’ll dive into the different types of metadata stored in Parquet files, how metadata improves query performance, and best practices for leveraging metadata in your data pipelines.
 
 ## What is Metadata in Parquet?
 
@@ -81,7 +82,7 @@ For example, consider a query that filters for rows where the value in the `Age`
 ### Other Ways Metadata Optimizes Queries
 
 - **Column Pruning**: Since Parquet is a columnar format, queries that only require specific columns can skip over irrelevant columns. The metadata helps identify which columns are needed for the query and ensures that only those columns are read.
-  
+ 
 - **Row Group Skipping**: If a query involves filtering based on a column’s value, Parquet’s row group-level metadata allows the query engine to skip entire row groups that do not match the filter condition. This reduces the number of rows that need to be scanned.
 
 - **Page Skipping**: In addition to skipping row groups, metadata stored at the page level (within row groups) allows fine-grained control, letting the query engine skip pages that do not match query conditions.

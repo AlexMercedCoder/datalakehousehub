@@ -1,6 +1,6 @@
 ---
 title: "Securing Agent Identities in the Lakehouse"
-description: "How OAuth 2.0 token exchange, OAuth 2.1 device authorization grant, credential vending, and fine-grained access control secure AI agent identities in the Iceberg lakehouse."
+description: "How OAuth 2. 0 token exchange, OAuth 2. 1 device authorization grant, credential vending, and fine-grained access control secure AI agent identities."
 date: 2026-06-08T09:00:00Z
 slug: "securing-agent-identities-lakehouse-token-exchange"
 draft: false

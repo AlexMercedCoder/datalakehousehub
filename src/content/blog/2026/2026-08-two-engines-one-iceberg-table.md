@@ -14,9 +14,10 @@ tags:
 slug: "two-engines-one-iceberg-table"
 draft: false
 ---
-> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/two-engines-one-iceberg-table/).
 
 Somewhere in your platform, right now, a Spark job and a streaming writer are heading toward the same Apache Iceberg table, and they will arrive within milliseconds of each other. Maybe it is Spark and Flink, maybe a nightly batch and a DuckDB session someone opened from a laptop, maybe two instances of the same service after a deployment overlap. Nothing coordinates them. They share no locks, no leader, no queue, and in most cases no knowledge of each other's existence. And the table comes out correct anyway, both writes present, history linear, no reader ever seeing a half-applied state.
+
+> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/two-engines-one-iceberg-table/).
 
 That outcome is not luck. It is the most carefully engineered behavior in the entire format, and also the least understood, because it works well enough that most practitioners never have to look inside it, right up until the day a job starts failing with commit exceptions, or a MERGE conflicts with a compaction, or a retry storm turns a busy table into a contention experiment. On that day, the difference between a team that knows the machinery and one that trusts it blind is measured in hours of incident time, and occasionally in whether anyone can say with confidence that the data is right. This article opens the machinery all the way: snapshot isolation and what readers are promised, the optimistic commit protocol step by step, what the catalog's atomicity actually guarantees, how conflicts are detected and which operations conflict with which, what retries do and when they give up, the special cases, MERGE, compaction, streaming, where the sharp edges live, and how to configure and operate tables so that concurrency stays boring.
 
@@ -86,15 +87,15 @@ Schema and metadata changes ride the same protocol with the bluntest rules. A co
 
 The summary worth internalizing: conflicts are about overlap in what operations depended on, appends depend on nothing and never lose, row-level operations depend on the files and rows they touched, maintenance depends on the files it rewrote, and the validation machinery exists to compute exactly these dependency intersections against whatever landed during the race.
 
-The landscape compresses into a matrix, read as "what happens when the row operation races the column operation," with SI and SER marking where the isolation level decides:
+The landscape compresses into a matrix, read as "what happens when the row operation races the column operation, " with SI and SER marking where the isolation level decides:
 
 | Racing pair | Append | Row-level op (same files) | Row-level op (disjoint files) | Compaction (overlapping) | Schema change |
-|---|---|---|---|---|---|
+|--|--|--|--|--|--|
 | Append | Retry, always succeeds | Retry succeeds (SI) or op fails (SER, matching rows) | Retry succeeds | Retry succeeds | Fails for reconciliation |
 | Row-level op | See above | Validation fails loser, replan | Retry succeeds | Validation fails one side, replan or re-run | Fails for reconciliation |
 | Compaction | Retry succeeds | One side replans | Retry succeeds | One rewrite abandons, re-run | Fails for reconciliation |
 
-The matrix's shape carries the design philosophy: most cells say "retry succeeds," the expensive cells are exactly the semantic overlaps, and nothing anywhere says "corruption" or "undefined," which is the entire achievement. Print it, and the next commit-exception incident starts from a cell instead of from scratch.
+The matrix's shape carries the design philosophy: most cells say "retry succeeds, " the expensive cells are exactly the semantic overlaps, and nothing anywhere says "corruption" or "undefined, " which is the entire achievement. Print it, and the next commit-exception incident starts from a cell instead of from scratch.
 
 ## Retries: The Part That Makes It All Practical
 
@@ -142,7 +143,7 @@ Compaction's playbook is scope and timing, extending the earlier analysis into p
 
 Streaming writers are a contention pattern all their own: commits on a clock, forever. A single streaming writer per table is easy, its cadence merely sets the snapshot production rate, and the design questions arrive with multiplicity, several streams into one table, or streams plus batch plus maintenance. The levers, in order of power: commit interval, since a stream committing every ten seconds versus every two minutes changes contention and snapshot volume by an order of magnitude, one-writer-per-partition topology, which converts table-level races into disjoint lanes, and consolidation, letting one sink own the table and feeding it upstream, which deletes the problem. Flink's checkpoint-aligned commits deserve their honorable mention here: tying commits to checkpoints gives the stream exactly-once semantics across failures, the stream's own receipts pattern, and means its commit cadence is your checkpoint cadence, one knob governing both correctness and contention.
 
-The arithmetic behind the commit-interval lever deserves its numbers, because they compound past contention into every corner of table health. A ten-second cadence is 8,640 snapshots a day, 60,000 a week, each one a metadata file, a manifest list, and manifests, each one extending the history that time travel, snapshot expiration, and planning must handle, and each one a fresh chance to race every other writer on the table. A two-minute cadence is 720 a day, and a table receiving both a stream and hourly batch jobs at that cadence sees batch-versus-stream races roughly once per batch run rather than a dozen times, with each race resolved by the append-append rule anyway, cheaply. The streaming latency budget should be spent deliberately: commit as often as freshness genuinely requires and no oftener, because every unnecessary snapshot is contention surface, metadata mass, and maintenance debt purchased for nothing. This arithmetic is also exactly the pressure the v4 metadata redesign answers, and until it lands, the interval knob is the streaming team's best friend.
+The arithmetic behind the commit-interval lever deserves its numbers, because they compound past contention into every corner of table health. A ten-second cadence is 8, 640 snapshots a day, 60, 000 a week, each one a metadata file, a manifest list, and manifests, each one extending the history that time travel, snapshot expiration, and planning must handle, and each one a fresh chance to race every other writer on the table. A two-minute cadence is 720 a day, and a table receiving both a stream and hourly batch jobs at that cadence sees batch-versus-stream races roughly once per batch run rather than a dozen times, with each race resolved by the append-append rule anyway, cheaply. The streaming latency budget should be spent deliberately: commit as often as freshness genuinely requires and no oftener, because every unnecessary snapshot is contention surface, metadata mass, and maintenance debt purchased for nothing. This arithmetic is also exactly the pressure the v4 metadata redesign answers, and until it lands, the interval knob is the streaming team's best friend.
 
 And underneath all three, the same hygiene: watch snapshot production rate per table, alert on the two failure families separately, and remember that every contention fix is some form of fewer, larger, or more disjoint commits.
 
@@ -154,15 +155,10 @@ Terminal one, Spark, sets the table up with its concurrency posture explicit, so
 
 ```sql
 CREATE TABLE lake.demo.race_test (
-    id      BIGINT,
-    payload STRING
+ id BIGINT, payload STRING
 ) USING iceberg
 TBLPROPERTIES (
-    'commit.retry.num-retries'   = '4',
-    'commit.retry.min-wait-ms'   = '100',
-    'commit.retry.max-wait-ms'   = '60000',
-    'write.delete.isolation-level' = 'serializable',
-    'write.merge.isolation-level'  = 'serializable'
+ 'commit.retry.num-retries' = '4', 'commit.retry.min-wait-ms' = '100', 'commit.retry.max-wait-ms' = '60000', 'write.delete.isolation-level' = 'serializable', 'write.merge.isolation-level' = 'serializable'
 );
 ```
 
@@ -171,13 +167,9 @@ Now the race. In terminal one, start a Spark INSERT built to take a while, a SEL
 So look, because the snapshot history recorded everything:
 
 ```sql
-SELECT snapshot_id,
-       committed_at,
-       operation,
-       summary['spark.app.id']      AS committer,
-       summary['added-records']     AS rows_added
-FROM   lake.demo.race_test.snapshots
-ORDER  BY committed_at;
+SELECT snapshot_id, committed_at, operation, summary['spark.app.id'] AS committer, summary['added-records'] AS rows_added
+FROM lake.demo.race_test.snapshots
+ORDER BY committed_at;
 ```
 
 Two snapshots, in commit order rather than start order, the small write first, each attributed to its committer, history perfectly linear. Re-run the experiment with variations and each one teaches a section of this article: two simultaneous DELETEs targeting the same rows shows a validation failure and its exception text, the serializable properties above versus snapshot isolation shows the append-versus-delete contract difference, and dropping the retry count to zero shows what the retry layer was silently absorbing. The whole exercise costs a coffee break and permanently upgrades every future incident conversation, because everyone in it has seen the machinery move.

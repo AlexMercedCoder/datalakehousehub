@@ -11,12 +11,14 @@ slug: "federation-and-lakehouse"
 draft: false
 image: "/images/blog.png"
 canonical: https://iceberglakehouse.com/posts/federation-and-lakehouse/
+description: "By Alex Merced, Head of Developer Relations at Dremio"
 ---
-> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/federation-and-lakehouse/).
 
 # Federation and the Lakehouse: Two Roads to Unified Data Access, and How to Know Which One to Take
 
 *By Alex Merced, Head of Developer Relations at Dremio*
+
+> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/federation-and-lakehouse/).
 
 Every data strategy document written this decade contains some version of the same sentence: we need a single place to access all our data. The sentence is right. The trouble starts on the next page, because there are two fundamentally different ways to build that single place, and the industry has spent years arguing about them as if they were rivals.
 
@@ -72,7 +74,7 @@ Read that list again too: everything on it is what federation is good at. The tw
 
 ## The Decision Framework: Which Road Carries Which Workload
 
-Here is the framework I actually use with teams, workload by workload, because the unit of decision is never "the company," it is the individual data flow.
+Here is the framework I actually use with teams, workload by workload, because the unit of decision is never "the company, " it is the individual data flow.
 
 **Federate when freshness is the requirement.** Operational dashboards, customer-state lookups, inventory positions, anything where the answer must reflect the source system's current truth. No pipeline cadence will ever beat reading the source, and these queries are typically narrow enough, filtered lookups rather than scans, that pushdown keeps them cheap.
 

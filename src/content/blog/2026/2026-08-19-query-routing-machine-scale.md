@@ -1,7 +1,7 @@
 ---
 title: "Query Routing at Machine Scale: Multi-Engine Workload Distribution for the Agentic Lakehouse"
 date: 2026-08-19T09:00:00Z
-description: "Query routing at machine scale for the agentic lakehouse: engine selection, acceleration substitution, admission control, and placement across multi-engine estates."
+description: "Query routing at machine scale for the agentic lakehouse: engine selection, acceleration substitution, admission control, and placement."
 author: "Alex Merced"
 category: "AI & Agents"
 image: "/images/blog.png"
@@ -14,9 +14,10 @@ tags:
 slug: "query-routing-machine-scale"
 draft: false
 ---
-> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/query-routing-machine-scale/).
 
 For most of the analytics era, query routing was a human problem with human solutions. Analysts learned which tool to open for which job, platform teams published guidance about where the big joins belonged, and the estate's workload distribution was the sum of a few hundred people's habits, corrected quarterly by a wiki page nobody read. The arrangement survived because the query population grew with headcount, which is to say slowly, and because humans absorb routing rules the way they absorb office norms, imperfectly and well enough.
+
+> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/query-routing-machine-scale/).
 
 Agents ended the arrangement. A single analytics assistant generates more query traffic than the department it serves, an estate's agent population multiplies that by dozens, and the traffic's character changes along with its volume: machine-issued queries cluster into repeated shapes, arrive in bursts that follow model behavior rather than business hours, chain into workflows where one slow step stalls a plan, and originate from principals that read no wiki and absorb no norms. The question "which engine, which resources, which path" now gets asked thousands of times an hour by systems that need the answer computed, not remembered, and computing it well is the difference between an estate that scales with its agents and one that melts under them.
 
@@ -126,7 +127,7 @@ The semantic layer routes at the compilation grain: the optimizer's acceleration
 
 The engines route at the execution grain: admission into lanes, resource assignment, preemption, the workload management enforcing the guarantees the policy declared, keyed to the principals the upper layers resolved.
 
-And the policy that all three read lives where every other authority in this series lives: the governance repository, as code, reviewed and versioned, which is the design's whole trick. No single component is "the router," routing is a property the layers enforce jointly, and the estate still has one place where routing behavior is declared, diffed, and reverted, which is what centralized means once you stop expecting a central box.
+And the policy that all three read lives where every other authority in this series lives: the governance repository, as code, reviewed and versioned, which is the design's whole trick. No single component is "the router, " routing is a property the layers enforce jointly, and the estate still has one place where routing behavior is declared, diffed, and reverted, which is what centralized means once you stop expecting a central box.
 
 One property binds the distributed brain together and earns its sentence before the policy skeleton: explainability per request. Any workflow's trace reconstructs its routing story end to end, classified here, cache-missed there, admitted after this wait for that reason, executed on this engine in that region against a materialization of this age, because each layer's decision logged its reason into the shared trace. The property is what makes the distributed design governable, the answer to "why was this slow" or "why did this cost that" being a lookup rather than a cross-team investigation, and it is the standing argument against every clever routing shortcut that cannot explain itself.
 
@@ -134,44 +135,44 @@ The policy's shape, compressed to its skeleton:
 
 ```yaml
 workload_classes:
-  interactive_governed:
-    latency_class: interactive
-    engines: [sql_primary]
-    lane: interactive
-    lane_floor_slots: 24
-    staleness_tolerance: 1h
-    degrade_order: [serve_cached, queue_bounded, decline_polite]
-  bulk_mechanical:
-    latency_class: batch
-    engines: [direct_read]
-    lane: bulk
-    throttle: per_principal
-    degrade_order: [yield_and_resume]
-  maintenance:
-    latency_class: background
-    engines: [batch_framework]
-    lane: maintenance
-    schedule_window: "01:00-05:00"
-    cap_slots: 8
+ interactive_governed:
+ latency_class: interactive
+ engines: [sql_primary]
+ lane: interactive
+ lane_floor_slots: 24
+ staleness_tolerance: 1h
+ degrade_order: [serve_cached, queue_bounded, decline_polite]
+ bulk_mechanical:
+ latency_class: batch
+ engines: [direct_read]
+ lane: bulk
+ throttle: per_principal
+ degrade_order: [yield_and_resume]
+ maintenance:
+ latency_class: background
+ engines: [batch_framework]
+ lane: maintenance
+ schedule_window: "01:00-05:00"
+ cap_slots: 8
 
 placement:
-  regions:
-    - name: us_east
-      holds: [sales, finance]
-    - name: eu_west
-      holds: [eu_customers]
-      residency: eu_only
-  egress_policy: aggregates_travel
-  federation:
-    sources:
-      - name: ops_postgres
-        max_concurrency: 4
-        pushdown_required: [filters, aggregates]
+ regions:
+ - name: us_east
+ holds: [sales, finance]
+ - name: eu_west
+ holds: [eu_customers]
+ residency: eu_only
+ egress_policy: aggregates_travel
+ federation:
+ sources:
+ - name: ops_postgres
+ max_concurrency: 4
+ pushdown_required: [filters, aggregates]
 
 surge_schedule:
-  nightly_reporting_agents:
-    stagger_minutes: 15
-    window: "02:00-04:00"
+ nightly_reporting_agents:
+ stagger_minutes: 15
+ window: "02:00-04:00"
 ```
 
 Read the file as the article compressed: classes with their engines, lanes, floors, staleness tolerances, and declared degradation orders, placement with residency as constraint and egress as policy, federation sources with their contracts, and the surge choreography written down where the review can see it. A routing behavior change, the interactive lane's floor raised for a launch, a class migrated to a new engine, ships as a diff with an owner, which is the property the folklore era never had and the machine era cannot live without.

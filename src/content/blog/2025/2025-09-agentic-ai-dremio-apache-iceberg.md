@@ -15,16 +15,17 @@ draft: false
 image: "/images/blog.png"
 canonical: "https://iceberglakehouse.com/posts/2025-09-agentic-ai-dremio-apache-iceberg/"
 ---
-> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2025-09-agentic-ai-dremio-apache-iceberg/).
 
 ## Free Resources  
-- **[Free Apache Iceberg Course](https://hello.dremio.com/webcast-an-apache-iceberg-lakehouse-crash-course-reg.html?utm_source=ev_external_blog&utm_medium=influencer&utm_campaign=lakehouse-meetups&utm_content=alexmerced&utm_term=external_blog)**  
-- **[Free Copy of “Apache Iceberg: The Definitive Guide”](https://hello.dremio.com/wp-apache-iceberg-the-definitive-guide-reg.html?utm_source=ev_external_blog&utm_medium=influencer&utm_campaign=lakehouse-meetups&utm_content=alexmerced&utm_term=external_blog)**  
+- **[Free Apache Iceberg Course](https://hello.dremio.com/webcast-an-apache-iceberg-lakehouse-crash-course-reg.html?utm_source=ev_external_blog&utm_medium=influencer&utm_campaign=lakehouse-meetups&utm_content=alexmerced&utm_term=external_blog)** 
+- **[Free Copy of “Apache Iceberg: The Definitive Guide”](https://hello.dremio.com/wp-apache-iceberg-the-definitive-guide-reg.html?utm_source=ev_external_blog&utm_medium=influencer&utm_campaign=lakehouse-meetups&utm_content=alexmerced&utm_term=external_blog)** 
 - **[Free Copy of “Apache Polaris: The Definitive Guide”](https://hello.dremio.com/wp-apache-polaris-guide-reg.html?utm_source=ev_external_blog&utm_medium=influencer&utm_campaign=lakehouse-meetups&utm_content=alexmerced&utm_term=external_blog)**
-- **[Purchase "Architecting an Apache Iceberg Lakehouse" (50% Off with Code MLMerced)](https://hubs.la/Q03GfY4f0?utm_source=merced&utm_medium=affiliate&utm_campaign=book_merced&a_aid=merced&a_bid=7eac4151)**  
-- **[2025 Apache Iceberg Architecture Guide](https://medium.com/data-engineering-with-dremio/2025-guide-to-architecting-an-iceberg-lakehouse-9b19ed42c9de)**  
-- **[Iceberg Lakehouse Engineering Video Playlist](https://youtube.com/playlist?list=PLsLAVBjQJO0p0Yq1fLkoHvt2lEJj5pcYe&si=WTSnqjXZv6Glkc3y)**  
-- **[Ultimate Apache Iceberg Resource Guide](https://medium.com/data-engineering-with-dremio/ultimate-directory-of-apache-iceberg-resources-e3e02efac62e)** 
+- **[Purchase "Architecting an Apache Iceberg Lakehouse" (50% Off with Code MLMerced)](https://hubs.la/Q03GfY4f0?utm_source=merced&utm_medium=affiliate&utm_campaign=book_merced&a_aid=merced&a_bid=7eac4151)** 
+- **[2025 Apache Iceberg Architecture Guide](https://medium.com/data-engineering-with-dremio/2025-guide-to-architecting-an-iceberg-lakehouse-9b19ed42c9de)** 
+- **[Iceberg Lakehouse Engineering Video Playlist](https://youtube.com/playlist?list=PLsLAVBjQJO0p0Yq1fLkoHvt2lEJj5pcYe&si=WTSnqjXZv6Glkc3y)** 
+- **[Ultimate Apache Iceberg Resource Guide](https://medium.com/data-engineering-with-dremio/ultimate-directory-of-apache-iceberg-resources-e3e02efac62e)**
+
+> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2025-09-agentic-ai-dremio-apache-iceberg/).
 
 Agentic AI is quickly moving from the whiteboard to production. These aren’t just smarter chatbots - they're intelligent systems that reason, learn, and act with autonomy. They summarize research, manage operations, and even coordinate complex workflows. But while models have become more capable, they still hit a wall without the right data infrastructure.
 

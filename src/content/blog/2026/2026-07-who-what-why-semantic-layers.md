@@ -11,12 +11,14 @@ slug: "who-what-why-semantic-layers"
 draft: false
 image: "/images/blog.png"
 canonical: https://iceberglakehouse.com/posts/who-what-why-semantic-layers/
+description: "By Alex Merced, Head of Developer Relations at Dremio"
 ---
-> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/who-what-why-semantic-layers/).
 
 # The Who, What, and Why of Semantic Layers: The Layer That Decides Whether Your Numbers Can Be Trusted
 
 *By Alex Merced, Head of Developer Relations at Dremio*
+
+> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/who-what-why-semantic-layers/).
 
 There is a survey statistic making the rounds this year that I cannot stop quoting: 84 percent of data teams report regularly encountering conflicting versions of the same metric. Not occasionally. Regularly. As in, most reporting cycles include an argument about whether revenue means gross or net, whether churn counts seats or accounts, whether this week's number can be compared to last week's at all.
 

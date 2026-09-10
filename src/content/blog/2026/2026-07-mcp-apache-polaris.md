@@ -1,6 +1,6 @@
 ---
 title: "Wiring an AI Agent to Apache Polaris with the Model Context Protocol"
-description: "The catalog is the right attachment point for AI agents working against a lakehouse. Here's how to wire the official Polaris MCP Server and add the read path it deliberately leaves out."
+description: "The catalog is the right attachment point for AI agents working against a lakehouse. Here's how to wire the official Polaris MCP Server and add the read."
 date: 2026-07-28T09:00:00Z
 author: "Alex Merced"
 category: "Apache Iceberg"
@@ -15,11 +15,11 @@ image: "/images/blog.png"
 canonical: "https://iceberglakehouse.com/posts/mcp-apache-polaris/"
 ---
 
-> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/mcp-apache-polaris/).
-
 # Wiring an AI Agent to Apache Polaris with the Model Context Protocol
 
-An engineer opens Cursor, types "what tables do we have in the sales namespace, and which ones have a customer_id column," and gets an answer in four seconds. No Slack message to the data team. No hunting through a wiki page last updated in 2023.
+An engineer opens Cursor, types "what tables do we have in the sales namespace, and which ones have a customer_id column, " and gets an answer in four seconds. No Slack message to the data team. No hunting through a wiki page last updated in 2023.
+
+> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/mcp-apache-polaris/).
 
 Getting to that four seconds requires a plumbing decision most teams get wrong on the first try. The tempting approach is to hand the agent database credentials and a SQL client. That works in a demo and fails in production, because credentials do not expire, permissions do not follow the user, and nobody can reconstruct afterward what the agent actually touched.
 
@@ -90,7 +90,7 @@ Each tool returns both a human-readable transcript of the HTTP exchange and stru
 Here is how the attachment points compare in practice.
 
 | Attachment point | Discovery | Schema quality | Access control | Credential lifetime | Query execution |
-|---|---|---|---|---|---|
+|--|--|--|--|--|--|
 | Catalog MCP server | Complete, from catalog state | Authoritative | Catalog RBAC | Short-lived, vended | None |
 | Query engine MCP server | Whatever the engine exposes | Good, plus semantic layer | Engine security model | Engine session | Full |
 | Direct database credentials | Information schema only | Raw column names | Database grants, static | Indefinite | Full |
@@ -110,7 +110,7 @@ uv sync
 uv run polaris-mcp
 
 # Install dev dependencies and run the test suite
-uv sync --all-extras
+uv sync -all-extras
 uv run pytest
 ```
 
@@ -134,24 +134,19 @@ Registering it with a desktop client looks like this:
 
 ```json
 {
-  "mcpServers": {
-    "polaris": {
-      "command": "uv",
-      "args": [
-        "--directory",
-        "/path/to/polaris-tools/mcp-server",
-        "run",
-        "polaris-mcp"
-      ],
-      "env": {
-        "POLARIS_CONFIG_FILE": "/path/to/polaris-tools/mcp-server/.polaris_mcp.env"
-      }
-    }
-  }
+ "mcpServers": {
+ "polaris": {
+ "command": "uv", "args": [
+ "-directory", "/path/to/polaris-tools/mcp-server", "run", "polaris-mcp"
+ ], "env": {
+ "POLARIS_CONFIG_FILE": "/path/to/polaris-tools/mcp-server/.polaris_mcp.env"
+ }
+ }
+ }
 }
 ```
 
-The `--directory` argument points at a local checkout. Pulling `polaris-mcp` from PyPI removes the need for it.
+The `-directory` argument points at a local checkout. Pulling `polaris-mcp` from PyPI removes the need for it.
 
 For testing without wiring up a full client, the repository includes a client script. Interactive mode over stdio:
 
@@ -163,34 +158,26 @@ Non-interactive, calling one tool directly:
 
 ```bash
 uv run int_test/client.py polaris_mcp/server.py \
-  --tool polaris-catalog-request \
-  --args '{"operation": "list"}'
+ -tool polaris-catalog-request \
+ -args '{"operation": "list"}'
 ```
 
 Creating a catalog through the same path shows the shape of a write operation:
 
 ```bash
 uv run int_test/client.py polaris_mcp/server.py \
-  --tool polaris-catalog-request \
-  --args '{
-    "operation": "create",
-    "body": {
-      "catalog": {
-        "name": "quickstart_catalog",
-        "type": "INTERNAL",
-        "readOnly": false,
-        "properties": {
-          "default-base-location": "s3://bucket123"
-        },
-        "storageConfigInfo": {
-          "storageType": "S3",
-          "allowedLocations": ["s3://bucket123"],
-          "endpoint": "http://localhost:9000",
-          "pathStyleAccess": true
-        }
-      }
-    }
-  }'
+ -tool polaris-catalog-request \
+ -args '{
+ "operation": "create", "body": {
+ "catalog": {
+ "name": "quickstart_catalog", "type": "INTERNAL", "readOnly": false, "properties": {
+ "default-base-location": "s3://bucket123"
+ }, "storageConfigInfo": {
+ "storageType": "S3", "allowedLocations": ["s3://bucket123"], "endpoint": "http://localhost:9000", "pathStyleAccess": true
+ }
+ }
+ }
+ }'
 ```
 
 Run that script against a scratch Polaris before you point any agent at production. Watching the raw JSON-RPC exchange for ten minutes teaches you more about what the agent sees than any amount of documentation.
@@ -233,65 +220,51 @@ from pyiceberg.catalog import load_catalog
 mcp = FastMCP("polaris-read")
 
 catalog = load_catalog(
-    "polaris",
-    **{
-        "type": "rest",
-        "uri": "https://polaris.internal.example.com/api/catalog",
-        "credential": "agent-readonly:<secret>",
-        "scope": "PRINCIPAL_ROLE:agent_reader",
-        "warehouse": "analytics",
-    },
-)
+ "polaris", **{
+ "type": "rest", "uri": "https://polaris.internal.example.com/api/catalog", "credential": "agent-readonly:<secret>", "scope": "PRINCIPAL_ROLE:agent_reader", "warehouse": "analytics", }, )
 
 
 @mcp.tool()
 def list_tables(namespace: str) -> str:
-    """List every Iceberg table in a namespace.
+ """List every Iceberg table in a namespace.
 
-    Use this first when the user names a subject area but not a table.
-    Returns fully qualified table identifiers, one per line.
-    """
-    identifiers = catalog.list_tables(namespace)
-    return "\n".join(".".join(i) for i in identifiers)
+ Use this first when the user names a subject area but not a table.
+ Returns fully qualified table identifiers, one per line.
+ """
+ identifiers = catalog.list_tables(namespace)
+ return "\n".join(".".join(i) for i in identifiers)
 
 
 @mcp.tool()
 def describe_table(namespace: str, table: str) -> str:
-    """Return the schema, partition spec, and row count for one table.
+ """Return the schema, partition spec, and row count for one table.
 
-    Call this before writing any SQL against a table. Column names in
-    this lakehouse do not follow a predictable convention, so guessing
-    them fails.
-    """
-    tbl = catalog.load_table(f"{namespace}.{table}")
-    snapshot = tbl.current_snapshot()
-    return json.dumps(
-        {
-            "schema": str(tbl.schema()),
-            "partition_spec": str(tbl.spec()),
-            "sort_order": str(tbl.sort_order()),
-            "record_count": snapshot.summary.get("total-records") if snapshot else 0,
-            "properties": dict(tbl.properties),
-        },
-        indent=2,
-    )
+ Call this before writing any SQL against a table. Column names in
+ this lakehouse do not follow a predictable convention, so guessing
+ them fails.
+ """
+ tbl = catalog.load_table(f"{namespace}.{table}")
+ snapshot = tbl.current_snapshot()
+ return json.dumps(
+ {
+ "schema": str(tbl.schema()), "partition_spec": str(tbl.spec()), "sort_order": str(tbl.sort_order()), "record_count": snapshot.summary.get("total-records") if snapshot else 0, "properties": dict(tbl.properties), }, indent=2, )
 
 
 @mcp.tool()
 def sample_rows(namespace: str, table: str, limit: int = 20) -> str:
-    """Return a small sample of rows so the model sees real value formats.
+ """Return a small sample of rows so the model sees real value formats.
 
-    Hard capped at 100 rows. For anything larger, write SQL and run it
-    through the query engine instead.
-    """
-    limit = min(limit, 100)
-    tbl = catalog.load_table(f"{namespace}.{table}")
-    scanned = tbl.scan(limit=limit).to_arrow()
-    return scanned.to_pandas().to_string()
+ Hard capped at 100 rows. For anything larger, write SQL and run it
+ through the query engine instead.
+ """
+ limit = min(limit, 100)
+ tbl = catalog.load_table(f"{namespace}.{table}")
+ scanned = tbl.scan(limit=limit).to_arrow()
+ return scanned.to_pandas().to_string()
 
 
 if __name__ == "__main__":
-    mcp.run()
+ mcp.run()
 ```
 
 Several details in that code are deliberate.
@@ -404,7 +377,7 @@ Policy gives you a fourth lever worth watching. The Polaris policy framework, ex
 
 **Incomplete realm configuration.** Realm-specific credentials that are missing a field do not fall back to global settings, so the agent fails to authenticate against that realm with an error that reads like a network problem. Warning sign: one realm works and another returns authorization failures. Fix: set all four realm variables together or none of them.
 
-**The model calls list operations in a loop.** An agent asked about "the whole warehouse" calls `list_tables` for every namespace, then `describe_table` for every table. On a catalog with 8,000 tables this is 8,000 REST calls, and Polaris starts rate limiting or falling over. Warning sign: catalog request volume spiking during agent sessions. Fix: add a single tool that returns a compact catalog summary in one call, and describe it as the starting point for broad questions.
+**The model calls list operations in a loop.** An agent asked about "the whole warehouse" calls `list_tables` for every namespace, then `describe_table` for every table. On a catalog with 8, 000 tables this is 8, 000 REST calls, and Polaris starts rate limiting or falling over. Warning sign: catalog request volume spiking during agent sessions. Fix: add a single tool that returns a compact catalog summary in one call, and describe it as the starting point for broad questions.
 
 **Context window exhaustion from verbose tool results.** Each tool returns a human-readable transcript of the HTTP exchange. That is useful for debugging and expensive in tokens. Ten table descriptions with full property maps fill a context window fast, and the model starts forgetting what the user asked. Warning sign: agents that answer the first question well and lose the thread by the fourth. Fix: trim what your read tools return to the fields that matter, and put the full detail behind a separate tool the model calls when it needs depth.
 

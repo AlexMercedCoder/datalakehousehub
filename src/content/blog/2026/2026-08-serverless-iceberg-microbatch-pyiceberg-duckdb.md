@@ -14,9 +14,10 @@ tags:
 slug: "serverless-iceberg-microbatch-pyiceberg-duckdb"
 draft: false
 ---
-> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/serverless-iceberg-microbatch-pyiceberg-duckdb/).
 
 A team has 40 event feeds landing in an object store. Most of them produce a few hundred megabytes an hour. A handful spike to a few gigabytes during business hours. The data needs to end up in Apache Iceberg tables within a few minutes of arrival so analysts and agents can query it. The obvious answer is a Spark Structured Streaming job, so the team stands one up. Six months later they are paying for a three-node cluster that sits at 8 percent CPU, they have a checkpoint directory nobody fully understands, and every version upgrade of Spark, Iceberg, and the cloud connector jar is a week of work.
+
+> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/serverless-iceberg-microbatch-pyiceberg-duckdb/).
 
 The cluster was never the right tool. Spark exists to shuffle terabytes across hundreds of cores. Landing a few hundred megabytes an hour into a table is not that job. It is a job for a function that wakes up, reads a batch, writes a few Parquet files, commits to a catalog, and goes back to sleep.
 
@@ -52,7 +53,7 @@ Fifth, the writer asks the catalog to commit. Against a REST catalog, that is a 
 
 Steps one through four are object store writes. Step five is the only serialized operation in the whole flow, and it is the one that concurrent functions contend on. That single fact shapes the architecture: write files in parallel, commit in a way that tolerates conflicts.
 
-A note on size: every commit adds at least one data file, one manifest, one manifest list, and one metadata file. A function that commits every 10 seconds produces 8,640 snapshots a day and at least that many tiny files at every level. That is the small-file problem, and it is the first failure mode I will cover. The batching decision is the most important design choice in the whole pipeline.
+A note on size: every commit adds at least one data file, one manifest, one manifest list, and one metadata file. A function that commits every 10 seconds produces 8, 640 snapshots a day and at least that many tiny files at every level. That is the small-file problem, and it is the first failure mode I will cover. The batching decision is the most important design choice in the whole pipeline.
 
 ## How PyIceberg and DuckDB Divide the Work
 
@@ -71,7 +72,7 @@ The second is DuckDB end to end. DuckDB attaches the REST catalog, reads the raw
 Here is how the two compare on the dimensions that matter for a serverless function:
 
 | Concern | PyIceberg (0.11.1) | DuckDB Iceberg extension (1.5.3) |
-|---|---|---|
+|--|--|--|
 | Role | Iceberg catalog client and writer | SQL engine with Iceberg read and write |
 | Input | Arrow tables and pandas DataFrames | Any DuckDB-readable source via SQL |
 | Append | `table.append(arrow_table)` | `INSERT INTO catalog.ns.table` |
@@ -102,7 +103,7 @@ Concurrency is the sixth constraint, and it is the one that interacts with Icebe
 Here are the limits that matter on the three major platforms, as of this writing. Check the current numbers before you design, because they move.
 
 | Constraint | AWS Lambda | Google Cloud Run (jobs) | Azure Functions (Premium) |
-|---|---|---|---|
+|--|--|--|--|
 | Max execution time | 15 minutes | 24 hours per task | Unbounded (60 min default) |
 | Max memory | 10 GB | 32 GB | 14 GB |
 | Ephemeral disk | 512 MB to 10 GB | In-memory filesystem, counts against memory | Up to 250 GB |
@@ -120,15 +121,15 @@ The container image is where most of the cold start and package size problems ge
 FROM public.ecr.aws/lambda/python:3.12
 
 # Only the extras this function needs. Each cloud SDK adds 50 to 150 MB.
-RUN pip install --no-cache-dir \
-    "pyiceberg[s3fs,pyarrow]==0.11.1" \
-    "duckdb==1.5.3"
+RUN pip install -no-cache-dir \
+ "pyiceberg[s3fs, pyarrow]==0.11.1" \
+ "duckdb==1.5.3"
 
 # Pre-install the Iceberg and httpfs extensions into the image so a cold
 # container does not fetch them over the network on first use.
 RUN python -c "import duckdb; c = duckdb.connect(); \
-    c.execute('INSTALL iceberg'); c.execute('INSTALL httpfs'); \
-    c.execute('LOAD iceberg'); c.execute('LOAD httpfs')"
+ c.execute('INSTALL iceberg'); c.execute('INSTALL httpfs'); \
+ c.execute('LOAD iceberg'); c.execute('LOAD httpfs')"
 
 # DuckDB stores installed extensions under the home directory by default.
 # Lambda's home is read-only at runtime, so point it at the writable /tmp
@@ -144,7 +145,7 @@ Three decisions in that file are worth explaining.
 
 Pinning both libraries to exact versions is not optional. PyIceberg 0.11.1 is stable. The 0.12.0 release candidate is not, and a floating `>=` pin picks it up the day it ships to PyPI. DuckDB's Iceberg extension is versioned against the DuckDB binary, and the extension updates between DuckDB releases, so a mismatch between the two surfaces as a load error at cold start.
 
-Installing extras selectively keeps the image small. `pyiceberg[s3fs,pyarrow]` pulls in the S3 filesystem and PyArrow and nothing else. Adding `gcsfs` or `adlfs` when you do not need them adds another cloud SDK and its transitive dependencies. Use one image per cloud rather than one image that can talk to all three.
+Installing extras selectively keeps the image small. `pyiceberg[s3fs, pyarrow]` pulls in the S3 filesystem and PyArrow and nothing else. Adding `gcsfs` or `adlfs` when you do not need them adds another cloud SDK and its transitive dependencies. Use one image per cloud rather than one image that can talk to all three.
 
 Pre-installing the DuckDB extensions at build time removes a network fetch from the cold path. DuckDB installs extensions to a directory under the home directory, which is read-only in most serverless runtimes at execution time. The handler needs to either copy the pre-installed extensions to a writable path on startup or set `extension_directory` to the baked-in location before calling `LOAD`. Get this wrong and every cold start downloads 20 megabytes of extension from the DuckDB CDN before it does any work.
 
@@ -181,16 +182,11 @@ from pyiceberg.exceptions import CommitFailedException
 
 # Module scope: initialized once per container, reused across warm invocations.
 CATALOG = load_catalog(
-    "polaris",
-    **{
-        "type": "rest",
-        "uri": os.environ["POLARIS_URI"],                   # https://.../api/catalog
-        "warehouse": os.environ["POLARIS_WAREHOUSE"],       # catalog name in Polaris
-        "credential": os.environ["POLARIS_CREDENTIAL"],     # client_id:client_secret
-        "scope": "PRINCIPAL_ROLE:ALL",
-        "header.X-Iceberg-Access-Delegation": "vended-credentials",
-    },
-)
+ "polaris", **{
+ "type": "rest", "uri": os.environ["POLARIS_URI"], # https://.../api/catalog
+ "warehouse": os.environ["POLARIS_WAREHOUSE"], # catalog name in Polaris
+ "credential": os.environ["POLARIS_CREDENTIAL"], # client_id:client_secret
+ "scope": "PRINCIPAL_ROLE:ALL", "header.X-Iceberg-Access-Delegation": "vended-credentials", }, )
 
 DUCK = duckdb.connect()
 DUCK.execute("SET memory_limit = '3GB'")
@@ -198,51 +194,45 @@ DUCK.execute("SET temp_directory = '/tmp/duckdb'")
 DUCK.execute("SET threads = 2")
 
 TABLE_ID = "events.web_clicks"
-SOURCE_PREFIX = os.environ["SOURCE_PREFIX"]                # s3://raw-bucket/web_clicks/
+SOURCE_PREFIX = os.environ["SOURCE_PREFIX"] # s3://raw-bucket/web_clicks/
 
 def transform(batch_paths: list[str]) -> pa.Table:
-    """Read raw JSON, clean and type it, deduplicate, return Arrow."""
-    files = ", ".join(f"'{p}'" for p in batch_paths)
-    return DUCK.execute(f"""
-        WITH raw AS (
-            SELECT * FROM read_json_auto([{files}], union_by_name = true)
-        ),
-        typed AS (
-            SELECT
-                CAST(event_id AS VARCHAR)                       AS event_id,
-                CAST(user_id AS BIGINT)                         AS user_id,
-                CAST(ts AS TIMESTAMP)                           AS event_time,
-                lower(trim(page))                               AS page,
-                CAST(duration_ms AS INTEGER)                    AS duration_ms,
-                CAST(event_time AS DATE)                        AS event_date
-            FROM raw
-            WHERE event_id IS NOT NULL
-        )
-        SELECT * FROM typed
-        QUALIFY row_number() OVER (PARTITION BY event_id ORDER BY event_time DESC) = 1
-    """).arrow()
+ """Read raw JSON, clean and type it, deduplicate, return Arrow."""
+ files = ", ".join(f"'{p}'" for p in batch_paths)
+ return DUCK.execute(f"""
+ WITH raw AS (
+ SELECT * FROM read_json_auto([{files}], union_by_name = true)
+ ), typed AS (
+ SELECT
+ CAST(event_id AS VARCHAR) AS event_id, CAST(user_id AS BIGINT) AS user_id, CAST(ts AS TIMESTAMP) AS event_time, lower(trim(page)) AS page, CAST(duration_ms AS INTEGER) AS duration_ms, CAST(event_time AS DATE) AS event_date
+ FROM raw
+ WHERE event_id IS NOT NULL
+ )
+ SELECT * FROM typed
+ QUALIFY row_number() OVER (PARTITION BY event_id ORDER BY event_time DESC) = 1
+ """).arrow()
 
 def handler(event, context):
-    batch_paths = list_new_objects(SOURCE_PREFIX, since=read_watermark(TABLE_ID))
-    if not batch_paths:
-        return {"status": "empty"}
+ batch_paths = list_new_objects(SOURCE_PREFIX, since=read_watermark(TABLE_ID))
+ if not batch_paths:
+ return {"status": "empty"}
 
-    arrow_table = transform(batch_paths)
-    if arrow_table.num_rows == 0:
-        advance_watermark(TABLE_ID, batch_paths)
-        return {"status": "no-rows"}
+ arrow_table = transform(batch_paths)
+ if arrow_table.num_rows == 0:
+ advance_watermark(TABLE_ID, batch_paths)
+ return {"status": "no-rows"}
 
-    table = CATALOG.load_table(TABLE_ID)
+ table = CATALOG.load_table(TABLE_ID)
 
-    # PyIceberg retries the REST commit on conflict with backoff.
-    # Surface a final failure so the platform retries the whole invocation.
-    try:
-        table.append(arrow_table)
-    except CommitFailedException as exc:
-        raise RuntimeError(f"commit failed after retries: {exc}") from exc
+ # PyIceberg retries the REST commit on conflict with backoff.
+ # Surface a final failure so the platform retries the whole invocation.
+ try:
+ table.append(arrow_table)
+ except CommitFailedException as exc:
+ raise RuntimeError(f"commit failed after retries: {exc}") from exc
 
-    advance_watermark(TABLE_ID, batch_paths)
-    return {"status": "committed", "rows": arrow_table.num_rows, "files": len(batch_paths)}
+ advance_watermark(TABLE_ID, batch_paths)
+ return {"status": "committed", "rows": arrow_table.num_rows, "files": len(batch_paths)}
 ```
 
 Walk through the parts that matter.
@@ -263,30 +253,24 @@ For the DuckDB end-to-end shape, the write section of the handler changes to an 
 
 ```python
 DUCK.execute(f"""
-    CREATE OR REPLACE SECRET polaris_secret (
-        TYPE iceberg,
-        CLIENT_ID '{client_id}',
-        CLIENT_SECRET '{client_secret}',
-        OAUTH2_SERVER_URI '{polaris_uri}/v1/oauth/tokens',
-        OAUTH2_SCOPE 'PRINCIPAL_ROLE:ALL'
-    )
+ CREATE OR REPLACE SECRET polaris_secret (
+ TYPE iceberg, CLIENT_ID '{client_id}', CLIENT_SECRET '{client_secret}', OAUTH2_SERVER_URI '{polaris_uri}/v1/oauth/tokens', OAUTH2_SCOPE 'PRINCIPAL_ROLE:ALL'
+ )
 """)
 DUCK.execute(f"""
-    ATTACH IF NOT EXISTS '{warehouse}' AS lake (
-        TYPE iceberg,
-        ENDPOINT '{polaris_uri}',
-        SECRET polaris_secret
-    )
+ ATTACH IF NOT EXISTS '{warehouse}' AS lake (
+ TYPE iceberg, ENDPOINT '{polaris_uri}', SECRET polaris_secret
+ )
 """)
 DUCK.execute("""
-    MERGE INTO lake.events.web_clicks AS t
-    USING typed_batch AS s
-    ON t.event_id = s.event_id
-    WHEN MATCHED THEN UPDATE SET
-        event_time = s.event_time, page = s.page, duration_ms = s.duration_ms
-    WHEN NOT MATCHED THEN INSERT
-        (event_id, user_id, event_time, page, duration_ms, event_date)
-        VALUES (s.event_id, s.user_id, s.event_time, s.page, s.duration_ms, s.event_date)
+ MERGE INTO lake.events.web_clicks AS t
+ USING typed_batch AS s
+ ON t.event_id = s.event_id
+ WHEN MATCHED THEN UPDATE SET
+ event_time = s.event_time, page = s.page, duration_ms = s.duration_ms
+ WHEN NOT MATCHED THEN INSERT
+ (event_id, user_id, event_time, page, duration_ms, event_date)
+ VALUES (s.event_id, s.user_id, s.event_time, s.page, s.duration_ms, s.event_date)
 """)
 ```
 
@@ -312,9 +296,9 @@ Until you have idempotency end to end, the fallback is deduplication on read (a 
 
 These are the problems that show up in the first month of running this pattern, roughly in order of how often I see them.
 
-**Small files.** The number one issue. Every commit produces at least one data file, and if the batch is small, that file is small. A table receiving a 2-megabyte commit every minute has 1,440 files a day and 40,000 a month, and query planning has to evaluate every one. The warning sign is query latency creeping up on a table whose total size is not growing much. The fix is two-part: batch bigger (raise the interval or the size threshold), and run compaction on a schedule. PyIceberg does not yet include a rewrite-data-files action, so compaction runs in a separate engine (Spark, Dremio, Trino, or DuckDB with a `INSERT OVERWRITE` style rewrite) on a daily or hourly cadence. Budget for it from day one.
+**Small files.** The number one issue. Every commit produces at least one data file, and if the batch is small, that file is small. A table receiving a 2-megabyte commit every minute has 1, 440 files a day and 40, 000 a month, and query planning has to evaluate every one. The warning sign is query latency creeping up on a table whose total size is not growing much. The fix is two-part: batch bigger (raise the interval or the size threshold), and run compaction on a schedule. PyIceberg does not yet include a rewrite-data-files action, so compaction runs in a separate engine (Spark, Dremio, Trino, or DuckDB with a `INSERT OVERWRITE` style rewrite) on a daily or hourly cadence. Budget for it from day one.
 
-**Tiny metadata files.** Same root cause, different layer. Each commit writes a manifest, a manifest list, and a metadata JSON. After 40,000 commits the metadata directory holds 120,000 small objects and the metadata JSON carries 40,000 snapshot entries. Set `history.expire.max-snapshot-age-ms` and run snapshot expiration, and run manifest rewrite alongside data compaction. Iceberg's v4 proposals for a root manifest with inlined small commits are the format-level fix, but they are not shipped yet.
+**Tiny metadata files.** Same root cause, different layer. Each commit writes a manifest, a manifest list, and a metadata JSON. After 40, 000 commits the metadata directory holds 120, 000 small objects and the metadata JSON carries 40, 000 snapshot entries. Set `history.expire.max-snapshot-age-ms` and run snapshot expiration, and run manifest rewrite alongside data compaction. Iceberg's v4 proposals for a root manifest with inlined small commits are the format-level fix, but they are not shipped yet.
 
 **Commit conflicts under retry storms.** The sign is invocations that succeed but take 30 seconds longer than the batch size explains, with PyIceberg retry log lines. Usually the cause is a trigger misconfiguration that fires the same feed's function more than once per interval, or a platform retry policy that is more aggressive than it needs to be. Check the function's concurrency setting and cap it at 1 per feed if the platform supports reserved concurrency.
 

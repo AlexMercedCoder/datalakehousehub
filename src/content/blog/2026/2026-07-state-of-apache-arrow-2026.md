@@ -2,7 +2,7 @@
 title: "The State of Apache Arrow in 2026: Ten Years In, the Invisible Standard Is Everywhere"
 date: 2026-07-06T12:00:00Z
 canonical: https://iceberglakehouse.com/posts/state-of-apache-arrow-2026/
-description: "Apache Arrow at 10 — ADBC, Flight SQL, nanoarrow, the AI reinterpretation, and how an in-memory standard eliminated the copy tax across the data stack."
+description: "Apache Arrow at 10, ADBC, Flight SQL, nanoarrow, the AI reinterpretation, and how an in-memory standard eliminated the copy tax across the data stack."
 author: "Alex Merced"
 category: "Apache Arrow"
 tags:
@@ -17,11 +17,12 @@ draft: false
 image: "/images/blog.png"
 bannerImage: "/images/blog.png"
 ---
-> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/state-of-apache-arrow-2026/).
 
 # The State of Apache Arrow in 2026: Ten Years In, the Invisible Standard Is Everywhere
 
 *By Alex Merced, Head of Developer Relations at Dremio*
+
+> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/state-of-apache-arrow-2026/).
 
 In February 2026, Apache Arrow turned ten years old. The first commit landed on February 5th, 2016, and the anniversary passed the way Arrow itself operates: quietly, while running inside nearly every data tool you touched that day.
 
@@ -53,7 +54,7 @@ Chapter two, 2018 to 2019, was language expansion. Rust, Go, JavaScript, and mor
 
 Chapter three, 2020 to 2021, was the compute era. A 1.0 format with stability guarantees, the C++ compute kernels and what became Acero, Gandiva for expression compilation, and DataFusion growing inside the Rust repository. The project tested how far up the stack a standard should climb.
 
-Chapter four, 2022 to 2023, was connectivity. Flight SQL matured, ADBC launched with its 1.0 specification, and nanoarrow appeared at the opposite extreme, Arrow as two embeddable C files. The project's center of gravity shifted from "represent data well" to "move data everywhere," which in hindsight was the decisive strategic turn.
+Chapter four, 2022 to 2023, was connectivity. Flight SQL matured, ADBC launched with its 1.0 specification, and nanoarrow appeared at the opposite extreme, Arrow as two embeddable C files. The project's center of gravity shifted from "represent data well" to "move data everywhere, " which in hindsight was the decisive strategic turn.
 
 Chapter five, 2024 to 2025, was restructuring and resilience. Language implementations moved to independent repositories, DataFusion graduated to its own Apache Top-Level Project, format additions like string views and run-end encoding landed for modern workloads, and the community absorbed the wind-down of its largest corporate patron without missing a release. The first Arrow Summit in Paris closed the chapter with the community meeting itself in person.
 

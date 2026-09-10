@@ -2,7 +2,7 @@
 title: "Why Semantic Layers Make Enterprise Text-to-SQL Safer"
 date: 2026-05-24T11:30:00Z
 pubDatetime: 2026-05-24T11:30:00Z
-description: "Text-to-SQL accuracy jumps from 40% to 85-95% when grounded in a semantic layer. Learn how Dremio, Snowflake Cortex Analyst, and dbt Semantic Layer improve AI analytics reliability."
+description: "Text-to-SQL accuracy jumps from 40% to 85-95% when grounded in a semantic layer. Learn how Dremio, Snowflake Cortex Analyst, and dbt Semantic Layer."
 author: "Alex Merced"
 category: "Dremio"
 tags:
@@ -18,11 +18,12 @@ draft: false
 image: "/images/blog/semantic-layers-text-to-sql/cortex-vs-dbt-semantic-comparison.png"
 canonical: "https://iceberglakehouse.com/posts/2026-05-24-semantic-layers-text-to-sql/"
 ---
-> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-05-24-semantic-layers-text-to-sql/).
 
 # Why Semantic Layers Make Enterprise Text-to-SQL Safer
 
 Text-to-SQL generated serious excitement when early demonstrations showed AI assistants turning plain English into working SQL. It also generated serious skepticism from the analytics engineers who knew what those SQL queries were actually running against: messy schemas with inconsistent column naming, duplicate business logic spread across dozens of views, and metric definitions that varied by team.
+
+> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-05-24-semantic-layers-text-to-sql/).
 
 Raw text-to-SQL, meaning a large language model receiving a database schema and a question and generating SQL directly, produces accurate results on toy datasets and embarrassing results on enterprise schemas. Accuracy rates around 40% on real-world enterprise schemas have been reported across several industry evaluations. That's below the threshold where any responsible team deploys it to business users.
 
@@ -30,7 +31,7 @@ The semantic layer changes this calculation. When the AI generates SQL against a
 
 This post covers how four different approaches to semantic layers enable reliable enterprise text-to-SQL: Dremio's natively integrated virtual dataset and reflections architecture, Snowflake Cortex Analyst with Semantic Views, the dbt Semantic Layer powered by MetricFlow, and how to choose between them.
 
----
+--
 
 ## Why Raw Text-to-SQL Fails in Enterprise Environments
 
@@ -42,7 +43,7 @@ There's also the terminology problem. A sales team's "customer" might join again
 
 Finally, most large enterprise schemas contain hundreds or thousands of tables. An LLM prompted with an entire schema doesn't have a useful understanding of which tables matter for which business questions, it's working with a phone book when it needs a guided directory.
 
----
+--
 
 ## The Semantic Layer: Structured Context for AI
 
@@ -62,7 +63,7 @@ The routing architecture works like this: a user submits a natural language ques
 
 This routing discipline is what makes the accuracy improvement so dramatic. Questions within the semantic model's coverage are answered deterministically; the SQL is generated from governed metric definitions, not LLM inference. Questions outside coverage either have a human review checkpoint or are declined gracefully. The system never silently generates plausible-but-wrong SQL from raw schema and serves it as a trusted answer.
 
----
+--
 
 ## Dremio: Semantic Layer Natively Integrated with the Query Engine
 
@@ -87,8 +88,8 @@ Dremio's Reflections feature adds an acceleration dimension that most semantic l
 For text-to-SQL use cases, this means the semantic layer isn't just providing correct context, it's also providing fast results. When an AI assistant routes a natural language question through Dremio's semantic model, the resulting SQL benefits from Reflection-based acceleration without requiring the AI to know anything about the underlying physical optimization.
 
 ```sql
--- Create an aggregation reflection for revenue analytics
--- This materializes the join and aggregation, accelerating downstream text-to-SQL
+- Create an aggregation reflection for revenue analytics
+- This materializes the join and aggregation, accelerating downstream text-to-SQL
 ALTER DATASET "business_layer"."revenue_analytics"
 CREATE AGGREGATE REFLECTION "revenue_daily_agg"
 USING DISPLAY (region, product_category)
@@ -112,28 +113,25 @@ Dremio's semantic layer includes built-in fine-grained access control. Row-level
 
 This is architecturally significant for AI use cases. When an LLM generates SQL against a Dremio virtual dataset that has row-level security configured, the row filter is enforced at execution time by the query engine. The AI doesn't need to know about access policies, they're invisible to the query generation layer but always enforced.
 
----
+--
 
 ## Snowflake Cortex Analyst
 
 Snowflake Cortex Analyst is Snowflake's native managed text-to-SQL service. It's designed to work with Snowflake Semantic Views, objects defined in Snowflake's metadata layer that describe metrics, measures, and dimension relationships.
 
 ```sql
--- Define a Snowflake Semantic View for revenue analytics
+- Define a Snowflake Semantic View for revenue analytics
 CREATE OR REPLACE SEMANTIC VIEW revenue_analytics AS
-    SELECT
-        o.order_date,
-        c.region,
-        SUM(o.amount) AS total_revenue,
-        COUNT(DISTINCT o.customer_id) AS unique_customers
-    FROM orders o
-    JOIN customers c ON o.customer_id = c.id
-    WHERE o.status = 'completed'
-    GROUP BY 1, 2;
+ SELECT
+ o.order_date, c.region, SUM(o.amount) AS total_revenue, COUNT(DISTINCT o.customer_id) AS unique_customers
+ FROM orders o
+ JOIN customers c ON o.customer_id = c.id
+ WHERE o.status = 'completed'
+ GROUP BY 1, 2;
 
--- Annotate with semantic metadata
+- Annotate with semantic metadata
 COMMENT ON SEMANTIC VIEW revenue_analytics IS 
-    'Daily revenue by region for completed orders';
+ 'Daily revenue by region for completed orders';
 ```
 
 Cortex Analyst uses the semantic view definitions to constrain its SQL generation. A user asking "what was revenue in the west region last week?" generates a SQL query against the pre-defined `total_revenue` metric with the `region` and `order_date` filters applied correctly, not an ad-hoc query that might join the wrong tables.
@@ -142,7 +140,7 @@ The Cortex Analyst API returns both the SQL it generated and the underlying sema
 
 Cortex Analyst is Snowflake-specific. The accuracy advantages it provides apply within Snowflake environments, and the semantic views cannot be ported to Databricks, BigQuery, or other engines.
 
----
+--
 
 ## dbt Semantic Layer and MetricFlow
 
@@ -151,38 +149,38 @@ The dbt Semantic Layer, powered by MetricFlow, takes a different architectural a
 ```yaml
 # metrics/revenue.yml
 semantic_models:
-  - name: orders
-    defaults:
-      agg_time_dimension: order_date
-    model: ref('fct_orders')
-    entities:
-      - name: order
-        type: primary
-        expr: order_id
-      - name: customer
-        type: foreign
-        expr: customer_id
-    measures:
-      - name: total_revenue
-        agg: sum
-        expr: amount
-        filter: "status = 'completed'"
-    dimensions:
-      - name: region
-        type: categorical
-        expr: region
-      - name: order_date
-        type: time
-        type_params:
-          time_granularity: day
+ - name: orders
+ defaults:
+ agg_time_dimension: order_date
+ model: ref('fct_orders')
+ entities:
+ - name: order
+ type: primary
+ expr: order_id
+ - name: customer
+ type: foreign
+ expr: customer_id
+ measures:
+ - name: total_revenue
+ agg: sum
+ expr: amount
+ filter: "status = 'completed'"
+ dimensions:
+ - name: region
+ type: categorical
+ expr: region
+ - name: order_date
+ type: time
+ type_params:
+ time_granularity: day
 
 metrics:
-  - name: revenue
-    type: simple
-    type_params:
-      measure: total_revenue
-    label: "Total Revenue"
-    description: "Sum of completed order amounts"
+ - name: revenue
+ type: simple
+ type_params:
+ measure: total_revenue
+ label: "Total Revenue"
+ description: "Sum of completed order amounts"
 ```
 
 Because the metric definitions are code in a Git repository, they go through the same review processes as SQL models. Changes to metric definitions are auditable. Teams can see the history of how a metric definition evolved and who approved each change.
@@ -193,7 +191,7 @@ The key advantage of the dbt approach is portability. The same metric YAML defin
 
 The limitation is coupling to the dbt ecosystem. Teams that don't use dbt for transformation logic face a significant setup cost to build out dbt models as the foundation for semantic model definitions.
 
----
+--
 
 ## Building the Synonym and Description Library
 
@@ -210,7 +208,7 @@ In Dremio, synonyms and business descriptions are maintained alongside virtual d
 
 Practical synonym management requires a feedback loop: when text-to-SQL questions fail to route correctly, the routing failures are logged, reviewed, and used to add new synonyms. Teams that treat synonym management as a one-time setup task see accuracy plateau. Teams that maintain a feedback loop see accuracy improve over time as the semantic model's vocabulary coverage expands.
 
----
+--
 
 ## Choosing Between Dremio, Snowflake Cortex Analyst, and dbt
 
@@ -226,7 +224,7 @@ The choice between semantic layer approaches comes down to four factors:
 
 **Team skills:** dbt Semantic Layer requires analytics engineering investment in YAML metric definitions and model maintenance. Snowflake Cortex Analyst requires SQL DDL for semantic views. Dremio's virtual dataset approach requires SQL-based view building but benefits from a guided UI and AI-assisted metadata generation.
 
----
+--
 
 ## The AI Reliability Improvement in Practice
 
@@ -244,7 +242,7 @@ Accuracy improvements are smallest on:
 
 This is why semantic model coverage expansion is an ongoing practice, not a one-time project. Each category of unanswered questions represents an opportunity to extend the semantic model's coverage and push accuracy higher.
 
----
+--
 
 ## Conclusion
 
@@ -254,7 +252,7 @@ Dremio's integrated approach (native semantic layer, automatic Reflection accele
 
 The semantic layer turns AI-generated analytics from a liability into a controlled surface. That's the version enterprise teams can actually trust.
 
----
+--
 
 ### Go Deeper on Data Reliability
 

@@ -16,7 +16,6 @@ slug: 2025-12-2025-year-in-review-iceberg-arrow-polaris-parquet
 draft: false
 image: "/images/blog.png"
 ---
-
 **Get Data Lakehouse Books:**
 - [Apache Iceberg: The Definitive Guide](https://drmevn.fyi/tableformatblog)
 - [Apache Polaris: The Defintive Guide](https://drmevn.fyi/tableformatblog-62P6t)
@@ -29,7 +28,7 @@ image: "/images/blog.png"
 - [OSS Community Listings](https://osscommunity.com)
 - [Dremio Lakehouse Developer Hub](https://developer.dremio.com)
 
----
+--
 
 The open lakehouse is no longer a concept. In 2025, key Apache projects matured, making data warehouse performance on object storage a practical reality. This post walks through the most critical developments in four of those projects: Iceberg, Polaris, Parquet, and Arrow. Each is building a critical layer for an open, engine-agnostic analytics stack.
 

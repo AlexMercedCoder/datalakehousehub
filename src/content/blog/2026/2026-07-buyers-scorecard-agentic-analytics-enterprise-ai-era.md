@@ -11,12 +11,14 @@ slug: "buyers-scorecard-agentic-analytics-enterprise-ai-era"
 draft: false
 image: "/images/blog.png"
 canonical: https://iceberglakehouse.com/posts/buyers-scorecard-agentic-analytics-enterprise-ai-era/
+description: "Agentic analytics demos are easy to enjoy and hard to evaluate. A user asks a question, an assistant answers, a chart appears, and the room leans forward."
 ---
-> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/buyers-scorecard-agentic-analytics-enterprise-ai-era/).
 
 # The Buyer's Scorecard for Agentic Analytics: Evaluating Tooling in the Enterprise AI Era
 
 Agentic analytics demos are easy to enjoy and hard to evaluate. A user asks a question, an assistant answers, a chart appears, and the room leans forward. The problem is that a good demo does not prove production readiness.
+
+> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/buyers-scorecard-agentic-analytics-enterprise-ai-era/).
 
 Enterprise buyers need a different scorecard. The right question is not "Can this tool answer a sample question?" The right question is "Can this system turn business intent into governed, validated, auditable analytical work across real enterprise data?"
 

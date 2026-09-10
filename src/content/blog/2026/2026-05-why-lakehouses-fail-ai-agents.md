@@ -1,7 +1,7 @@
 ---
 title: "Why Traditional Lakehouses Fail AI Agents: The Mathematical Case for the Agentic Lakehouse"
 date: 2026-05-28T09:00:00Z
-description: "Traditional lakehouses expose raw directories and ambiguous schemas to AI agents, causing hallucination. Here's the mathematical case for why this fails and what fixes it."
+description: "Traditional lakehouses expose raw directories and ambiguous schemas to AI agents, causing hallucination."
 author: "Alex Merced"
 category: "Agentic Lakehouse"
 tags:
@@ -10,7 +10,6 @@ slug: "why-lakehouses-fail-ai-agents"
 draft: false
 image: "/images/blog.png"
 ---
-
 # Why Traditional Lakehouses Fail AI Agents: The Mathematical Case for the Agentic Lakehouse
 
 When organizations first try connecting an LLM to their data lakehouse, the experience follows a predictable pattern: early demos work surprisingly well, production queries fail in embarrassing ways, and teams spend months debugging why the AI produces confident, plausible, wrong answers.
@@ -93,13 +92,13 @@ That's a move from ~10% to ~90% reliability for complex queries : achieved not b
 
 ![Semantic layer probability improvement for AI agent accuracy](/images/blog/may28seo/semantic-layer-accuracy-improvement.png)
 
-The model is simplified :  real correctness probabilities depend on many factors ,  but the directional effect is real. The investment in semantic layer documentation pays directly in AI agent accuracy.
+The model is simplified : real correctness probabilities depend on many factors, but the directional effect is real. The investment in semantic layer documentation pays directly in AI agent accuracy.
 
 ## Starting the Transition
 
 The transition from a traditional lakehouse to an agentic lakehouse is incremental. You don't need to document every table before you start.
 
-Begin with the 10–20 most frequently queried datasets. Create virtual datasets with canonical business logic. Write wiki documentation for every column in those datasets. Classify PII columns. Test the agent against those datasets and measure whether its accuracy improves.
+Begin with the 10-20 most frequently queried datasets. Create virtual datasets with canonical business logic. Write wiki documentation for every column in those datasets. Classify PII columns. Test the agent against those datasets and measure whether its accuracy improves.
 
 Then expand to the next tier of datasets. Each documented dataset extends the reliable scope of the agent.
 

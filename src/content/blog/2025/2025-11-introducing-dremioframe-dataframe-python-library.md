@@ -1,7 +1,7 @@
 ---
 title: Introducing dremioframe - A Pythonic DataFrame Interface for Dremio
 date: 2025-11-29T09:00:00Z
-description: "Discover dremioframe, a new Python library that offers a DataFrame-like experience for interacting with Dremio's data lakehouse platform. Learn how to leverage its intuitive API to streamline your data engineering workflows."
+description: "Discover dremioframe, a new Python library that offers a DataFrame-like experience for interacting with Dremio's data lakehouse platform."
 author: "Alex Merced"
 category: "Data Engineering"
 bannerImage: "https://i.imgur.com/cpoMZQ8.png"
@@ -14,16 +14,17 @@ draft: false
 image: "/images/blog.png"
 canonical: "https://iceberglakehouse.com/posts/2025-11-introducing-dremioframe-dataframe-python-library/"
 ---
-> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2025-11-introducing-dremioframe-dataframe-python-library/).
 
 If you're a data analyst or Python developer who prefers chaining expressive `.select()` and `.mutate()` calls over writing raw SQL, you're going to love `dremioframe` : the unofficial Python DataFrame library for Dremio (currently in Alpha).
+
+> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2025-11-introducing-dremioframe-dataframe-python-library/).
 
 Dremio has always made it easy to query across cloud and on-prem datasets using SQL. Some users prefer the ergonomics of DataFrame-style APIs, where transformations are composable, readable, and testable : especially when working in notebooks or building data pipelines in Python.
 
 That’s where `dremioframe` comes in. It bridges the gap between SQL and Python by letting you build Dremio queries using intuitive DataFrame methods like `.select()`, `.filter()`, `.mutate()`, and more. Under the hood, it still generates SQL and pushes down queries to Dremio, but you write it the way you're used to in Python.
 
-> Want to try this yourself?  
-> You can [sign up for a free 30-day trial of Dremio Cloud](https://drmevn.fyi/am-get-started), which includes full access to Agentic AI features, native Apache Iceberg integration, and support for all Iceberg catalogs (e.g. AWS Glue, Nessie, Snowflake, Hive, etc.).  
+> Want to try this yourself? 
+> You can [sign up for a free 30-day trial of Dremio Cloud](https://drmevn.fyi/am-get-started), which includes full access to Agentic AI features, native Apache Iceberg integration, and support for all Iceberg catalogs (e.g. AWS Glue, Nessie, Snowflake, Hive, etc.). 
 > Or if you'd rather run Dremio locally for free, check out the [Community Edition setup guide](https://www.dremio.com/blog/intro-to-dremio-nessie-and-apache-iceberg-on-your-laptop/). Community Edition doesn’t include Agentic AI or full catalog support, but still lets you run federated queries and work with some Iceberg catalogs like Glue and Nessie.
 
 In this post, we’ll walk through how to get started with `dremioframe` - from installing the library and configuring authentication, to writing powerful queries using SQL, DataFrame chaining, and expression builders. We’ll wrap up with a look at some of the more advanced features it unlocks for analytics, ingestion, and administration.
@@ -81,17 +82,13 @@ For most use cases, the synchronous client is sufficient and straightforward to 
 ```python
 from dremioframe.client import DremioClient
 
-client = DremioClient()  # reads config from environment
+client = DremioClient() # reads config from environment
 ```
 If you prefer to pass credentials explicitly (useful in scripts or when using the Community Edition), you can do:
 
 ```python
 client = DremioClient(
-    hostname="localhost",
-    port=32010,
-    username="admin",
-    password="password123",
-    tls=False  # Set to True if connecting over HTTPS
+ hostname="localhost", port=32010, username="admin", password="password123", tls=False # Set to True if connecting over HTTPS
 )
 ```
 This sets up a connection to your Dremio instance using standard authentication.
@@ -103,14 +100,13 @@ If you're working in an async application (e.g., FastAPI, asyncio notebooks, etc
 from dremioframe.client import AsyncDremioClient
 
 async with AsyncDremioClient(
-    pat="YOUR_PAT", 
-    project_id="YOUR_PROJECT_ID"
+ pat="YOUR_PAT", project_id="YOUR_PROJECT_ID"
 ) as client:
-    df = await client.table("Samples.samples.dremio.com.zips.json") \
-                    .select("city", "state") \
-                    .limit(5) \
-                    .toPandas()
-    print(df)
+ df = await client.table("Samples.samples.dremio.com.zips.json") \
+ .select("city", "state") \
+ .limit(5) \
+ .toPandas()
+ print(df)
 ```
 
 The async API mirrors the sync one, but allows you to await results in event-driven applications.
@@ -123,11 +119,11 @@ Here’s a simple example that selects city and state from the sample zips datas
 
 ```python
 df = client.query("""
-    SELECT city, state
-    FROM Samples.samples.dremio.com.zips.json
-    WHERE state = 'CA'
-    ORDER BY city
-    LIMIT 10
+ SELECT city, state
+ FROM Samples.samples.dremio.com.zips.json
+ WHERE state = 'CA'
+ ORDER BY city
+ LIMIT 10
 """)
 
 print(df)
@@ -153,20 +149,17 @@ Let’s say we want to select a few fields and apply a SQL function like `UPPER(
 
 ```python
 df = client.table("Samples.samples.dremio.com.zips.json") \
-           .select(
-               "city", 
-               "state", 
-               "pop", 
-               "UPPER(state) AS state_upper"  # using SQL function
-           ) \
-           .filter("pop > 100000") \
-           .limit(10) \
-           .collect()
+ .select(
+ "city", "state", "pop", "UPPER(state) AS state_upper" # using SQL function
+ ) \
+ .filter("pop > 100000") \
+ .limit(10) \
+ .collect()
 
 print(df)
 ```
 
-This returns 10 rows where the population is over 100,000 and includes the state_upper column that’s uppercased using Dremio’s SQL engine.
+This returns 10 rows where the population is over 100, 000 and includes the state_upper column that’s uppercased using Dremio’s SQL engine.
 
 **Remember:** even though you're using .select(), these expressions are passed through directly to Dremio and fully optimized as part of the SQL query plan.
 
@@ -182,14 +175,14 @@ Let’s take the same query from before and add a new column that calculates pop
 
 ```python
 df = client.table("Samples.samples.dremio.com.zips.json") \
-           .select("city", "state", "pop") \
-           .mutate(
-               pop_thousands="pop / 1000",               # create a scaled version
-               pop_label="CASE WHEN pop > 100000 THEN 'large' ELSE 'small' END"
-           ) \
-           .filter("state = 'TX'") \
-           .limit(10) \
-           .collect()
+ .select("city", "state", "pop") \
+ .mutate(
+ pop_thousands="pop / 1000", # create a scaled version
+ pop_label="CASE WHEN pop > 100000 THEN 'large' ELSE 'small' END"
+ ) \
+ .filter("state = 'TX'") \
+ .limit(10) \
+ .collect()
 
 print(df)
 ```
@@ -215,20 +208,16 @@ Let’s rewrite the previous example using `F`:
 from dremioframe import F
 
 df = client.table("Samples.samples.dremio.com.zips.json") \
-           .select(
-               F.col("city"),
-               F.col("state"),
-               F.col("pop"),
-               (F.col("pop") / 1000).alias("pop_thousands"),
-               F.case()
-                 .when(F.col("pop") > 100000, F.lit("large"))
-                 .else_(F.lit("small"))
-                 .end()
-                 .alias("pop_label")
-           ) \
-           .filter(F.col("state") == F.lit("TX")) \
-           .limit(10) \
-           .collect()
+ .select(
+ F.col("city"), F.col("state"), F.col("pop"), (F.col("pop") / 1000).alias("pop_thousands"), F.case()
+ .when(F.col("pop") > 100000, F.lit("large"))
+ .else_(F.lit("small"))
+ .end()
+ .alias("pop_label")
+ ) \
+ .filter(F.col("state") == F.lit("TX")) \
+ .limit(10) \
+ .collect()
 
 print(df)
 ```
@@ -270,9 +259,7 @@ You can pull data from REST APIs and ingest it directly into Dremio:
 
 ```python
 client.ingest_api(
-    url="https://jsonplaceholder.typicode.com/posts",
-    table_name="sandbox.api_posts",
-    mode="merge"
+ url="https://jsonplaceholder.typicode.com/posts", table_name="sandbox.api_posts", mode="merge"
 )
 ```
 
@@ -340,7 +327,7 @@ With just a few lines of code, you can:
 
 By using `dremioframe`, you get the best of both worlds: the expressiveness of Python and the performance of Dremio’s SQL engine.
 
-> Don’t forget : you can [sign up for a free 30-day trial of Dremio Cloud](https://drmevn.fyi/am-get-started) to experience all the advanced features like Agentic AI and native support for all Iceberg catalogs.  
+> Don’t forget : you can [sign up for a free 30-day trial of Dremio Cloud](https://drmevn.fyi/am-get-started) to experience all the advanced features like Agentic AI and native support for all Iceberg catalogs. 
 > Or, if you're experimenting locally, [try Community Edition](https://www.dremio.com/blog/intro-to-dremio-nessie-and-apache-iceberg-on-your-laptop/) to run federated queries and interact with Glue or Nessie-based Iceberg tables.
 
 The `dremioframe` project is still evolving, but it’s already a powerful toolkit for building readable, maintainable, and scalable data workflows in Python. Give it a try and let us know what you build.

@@ -16,9 +16,10 @@ draft: false
 image: "/images/blog.png"
 canonical: "https://iceberglakehouse.com/posts/2026-03-aitool-zed/"
 ---
-> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-03-aitool-zed/).
 
 Zed is an open-source, GPU-accelerated code editor written in Rust. It is designed for speed and collaboration, with a built-in AI assistant that supports multiple LLM providers and an agent mode for autonomous multi-step development. Dremio is a unified lakehouse platform that provides business context through its semantic layer, universal data access through query federation, and interactive speed through Reflections and Apache Arrow.
+
+> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-03-aitool-zed/).
 
 Connecting them gives Zed's AI agent the context it needs to write accurate Dremio SQL, generate data pipelines, and build applications against your lakehouse. Zed's performance advantage is significant for data work: its GPU-accelerated rendering handles large result sets and complex code without the lag common in Electron-based editors.
 
@@ -58,18 +59,17 @@ Log into [Dremio Cloud](https://www.dremio.com/get-started) and navigate to **Pr
 
 ### Configure Zed's MCP Connection
 
-Open Zed's settings (`Cmd+,`) and add the MCP server configuration:
+Open Zed's settings (`Cmd+, `) and add the MCP server configuration:
 
 ```json
 {
-  "context_servers": {
-    "dremio": {
-      "command": {
-        "path": "npx",
-        "args": ["-y", "@dremio/mcp-client", "--url", "https://YOUR_PROJECT_MCP_URL"]
-      }
-    }
-  }
+ "context_servers": {
+ "dremio": {
+ "command": {
+ "path": "npx", "args": ["-y", "@dremio/mcp-client", "-url", "https://YOUR_PROJECT_MCP_URL"]
+ }
+ }
+ }
 }
 ```
 
@@ -91,17 +91,15 @@ For Dremio Software deployments, use the dremio-mcp server:
 
 ```json
 {
-  "context_servers": {
-    "dremio": {
-      "command": {
-        "path": "uv",
-        "args": [
-          "run", "--directory", "/path/to/dremio-mcp",
-          "dremio-mcp-server", "run"
-        ]
-      }
-    }
-  }
+ "context_servers": {
+ "dremio": {
+ "command": {
+ "path": "uv", "args": [
+ "run", "-directory", "/path/to/dremio-mcp", "dremio-mcp-server", "run"
+ ]
+ }
+ }
+ }
 }
 ```
 
@@ -264,7 +262,7 @@ The agent generates the complete API server.
 ## Which Approach Should You Use?
 
 | Approach | Setup Time | What You Get | Best For |
-|----------|-----------|--------------|----------|
+|-----|------|-------|-----|
 | MCP Server | 5 minutes | Live queries, schema browsing, catalog exploration | Data analysis, SQL generation, real-time access |
 | AGENTS.md | 10 minutes | Convention enforcement, reference file pointers | Teams that want speed + context control |
 | Pre-Built Skills | 5 minutes | Comprehensive Dremio knowledge (CLI, SDK, SQL, API) | Quick start with broad coverage |

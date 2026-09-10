@@ -1,6 +1,6 @@
 ---
 title: "Modern Python Tooling for Apache Iceberg"
-description: "PyIceberg, IceFrame, and the Iceberg CLI form a complete Python toolchain for Iceberg table management. Each tool targets a different workflow from metadata inspection to data engineering."
+description: "PyIceberg, IceFrame, and the Iceberg CLI form a complete Python toolchain for Iceberg table management."
 date: 2026-06-08T09:00:00Z
 slug: "python-tooling-apache-iceberg-pyiceberg-iceframe-iceberg-cli"
 draft: false
@@ -15,14 +15,13 @@ tags:
   - "Spark-free Iceberg"
   - "Iceberg Python ecosystem"
 ---
-
 ## The Python Iceberg Ecosystem in 2026
 
 Apache Iceberg started as a Java project. The table format specification, the core libraries, and the major query engines all ran on the JVM. Python users who wanted to work with Iceberg tables had two options. Install PySpark and use the Spark Iceberg integration, or write raw HTTP calls against the Iceberg REST Catalog API.
 
 Neither option was satisfying. PySpark is a 500MB dependency that takes minutes to start. Raw HTTP calls work but skip all the metadata handling that makes Iceberg useful.
 
-The Python ecosystem around Iceberg has matured rapidly. PyIceberg, the official Apache Python client, now sees over 500,000 daily PyPI downloads according to PyPI download statistics. IceFrame provides a pandas-like DataFrame interface built on top of PyIceberg. The PyIceberg CLI gives command-line access to table metadata and properties.
+The Python ecosystem around Iceberg has matured rapidly. PyIceberg, the official Apache Python client, now sees over 500, 000 daily PyPI downloads according to PyPI download statistics. IceFrame provides a pandas-like DataFrame interface built on top of PyIceberg. The PyIceberg CLI gives command-line access to table metadata and properties.
 
 These three tools form a complete Python toolchain for Iceberg table management. Each targets a different workflow. Together they cover metadata inspection, catalog automation, data engineering, and AI agent integration. None of them require a JVM.
 
@@ -38,25 +37,22 @@ A typical PyIceberg workflow looks like this:
 from pyiceberg.catalog import load_catalog
 
 catalog = load_catalog(
-    "default",
-    **{
-        "uri": "https://catalog.example.com/api/iceberg",
-        "warehouse": "my_warehouse",
-    }
+ "default", **{
+ "uri": "https://catalog.example.com/api/iceberg", "warehouse": "my_warehouse", }
 )
 
 table = catalog.load_table("sales.transactions")
 for snapshot in table.snapshots():
-    print(f"Snapshot {snapshot.snapshot_id}: "
-          f"{snapshot.operation}, "
-          f"{snapshot.timestamp_ms}")
+ print(f"Snapshot {snapshot.snapshot_id}: "
+ f"{snapshot.operation}, "
+ f"{snapshot.timestamp_ms}")
 ```
 
 This code connects to an Iceberg REST catalog, loads a table, and iterates its snapshots. No Spark context, no JVM startup, no Hadoop configuration. The entire operation runs in Python.
 
 PyIceberg also supports schema evolution, partition pruning, time travel, and branch operations. You can add a column, roll back to a previous snapshot, or create a write-audit-publish branch. All through Python APIs.
 
-The library's daily download count of 500,000+ reflects its adoption beyond the data engineering community. ML engineers use PyIceberg to read training data from Iceberg tables directly into PyArrow or pandas DataFrames. Platform engineers use it to automate catalog operations. AI agents use it through MCP servers for governed data access.
+The library's daily download count of 500, 000+ reflects its adoption beyond the data engineering community. ML engineers use PyIceberg to read training data from Iceberg tables directly into PyArrow or pandas DataFrames. Platform engineers use it to automate catalog operations. AI agents use it through MCP servers for governed data access.
 
 ## PyIceberg CLI: Command-Line Metadata Management
 
@@ -81,10 +77,10 @@ pyiceberg schema nyc.taxis
 pyiceberg files nyc.taxis
 ```
 
-The `--output json` flag enables programmatic consumption. Combined with `jq`, you can extract table metadata in pipelines without writing Python code:
+The `-output json` flag enables programmatic consumption. Combined with `jq`, you can extract table metadata in pipelines without writing Python code:
 
 ```bash
-pyiceberg --output json describe nyc.taxis | jq '.metadata.current-snapshot-id'
+pyiceberg -output json describe nyc.taxis | jq '.metadata.current-snapshot-id'
 ```
 
 This makes the CLI useful in CI/CD scripts, monitoring dashboards, and incident response workflows. When a pipeline fails because of a schema mismatch, a quick `pyiceberg schema` command shows the current state without opening a notebook or a database console.
@@ -93,7 +89,7 @@ Property management is another CLI strength. You can set Iceberg table propertie
 
 ```bash
 pyiceberg properties set table nyc.taxis \
-    write.metadata.delete-after-commit.enabled true
+ write.metadata.delete-after-commit.enabled true
 ```
 
 This is useful for maintenance operations that need to run across many tables. A shell loop can apply the same property to every table in a namespace, something that would require separate code in PyIceberg or Spark.
@@ -118,11 +114,7 @@ ice.create_table("my_table", schema)
 # Append data from a Polars DataFrame
 import polars as pl
 data = pl.DataFrame({
-    "id": [1, 2, 3],
-    "name": ["Alice", "Bob", "Charlie"],
-    "created_at": [pl.datetime(2024, 1, 1),
-                   pl.datetime(2024, 1, 2),
-                   pl.datetime(2024, 1, 3)]
+ "id": [1, 2, 3], "name": ["Alice", "Bob", "Charlie"], "created_at": [pl.datetime(2024, 1, 1), pl.datetime(2024, 1, 2), pl.datetime(2024, 1, 3)]
 })
 ice.append_to_table("my_table", data)
 
@@ -138,9 +130,9 @@ from iceframe.expressions import col
 from iceframe.functions import sum
 
 result = (ice.query("my_table")
-          .select("name", sum(col("id")).alias("total_id"))
-          .group_by("name")
-          .execute())
+ .select("name", sum(col("id")).alias("total_id"))
+ .group_by("name")
+ .execute())
 ```
 
 For AI agent workflows, IceFrame provides an MCP server that exposes Iceberg operations through the Model Context Protocol. An agent can create tables, write data, and query results through standardized MCP tools.
@@ -168,10 +160,10 @@ A common production workflow combines all three tools. Consider a maintenance sc
 First, the script uses the CLI to check the table's current partition layout and snapshot count:
 
 ```bash
-SNAPSHOT_COUNT=$(pyiceberg --output json describe \
-    sales.transactions | jq '.metadata.snapshots | length')
+SNAPSHOT_COUNT=$(pyiceberg -output json describe \
+ sales.transactions | jq '.metadata.snapshots | length')
 if [ "$SNAPSHOT_COUNT" -gt 100 ]; then
-    echo "Need to expire old snapshots"
+ echo "Need to expire old snapshots"
 fi
 ```
 
@@ -185,7 +177,7 @@ table = catalog.load_table("sales.transactions")
 
 # Expire snapshots older than 7 days
 table.expire_snapshots(
-    timestamp_ms=int(time.time()) * 1000 - 7 * 86400 * 1000
+ timestamp_ms=int(time.time()) * 1000 - 7 * 86400 * 1000
 )
 
 # Remove orphan files
@@ -201,9 +193,7 @@ ice = IceFrame(config)
 table_stats = ice.get_table_stats("sales.transactions")
 
 if table_stats["data_file_count"] > 1000:
-    ice.compact_table("sales.transactions",
-                      strategy="bin_pack",
-                      target_file_size_mb=128)
+ ice.compact_table("sales.transactions", strategy="bin_pack", target_file_size_mb=128)
 ```
 
 This three-tool workflow handles the complete maintenance cycle without Spark, without a Java environment, and without custom infrastructure.
@@ -233,7 +223,7 @@ table.create_branch("quality-checks")
 # Check the current state
 refs = table.list_refs()
 for ref_name, ref in refs.items():
-    print(f"{ref_name}: snapshot {ref.snapshot_id}")
+ print(f"{ref_name}: snapshot {ref.snapshot_id}")
 ```
 
 IceFrame adds convenience methods for the same operations. The `create_branch`, `fast_forward`, and `rollback_to_timestamp` methods handle common branching patterns with fewer lines of code.
@@ -242,12 +232,12 @@ Time travel is available in both PyIceberg (via snapshot selection) and the CLI 
 
 ## The Bottom Line
 
-The Python Iceberg ecosystem in 2026 is mature enough for production use. PyIceberg handles core metadata and data operations with 500,000+ daily downloads and a growing community. The PyIceberg CLI provides command-line access for operations teams and CI/CD workflows. IceFrame offers a higher-level DataFrame experience for data scientists and smaller-scale ETL.
+The Python Iceberg ecosystem in 2026 is mature enough for production use. PyIceberg handles core metadata and data operations with 500, 000+ daily downloads and a growing community. The PyIceberg CLI provides command-line access for operations teams and CI/CD workflows. IceFrame offers a higher-level DataFrame experience for data scientists and smaller-scale ETL.
 
 All three tools share the critical advantage of running without a JVM. Teams can manage Iceberg tables in the same Python environments where they train models, run web applications, and deploy agents. The Spark requirement, once the biggest barrier to Python-based Iceberg adoption, is no longer necessary for most Iceberg operations.
 
 The remaining gap is write support for complex transformation pipelines. PyIceberg supports appending data and overwriting partitions, but full-fledged ETL with multi-table joins, window functions, and CDC still benefits from Spark or Flink. For metadata management, catalog automation, maintenance operations, and AI agent integration, the Python toolchain is ready.
 
----
+--
 
 **Building data pipelines on Apache Iceberg?** Dremio's lakehouse platform provides a SQL query engine and semantic layer for Iceberg tables across any cloud or catalog. Pair it with PyIceberg and IceFrame for a complete Python-to-Iceberg workflow. [Learn more at dremio.com](https://www.dremio.com).

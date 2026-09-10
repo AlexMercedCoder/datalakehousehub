@@ -12,13 +12,13 @@ tags:
   - data engineering
 canonical: "https://iceberglakehouse.com/posts/2024-7-databases-decontstructed-value-of-data-lakehouses-and-table-formats/"
 ---
+
+Databases and data warehouses are powerful systems that simplify working with data by abstracting many of the inherent challenges, including:
+
 > **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2024-7-databases-decontstructed-value-of-data-lakehouses-and-table-formats/).
 
 - [Checkout out my Apache Iceberg Crash Course](https://bit.ly/am-2024-iceberg-live-crash-course-1)
 - [Get a free copy of Apache Iceberg the Definitive Guide](https://bit.ly/am-iceberg-book)
-
-
-Databases and data warehouses are powerful systems that simplify working with data by abstracting many of the inherent challenges, including:
 
 - **Storage:** How data is stored and persisted, what file formats are used, and how those files are managed.
 - **Tables:** How we determine which data belongs to which table and what table statistics are tracked internally.
@@ -41,7 +41,7 @@ Let's examine the construction of a data lakehouse layer by layer.
 
 ## The Storage Layer
 
-The basic foundation of a data lakehouse is the storage layer, where we need to determine where and how to store the data. For the "where," the obvious choice is object storage.
+The basic foundation of a data lakehouse is the storage layer, where we need to determine where and how to store the data. For the "where, " the obvious choice is object storage.
 
 **What is Object Storage?**
 
@@ -72,65 +72,65 @@ Apache Parquet is a columnar storage file format optimized for use with big data
 Parquet files are divided into row groups, subsets of the data that can be processed independently. Each row group contains column chunks, each of which consists of pages. This structure enables efficient reads by allowing queries to skip irrelevant data and read only the necessary columns and rows.
 
 ```
-+-----------------------------------------------------+
-|                     Parquet File                    |
-+-----------------------------------------------------+
-|                    File Metadata                    |
-|                                                     |
-| - Schema                                            |
-| - Key-Value Metadata                                |
-| - Version                                           |
-+-----------------------------------------------------+
-|                    Row Group 1                      |
-|  +-----------------------------------------------+  |
-|  |                 Column Chunk 1                |  |
-|  |  +-----------------------------------------+  |  |
-|  |  |                  Page 1                 |  |  |
-|  |  +-----------------------------------------+  |  |
-|  |  |                  Page 2                 |  |  |
-|  |  +-----------------------------------------+  |  |
-|  |  |                  ...                    |  |  |
-|  |  +-----------------------------------------+  |  |
-|  +-----------------------------------------------+  |
-|  +-----------------------------------------------+  |
-|  |                 Column Chunk 2                |  |
-|  |  +-----------------------------------------+  |  |
-|  |  |                  Page 1                 |  |  |
-|  |  +-----------------------------------------+  |  |
-|  |  |                  Page 2                 |  |  |
-|  |  +-----------------------------------------+  |  |
-|  |  |                  ...                    |  |  |
-|  |  +-----------------------------------------+  |  |
-|  +-----------------------------------------------+  |
-|  |                     ...                       |  |
-|  +-----------------------------------------------+  |
-+-----------------------------------------------------+
-|                    Row Group 2                      |
-|  +-----------------------------------------------+  |
-|  |                 Column Chunk 1                |  |
-|  |  +-----------------------------------------+  |  |
-|  |  |                  Page 1                 |  |  |
-|  |  +-----------------------------------------+  |  |
-|  |  |                  Page 2                 |  |  |
-|  |  +-----------------------------------------+  |  |
-|  |  |                  ...                    |  |  |
-|  |  +-----------------------------------------+  |  |
-|  +-----------------------------------------------+  |
-|  +-----------------------------------------------+  |
-|  |                 Column Chunk 2                |  |
-|  |  +-----------------------------------------+  |  |
-|  |  |                  Page 1                 |  |  |
-|  |  +-----------------------------------------+  |  |
-|  |  |                  Page 2                 |  |  |
-|  |  +-----------------------------------------+  |  |
-|  |  |                  ...                    |  |  |
-|  |  +-----------------------------------------+  |  |
-|  +-----------------------------------------------+  |
-|  |                     ...                       |  |
-|  +-----------------------------------------------+  |
-+-----------------------------------------------------+
-|                     ...                             |
-+-----------------------------------------------------+
++---------------------------+
+| Parquet File |
++---------------------------+
+| File Metadata |
+| |
+| - Schema |
+| - Key-Value Metadata |
+| - Version |
++---------------------------+
+| Row Group 1 |
+| +------------------------+ |
+| | Column Chunk 1 | |
+| | +---------------------+ | |
+| | | Page 1 | | |
+| | +---------------------+ | |
+| | | Page 2 | | |
+| | +---------------------+ | |
+| | | ... | | |
+| | +---------------------+ | |
+| +------------------------+ |
+| +------------------------+ |
+| | Column Chunk 2 | |
+| | +---------------------+ | |
+| | | Page 1 | | |
+| | +---------------------+ | |
+| | | Page 2 | | |
+| | +---------------------+ | |
+| | | ... | | |
+| | +---------------------+ | |
+| +------------------------+ |
+| | ... | |
+| +------------------------+ |
++---------------------------+
+| Row Group 2 |
+| +------------------------+ |
+| | Column Chunk 1 | |
+| | +---------------------+ | |
+| | | Page 1 | | |
+| | +---------------------+ | |
+| | | Page 2 | | |
+| | +---------------------+ | |
+| | | ... | | |
+| | +---------------------+ | |
+| +------------------------+ |
+| +------------------------+ |
+| | Column Chunk 2 | |
+| | +---------------------+ | |
+| | | Page 1 | | |
+| | +---------------------+ | |
+| | | Page 2 | | |
+| | +---------------------+ | |
+| | | ... | | |
+| | +---------------------+ | |
+| +------------------------+ |
+| | ... | |
+| +------------------------+ |
++---------------------------+
+| ... |
++---------------------------+
 
 ```
 
@@ -146,11 +146,11 @@ In this case, we need an abstraction that helps do a few things:
 - Maintain a history of the file listings for previous table versions.
 - Track file statistics that can be used to determine which files are relevant to a particular query.
 
-This abstraction allows for faster scanning of large datasets and consistent results. It is known as a "table format," a standard for how metadata is written to document the files in the table along with their statistics.
+This abstraction allows for faster scanning of large datasets and consistent results. It is known as a "table format, " a standard for how metadata is written to document the files in the table along with their statistics.
 
 Currently, there are three main table formats: [Apache Iceberg, Apache Hudi, and Delta Lake](https://bit.ly/am-format-arch).
 
-[Apache Iceberg is thought to have recently established itself as the industry standard.](https://blog.iceberglakehouse.com/summarizing-recent-wins-for-apache-iceberg-table-format-56bd60837181?source=collection_home---4------3-----------------------)
+[Apache Iceberg is thought to have recently established itself as the industry standard.](https://blog.iceberglakehouse.com/summarizing-recent-wins-for-apache-iceberg-table-format-56bd60837181?source=collection_home--4---3------------)
 
 ## The Catalog 
 

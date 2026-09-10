@@ -15,9 +15,10 @@ tags:
 slug: "apache-iceberg-v3-deletion-vectors-streaming-ingest"
 draft: false
 ---
-> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/apache-iceberg-v3-deletion-vectors-streaming-ingest/).
 
 Here is a bill that surprises teams every quarter. A Flink pipeline streams change data capture events into an Apache Iceberg table, a few thousand updates per minute against a ten-terabyte fact table. The data itself is tiny. The cloud bill is not. Storage grows far faster than the data, object store API charges climb, and the nightly compaction job takes longer every week. Query latency creeps up too, because every read now wades through thousands of small files that exist only to say "these rows are gone."
+
+> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/apache-iceberg-v3-deletion-vectors-streaming-ingest/).
 
 None of that is a bug. It is the arithmetic of running row-level updates on immutable files, and for years Iceberg users paid it through one of two taxes: rewrite whole data files on every change, or accumulate delete files that readers reconcile at query time. The Iceberg v3 specification introduces deletion vectors to shrink both taxes at once, and as of the Apache Iceberg 1.11.0 release they are the stable, default mechanism for row-level deletes on v3 tables.
 
@@ -31,7 +32,7 @@ The price is that "delete one row" is not a primitive operation. A row lives at 
 
 Option one is copy-on-write, usually shortened to COW. Find every data file containing an affected row, rewrite each of those files without the deleted rows, and commit a snapshot that swaps old files for new. Reads stay perfectly simple, because every live file contains only live rows. Writes carry the full cost. Delete one row from a 512 MB Parquet file and you rewrite 512 MB. Delete one row from each of a thousand files and you rewrite half a terabyte to remove a kilobyte. This ratio of physical bytes written to logical bytes changed is write amplification, and for streaming workloads it is the tax that breaks the budget.
 
-Option two is merge-on-read, shortened to MOR. Leave the data files alone and write a small side record saying "row at position 4,832 of file X is deleted." Writes become cheap and fast. Reads inherit the cost, because every scan must load the side records and reconcile them against the data files before returning results. Let the side records pile up unmanaged and read performance decays until compaction pays the deferred bill.
+Option two is merge-on-read, shortened to MOR. Leave the data files alone and write a small side record saying "row at position 4, 832 of file X is deleted." Writes become cheap and fast. Reads inherit the cost, because every scan must load the side records and reconcile them against the data files before returning results. Let the side records pile up unmanaged and read performance decays until compaction pays the deferred bill.
 
 Neither option is wrong. COW is the right choice for tables that change rarely and are read constantly. MOR is the right choice when changes arrive continuously and the write path must stay fast. Streaming ingest, CDC (change data capture) mirroring, and frequent MERGE workloads live squarely in MOR territory. So the practical question for the streaming architect is not COW versus MOR. It is: how expensive is the MOR bookkeeping, and how painful is the read-time reconciliation? That is exactly the question v3 answers differently than v2.
 
@@ -58,7 +59,7 @@ The v2 era taught the community precisely what the fix needed to be: keep MOR's 
 Deletion vectors change the terms of the COW versus MOR decision, so it is worth restating the framework with the new numbers in mind. The decision is per table, and Iceberg lets you set it per operation type, which means DELETE, UPDATE, and MERGE each get their own mode.
 
 | Dimension | Copy-on-Write | v2 Merge-on-Read | v3 MOR with Deletion Vectors |
-|---|---|---|---|
+|--|--|--|--|
 | Write cost per change | Full file rewrites | Small delete files | Small Puffin blobs |
 | Read overhead | None | Grows with commits until compaction | Flat: one bitmap per file |
 | Delete application cost | None | Merge-join per delete file | Bit lookup per row |
@@ -72,7 +73,7 @@ Notice what the table implies about mixed workloads. A dimension table that gets
 
 ## Deletion Vectors: The Mechanism
 
-A deletion vector is a bitmap with one bit per row of a data file. Bit set means the row is deleted. Bit clear means the row is live. Checking whether row 4,832 is deleted becomes a single bit lookup, constant time, no merge, no join, no predicate evaluation.
+A deletion vector is a bitmap with one bit per row of a data file. Bit set means the row is deleted. Bit clear means the row is live. Checking whether row 4, 832 is deleted becomes a single bit lookup, constant time, no merge, no join, no predicate evaluation.
 
 Naive bitmaps are wasteful for sparse deletes, so the spec uses Roaring bitmaps, a compressed bitmap format with an ecosystem of fast implementations across Java, C++, Rust, and Go. Roaring bitmaps store dense runs and sparse scatters of set bits in different internal containers, so a vector marking 200 deleted rows out of two million compresses to a few hundred bytes while still answering membership checks in constant time. The format was already battle-tested across search engines and databases before Iceberg adopted it, which mattered for a spec that every engine in the ecosystem has to implement identically.
 
@@ -80,7 +81,7 @@ Deletion vectors live in Puffin files. Puffin is Iceberg's companion file format
 
 Two spec rules do the heavy lifting for read performance, and they are worth quoting in spirit because they define the whole operational model.
 
-Rule one: at most one deletion vector per data file per snapshot. All deletes for a given data file, across all history, consolidate into a single bitmap. A reader planning a scan knows the worst case up front: one data file, plus at most one vector to fetch and apply. Compare that with v2's "one data file plus every delete file that accumulated since the last compaction," and you see the structural change. The bookkeeping per file is bounded, permanently, by construction.
+Rule one: at most one deletion vector per data file per snapshot. All deletes for a given data file, across all history, consolidate into a single bitmap. A reader planning a scan knows the worst case up front: one data file, plus at most one vector to fetch and apply. Compare that with v2's "one data file plus every delete file that accumulated since the last compaction, " and you see the structural change. The bookkeeping per file is bounded, permanently, by construction.
 
 Rule two: when a writer produces a deletion vector for a data file, that vector must replace all previously written position deletes for the file, and the new vector merges the old delete content into itself. Readers seeing a vector can safely ignore any older position delete files for that file. Consolidation stopped being a maintenance job and became a write-path invariant. Position delete files themselves are deprecated in v3, and writers are not required to rewrite Puffin files containing superseded vectors, since dangling blobs are just unreferenced bytes for garbage collection to reap later.
 
@@ -88,7 +89,7 @@ The engineering elegance here is easy to miss. The v3 designers did not invent a
 
 ## The Write Amplification Math for Streaming
 
-To see what this buys a streaming pipeline, put numbers on the three designs for the same workload: a CDC stream applying 1,000 row updates per minute to a table of 512 MB data files, with each minute's updates scattered across roughly 40 distinct files.
+To see what this buys a streaming pipeline, put numbers on the three designs for the same workload: a CDC stream applying 1, 000 row updates per minute to a table of 512 MB data files, with each minute's updates scattered across roughly 40 distinct files.
 
 Under COW, each affected file is rewritten. Forty files at 512 MB is about 20 GB of Parquet written per minute to apply perhaps a few hundred kilobytes of logical change. That is write amplification on the order of tens of thousands to one. Per day it is roughly 28 TB of writes, with matching compute to re-encode the Parquet and matching API charges for the uploads. The read side is pristine and nobody can afford it.
 
@@ -106,17 +107,11 @@ For a new table in Spark SQL, set the format version and MOR behavior at creatio
 
 ```sql
 CREATE TABLE lake.events.orders (
-    order_id BIGINT,
-    customer_id BIGINT,
-    status STRING,
-    updated_at TIMESTAMP
+ order_id BIGINT, customer_id BIGINT, status STRING, updated_at TIMESTAMP
 )
 USING iceberg
 TBLPROPERTIES (
-    'format-version' = '3',
-    'write.delete.mode' = 'merge-on-read',
-    'write.update.mode' = 'merge-on-read',
-    'write.merge.mode' = 'merge-on-read'
+ 'format-version' = '3', 'write.delete.mode' = 'merge-on-read', 'write.update.mode' = 'merge-on-read', 'write.merge.mode' = 'merge-on-read'
 )
 ```
 
@@ -138,8 +133,7 @@ USING staged_changes s
 ON t.order_id = s.order_id
 WHEN MATCHED AND s.op = 'D' THEN DELETE
 WHEN MATCHED THEN UPDATE SET
-    t.status = s.status,
-    t.updated_at = s.updated_at
+ t.status = s.status, t.updated_at = s.updated_at
 WHEN NOT MATCHED THEN INSERT *
 ```
 
@@ -153,11 +147,11 @@ A note on lightweight writers, since not every ingest path runs a JVM cluster. P
 
 The email that usually kicks off a deletion vector migration comes from finance, not engineering, so it is worth itemizing exactly where MOR bookkeeping shows up on a cloud bill. Object storage pricing has three meters: bytes stored per month, PUT-class requests, and GET-class requests. Delete file strategies hit all three differently.
 
-Take the streaming workload from the earlier math, one commit per minute touching 40 data files, and run it for a 30-day month, about 43,200 commits.
+Take the streaming workload from the earlier math, one commit per minute touching 40 data files, and run it for a 30-day month, about 43, 200 commits.
 
 Under v2 position deletes, each commit writes up to 40 small delete files. That is around 1.7 million PUT requests per month for delete bookkeeping alone. Every subsequent scan of a touched data file issues GETs for its accumulated delete files, so the read-side request count multiplies with both query traffic and delete file accumulation. The stored bytes are small, and the request charges are not, because request pricing is per operation regardless of size. Small files are the most expensive bytes on any object store, measured per byte of value delivered.
 
-Under v3 vectors, each commit writes one Puffin file. The month costs about 43,200 PUTs for delete bookkeeping, a 40x reduction in write requests for this shape of workload. On the read side, a scan issues at most one ranged GET per data file for its vector, flat over time, and files without deletes cost nothing extra. Storage for superseded vector blobs accrues until snapshot expiration reaps the old Puffin files, which is a routine maintenance cost rather than a growth curve.
+Under v3 vectors, each commit writes one Puffin file. The month costs about 43, 200 PUTs for delete bookkeeping, a 40x reduction in write requests for this shape of workload. On the read side, a scan issues at most one ranged GET per data file for its vector, flat over time, and files without deletes cost nothing extra. Storage for superseded vector blobs accrues until snapshot expiration reaps the old Puffin files, which is a routine maintenance cost rather than a growth curve.
 
 The same itemization explains a subtler saving: compaction itself gets cheaper. v2 compaction jobs spent much of their runtime listing, fetching, and merging thousands of delete files before writing anything. v3 rewrite jobs read one bitmap per input file. When teams report that their maintenance windows shrank after migrating, this is the mechanism, and it compounds with the density-driven scheduling covered later, since jobs also run less often. Put the three meters on one dashboard panel before the migration, capture a month of baseline, and the after picture writes your internal case study for you.
 
@@ -183,13 +177,10 @@ The measurement is delete density: for each data file, the cardinality of its de
 
 ```sql
 SELECT
-    f.file_path,
-    f.record_count,
-    d.record_count AS deleted_rows,
-    ROUND(d.record_count * 100.0 / f.record_count, 1) AS pct_deleted
+ f.file_path, f.record_count, d.record_count AS deleted_rows, ROUND(d.record_count * 100.0 / f.record_count, 1) AS pct_deleted
 FROM lake.events.orders.data_files f
 JOIN lake.events.orders.delete_files d
-    ON d.referenced_data_file = f.file_path
+ ON d.referenced_data_file = f.file_path
 ORDER BY pct_deleted DESC
 ```
 
@@ -199,12 +190,9 @@ Spark's rewrite procedure accepts a filter for exactly this targeting, and the d
 
 ```sql
 CALL lake.system.rewrite_data_files(
-    table => 'events.orders',
-    where => 'updated_at >= TIMESTAMP \'2026-08-01 00:00:00\'',
-    options => map(
-        'delete-file-threshold', '1',
-        'min-input-files', '2'
-    )
+ table => 'events.orders', where => 'updated_at >= TIMESTAMP \'2026-08-01 00:00:00\'', options => map(
+ 'delete-file-threshold', '1', 'min-input-files', '2'
+ )
 )
 ```
 

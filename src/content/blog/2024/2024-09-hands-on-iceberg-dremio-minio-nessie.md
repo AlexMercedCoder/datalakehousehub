@@ -13,10 +13,6 @@ draft: false
 image: "/images/blog.png"
 canonical: "https://iceberglakehouse.com/posts/2024-9-hands-on-iceberg-dremio-minio-nessie/"
 ---
-> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2024-9-hands-on-iceberg-dremio-minio-nessie/).
-
-- [Free Copy of Apache Iceberg: The Definitive Guide](https://hello.dremio.com/wp-apache-iceberg-the-definitive-guide-reg.html?utm_source=ev_external_blog&utm_medium=influencer&utm_campaign=introiceberg&utm_content=alexmerced&utm_term=external_blog)
-- [Free Apache Iceberg Crash Course](https://hello.dremio.com/webcast-an-apache-iceberg-lakehouse-crash-course-reg.html?utm_source=ev_external_blog&utm_medium=influencer&utm_campaign=introiceberg&utm_content=alexmerced&utm_term=external_blog)
 
 **Table of Contents**
 - [What is a Data Lakehouse?](#what-is-a-data-lakehouse)
@@ -29,6 +25,11 @@ canonical: "https://iceberglakehouse.com/posts/2024-9-hands-on-iceberg-dremio-mi
 - [Connecting Dremio to Minio and Nessie](#connecting-nessie-and-minio-as-sources-in-dremio)
 - [Access Data From Dremio in BI Tools and Notebooks](#accessing-data-in-dremio-bi-tool-integrations-rest-api-jdbcodbc-and-apache-arrow-flight)
 - [Conclusion](#conclusion)
+
+> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2024-9-hands-on-iceberg-dremio-minio-nessie/).
+
+- [Free Copy of Apache Iceberg: The Definitive Guide](https://hello.dremio.com/wp-apache-iceberg-the-definitive-guide-reg.html?utm_source=ev_external_blog&utm_medium=influencer&utm_campaign=introiceberg&utm_content=alexmerced&utm_term=external_blog)
+- [Free Apache Iceberg Crash Course](https://hello.dremio.com/webcast-an-apache-iceberg-lakehouse-crash-course-reg.html?utm_source=ev_external_blog&utm_medium=influencer&utm_campaign=introiceberg&utm_content=alexmerced&utm_term=external_blog)
 
 Apache Iceberg and the Data Lakehouse architecture have garnered significant attention in the data landscape. Technologies such as Dremio, Nessie, and Minio play a vital role in enabling the Lakehouse paradigm, offering powerful tools for data management and analytics. In this blog, we'll explore the concept of the Lakehouse, introduce the key technologies that make it possible, and provide a hands-on guide to building your own Data Lakehouse environment right on your laptop. This will allow you to experience firsthand how these tools work together to revolutionize data storage and processing.
 
@@ -90,112 +91,112 @@ For this exercise, we will be working with a pre-built environment template host
 version: "3"
 
 services:
-  # Nessie Catalog Server Using In-Memory Store
-  nessie:
-    image: projectnessie/nessie:latest
-    container_name: nessie
-    environment:
-      - QUARKUS_PROFILE=prod
-      - QUARKUS_HTTP_PORT=19120
-      - QUARKUS_LOG_CONSOLE_FORMAT=%d{yyyy-MM-dd HH:mm:ss} %-5p [%c{1.}] (%t) %s%e%n
-      - QUARKUS_LOG_LEVEL=INFO
-      - QUARKUS_DATASOURCE_DB_KIND=rocksdb
-      - QUARKUS_DATASOURCE_JDBC_URL=jdbc:rocksdb:file:///nessie/data
-      - QUARKUS_DATASOURCE_USERNAME=nessie
-      - QUARKUS_DATASOURCE_PASSWORD=nessie
-    volumes:
-      - ./nessie-data:/nessie/data  # Mount local directory to persist RocksDB data
-    ports:
-      - "19120:19120"  # Expose Nessie API port
-    networks:
-      intro-network:
-  # Minio Storage Server
-  minio:
-    image: minio/minio
-    container_name: minio
-    environment:
-      - MINIO_ROOT_USER=admin
-      - MINIO_ROOT_PASSWORD=password
-      - MINIO_DOMAIN=minio
-      - MINIO_REGION_NAME=us-east-1
-      - MINIO_REGION=us-east-1
-    ports:
-      - "9000:9000"
-      - "9001:9001"
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
-      interval: 30s
-      timeout: 20s
-      retries: 3
-    volumes:
-      - ./minio-data:/minio-data  # Mount the local folder to container
-    entrypoint: >
-      /bin/sh -c "
-      minio server /data --console-address ':9001' &
-      sleep 5;
-      mc alias set myminio http://localhost:9000 admin password;
-      mc mb myminio/datalake;
-      mc mb myminio/datalakehouse;
-      mc mb myminio/warehouse;
-      mc mb myminio/seed;
-      mc cp /minio-data/* myminio/seed/;
-      tail -f /dev/null"
-    networks:
-      intro-network:
-  
-  # Spark
-  spark:
-    platform: linux/x86_64
-    image: alexmerced/spark35nb:latest
-    ports: 
-      - 8080:8080    # Master Web UI
-      - 7077:7077    # Master Port for job submissions
-      - 8081:8081    # Worker Web UI
-      - 4040-4045:4040-4045  # Additional Spark job UI ports for more jobs
-      - 18080:18080  # Spark History Server
-      - 8888:8888    # Jupyter Notebook
-    environment:
-      - AWS_REGION=us-east-1
-      - AWS_ACCESS_KEY_ID=admin  # Minio username
-      - AWS_SECRET_ACCESS_KEY=password  # Minio password
-      - SPARK_MASTER_HOST=spark
-      - SPARK_MASTER_PORT=7077
-      - SPARK_MASTER_WEBUI_PORT=8080
-      - SPARK_WORKER_WEBUI_PORT=8081
-      - SPARK_HISTORY_OPTS=-Dspark.history.fs.logDirectory=/tmp/spark-events
-      - SPARK_HOME=/opt/spark  # Set SPARK_HOME explicitly
-    volumes:
-      - ./notebook-seed:/workspace/seed-data  # Volume for seeding data into the container
-    container_name: spark
-    entrypoint: >
-      /bin/bash -c "
-      /opt/spark/sbin/start-master.sh && \
-      /opt/spark/sbin/start-worker.sh spark://$(hostname):7077 && \
-      mkdir -p /tmp/spark-events && \
-      start-history-server.sh && \
-      jupyter lab --ip=0.0.0.0 --port=8888 --no-browser --allow-root --NotebookApp.token='' --NotebookApp.password='' && \
-      tail -f /dev/null
-      "
-    networks:
-      intro-network:
+ # Nessie Catalog Server Using In-Memory Store
+ nessie:
+ image: projectnessie/nessie:latest
+ container_name: nessie
+ environment:
+ - QUARKUS_PROFILE=prod
+ - QUARKUS_HTTP_PORT=19120
+ - QUARKUS_LOG_CONSOLE_FORMAT=%d{yyyy-MM-dd HH:mm:ss} %-5p [%c{1.}] (%t) %s%e%n
+ - QUARKUS_LOG_LEVEL=INFO
+ - QUARKUS_DATASOURCE_DB_KIND=rocksdb
+ - QUARKUS_DATASOURCE_JDBC_URL=jdbc:rocksdb:file:///nessie/data
+ - QUARKUS_DATASOURCE_USERNAME=nessie
+ - QUARKUS_DATASOURCE_PASSWORD=nessie
+ volumes:
+ - ./nessie-data:/nessie/data # Mount local directory to persist RocksDB data
+ ports:
+ - "19120:19120" # Expose Nessie API port
+ networks:
+ intro-network:
+ # Minio Storage Server
+ minio:
+ image: minio/minio
+ container_name: minio
+ environment:
+ - MINIO_ROOT_USER=admin
+ - MINIO_ROOT_PASSWORD=password
+ - MINIO_DOMAIN=minio
+ - MINIO_REGION_NAME=us-east-1
+ - MINIO_REGION=us-east-1
+ ports:
+ - "9000:9000"
+ - "9001:9001"
+ healthcheck:
+ test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
+ interval: 30s
+ timeout: 20s
+ retries: 3
+ volumes:
+ - ./minio-data:/minio-data # Mount the local folder to container
+ entrypoint: >
+ /bin/sh -c "
+ minio server /data -console-address ':9001' &
+ sleep 5;
+ mc alias set myminio http://localhost:9000 admin password;
+ mc mb myminio/datalake;
+ mc mb myminio/datalakehouse;
+ mc mb myminio/warehouse;
+ mc mb myminio/seed;
+ mc cp /minio-data/* myminio/seed/;
+ tail -f /dev/null"
+ networks:
+ intro-network:
+ 
+ # Spark
+ spark:
+ platform: linux/x86_64
+ image: alexmerced/spark35nb:latest
+ ports: 
+ - 8080:8080 # Master Web UI
+ - 7077:7077 # Master Port for job submissions
+ - 8081:8081 # Worker Web UI
+ - 4040-4045:4040-4045 # Additional Spark job UI ports for more jobs
+ - 18080:18080 # Spark History Server
+ - 8888:8888 # Jupyter Notebook
+ environment:
+ - AWS_REGION=us-east-1
+ - AWS_ACCESS_KEY_ID=admin # Minio username
+ - AWS_SECRET_ACCESS_KEY=password # Minio password
+ - SPARK_MASTER_HOST=spark
+ - SPARK_MASTER_PORT=7077
+ - SPARK_MASTER_WEBUI_PORT=8080
+ - SPARK_WORKER_WEBUI_PORT=8081
+ - SPARK_HISTORY_OPTS=-Dspark.history.fs.logDirectory=/tmp/spark-events
+ - SPARK_HOME=/opt/spark # Set SPARK_HOME explicitly
+ volumes:
+ - ./notebook-seed:/workspace/seed-data # Volume for seeding data into the container
+ container_name: spark
+ entrypoint: >
+ /bin/bash -c "
+ /opt/spark/sbin/start-master.sh && \
+ /opt/spark/sbin/start-worker.sh spark://$(hostname):7077 && \
+ mkdir -p /tmp/spark-events && \
+ start-history-server.sh && \
+ jupyter lab -ip=0.0.0.0 -port=8888 -no-browser -allow-root -NotebookApp.token='' -NotebookApp.password='' && \
+ tail -f /dev/null
+ "
+ networks:
+ intro-network:
 
-  # Dremio
-  dremio:
-    platform: linux/x86_64
-    image: dremio/dremio-oss:latest
-    ports:
-      - 9047:9047
-      - 31010:31010
-      - 32010:32010
-      - 45678:45678
-    container_name: dremio
-    environment:
-      - DREMIO_JAVA_SERVER_EXTRA_OPTS=-Dpaths.dist=file:///opt/dremio/data/dist
-    networks:
-      intro-network:
+ # Dremio
+ dremio:
+ platform: linux/x86_64
+ image: dremio/dremio-oss:latest
+ ports:
+ - 9047:9047
+ - 31010:31010
+ - 32010:32010
+ - 45678:45678
+ container_name: dremio
+ environment:
+ - DREMIO_JAVA_SERVER_EXTRA_OPTS=-Dpaths.dist=file:///opt/dremio/data/dist
+ networks:
+ intro-network:
 
 networks:
-  intro-network:
+ intro-network:
 ```
 
 ### Understanding the Docker Compose File in Depth
@@ -208,10 +209,10 @@ Nessie is our catalog service, responsible for tracking the metadata of Apache I
 
 - **Image**: `projectnessie/nessie:latest` pulls the latest Nessie image from Docker Hub.
 - **Environment Variables**:
-  - `QUARKUS_PROFILE=prod`: Sets the profile to production mode.
-  - `QUARKUS_HTTP_PORT=19120`: Configures Nessie's HTTP API to be exposed on port 19120.
-  - `QUARKUS_DATASOURCE_DB_KIND=rocksdb`: Nessie uses RocksDB as its internal database to store catalog information.
-  - `QUARKUS_DATASOURCE_JDBC_URL=jdbc:rocksdb:file:///nessie/data`: Defines the storage location for the RocksDB database, which is mounted as a volume to persist data across container restarts.
+ - `QUARKUS_PROFILE=prod`: Sets the profile to production mode.
+ - `QUARKUS_HTTP_PORT=19120`: Configures Nessie's HTTP API to be exposed on port 19120.
+ - `QUARKUS_DATASOURCE_DB_KIND=rocksdb`: Nessie uses RocksDB as its internal database to store catalog information.
+ - `QUARKUS_DATASOURCE_JDBC_URL=jdbc:rocksdb:file:///nessie/data`: Defines the storage location for the RocksDB database, which is mounted as a volume to persist data across container restarts.
 - **Volumes**: The local directory `./nessie-data` is mounted to `/nessie/data` inside the container, ensuring that catalog information is stored persistently.
 - **Ports**: Port `19120` is exposed, allowing external tools (like Dremio and Spark) to access Nessie's API for catalog management.
 - **Networks**: Nessie is part of the `intro-network`, enabling it to communicate with other services in the Compose setup.
@@ -224,16 +225,16 @@ Minio serves as the object storage system in this setup, simulating an S3-like e
 
 - **Image**: `minio/minio` is the latest version of the Minio server.
 - **Environment Variables**:
-  - `MINIO_ROOT_USER=admin` and `MINIO_ROOT_PASSWORD=password`: These define the credentials for accessing the Minio service.
-  - `MINIO_DOMAIN=minio` and `MINIO_REGION_NAME=us-east-1`: Sets up the Minio domain and region, simulating a cloud-based object storage.
+ - `MINIO_ROOT_USER=admin` and `MINIO_ROOT_PASSWORD=password`: These define the credentials for accessing the Minio service.
+ - `MINIO_DOMAIN=minio` and `MINIO_REGION_NAME=us-east-1`: Sets up the Minio domain and region, simulating a cloud-based object storage.
 - **Ports**:
-  - `9000:9000`: Exposes Minio’s S3-compatible API on port 9000.
-  - `9001:9001`: Exposes Minio’s web console on port 9001, allowing you to manage your storage via a web interface.
+ - `9000:9000`: Exposes Minio’s S3-compatible API on port 9000.
+ - `9001:9001`: Exposes Minio’s web console on port 9001, allowing you to manage your storage via a web interface.
 - **Healthcheck**: Ensures that Minio is healthy by testing its liveness endpoint (`http://localhost:9000/minio/health/live`), and retries if needed.
 - **Volumes**: The local `./minio-data` directory is mounted into the container as `/minio-data`. This allows you to seed data into the Minio server by placing files in the `./minio-data` folder.
 - **Entrypoint**: 
-  - Minio's entrypoint script initializes the object storage and creates several buckets (`datalake`, `datalakehouse`, `warehouse`, `seed`).
-  - The `mc cp /minio-data/* myminio/seed/` command uploads all data from the `./minio-data` directory into the `seed` bucket in Minio. This provides a straightforward way to seed datasets into your object storage for later use.
+ - Minio's entrypoint script initializes the object storage and creates several buckets (`datalake`, `datalakehouse`, `warehouse`, `seed`).
+ - The `mc cp /minio-data/* myminio/seed/` command uploads all data from the `./minio-data` directory into the `seed` bucket in Minio. This provides a straightforward way to seed datasets into your object storage for later use.
 
 Minio’s configuration makes it the core storage layer of the data lakehouse, and by automatically seeding data into it, we streamline the process of making datasets available for analytics.
 
@@ -243,18 +244,18 @@ Spark is the processing engine for the environment, handling data transformation
 
 - **Image**: `alexmerced/spark35nb:latest` pulls a custom Spark image that includes Jupyter for notebook-based processing.
 - **Ports**:
-  - `8080:8080` and `8081:8081`: These expose the Spark Master and Worker web UIs, allowing you to monitor job submissions and worker performance.
-  - `7077`: This is the Spark Master port used for job submissions.
-  - `8888`: This exposes the Jupyter notebook interface, making it easy to run Spark jobs interactively in a notebook environment.
-  - `4040-4045`: These ports are reserved for Spark's job UIs, which provide detailed information about running jobs.
-  - `18080`: Exposes the Spark History Server, where you can review past jobs and their execution metrics.
+ - `8080:8080` and `8081:8081`: These expose the Spark Master and Worker web UIs, allowing you to monitor job submissions and worker performance.
+ - `7077`: This is the Spark Master port used for job submissions.
+ - `8888`: This exposes the Jupyter notebook interface, making it easy to run Spark jobs interactively in a notebook environment.
+ - `4040-4045`: These ports are reserved for Spark's job UIs, which provide detailed information about running jobs.
+ - `18080`: Exposes the Spark History Server, where you can review past jobs and their execution metrics.
 - **Environment Variables**:
-  - `AWS_ACCESS_KEY_ID=admin` and `AWS_SECRET_ACCESS_KEY=password`: These credentials allow Spark to access Minio's object storage as if it were S3.
-  - Other Spark-specific environment variables ensure that Spark runs as a distributed system and can connect to the Minio object store.
+ - `AWS_ACCESS_KEY_ID=admin` and `AWS_SECRET_ACCESS_KEY=password`: These credentials allow Spark to access Minio's object storage as if it were S3.
+ - Other Spark-specific environment variables ensure that Spark runs as a distributed system and can connect to the Minio object store.
 - **Volumes**: The local directory `./notebook-seed` is mounted to `/workspace/seed-data` inside the container. This volume contains any data that you want to pre-load into the Spark environment, making it accessible within the Jupyter notebooks for processing.
 - **Entrypoint**: 
-  - The entrypoint script starts the Spark Master, Worker, and History Server. It also launches Jupyter Lab, providing an interactive environment to run Spark jobs and experiments.
-  - The script ensures that the Spark processing engine is always running, ready to handle tasks, and that the notebook interface is accessible.
+ - The entrypoint script starts the Spark Master, Worker, and History Server. It also launches Jupyter Lab, providing an interactive environment to run Spark jobs and experiments.
+ - The script ensures that the Spark processing engine is always running, ready to handle tasks, and that the notebook interface is accessible.
 
 This Spark setup allows you to run interactive notebooks, process large datasets, and leverage Minio for data storage.
 
@@ -264,10 +265,10 @@ Dremio is the analytics layer of this environment, allowing you to perform SQL-b
 
 - **Image**: `dremio/dremio-oss:latest` pulls the latest open-source version of Dremio.
 - **Ports**:
-  - `9047`: Exposes the Dremio web interface, where users can query datasets and manage the environment.
-  - `31010`, `32010`, `45678`: These ports are used for Dremio’s internal services, handling query execution and communication between Dremio components. (31010 for JDBC, 32010 for Arrow Flight)
+ - `9047`: Exposes the Dremio web interface, where users can query datasets and manage the environment.
+ - `31010`, `32010`, `45678`: These ports are used for Dremio’s internal services, handling query execution and communication between Dremio components. (31010 for JDBC, 32010 for Arrow Flight)
 - **Environment Variables**: 
-  - `DREMIO_JAVA_SERVER_EXTRA_OPTS=-Dpaths.dist=file:///opt/dremio/data/dist`: This sets the internal paths for Dremio to ensure it runs correctly in the Docker environment.
+ - `DREMIO_JAVA_SERVER_EXTRA_OPTS=-Dpaths.dist=file:///opt/dremio/data/dist`: This sets the internal paths for Dremio to ensure it runs correctly in the Docker environment.
 - **Networks**: Dremio is connected to the `intro-network`, enabling it to interact with Nessie and Minio for querying Iceberg tables and accessing object storage.
 
 Dremio’s role in this setup is to serve as the query engine for your data lakehouse, allowing you to perform high-performance SQL queries on data stored in Minio and managed by Nessie.
@@ -275,7 +276,7 @@ Dremio’s role in this setup is to serve as the query engine for your data lake
 ### Seeding Data into Minio and Spark Notebooks
 
 - **Minio**: The `./minio-data` folder on your local machine is mounted to the container and used to seed data into Minio. When the container starts, the `mc cp` command uploads any files in this directory to the `seed` bucket in Minio. This makes your datasets immediately available for querying or processing without needing to manually upload files after the environment is up.
-  
+ 
 - **Spark Notebooks**: Similarly, the `./notebook-seed` directory is mounted into the Spark container at `/workspace/seed-data`. This allows any data placed in the `./notebook-seed` folder to be available within the Jupyter notebook environment, making it easy to start analyzing or transforming data right away.
 
 ### Spinning Up and Down the Environment with Docker Compose
@@ -302,16 +303,16 @@ docker-compose up -d
 
 In detached mode, you won't see the logs in the terminal, but the services will continue running in the background.
 
-- `--build`: Use this flag to force a rebuild of the images, which is helpful if you've made changes to the Dockerfiles or configurations.
+- `-build`: Use this flag to force a rebuild of the images, which is helpful if you've made changes to the Dockerfiles or configurations.
 
 ```bash
-docker-compose up --build
+docker-compose up -build
 ```
 
-- `--force-recreate`: If you want to ensure that all containers are recreated (even if their configurations haven't changed), you can use this flag.
+- `-force-recreate`: If you want to ensure that all containers are recreated (even if their configurations haven't changed), you can use this flag.
 
 ```bash
-docker-compose up --force-recreate
+docker-compose up -force-recreate
 ```
 
 #### Spinning Down the Environment
@@ -325,16 +326,16 @@ This stops the services and removes the associated containers, networks, and vol
 
 You can also use the following flags with docker-compose down:
 
-- `--volumes`: This flag will remove all the associated volumes as well. Use this if you want to completely clean up the environment, including any persisted data in volumes.
+- `-volumes`: This flag will remove all the associated volumes as well. Use this if you want to completely clean up the environment, including any persisted data in volumes.
 
 ```bash
-docker-compose down --volumes
+docker-compose down -volumes
 ```
 
-- `--remove-orphans`: If there are any containers running from previous Compose configurations that aren't defined in the current file, this flag will remove them.
+- `-remove-orphans`: If there are any containers running from previous Compose configurations that aren't defined in the current file, this flag will remove them.
 
 ```bash
-docker-compose down --remove-orphans
+docker-compose down -remove-orphans
 ```
 
 #### Checking the Status of the Environment
@@ -415,9 +416,7 @@ Example response:
 
 ```json
 {
-  "type": "BRANCH",
-  "name": "main",
-  "hash": "..."
+ "type": "BRANCH", "name": "main", "hash": "..."
 }
 ```
 
@@ -457,28 +456,28 @@ from pyspark.sql.types import StructType, StructField, IntegerType, StringType, 
 import os
 
 ## DEFINE SENSITIVE VARIABLES
-CATALOG_URI = "http://nessie:19120/api/v1"  # Nessie Server URI
-WAREHOUSE = "s3://warehouse/"               # Minio Address to Write to
-STORAGE_URI = "http://172.18.0.2:9000"      # Minio IP address from docker inspect
+CATALOG_URI = "http://nessie:19120/api/v1" # Nessie Server URI
+WAREHOUSE = "s3://warehouse/" # Minio Address to Write to
+STORAGE_URI = "http://172.18.0.2:9000" # Minio IP address from docker inspect
 
 # Configure Spark with necessary packages and Iceberg/Nessie settings
 conf = (
-    pyspark.SparkConf()
-        .setAppName('sales_data_app')
-        # Include necessary packages
-        .set('spark.jars.packages', 'org.postgresql:postgresql:42.7.3,org.apache.iceberg:iceberg-spark-runtime-3.5_2.12:1.5.0,org.projectnessie.nessie-integrations:nessie-spark-extensions-3.5_2.12:0.77.1,software.amazon.awssdk:bundle:2.24.8,software.amazon.awssdk:url-connection-client:2.24.8')
-        # Enable Iceberg and Nessie extensions
-        .set('spark.sql.extensions', 'org.apache.iceberg.spark.extensions.IcebergSparkSessionExtensions,org.projectnessie.spark.extensions.NessieSparkSessionExtensions')
-        # Configure Nessie catalog
-        .set('spark.sql.catalog.nessie', 'org.apache.iceberg.spark.SparkCatalog')
-        .set('spark.sql.catalog.nessie.uri', CATALOG_URI)
-        .set('spark.sql.catalog.nessie.ref', 'main')
-        .set('spark.sql.catalog.nessie.authentication.type', 'NONE')
-        .set('spark.sql.catalog.nessie.catalog-impl', 'org.apache.iceberg.nessie.NessieCatalog')
-        # Set Minio as the S3 endpoint for Iceberg storage
-        .set('spark.sql.catalog.nessie.s3.endpoint', STORAGE_URI)
-        .set('spark.sql.catalog.nessie.warehouse', WAREHOUSE)
-        .set('spark.sql.catalog.nessie.io-impl', 'org.apache.iceberg.aws.s3.S3FileIO')
+ pyspark.SparkConf()
+ .setAppName('sales_data_app')
+ # Include necessary packages
+ .set('spark.jars.packages', 'org.postgresql:postgresql:42.7.3, org.apache.iceberg:iceberg-spark-runtime-3.5_2.12:1.5.0, org.projectnessie.nessie-integrations:nessie-spark-extensions-3.5_2.12:0.77.1, software.amazon.awssdk:bundle:2.24.8, software.amazon.awssdk:url-connection-client:2.24.8')
+ # Enable Iceberg and Nessie extensions
+ .set('spark.sql.extensions', 'org.apache.iceberg.spark.extensions.IcebergSparkSessionExtensions, org.projectnessie.spark.extensions.NessieSparkSessionExtensions')
+ # Configure Nessie catalog
+ .set('spark.sql.catalog.nessie', 'org.apache.iceberg.spark.SparkCatalog')
+ .set('spark.sql.catalog.nessie.uri', CATALOG_URI)
+ .set('spark.sql.catalog.nessie.ref', 'main')
+ .set('spark.sql.catalog.nessie.authentication.type', 'NONE')
+ .set('spark.sql.catalog.nessie.catalog-impl', 'org.apache.iceberg.nessie.NessieCatalog')
+ # Set Minio as the S3 endpoint for Iceberg storage
+ .set('spark.sql.catalog.nessie.s3.endpoint', STORAGE_URI)
+ .set('spark.sql.catalog.nessie.warehouse', WAREHOUSE)
+ .set('spark.sql.catalog.nessie.io-impl', 'org.apache.iceberg.aws.s3.S3FileIO')
 )
 
 # Start Spark session
@@ -487,22 +486,14 @@ print("Spark Session Started")
 
 # Define a schema for the sales data
 schema = StructType([
-    StructField("order_id", IntegerType(), True),
-    StructField("customer_id", IntegerType(), True),
-    StructField("product", StringType(), True),
-    StructField("quantity", IntegerType(), True),
-    StructField("price", DoubleType(), True),
-    StructField("order_date", StringType(), True)
+ StructField("order_id", IntegerType(), True), StructField("customer_id", IntegerType(), True), StructField("product", StringType(), True), StructField("quantity", IntegerType(), True), StructField("price", DoubleType(), True), StructField("order_date", StringType(), True)
 ])
 
 # Create a DataFrame with messy sales data (including duplicates and errors)
 sales_data = [
-    (1, 101, "Laptop", 1, 1000.00, "2023-08-01"),
-    (2, 102, "Mouse", 2, 25.50, "2023-08-01"),
-    (3, 103, "Keyboard", 1, 45.00, "2023-08-01"),
-    (1, 101, "Laptop", 1, 1000.00, "2023-08-01"),  # Duplicate
-    (4, 104, "Monitor", None, 200.00, "2023-08-02"),  # Missing quantity
-    (5, None, "Mouse", 1, 25.50, "2023-08-02")  # Missing customer_id
+ (1, 101, "Laptop", 1, 1000.00, "2023-08-01"), (2, 102, "Mouse", 2, 25.50, "2023-08-01"), (3, 103, "Keyboard", 1, 45.00, "2023-08-01"), (1, 101, "Laptop", 1, 1000.00, "2023-08-01"), # Duplicate
+ (4, 104, "Monitor", None, 200.00, "2023-08-02"), # Missing quantity
+ (5, None, "Mouse", 1, 25.50, "2023-08-02") # Missing customer_id
 ]
 
 # Convert the data into a DataFrame
@@ -545,9 +536,9 @@ StructType, StructField, and data types (IntegerType, StringType, etc.): These a
 
 #### 2. Defining Sensitive Variables
 ```python
-CATALOG_URI = "http://nessie:19120/api/v1"  # Nessie Server URI
-WAREHOUSE = "s3://warehouse/"               # Minio Address to Write to
-STORAGE_URI = "http://172.27.0.3:9000"      # Minio IP address from docker inspect
+CATALOG_URI = "http://nessie:19120/api/v1" # Nessie Server URI
+WAREHOUSE = "s3://warehouse/" # Minio Address to Write to
+STORAGE_URI = "http://172.27.0.3:9000" # Minio IP address from docker inspect
 ```
 
 Here, we define a few key variables:
@@ -559,22 +550,22 @@ Here, we define a few key variables:
 #### 3. Configuring Spark with Iceberg and Nessie Settings
 ```python
 conf = (
-    pyspark.SparkConf()
-        .setAppName('sales_data_app')
-        # Include necessary packages
-        .set('spark.jars.packages', 'org.postgresql:postgresql:42.7.3,org.apache.iceberg:iceberg-spark-runtime-3.5_2.12:1.5.0,org.projectnessie.nessie-integrations:nessie-spark-extensions-3.5_2.12:0.77.1,software.amazon.awssdk:bundle:2.24.8,software.amazon.awssdk:url-connection-client:2.24.8')
-        # Enable Iceberg and Nessie extensions
-        .set('spark.sql.extensions', 'org.apache.iceberg.spark.extensions.IcebergSparkSessionExtensions,org.projectnessie.spark.extensions.NessieSparkSessionExtensions')
-        # Configure Nessie catalog
-        .set('spark.sql.catalog.nessie', 'org.apache.iceberg.spark.SparkCatalog')
-        .set('spark.sql.catalog.nessie.uri', CATALOG_URI)
-        .set('spark.sql.catalog.nessie.ref', 'main')
-        .set('spark.sql.catalog.nessie.authentication.type', 'NONE')
-        .set('spark.sql.catalog.nessie.catalog-impl', 'org.apache.iceberg.nessie.NessieCatalog')
-        # Set Minio as the S3 endpoint for Iceberg storage
-        .set('spark.sql.catalog.nessie.s3.endpoint', STORAGE_URI)
-        .set('spark.sql.catalog.nessie.warehouse', WAREHOUSE)
-        .set('spark.sql.catalog.nessie.io-impl', 'org.apache.iceberg.aws.s3.S3FileIO')
+ pyspark.SparkConf()
+ .setAppName('sales_data_app')
+ # Include necessary packages
+ .set('spark.jars.packages', 'org.postgresql:postgresql:42.7.3, org.apache.iceberg:iceberg-spark-runtime-3.5_2.12:1.5.0, org.projectnessie.nessie-integrations:nessie-spark-extensions-3.5_2.12:0.77.1, software.amazon.awssdk:bundle:2.24.8, software.amazon.awssdk:url-connection-client:2.24.8')
+ # Enable Iceberg and Nessie extensions
+ .set('spark.sql.extensions', 'org.apache.iceberg.spark.extensions.IcebergSparkSessionExtensions, org.projectnessie.spark.extensions.NessieSparkSessionExtensions')
+ # Configure Nessie catalog
+ .set('spark.sql.catalog.nessie', 'org.apache.iceberg.spark.SparkCatalog')
+ .set('spark.sql.catalog.nessie.uri', CATALOG_URI)
+ .set('spark.sql.catalog.nessie.ref', 'main')
+ .set('spark.sql.catalog.nessie.authentication.type', 'NONE')
+ .set('spark.sql.catalog.nessie.catalog-impl', 'org.apache.iceberg.nessie.NessieCatalog')
+ # Set Minio as the S3 endpoint for Iceberg storage
+ .set('spark.sql.catalog.nessie.s3.endpoint', STORAGE_URI)
+ .set('spark.sql.catalog.nessie.warehouse', WAREHOUSE)
+ .set('spark.sql.catalog.nessie.io-impl', 'org.apache.iceberg.aws.s3.S3FileIO')
 )
 ```
 This block configures the Spark session to work with Apache Iceberg and Nessie:
@@ -594,12 +585,7 @@ This line starts the Spark session using the previously defined configuration (c
 5. Defining the Schema for the Sales Data
 ```python
 schema = StructType([
-    StructField("order_id", IntegerType(), True),
-    StructField("customer_id", IntegerType(), True),
-    StructField("product", StringType(), True),
-    StructField("quantity", IntegerType(), True),
-    StructField("price", DoubleType(), True),
-    StructField("order_date", StringType(), True)
+ StructField("order_id", IntegerType(), True), StructField("customer_id", IntegerType(), True), StructField("product", StringType(), True), StructField("quantity", IntegerType(), True), StructField("price", DoubleType(), True), StructField("order_date", StringType(), True)
 ])
 ```
 
@@ -608,12 +594,9 @@ Here, we define the schema for the sales data. This schema includes fields such 
 #### 6. Creating a DataFrame with Messy Sales Data
 ```python
 sales_data = [
-    (1, 101, "Laptop", 1, 1000.00, "2023-08-01"),
-    (2, 102, "Mouse", 2, 25.50, "2023-08-01"),
-    (3, 103, "Keyboard", 1, 45.00, "2023-08-01"),
-    (1, 101, "Laptop", 1, 1000.00, "2023-08-01"),  # Duplicate
-    (4, 104, "Monitor", None, 200.00, "2023-08-02"),  # Missing quantity
-    (5, None, "Mouse", 1, 25.50, "2023-08-02")  # Missing customer_id
+ (1, 101, "Laptop", 1, 1000.00, "2023-08-01"), (2, 102, "Mouse", 2, 25.50, "2023-08-01"), (3, 103, "Keyboard", 1, 45.00, "2023-08-01"), (1, 101, "Laptop", 1, 1000.00, "2023-08-01"), # Duplicate
+ (4, 104, "Monitor", None, 200.00, "2023-08-02"), # Missing quantity
+ (5, None, "Mouse", 1, 25.50, "2023-08-02") # Missing customer_id
 ]
 
 sales_df = spark.createDataFrame(sales_data, schema)
@@ -679,9 +662,9 @@ To better understand how Apache Iceberg structures its metadata, we will now cre
 1. **Open the JupyterLab interface**:
 - In your browser, navigate to the JupyterLab environment at:
 
-  ```
-  http://localhost:8888
-  ```
+ ```
+ http://localhost:8888
+ ```
 
 2. **Create a new Python notebook**:
 - In the JupyterLab interface, create a new Python notebook to run the following code, which will inspect the metadata files stored in Minio.
@@ -696,16 +679,13 @@ import json
 
 # Define Minio connection parameters
 minio_client = boto3.client(
-    's3',
-    endpoint_url='http://172.27.0.3:9000',  # Minio IP address from docker inspect
-    aws_access_key_id='admin',
-    aws_secret_access_key='password',
-    region_name='us-east-1'
+ 's3', endpoint_url='http://172.27.0.3:9000', # Minio IP address from docker inspect
+ aws_access_key_id='admin', aws_secret_access_key='password', region_name='us-east-1'
 )
 
 # Specify the bucket and metadata file path
 bucket_name = 'warehouse'
-metadata_file_key = 'sales/sales_data_raw_a2c0456f-77a6-4121-8d3a-1d8168404edc/metadata/00000-ea121056-0c00-46cb-b9ca-88643d3492cb.metadata.json'  # Example metadata path
+metadata_file_key = 'sales/sales_data_raw_a2c0456f-77a6-4121-8d3a-1d8168404edc/metadata/00000-ea121056-0c00-46cb-b9ca-88643d3492cb.metadata.json' # Example metadata path
 
 # Download the metadata file
 metadata_file = minio_client.get_object(Bucket=bucket_name, Key=metadata_file_key)
@@ -726,117 +706,49 @@ This code does the following:
 
 ```json
 {
-    "format-version": 2,
-    "table-uuid": "2914be24-fd7d-4b54-bcc0-63edc5e03942",
-    "location": "s3://warehouse/sales/sales_data_raw_a2c0456f-77a6-4121-8d3a-1d8168404edc",
-    "last-sequence-number": 1,
-    "last-updated-ms": 1726146520362,
-    "last-column-id": 6,
-    "current-schema-id": 0,
-    "schemas": [
-        {
-            "type": "struct",
-            "schema-id": 0,
-            "fields": [
-                {
-                    "id": 1,
-                    "name": "order_id",
-                    "required": false,
-                    "type": "int"
-                },
-                {
-                    "id": 2,
-                    "name": "customer_id",
-                    "required": false,
-                    "type": "int"
-                },
-                {
-                    "id": 3,
-                    "name": "product",
-                    "required": false,
-                    "type": "string"
-                },
-                {
-                    "id": 4,
-                    "name": "quantity",
-                    "required": false,
-                    "type": "int"
-                },
-                {
-                    "id": 5,
-                    "name": "price",
-                    "required": false,
-                    "type": "double"
-                },
-                {
-                    "id": 6,
-                    "name": "order_date",
-                    "required": false,
-                    "type": "string"
-                }
-            ]
-        }
-    ],
-    "default-spec-id": 0,
-    "partition-specs": [
-        {
-            "spec-id": 0,
-            "fields": []
-        }
-    ],
-    "last-partition-id": 999,
-    "default-sort-order-id": 0,
-    "sort-orders": [
-        {
-            "order-id": 0,
-            "fields": []
-        }
-    ],
-    "properties": {
-        "owner": "root",
-        "write.metadata.delete-after-commit.enabled": "false",
-        "gc.enabled": "false",
-        "write.parquet.compression-codec": "zstd"
-    },
-    "current-snapshot-id": 8859389821243348049,
-    "refs": {
-        "main": {
-            "snapshot-id": 8859389821243348049,
-            "type": "branch"
-        }
-    },
-    "snapshots": [
-        {
-            "sequence-number": 1,
-            "snapshot-id": 8859389821243348049,
-            "timestamp-ms": 1726146520362,
-            "summary": {
-                "operation": "append",
-                "spark.app.id": "local-1726146494182",
-                "added-data-files": "6",
-                "added-records": "6",
-                "added-files-size": "10183",
-                "changed-partition-count": "1",
-                "total-records": "6",
-                "total-files-size": "10183",
-                "total-data-files": "6",
-                "total-delete-files": "0",
-                "total-position-deletes": "0",
-                "total-equality-deletes": "0"
-            },
-            "manifest-list": "s3://warehouse/sales/sales_data_raw_a2c0456f-77a6-4121-8d3a-1d8168404edc/metadata/snap-8859389821243348049-1-b395c768-1348-4f50-a762-8033fe417915.avro",
-            "schema-id": 0
-        }
-    ],
-    "statistics": [],
-    "partition-statistics": [],
-    "snapshot-log": [
-        {
-            "timestamp-ms": 1726146520362,
-            "snapshot-id": 8859389821243348049
-        }
-    ],
-    "metadata-log": []
+ "format-version": 2, "table-uuid": "2914be24-fd7d-4b54-bcc0-63edc5e03942", "location": "s3://warehouse/sales/sales_data_raw_a2c0456f-77a6-4121-8d3a-1d8168404edc", "last-sequence-number": 1, "last-updated-ms": 1726146520362, "last-column-id": 6, "current-schema-id": 0, "schemas": [
+ {
+ "type": "struct", "schema-id": 0, "fields": [
+ {
+ "id": 1, "name": "order_id", "required": false, "type": "int"
+ }, {
+ "id": 2, "name": "customer_id", "required": false, "type": "int"
+ }, {
+ "id": 3, "name": "product", "required": false, "type": "string"
+ }, {
+ "id": 4, "name": "quantity", "required": false, "type": "int"
+ }, {
+ "id": 5, "name": "price", "required": false, "type": "double"
+ }, {
+ "id": 6, "name": "order_date", "required": false, "type": "string"
+ }
+ ]
+ }
+ ], "default-spec-id": 0, "partition-specs": [
+ {
+ "spec-id": 0, "fields": []
+ }
+ ], "last-partition-id": 999, "default-sort-order-id": 0, "sort-orders": [
+ {
+ "order-id": 0, "fields": []
+ }
+ ], "properties": {
+ "owner": "root", "write.metadata.delete-after-commit.enabled": "false", "gc.enabled": "false", "write.parquet.compression-codec": "zstd"
+ }, "current-snapshot-id": 8859389821243348049, "refs": {
+ "main": {
+ "snapshot-id": 8859389821243348049, "type": "branch"
+ }
+ }, "snapshots": [
+ {
+ "sequence-number": 1, "snapshot-id": 8859389821243348049, "timestamp-ms": 1726146520362, "summary": {
+ "operation": "append", "spark.app.id": "local-1726146494182", "added-data-files": "6", "added-records": "6", "added-files-size": "10183", "changed-partition-count": "1", "total-records": "6", "total-files-size": "10183", "total-data-files": "6", "total-delete-files": "0", "total-position-deletes": "0", "total-equality-deletes": "0"
+ }, "manifest-list": "s3://warehouse/sales/sales_data_raw_a2c0456f-77a6-4121-8d3a-1d8168404edc/metadata/snap-8859389821243348049-1-b395c768-1348-4f50-a762-8033fe417915.avro", "schema-id": 0
+ }
+ ], "statistics": [], "partition-statistics": [], "snapshot-log": [
+ {
+ "timestamp-ms": 1726146520362, "snapshot-id": 8859389821243348049
+ }
+ ], "metadata-log": []
 }
 ```
 
@@ -872,9 +784,7 @@ Example response:
 
 ```json
 {
-  "type": "BRANCH",
-  "name": "main",
-  "hash": "abcdef1234567890"
+ "type": "BRANCH", "name": "main", "hash": "abcdef1234567890"
 }
 ```
 
@@ -891,10 +801,9 @@ Example response:
 
 ```json
 {
-  "sales_data_raw": {
-    "type": "ICEBERG_TABLE",
-    "metadataLocation": "s3://warehouse/nessie/sales/sales_data_raw/metadata/v1.metadata.json"
-  }
+ "sales_data_raw": {
+ "type": "ICEBERG_TABLE", "metadataLocation": "s3://warehouse/nessie/sales/sales_data_raw/metadata/v1.metadata.json"
+ }
 }
 ```
 
@@ -913,19 +822,11 @@ Example response:
 
 ```json
 {
-  "type": "ICEBERG_TABLE",
-  "metadataLocation": "s3://warehouse/nessie/sales/sales_data_raw/metadata/v1.metadata.json",
-  "snapshotId": "1234567890abcdef",
-  "schema": {
-    "fields": [
-      {"name": "order_id", "type": "int"},
-      {"name": "customer_id", "type": "int"},
-      {"name": "product", "type": "string"},
-      {"name": "quantity", "type": "int"},
-      {"name": "price", "type": "double"},
-      {"name": "order_date", "type": "string"}
-    ]
-  }
+ "type": "ICEBERG_TABLE", "metadataLocation": "s3://warehouse/nessie/sales/sales_data_raw/metadata/v1.metadata.json", "snapshotId": "1234567890abcdef", "schema": {
+ "fields": [
+ {"name": "order_id", "type": "int"}, {"name": "customer_id", "type": "int"}, {"name": "product", "type": "string"}, {"name": "quantity", "type": "int"}, {"name": "price", "type": "double"}, {"name": "order_date", "type": "string"}
+ ]
+ }
 }
 ```
 
@@ -944,15 +845,11 @@ Example response:
 
 ```json
 [
-  {
-    "snapshotId": "1234567890abcdef",
-    "timestamp": 1694653200000,
-    "summary": {
-      "operation": "append",
-      "addedFiles": 1,
-      "addedRecords": 1000
-    }
-  }
+ {
+ "snapshotId": "1234567890abcdef", "timestamp": 1694653200000, "summary": {
+ "operation": "append", "addedFiles": 1, "addedRecords": 1000
+ }
+ }
 ]
 ```
 
@@ -988,24 +885,24 @@ http://localhost:9047
 There are two sections to fill out: **General** and **Storage Settings**.
 
 - **General Settings (Connecting to the Nessie Server)**:
-  - **Name**: Set the source name to `nessie`.
-  - **Endpoint URL**: Enter the Nessie API endpoint URL as:
+ - **Name**: Set the source name to `nessie`.
+ - **Endpoint URL**: Enter the Nessie API endpoint URL as:
 
-    ```
-    http://nessie:19120/api/v2
-    ```
+ ```
+ http://nessie:19120/api/v2
+ ```
 
-  - **Authentication**: Set this to `None`.
+ - **Authentication**: Set this to `None`.
 
 - **Storage Settings**:
-  - **Access Key**: Set this to `admin` (Minio username).
-  - **Secret Key**: Set this to `password` (Minio password).
-  - **Root Path**: Set this to `warehouse` (this is the bucket where our Iceberg tables are stored).
-  - **Connection Properties**:
-    - Set `fs.s3a.path.style.access` to `true`.
-    - Set `fs.s3a.endpoint` to `minio:9000`.
-    - Set `dremio.s3.compat` to `true`.
-  - **Encrypt Connection**: Uncheck this option (since we are running Nessie locally on HTTP).
+ - **Access Key**: Set this to `admin` (Minio username).
+ - **Secret Key**: Set this to `password` (Minio password).
+ - **Root Path**: Set this to `warehouse` (this is the bucket where our Iceberg tables are stored).
+ - **Connection Properties**:
+ - Set `fs.s3a.path.style.access` to `true`.
+ - Set `fs.s3a.endpoint` to `minio:9000`.
+ - Set `dremio.s3.compat` to `true`.
+ - **Encrypt Connection**: Uncheck this option (since we are running Nessie locally on HTTP).
 
 4. **Save the Source**: After filling out all the settings, click **Save**. The Nessie source will now be connected to Dremio, and you will be able to browse the tables stored in the Nessie catalog.
 
@@ -1017,19 +914,19 @@ There are two sections to fill out: **General** and **Storage Settings**.
 2. **Configure the S3 Source for Minio**:
 
 - **General Settings**:
-  - **Name**: Set the source name to `seed`.
-  - **Credentials**: Select **AWS access key**.
-  - **Access Key**: Set to `admin` (Minio username).
-  - **Secret Key**: Set to `password` (Minio password).
-  - **Encrypt Connection**: Uncheck this option (since Minio is running locally).
+ - **Name**: Set the source name to `seed`.
+ - **Credentials**: Select **AWS access key**.
+ - **Access Key**: Set to `admin` (Minio username).
+ - **Secret Key**: Set to `password` (Minio password).
+ - **Encrypt Connection**: Uncheck this option (since Minio is running locally).
 
 - **Advanced Options**:
-  - **Enable Compatibility Mode**: Set to `true` (to ensure compatibility with Minio).
-  - **Root Path**: Set to `/seed` (this is where the seed data files are located in Minio).
+ - **Enable Compatibility Mode**: Set to `true` (to ensure compatibility with Minio).
+ - **Root Path**: Set to `/seed` (this is where the seed data files are located in Minio).
 
 - **Connection Properties**:
-  - Set `fs.s3a.path.style.access` to `true`.
-  - Set `fs.s3a.endpoint` to `minio:9000`.
+ - Set `fs.s3a.path.style.access` to `true`.
+ - Set `fs.s3a.endpoint` to `minio:9000`.
 
 3. **Save the Source**: After entering the configuration details, click **Save**. The `seed` bucket is now accessible in Dremio, and you can query the raw data stored in this bucket.
 
@@ -1047,12 +944,7 @@ In the SQL editor, you can clean the raw data by removing duplicates, fixing mis
 
 ```sql
 SELECT DISTINCT
-  COALESCE(order_id, 0) AS order_id,
-  COALESCE(customer_id, 0) AS customer_id,
-  product,
-  COALESCE(quantity, 1) AS quantity,
-  price,
-  order_date
+ COALESCE(order_id, 0) AS order_id, COALESCE(customer_id, 0) AS customer_id, product, COALESCE(quantity, 1) AS quantity, price, order_date
 FROM nessie.sales.sales_data_raw
 WHERE customer_id IS NOT NULL
 ```
@@ -1076,11 +968,7 @@ With the Silver view cleaned up, we can now generate "Gold" metrics - higher-lev
 
 ```sql
 SELECT
-  product,
-  COUNT(order_id) AS total_orders,
-  SUM(quantity) AS total_quantity_sold,
-  SUM(quantity * price) AS total_sales,
-  AVG(quantity * price) AS avg_order_value
+ product, COUNT(order_id) AS total_orders, SUM(quantity) AS total_quantity_sold, SUM(quantity * price) AS total_sales, AVG(quantity * price) AS avg_order_value
 FROM nessie.sales.sales_data_silver
 GROUP BY product
 ```
@@ -1156,8 +1044,8 @@ import matplotlib.pyplot as plt
 # Dremio login details
 login_endpoint = "http://dremio:9047/apiv2/login"
 payload = {
-    "userName": "admin",  # Dremio username
-    "password": "password"  # Dremio password
+ "userName": "admin", # Dremio username
+ "password": "password" # Dremio password
 }
 
 # Get the token

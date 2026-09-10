@@ -1,7 +1,8 @@
 ---
 title: "What is an Iceberg Manifest File?"
 meta_title: "What is an Iceberg Manifest File? | Expert Architecture Guide"
-description: "A comprehensive guide to the Iceberg Manifest File. Learn how this foundational metadata file tracks physical Parquet files and enables sub-second query planning."
+description: "A comprehensive guide to the Iceberg Manifest File. Learn how this foundational metadata file tracks physical Parquet files and enables sub-second query."
+canonical: "https://iceberglakehouse.com/iceberg/iceberg-manifest-file/"
 ---
 
 # What is an Iceberg Manifest File?

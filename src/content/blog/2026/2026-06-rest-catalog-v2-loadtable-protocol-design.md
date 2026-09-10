@@ -13,7 +13,6 @@ slug: rest-catalog-v2-loadtable-protocol-design
 draft: false
 image: "/images/blog.png"
 ---
-
 # REST Catalog V2 LoadTable and Client Capability
 
 
@@ -89,7 +88,7 @@ I would also require a visible error path for protocol mismatches. If the catalo
 ## Operational Checklist
 
 | Area | Question to answer | Why it matters |
-|---|---|---|
+|--|--|--|
 | Ownership | Who owns the catalog implementation and the client library version? | Version mismatches need named owners to resolve. |
 | Scope | Which catalog operations are in scope for this client and rollout? | A narrow operation scope is easier to validate. |
 | Compatibility | Which client versions are tested against which catalog versions? | Untested combinations are where silent failures hide. |
@@ -136,7 +135,7 @@ The next step is to define the dimensions that actually change behavior: LoadTab
 
 ## Review Questions Worth Asking
 
-The first question is simple: what is the tested compatibility matrix for this catalog and its client library versions? If the answer is "we use whatever is current," the compatibility story is not managed.
+The first question is simple: what is the tested compatibility matrix for this catalog and its client library versions? If the answer is "we use whatever is current, " the compatibility story is not managed.
 
 The second question: what does the catalog return in a LoadTable response when the client requests an operation that is not supported? If the answer is unclear, the error handling is not designed.
 

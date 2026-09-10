@@ -14,9 +14,10 @@ tags:
 slug: "ai-gateways-field-guide"
 draft: false
 ---
-> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/ai-gateways-field-guide/).
 
 The most useful thing my terminal agent ever did happened while I was nowhere near a terminal. I was in line at an airport, a build had failed, and I sent a message from my phone: "check why the release job failed and tell me if it is the flaky test again." Four minutes later I had the answer and a proposed fix waiting for my approval. The agent had not changed. What changed was that it heard me from somewhere other than a shell prompt.
+
+> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/ai-gateways-field-guide/).
 
 That capability has a name now. An AI gateway is a long-running process that connects one agent to the messaging platforms you already use, routes each incoming message to the right session, enforces who is allowed to talk to it, and delivers the reply back where the message came from. Hermes Agent calls it the gateway. OpenClaw calls it the Gateway with a capital G. My own Loro and MagAgent harnesses have one each. The architecture is the same in every case, and so are the failure modes.
 
@@ -40,7 +41,7 @@ That separation is why one gateway can serve many platforms at once. Hermes list
 
 ## The Two Gateways Everyone Compares
 
-Hermes Agent and OpenClaw are the two open-source gateways with the most users, and they are related. OpenClaw started as Clawdbot in November 2025, was renamed twice after a trademark notice, and is now developed by the OpenClaw Foundation, a non-profit. Its creator joined OpenAI in February 2026. Hermes Agent, from Nous Research, is widely described as OpenClaw's spiritual successor, ships a `hermes claw migrate` command that imports OpenClaw settings, memories, skills, and API keys, and passed 100,000 GitHub stars this year.
+Hermes Agent and OpenClaw are the two open-source gateways with the most users, and they are related. OpenClaw started as Clawdbot in November 2025, was renamed twice after a trademark notice, and is now developed by the OpenClaw Foundation, a non-profit. Its creator joined OpenAI in February 2026. Hermes Agent, from Nous Research, is widely described as OpenClaw's spiritual successor, ships a `hermes claw migrate` command that imports OpenClaw settings, memories, skills, and API keys, and passed 100, 000 GitHub stars this year.
 
 **Hermes** is Python. One install command, then `hermes gateway setup` walks you through each platform with arrow-key selection, and `hermes gateway install` registers it as a systemd user service on Linux or a launchd agent on macOS. Configuration lives in `~/.hermes/.env` for secrets and `~/.hermes/config.yaml` for behavior. Every platform gets the same session model, the same slash commands, and the same access-control pattern. The design goal is one process that does everything, and it shows: voice transcription, cron delivery, per-channel model overrides, background sessions, a delivery ledger that redelivers replies lost in a crash, and a circuit breaker per platform adapter all live in the gateway.
 
@@ -59,8 +60,8 @@ The setup is a conversation with a bot. Open Telegram, message `@BotFather`, sen
 In Hermes:
 
 ```bash
-hermes gateway setup        # pick Telegram, paste the token, set allowed users
-hermes gateway install      # register as a service
+hermes gateway setup # pick Telegram, paste the token, set allowed users
+hermes gateway install # register as a service
 hermes gateway start
 ```
 
@@ -75,13 +76,11 @@ In OpenClaw, the equivalent is a block in the JSON config:
 
 ```json
 {
-  "channels": {
-    "telegram": {
-      "enabled": true,
-      "botToken": "123456789:AAH...",
-      "dmPolicy": "pairing"
-    }
-  }
+ "channels": {
+ "telegram": {
+ "enabled": true, "botToken": "123456789:AAH...", "dmPolicy": "pairing"
+ }
+ }
 }
 ```
 
@@ -110,15 +109,15 @@ That per-channel override is the feature that makes Discord a good team surface.
 
 ```yaml
 platforms:
-  discord:
-    enabled: true
-    channel_overrides:
-      "123456789012345678":
-        model: anthropic/claude-sonnet-4.6
-        provider: anthropic
-        system_prompt: "You are the #dev channel code-review specialist."
-      "987654321098765432":
-        model: openai/gpt-5-mini
+ discord:
+ enabled: true
+ channel_overrides:
+ "123456789012345678":
+ model: anthropic/claude-sonnet-4.6
+ provider: anthropic
+ system_prompt: "You are the #dev channel code-review specialist."
+ "987654321098765432":
+ model: openai/gpt-5-mini
 ```
 
 A user running `/model` in a chat still wins over the channel default, and the override is injected per turn rather than stored in history.
@@ -143,14 +142,11 @@ OpenClaw's block wants both keys too:
 
 ```json
 {
-  "channels": {
-    "slack": {
-      "enabled": true,
-      "botToken": "xoxb-...",
-      "appToken": "xapp-...",
-      "dmPolicy": "pairing"
-    }
-  }
+ "channels": {
+ "slack": {
+ "enabled": true, "botToken": "xoxb-...", "appToken": "xapp-...", "dmPolicy": "pairing"
+ }
+ }
 }
 ```
 
@@ -175,7 +171,7 @@ brew install signal-cli
 signal-cli link -n "HermesAgent"
 
 # Run the daemon with your number in E.164 format
-signal-cli --account +1234567890 daemon --http 127.0.0.1:8080
+signal-cli -account +1234567890 daemon -http 127.0.0.1:8080
 
 # Confirm it is up
 curl http://127.0.0.1:8080/api/v1/check
@@ -186,7 +182,7 @@ Then point the gateway at the daemon:
 ```bash
 SIGNAL_HTTP_URL=http://127.0.0.1:8080
 SIGNAL_ACCOUNT=+1234567890
-SIGNAL_ALLOWED_USERS=+1234567890,+0987654321
+SIGNAL_ALLOWED_USERS=+1234567890, +0987654321
 ```
 
 Four things make this harder than the others. You need Java 17 or newer. signal-cli is not in apt or snap, so on Linux you download a release tarball from GitHub. The daemon is a second long-running process that has to be kept alive alongside the gateway, so you end up with two systemd units instead of one. And the linked-device session data in `~/.local/share/signal-cli/` is an account credential, which the Hermes docs tell you to protect like a password, because it is one.
@@ -210,12 +206,12 @@ npm install -g @microsoft/teams.cli@preview
 teams login
 
 # Expose the local port during development
-devtunnel create hermes-bot --allow-anonymous
-devtunnel port create hermes-bot -p 3978 --protocol http
+devtunnel create hermes-bot -allow-anonymous
+devtunnel port create hermes-bot -p 3978 -protocol http
 devtunnel host hermes-bot
 
 # Register the bot against the tunnel URL
-teams app create --name "Hermes" --endpoint "https://<tunnel-url>/api/messages"
+teams app create -name "Hermes" -endpoint "https://<tunnel-url>/api/messages"
 ```
 
 The CLI prints a client ID, client secret, and tenant ID, plus an install link. Save the secret. It is not shown again.
@@ -227,7 +223,7 @@ TEAMS_TENANT_ID=<tenant-id>
 TEAMS_ALLOWED_USERS=<aad-object-id>
 ```
 
-`TEAMS_ALLOWED_USERS` takes Azure AD object IDs, which `teams status --verbose` prints for your own account. Then `hermes gateway restart`, confirm `curl http://localhost:3978/health` returns `ok`, and install the app from the link with `teams app get <appId> --install-link`. Hermes lazy-installs the Teams SDK into its own virtual environment on first start. Do not use the system `pip` on Ubuntu 24.04, because it refuses under PEP 668 and does not touch the service's environment anyway.
+`TEAMS_ALLOWED_USERS` takes Azure AD object IDs, which `teams status -verbose` prints for your own account. Then `hermes gateway restart`, confirm `curl http://localhost:3978/health` returns `ok`, and install the app from the link with `teams app get <appId> -install-link`. Hermes lazy-installs the Teams SDK into its own virtual environment on first start. Do not use the system `pip` on Ubuntu 24.04, because it refuses under PEP 668 and does not touch the service's environment anyway.
 
 In OpenClaw, Teams is an installable plugin rather than core, and pairing is supported through the `msteams` channel.
 
@@ -240,7 +236,7 @@ The tradeoffs are the public endpoint, the tenant admin approval to install the 
 Here is the whole thing in one table, with my ranking of setup difficulty from one (easiest) to five.
 
 | | Telegram | Discord | Slack | Signal | Teams |
-|---|---|---|---|---|---|
+|--|--|--|--|--|--|
 | Setup difficulty | 1 | 2 | 3 | 5 | 4 |
 | Credential | One bot token from BotFather | Bot token plus Message Content intent | Bot token and app token, plus scopes | Linked device via signal-cli | Client ID, secret, tenant ID via Teams CLI |
 | Public endpoint needed | No | No | No (Socket Mode) | No | Yes, HTTPS with valid cert |
@@ -265,20 +261,15 @@ There are three layers, and a good gateway has all three.
 
 ```json
 {
-  "accessGroups": {
-    "operators": {
-      "type": "message.senders",
-      "members": {
-        "discord": ["discord:123456789012345678"],
-        "telegram": ["987654321"],
-        "whatsapp": ["+15551234567"]
-      }
-    }
-  },
-  "channels": {
-    "telegram": { "dmPolicy": "allowlist", "allowFrom": ["accessGroup:operators"] },
-    "whatsapp": { "groupPolicy": "allowlist", "groupAllowFrom": ["accessGroup:operators"] }
-  }
+ "accessGroups": {
+ "operators": {
+ "type": "message.senders", "members": {
+ "discord": ["discord:123456789012345678"], "telegram": ["987654321"], "whatsapp": ["+15551234567"]
+ }
+ }
+ }, "channels": {
+ "telegram": { "dmPolicy": "allowlist", "allowFrom": ["accessGroup:operators"] }, "whatsapp": { "groupPolicy": "allowlist", "groupAllowFrom": ["accessGroup:operators"] }
+ }
 }
 ```
 
@@ -302,8 +293,8 @@ MagAgent and Loro do the same thing with the Open Agent Profile (OAP), my draft 
 
 ```bash
 python -m pip install mag-agent
-magent configure                 # provider, model, and gateway tokens
-magent ui                        # local workspace with profile-backed bots
+magent configure # provider, model, and gateway tokens
+magent ui # local workspace with profile-backed bots
 ```
 
 MagAgent's gateway takes tasks from Slack, Discord, or Telegram and runs them against the same MagGraph memory the terminal uses, so a question asked from your phone gets the same project context as one asked at your desk.
@@ -313,10 +304,10 @@ The governed version is Loro. The gateway setup is its own wizard, and the crede
 ```bash
 python -m pip install "loro-agent[gateway]"
 loro configure
-loro setup identity              # who is allowed to be who
-loro setup approvals             # once, session, and deny prompts
-loro setup audit                 # hash-chained audit log
-loro get-started                 # reads the folder and recommends the next step
+loro setup identity # who is allowed to be who
+loro setup approvals # once, session, and deny prompts
+loro setup audit # hash-chained audit log
+loro get-started # reads the folder and recommends the next step
 ```
 
 The profile a gateway message hits is the same OAP file the terminal and the Web UI use, so when someone messages the release-notes bot from Teams, they get an agent that is structurally unable to publish, and the audit log records that the request came in over Teams under a mapped identity. That is the version of a gateway I run in a regulated environment, and it is why I built it. Hermes and OpenClaw are the version I run everywhere else.
@@ -339,7 +330,7 @@ Gateways fail differently from agents. An agent failure is a wrong answer. A gat
 
 **The forgotten allow-all.** Covered above. Audit for it monthly.
 
-**The public-endpoint drift.** Teams only. The tunnel URL changed, the bot's registered endpoint did not, and Teams shows "this bot is not responding." `teams app update --id <appId> --endpoint <new-url>`. Use a named devtunnel so the URL persists.
+**The public-endpoint drift.** Teams only. The tunnel URL changed, the bot's registered endpoint did not, and Teams shows "this bot is not responding." `teams app update -id <appId> -endpoint <new-url>`. Use a named devtunnel so the URL persists.
 
 ## Operating a Gateway
 
@@ -347,7 +338,7 @@ A few habits that separate a gateway that runs for months from one that needs ba
 
 **Run it as a service, not a shell.** `hermes gateway install` on Linux creates a systemd user unit. Enable lingering with `sudo loginctl enable-linger $USER` so it survives logout and starts at boot without root. On a headless VPS, prefer the user service plus linger over the system service, because a system service needs root for every restart, including the one at the end of `hermes update`. On macOS the same command creates a launchd agent, and the plist captures your PATH at install time, so re-run `hermes gateway install` after installing new tools like ffmpeg or a Node version.
 
-**Watch the logs where they actually are.** `journalctl --user -u hermes-gateway -f` on Linux, `tail -f ~/.hermes/logs/gateway.log` on macOS, `docker logs -f hermes` in Docker. Phone numbers are redacted in Hermes logs by default, and `display.tool_progress: log` writes every tool call to a rotating audit file with secrets redacted, which is the right setting for a shared bot where you want a trail without chat noise.
+**Watch the logs where they actually are.** `journalctl -user -u hermes-gateway -f` on Linux, `tail -f ~/.hermes/logs/gateway.log` on macOS, `docker logs -f hermes` in Docker. Phone numbers are redacted in Hermes logs by default, and `display.tool_progress: log` writes every tool call to a rotating audit file with secrets redacted, which is the right setting for a shared bot where you want a trail without chat noise.
 
 **Set a home channel per platform.** `SIGNAL_HOME_CHANNEL`, `TEAMS_HOME_CHANNEL`, `home_chat_id` under each platform in Hermes. It is where cron jobs deliver, where restart notifications land, and where the circuit breaker reports. Turn `gateway_restart_notification` off on noisy platforms and leave it on for your primary one.
 

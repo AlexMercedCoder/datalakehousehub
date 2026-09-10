@@ -13,16 +13,17 @@ draft: false
 image: "/images/blog.png"
 canonical: "https://iceberglakehouse.com/posts/2025-06-AWS-Instance-Types/"
 ---
-> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2025-06-AWS-Instance-Types/).
 
 ## Free Resources  
-- **[Free Apache Iceberg Course](https://hello.dremio.com/webcast-an-apache-iceberg-lakehouse-crash-course-reg.html?utm_source=ev_external_blog&utm_medium=influencer&utm_campaign=intro_to_de&utm_content=alexmerced&utm_term=external_blog)**  
-- **[Free Copy of “Apache Iceberg: The Definitive Guide”](https://hello.dremio.com/wp-apache-iceberg-the-definitive-guide-reg.html?utm_source=ev_external_blog&utm_medium=influencer&utm_campaign=intro_to_de&utm_content=alexmerced&utm_term=external_blog)**  
-- **[Free Copy of “Apache Polaris: The Definitive Guide”](https://hello.dremio.com/wp-apache-polaris-guide-reg.html?utm_source=ev_external_blog&utm_medium=influencer&utm_campaign=intro_to_de&utm_content=alexmerced&utm_term=external_blog)**  
-- **[2025 Apache Iceberg Architecture Guide](https://medium.com/data-engineering-with-dremio/2025-guide-to-architecting-an-iceberg-lakehouse-9b19ed42c9de)**  
-- **[How to Join the Iceberg Community](https://medium.alexmerced.blog/guide-to-finding-apache-iceberg-events-near-you-and-being-part-of-the-greater-iceberg-community-0c38ae785ddb)**  
-- **[Iceberg Lakehouse Engineering Video Playlist](https://youtube.com/playlist?list=PLsLAVBjQJO0p0Yq1fLkoHvt2lEJj5pcYe&si=WTSnqjXZv6Glkc3y)**  
-- **[Ultimate Apache Iceberg Resource Guide](https://medium.com/data-engineering-with-dremio/ultimate-directory-of-apache-iceberg-resources-e3e02efac62e)** 
+- **[Free Apache Iceberg Course](https://hello.dremio.com/webcast-an-apache-iceberg-lakehouse-crash-course-reg.html?utm_source=ev_external_blog&utm_medium=influencer&utm_campaign=intro_to_de&utm_content=alexmerced&utm_term=external_blog)** 
+- **[Free Copy of “Apache Iceberg: The Definitive Guide”](https://hello.dremio.com/wp-apache-iceberg-the-definitive-guide-reg.html?utm_source=ev_external_blog&utm_medium=influencer&utm_campaign=intro_to_de&utm_content=alexmerced&utm_term=external_blog)** 
+- **[Free Copy of “Apache Polaris: The Definitive Guide”](https://hello.dremio.com/wp-apache-polaris-guide-reg.html?utm_source=ev_external_blog&utm_medium=influencer&utm_campaign=intro_to_de&utm_content=alexmerced&utm_term=external_blog)** 
+- **[2025 Apache Iceberg Architecture Guide](https://medium.com/data-engineering-with-dremio/2025-guide-to-architecting-an-iceberg-lakehouse-9b19ed42c9de)** 
+- **[How to Join the Iceberg Community](https://medium.alexmerced.blog/guide-to-finding-apache-iceberg-events-near-you-and-being-part-of-the-greater-iceberg-community-0c38ae785ddb)** 
+- **[Iceberg Lakehouse Engineering Video Playlist](https://youtube.com/playlist?list=PLsLAVBjQJO0p0Yq1fLkoHvt2lEJj5pcYe&si=WTSnqjXZv6Glkc3y)** 
+- **[Ultimate Apache Iceberg Resource Guide](https://medium.com/data-engineering-with-dremio/ultimate-directory-of-apache-iceberg-resources-e3e02efac62e)**
+
+> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2025-06-AWS-Instance-Types/).
 
 
 ## Introduction
@@ -52,27 +53,27 @@ By understanding what each segment means, you can quickly assess whether an inst
 
 In the sections below, we’ll walk through each part of the name in more detail.
 
-## Family – What Is the Instance Optimized For?
+## Family - What Is the Instance Optimized For?
 
 The first letter (or set of letters) in an instance type indicates the **instance family**, which tells you what the instance is optimized for. This helps guide your choice based on the nature of your workload - whether you need general-purpose performance, high CPU, large memory, or GPU acceleration.
 
 Here’s a quick overview of the most common instance families:
 
-| Family | Description                        | Common Use Cases                             |
-|--------|------------------------------------|----------------------------------------------|
-| `t`    | Burstable general purpose          | Development, low-traffic websites            |
-| `m`    | General purpose                    | Balanced CPU and memory workloads            |
-| `c`    | Compute optimized                  | High-performance computing, batch processing |
-| `r`    | Memory optimized                   | In-memory databases, real-time analytics     |
-| `x`    | Extra memory optimized             | SAP HANA, memory-intensive enterprise apps   |
-| `i`    | Storage optimized (high IOPS)      | NoSQL databases, large transactional systems |
-| `g`    | GPU instances                      | Machine learning, video rendering            |
-| `p`    | High-performance GPU               | Deep learning training, scientific modeling  |
-| `h`, `d`, `z` | Specialized families        | Varies (HPC, local storage, high-frequency)  |
+| Family | Description | Common Use Cases |
+|----|------------------|-----------------------|
+| `t` | Burstable general purpose | Development, low-traffic websites |
+| `m` | General purpose | Balanced CPU and memory workloads |
+| `c` | Compute optimized | High-performance computing, batch processing |
+| `r` | Memory optimized | In-memory databases, real-time analytics |
+| `x` | Extra memory optimized | SAP HANA, memory-intensive enterprise apps |
+| `i` | Storage optimized (high IOPS) | NoSQL databases, large transactional systems |
+| `g` | GPU instances | Machine learning, video rendering |
+| `p` | High-performance GPU | Deep learning training, scientific modeling |
+| `h`, `d`, `z` | Specialized families | Varies (HPC, local storage, high-frequency) |
 
 Understanding the family is the first step in selecting the right instance. For example, if your application is CPU-bound, a `c` family instance will typically deliver better performance per dollar than an `m` or `t` instance.
 
-## Generation – How New Is the Hardware?
+## Generation - How New Is the Hardware?
 
 The number immediately following the family letter represents the **generation** of the instance. AWS continuously improves its infrastructure, and newer generations typically offer better performance, energy efficiency, and cost-effectiveness compared to older ones.
 
@@ -89,20 +90,20 @@ Choosing a newer generation instance usually means access to:
 
 That said, not all regions have the latest generation available. Always check your region’s instance offerings and benchmark critical workloads if performance is a top priority.
 
-## Suffix – Special Chips or Capabilities
+## Suffix - Special Chips or Capabilities
 
 Some instance types include an optional **suffix**: a letter (or combination of letters) that provides additional detail about the instance’s hardware or features. These suffixes appear immediately after the generation number and can help you identify special variants optimized for particular use cases.
 
 ### Common Suffixes and What They Mean:
 
-| Suffix | Meaning                                 | Description                                             |
-|--------|------------------------------------------|---------------------------------------------------------|
-| `a`    | AMD EPYC processor                       | Cost-effective alternative to Intel-based instances     |
-| `g`    | AWS Graviton processor (ARM-based)       | Energy-efficient, high performance, lower cost          |
-| `n`    | Network-optimized                        | Enhanced network bandwidth and performance              |
-| `d`    | Includes local NVMe storage              | Fast local instance storage for low-latency workloads   |
-| `e`    | Extended memory or enhanced features     | More memory or improved capabilities per vCPU           |
-| `z`    | High-frequency Intel CPUs                | For workloads that need very high clock speed           |
+| Suffix | Meaning | Description |
+|----|---------------------|-----------------------------|
+| `a` | AMD EPYC processor | Cost-effective alternative to Intel-based instances |
+| `g` | AWS Graviton processor (ARM-based) | Energy-efficient, high performance, lower cost |
+| `n` | Network-optimized | Enhanced network bandwidth and performance |
+| `d` | Includes local NVMe storage | Fast local instance storage for low-latency workloads |
+| `e` | Extended memory or enhanced features | More memory or improved capabilities per vCPU |
+| `z` | High-frequency Intel CPUs | For workloads that need very high clock speed |
 
 ### Example:
 - `r6a` → Memory optimized (r), 6th generation, AMD processor (a)
@@ -111,26 +112,26 @@ Some instance types include an optional **suffix**: a letter (or combination of 
 
 These suffixes allow you to fine-tune your instance selection based on price, performance, or architecture preferences - especially important if your software is architecture-sensitive (e.g., x86 vs ARM).
 
-## Size – How Big Is the Instance?
+## Size - How Big Is the Instance?
 
 The part of the instance type that comes **after the period (`.`)** defines the **size** of the instance. This determines how many vCPUs, how much memory, and sometimes how much networking or storage bandwidth is allocated.
 
 AWS uses consistent naming for sizes across instance families:
 
-| Size         | Description                 | Typical vCPUs | Notes                              |
-|--------------|-----------------------------|---------------|------------------------------------|
-| `.nano`      | Very small                  | 1             | For ultra-light workloads          |
-| `.micro`     | Small                       | 1             | Entry-level, burstable performance |
-| `.small`     | Modest                      | 1–2           | Slightly more consistent CPU       |
-| `.medium`    | Standard                    | 1–2           | Balanced for small apps            |
-| `.large`     | 2x baseline                 | 2             | Common for dev/test workloads      |
-| `.xlarge`    | 4x baseline                 | 4             | Heavier compute or memory needs    |
-| `.2xlarge`   | 8x baseline                 | 8             | Medium to large production loads   |
-| `.4xlarge`   | 16x baseline                | 16            | High-capacity apps                 |
-| `.8xlarge`   | 32x baseline                | 32            | Data processing, analytics         |
-| `.12xlarge`  | 48x baseline                | 48            | High-scale enterprise workloads    |
-| `.24xlarge`  | 96x baseline                | 96            | Very high-performance computing    |
-| `.metal`     | Bare metal (no hypervisor) | Varies        | Full access to physical server     |
+| Size | Description | Typical vCPUs | Notes |
+|-------|---------------|--------|------------------|
+| `.nano` | Very small | 1 | For ultra-light workloads |
+| `.micro` | Small | 1 | Entry-level, burstable performance |
+| `.small` | Modest | 1-2 | Slightly more consistent CPU |
+| `.medium` | Standard | 1-2 | Balanced for small apps |
+| `.large` | 2x baseline | 2 | Common for dev/test workloads |
+| `.xlarge` | 4x baseline | 4 | Heavier compute or memory needs |
+| `.2xlarge` | 8x baseline | 8 | Medium to large production loads |
+| `.4xlarge` | 16x baseline | 16 | High-capacity apps |
+| `.8xlarge` | 32x baseline | 32 | Data processing, analytics |
+| `.12xlarge` | 48x baseline | 48 | High-scale enterprise workloads |
+| `.24xlarge` | 96x baseline | 96 | Very high-performance computing |
+| `.metal` | Bare metal (no hypervisor) | Varies | Full access to physical server |
 
 ### Example:
 - `m5.large` = General-purpose instance, 5th generation, with 2 vCPUs and 8 GB memory.
@@ -152,7 +153,7 @@ Let’s break down a few examples to reinforce what you’ve learned:
 
 **Use case:** Great for compute-heavy applications running on ARM, like containerized services or microservices at scale.
 
----
+--
 
 ### 🔹 Example 2: `r5d.4xlarge`
 - `r` → Memory optimized
@@ -162,7 +163,7 @@ Let’s break down a few examples to reinforce what you’ve learned:
 
 **Use case:** Ideal for high-throughput, in-memory databases or data processing that benefits from fast local storage.
 
----
+--
 
 ### 🔹 Example 3: `m7a.xlarge`
 - `m` → General purpose
@@ -172,7 +173,6 @@ Let’s break down a few examples to reinforce what you’ve learned:
 
 **Use case:** Balanced workloads where cost-effectiveness is important, such as web applications or business logic layers.
 
----
+--
 
 Understanding how to read these names makes it easier to compare instance types, choose the best fit for your application, and avoid over-provisioning. You’ll save money, optimize performance, and build with more confidence on AWS.
-

@@ -12,12 +12,14 @@ slug: "iceberg-v3-variant-type-ai-json-payloads"
 draft: false
 image: "/images/blog.png"
 canonical: https://iceberglakehouse.com/posts/iceberg-v3-variant-type-ai-json-payloads/
+description: "AI applications are messy data producers. They create prompts, completions, tool calls, retrieval traces, ranking signals, evaluation scores, safety."
 ---
-> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/iceberg-v3-variant-type-ai-json-payloads/).
 
 # Mapping the Variant Type in Iceberg v3: Standardizing Semi-Structured AI JSON Payloads
 
 AI applications are messy data producers. They create prompts, completions, tool calls, retrieval traces, ranking signals, evaluation scores, safety annotations, user feedback, latency metrics, and error payloads. Some of that data is stable enough to deserve clean columns on day one. Much of it is not.
+
+> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/iceberg-v3-variant-type-ai-json-payloads/).
 
 That tension is exactly why semi-structured data support matters in the lakehouse. Teams want the freedom to capture evolving AI payloads without stopping every release for a schema migration. They also need the discipline to turn the parts that matter into governed, queryable, trusted data products. If everything stays as raw JSON forever, analytics becomes guesswork. If everything has to be modeled before it lands, AI teams move faster than the data platform can keep up.
 

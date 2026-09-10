@@ -14,7 +14,6 @@ tags:
   - SQL
   - Database
 ---
-
 [Subscribe to my Data Youtube Channel and Podcasts, Links Here](https://bio.alexmerced.com/data)
 
 [Subscribe to my web development youtube channel and podcasts here](https://bio.alexmerced.com/web)
@@ -41,11 +40,7 @@ The foundation of any database operation begins with its structure, and this is 
 
 ```sql
 CREATE TABLE employees (
-    employee_id INT PRIMARY KEY,
-    name VARCHAR(100),
-    position VARCHAR(100),
-    department VARCHAR(50),
-    salary DECIMAL(10, 2)
+ employee_id INT PRIMARY KEY, name VARCHAR(100), position VARCHAR(100), department VARCHAR(50), salary DECIMAL(10, 2)
 );
 ```
 
@@ -193,7 +188,7 @@ GROUP BY department
 HAVING AVG(salary) > 60000;
 ```
 
-This query returns only those departments where the average salary is greater than 60,000, illustrating how HAVING complements GROUP BY by enabling conditional aggregation.
+This query returns only those departments where the average salary is greater than 60, 000, illustrating how HAVING complements GROUP BY by enabling conditional aggregation.
 
 Aggregation functions are indispensable in SQL for summarizing data, allowing for complex analyses and insights into the underlying data patterns. Whether you're calculating simple averages or segmenting data into groups for detailed comparisons, understanding and utilizing these functions will significantly enhance your data analysis capabilities. The next section will explore joins, another critical aspect of SQL for combining data from multiple tables.
 
@@ -291,9 +286,9 @@ Unions are particularly useful in scenarios where data is segmented across simil
 
 ```sql
 SELECT * FROM (
-  SELECT name FROM employees
-  UNION
-  SELECT name FROM contractors
+ SELECT name FROM employees
+ UNION
+ SELECT name FROM contractors
 ) AS combined_names
 ORDER BY name
 LIMIT 10;
@@ -311,9 +306,9 @@ A CTE is defined using the WITH clause followed by the CTE name, an optional col
 
 ```sql
 WITH CteName (column1, column2, ...) AS (
-    SELECT column1, column2, ...
-    FROM table_name
-    WHERE condition
+ SELECT column1, column2, ...
+ FROM table_name
+ WHERE condition
 )
 SELECT * FROM CteName;
 ```
@@ -323,9 +318,9 @@ Let's look at a simple example to understand how CTEs work:
 
 ```sql
 WITH DepartmentSalaries AS (
-    SELECT department_id, AVG(salary) AS average_salary
-    FROM employees
-    GROUP BY department_id
+ SELECT department_id, AVG(salary) AS average_salary
+ FROM employees
+ GROUP BY department_id
 )
 SELECT departments.department_name, DepartmentSalaries.average_salary
 FROM departments
@@ -340,16 +335,14 @@ Recursive CTEs are a powerful feature that allows you to perform recursive opera
 **A recursive CTE consists of two parts:** the anchor member (the initial query that returns the base result set) and the recursive member (the query that references the CTE and adds to the result set). The UNION or UNION ALL operator is used to combine these two parts.
 
 ```sql
-WITH RECURSIVE CteName AS (
-    -- Anchor member
-    SELECT column1, column2
-    FROM table_name
-    WHERE condition
-    UNION ALL
-    -- Recursive member
-    SELECT t.column1, t.column2
-    FROM table_name t
-    INNER JOIN CteName c ON t.parent_column = c.column1
+WITH RECURSIVE CteName AS (, Anchor member
+ SELECT column1, column2
+ FROM table_name
+ WHERE condition
+ UNION ALL, Recursive member
+ SELECT t.column1, t.column2
+ FROM table_name t
+ INNER JOIN CteName c ON t.parent_column = c.column1
 )
 SELECT * FROM CteName;
 ```
@@ -380,8 +373,7 @@ Framing: Specifies the subset of rows within the partition to be considered for 
 Ranking functions: Such as ROW_NUMBER(), RANK(), DENSE_RANK(), and NTILE(), are used for assigning ranks to rows within a partition.
 
 ```sql
-SELECT name, salary, 
-       ROW_NUMBER() OVER (ORDER BY salary DESC) as rank
+SELECT name, salary, ROW_NUMBER() OVER (ORDER BY salary DESC) as rank
 FROM employees;
 ```
 
@@ -390,8 +382,7 @@ This query assigns a unique rank to each employee based on their salary, with th
 **Analytic functions:** Such as LEAD(), LAG(), FIRST_VALUE(), LAST_VALUE(), allow for comparisons between rows within a partition.
 
 ```sql
-SELECT name, salary, 
-       LEAD(salary) OVER (ORDER BY salary DESC) as next_higher_salary
+SELECT name, salary, LEAD(salary) OVER (ORDER BY salary DESC) as next_higher_salary
 FROM employees;
 ```
 
@@ -400,8 +391,7 @@ This returns each employee's salary and the salary of the next higher-paid emplo
 **Aggregate functions:** Standard aggregate functions like SUM(), AVG(), MIN(), MAX() can also be used as window functions with the OVER() clause.
 
 ```sql
-SELECT name, department_id, salary,
-       SUM(salary) OVER (PARTITION BY department_id) as department_salary_total
+SELECT name, department_id, salary, SUM(salary) OVER (PARTITION BY department_id) as department_salary_total
 FROM employees;
 ```
 

@@ -2,6 +2,7 @@
 title: "Apache Iceberg vs Delta Lake vs Apache Hudi"
 meta_title: "Iceberg vs Delta Lake vs Hudi | Open Table Formats Compared"
 description: "A deep technical comparison of the big three Open Table Formats. Evaluate the write paths, concurrency models, and ecosystem interoperability."
+canonical: "https://iceberglakehouse.com/apache-iceberg-vs-delta-lake-vs-hudi/"
 ---
 
 # Apache Iceberg vs Delta Lake vs Apache Hudi

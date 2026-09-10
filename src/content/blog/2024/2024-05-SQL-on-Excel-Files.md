@@ -12,7 +12,6 @@ tags:
   - Apache Iceberg
   - Data Lakehouse
 ---
-
 Being able to quickly analyze and gain insights from your data is crucial. Excel is widely used for data storage, but when it comes to complex queries and analytics, SQL is often the preferred tool. [Dremio, a data lakehouse platform](https://www.dremio.com/solutions/data-lakehouse/), bridges this gap by allowing you to run SQL queries directly on your Excel files without extensive setup. In this tutorial, I'll guide you through setting up Dremio in a Docker container on your laptop and running SQL queries on an Excel file.
 
 ## Step 1: Setting Up Dremio Using Docker
@@ -20,7 +19,7 @@ Being able to quickly analyze and gain insights from your data is crucial. Excel
 To get started, you need to run Dremio on your machine using Docker. This approach ensures that the setup is isolated and does not interfere with other software on your system. Here’s the Docker command to start the Dremio server:
 
 ```bash
-docker run -p 9047:9047 -p 31010:31010 -p 45678:45678 -p 32010:32010 -e DREMIO_JAVA_SERVER_EXTRA_OPTS=-Dpaths.dist=file:///opt/dremio/data/dist --name try-dremio dremio/dremio-oss
+docker run -p 9047:9047 -p 31010:31010 -p 45678:45678 -p 32010:32010 -e DREMIO_JAVA_SERVER_EXTRA_OPTS=-Dpaths.dist=file:///opt/dremio/data/dist -name try-dremio dremio/dremio-oss
 ```
 
 This command sets up the necessary port mappings and environment variables for Dremio to operate correctly.

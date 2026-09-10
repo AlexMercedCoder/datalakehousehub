@@ -10,6 +10,7 @@ const knowledgebaseCollection = defineCollection({
     description: z.string().optional(),
     image: z.string().optional(),
     draft: z.boolean().optional(),
+    canonical: z.string().optional(),
   }),
 });
 
@@ -101,6 +102,7 @@ const pagesCollection = defineCollection({
     layout: z.string().optional(),
     noindex: z.boolean().optional(),
     draft: z.boolean().optional(),
+    canonical: z.string().optional(),
   }),
 });
 

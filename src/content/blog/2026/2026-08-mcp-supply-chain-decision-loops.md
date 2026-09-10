@@ -1,7 +1,7 @@
 ---
 title: "Moving From Supply Chain Dashboards to Decision Loops With the Model Context Protocol"
 date: 2026-08-04T09:00:00Z
-description: "Moving from supply chain dashboards to decision loops with MCP: sense, decide, act, and verify, with typed action tools, idempotency keys, and graduated human approval."
+description: "Moving from supply chain dashboards to decision loops with MCP: sense, decide, act, and verify, with typed action tools, idempotency keys, and graduated."
 author: "Alex Merced"
 category: "AI & Agents"
 tags:
@@ -16,11 +16,11 @@ image: "/images/blog.png"
 canonical: "https://iceberglakehouse.com/posts/mcp-supply-chain-decision-loops/"
 ---
 
-> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/mcp-supply-chain-decision-loops/).
-
 # Moving From Supply Chain Dashboards to Decision Loops With the Model Context Protocol
 
 *By Alex Merced, Data Lakehouse and AI Evangelist*
+
+> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/mcp-supply-chain-decision-loops/).
 
 A supply chain control tower shows a red tile. A supplier's on-time delivery rate dropped below threshold four days ago. The tile has been red for four days because the planner who owns that category has been in meetings, and the alert email went to a distribution list with two hundred people on it.
 
@@ -80,21 +80,12 @@ Signals themselves belong in an Iceberg table too. That gives you a queryable hi
 
 ```sql
 CREATE TABLE ops.signals.supply_conditions (
-    signal_id        STRING,
-    condition_type   STRING,
-    entity_type      STRING,
-    entity_id        STRING,
-    severity         STRING,
-    detected_at      TIMESTAMP,
-    trigger_values   VARIANT,
-    disposition      STRING
+ signal_id STRING, condition_type STRING, entity_type STRING, entity_id STRING, severity STRING, detected_at TIMESTAMP, trigger_values VARIANT, disposition STRING
 )
 USING iceberg
 PARTITIONED BY (days(detected_at))
 TBLPROPERTIES (
-    'format-version'      = '3',
-    'write.delete.mode'   = 'merge-on-read',
-    'write.update.mode'   = 'merge-on-read'
+ 'format-version' = '3', 'write.delete.mode' = 'merge-on-read', 'write.update.mode' = 'merge-on-read'
 );
 ```
 
@@ -114,23 +105,11 @@ Here is what a well-designed action tool looks like.
 
 ```json
 {
-  "name": "create_replenishment_request",
-  "description": "Create a replenishment request for review. Does not place a purchase order. Requires human approval before the request becomes an order.",
-  "inputSchema": {
-    "type": "object",
-    "properties": {
-      "sku":              { "type": "string" },
-      "destination_site": { "type": "string" },
-      "quantity":         { "type": "integer", "minimum": 1, "maximum": 5000 },
-      "supplier_id":      { "type": "string" },
-      "need_by_date":     { "type": "string", "format": "date" },
-      "rationale":        { "type": "string", "minLength": 50 },
-      "signal_id":        { "type": "string" },
-      "idempotency_key":  { "type": "string" }
-    },
-    "required": ["sku", "destination_site", "quantity", "supplier_id",
-                 "rationale", "signal_id", "idempotency_key"]
-  }
+ "name": "create_replenishment_request", "description": "Create a replenishment request for review. Does not place a purchase order. Requires human approval before the request becomes an order.", "inputSchema": {
+ "type": "object", "properties": {
+ "sku": { "type": "string" }, "destination_site": { "type": "string" }, "quantity": { "type": "integer", "minimum": 1, "maximum": 5000 }, "supplier_id": { "type": "string" }, "need_by_date": { "type": "string", "format": "date" }, "rationale": { "type": "string", "minLength": 50 }, "signal_id": { "type": "string" }, "idempotency_key": { "type": "string" }
+ }, "required": ["sku", "destination_site", "quantity", "supplier_id", "rationale", "signal_id", "idempotency_key"]
+ }
 }
 ```
 
@@ -155,7 +134,7 @@ The autonomy question is the one every stakeholder asks first, and the right ans
 Sort actions along two axes: reversibility and blast radius.
 
 | Action character | Example | Autonomy level |
-|---|---|---|
+|--|--|--|
 | Reversible, narrow | Adjust a forecast, flag a record for review | Automatic, logged |
 | Reversible, wide | Reroute a shipment already in transit | Automatic with notification, easy override |
 | Irreversible, narrow | Release a small replenishment within contract terms | Approval by exception, auto-approve under threshold |
@@ -181,17 +160,12 @@ Design verification as its own scheduled check reading the signals table.
 
 ```sql
 SELECT
-    s.signal_id,
-    s.entity_id,
-    s.detected_at,
-    a.action_type,
-    a.executed_at,
-    a.expected_effect_by
+ s.signal_id, s.entity_id, s.detected_at, a.action_type, a.executed_at, a.expected_effect_by
 FROM ops.signals.supply_conditions s
 JOIN ops.signals.actions a
-  ON s.signal_id = a.signal_id
+ ON s.signal_id = a.signal_id
 WHERE a.verified_at IS NULL
-  AND a.expected_effect_by < current_timestamp
+ AND a.expected_effect_by < current_timestamp
 ORDER BY a.expected_effect_by;
 ```
 

@@ -2,6 +2,7 @@
 title: "What is an Iceberg Manifest List?"
 meta_title: "What is an Iceberg Manifest List? | Expert Architecture Guide"
 description: "A comprehensive guide to the Iceberg Manifest List. Learn how this top-tier metadata file orchestrates entire Data Lakehouse snapshots for sub-second planning."
+canonical: "https://iceberglakehouse.com/iceberg/iceberg-manifest-list/"
 ---
 
 # What is an Iceberg Manifest List?

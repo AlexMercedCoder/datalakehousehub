@@ -14,9 +14,10 @@ tags:
 slug: "metric-contracts-code-multi-agent"
 draft: false
 ---
-> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/metric-contracts-code-multi-agent/).
 
 Three agents answer the same question on the same afternoon. A finance agent, asked for last quarter's net revenue, sums completed orders, subtracts refunds, and reports $41.2 million. A sales agent, asked the same thing by a regional director, sums completed orders and reports $43.8 million, because nobody told it about refunds. A board-deck agent pulls "revenue" from a dashboard's cached tile and reports $42.6 million, which was right two weeks ago. All three are confident. All three cite their sources. The CFO gets three numbers and has to decide which agent to believe.
+
+> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/metric-contracts-code-multi-agent/).
 
 That is metric drift, and it existed before agents. Dashboards drifted from each other for a decade. What agents change is the speed and the volume: an agent framework that spins up a dozen specialized agents, each generating its own SQL, produces a dozen slightly different definitions of every metric it touches, and it does so hundreds of times a day with no reconciliation meeting. Drift that used to surface quarterly now surfaces per conversation.
 
@@ -49,112 +50,96 @@ Here is the net revenue contract, in Ossie with a contract extension:
 ```yaml
 version: 0.2.0.dev0
 semantic_model:
-  - name: finance_core
-    description: Certified finance metrics. Changes require finance-data-owners approval.
+ - name: finance_core
+ description: Certified finance metrics. Changes require finance-data-owners approval.
 
-    datasets:
-      - name: orders
-        source: lake.sales.orders
-        primary_key: [order_id]
-        fields:
-          - name: order_id
-            expression: { dialects: [{ dialect: ANSI_SQL, expression: order_id }] }
-            datatype: String
-          - name: customer_id
-            expression: { dialects: [{ dialect: ANSI_SQL, expression: customer_id }] }
-            datatype: String
-          - name: order_date
-            expression: { dialects: [{ dialect: ANSI_SQL, expression: order_date }] }
-            datatype: Date
-            dimension: { is_time: true }
-          - name: status
-            expression: { dialects: [{ dialect: ANSI_SQL, expression: status }] }
-            datatype: String
-            dimension: {}
-          - name: is_test
-            expression: { dialects: [{ dialect: ANSI_SQL, expression: is_test }] }
-            datatype: Boolean
-          - name: amount_usd
-            expression: { dialects: [{ dialect: ANSI_SQL, expression: amount_usd }] }
-            datatype: Decimal
-          - name: refund_usd
-            expression: { dialects: [{ dialect: ANSI_SQL, expression: COALESCE(refund_usd, 0) }] }
-            datatype: Decimal
+ datasets:
+ - name: orders
+ source: lake.sales.orders
+ primary_key: [order_id]
+ fields:
+ - name: order_id
+ expression: { dialects: [{ dialect: ANSI_SQL, expression: order_id }] }
+ datatype: String
+ - name: customer_id
+ expression: { dialects: [{ dialect: ANSI_SQL, expression: customer_id }] }
+ datatype: String
+ - name: order_date
+ expression: { dialects: [{ dialect: ANSI_SQL, expression: order_date }] }
+ datatype: Date
+ dimension: { is_time: true }
+ - name: status
+ expression: { dialects: [{ dialect: ANSI_SQL, expression: status }] }
+ datatype: String
+ dimension: {}
+ - name: is_test
+ expression: { dialects: [{ dialect: ANSI_SQL, expression: is_test }] }
+ datatype: Boolean
+ - name: amount_usd
+ expression: { dialects: [{ dialect: ANSI_SQL, expression: amount_usd }] }
+ datatype: Decimal
+ - name: refund_usd
+ expression: { dialects: [{ dialect: ANSI_SQL, expression: COALESCE(refund_usd, 0) }] }
+ datatype: Decimal
 
-      - name: customers
-        source: lake.sales.customers
-        primary_key: [id]
-        fields:
-          - name: id
-            expression: { dialects: [{ dialect: ANSI_SQL, expression: id }] }
-            datatype: String
-          - name: segment
-            expression: { dialects: [{ dialect: ANSI_SQL, expression: segment }] }
-            datatype: String
-            dimension: {}
+ - name: customers
+ source: lake.sales.customers
+ primary_key: [id]
+ fields:
+ - name: id
+ expression: { dialects: [{ dialect: ANSI_SQL, expression: id }] }
+ datatype: String
+ - name: segment
+ expression: { dialects: [{ dialect: ANSI_SQL, expression: segment }] }
+ datatype: String
+ dimension: {}
 
-    relationships:
-      - name: orders_to_customers
-        from: orders
-        to: customers
-        from_columns: [customer_id]
-        to_columns: [id]
+ relationships:
+ - name: orders_to_customers
+ from: orders
+ to: customers
+ from_columns: [customer_id]
+ to_columns: [id]
 
-    metrics:
-      - name: net_revenue_usd
-        description: Completed, non-test order amounts minus refunds, in USD at order-date rate.
-        expression:
-          dialects:
-            - dialect: ANSI_SQL
-              expression: >
-                SUM(CASE WHEN orders.status = 'completed' AND NOT orders.is_test
-                         THEN orders.amount_usd - COALESCE(orders.refund_usd, 0) ELSE 0 END)
-        datatype: Decimal
-        ai_context:
-          synonyms: ["net revenue", "revenue", "net sales"]
-          examples: ["What was net revenue last quarter?", "Net revenue by segment for July"]
-          instructions: >
-            Always use this metric for revenue questions. Do not compute revenue from raw amount.
-        custom_extensions:
-          - vendor_name: ACME_CONTRACT
-            data: |
-              {
-                "contract_version": "2.1.0",
-                "grain": "order",
-                "time_anchor": "orders.order_date",
-                "time_zone": "UTC",
-                "additivity": {"time": "sum", "dimensions": "sum"},
-                "allowed_dimensions": ["customers.segment", "orders.status", "orders.order_date"],
-                "forbidden_dimensions": [],
-                "owner": "finance-data-owners",
-                "certified": true,
-                "certified_at": "2026-08-01",
-                "changelog": "2.1.0: refunds now COALESCE to 0 (was NULL-propagating)"
-              }
+ metrics:
+ - name: net_revenue_usd
+ description: Completed, non-test order amounts minus refunds, in USD at order-date rate.
+ expression:
+ dialects:
+ - dialect: ANSI_SQL
+ expression: >
+ SUM(CASE WHEN orders.status = 'completed' AND NOT orders.is_test
+ THEN orders.amount_usd - COALESCE(orders.refund_usd, 0) ELSE 0 END)
+ datatype: Decimal
+ ai_context:
+ synonyms: ["net revenue", "revenue", "net sales"]
+ examples: ["What was net revenue last quarter?", "Net revenue by segment for July"]
+ instructions: >
+ Always use this metric for revenue questions. Do not compute revenue from raw amount.
+ custom_extensions:
+ - vendor_name: ACME_CONTRACT
+ data: |
+ {
+ "contract_version": "2.1.0", "grain": "order", "time_anchor": "orders.order_date", "time_zone": "UTC", "additivity": {"time": "sum", "dimensions": "sum"}, "allowed_dimensions": ["customers.segment", "orders.status", "orders.order_date"], "forbidden_dimensions": [], "owner": "finance-data-owners", "certified": true, "certified_at": "2026-08-01", "changelog": "2.1.0: refunds now COALESCE to 0 (was NULL-propagating)"
+ }
 
-      - name: average_order_value_usd
-        description: Net revenue divided by completed non-test order count.
-        expression:
-          dialects:
-            - dialect: ANSI_SQL
-              expression: >
-                SUM(CASE WHEN orders.status = 'completed' AND NOT orders.is_test
-                         THEN orders.amount_usd - COALESCE(orders.refund_usd, 0) ELSE 0 END)
-                / NULLIF(COUNT(DISTINCT CASE WHEN orders.status = 'completed' AND NOT orders.is_test
-                                             THEN orders.order_id END), 0)
-        datatype: Decimal
-        custom_extensions:
-          - vendor_name: ACME_CONTRACT
-            data: |
-              {
-                "contract_version": "1.0.0",
-                "grain": "order",
-                "time_anchor": "orders.order_date",
-                "additivity": {"time": "recompute", "dimensions": "recompute"},
-                "allowed_dimensions": ["customers.segment", "orders.order_date"],
-                "owner": "finance-data-owners",
-                "certified": true
-              }
+ - name: average_order_value_usd
+ description: Net revenue divided by completed non-test order count.
+ expression:
+ dialects:
+ - dialect: ANSI_SQL
+ expression: >
+ SUM(CASE WHEN orders.status = 'completed' AND NOT orders.is_test
+ THEN orders.amount_usd - COALESCE(orders.refund_usd, 0) ELSE 0 END)
+ / NULLIF(COUNT(DISTINCT CASE WHEN orders.status = 'completed' AND NOT orders.is_test
+ THEN orders.order_id END), 0)
+ datatype: Decimal
+ custom_extensions:
+ - vendor_name: ACME_CONTRACT
+ data: |
+ {
+ "contract_version": "1.0.0", "grain": "order", "time_anchor": "orders.order_date", "additivity": {"time": "recompute", "dimensions": "recompute"}, "allowed_dimensions": ["customers.segment", "orders.order_date"], "owner": "finance-data-owners", "certified": true
+ }
 ```
 
 Three things about this structure.
@@ -190,95 +175,90 @@ CONTRACT_PATH = "contracts/finance_core.yaml"
 RELEASED_PATH = "contracts/released/finance_core.yaml"
 
 def load_model(path):
-    return yaml.safe_load(open(path))["semantic_model"][0]
+ return yaml.safe_load(open(path))["semantic_model"][0]
 
 def metric(model, name):
-    m = next(x for x in model["metrics"] if x["name"] == name)
-    ext = next(e for e in m["custom_extensions"] if e["vendor_name"] == "ACME_CONTRACT")
-    return m, json.loads(ext["data"])
+ m = next(x for x in model["metrics"] if x["name"] == name)
+ ext = next(e for e in m["custom_extensions"] if e["vendor_name"] == "ACME_CONTRACT")
+ return m, json.loads(ext["data"])
 
 def ansi(expr_obj):
-    return next(d["expression"] for d in expr_obj["dialects"] if d["dialect"] == "ANSI_SQL")
+ return next(d["expression"] for d in expr_obj["dialects"] if d["dialect"] == "ANSI_SQL")
 
 @pytest.fixture
 def con():
-    c = duckdb.connect()
-    c.execute("""
-        CREATE TABLE orders AS SELECT * FROM (VALUES
-          ('o1','c1',DATE '2026-07-03','completed',false, 100.00, NULL),
-          ('o2','c1',DATE '2026-07-15','completed',false, 250.00, 50.00),
-          ('o3','c2',DATE '2026-07-20','cancelled',false, 999.00, NULL),
-          ('o4','c2',DATE '2026-08-02','completed',true,  10.00, NULL),
-          ('o5','c3',DATE '2026-08-10','completed',false, 80.00, 80.00),
-          ('o6','c3',DATE '2026-09-01','completed',false, 120.00, NULL)
-        ) t(order_id, customer_id, order_date, status, is_test, amount_usd, refund_usd)
-    """)
-    c.execute("""
-        CREATE TABLE customers AS SELECT * FROM (VALUES
-          ('c1','enterprise'), ('c2','smb'), ('c3','smb')
-        ) t(id, segment)
-    """)
-    return c
+ c = duckdb.connect()
+ c.execute("""
+ CREATE TABLE orders AS SELECT * FROM (VALUES
+ ('o1', 'c1', DATE '2026-07-03', 'completed', false, 100.00, NULL), ('o2', 'c1', DATE '2026-07-15', 'completed', false, 250.00, 50.00), ('o3', 'c2', DATE '2026-07-20', 'cancelled', false, 999.00, NULL), ('o4', 'c2', DATE '2026-08-02', 'completed', true, 10.00, NULL), ('o5', 'c3', DATE '2026-08-10', 'completed', false, 80.00, 80.00), ('o6', 'c3', DATE '2026-09-01', 'completed', false, 120.00, NULL)
+ ) t(order_id, customer_id, order_date, status, is_test, amount_usd, refund_usd)
+ """)
+ c.execute("""
+ CREATE TABLE customers AS SELECT * FROM (VALUES
+ ('c1', 'enterprise'), ('c2', 'smb'), ('c3', 'smb')
+ ) t(id, segment)
+ """)
+ return c
 
 def run_metric(con, model, name, group_by=None, where=None):
-    m, _ = metric(model, name)
-    expr = ansi(m["expression"])
-    gb = f"GROUP BY {group_by}" if group_by else ""
-    sel = f"{group_by}, " if group_by else ""
-    wh = f"WHERE {where}" if where else ""
-    return con.execute(f"""
-        SELECT {sel}{expr} AS v
-        FROM orders JOIN customers ON orders.customer_id = customers.id
-        {wh} {gb}
-    """).fetchall()
+ m, _ = metric(model, name)
+ expr = ansi(m["expression"])
+ gb = f"GROUP BY {group_by}" if group_by else ""
+ sel = f"{group_by}, " if group_by else ""
+ wh = f"WHERE {where}" if where else ""
+ return con.execute(f"""
+ SELECT {sel}{expr} AS v
+ FROM orders JOIN customers ON orders.customer_id = customers.id
+ {wh} {gb}
+ """).fetchall()
 
 def test_net_revenue_fixture(con):
-    model = load_model(CONTRACT_PATH)
-    # o1: 100, o2: 250-50=200, o3 cancelled, o4 test, o5: 80-80=0, o6: 120  => 420
-    assert run_metric(con, model, "net_revenue_usd")[0][0] == Decimal("420.00")
+ model = load_model(CONTRACT_PATH)
+ # o1: 100, o2: 250-50=200, o3 cancelled, o4 test, o5: 80-80=0, o6: 120 => 420
+ assert run_metric(con, model, "net_revenue_usd")[0][0] == Decimal("420.00")
 
 def test_net_revenue_is_summable_over_time(con):
-    model = load_model(CONTRACT_PATH)
-    _, contract = metric(model, "net_revenue_usd")
-    assert contract["additivity"]["time"] == "sum"
-    monthly = run_metric(con, model, "net_revenue_usd", group_by="DATE_TRUNC('month', order_date)")
-    assert sum(v for _, v in monthly) == run_metric(con, model, "net_revenue_usd")[0][0]
+ model = load_model(CONTRACT_PATH)
+ _, contract = metric(model, "net_revenue_usd")
+ assert contract["additivity"]["time"] == "sum"
+ monthly = run_metric(con, model, "net_revenue_usd", group_by="DATE_TRUNC('month', order_date)")
+ assert sum(v for _, v in monthly) == run_metric(con, model, "net_revenue_usd")[0][0]
 
 def test_aov_is_not_summable(con):
-    model = load_model(CONTRACT_PATH)
-    _, contract = metric(model, "average_order_value_usd")
-    assert contract["additivity"]["time"] == "recompute"
-    monthly = run_metric(con, model, "average_order_value_usd", group_by="DATE_TRUNC('month', order_date)")
-    naive = sum(v for _, v in monthly) / len(monthly)
-    direct = run_metric(con, model, "average_order_value_usd")[0][0]
-    assert naive != direct  # proves the contract is right to forbid rollup
+ model = load_model(CONTRACT_PATH)
+ _, contract = metric(model, "average_order_value_usd")
+ assert contract["additivity"]["time"] == "recompute"
+ monthly = run_metric(con, model, "average_order_value_usd", group_by="DATE_TRUNC('month', order_date)")
+ naive = sum(v for _, v in monthly) / len(monthly)
+ direct = run_metric(con, model, "average_order_value_usd")[0][0]
+ assert naive != direct # proves the contract is right to forbid rollup
 
 def test_allowed_dimensions_sum_to_total(con):
-    model = load_model(CONTRACT_PATH)
-    _, contract = metric(model, "net_revenue_usd")
-    total = run_metric(con, model, "net_revenue_usd")[0][0]
-    for dim in contract["allowed_dimensions"]:
-        col = dim.split(".")[1]
-        sliced = run_metric(con, model, "net_revenue_usd", group_by=col)
-        assert sum(v for _, v in sliced) == total, f"{dim} does not sum to total"
+ model = load_model(CONTRACT_PATH)
+ _, contract = metric(model, "net_revenue_usd")
+ total = run_metric(con, model, "net_revenue_usd")[0][0]
+ for dim in contract["allowed_dimensions"]:
+ col = dim.split(".")[1]
+ sliced = run_metric(con, model, "net_revenue_usd", group_by=col)
+ assert sum(v for _, v in sliced) == total, f"{dim} does not sum to total"
 
 def test_contract_change_requires_version_bump():
-    current = load_model(CONTRACT_PATH)
-    released = load_model(RELEASED_PATH)
-    for m in current["metrics"]:
-        cur_m, cur_c = metric(current, m["name"])
-        try:
-            rel_m, rel_c = metric(released, m["name"])
-        except StopIteration:
-            continue  # new metric, no prior version
-        changed = ansi(cur_m["expression"]) != ansi(rel_m["expression"]) or \
-                  {k: v for k, v in cur_c.items() if k not in ("contract_version", "changelog", "certified_at")} != \
-                  {k: v for k, v in rel_c.items() if k not in ("contract_version", "changelog", "certified_at")}
-        if changed:
-            assert cur_c["contract_version"] != rel_c["contract_version"], \
-                f"{m['name']} changed without a version bump"
-            assert cur_c.get("changelog", "").startswith(cur_c["contract_version"]), \
-                f"{m['name']} changed without a changelog entry"
+ current = load_model(CONTRACT_PATH)
+ released = load_model(RELEASED_PATH)
+ for m in current["metrics"]:
+ cur_m, cur_c = metric(current, m["name"])
+ try:
+ rel_m, rel_c = metric(released, m["name"])
+ except StopIteration:
+ continue # new metric, no prior version
+ changed = ansi(cur_m["expression"]) != ansi(rel_m["expression"]) or \
+ {k: v for k, v in cur_c.items() if k not in ("contract_version", "changelog", "certified_at")} != \
+ {k: v for k, v in rel_c.items() if k not in ("contract_version", "changelog", "certified_at")}
+ if changed:
+ assert cur_c["contract_version"] != rel_c["contract_version"], \
+ f"{m['name']} changed without a version bump"
+ assert cur_c.get("changelog", "").startswith(cur_c["contract_version"]), \
+ f"{m['name']} changed without a changelog entry"
 ```
 
 Walk through what each test proves.
@@ -298,56 +278,56 @@ The tests only prevent drift if they gate the merge. Here is the pipeline for th
 ```yaml
 name: metric-contracts
 on:
-  pull_request:
-    paths: ["contracts/**", "tests/**", "generators/**"]
-  push:
-    branches: [main]
+ pull_request:
+ paths: ["contracts/**", "tests/**", "generators/**"]
+ push:
+ branches: [main]
 
 jobs:
-  validate:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
-        with: { python-version: "3.12" }
-      - run: pip install duckdb pyyaml pytest jsonschema sqlglot
+ validate:
+ runs-on: ubuntu-latest
+ steps:
+ - uses: actions/checkout@v4
+ - uses: actions/setup-python@v5
+ with: { python-version: "3.12" }
+ - run: pip install duckdb pyyaml pytest jsonschema sqlglot
 
-      - name: Validate Ossie schema
-        run: python generators/validate_ossie.py contracts/*.yaml
+ - name: Validate Ossie schema
+ run: python generators/validate_ossie.py contracts/*.yaml
 
-      - name: Run contract tests
-        run: pytest -q tests/
+ - name: Run contract tests
+ run: pytest -q tests/
 
-      - name: Generate interfaces
-        run: |
-          python generators/gen_views.py contracts/ > build/views.sql
-          python generators/gen_graphql.py contracts/ > build/schema.graphql
-          python generators/gen_mcp_tools.py contracts/ > build/tools.json
+ - name: Generate interfaces
+ run: |
+ python generators/gen_views.py contracts/ > build/views.sql
+ python generators/gen_graphql.py contracts/ > build/schema.graphql
+ python generators/gen_mcp_tools.py contracts/ > build/tools.json
 
-      - name: Diff generated interfaces against committed
-        run: git diff --exit-code build/ || (echo "Regenerate interfaces and commit" && exit 1)
+ - name: Diff generated interfaces against committed
+ run: git diff -exit-code build/ || (echo "Regenerate interfaces and commit" && exit 1)
 
-      - name: Post contract summary to PR
-        if: github.event_name == 'pull_request'
-        run: python generators/summarize_changes.py contracts/ contracts/released/ >> $GITHUB_STEP_SUMMARY
+ - name: Post contract summary to PR
+ if: github.event_name == 'pull_request'
+ run: python generators/summarize_changes.py contracts/ contracts/released/ >> $GITHUB_STEP_SUMMARY
 
-  release:
-    needs: validate
-    if: github.ref == 'refs/heads/main'
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - name: Apply views to engine
-        run: python generators/apply_views.py build/views.sql --engine "$DREMIO_URL"
-        env: { DREMIO_TOKEN: "${{ secrets.DREMIO_TOKEN }}" }
-      - name: Publish to catalog
-        run: python generators/publish_polaris.py contracts/ --polaris "$POLARIS_URL"
-        env: { POLARIS_CREDENTIAL: "${{ secrets.POLARIS_CREDENTIAL }}" }
-      - name: Promote to released
-        run: |
-          cp contracts/*.yaml contracts/released/
-          git config user.name ci && git config user.email ci@example.com
-          git add contracts/released && git commit -m "release: promote contracts" && git push
+ release:
+ needs: validate
+ if: github.ref == 'refs/heads/main'
+ runs-on: ubuntu-latest
+ steps:
+ - uses: actions/checkout@v4
+ - name: Apply views to engine
+ run: python generators/apply_views.py build/views.sql -engine "$DREMIO_URL"
+ env: { DREMIO_TOKEN: "${{ secrets.DREMIO_TOKEN }}" }
+ - name: Publish to catalog
+ run: python generators/publish_polaris.py contracts/ -polaris "$POLARIS_URL"
+ env: { POLARIS_CREDENTIAL: "${{ secrets.POLARIS_CREDENTIAL }}" }
+ - name: Promote to released
+ run: |
+ cp contracts/*.yaml contracts/released/
+ git config user.name ci && git config user.email ci@example.com
+ git add contracts/released && git commit -m "release: promote contracts" && git push
 ```
 
 The validate job runs on every pull request. Schema validation against Ossie's JSON schema catches structural errors. The pytest suite catches semantic ones. The generators produce the view DDL, the GraphQL schema, and the MCP tool list, and the diff step fails the build if the committed generated files are stale, which forces the author to regenerate and commit them so reviewers see the downstream effect of a contract change in the same PR. The summary step posts a human-readable diff of the contract against the released version (new metrics, version bumps, changed expressions) to the PR.
@@ -381,26 +361,21 @@ The signal is in the query log. Every query an agent runs is recorded by the eng
 A drift detector is a scheduled job over the query log that, for each agent principal, classifies queries as contract-conformant or not. The simple version is structural: does the query reference a raw dataset that has a certified metric defined over it, and does the query contain an aggregate over a column that is a certified metric's input? Here is the shape:
 
 ```sql
-WITH certified_inputs AS (
-  -- From the contract: raw columns that feed certified metrics
-  SELECT 'lake.sales.orders' AS dataset, 'amount_usd' AS column, 'net_revenue_usd' AS metric
-  UNION ALL
-  SELECT 'lake.sales.orders', 'refund_usd', 'net_revenue_usd'
-),
-agent_queries AS (
-  SELECT job_id, user_name AS principal, sql_text, submitted_ts
-  FROM sys.project.history.jobs
-  WHERE user_name LIKE 'agent-%'
-    AND submitted_ts >= CURRENT_DATE - INTERVAL '7' DAY
-    AND query_state = 'COMPLETED'
+WITH certified_inputs AS (, From the contract: raw columns that feed certified metrics
+ SELECT 'lake.sales.orders' AS dataset, 'amount_usd' AS column, 'net_revenue_usd' AS metric
+ UNION ALL
+ SELECT 'lake.sales.orders', 'refund_usd', 'net_revenue_usd'
+), agent_queries AS (
+ SELECT job_id, user_name AS principal, sql_text, submitted_ts
+ FROM sys.project.history.jobs
+ WHERE user_name LIKE 'agent-%'
+ AND submitted_ts >= CURRENT_DATE - INTERVAL '7' DAY
+ AND query_state = 'COMPLETED'
 )
 SELECT
-  q.principal,
-  COUNT(*) AS total_queries,
-  SUM(CASE WHEN q.sql_text ILIKE '%finance_core.net_revenue_usd%'
-             OR q.sql_text ILIKE '%semantic.finance.net_revenue%' THEN 1 ELSE 0 END) AS conformant,
-  SUM(CASE WHEN q.sql_text ILIKE '%lake.sales.orders%'
-            AND q.sql_text ILIKE '%SUM(%amount_usd%' THEN 1 ELSE 0 END) AS raw_revenue_recomputed
+ q.principal, COUNT(*) AS total_queries, SUM(CASE WHEN q.sql_text ILIKE '%finance_core.net_revenue_usd%'
+ OR q.sql_text ILIKE '%semantic.finance.net_revenue%' THEN 1 ELSE 0 END) AS conformant, SUM(CASE WHEN q.sql_text ILIKE '%lake.sales.orders%'
+ AND q.sql_text ILIKE '%SUM(%amount_usd%' THEN 1 ELSE 0 END) AS raw_revenue_recomputed
 FROM agent_queries q
 GROUP BY q.principal
 ORDER BY raw_revenue_recomputed DESC;
@@ -424,18 +399,9 @@ GET /metrics/net_revenue_usd?group_by=customers.segment&from=2026-07-01&to=2026-
 
 ```json
 {
-  "metric": "net_revenue_usd",
-  "contract_version": "2.1.0",
-  "certified": true,
-  "grain": "order",
-  "time_anchor": "orders.order_date",
-  "additivity": {"time": "sum", "dimensions": "sum"},
-  "rows": [
-    {"customers.segment": "enterprise", "net_revenue_usd": 27400000.00},
-    {"customers.segment": "smb", "net_revenue_usd": 13800000.00}
-  ],
-  "computed_at": "2026-08-25T14:02:11Z",
-  "source_snapshot": "lake.sales.orders@8812349912"
+ "metric": "net_revenue_usd", "contract_version": "2.1.0", "certified": true, "grain": "order", "time_anchor": "orders.order_date", "additivity": {"time": "sum", "dimensions": "sum"}, "rows": [
+ {"customers.segment": "enterprise", "net_revenue_usd": 27400000.00}, {"customers.segment": "smb", "net_revenue_usd": 13800000.00}
+ ], "computed_at": "2026-08-25T14:02:11Z", "source_snapshot": "lake.sales.orders@8812349912"
 }
 ```
 
@@ -445,24 +411,24 @@ The response carries the version, the certification, and the source snapshot. A 
 
 ```graphql
 type Query {
-  netRevenueUsd(
-    groupBy: [NetRevenueDimension!]
-    from: Date!
-    to: Date!
-  ): MetricResult!
+ netRevenueUsd(
+ groupBy: [NetRevenueDimension!]
+ from: Date!
+ to: Date!
+ ): MetricResult!
 }
 
 enum NetRevenueDimension {
-  CUSTOMERS_SEGMENT
-  ORDERS_STATUS
-  ORDERS_ORDER_DATE
+ CUSTOMERS_SEGMENT
+ ORDERS_STATUS
+ ORDERS_ORDER_DATE
 }
 
 type MetricResult {
-  contractVersion: String!
-  certified: Boolean!
-  rows: [MetricRow!]!
-  sourceSnapshot: String!
+ contractVersion: String!
+ certified: Boolean!
+ rows: [MetricRow!]!
+ sourceSnapshot: String!
 }
 ```
 
@@ -472,28 +438,17 @@ Because the dimension enum is generated from `allowed_dimensions`, adding a dime
 
 ```json
 {
-  "name": "net_revenue_usd",
-  "description": "Net revenue in USD. Completed, non-test order amounts minus refunds, at order-date rate. Certified by finance-data-owners, contract v2.1.0. Synonyms: net revenue, revenue, net sales. Summable across time and across the listed dimensions. Always use this tool for revenue questions. Do not compute revenue from raw order amounts. Examples: 'What was net revenue last quarter?', 'Net revenue by segment for July'.",
-  "inputSchema": {
-    "type": "object",
-    "properties": {
-      "from": {"type": "string", "format": "date"},
-      "to":   {"type": "string", "format": "date"},
-      "group_by": {
-        "type": "array",
-        "items": {"type": "string", "enum": ["customers.segment", "orders.status", "orders.order_date"]}
-      },
-      "filters": {
-        "type": "object",
-        "additionalProperties": false,
-        "properties": {
-          "customers.segment": {"type": "string"},
-          "orders.status": {"type": "string"}
-        }
-      }
-    },
-    "required": ["from", "to"]
-  }
+ "name": "net_revenue_usd", "description": "Net revenue in USD. Completed, non-test order amounts minus refunds, at order-date rate. Certified by finance-data-owners, contract v2.1.0. Synonyms: net revenue, revenue, net sales. Summable across time and across the listed dimensions. Always use this tool for revenue questions. Do not compute revenue from raw order amounts. Examples: 'What was net revenue last quarter?', 'Net revenue by segment for July'.", "inputSchema": {
+ "type": "object", "properties": {
+ "from": {"type": "string", "format": "date"}, "to": {"type": "string", "format": "date"}, "group_by": {
+ "type": "array", "items": {"type": "string", "enum": ["customers.segment", "orders.status", "orders.order_date"]}
+ }, "filters": {
+ "type": "object", "additionalProperties": false, "properties": {
+ "customers.segment": {"type": "string"}, "orders.status": {"type": "string"}
+ }
+ }
+ }, "required": ["from", "to"]
+ }
 }
 ```
 
@@ -520,7 +475,7 @@ The rule that keeps this coherent is that no agent framework gets its own metric
 Here is what a multi-agent estate looks like when this holds:
 
 | Agent | Framework | Path to `net_revenue_usd` | Contract version seen | Drift detector status |
-|---|---|---|---|---|
+|--|--|--|--|--|
 | finance-close | Orchestration framework with MCP client | MCP tool from shared gateway | 2.1.0 | Conformant |
 | sales-assistant | Chat framework with MCP client | MCP tool from shared gateway | 2.1.0 | Conformant |
 | board-deck-builder | Scheduled Python runner, no MCP | REST endpoint via generated adapter | 2.1.0 | Conformant |

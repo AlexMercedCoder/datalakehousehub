@@ -1,6 +1,6 @@
 ---
 title: "Building Agent Telemetry Tables in Iceberg That Survive an Audit"
-description: "A practical guide to building agent decision traces in Apache Iceberg that support audit reconstruction, governance review, and cost attribution across sessions."
+description: "A practical guide to building agent decision traces in Apache Iceberg that support audit reconstruction, governance review, and cost attribution."
 date: 2026-07-28T09:00:00Z
 author: "Alex Merced"
 category: "AI & Agents"
@@ -15,11 +15,11 @@ image: "/images/blog.png"
 canonical: "https://iceberglakehouse.com/posts/agent-telemetry-iceberg-audit/"
 ---
 
-> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/agent-telemetry-iceberg-audit/).
-
 # Building Agent Telemetry Tables in Iceberg That Survive an Audit
 
 An agent gives a customer-facing team a revenue number. Six weeks later someone asks where it came from. The application logs rolled off after 14 days. The tracing system has a span showing an LLM call took 3.2 seconds. Nobody can say which tables the agent read, what SQL it ran, which prompt produced that SQL, or whether a human approved anything.
+
+> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/agent-telemetry-iceberg-audit/).
 
 That is not an unusual state. It is the default state, because the observability tooling most teams already run was built to answer "is the service healthy" and not "reconstruct this decision."
 
@@ -57,7 +57,7 @@ Six things are needed, and most implementations capture two or three.
 
 **Inputs.** The user's request and any context retrieved before reasoning. Retrieval matters as much as the prompt. An agent that got a wrong answer because retrieval returned a stale document has a different problem from one that reasoned badly on good context, and you cannot tell them apart without recording both.
 
-**Actions.** Every tool call with its arguments, the result, and how long it took. For data access specifically, record the tables and columns touched and the SQL executed. This is the field that answers "what did it read," which is the question that comes up in both governance and debugging.
+**Actions.** Every tool call with its arguments, the result, and how long it took. For data access specifically, record the tables and columns touched and the SQL executed. This is the field that answers "what did it read, " which is the question that comes up in both governance and debugging.
 
 **Human involvement.** Whether a human reviewed, who, when, and what they decided. An approval that happened and was not recorded did not happen as far as any later review is concerned.
 
@@ -71,61 +71,23 @@ Two tables, not one. Sessions and events. The join key is the session identifier
 
 ```sql
 CREATE TABLE governance.ai.agent_sessions (
-    session_id            string,
-    started_at            timestamp,
-    ended_at              timestamp,
-    user_id               string,
-    agent_name            string,
-    agent_version         string,
-    model_id              string,
-    system_prompt_hash    string,
-    tool_manifest_hash    string,
-    data_principal        string,
-    initial_request       string,
-    final_response        string,
-    outcome_status        string,
-    human_reviewed        boolean,
-    reviewer_id           string,
-    reviewed_at           timestamp,
-    review_decision       string,
-    total_tool_calls      int,
-    total_tokens          bigint
+ session_id string, started_at timestamp, ended_at timestamp, user_id string, agent_name string, agent_version string, model_id string, system_prompt_hash string, tool_manifest_hash string, data_principal string, initial_request string, final_response string, outcome_status string, human_reviewed boolean, reviewer_id string, reviewed_at timestamp, review_decision string, total_tool_calls int, total_tokens bigint
 )
 USING iceberg
 PARTITIONED BY (days(started_at))
 TBLPROPERTIES (
-    'format-version' = '3',
-    'write.parquet.compression-codec' = 'zstd',
-    'write.metadata.delete-after-commit.enabled' = 'true',
-    'write.metadata.previous-versions-max' = '200'
+ 'format-version' = '3', 'write.parquet.compression-codec' = 'zstd', 'write.metadata.delete-after-commit.enabled' = 'true', 'write.metadata.previous-versions-max' = '200'
 );
 ```
 
 ```sql
 CREATE TABLE governance.ai.agent_events (
-    event_id              string,
-    session_id            string,
-    event_seq             int,
-    occurred_at           timestamp,
-    event_type            string,
-    tool_name             string,
-    tool_arguments        string,
-    tool_result_summary   string,
-    tool_result_bytes     bigint,
-    sql_text              string,
-    tables_accessed       array<string>,
-    columns_accessed      array<string>,
-    rows_returned         bigint,
-    duration_ms           int,
-    error_class           string,
-    policy_checked        array<string>,
-    policy_outcome        string
+ event_id string, session_id string, event_seq int, occurred_at timestamp, event_type string, tool_name string, tool_arguments string, tool_result_summary string, tool_result_bytes bigint, sql_text string, tables_accessed array<string>, columns_accessed array<string>, rows_returned bigint, duration_ms int, error_class string, policy_checked array<string>, policy_outcome string
 )
 USING iceberg
 PARTITIONED BY (days(occurred_at))
 TBLPROPERTIES (
-    'format-version' = '3',
-    'write.parquet.compression-codec' = 'zstd'
+ 'format-version' = '3', 'write.parquet.compression-codec' = 'zstd'
 );
 ```
 
@@ -151,7 +113,7 @@ Telemetry writes are the definition of a workload that should never affect the t
 
 **Never write synchronously in the agent's request path.** Buffer and write asynchronously. An agent that waits on a telemetry commit has coupled user latency to your governance infrastructure.
 
-**Batch commits.** One commit per event produces a snapshot per event, and a table taking 50,000 events a day accumulates snapshots faster than any expiration schedule handles. Batch on a time or size trigger.
+**Batch commits.** One commit per event produces a snapshot per event, and a table taking 50, 000 events a day accumulates snapshots faster than any expiration schedule handles. Batch on a time or size trigger.
 
 **Append only.** No updates, no merges. Appends conflict with almost nothing, so this writer coexists with maintenance and with any other process.
 
@@ -164,58 +126,57 @@ import pyarrow as pa
 from pyiceberg.catalog import load_catalog
 
 class TelemetryWriter:
-    """Buffered append-only writer for agent event telemetry."""
+ """Buffered append-only writer for agent event telemetry."""
 
-    def __init__(self, catalog_name, table_id,
-                 flush_seconds=30, flush_rows=500):
-        self.catalog = load_catalog(catalog_name)
-        self.table = self.catalog.load_table(table_id)
-        self.queue = Queue(maxsize=50_000)
-        self.flush_seconds = flush_seconds
-        self.flush_rows = flush_rows
-        self._stop = threading.Event()
-        self._thread = threading.Thread(target=self._run, daemon=True)
-        self._thread.start()
+ def __init__(self, catalog_name, table_id, flush_seconds=30, flush_rows=500):
+ self.catalog = load_catalog(catalog_name)
+ self.table = self.catalog.load_table(table_id)
+ self.queue = Queue(maxsize=50_000)
+ self.flush_seconds = flush_seconds
+ self.flush_rows = flush_rows
+ self._stop = threading.Event()
+ self._thread = threading.Thread(target=self._run, daemon=True)
+ self._thread.start()
 
-    def record(self, event: dict) -> None:
-        """Non-blocking. Drops on overflow rather than blocking the agent."""
-        event.setdefault("event_id", str(uuid.uuid4()))
-        try:
-            self.queue.put_nowait(event)
-        except Exception:
-            # Telemetry loss beats request-path blocking. Count it.
-            OVERFLOW_COUNTER.inc()
+ def record(self, event: dict) -> None:
+ """Non-blocking. Drops on overflow rather than blocking the agent."""
+ event.setdefault("event_id", str(uuid.uuid4()))
+ try:
+ self.queue.put_nowait(event)
+ except Exception:
+ # Telemetry loss beats request-path blocking. Count it.
+ OVERFLOW_COUNTER.inc()
 
-    def _run(self):
-        buffer, last_flush = [], time.monotonic()
-        while not self._stop.is_set():
-            try:
-                buffer.append(self.queue.get(timeout=1.0))
-            except Empty:
-                pass
-            elapsed = time.monotonic() - last_flush
-            if len(buffer) >= self.flush_rows or (
-                buffer and elapsed >= self.flush_seconds
-            ):
-                self._flush(buffer)
-                buffer, last_flush = [], time.monotonic()
+ def _run(self):
+ buffer, last_flush = [], time.monotonic()
+ while not self._stop.is_set():
+ try:
+ buffer.append(self.queue.get(timeout=1.0))
+ except Empty:
+ pass
+ elapsed = time.monotonic() - last_flush
+ if len(buffer) >= self.flush_rows or (
+ buffer and elapsed >= self.flush_seconds
+ ):
+ self._flush(buffer)
+ buffer, last_flush = [], time.monotonic()
 
-    def _flush(self, rows):
-        if not rows:
-            return
-        arrow_table = pa.Table.from_pylist(
-            rows, schema=self.table.schema().as_arrow()
-        )
-        self.table.append(arrow_table)
+ def _flush(self, rows):
+ if not rows:
+ return
+ arrow_table = pa.Table.from_pylist(
+ rows, schema=self.table.schema().as_arrow()
+ )
+ self.table.append(arrow_table)
 
-    def close(self):
-        self._stop.set()
-        self._thread.join(timeout=30)
+ def close(self):
+ self._stop.set()
+ self._thread.join(timeout=30)
 ```
 
 The overflow behavior is a deliberate choice worth arguing about. Dropping telemetry under extreme load keeps the agent responsive. Blocking preserves the record and degrades the service. For a governance-critical system the trade goes the other way, and the right design there is a durable local buffer that survives process restart rather than an in-memory queue. Whichever you pick, count the drops and alert on them, because silent telemetry loss is the failure that makes the whole system worthless at exactly the moment you need it.
 
-The flush thresholds set your write rate. Thirty seconds and 500 rows on a moderately busy agent produces roughly 2,880 commits a day at worst. That is fine for an append-only table with snapshot expiration running. Tighten them and check your snapshot count.
+The flush thresholds set your write rate. Thirty seconds and 500 rows on a moderately busy agent produces roughly 2, 880 commits a day at worst. That is fine for an append-only table with snapshot expiration running. Tighten them and check your snapshot count.
 
 ## Volume and sizing
 
@@ -223,19 +184,19 @@ Rough numbers help decide how seriously to engineer this.
 
 Start with events per session. A discovery agent produces somewhere between 4 and 30 tool calls, from what I have seen. Take 12 as a working average. A row in the events table with a truncated SQL text and a summary runs a few hundred bytes to a couple of kilobytes uncompressed, and ZSTD on columnar data with repeated agent names and tool names compresses hard, often past 10 to 1.
 
-At 1,000 sessions a day, that is 12,000 event rows a day, plus 1,000 session rows. Call it 25 MB a day uncompressed and a small fraction of that on disk. A year of retention is measured in single-digit gigabytes.
+At 1, 000 sessions a day, that is 12, 000 event rows a day, plus 1, 000 session rows. Call it 25 MB a day uncompressed and a small fraction of that on disk. A year of retention is measured in single-digit gigabytes.
 
 That number matters because it settles an argument before it starts. Nobody needs to debate retention economics for a table this size. Retain for years, because the storage cost is noise against the value of being able to answer a question about last spring.
 
-Scale it up and the conclusion holds. At 100,000 sessions a day, you are into the low terabytes annually, which is still ordinary for an analytical table and still cheap on object storage.
+Scale it up and the conclusion holds. At 100, 000 sessions a day, you are into the low terabytes annually, which is still ordinary for an analytical table and still cheap on object storage.
 
 What does get expensive at that scale is the free-text columns if you let them grow. A prompt stored per event rather than hashed per session, or a full result set instead of a summary, changes the arithmetic by two orders of magnitude. The design choices in the schema section exist to keep the table small enough that retention is never the constraint.
 
 Two operational thresholds worth knowing.
 
-**Commit rate.** Batching at 30 seconds gives at most 2,880 commits a day per writer. Multiple writer instances multiply that. Past roughly 10,000 daily commits on one table, run snapshot expiration more than daily and check your metadata size.
+**Commit rate.** Batching at 30 seconds gives at most 2, 880 commits a day per writer. Multiple writer instances multiply that. Past roughly 10, 000 daily commits on one table, run snapshot expiration more than daily and check your metadata size.
 
-**Partition count.** Day partitioning over three years is about 1,100 partitions, which is comfortable. Adding a second partition field like agent name multiplies that and produces small files. Resist it. Filter on agent name at query time and let the column statistics do the pruning.
+**Partition count.** Day partitioning over three years is about 1, 100 partitions, which is comfortable. Adding a second partition field like agent name multiplies that and produces small files. Resist it. Filter on agent name at query time and let the column statistics do the pruning.
 
 ## Reconstructing a session
 
@@ -245,17 +206,10 @@ Full trace for one session, in order:
 
 ```sql
 SELECT
-    e.event_seq,
-    e.occurred_at,
-    e.event_type,
-    e.tool_name,
-    e.tables_accessed,
-    e.duration_ms,
-    e.error_class,
-    left(e.sql_text, 200) AS sql_preview
+ e.event_seq, e.occurred_at, e.event_type, e.tool_name, e.tables_accessed, e.duration_ms, e.error_class, left(e.sql_text, 200) AS sql_preview
 FROM governance.ai.agent_events e
 WHERE e.session_id = :session_id
-  AND e.occurred_at >= :window_start
+ AND e.occurred_at >= :window_start
 ORDER BY e.event_seq;
 ```
 
@@ -265,19 +219,13 @@ Which agents read a sensitive table, over a quarter:
 
 ```sql
 SELECT
-    s.agent_name,
-    s.agent_version,
-    s.data_principal,
-    count(DISTINCT e.session_id) AS sessions,
-    count(*)                     AS accesses,
-    min(e.occurred_at)           AS first_access,
-    max(e.occurred_at)           AS last_access
+ s.agent_name, s.agent_version, s.data_principal, count(DISTINCT e.session_id) AS sessions, count(*) AS accesses, min(e.occurred_at) AS first_access, max(e.occurred_at) AS last_access
 FROM governance.ai.agent_events e
 JOIN governance.ai.agent_sessions s
-  ON e.session_id = s.session_id
+ ON e.session_id = s.session_id
 WHERE array_contains(e.tables_accessed, 'gold.hr.compensation')
-  AND e.occurred_at >= :quarter_start
-  AND e.occurred_at <  :quarter_end
+ AND e.occurred_at >= :quarter_start
+ AND e.occurred_at < :quarter_end
 GROUP BY 1, 2, 3
 ORDER BY accesses DESC;
 ```
@@ -288,15 +236,11 @@ Sessions that produced an outcome without human review, where policy required on
 
 ```sql
 SELECT
-    s.session_id,
-    s.started_at,
-    s.agent_name,
-    s.user_id,
-    s.outcome_status
+ s.session_id, s.started_at, s.agent_name, s.user_id, s.outcome_status
 FROM governance.ai.agent_sessions s
 WHERE s.human_reviewed = false
-  AND s.outcome_status = 'ACTED'
-  AND s.started_at >= :window_start
+ AND s.outcome_status = 'ACTED'
+ AND s.started_at >= :window_start
 ORDER BY s.started_at DESC;
 ```
 
@@ -306,15 +250,12 @@ Error patterns by agent version, which is the operational payoff:
 
 ```sql
 SELECT
-    s.agent_version,
-    e.error_class,
-    count(*) AS occurrences,
-    count(DISTINCT e.session_id) AS affected_sessions
+ s.agent_version, e.error_class, count(*) AS occurrences, count(DISTINCT e.session_id) AS affected_sessions
 FROM governance.ai.agent_events e
 JOIN governance.ai.agent_sessions s
-  ON e.session_id = s.session_id
+ ON e.session_id = s.session_id
 WHERE e.error_class IS NOT NULL
-  AND e.occurred_at >= current_timestamp - INTERVAL '30' DAY
+ AND e.occurred_at >= current_timestamp - INTERVAL '30' DAY
 GROUP BY 1, 2
 ORDER BY occurrences DESC;
 ```
@@ -337,11 +278,11 @@ The propagation is the part people skip, so here is what it looks like concretel
 
 ```python
 def run_agent_query(engine, sql: str, session_id: str, agent: str) -> object:
-    tagged = (
-        f"-- agent_session_id={session_id} agent={agent}\n"
-        f"{sql}"
-    )
-    return engine.execute(tagged)
+ tagged = (
+ f"- agent_session_id={session_id} agent={agent}\n"
+ f"{sql}"
+ )
+ return engine.execute(tagged)
 ```
 
 That comment costs nothing, changes no semantics, and appears in the engine's job records. Now the engine's own accounting of bytes scanned and execution time joins to your telemetry on session ID.
@@ -350,19 +291,13 @@ The attribution query then writes itself:
 
 ```sql
 SELECT
-    s.agent_name,
-    s.agent_version,
-    count(DISTINCT s.session_id)  AS sessions,
-    sum(s.total_tokens)           AS tokens,
-    sum(e.rows_returned)          AS rows_returned,
-    sum(e.duration_ms) / 1000.0   AS engine_seconds,
-    sum(e.duration_ms) / 1000.0
-      / count(DISTINCT s.session_id) AS engine_seconds_per_session
+ s.agent_name, s.agent_version, count(DISTINCT s.session_id) AS sessions, sum(s.total_tokens) AS tokens, sum(e.rows_returned) AS rows_returned, sum(e.duration_ms) / 1000.0 AS engine_seconds, sum(e.duration_ms) / 1000.0
+ / count(DISTINCT s.session_id) AS engine_seconds_per_session
 FROM governance.ai.agent_sessions s
 JOIN governance.ai.agent_events e
-  ON s.session_id = e.session_id
+ ON s.session_id = e.session_id
 WHERE s.started_at >= :month_start
-  AND s.started_at <  :month_end
+ AND s.started_at < :month_end
 GROUP BY 1, 2
 ORDER BY engine_seconds DESC;
 ```
@@ -420,25 +355,19 @@ Record the review in the sessions table using the fields already there. `human_r
 **Targeted review on triggers.** Random sampling catches drift. Triggered review catches incidents. Useful triggers: any session where policy outcome was a denial, any session whose output was acted on without approval, any session with an error class that has not been seen before, any session touching a table classified as sensitive.
 
 ```sql
--- Review queue: sessions needing human attention
+- Review queue: sessions needing human attention
 SELECT
-    s.session_id,
-    s.started_at,
-    s.agent_name,
-    s.user_id,
-    e.policy_outcome,
-    e.error_class,
-    e.tables_accessed
+ s.session_id, s.started_at, s.agent_name, s.user_id, e.policy_outcome, e.error_class, e.tables_accessed
 FROM governance.ai.agent_sessions s
 JOIN governance.ai.agent_events e
-  ON s.session_id = e.session_id
+ ON s.session_id = e.session_id
 WHERE s.human_reviewed = false
-  AND s.started_at >= current_timestamp - INTERVAL '7' DAY
-  AND (
-        e.policy_outcome = 'DENIED'
-     OR e.error_class IS NOT NULL
-     OR array_contains(e.tables_accessed, 'gold.hr.compensation')
-  )
+ AND s.started_at >= current_timestamp - INTERVAL '7' DAY
+ AND (
+ e.policy_outcome = 'DENIED'
+ OR e.error_class IS NOT NULL
+ OR array_contains(e.tables_accessed, 'gold.hr.compensation')
+ )
 ORDER BY s.started_at DESC;
 ```
 

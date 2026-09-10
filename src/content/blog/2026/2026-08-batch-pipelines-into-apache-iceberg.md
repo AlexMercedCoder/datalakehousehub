@@ -16,11 +16,11 @@ image: "/images/blog.png"
 canonical: "https://iceberglakehouse.com/posts/batch-pipelines-into-apache-iceberg/"
 ---
 
-> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/batch-pipelines-into-apache-iceberg/).
-
 # Designing Batch Pipelines That Write Well Into Apache Iceberg
 
 The pipeline runs at 2 a.m. It reads yesterday's extract, does its transformations, and writes to an Apache Iceberg table. Six months later the same pipeline takes four times as long, the downstream dashboard takes 40 seconds to load, and somebody opens a ticket asking why the lakehouse is slow. Nothing broke. The pipeline is doing exactly what it was told. The problem is that nobody decided what it should have been told.
+
+> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/batch-pipelines-into-apache-iceberg/).
 
 I have reviewed a lot of these pipelines. The failures are rarely exotic. They come from a handful of decisions that get made by default at the start and never revisited: how big a batch is, how often it commits, how the data lands on disk, who cleans up afterward, and what happens when two jobs touch the same table at the same time. Each of those decisions has a right answer that follows from your read patterns and your service level agreements, and each has a default that follows from whatever the engine did without being asked.
 
@@ -40,7 +40,7 @@ Three consequences flow from that design, and they shape everything else in this
 
 **Concurrency is optimistic, not locked.** Two writers both read the current snapshot, both do their work, and both try to swap the pointer. One wins. The other detects that the base snapshot changed, and depending on the operation and the isolation level, it either retries against the new state or fails. Nobody holds a lock for the duration of a 40-minute job. That is good for throughput and it means your pipeline needs a retry story.
 
-**Metadata is data, and it accumulates.** Every commit writes new manifest files and creates a snapshot. Query planning reads that metadata. A table with a clean layout plans in under a second. The same table after 50,000 unmaintained commits plans in 30 seconds before scanning a single row. Planning cost is the tax you pay for careless commit behavior, and it compounds.
+**Metadata is data, and it accumulates.** Every commit writes new manifest files and creates a snapshot. Query planning reads that metadata. A table with a clean layout plans in under a second. The same table after 50, 000 unmaintained commits plans in 30 seconds before scanning a single row. Planning cost is the tax you pay for careless commit behavior, and it compounds.
 
 Hold onto that third point in particular. Most Iceberg performance complaints I investigate turn out to be planning problems dressed up as scan problems.
 
@@ -66,7 +66,7 @@ Once you know the read pattern, the next decision is how work maps onto commits.
 
 A commit has fixed costs. It writes a metadata file, a manifest list, and at least one manifest. It creates a snapshot that pins data files against deletion. It takes a round trip to the catalog and risks a conflict with concurrent writers. Those costs are small individually. Multiplied by frequency, they set the shape of your table's metadata.
 
-Work out the arithmetic for your table. A job committing every 5 minutes produces 288 snapshots a day and over 100,000 a year. If each commit touches 50 partitions and writes one file per partition, that is 14,400 files a day from a single pipeline. Neither number is fatal on its own. Both are fatal if nothing ever compacts or expires.
+Work out the arithmetic for your table. A job committing every 5 minutes produces 288 snapshots a day and over 100, 000 a year. If each commit touches 50 partitions and writes one file per partition, that is 14, 400 files a day from a single pipeline. Neither number is fatal on its own. Both are fatal if nothing ever compacts or expires.
 
 Three patterns cover most batch pipelines.
 
@@ -130,7 +130,7 @@ Partition evolution deserves a mention because it is genuinely useful and genuin
 
 Here is the mechanism that produces small files, and it has nothing to do with how much data you wrote.
 
-A distributed engine writes files from tasks. If a task holds rows belonging to 40 partitions, it writes at least 40 files. With 200 tasks each holding rows across the same 40 partitions, one commit produces 8,000 files instead of 40. The data volume is identical. The file count is 200 times worse.
+A distributed engine writes files from tasks. If a task holds rows belonging to 40 partitions, it writes at least 40 files. With 200 tasks each holding rows across the same 40 partitions, one commit produces 8, 000 files instead of 40. The data volume is identical. The file count is 200 times worse.
 
 The fix is to shuffle data by partition before writing, so each partition's rows land in a small number of tasks. Every serious engine exposes this. Iceberg carries a table property, `write.distribution-mode`, with three values.
 
@@ -150,7 +150,7 @@ In an unsorted file set, a column's min and max within each file span nearly the
 
 Iceberg tables carry a sort order that writers respect. Choose the sort key by the same method as the partition key: look at the query log. The pattern that works is partition on the coarse dimension almost everyone filters on, then sort within the partition on the next most common filter, typically a high-cardinality identifier.
 
-An example makes the payoff concrete. An events table partitioned by day, unsorted, with 2,000 files per day. A query filtering on a single user ID has to read all 2,000 files, because any file can contain that user. Sort the same data by user ID within each day and the query reads a handful. The data volume on disk is the same. The scan is two orders of magnitude smaller.
+An example makes the payoff concrete. An events table partitioned by day, unsorted, with 2, 000 files per day. A query filtering on a single user ID has to read all 2, 000 files, because any file can contain that user. Sort the same data by user ID within each day and the query reads a handful. The data volume on disk is the same. The scan is two orders of magnitude smaller.
 
 Sorting costs write time. That is the whole tradeoff. For a table written once and read thousands of times, it is one of the best trades available. For a landing table that gets read twice, skip it.
 
@@ -215,29 +215,17 @@ Tags complete the picture. A tag is a named reference to a snapshot that does no
 Here is the shape of a daily batch pipeline into a production Iceberg table, expressed in SQL and table properties. The syntax leans on Spark SQL conventions because they are widely readable, and the design translates to any engine.
 
 ```sql
--- 1. Table definition. Every property here is a decision, not a default.
+- 1. Table definition. Every property here is a decision, not a default.
 CREATE TABLE lakehouse.analytics.orders (
-    order_id        BIGINT,
-    customer_id     BIGINT,
-    order_ts        TIMESTAMP,
-    status          STRING,
-    amount          DECIMAL(12,2),
-    batch_id        STRING
+ order_id BIGINT, customer_id BIGINT, order_ts TIMESTAMP, status STRING, amount DECIMAL(12, 2), batch_id STRING
 )
 USING iceberg
 PARTITIONED BY (days(order_ts), bucket(16, customer_id))
 TBLPROPERTIES (
-    'format-version'                  = '2',
-    'write.distribution-mode'         = 'hash',
-    'write.target-file-size-bytes'    = '536870912',
-    'write.parquet.compression-codec' = 'zstd',
-    'write.update.mode'               = 'merge-on-read',
-    'write.delete.mode'               = 'merge-on-read',
-    'write.merge.mode'                = 'merge-on-read',
-    'history.expire.max-snapshot-age-ms' = '604800000'
+ 'format-version' = '2', 'write.distribution-mode' = 'hash', 'write.target-file-size-bytes' = '536870912', 'write.parquet.compression-codec' = 'zstd', 'write.update.mode' = 'merge-on-read', 'write.delete.mode' = 'merge-on-read', 'write.merge.mode' = 'merge-on-read', 'history.expire.max-snapshot-age-ms' = '604800000'
 );
 
--- Sort order applies to writes and to compaction.
+- Sort order applies to writes and to compaction.
 ALTER TABLE lakehouse.analytics.orders WRITE ORDERED BY customer_id, order_ts;
 ```
 
@@ -258,25 +246,19 @@ The three merge-on-read settings suit a table with scattered updates from an ord
 The sort order is separate from the partition spec on purpose. Partitioning determines which files a query opens. Sorting determines how tightly each file's statistics bound its contents.
 
 ```sql
--- 2. Write to an audit branch instead of main.
+- 2. Write to an audit branch instead of main.
 ALTER TABLE lakehouse.analytics.orders CREATE BRANCH audit_20260802;
 
--- Engine-level setting that routes writes and reads to the branch.
+- Engine-level setting that routes writes and reads to the branch.
 SET spark.wap.branch = audit_20260802;
 
--- 3. Idempotent load. Remove anything already present for this batch,
---    then insert. Rerunning the job produces identical state.
+- 3. Idempotent load. Remove anything already present for this batch, - then insert. Rerunning the job produces identical state.
 DELETE FROM lakehouse.analytics.orders
 WHERE batch_id = '2026-08-02';
 
 INSERT INTO lakehouse.analytics.orders
 SELECT
-    order_id,
-    customer_id,
-    order_ts,
-    status,
-    amount,
-    '2026-08-02' AS batch_id
+ order_id, customer_id, order_ts, status, amount, '2026-08-02' AS batch_id
 FROM staging.orders_cleaned
 WHERE load_date = '2026-08-02';
 ```
@@ -284,8 +266,8 @@ WHERE load_date = '2026-08-02';
 The delete-then-insert on `batch_id` is the whole idempotency mechanism. It survives partial failures, manual reruns, and orchestrator retries. Because both statements target the audit branch, main is untouched throughout.
 
 ```sql
--- 4. Audit. These run against the branch, so failures are invisible
---    to production consumers.
+- 4. Audit. These run against the branch, so failures are invisible
+- to production consumers.
 SELECT COUNT(*) AS row_count
 FROM lakehouse.analytics.orders
 WHERE batch_id = '2026-08-02';
@@ -295,21 +277,19 @@ FROM lakehouse.analytics.orders
 WHERE batch_id = '2026-08-02' AND customer_id IS NULL;
 
 SELECT COUNT(*) AS dupes FROM (
-    SELECT order_id
-    FROM lakehouse.analytics.orders
-    WHERE batch_id = '2026-08-02'
-    GROUP BY order_id
-    HAVING COUNT(*) > 1
+ SELECT order_id
+ FROM lakehouse.analytics.orders
+ WHERE batch_id = '2026-08-02'
+ GROUP BY order_id
+ HAVING COUNT(*) > 1
 );
 
--- 5. Publish. Metadata-only, atomic, instant.
+- 5. Publish. Metadata-only, atomic, instant.
 CALL lakehouse.system.fast_forward(
-    table  => 'analytics.orders',
-    branch => 'main',
-    to     => 'audit_20260802'
+ table => 'analytics.orders', branch => 'main', to => 'audit_20260802'
 );
 
--- 6. Tag the published state for reproducibility.
+- 6. Tag the published state for reproducibility.
 ALTER TABLE lakehouse.analytics.orders
 CREATE TAG daily_20260802 RETAIN 90 DAYS;
 ```

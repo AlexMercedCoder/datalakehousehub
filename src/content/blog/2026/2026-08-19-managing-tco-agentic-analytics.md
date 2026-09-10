@@ -14,9 +14,10 @@ tags:
 slug: "managing-tco-agentic-analytics"
 draft: false
 ---
-> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/managing-tco-agentic-analytics/).
 
 The AI budget conversation changed its tone this year, and the numbers explain why. Industry surveys of enterprise AI spending in 2026 keep finding the same pattern: roughly three quarters of organizations blew through their original AI cost plans, agentic projects specifically overran by multiples rather than percentages, and the war stories went mainstream, including the widely-repeated one about a major tech company exhausting its annual AI budget in four months. The cruel twist is that unit prices moved the other way: the average price per token fell by well over half across the same period. Intelligence got cheaper, bills got bigger, and the gap between those two facts is where agentic analytics economics lives.
+
+> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/managing-tco-agentic-analytics/).
 
 The mechanism is not mysterious once named. Agentic workflows consume tokens at a completely different rate than the chatbots the budgets were modeled on, commonly five to thirty times more per task, because agents plan, retry, call tools, retrieve context, and re-send their accumulated history every step. A consumption pattern that scales with model behavior rather than with headcount, priced per unit, deployed with autonomy: that is a cost category with the volatility of cloud spend at its worst, arriving at organizations whose budgeting still assumes seats and servers. The discipline that tames it is real and buildable, and it borrows the FinOps playbook while adding the controls that autonomy specifically demands: token budgets, query throttles, unit economics, and the architecture decisions that determine cost before any optimizer touches it.
 
@@ -126,25 +127,25 @@ The controls' home completes the architecture: budgets, throttles, and exhaustio
 principal: agent-analytics-assistant
 owner: data-platform
 cost:
-  budget:
-    monthly_usd: 4000
-    alert_at_pct: 80
-    on_exhaustion: degrade
-    degrade_profile: economy_routing
-  throttles:
-    requests_per_minute: 120
-    max_concurrent_workflows: 20
-    query_class_ceiling: interactive_medium
-    max_scan_gb_per_query: 50
-  routing:
-    default: capable_v3
-    steps:
-      extraction: economy_v2
-      classification: economy_v2
-      synthesis: capable_v3
-  unit:
-    task_type: answered_exchange
-    target_cost_usd: 0.18
+ budget:
+ monthly_usd: 4000
+ alert_at_pct: 80
+ on_exhaustion: degrade
+ degrade_profile: economy_routing
+ throttles:
+ requests_per_minute: 120
+ max_concurrent_workflows: 20
+ query_class_ceiling: interactive_medium
+ max_scan_gb_per_query: 50
+ routing:
+ default: capable_v3
+ steps:
+ extraction: economy_v2
+ classification: economy_v2
+ synthesis: capable_v3
+ unit:
+ task_type: answered_exchange
+ target_cost_usd: 0.18
 ```
 
 Read the file as the article compressed. The budget block is the ceiling with its escalation ladder and its declared exhaustion behavior, the degrade profile naming the economy routing that keeps the assistant answering cheaply rather than going dark. The throttle block prices the worst minute in both currencies, requests and query demand. The routing block is the model-fit optimization as reviewable configuration rather than scattered code. And the unit block declares the task definition and its target, which is what turns the cost-per-task dashboard from description into contract: the number the owner signed, the number reviews argue against, the number the anomaly detection baselines.

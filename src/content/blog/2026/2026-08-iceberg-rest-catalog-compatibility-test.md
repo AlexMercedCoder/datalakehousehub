@@ -14,9 +14,10 @@ tags:
 slug: "iceberg-rest-catalog-compatibility-test"
 draft: false
 ---
-> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/iceberg-rest-catalog-compatibility-test/).
 
 "Supports the Iceberg REST catalog" is the most load-bearing claim in the modern data platform market, and it has no test. Every catalog service, warehouse, and managed platform makes it, buyers weigh entire architectures on it, and the claim's actual content, which operations, from which clients, under which policies, varies so widely that two platforms making the identical sentence true can differ on whether your engine can create a table, evolve a schema, or write a row. This site has documented that variance empirically, more than once, and documentation of variance is not the fix. The fix is a test: a defined suite of operations, run the same way against every platform, scored in a shared four-value vocabulary, published with dates attached, and re-run on a standing calendar.
+
+> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/iceberg-rest-catalog-compatibility-test/).
 
 This article is that test's specification, written to be implemented, and it is also a commitment: this suite, run across the catalogs practitioners actually choose between, becomes a standing, annually refreshed asset of this site, a compatibility matrix with a methodology behind it rather than a review with opinions inside it. What follows defines the design principles the suite must satisfy, the seven levels of operations it probes, from attachment to remote scan planning, the four-way scoring vocabulary that keeps policy refusals distinct from failures, the runner architecture that keeps it engine-agnostic, and the publication protocol that keeps it honest over time. If you run a platform, this is the checklist your documentation should be able to answer. If you are choosing one, this is the checklist to run before the contract gets signed.
 
@@ -26,11 +27,11 @@ Disclosure, stated with unusual care given the subject: I work at Dremio, whose 
 
 The genre this article refuses deserves a paragraph, because the refusal is the design.
 
-Platform reviews and comparison posts, this site's included, decay in three ways. They age silently, accurate at publication and misleading eighteen months later, with no mechanism that flags the decay. They blur two different things, what the specification's protocol supports and what a given platform's policy permits, into one impression of "compatibility," when the distinction is the single most decision-relevant fact in the territory. And they resist verification, since a prose claim about what happened during someone's testing cannot be re-run by a reader, a vendor, or the author's future self. Earlier work on this site, the seven-catalog write-probe protocol run through a single embedded engine, was built to escape the third decay, publish the method, not just the findings, and its reception taught the obvious next lesson: a method worth publishing for one engine is worth generalizing into a suite for any engine, and a suite worth running once is worth institutionalizing on a calendar.
+Platform reviews and comparison posts, this site's included, decay in three ways. They age silently, accurate at publication and misleading eighteen months later, with no mechanism that flags the decay. They blur two different things, what the specification's protocol supports and what a given platform's policy permits, into one impression of "compatibility, " when the distinction is the single most decision-relevant fact in the territory. And they resist verification, since a prose claim about what happened during someone's testing cannot be re-run by a reader, a vendor, or the author's future self. Earlier work on this site, the seven-catalog write-probe protocol run through a single embedded engine, was built to escape the third decay, publish the method, not just the findings, and its reception taught the obvious next lesson: a method worth publishing for one engine is worth generalizing into a suite for any engine, and a suite worth running once is worth institutionalizing on a calendar.
 
 A test suite escapes all three decays structurally. Dated, versioned runs make staleness visible instead of silent, this matrix reflects suite version so-and-so run in such-and-such month, and the previous matrix remains published beside it, so the decay is a diff anyone can read. A scoring vocabulary that separates refusal from failure keeps the spec-versus-policy distinction in the results themselves rather than in caveats nobody reads. And a public test runner makes every cell reproducible: disagree with a result, run the cell, file the discrepancy with logs attached, which converts arguments about compatibility from testimony into evidence.
 
-There is also a quieter reason the suite matters now, and it is the trajectory this site has traced all year. The population of things that speak to catalogs is exploding, embedded engines, native libraries in four languages, services, agents, and every new client multiplies the pairings whose behavior somebody has to know. Pairwise experiential knowledge, the veteran engineer who remembers which platform refuses which operation, does not scale to that combinatorics, and the arithmetic is worth one sentence: eight platforms by five clients by forty operations is sixteen hundred cells, a number no team's institutional memory holds and a machine re-verifies in an afternoon. Official conformance work, the fixture and test efforts inside the project, addresses the specification's side of the question, whether implementations read and write the format correctly. The gap between those two, how commercial platforms' policies and integrations actually behave at their REST boundaries, is exactly the gap a practitioner-run suite fills, complementary to the official work, adjacent to it, and honest about being a different thing: conformance tests ask "is this implementation correct," this suite asks "what will this platform let your tools do."
+There is also a quieter reason the suite matters now, and it is the trajectory this site has traced all year. The population of things that speak to catalogs is exploding, embedded engines, native libraries in four languages, services, agents, and every new client multiplies the pairings whose behavior somebody has to know. Pairwise experiential knowledge, the veteran engineer who remembers which platform refuses which operation, does not scale to that combinatorics, and the arithmetic is worth one sentence: eight platforms by five clients by forty operations is sixteen hundred cells, a number no team's institutional memory holds and a machine re-verifies in an afternoon. Official conformance work, the fixture and test efforts inside the project, addresses the specification's side of the question, whether implementations read and write the format correctly. The gap between those two, how commercial platforms' policies and integrations actually behave at their REST boundaries, is exactly the gap a practitioner-run suite fills, complementary to the official work, adjacent to it, and honest about being a different thing: conformance tests ask "is this implementation correct, " this suite asks "what will this platform let your tools do."
 
 ## Design Principles
 
@@ -83,7 +84,7 @@ Level 6, remote scan planning. The frontier level, added this suite version, tes
 The levels, compressed to their essence:
 
 | Level | Question it answers | Representative operations |
-|---|---|---|
+|--|--|--|
 | L0 | Can a client attach and look around? | Auth, config, list namespaces and tables, load table |
 | L1 | Can it read, including current-format features? | Scans, filters, time travel, metadata tables, v3 fixtures |
 | L2 | Can it change data? | Create, append, update, delete, merge, drop semantics |
@@ -104,13 +105,13 @@ Refused by policy: the platform rejected the operation deliberately, with an err
 
 Fails: the operation errored in a way that is neither success nor intelligible refusal, a crash, a hang, a corruption, a success response with wrong results, the last being the gravest and specifically probed for, since wrong-answers-quietly is the failure mode this site's format coverage keeps flagging as worse than any error. Fails cells carry logs, and, per the publication protocol below, a vendor notice before the matrix ships.
 
-The vocabulary's discipline is refusing a fifth value. No "partial," no "planned," no "works in beta," because fuzzy values are where matrices go to become marketing, and every tempting middle case maps to one of the four with notes: the beta feature that worked is works-with-configuration noted as beta, the operation that succeeded with wrong results is fails, full stop.
+The vocabulary's discipline is refusing a fifth value. No "partial, " no "planned, " no "works in beta, " because fuzzy values are where matrices go to become marketing, and every tempting middle case maps to one of the four with notes: the beta feature that worked is works-with-configuration noted as beta, the operation that succeeded with wrong results is fails, full stop.
 
 The gravest classification deserves its probe described, because "success response with wrong results" is not caught by checking return codes. Wherever the suite writes, it verifies content: the appended rows re-read and compared, the deleted rows confirmed absent, the merged state checked against the expected outcome computed independently, and Level 1's format probes extend the same discipline to reads, the v3 fixture with deletion vectors carrying known live-and-deleted row sets, so a reader that ignores vectors and returns deleted rows as live, the exact wrong-answers failure this site's delete coverage flags as the ecosystem's worst mode, converts a green-looking read into a fails cell with the discrepancy in the log. Content verification is most of the runner's actual code and all of its credibility, since a compatibility matrix that trusts status codes is measuring politeness rather than correctness.
 
 ## One Cell, Walked Through
 
-Abstractions land better with one concrete execution, so trace a single Level 2 cell, "append rows via the embedded-engine driver," against a composite platform, end to end.
+Abstractions land better with one concrete execution, so trace a single Level 2 cell, "append rows via the embedded-engine driver, " against a composite platform, end to end.
 
 Attachment reuses the run's Level 0 session: the profile supplied the endpoint, an OAuth client-credentials flow, and one platform-specific property the profile's notes flag as required, which has already marked this platform's row as works-with-configuration territory at L0. Setup creates the cell's fixture table in the suite's permitted namespace through the driver, a four-column table, and the creation itself was the previous cell, green, so this cell starts from a real, empty, suite-owned table.
 
@@ -124,26 +125,25 @@ Now the same cell against a second composite platform, the warehouse genre: atta
 
 The suite's implementation shape, specified tightly enough to build and loosely enough to survive contact with real platforms.
 
-Three abstractions carry the whole design. A catalog profile describes one platform target: endpoint, authentication method and materials, warehouse or account identifiers, the namespace the suite is permitted to use, and any platform-required configuration, the profile being exactly the attachment recipe Level 0 validates and publishes. An engine driver implements the suite's operation vocabulary for one client: given "append rows to table T," the embedded-engine driver issues its SQL dialect, the library driver calls its API, the JVM-engine driver submits its statement, each driver small because the operation vocabulary is small, a few dozen verbs. And a run binds one profile to one driver, executes the levels in order, and emits results, machine-readable cells plus captured logs, which the reporting layer renders into the published matrix.
+Three abstractions carry the whole design. A catalog profile describes one platform target: endpoint, authentication method and materials, warehouse or account identifiers, the namespace the suite is permitted to use, and any platform-required configuration, the profile being exactly the attachment recipe Level 0 validates and publishes. An engine driver implements the suite's operation vocabulary for one client: given "append rows to table T, " the embedded-engine driver issues its SQL dialect, the library driver calls its API, the JVM-engine driver submits its statement, each driver small because the operation vocabulary is small, a few dozen verbs. And a run binds one profile to one driver, executes the levels in order, and emits results, machine-readable cells plus captured logs, which the reporting layer renders into the published matrix.
 
 The operation flow per cell is uniform and boring on purpose: set up the cell's fixture state, execute the operation through the driver, verify the outcome through an independent read where possible, classify into the four-way vocabulary using the error taxonomy, refusal-shaped errors versus failure-shaped ones, record everything, tear down. In sketch:
 
 ```python
 def run_cell(profile, driver, operation):
-    ctx = attach(profile)                  # L0 machinery, reused per run
-    fixture = operation.setup(ctx)         # tables/rows the op needs
-    try:
-        result = driver.execute(ctx, operation, fixture)
-        verified = operation.verify(ctx, result)
-        return Cell(WORKS if verified.standard_path
-                    else WORKS_WITH_CONFIG,
-                    notes=verified.notes, log=result.log)
-    except RefusalError as e:              # auth/policy-shaped errors
-        return Cell(REFUSED_BY_POLICY, notes=e.policy_hint, log=e.log)
-    except Exception as e:                 # everything else
-        return Cell(FAILS, log=capture(e))
-    finally:
-        operation.teardown(ctx, fixture)
+ ctx = attach(profile) # L0 machinery, reused per run
+ fixture = operation.setup(ctx) # tables/rows the op needs
+ try:
+ result = driver.execute(ctx, operation, fixture)
+ verified = operation.verify(ctx, result)
+ return Cell(WORKS if verified.standard_path
+ else WORKS_WITH_CONFIG, notes=verified.notes, log=result.log)
+ except RefusalError as e: # auth/policy-shaped errors
+ return Cell(REFUSED_BY_POLICY, notes=e.policy_hint, log=e.log)
+ except Exception as e: # everything else
+ return Cell(FAILS, log=capture(e))
+ finally:
+ operation.teardown(ctx, fixture)
 ```
 
 Four implementation decisions round out the architecture. Fixtures are minimal and self-created: the suite provisions its own tiny tables inside its permitted namespace, a few hundred rows, both v2 and v3 variants for Level 1's format probes, so executions need nothing pre-staged and clean up after themselves. Verification prefers independence: after a write through driver A, the runner re-reads through the catalog's own interface or a second driver where available, because a client that believes its own write is weaker evidence than a second path confirming it. Error classification is a maintained taxonomy, the mapping from each platform's error shapes to refusal-versus-failure, and it is the runner's most platform-specific component, versioned with the suite, because a misclassified refusal is the likeliest way for the matrix to be wrong. And everything lands in a repository, profiles minus secrets, drivers, operations, taxonomy, and the rendering pipeline, because the reproducibility principle is a repository or it is rhetoric.
@@ -184,7 +184,7 @@ Selection: a buyer choosing a catalog platform reads their client's matrix row-s
 
 Regression detection: teams already running a platform diff editions to learn what changed under them, the policy tightened, the operation newly supported, before their pipelines learn it the hard way, which turns the annual edition into something between a changelog and an early-warning service for the ecosystem's integration surface. The partial re-run mechanism serves the same use at higher frequency for the platforms a team actually depends on: subscribe to a row, in effect, by re-running it quarterly with your own credentials against your own tier, the reproduction guide making that an hour's automation, and the suite's operation vocabulary doubles as the smoke test a platform migration or version upgrade runs before production traffic does, which is the suite quietly becoming operational tooling rather than merely published research, an outcome the repository's structure deliberately invites.
 
-Accountability: the claim this article opened with, "supports the Iceberg REST catalog," acquires a public referent, and the gap between a platform's marketing and its matrix row becomes legible to everyone, which is the gentlest available pressure toward documentation that matches endpoints and policies stated rather than discovered. The four-way vocabulary keeps the pressure fair, platforms are never punished for governance choices, only for opacity about them.
+Accountability: the claim this article opened with, "supports the Iceberg REST catalog, " acquires a public referent, and the gap between a platform's marketing and its matrix row becomes legible to everyone, which is the gentlest available pressure toward documentation that matches endpoints and policies stated rather than discovered. The four-way vocabulary keeps the pressure fair, platforms are never punished for governance choices, only for opacity about them.
 
 And convergence: the suite feeds the larger movement this site has repeatedly pointed at, the conformance fixtures, the interop test efforts, the multi-implementation era's shared verification infrastructure. A practitioner-run behavioral suite at the platform boundary complements spec-conformance work at the implementation boundary, findings from one flowing into the other, a platform's fails cell occasionally being an upstream implementation's bug surfaced through a commercial wrapper, and the long-run success condition is worth stating plainly: this suite should eventually be boring, every cell green or cleanly refused, editions differing only as new levels probe new frontiers, because the variance it was built to map has been engineered away. Instruments that aspire to their own obsolescence tend to be the trustworthy ones.
 

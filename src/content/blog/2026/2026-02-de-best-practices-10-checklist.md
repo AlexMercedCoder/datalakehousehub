@@ -15,9 +15,10 @@ draft: false
 image: "/images/blog.png"
 canonical: "https://iceberglakehouse.com/posts/2026-02-debp-de-best-practices-checklist/"
 ---
-> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-02-debp-de-best-practices-checklist/).
 
 ![Comprehensive data engineering checklist organized by categories with status indicators](/images/blog/debp/de-checklist.png)
+
+> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-02-debp-de-best-practices-checklist/).
 
 Best practices documents are easy to write and hard to use. They list principles without context, advice without prioritization, and rules without explaining when to break them. This one is different. It's a practical, tool-agnostic checklist organized by the categories that matter most : with each item tied to a specific outcome.
 

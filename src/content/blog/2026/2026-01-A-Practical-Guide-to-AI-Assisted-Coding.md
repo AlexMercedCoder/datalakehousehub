@@ -14,7 +14,6 @@ slug: 2026-01-a-practical-guide-to-ai-assisted-coding-tools
 draft: false
 image: "/images/blog.png"
 ---
-
 **Get Data Lakehouse Books:**
 - [Apache Iceberg: The Definitive Guide](https://drmevn.fyi/tableformatblog)
 - [Apache Polaris: The Definitive Guide](https://drmevn.fyi/tableformatblog-62P6t)
@@ -27,7 +26,7 @@ image: "/images/blog.png"
 - [OSS Community Listings](https://osscommunity.com)
 - [Dremio Lakehouse Developer Hub](https://developer.dremio.com)
 
----
+--
 
 AI-assisted coding is no longer a novelty. It is becoming a core part of how software gets built.
 
@@ -213,7 +212,7 @@ Autocomplete-focused tools are usually the cheapest. Agent-based systems are the
 
 Another factor is model flexibility. Tools that allow you to bring your own API keys shift costs directly to the underlying model provider. This can be cheaper or more expensive depending on how you use them.
 
-The right question is not “which tool is cheapest,” but “which tool replaces the most manual effort for my work.”
+The right question is not “which tool is cheapest, ” but “which tool replaces the most manual effort for my work.”
 
 ### Individual vs Team Economics
 
@@ -406,12 +405,12 @@ Each prompt focuses on building or modifying something small while helping you l
 Use this to test repo awareness and file creation.
 
 > Create a simple Python project for a command-line tool.
->  
+> 
 > It should include:
 > - A README
 > - A main entry file
 > - A basic argument parser
->  
+> 
 > Do not add extra features.
 
 This prompt helps you see how the tool structures files and how much initiative it takes.
@@ -421,7 +420,7 @@ This prompt helps you see how the tool structures files and how much initiative 
 Use this to test code generation quality.
 
 > Add a function that reads a CSV file and prints the top 5 rows.
->  
+> 
 > Assume the file path is passed as a command-line argument.
 
 This works well in IDE plugins and editors. Review the code carefully and run it.
@@ -431,7 +430,7 @@ This works well in IDE plugins and editors. Review the code carefully and run it
 Use this to test understanding and explanation.
 
 > Explain what this function does and identify any edge cases.
->  
+> 
 > Keep the explanation concise.
 
 This is useful for learning unfamiliar code and validating AI understanding.
@@ -441,9 +440,9 @@ This is useful for learning unfamiliar code and validating AI understanding.
 Use this to test correctness and coverage.
 
 > Write unit tests for this function.
->  
+> 
 > Use the existing testing framework.
->  
+> 
 > Cover normal cases and one edge case.
 
 This helps establish a review habit and reinforces test-driven thinking.
@@ -453,9 +452,9 @@ This helps establish a review habit and reinforces test-driven thinking.
 Use this to test refactoring behavior.
 
 > Refactor this code to improve readability.
->  
+> 
 > Do not change behavior.
->  
+> 
 > Keep the logic explicit.
 
 Compare the diff to ensure intent is preserved.
@@ -466,9 +465,9 @@ Compare the diff to ensure intent is preserved.
 Use this to test safe autonomy.
 
 > Add basic logging to this application.
->  
+> 
 > Use the existing logging library.
->  
+> 
 > Show me the changes before committing.
 
 This prompt checks whether the agent plans steps and respects boundaries.
@@ -478,9 +477,9 @@ This prompt checks whether the agent plans steps and respects boundaries.
 Use this to test reasoning.
 
 > This test is failing.
->  
+> 
 > Explain why, then propose a fix.
->  
+> 
 > Do not apply the fix yet.
 
 Only apply changes after reviewing the explanation.

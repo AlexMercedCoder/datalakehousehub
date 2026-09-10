@@ -13,7 +13,6 @@ slug: unity-ai-gateway-vs-apache-polaris-governance-control-plane
 draft: false
 image: "/images/blog.png"
 ---
-
 # Unity AI Gateway vs Apache Polaris Control Planes
 
 
@@ -89,7 +88,7 @@ I would also require a complete audit trail that covers all four layers. An audi
 ## Operational Checklist
 
 | Area | Question to answer | Why it matters |
-|---|---|---|
+|--|--|--|
 | Ownership | Who owns the gateway policy, the catalog policy, and the semantic definitions? | Each governance layer needs a named owner. |
 | Scope | Which tools, tables, and metrics are in scope for each governance layer? | A narrow scope is easier to test and audit. |
 | Identity | Is the identity established at the gateway correctly propagated to the catalog? | Identity gaps between layers are governance gaps. |
@@ -138,7 +137,7 @@ The next step is to define the dimensions that actually change behavior: AI gate
 
 ## Review Questions Worth Asking
 
-The first question is simple: if the AI gateway is bypassed, what governance remains? If the answer is "nothing until the catalog," the catalog governance needs to be defined and tested. If the answer is "nothing at all," the data layer is ungoverned.
+The first question is simple: if the AI gateway is bypassed, what governance remains? If the answer is "nothing until the catalog, " the catalog governance needs to be defined and tested. If the answer is "nothing at all, " the data layer is ungoverned.
 
 The second question: can the audit trail for a specific agent query be reconstructed from logs to show the gateway decision, the catalog decision, and the query result independently? If not, the audit trail is not complete.
 

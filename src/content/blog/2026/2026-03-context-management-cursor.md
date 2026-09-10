@@ -16,9 +16,10 @@ draft: false
 image: "/images/blog.png"
 canonical: "https://iceberglakehouse.com/posts/2026-03-context-cursor/"
 ---
-> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-03-context-cursor/).
 
 Cursor is an AI-native code editor built on the VS Code foundation that integrates AI deeply into every aspect of the development workflow. Its context management system is one of the most sophisticated among coding tools, combining workspace-level indexing, granular rules files, documentation integration, MCP server support, and intelligent context assembly that automatically determines which files and symbols are relevant to your current task.
+
+> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-03-context-cursor/).
 
 This guide covers every context management mechanism Cursor provides and explains how to configure them for productive, reliable AI-assisted development.
 
@@ -43,7 +44,7 @@ Cursor uses `.cursor/rules/` files in MDC (Markdown Configuration) format to pro
 ### Rule Types
 
 | Type | Behavior | Best For |
-|---|---|---|
+|--|--|--|
 | **Always** | Loaded for every interaction | Core conventions, style preferences |
 | **Auto** | Loaded when matched files are active | File-type specific rules (e.g., Python vs. TypeScript) |
 | **Agent** | Available to the agent for self-selection | Specialized knowledge the agent invokes when needed |
@@ -54,11 +55,11 @@ Cursor uses `.cursor/rules/` files in MDC (Markdown Configuration) format to pro
 Create `.mdc` files in `.cursor/rules/`:
 
 ```markdown
----
+--
 description: Python coding standards for this project
 globs: ["**/*.py"]
 alwaysApply: false
----
+--
 
 # Python Rules
 
@@ -95,7 +96,7 @@ Cursor's @-mention system lets you add specific context to any prompt.
 ### Available @-Mentions
 
 | Mention | Purpose |
-|---|---|
+|--|--|
 | `@file` | Reference a specific file by name |
 | `@codebase` | Search the entire indexed codebase for relevant context |
 | `@Docs` | Search indexed documentation |
@@ -135,19 +136,15 @@ MCP servers are configured in Cursor's settings:
 
 ```json
 {
-  "mcpServers": {
-    "postgres": {
-      "command": "npx",
-      "args": ["-y", "@anthropic/mcp-server-postgres"],
-      "env": {
-        "DATABASE_URL": "postgresql://dev@localhost:5432/mydb"
-      }
-    },
-    "github": {
-      "command": "npx",
-      "args": ["-y", "@anthropic/mcp-server-github"]
-    }
-  }
+ "mcpServers": {
+ "postgres": {
+ "command": "npx", "args": ["-y", "@anthropic/mcp-server-postgres"], "env": {
+ "DATABASE_URL": "postgresql://dev@localhost:5432/mydb"
+ }
+ }, "github": {
+ "command": "npx", "args": ["-y", "@anthropic/mcp-server-github"]
+ }
+ }
 }
 ```
 
@@ -207,7 +204,7 @@ Cursor supports multiple AI providers and models. Your model choice affects cont
 ### Context Window Considerations
 
 | Model | Context Window | Best For |
-|---|---|---|
+|--|--|--|
 | **Claude Sonnet** | 200K tokens | Large codebase analysis, complex refactoring |
 | **GPT-4o** | 128K tokens | Feature development, code generation |
 | **Cursor Small** | Varies | Quick edits, inline completions |

@@ -14,11 +14,12 @@ draft: false
 image: "/images/blog/apache-iceberg-masterclass/03-iceberg-metadata-performance-scan-planning-cascade.png"
 canonical: "https://iceberglakehouse.com/posts/2026-04-29-iceberg-masterclass-03/"
 ---
-> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-04-29-iceberg-masterclass-03/).
 
-<!-- Meta Description: Iceberg's three-layer metadata tree eliminates directory listing and enables multi-level data skipping. Here is how scan planning actually works. -->
-<!-- Primary Keyword: Apache Iceberg metadata performance -->
-<!-- Secondary Keywords: Iceberg scan planning, manifest pruning, file skipping -->
+<!- Meta Description: Iceberg's three-layer metadata tree eliminates directory listing and enables multi-level data skipping. Here is how scan planning actually works. ->
+<!- Primary Keyword: Apache Iceberg metadata performance ->
+<!- Secondary Keywords: Iceberg scan planning, manifest pruning, file skipping ->
+
+> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-04-29-iceberg-masterclass-03/).
 
 *Read the complete Apache Iceberg Masterclass series:*
 * [Part 1: What Are Table Formats and Why Were They Needed?](/blog/2026-04-29-apache-iceberg-masterclass-01-table-formats)
@@ -85,7 +86,7 @@ Consider a table `orders` partitioned by month with 12 months of data, 20 files 
 ```sql
 SELECT * FROM orders
 WHERE order_date = '2024-03-15'
-  AND amount > 500
+ AND amount > 500
 ```
 
 **Manifest list pruning**: The engine checks partition summaries. 11 of 12 monthly manifests have date ranges that do not include March 2024. They are skipped. Only the March manifest is read.
@@ -119,7 +120,7 @@ Too many small files (the "small file problem") bloat manifests and slow down pl
 Iceberg's spec supports several statistical measures per column per file:
 
 | Statistic | Purpose | Pruning Power |
-|---|---|---|
+|--|--|--|
 | Min/Max values | Range-based filtering | High (if sorted) |
 | Null count | `IS NOT NULL` filters | High |
 | NaN count | Float NaN filtering | Moderate |

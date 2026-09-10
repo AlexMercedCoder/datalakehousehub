@@ -14,9 +14,10 @@ tags:
 slug: "agents-with-personalities"
 draft: false
 ---
-> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/agents-with-personalities/).
 
 Open your terminal and count the agent CLIs installed on it. On my machine the number is fourteen. Each one was configured separately. Each one has its own idea of what "an agent" is, its own place to store a system prompt, its own way to pin a model, its own permission dialog. When I want a code reviewer that refuses to edit files, I set that up in Claude Code. Then I set it up again in Codex. Then again in Goose. The reviewer I trust is not a thing I own. It is a configuration scattered across five tools, none of which agree on the shape.
+
+> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/agents-with-personalities/).
 
 For most of the last three years that was fine, because an agent was a session. You opened a chat, gave it context, got your output, and closed it. Nothing persisted, so nothing needed a format.
 
@@ -66,7 +67,7 @@ The lesson from Grok Bot is that persistence is the feature people pay for. An a
 
 ### Hermes Bot Mode: the agent gets a profile
 
-Nous Research's answer is the closest to mine, which is why I find it the most interesting. Hermes Agent is an MIT-licensed, self-improving agent that runs on your own machine or a cheap VPS, connects to any model provider, and has a built-in learning loop that creates and improves skills from experience. It passed 100,000 GitHub stars this year.
+Nous Research's answer is the closest to mine, which is why I find it the most interesting. Hermes Agent is an MIT-licensed, self-improving agent that runs on your own machine or a cheap VPS, connects to any model provider, and has a built-in learning loop that creates and improves skills from experience. It passed 100, 000 GitHub stars this year.
 
 On August 17, 2026, co-founder Teknium shipped Bot Mode as a one-day public beta plugin, collected bug reports in the open, and then bundled it default-on into Hermes Desktop with the v0.20.3 release. Bot Mode replaces the single-agent session list with a roster of named Bots. Each Bot is a full Hermes profile with its own role, pinned model, memory, skills, and profile picture. Bots @mention each other through a persistent Agent Inbox, hand off work, run scheduled routines, and gather in collaboration rooms of two to six Bots for bounded rounds of turns.
 
@@ -88,7 +89,7 @@ The word "personality" does a lot of work in the marketing around these products
 
 **Memory and context.** Which files are always in the agent's context, which are pulled on demand, and which external memory stores it is allowed to read or write. A profile should point at memory rather than contain it. My release-notes agent needs the project knowledge graph. It does not need to carry a copy of it.
 
-**Learned state.** What the agent figured out across previous sessions. The repository's tag convention. The maintainer's preference for listing breaking changes first. This is the part every product is now racing to build, because it is what makes an agent "get sharper the more you work together," in xAI's phrasing. It is also the most dangerous part, and I will come back to why.
+**Learned state.** What the agent figured out across previous sessions. The repository's tag convention. The maintainer's preference for listing breaking changes first. This is the part every product is now racing to build, because it is what makes an agent "get sharper the more you work together, " in xAI's phrasing. It is also the most dangerous part, and I will come back to why.
 
 Look at that list and notice what it is. It is not a personality. It is a contract between a human and a process about what that process is, what it is allowed to do, and what it is allowed to remember. The name and the avatar are the signature line. The rest is the terms.
 
@@ -150,93 +151,93 @@ Here is a real profile. I validated it against the OAP reference implementation 
 oap: "1.0"
 kind: AgentProfile
 metadata:
-  name: release-notes
-  description: Drafts release notes from merged work. Never publishes.
-  revision: 3
-  trust: project
-  tags: [docs, release]
+ name: release-notes
+ description: Drafts release notes from merged work. Never publishes.
+ revision: 3
+ trust: project
+ tags: [docs, release]
 spec:
-  role:
-    instructions: >
-      You write release notes for this repository. Read the merged
-      pull requests and changelog since the last tag, group changes
-      by user impact, and draft notes a customer can read. Do not
-      publish anything. Hand the draft back for human review.
-    constraints:
-      - Never edit source files.
-      - Never run git push or create tags.
-    persona:
-      tone: plain and direct
-      verbosity: balanced
-      style_rules:
-        - No marketing adjectives.
-        - Lead with breaking changes.
-  model:
-    tier: standard
-    fallbacks:
-      - provider: anthropic
-        id: claude-sonnet-4-6
-  tools:
-    policy: allowlist
-    allow: [file_read, shell_exec, web_fetch]
-    bindings:
-      - name: shell_exec
-        permission: ask
-  permissions:
-    default: deny
-    shell: ask
-    edit: deny
-    network: ask
-    filesystem:
-      read_roots: ["."]
-      write_roots: ["docs/releases"]
-      deny_paths: [".env", "secrets/**"]
-  context:
-    files:
-      - path: CHANGELOG.md
-        mode: always
-      - path: docs/release-style.md
-        mode: on_demand
-        description: House style for release notes
-  memory:
-    mode: read_only
-    stores:
-      - name: project-graph
-        kind: maggraph
-        uri: ./.maggraph
-        mode: read_only
-  runtime:
-    mode: either
-    max_turns: 40
-    max_tool_calls: 120
-    max_cost_usd: 2.0
-  lifecycle:
-    writeback: propose
-    retention:
-      max_facts: 200
-      fact_ttl_days: 90
+ role:
+ instructions: >
+ You write release notes for this repository. Read the merged
+ pull requests and changelog since the last tag, group changes
+ by user impact, and draft notes a customer can read. Do not
+ publish anything. Hand the draft back for human review.
+ constraints:
+ - Never edit source files.
+ - Never run git push or create tags.
+ persona:
+ tone: plain and direct
+ verbosity: balanced
+ style_rules:
+ - No marketing adjectives.
+ - Lead with breaking changes.
+ model:
+ tier: standard
+ fallbacks:
+ - provider: anthropic
+ id: claude-sonnet-4-6
+ tools:
+ policy: allowlist
+ allow: [file_read, shell_exec, web_fetch]
+ bindings:
+ - name: shell_exec
+ permission: ask
+ permissions:
+ default: deny
+ shell: ask
+ edit: deny
+ network: ask
+ filesystem:
+ read_roots: ["."]
+ write_roots: ["docs/releases"]
+ deny_paths: [".env", "secrets/**"]
+ context:
+ files:
+ - path: CHANGELOG.md
+ mode: always
+ - path: docs/release-style.md
+ mode: on_demand
+ description: House style for release notes
+ memory:
+ mode: read_only
+ stores:
+ - name: project-graph
+ kind: maggraph
+ uri: ./.maggraph
+ mode: read_only
+ runtime:
+ mode: either
+ max_turns: 40
+ max_tool_calls: 120
+ max_cost_usd: 2.0
+ lifecycle:
+ writeback: propose
+ retention:
+ max_facts: 200
+ fact_ttl_days: 90
 state:
-  revision: 3
-  summary: Has drafted notes for two prior releases of this repo.
-  facts:
-    - id: f-001
-      text: This repo tags releases as vMAJOR.MINOR.PATCH on main.
-      confidence: 0.9
-      source: session
-      pinned: true
-  preferences:
-    - id: p-001
-      text: Maintainer wants breaking changes listed before features.
-      confidence: 0.8
-      source: session
+ revision: 3
+ summary: Has drafted notes for two prior releases of this repo.
+ facts:
+ - id: f-001
+ text: This repo tags releases as vMAJOR.MINOR.PATCH on main.
+ confidence: 0.9
+ source: session
+ pinned: true
+ preferences:
+ - id: p-001
+ text: Maintainer wants breaking changes listed before features.
+ confidence: 0.8
+ source: session
 history:
-  - revision: 3
-    at: "2026-08-20T14:02:00Z"
-    by: agent
-    harness: loro
-    change: Learned release-tag convention and ordering preference.
-    approved_by: alex
-    sections: [state]
+ - revision: 3
+ at: "2026-08-20T14:02:00Z"
+ by: agent
+ harness: loro
+ change: Learned release-tag convention and ordering preference.
+ approved_by: alex
+ sections: [state]
 ```
 
 Walk it top to bottom.
@@ -245,7 +246,7 @@ The `metadata` block says this is revision 3 of a project-trust profile. Project
 
 `spec.role` has three parts. `instructions` is the prose the model reads. `constraints` are hard rules, and they are deliberately redundant with the permission block below. The prose tells the model not to push. The permissions make pushing impossible. Belt and suspenders is the right posture here, because the prose is for the model's benefit and the permissions are for yours. The `persona` block is where the personality lives, and notice how small it is: a tone, a verbosity setting, two style rules. That is the part everyone puts on the box, and it is 5 lines out of 90.
 
-`spec.model` does not pin a model. It declares a capability `tier` of `standard`, a normalized demand that says "this is ordinary work, not frontier work," and lets the harness map that tier to whatever it has configured. The `fallbacks` list gives a specific model to try if the harness cannot resolve the tier. This is how a profile written in August 2026 keeps working in August 2027 without editing.
+`spec.model` does not pin a model. It declares a capability `tier` of `standard`, a normalized demand that says "this is ordinary work, not frontier work, " and lets the harness map that tier to whatever it has configured. The `fallbacks` list gives a specific model to try if the harness cannot resolve the tier. This is how a profile written in August 2026 keeps working in August 2027 without editing.
 
 `spec.tools` uses an allowlist. Three tools exist for this agent. Everything else does not. The `bindings` entry says that `shell_exec`, even though allowed, requires a human to approve each call. That is how you let an agent run `git log` without letting it run anything unsupervised.
 
@@ -282,7 +283,7 @@ That distinction is the one thing I ask every builder in this space to adopt, wh
 The selected harness keeps model access, tools, authentication, sandboxing, approvals, and final policy enforcement. Merced AI never supersedes a harness policy. Nothing here can make a harness enforce a permission it does not have. The value is that you stop rewriting your reviewer for each vendor's format and stop waiting for one harness to win.
 
 | | Buzz | Grok Bot | Hermes Bot Mode | OAP + Merced AI |
-|---|---|---|---|---|
+|--|--|--|--|--|
 | Where the agent lives | Nostr keypair, platform account | Vendor cloud VM | `~/.hermes/profiles/<name>/` | A YAML/JSON/Markdown file in your repo |
 | Readable by other tools | Via ACP bridge | No | No | Yes, by design |
 | Permission enforcement | Platform-level, per key | Vendor-controlled | Hermes policy | Harness policy, profile can only narrow |
@@ -319,8 +320,8 @@ You do not have to adopt everything at once, and you do not have to adopt my too
 python -m pip install merced-ai
 merced-ai init
 merced-ai profile create reviewer \
-  --description "Reviews code for concrete defects before merge." \
-  --instructions "Review code. Report verified defects and do not edit files."
+ -description "Reviews code for concrete defects before merge." \
+ -instructions "Review code. Report verified defects and do not edit files."
 merced-ai profile validate .agents/reviewer.agent.yaml
 ```
 
@@ -330,13 +331,13 @@ merced-ai profile validate .agents/reviewer.agent.yaml
 
 ```bash
 merced-ai harness list
-merced-ai bot create reviewer --profile reviewer --harness codex --fallback claude
-merced-ai profile effective reviewer --harness codex
-merced-ai ask reviewer "Review the current diff" --dry-run --explain
+merced-ai bot create reviewer -profile reviewer -harness codex -fallback claude
+merced-ai profile effective reviewer -harness codex
+merced-ai ask reviewer "Review the current diff" -dry-run -explain
 merced-ai ask reviewer "Review the current diff"
 ```
 
-`harness list` shows what was discovered and at what version. `bot create` binds the profile to a primary harness with a fallback. `profile effective` shows exactly what the target harness will receive and which fields survived. The `--dry-run --explain` flags on `ask` print the full projection report without executing. Only then run it. Sessions are durable and project-local, so `merced-ai session list` and `session resume <id>` pick up where you left off. If you prefer clicking to typing, `python -m pip install 'merced-ai[webui]'` and `merced-ai ui` serve the same records in a loopback browser.
+`harness list` shows what was discovered and at what version. `bot create` binds the profile to a primary harness with a fallback. `profile effective` shows exactly what the target harness will receive and which fields survived. The `-dry-run -explain` flags on `ask` print the full projection report without executing. Only then run it. Sessions are durable and project-local, so `merced-ai session list` and `session resume <id>` pick up where you left off. If you prefer clicking to typing, `python -m pip install 'merced-ai[webui]'` and `merced-ai ui` serve the same records in a loopback browser.
 
 **Path 3: Use a governed harness when the work needs evidence.** If you are in an environment where someone will eventually ask who authorized a write, start with Loro. It has a `mock` provider, so the first run needs no API key.
 
@@ -353,7 +354,7 @@ loro audit verify
 
 `get-started` reads the current folder and recommends the next command. The three `setup` wizards configure identity binding, approval prompts, and the hash-chained audit log. After a run, `audit verify` walks the chain and confirms nothing was edited. Drop the same `release-notes.agent.yaml` from above into the project and Loro reads it natively, intersected with whatever managed policy you have configured.
 
-**Path 4: Try the commercial products with the file question in mind.** Buzz is free and self-hostable, and it is the best place to feel what agent-as-team-member is like in a shared workspace. Hermes Bot Mode is free and runs on your own machine. Grok Bot costs a subscription. All three are worth trying. When you do, ask one question of each: where is the agent, and can I read it? If the answer is a file you can open, you are in good shape regardless of whose format it is. If the answer is "in our cloud," decide now how much you are willing to invest in something you rent.
+**Path 4: Try the commercial products with the file question in mind.** Buzz is free and self-hostable, and it is the best place to feel what agent-as-team-member is like in a shared workspace. Hermes Bot Mode is free and runs on your own machine. Grok Bot costs a subscription. All three are worth trying. When you do, ask one question of each: where is the agent, and can I read it? If the answer is a file you can open, you are in good shape regardless of whose format it is. If the answer is "in our cloud, " decide now how much you are willing to invest in something you rent.
 
 Whichever path you take, the habit that matters is putting the profile next to the code. Commit `.agents/` to the repository. Review changes to it in pull requests. Treat a change to a permission block with the same seriousness as a change to CI configuration, because it is the same kind of thing.
 

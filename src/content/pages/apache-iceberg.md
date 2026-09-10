@@ -2,6 +2,7 @@
 title: "Apache Iceberg Explained: Architecture and Internals"
 meta_title: "Apache Iceberg Explained | The Open Table Format Guide"
 description: "A deep technical guide to how Apache Iceberg works, covering snapshots, manifest lists, schema evolution, hidden partitioning, and catalog design."
+canonical: "https://iceberglakehouse.com/apache-iceberg/"
 ---
 
 # Apache Iceberg Explained

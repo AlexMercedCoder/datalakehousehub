@@ -2,7 +2,7 @@
 title: "Building Composable Query Engines with Rust Runtimes"
 date: 2026-05-24T10:15:00Z
 pubDatetime: 2026-05-24T10:15:00Z
-description: "Apache DataFusion, Velox, and Substrait form the foundation of modern composable query engine stacks. Learn how these components fit together and when to use each."
+description: "Apache DataFusion, Velox, and Substrait form the foundation of modern composable query engine stacks."
 author: "Alex Merced"
 category: "Data Engineering"
 tags:
@@ -17,17 +17,18 @@ draft: false
 image: "/images/blog/composable-query-engines/datafusion-vs-velox-comparison.png"
 canonical: "https://iceberglakehouse.com/posts/2026-05-24-composable-query-engines/"
 ---
-> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-05-24-composable-query-engines/).
 
 # Building Composable Query Engines with Rust Runtimes
 
 For most of data engineering history, a query engine was a monolithic system. You picked a database or warehouse, and it owned everything from the SQL parser through the disk I/O layer. The engine choice was also your storage choice, your catalog choice, and often your governance choice. Composability (the ability to mix and match components from different systems) was minimal.
 
+> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-05-24-composable-query-engines/).
+
 That design is being dismantled. Apache DataFusion provides an embeddable, modular query execution engine written in Rust. Meta's Velox provides a high-performance C++ execution kernel that plugs into Presto, Spark, and other systems. Substrait provides a cross-language plan representation format that lets query plans flow between different engines without recompilation or reparse. Apache Arrow provides the in-memory columnar format that eliminates serialization overhead when data moves between components.
 
 Together, these four projects define a stack where you can build a query engine the way you build a web application, assembling purpose-fit components rather than accepting a single vendor's implementation decisions at every layer.
 
----
+--
 
 ## The Problem with Monolithic Engines
 
@@ -37,7 +38,7 @@ This creates two expensive problems. First, every query engine team must solve t
 
 The composable stack addresses both by separating concerns into standardized layers.
 
----
+--
 
 ## The Composable Stack: Four Layers
 
@@ -55,7 +56,7 @@ DataFusion supports Substrait as both a producer (it can serialize its physical 
 
 **The memory layer: Apache Arrow IPC.** Arrow's Inter-Process Communication format allows data to pass between processes (or components in the same process) as raw memory pointers to columnar buffers. No serialization, no copying. When a DataFusion component passes a batch to a Velox component in the same process, the data doesn't move at all, only the pointer does.
 
----
+--
 
 ## Apache DataFusion: The Rust-Native Embedded Engine
 
@@ -76,28 +77,28 @@ use iceberg_datafusion::IcebergTableProvider;
 
 #[tokio::main]
 async fn main() -> datafusion::error::Result<()> {
-    let ctx = SessionContext::new();
-    
-    // Register an Iceberg table as a DataFusion source
-    let iceberg_provider = IcebergTableProvider::try_new(
-        "s3://my-bucket/iceberg/events/"
-    ).await?;
-    
-    ctx.register_table("events", Arc::new(iceberg_provider))?;
-    
-    // Query using standard SQL
-    let df = ctx.sql(
-        "SELECT region, COUNT(*) as cnt FROM events WHERE event_date = '2025-05-24' GROUP BY region"
-    ).await?;
-    
-    df.show().await?;
-    Ok(())
+ let ctx = SessionContext::new();
+ 
+ // Register an Iceberg table as a DataFusion source
+ let iceberg_provider = IcebergTableProvider::try_new(
+ "s3://my-bucket/iceberg/events/"
+ ).await?;
+ 
+ ctx.register_table("events", Arc::new(iceberg_provider))?;
+ 
+ // Query using standard SQL
+ let df = ctx.sql(
+ "SELECT region, COUNT(*) as cnt FROM events WHERE event_date = '2025-05-24' GROUP BY region"
+ ).await?;
+ 
+ df.show().await?;
+ Ok(())
 }
 ```
 
 DataFusion has real production users. dbt Fusion uses DataFusion for SQL compilation and plan analysis. InfluxDB IOx uses it as the query engine for InfluxDB's column-store backend. The Ballista distributed query engine uses DataFusion as its single-node execution layer.
 
----
+--
 
 ## Meta Velox: The C++ Execution Kernel
 
@@ -107,7 +108,7 @@ Velox integrates as a native execution plugin for Presto at Meta and is availabl
 
 Velox also accepts Substrait plans, which means it can interoperate with DataFusion-produced plans for cross-system execution.
 
----
+--
 
 ## DataFusion vs Velox: Choosing Your Foundation
 
@@ -121,7 +122,7 @@ Choose Velox if you're adding an acceleration layer to an existing JVM-based sys
 
 For most new data platform projects in 2026, DataFusion is the default choice. The Rust ecosystem's library-first design, combined with DataFusion's extensive trait-based extensibility, makes it easier to build a new system on top of DataFusion than to integrate Velox into a stack that wasn't designed around it from the start.
 
----
+--
 
 ## What This Means for Platform Engineers
 
@@ -133,7 +134,7 @@ The composable runtime stack doesn't require you to write a query engine to be u
 
 **Arrow eliminates serialization overhead.** If two components in your pipeline both support Apache Arrow IPC, you can pass data between them without serialization. This is especially relevant for ML pipelines where query results feed directly into model inference.
 
----
+--
 
 ## Conclusion
 
@@ -141,7 +142,7 @@ The composable query engine stack (DataFusion for Rust-native execution, Velox f
 
 For teams building new data infrastructure, DataFusion is the most productive starting point. It's a mature library, actively maintained under the Apache Software Foundation, with production use cases that prove its execution model at scale.
 
----
+--
 
 ## Building an Embedded Analytics Engine with DataFusion
 
@@ -161,47 +162,36 @@ type SharedContext = Arc<RwLock<SessionContext>>;
 
 #[derive(Deserialize)]
 struct QueryRequest {
-    sql: String,
-    tenant_id: String,
-}
+ sql: String, tenant_id: String, }
 
 #[derive(Serialize)]
 struct QueryResponse {
-    rows: Vec<serde_json::Value>,
-    row_count: usize,
-    execution_time_ms: u64,
-}
+ rows: Vec<serde_json::Value>, row_count: usize, execution_time_ms: u64, }
 
 async fn execute_query(
-    ctx: web::Data<SharedContext>,
-    query: web::Json<QueryRequest>,
-) -> HttpResponse {
-    let start = std::time::Instant::now();
-    
-    // Get or create tenant context
-    let session = ctx.read().await;
-    
-    // Execute SQL query
-    match session.sql(&query.sql).await {
-        Ok(df) => {
-            let batches = df.collect().await.unwrap_or_default();
-            let rows = arrow_to_json(&batches);
-            let elapsed = start.elapsed().as_millis() as u64;
-            
-            HttpResponse::Ok().json(QueryResponse {
-                row_count: rows.len(),
-                rows,
-                execution_time_ms: elapsed,
-            })
-        }
-        Err(e) => HttpResponse::BadRequest().body(e.to_string()),
-    }
+ ctx: web::Data<SharedContext>, query: web::Json<QueryRequest>, ) -> HttpResponse {
+ let start = std::time::Instant::now();
+ 
+ // Get or create tenant context
+ let session = ctx.read().await;
+ 
+ // Execute SQL query
+ match session.sql(&query.sql).await {
+ Ok(df) => {
+ let batches = df.collect().await.unwrap_or_default();
+ let rows = arrow_to_json(&batches);
+ let elapsed = start.elapsed().as_millis() as u64;
+ 
+ HttpResponse::Ok().json(QueryResponse {
+ row_count: rows.len(), rows, execution_time_ms: elapsed, })
+ }
+ Err(e) => HttpResponse::BadRequest().body(e.to_string()), }
 }
 ```
 
 This embedded pattern means the query engine starts and stops with the application process, scales horizontally with the application, and has zero network overhead for query execution, data stays in the process address space.
 
----
+--
 
 ## Ballista: DataFusion for Distributed Workloads
 
@@ -214,23 +204,23 @@ use ballista::prelude::*;
 
 #[tokio::main]
 async fn main() -> Result<()> {
-    // Connect to Ballista scheduler
-    let ctx = BallistaContext::remote("localhost", 50050, &BallistaConfig::new()).await?;
-    
-    // Register data sources - same API as local DataFusion
-    ctx.register_parquet("events", "s3://my-bucket/events/**/*.parquet", ParquetReadOptions::default()).await?;
-    
-    // Query executes distributed
-    let df = ctx.sql("SELECT date, SUM(amount) FROM events GROUP BY date ORDER BY date").await?;
-    df.show().await?;
-    
-    Ok(())
+ // Connect to Ballista scheduler
+ let ctx = BallistaContext::remote("localhost", 50050, &BallistaConfig::new()).await?;
+ 
+ // Register data sources - same API as local DataFusion
+ ctx.register_parquet("events", "s3://my-bucket/events/**/*.parquet", ParquetReadOptions::default()).await?;
+ 
+ // Query executes distributed
+ let df = ctx.sql("SELECT date, SUM(amount) FROM events GROUP BY date ORDER BY date").await?;
+ df.show().await?;
+ 
+ Ok(())
 }
 ```
 
 Ballista is less mature than DataFusion itself and is still catching up to the DataFusion API surface. But for teams that are already building on DataFusion and need to scale out, Ballista provides a path that doesn't require adopting Spark.
 
----
+--
 
 ## The Practical Impact on Query Performance
 
@@ -245,12 +235,9 @@ In a traditional architecture, a query that joins a Postgres table with an Icebe
 With DataFusion's pluggable table providers, all three sources can be registered as tables in the same SessionContext, and the join executes in a single Arrow-native pass with no intermediate files:
 
 ```sql
--- All three sources queried in one statement, no data movement
+- All three sources queried in one statement, no data movement
 SELECT 
-    u.user_id,
-    u.email,
-    e.purchase_count,
-    r.loyalty_tier
+ u.user_id, u.email, e.purchase_count, r.loyalty_tier
 FROM postgres_users u
 JOIN iceberg_events e ON u.user_id = e.user_id
 JOIN redis_loyalty r ON u.user_id = r.user_id
@@ -259,7 +246,7 @@ WHERE e.event_date = '2025-05-24'
 
 This query processes data from Postgres, Iceberg, and Redis without materializing any intermediate dataset to disk. The Arrow IPC format enables zero-copy data passing between the table providers and the join executor. For queries that frequently need cross-source joins, the performance improvement over traditional ETL-then-join workflows is substantial.
 
----
+--
 
 ## The Composable Data Ecosystem in Practice
 
@@ -273,7 +260,7 @@ This composability also means that adopting a new tool doesn't require rebuildin
 
 The organizational implication is significant. Composable architectures allow different teams to choose the query engine that fits their workload and skill set without creating data silos. The ML team uses Python and Polars. The analytics team uses DuckDB and SQL. The data platform team uses Spark for heavy transformation. All three teams share the same Iceberg tables. Coordination happens through data agreements and schema contracts, not through shared infrastructure choices.
 
----
+--
 
 ## Choosing a Query Engine: Decision Framework
 
@@ -285,7 +272,7 @@ Teams evaluating composable query engine options benefit from a structured decis
 
 **Account for ecosystem integrations.** Spark has the deepest catalog and connector integrations of any query engine in the open-source ecosystem. DuckDB has the fastest growing integration surface for ad-hoc analytics. DataFusion's Rust-native execution makes it the best choice when query execution must be embedded in a non-JVM service. Choose based on what already exists in your stack.
 
----
+--
 
 ### Build Deeper Expertise
 

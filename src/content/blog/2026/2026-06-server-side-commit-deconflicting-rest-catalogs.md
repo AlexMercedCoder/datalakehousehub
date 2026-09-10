@@ -13,7 +13,6 @@ slug: server-side-commit-deconflicting-rest-catalogs
 draft: false
 image: "/images/blog.png"
 ---
-
 # Server-Side Commit Deconflicting in REST Catalogs
 
 
@@ -89,7 +88,7 @@ I would also require a visible commit failure path for agent writers. If a commi
 ## Operational Checklist
 
 | Area | Question to answer | Why it matters |
-|---|---|---|
+|--|--|--|
 | Ownership | Who owns the write pipeline, the retry configuration, and the conflict recovery process? | Incidents need named owners, not shared confusion. |
 | Scope | Which writer types are in scope for this rollout? | A narrow writer scope is easier to test and govern. |
 | Concurrency | What is the maximum concurrent writer count for this table? | Concurrency limits define the expected conflict rate. |
@@ -138,7 +137,7 @@ The next step is to define the dimensions that actually change behavior: snapsho
 
 The first question is simple: what are the concurrent writer types on each high-traffic table, and what is the expected conflict rate between them? If nobody has measured it, the concurrency design is based on assumptions.
 
-The second question: what is the recovery process when an appender exceeds the retry limit because compaction ran concurrently? If the answer is "the operator manually retries," the process is not designed for automated scale.
+The second question: what is the recovery process when an appender exceeds the retry limit because compaction ran concurrently? If the answer is "the operator manually retries, " the process is not designed for automated scale.
 
 The third question: who gets notified when the reject rate for a specific table exceeds a threshold? If the answer is unclear, the conflict monitoring is not operational.
 

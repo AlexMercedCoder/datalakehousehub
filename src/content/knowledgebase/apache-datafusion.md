@@ -2,6 +2,7 @@
 title: "What is Apache DataFusion?"
 meta_title: "What is Apache DataFusion? | Expert Data Lakehouse Architecture Guide"
 description: "A comprehensive guide to Apache DataFusion. Learn how this massive, Rust-based extensible query engine framework is revolutionizing embedded analytics."
+canonical: "https://iceberglakehouse.com/iceberg/apache-datafusion/"
 ---
 
 # What is Apache DataFusion?

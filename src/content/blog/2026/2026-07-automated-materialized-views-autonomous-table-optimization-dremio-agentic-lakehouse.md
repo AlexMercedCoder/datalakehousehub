@@ -13,9 +13,10 @@ draft: false
 image: "/images/blog.png"
 canonical: "https://iceberglakehouse.com/posts/automated-materialized-views-autonomous-table-optimization-dremio-agentic-lakehouse/"
 ---
-> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/automated-materialized-views-autonomous-table-optimization-dremio-agentic-lakehouse/).
 
 Traditional lakehouse maintenance runs on a schedule. Someone writes a cron job to compact small files at 2 a.m., another to refresh a materialized view every hour, another to expire old snapshots on Sunday. This works when workloads are predictable, when the same dashboards hit the same tables in the same patterns week after week. AI-era workloads are not predictable. An agent investigating a business question does not run one query. It runs a burst of ten or twenty, each building on the last, joining datasets no one anticipated, filtering on columns no one indexed for, and it does this at whatever moment the business question arises rather than on a schedule you set in advance. Static maintenance built for steady BI traffic falls behind irregular agentic demand, and it falls behind in ways that are hard to see until latency and cost both creep up.
+
+> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/automated-materialized-views-autonomous-table-optimization-dremio-agentic-lakehouse/).
 
 Dremio's answer is to make physical optimization a function of observed demand rather than a manual tuning exercise. Reflections, Autonomous Reflections, automatic table optimization for Iceberg, and multiple layers of caching let the platform adapt what it materializes and how it stores data to what queries are actually running. The sections ahead cover why cron-based maintenance falls behind, how Reflections differ from traditional materialized views, how Autonomous Reflections work from query patterns, what automatic Iceberg table optimization covers, and, importantly, how to measure whether all of this is actually saving you anything. The governing idea, in Dremio's own framing: performance is an automated byproduct of the architecture, not a manual tuning exercise. That claim only holds if you can measure it, which is why honest measurement gets its own treatment below rather than a footnote.
 
@@ -46,7 +47,7 @@ It removes the burden from query authors. Nobody has to know a Reflection exists
 It decouples logical from physical. You can add, change, or remove Reflections without rewriting a single query, because queries reference logical datasets. Physical optimization becomes something the platform manages underneath a stable logical surface. Dremio's own comparison, [five ways Reflections outsmart traditional materialized views](https://www.dremio.com/blog/5-ways-dremio-reflections-outsmart-traditional-materialized-views/), goes deeper on the mechanics. The table below captures the core contrast.
 
 | Property | Traditional materialized view | Dremio Reflection |
-| --- | --- | --- |
+| -- | -- | -- |
 | Query references it | Explicitly, or via limited rewrite | Never, optimizer substitutes transparently |
 | Author awareness | Authors must know it exists | Invisible to authors and agents |
 | Semantic consistency | Risk of divergent definitions | Single logical definition preserved |
@@ -66,21 +67,21 @@ It is worth being precise about what this is and is not. This is not magic and i
 The advantage over a human doing this by hand is not that the machine is smarter. A skilled performance engineer given the full query log would reach similar conclusions. The advantage is scale and continuity. A human reviews query patterns occasionally, considers a handful of the most obvious candidates, and revisits the analysis maybe once a quarter because it is tedious work competing with everything else on their plate. The system does it across every query, all the time, without getting bored or falling behind. For a workload that changes weekly, quarterly human tuning is structurally too slow no matter how good the engineer is. Continuity is the real edge, and it is exactly the edge that matters most for agentic workloads that shift faster than any review cadence a person would keep up.
 
 ```
-   query history
-   (joins, filters, aggregations, hot datasets)
-            │
-            ▼
-   pattern detection ──▶ candidate Reflections ranked by
-            │             frequency × cost of recomputation
-            ▼
-   ┌──────────────────────────────────────────┐
-   │  create   →  accelerate frequent patterns │
-   │  refresh  →  keep valuable ones current   │
-   │  retire   →  drop patterns that faded     │
-   └──────────────────────────────────────────┘
-            │
-            ▼
-   optimizer substitutes Reflections transparently
+ query history
+ (joins, filters, aggregations, hot datasets)
+ │
+ ▼
+ pattern detection ──▶ candidate Reflections ranked by
+ │ frequency × cost of recomputation
+ ▼
+ ┌──────────────────────────────────────────┐
+ │ create → accelerate frequent patterns │
+ │ refresh → keep valuable ones current │
+ │ retire → drop patterns that faded │
+ └──────────────────────────────────────────┘
+ │
+ ▼
+ optimizer substitutes Reflections transparently
 ```
 
 ## Automatic Table Optimization for Iceberg
@@ -106,7 +107,7 @@ Measure the cost side just as carefully. Storage overhead is what the Reflection
 Then measure the operational dimension, which is easy to forget and often the largest saving: operator time. The hours a DBA or data engineer used to spend designing materialized views, tuning refresh schedules, and hand-writing compaction jobs are hours the automation gives back. That saving does not show up on a compute bill, but it is real and it compounds. The table below maps the manual tasks to their automated counterparts.
 
 | Manual DBA / engineer task | Dremio automated capability |
-| --- | --- |
+| -- | -- |
 | Design summary tables for hot patterns | Autonomous Reflections created from query history |
 | Schedule and tune materialized view refreshes | Refresh managed against observed demand |
 | Retire unused summary tables | Reflections retired when patterns fade |

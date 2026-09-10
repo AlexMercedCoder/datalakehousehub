@@ -1,7 +1,7 @@
 ---
 title: "What is Confluent?"
 meta_title: "What is Confluent? | Expert Data Lakehouse & AI Glossary"
-description: "A fully managed Kafka service offering enterprise-grade event streaming and real-time data processing tools. Learn the architecture, mechanics, and real-world value of Confluent in the modern data stack."
+description: "A fully managed Kafka service offering enterprise-grade event streaming and real-time data processing tools."
 ---
 
 ## What is Confluent?

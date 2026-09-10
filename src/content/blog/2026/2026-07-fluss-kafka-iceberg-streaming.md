@@ -1,6 +1,6 @@
 ---
 title: "Apache Fluss and Kafka Solve Different Problems in an Iceberg Pipeline"
-description: "Fluss puts a columnar, indexed hot tier between Kafka and Iceberg. Here's what it changes structurally, what Kafka still does better, and how to benchmark the comparison yourself."
+description: "Fluss puts a columnar, indexed hot tier between Kafka and Iceberg. Here's what it changes structurally, what Kafka still does better, and how to benchmark."
 date: 2026-07-28T09:00:00Z
 author: "Alex Merced"
 category: "Apache Iceberg"
@@ -15,11 +15,11 @@ image: "/images/blog.png"
 canonical: "https://iceberglakehouse.com/posts/fluss-kafka-iceberg-streaming/"
 ---
 
-> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/fluss-kafka-iceberg-streaming/).
-
 # Apache Fluss and Kafka Solve Different Problems in an Iceberg Pipeline
 
 A streaming team is asked to cut dashboard latency from six minutes to under thirty seconds. The pipeline is Kafka into Flink into Apache Iceberg, and the six minutes is almost entirely the Flink sink's commit interval.
+
+> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/fluss-kafka-iceberg-streaming/).
 
 They shorten it. Latency drops and the table starts producing a file per bucket per commit, so the file count grows by a factor of twelve. Query planning slows, compaction cannot keep up, and within two weeks the dashboard is slower than it was at six-minute commits.
 
@@ -39,7 +39,7 @@ An event is produced to Kafka. A Flink job consumes it, does whatever processing
 
 The latency is dominated by the checkpoint and commit interval, and that interval is bounded from below by three things.
 
-**File size economics.** Each commit produces at least one file per bucket per partition. A ten-second commit interval on a table with 32 buckets produces 32 files every ten seconds, which is 276,480 files a day. Each one carries footer overhead and a metadata entry, and readers pay for both. The historical gap between streaming and lakehouse has been somewhere in the five to fifteen minute range for exactly this reason: that is roughly how long it takes to accumulate enough records to write a file worth writing.
+**File size economics.** Each commit produces at least one file per bucket per partition. A ten-second commit interval on a table with 32 buckets produces 32 files every ten seconds, which is 276, 480 files a day. Each one carries footer overhead and a metadata entry, and readers pay for both. The historical gap between streaming and lakehouse has been somewhere in the five to fifteen minute range for exactly this reason: that is roughly how long it takes to accumulate enough records to write a file worth writing.
 
 **Metadata growth.** Every commit produces a snapshot and manifest entries. Frequent commits grow the metadata tree, and scan planning reads that tree. A table taking thousands of commits a day slows down for every reader unless expiration and manifest rewriting run aggressively.
 
@@ -52,7 +52,7 @@ The usual workaround is a second serving system. Keep Kafka for the stream, add 
 The three architectures compare on the dimensions that decide between them.
 
 | | Flink direct to Iceberg | Kafka plus Fluss plus Iceberg | Kafka replaced by Fluss |
-|---|---|---|---|
+|--|--|--|--|
 | Achievable freshness | Minutes | Sub-second | Sub-second |
 | Small-file pressure | High at low latency | Low | Low |
 | Systems to operate | One pipeline | Three layers | Two layers |
@@ -181,7 +181,7 @@ Each layer does the thing it is good at. Kafka does durable general-purpose tran
 
 The alternative composition, replacing Kafka with Fluss entirely using the protocol compatibility, is available and is a bigger commitment. It suits organizations whose streaming is predominantly analytical and whose event transport needs are modest. For most organizations Kafka is doing a job Fluss is not trying to do.
 
-There is a third option worth naming, which is doing neither. Flink writing directly to Iceberg with a commit interval in the low minutes, plus a query engine that accelerates recent partitions, is a simpler architecture with fewer moving parts. If your actual requirement is "under two minutes" rather than "under two seconds," that architecture meets it, and adding a streaming storage layer buys you complexity you do not need. Be honest about the requirement before adding a tier.
+There is a third option worth naming, which is doing neither. Flink writing directly to Iceberg with a commit interval in the low minutes, plus a query engine that accelerates recent partitions, is a simpler architecture with fewer moving parts. If your actual requirement is "under two minutes" rather than "under two seconds, " that architecture meets it, and adding a streaming storage layer buys you complexity you do not need. Be honest about the requirement before adding a tier.
 
 ## Benchmarking it yourself
 
@@ -192,17 +192,14 @@ What is useful is a method. Here is one you can run in a week.
 **Define the metric precisely.** End-to-end latency means the time from an event being produced to a query returning it. Instrument it with an event timestamp written by the producer and compare against query time at the consumer. Do not measure sink throughput and call it latency.
 
 ```sql
--- End-to-end latency measurement, run continuously against each candidate
+- End-to-end latency measurement, run continuously against each candidate
 SELECT
-    percentile_cont(0.50) WITHIN GROUP (ORDER BY lag_ms) AS p50_ms,
-    percentile_cont(0.95) WITHIN GROUP (ORDER BY lag_ms) AS p95_ms,
-    percentile_cont(0.99) WITHIN GROUP (ORDER BY lag_ms) AS p99_ms,
-    count(*)                                             AS sample_rows
+ percentile_cont(0.50) WITHIN GROUP (ORDER BY lag_ms) AS p50_ms, percentile_cont(0.95) WITHIN GROUP (ORDER BY lag_ms) AS p95_ms, percentile_cont(0.99) WITHIN GROUP (ORDER BY lag_ms) AS p99_ms, count(*) AS sample_rows
 FROM (
-    SELECT
-        timestampdiff(MILLISECOND, produced_at, current_timestamp) AS lag_ms
-    FROM measurement.events
-    WHERE produced_at >= current_timestamp - INTERVAL '5' MINUTE
+ SELECT
+ timestampdiff(MILLISECOND, produced_at, current_timestamp) AS lag_ms
+ FROM measurement.events
+ WHERE produced_at >= current_timestamp - INTERVAL '5' MINUTE
 );
 ```
 
@@ -213,12 +210,9 @@ Report p95 and p99, not the average. Streaming latency distributions have long t
 **Measure the cost of freshness, not just freshness.** For the Kafka-to-Flink-to-Iceberg baseline, run it at several commit intervals and record latency, file count per hour, and query planning time at each. That curve is the real finding. It shows you what a given latency target costs in table health, and it is what makes the comparison meaningful.
 
 ```sql
--- Track what a commit interval costs the table
+- Track what a commit interval costs the table
 SELECT
-    date_trunc('hour', committed_at) AS hour,
-    count(*)                          AS snapshots,
-    (SELECT count(*) FROM catalog.stream.events.files) AS current_files,
-    (SELECT count(*) FROM catalog.stream.events.manifests) AS manifests
+ date_trunc('hour', committed_at) AS hour, count(*) AS snapshots, (SELECT count(*) FROM catalog.stream.events.files) AS current_files, (SELECT count(*) FROM catalog.stream.events.manifests) AS manifests
 FROM catalog.stream.events.snapshots
 WHERE committed_at >= current_timestamp - INTERVAL '24' HOUR
 GROUP BY 1
@@ -347,7 +341,7 @@ Work through these in order.
 
 **What is your recovery time objective, and have you tested it?** Primary key tables recover in minutes rather than seconds. If your objective is tighter than that, either the table type or the objective has to change.
 
-A useful shortcut: if you answered "under 30 seconds," "wide records with narrow projection," "yes to point lookups," and "Flink," the case is strong. If you answered "a few minutes is fine," the case is weak regardless of how the other answers came out.
+A useful shortcut: if you answered "under 30 seconds, " "wide records with narrow projection, " "yes to point lookups, " and "Flink, " the case is strong. If you answered "a few minutes is fine, " the case is weak regardless of how the other answers came out.
 
 ## Where this is heading
 

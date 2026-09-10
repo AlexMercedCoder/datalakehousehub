@@ -16,9 +16,10 @@ draft: false
 image: "/images/blog.png"
 canonical: "https://iceberglakehouse.com/posts/2026-03-connector-dremio-open-catalog/"
 ---
-> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-03-connector-dremio-open-catalog/).
 
 Every Dremio Cloud account starts with a built-in Open Catalog : a fully managed Apache Iceberg catalog with integrated storage. When you create a Dremio Cloud project, you immediately have a catalog where you can create namespaces (folders), tables, and views without connecting any external sources, configuring storage, or setting up credentials.
+
+> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-03-connector-dremio-open-catalog/).
 
 This isn't a bare-bones starting point. The built-in Open Catalog is a production-grade Iceberg catalog with automated performance management, Autonomous Reflections, time travel, branching, and full DML support. It's the fastest path from "sign up" to "running analytics."
 
@@ -72,10 +73,10 @@ For tables in the built-in catalog, Dremio can automatically create and manage R
 Query any table as it existed at any point in the past:
 
 ```sql
--- Query table as it was 7 days ago
+- Query table as it was 7 days ago
 SELECT * FROM catalog_folder.my_table AT TIMESTAMP '2024-06-01 00:00:00';
 
--- Query a specific snapshot
+- Query a specific snapshot
 SELECT * FROM catalog_folder.my_table AT SNAPSHOT '1234567890123456789';
 ```
 
@@ -86,27 +87,27 @@ Time travel is valuable for auditing ("What did customer balances look like at q
 The built-in catalog supports all standard DML operations:
 
 ```sql
--- INSERT
+- INSERT
 INSERT INTO analytics.bronze.events
 SELECT event_type, user_id, event_timestamp
 FROM "s3-datalake".events.raw_events
 WHERE event_date = CURRENT_DATE - INTERVAL '1' DAY;
 
--- UPDATE
+- UPDATE
 UPDATE analytics.silver.customers
 SET segment = 'Enterprise'
 WHERE total_spend > 100000;
 
--- DELETE
+- DELETE
 DELETE FROM analytics.bronze.events
 WHERE event_timestamp < CURRENT_DATE - INTERVAL '365' DAY;
 
--- MERGE (upsert)
+- MERGE (upsert)
 MERGE INTO analytics.silver.customers AS target
 USING (
-  SELECT customer_id, SUM(amount) AS total_spend
-  FROM analytics.bronze.orders
-  GROUP BY customer_id
+ SELECT customer_id, SUM(amount) AS total_spend
+ FROM analytics.bronze.orders
+ GROUP BY customer_id
 ) AS source
 ON target.customer_id = source.customer_id
 WHEN MATCHED THEN UPDATE SET total_spend = source.total_spend
@@ -118,46 +119,30 @@ WHEN NOT MATCHED THEN INSERT (customer_id, total_spend) VALUES (source.customer_
 When you query items in the built-in catalog, you don't include a source name prefix : just the folder path and table/view name:
 
 ```sql
--- Create namespace structure
+- Create namespace structure
 CREATE FOLDER IF NOT EXISTS analytics;
 CREATE FOLDER IF NOT EXISTS analytics.bronze;
 CREATE FOLDER IF NOT EXISTS analytics.silver;
 CREATE FOLDER IF NOT EXISTS analytics.gold;
 
--- Create a table from an external source
+- Create a table from an external source
 CREATE TABLE analytics.bronze.raw_orders AS
 SELECT order_id, customer_id, product_id, quantity, price, order_date
 FROM "postgres-orders".public.orders
 WHERE order_date >= '2024-01-01';
 
--- Create a transformed table
+- Create a transformed table
 CREATE TABLE analytics.silver.enriched_orders AS
 SELECT
-  o.order_id,
-  o.customer_id,
-  c.customer_name,
-  c.region,
-  o.product_id,
-  p.product_name,
-  p.category,
-  o.quantity,
-  o.price,
-  o.quantity * o.price AS total_amount,
-  o.order_date
+ o.order_id, o.customer_id, c.customer_name, c.region, o.product_id, p.product_name, p.category, o.quantity, o.price, o.quantity * o.price AS total_amount, o.order_date
 FROM analytics.bronze.raw_orders o
 JOIN "postgres-orders".public.customers c ON o.customer_id = c.customer_id
 JOIN "postgres-orders".public.products p ON o.product_id = p.product_id;
 
--- Create an analytics view
+- Create an analytics view
 CREATE VIEW analytics.gold.revenue_summary AS
 SELECT
-  region,
-  category,
-  DATE_TRUNC('month', order_date) AS month,
-  SUM(total_amount) AS revenue,
-  COUNT(*) AS orders,
-  COUNT(DISTINCT customer_id) AS unique_customers,
-  ROUND(SUM(total_amount) / COUNT(DISTINCT customer_id), 2) AS revenue_per_customer
+ region, category, DATE_TRUNC('month', order_date) AS month, SUM(total_amount) AS revenue, COUNT(*) AS orders, COUNT(DISTINCT customer_id) AS unique_customers, ROUND(SUM(total_amount) / COUNT(DISTINCT customer_id), 2) AS revenue_per_customer
 FROM analytics.silver.enriched_orders
 GROUP BY region, category, DATE_TRUNC('month', order_date);
 ```
@@ -167,15 +152,11 @@ GROUP BY region, category, DATE_TRUNC('month', order_date);
 ```sql
 CREATE VIEW analytics.gold.product_performance AS
 SELECT
-  category,
-  product_name,
-  SUM(total_amount) AS revenue,
-  COUNT(*) AS orders,
-  CASE
-    WHEN SUM(total_amount) > 100000 THEN 'Top Performer'
-    WHEN SUM(total_amount) > 10000 THEN 'Solid'
-    ELSE 'Emerging'
-  END AS performance_tier
+ category, product_name, SUM(total_amount) AS revenue, COUNT(*) AS orders, CASE
+ WHEN SUM(total_amount) > 100000 THEN 'Top Performer'
+ WHEN SUM(total_amount) > 10000 THEN 'Solid'
+ ELSE 'Emerging'
+ END AS performance_tier
 FROM analytics.silver.enriched_orders
 GROUP BY category, product_name;
 ```
@@ -201,32 +182,25 @@ A VP of Product asks Claude "Compare our product category performance and identi
 ### AI SQL Functions
 
 ```sql
--- Generate product analysis with AI
+- Generate product analysis with AI
 SELECT
-  product_name,
-  performance_tier,
-  revenue,
-  AI_GENERATE(
-    'Write a one-sentence growth strategy for this product',
-    'Product: ' || product_name || ', Category: ' || category || ', Revenue: $' || CAST(revenue AS VARCHAR) || ', Tier: ' || performance_tier
-  ) AS growth_strategy
+ product_name, performance_tier, revenue, AI_GENERATE(
+ 'Write a one-sentence growth strategy for this product', 'Product: ' || product_name || ', Category: ' || category || ', Revenue: $' || CAST(revenue AS VARCHAR) || ', Tier: ' || performance_tier
+ ) AS growth_strategy
 FROM analytics.gold.product_performance;
 
--- Classify products for portfolio management
+- Classify products for portfolio management
 SELECT
-  product_name,
-  AI_CLASSIFY(
-    'Based on revenue and order volume, classify investment priority',
-    'Revenue: $' || CAST(revenue AS VARCHAR) || ', Orders: ' || CAST(orders AS VARCHAR),
-    ARRAY['Strategic Investment', 'Maintain', 'Optimize', 'Sunset']
-  ) AS investment_priority
+ product_name, AI_CLASSIFY(
+ 'Based on revenue and order volume, classify investment priority', 'Revenue: $' || CAST(revenue AS VARCHAR) || ', Orders: ' || CAST(orders AS VARCHAR), ARRAY['Strategic Investment', 'Maintain', 'Optimize', 'Sunset']
+ ) AS investment_priority
 FROM analytics.gold.product_performance;
 ```
 
 ## Built-in vs. External Catalogs
 
 | Feature | Built-in Open Catalog | External Catalogs (Glue, Unity, etc.) |
-|---|---|---|
+|--|--|--|
 | Setup | Zero configuration | Requires IAM, networking, credentials |
 | Auto-compaction | ✅ Automatic | ✅ For Iceberg tables |
 | Autonomous Reflections | ✅ Automatic | Manual Reflections only |
@@ -279,21 +253,18 @@ This medallion architecture runs entirely within Dremio : no external ETL tools,
 For ongoing data ingestion, use `MERGE` to incrementally update tables without full reloads:
 
 ```sql
--- Incremental merge: only update changed records
+- Incremental merge: only update changed records
 MERGE INTO analytics.silver.customers AS target
 USING (
-  SELECT customer_id, customer_name, email, segment, updated_at
-  FROM "postgres-crm".public.customers
-  WHERE updated_at > (SELECT MAX(updated_at) FROM analytics.silver.customers)
+ SELECT customer_id, customer_name, email, segment, updated_at
+ FROM "postgres-crm".public.customers
+ WHERE updated_at > (SELECT MAX(updated_at) FROM analytics.silver.customers)
 ) AS source
 ON target.customer_id = source.customer_id
 WHEN MATCHED THEN UPDATE SET
-  customer_name = source.customer_name,
-  email = source.email,
-  segment = source.segment,
-  updated_at = source.updated_at
+ customer_name = source.customer_name, email = source.email, segment = source.segment, updated_at = source.updated_at
 WHEN NOT MATCHED THEN INSERT (customer_id, customer_name, email, segment, updated_at)
-  VALUES (source.customer_id, source.customer_name, source.email, source.segment, source.updated_at);
+ VALUES (source.customer_id, source.customer_name, source.email, source.segment, source.updated_at);
 ```
 
 This pattern transfers only changed records, minimizing network traffic and compute costs.
@@ -308,11 +279,11 @@ Time travel is particularly valuable in the Open Catalog for:
 - **Recovery:** If a bad `UPDATE` or `DELETE` corrupts data, query the pre-change snapshot and restore
 
 ```sql
--- Compare current vs 24-hours-ago to find changed records
+- Compare current vs 24-hours-ago to find changed records
 SELECT current_data.customer_id, current_data.segment AS new_segment, old_data.segment AS old_segment
 FROM analytics.silver.customers current_data
 JOIN analytics.silver.customers AT TIMESTAMP '2024-06-14 00:00:00' old_data
-  ON current_data.customer_id = old_data.customer_id
+ ON current_data.customer_id = old_data.customer_id
 WHERE current_data.segment <> old_data.segment;
 ```
 

@@ -14,9 +14,10 @@ tags:
 slug: "zero-copy-legacy-db-to-iceberg"
 draft: false
 ---
-> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/zero-copy-legacy-db-to-iceberg/).
 
-The migration plan looked reasonable in the kickoff deck. Extract 4,000 tables from a 15-year-old enterprise warehouse, load them into cloud object storage as Apache Iceberg, repoint the 600 dashboards and 200 scheduled jobs, decommission the old system, and save the license fee. Eighteen months later the warehouse is still running, the object store holds three inconsistent copies of most tables, the dashboards are split between the two systems with nobody sure which is current, and the migration team is running a "double-ETL" pipeline that loads every source into both places every night so neither falls behind. The license fee is still being paid. The cloud bill has doubled.
+The migration plan looked reasonable in the kickoff deck. Extract 4, 000 tables from a 15-year-old enterprise warehouse, load them into cloud object storage as Apache Iceberg, repoint the 600 dashboards and 200 scheduled jobs, decommission the old system, and save the license fee. Eighteen months later the warehouse is still running, the object store holds three inconsistent copies of most tables, the dashboards are split between the two systems with nobody sure which is current, and the migration team is running a "double-ETL" pipeline that loads every source into both places every night so neither falls behind. The license fee is still being paid. The cloud bill has doubled.
+
+> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/zero-copy-legacy-db-to-iceberg/).
 
 I have watched this happen at enough companies to believe it is the default outcome of a lift-and-shift warehouse migration, not an unlucky one. The reason is structural. A lift-and-shift treats the migration as a data movement problem. It is not. It is a consumer cutover problem, and data movement is the easy half. The hard half is the 800 consumers who each need to keep working on the day their table moves, and who each depend on names, semantics, permissions, and performance characteristics that the physical move does not preserve.
 
@@ -30,9 +31,9 @@ It is worth being specific about the failure mechanisms, because the zero-copy d
 
 Consumers bind to physical names. A dashboard queries `EDW.SALES.FACT_ORDERS`. A scheduled job reads `finance_mart.dbo.gl_balances`. When the table moves, every consumer's connection string, schema reference, and table name has to change, and there are hundreds of them, owned by dozens of teams, some of which no longer exist. The migration team cannot change them all at once, so it changes them in waves, and during the waves some consumers read the old copy and some read the new one.
 
-Two copies means two truths. The moment a table exists in both systems, someone has to decide which is authoritative. Usually the answer is "the old one, until the cutover," which means the new copy is a lagging replica that has to be reloaded on every source refresh. That is the double-ETL: every ingestion pipeline now writes twice. It doubles the cost, doubles the failure surface, and creates a class of bugs where the two copies disagree and nobody knows why.
+Two copies means two truths. The moment a table exists in both systems, someone has to decide which is authoritative. Usually the answer is "the old one, until the cutover, " which means the new copy is a lagging replica that has to be reloaded on every source refresh. That is the double-ETL: every ingestion pipeline now writes twice. It doubles the cost, doubles the failure surface, and creates a class of bugs where the two copies disagree and nobody knows why.
 
-Semantics do not survive the move. A legacy warehouse has 15 years of views, stored procedures, computed columns, and implicit type conversions. A `DECIMAL(18,4)` in one system rounds differently from a `DOUBLE` in another. A view that joins across four schemas encodes business logic that exists nowhere else. Moving the base tables and rebuilding the views in the new system is a rewrite, and rewrites introduce differences that show up as reconciliation failures months later.
+Semantics do not survive the move. A legacy warehouse has 15 years of views, stored procedures, computed columns, and implicit type conversions. A `DECIMAL(18, 4)` in one system rounds differently from a `DOUBLE` in another. A view that joins across four schemas encodes business logic that exists nowhere else. Moving the base tables and rebuilding the views in the new system is a rewrite, and rewrites introduce differences that show up as reconciliation failures months later.
 
 Access control is rebuilt from scratch. The old system has grants accumulated over a decade. The new system starts empty. The migration team either recreates every grant (and gets some wrong) or opens the new system wide during the migration (and creates an audit finding).
 
@@ -63,7 +64,7 @@ The reason there is no double-ETL is that the copy in phase four is a one-time m
 
 The mirror phase is the largest amount of work and the least risky, because nothing changes for anyone. The goal is to build a complete logical model of the legacy warehouse inside the virtualization engine.
 
-Start with inventory. Pull the catalog of the legacy warehouse: every schema, table, view, and the query log for the last 90 days. The query log is the important part. It tells you which of the 4,000 tables are actually read, by whom, and how often. In every migration I have seen, 60 to 80 percent of tables have not been queried in the inventory window. Those do not need a view. They need an archive decision.
+Start with inventory. Pull the catalog of the legacy warehouse: every schema, table, view, and the query log for the last 90 days. The query log is the important part. It tells you which of the 4, 000 tables are actually read, by whom, and how often. In every migration I have seen, 60 to 80 percent of tables have not been queried in the inventory window. Those do not need a view. They need an archive decision.
 
 Connect the engine to the legacy warehouse as a source. In Dremio this is a source configuration with the connector for the database, credentials, and connection pool settings. The engine reads the warehouse's metadata and exposes every table under `legacy_edw.<schema>.<table>`. Filter and projection pushdown to the warehouse is what makes this usable at scale, because the engine sends `WHERE` clauses down rather than pulling whole tables.
 
@@ -78,36 +79,26 @@ The warehouse's existing views need to be ported into the silver tier. This is r
 Here is what a staging view and a conformed view look like in Dremio's SQL. The pattern is identical in any engine with view support:
 
 ```sql
--- Staging: one-to-one alias over the physical table. This is the swap point.
+- Staging: one-to-one alias over the physical table. This is the swap point.
 CREATE VIEW staging.sales.fact_orders AS
 SELECT
-  ORDER_ID          AS order_id,
-  CUSTOMER_KEY      AS customer_key,
-  ORDER_DT          AS order_date,
-  CAST(ORDER_AMT AS DECIMAL(18,4)) AS order_amount,
-  STATUS_CD         AS status_code,
-  LOAD_TS           AS load_timestamp
+ ORDER_ID AS order_id, CUSTOMER_KEY AS customer_key, ORDER_DT AS order_date, CAST(ORDER_AMT AS DECIMAL(18, 4)) AS order_amount, STATUS_CD AS status_code, LOAD_TS AS load_timestamp
 FROM legacy_edw.SALES.FACT_ORDERS;
 
--- Conformed: business logic ported from the legacy view V_ORDERS_ENRICHED.
+- Conformed: business logic ported from the legacy view V_ORDERS_ENRICHED.
 CREATE VIEW conformed.sales.orders AS
 SELECT
-  o.order_id,
-  o.order_date,
-  o.order_amount,
-  c.customer_id,
-  c.customer_segment,
-  CASE o.status_code
-    WHEN 'C' THEN 'completed'
-    WHEN 'X' THEN 'cancelled'
-    ELSE 'open'
-  END AS order_status
+ o.order_id, o.order_date, o.order_amount, c.customer_id, c.customer_segment, CASE o.status_code
+ WHEN 'C' THEN 'completed'
+ WHEN 'X' THEN 'cancelled'
+ ELSE 'open'
+ END AS order_status
 FROM staging.sales.fact_orders o
 JOIN staging.sales.dim_customer c
-  ON o.customer_key = c.customer_key
+ ON o.customer_key = c.customer_key
 WHERE o.load_timestamp >= DATE '2015-01-01';
 
--- Gold: what dashboards query.
+- Gold: what dashboards query.
 CREATE VIEW sales.orders AS
 SELECT * FROM conformed.sales.orders;
 ```
@@ -145,7 +136,7 @@ This phase is where the zero-copy approach earns its name. Everything that a lif
 Here is a validation table for a migration in flight, showing the kind of tracking that makes this phase concrete:
 
 | Check | Method | Pass criterion | Typical failures found |
-|---|---|---|---|
+|--|--|--|--|
 | Row count parity | `SELECT COUNT(*)` on view vs legacy table, per table | Exact match | Ported view filter differs from original |
 | Aggregate parity | `SUM`, `MIN`, `MAX` per numeric column | Match within decimal precision | Type cast rounding, null vs zero |
 | Checksum parity | Hash of sorted output on sampled queries | Exact match | Collation, string trimming, timezone |
@@ -172,19 +163,16 @@ Large, mutable tables (slowly changing dimensions, tables with updates and delet
 The swap itself is a view redefinition:
 
 ```sql
--- Before: staging view reads the legacy warehouse.
+- Before: staging view reads the legacy warehouse.
 CREATE OR REPLACE VIEW staging.sales.fact_orders AS
 SELECT
-  ORDER_ID AS order_id, CUSTOMER_KEY AS customer_key,
-  ORDER_DT AS order_date, CAST(ORDER_AMT AS DECIMAL(18,4)) AS order_amount,
-  STATUS_CD AS status_code, LOAD_TS AS load_timestamp
+ ORDER_ID AS order_id, CUSTOMER_KEY AS customer_key, ORDER_DT AS order_date, CAST(ORDER_AMT AS DECIMAL(18, 4)) AS order_amount, STATUS_CD AS status_code, LOAD_TS AS load_timestamp
 FROM legacy_edw.SALES.FACT_ORDERS;
 
--- After: same view, same columns, same types, reads Iceberg.
+- After: same view, same columns, same types, reads Iceberg.
 CREATE OR REPLACE VIEW staging.sales.fact_orders AS
 SELECT
-  order_id, customer_key, order_date, order_amount,
-  status_code, load_timestamp
+ order_id, customer_key, order_date, order_amount, status_code, load_timestamp
 FROM lakehouse.sales.fact_orders;
 ```
 
@@ -225,7 +213,7 @@ The swap is the moment of truth for each table, and it should be boring. Here is
 
 Total elapsed time is usually under an hour, most of it waiting for the reflection refresh. No consumer is notified because no consumer is affected. The next night's load runs against Iceberg, and the legacy table never receives another row.
 
-Batch the swaps. Ten tables a night is a reasonable pace for a team of two once the runbook is automated, and the runbook automates well because every step is a SQL statement or an API call. A 4,000-table warehouse with 1,200 tables worth migrating (the rest archived) is four months of swaps at that pace, and the four months are low-risk background work rather than a critical-path cutover.
+Batch the swaps. Ten tables a night is a reasonable pace for a team of two once the runbook is automated, and the runbook automates well because every step is a SQL statement or an API call. A 4, 000-table warehouse with 1, 200 tables worth migrating (the rest archived) is four months of swaps at that pace, and the four months are low-risk background work rather than a critical-path cutover.
 
 ## The Cost Model
 
@@ -243,7 +231,7 @@ The line item that surprises finance teams is the engine cost in phases one thro
 
 **Ported views that depend on legacy-only functions.** A view uses a warehouse-specific function (a Teradata `QUALIFY`, an Oracle `CONNECT BY`, a SQL Server `PIVOT` with dynamic columns) that the engine pushes down to the legacy source and cannot evaluate itself. It works in phases one through three because the source is the legacy system. It breaks at the swap when the source is Iceberg. The sign is a view that only plans successfully with pushdown. Audit every ported view for source-specific SQL in phase one and rewrite it in the engine's dialect before validation.
 
-**Type drift at the copy.** The Iceberg table is created with a type that does not match the staging view's cast. A `DECIMAL(18,4)` becomes a `DOUBLE` because the copy statement inferred it. Parity checks catch this, but only if you run them after the swap. Define Iceberg table schemas explicitly rather than inferring them from `CREATE TABLE AS SELECT`.
+**Type drift at the copy.** The Iceberg table is created with a type that does not match the staging view's cast. A `DECIMAL(18, 4)` becomes a `DOUBLE` because the copy statement inferred it. Parity checks catch this, but only if you run them after the swap. Define Iceberg table schemas explicitly rather than inferring them from `CREATE TABLE AS SELECT`.
 
 **Reflection staleness after swap.** The reflection on a gold view is still built from the legacy source when the staging view swaps, and until it refreshes, queries served from the reflection see stale data (if the legacy table received loads after the copy) or old physics. Trigger a refresh as part of the swap runbook rather than waiting for the schedule.
 

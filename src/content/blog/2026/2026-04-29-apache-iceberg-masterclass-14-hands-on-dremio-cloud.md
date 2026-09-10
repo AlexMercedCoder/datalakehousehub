@@ -14,11 +14,12 @@ draft: false
 image: "/images/blog/apache-iceberg-masterclass/14-hands-on-dremio-cloud-dremio-iceberg-workflow.png"
 canonical: "https://iceberglakehouse.com/posts/2026-04-29-iceberg-masterclass-14/"
 ---
-> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-04-29-iceberg-masterclass-14/).
 
-<!-- Meta Description: A practical walkthrough of creating, querying, and optimizing Iceberg tables on Dremio Cloud, from account setup to AI-powered analytics. -->
-<!-- Primary Keyword: Dremio Cloud Apache Iceberg -->
-<!-- Secondary Keywords: Dremio Cloud tutorial, Iceberg hands-on, COPY INTO, semantic layer -->
+<!- Meta Description: A practical walkthrough of creating, querying, and optimizing Iceberg tables on Dremio Cloud, from account setup to AI-powered analytics. ->
+<!- Primary Keyword: Dremio Cloud Apache Iceberg ->
+<!- Secondary Keywords: Dremio Cloud tutorial, Iceberg hands-on, COPY INTO, semantic layer ->
+
+> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-04-29-iceberg-masterclass-14/).
 
 *Read the complete Apache Iceberg Masterclass series:*
 * [Part 1: What Are Table Formats and Why Were They Needed?](/blog/2026-04-29-apache-iceberg-masterclass-01-table-formats)
@@ -54,12 +55,7 @@ Dremio creates an [Open Catalog](https://www.dremio.com/platform/open-catalog/) 
 
 ```sql
 CREATE TABLE analytics.orders (
-    order_id BIGINT,
-    customer_id BIGINT,
-    order_date DATE,
-    amount DECIMAL(10,2),
-    status VARCHAR,
-    region VARCHAR
+ order_id BIGINT, customer_id BIGINT, order_date DATE, amount DECIMAL(10, 2), status VARCHAR, region VARCHAR
 )
 PARTITION BY (day(order_date))
 ```
@@ -107,11 +103,7 @@ Dremio's [semantic layer](https://www.dremio.com/platform/semantic-layer/) lets 
 ```sql
 CREATE VIEW analytics.customer_orders AS
 SELECT
-    o.customer_id,
-    c.customer_name,
-    c.region,
-    SUM(o.amount) AS total_spend,
-    COUNT(*) AS order_count
+ o.customer_id, c.customer_name, c.region, SUM(o.amount) AS total_spend, COUNT(*) AS order_count
 FROM analytics.orders o
 JOIN analytics.customers c ON o.customer_id = c.customer_id
 GROUP BY o.customer_id, c.customer_name, c.region
@@ -124,11 +116,11 @@ Add wikis and tags to views and tables through the Dremio UI. These descriptions
 Dremio Reflections are precomputed materializations that automatically accelerate queries without requiring changes to your SQL. When you create a reflection on a view or table, Dremio precomputes the results and stores them as optimized Iceberg tables on fast storage:
 
 ```sql
--- Create an aggregation reflection for fast dashboard queries
+- Create an aggregation reflection for fast dashboard queries
 ALTER TABLE analytics.customer_orders
-  CREATE AGGREGATE REFLECTION customer_orders_agg
-  USING DIMENSIONS (region, order_date)
-  MEASURES (total_spend SUM, order_count SUM)
+ CREATE AGGREGATE REFLECTION customer_orders_agg
+ USING DIMENSIONS (region, order_date)
+ MEASURES (total_spend SUM, order_count SUM)
 ```
 
 When a query matches the reflection's definition, Dremio serves it from the precomputed data instead of scanning the full table. Queries that take 30 seconds against raw data can complete in under 1 second with reflections. The query optimizer chooses the reflection transparently, so users and applications do not need to know reflections exist.
@@ -138,14 +130,11 @@ When a query matches the reflection's definition, Dremio serves it from the prec
 Dremio provides column-level access control and row-level filtering directly in the [semantic layer](https://www.dremio.com/platform/semantic-layer/):
 
 ```sql
--- Create a view that masks PII for non-privileged users
+- Create a view that masks PII for non-privileged users
 CREATE VIEW analytics.orders_masked AS
 SELECT
-    order_id,
-    CASE WHEN is_member('finance_team') THEN customer_name
-         ELSE '***MASKED***' END AS customer_name,
-    order_date,
-    amount
+ order_id, CASE WHEN is_member('finance_team') THEN customer_name
+ ELSE '***MASKED***' END AS customer_name, order_date, amount
 FROM analytics.orders
 ```
 
@@ -156,7 +145,7 @@ Governance policies defined in the semantic layer apply consistently regardless 
 One of Dremio's unique capabilities is querying Iceberg tables alongside data in other systems:
 
 ```sql
--- Join Iceberg table with a PostgreSQL table
+- Join Iceberg table with a PostgreSQL table
 SELECT i.order_id, i.amount, p.payment_status
 FROM analytics.orders i
 JOIN postgres_source.public.payments p
@@ -172,13 +161,13 @@ This eliminates the need to move all data into Iceberg before you can query it. 
 ### Table Optimization
 
 ```sql
--- Compact small files
+- Compact small files
 OPTIMIZE TABLE analytics.orders REWRITE DATA USING BIN_PACK
 
--- Compact with sorting for better file skipping
+- Compact with sorting for better file skipping
 OPTIMIZE TABLE analytics.orders REWRITE DATA USING SORT (order_date, customer_id)
 
--- Expire old snapshots
+- Expire old snapshots
 ALTER TABLE analytics.orders EXPIRE SNAPSHOTS OLDER_THAN = '2024-04-01 00:00:00'
 ```
 
@@ -187,30 +176,29 @@ For tables managed by [Open Catalog](https://www.dremio.com/platform/open-catalo
 ### Time Travel
 
 ```sql
--- Query the table as of a specific timestamp
+- Query the table as of a specific timestamp
 SELECT * FROM analytics.orders
 AT TIMESTAMP '2024-03-01 00:00:00'
 
--- Compare current data to a previous snapshot
+- Compare current data to a previous snapshot
 SELECT
-    current_data.region,
-    current_data.total - old_data.total AS growth
+ current_data.region, current_data.total - old_data.total AS growth
 FROM (SELECT region, SUM(amount) AS total FROM analytics.orders GROUP BY region) current_data
 JOIN (
-    SELECT region, SUM(amount) AS total
-    FROM analytics.orders AT TIMESTAMP '2024-01-01'
-    GROUP BY region
+ SELECT region, SUM(amount) AS total
+ FROM analytics.orders AT TIMESTAMP '2024-01-01'
+ GROUP BY region
 ) old_data ON current_data.region = old_data.region
 ```
 
 ### Metadata Inspection
 
 ```sql
--- Check table health
+- Check table health
 SELECT AVG(file_size_in_bytes)/1048576 AS avg_mb, COUNT(*) AS files
 FROM TABLE(table_files('analytics.orders'))
 
--- Review recent snapshots
+- Review recent snapshots
 SELECT committed_at, operation, summary
 FROM TABLE(table_snapshot('analytics.orders'))
 ORDER BY committed_at DESC LIMIT 5

@@ -1,7 +1,7 @@
 ---
 title: "What is Open Table Format?"
 meta_title: "What is Open Table Format? | Expert Data Lakehouse & AI Glossary"
-description: "A specification for structuring metadata to allow multiple processing engines to read and write to the same table. Learn the architecture, mechanics, and real-world value of Open Table Format in the modern data stack."
+description: "A specification for structuring metadata to allow multiple processing engines to read and write to the same table."
 ---
 
 ## What is Open Table Format?

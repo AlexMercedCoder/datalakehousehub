@@ -15,9 +15,10 @@ draft: false
 image: "/images/blog.png"
 canonical: "https://iceberglakehouse.com/posts/2026-02-sl-data-virtualization-semantic-layer/"
 ---
-> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-02-sl-data-virtualization-semantic-layer/).
 
 ![Data virtualization : connecting sources to a unified semantic layer without copying](/images/blog/semantic-layer/data-virtualization.png)
+
+> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-02-sl-data-virtualization-semantic-layer/).
 
 Every data pipeline you build to move data from one system to another costs you three things: time to build it, money to run it, and freshness you lose while waiting for the next sync. Most analytics architectures accept this cost as unavoidable. It isn't.
 
@@ -59,7 +60,7 @@ The combination is powerful: you get real-time access to all your data (virtuali
 Each technology is useful alone. Together, they cover gaps neither can fill individually:
 
 | Capability | Virtualization Only | Semantic Layer Only | Both Together |
-|---|---|---|---|
+|--|--|--|--|
 | Access distributed data | Yes | No (limited to centralized data) | Yes |
 | Business definitions | No | Yes | Yes |
 | Governance enforcement | No | Yes | Yes |
@@ -103,7 +104,7 @@ Not every query should hit the source directly. The right architecture uses both
 - Table-level optimizations (compaction, partitioning, clustering) would improve performance
 - AI workloads need scan-heavy access to large datasets
 
-The practical strategy: start every source as a federated (virtual) connection. Monitor query frequency and performance. When a dataset crosses the line into "queried daily by multiple teams," materialize it as an Apache Iceberg table. Dremio's Reflections automate this for the most common query patterns, creating materialized copies that the optimizer uses transparently.
+The practical strategy: start every source as a federated (virtual) connection. Monitor query frequency and performance. When a dataset crosses the line into "queried daily by multiple teams, " materialize it as an Apache Iceberg table. Dremio's Reflections automate this for the most common query patterns, creating materialized copies that the optimizer uses transparently.
 
 ## What to Do Next
 

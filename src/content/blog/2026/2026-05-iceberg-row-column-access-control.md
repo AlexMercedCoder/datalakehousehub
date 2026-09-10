@@ -11,11 +11,12 @@ draft: false
 image: "/images/blog.png"
 canonical: "https://iceberglakehouse.com/posts/iceberg-row-column-access-control/"
 ---
-> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/iceberg-row-column-access-control/).
 
 # Securing Apache Iceberg Tables with Fine-Grained Row and Column Level Access Control
 
 Apache Iceberg handles table format, schema evolution, and metadata management. What it doesn't handle is access control. The spec defines how data is structured and stored, not who can see which rows or whether a phone number column gets masked for certain users.
+
+> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/iceberg-row-column-access-control/).
 
 That gap isn't a flaw : it's a design choice. Security belongs in the catalog and query engine layer, not in the file format. But it means you need to understand which layer does which job before you assume your Iceberg tables are actually secured.
 
@@ -37,7 +38,7 @@ The key security feature in Polaris is credential vending. When a compute engine
 
 This means even if a compromised compute engine tries to scan your full S3 bucket, it gets credentials that only cover the paths Polaris has authorized. The storage policy is enforced at the catalog level, not just at the bucket IAM level.
 
-What Polaris doesn't do natively is row-level filtering or column masking. A catalog role either grants access to a table or it doesn't. For finer-grained control :  different rows visible to different roles, or SSN columns masked for analysts ,  you need the query engine layer.
+What Polaris doesn't do natively is row-level filtering or column masking. A catalog role either grants access to a table or it doesn't. For finer-grained control : different rows visible to different roles, or SSN columns masked for analysts, you need the query engine layer.
 
 ## Row-Level Security Through Query Engine Policies
 
@@ -49,15 +50,15 @@ Most Iceberg-compatible engines implement RLS through a policy layer that rewrit
 
 **Dremio** implements RLS and column masking through user-defined functions (UDFs) applied to virtual datasets. A virtual dataset (VDS) is a SQL view defined in Dremio's semantic layer. You define the masking or filtering logic once in the VDS, and every query against that virtual dataset goes through the access control logic. Users querying through Dremio can't bypass the VDS to reach the raw table unless they have direct table permissions.
 
-The UDF-based approach in Dremio is flexible. You can write masking functions that partially expose data :  showing the last four digits of a credit card number, or replacing an email domain with `***.***` ,  rather than fully hiding the column. The function gets the user's role from the session context and applies the appropriate transformation.
+The UDF-based approach in Dremio is flexible. You can write masking functions that partially expose data : showing the last four digits of a credit card number, or replacing an email domain with `***.***`, rather than fully hiding the column. The function gets the user's role from the session context and applies the appropriate transformation.
 
 ```sql
--- Example Dremio column masking UDF
+- Example Dremio column masking UDF
 CREATE FUNCTION mask_email(email VARCHAR, user_role VARCHAR)
 RETURNS VARCHAR
 AS IF user_role IN ('admin', 'compliance') THEN email
-   ELSE REGEXP_REPLACE(email, '@.*', '@[redacted]')
-   END;
+ ELSE REGEXP_REPLACE(email, '@.*', '@[redacted]')
+ END;
 ```
 
 ![Apache Polaris credential vending and access control flow](/images/blog/may28seo/polaris-access-control-flow.png)
@@ -81,7 +82,7 @@ Dremio's [fine-grained access control](https://www.dremio.com/blog/the-brain-of-
 For most enterprise Iceberg deployments, the realistic access control stack looks like this:
 
 | Layer | Tool | What It Controls |
-|---|---|---|
+|--|--|--|
 | Storage | S3 IAM or Azure RBAC | Who can access the bucket at all |
 | Catalog | Apache Polaris / Dremio Open Catalog | Which tables each engine can discover and access |
 | Engine | Dremio VDS + UDFs | Row filtering and column masking per user role |

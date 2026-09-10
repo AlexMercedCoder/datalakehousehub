@@ -1,7 +1,7 @@
 ---
 title: "What is Redpanda?"
 meta_title: "What is Redpanda? | Expert Data Lakehouse & AI Glossary"
-description: "A Kafka-compatible streaming data platform engineered in C++ to provide extremely low latency and high throughput. Learn the architecture, mechanics, and real-world value of Redpanda in the modern data stack."
+description: "A Kafka-compatible streaming data platform engineered in C++ to provide extremely low latency and high throughput."
 ---
 
 ## What is Redpanda?

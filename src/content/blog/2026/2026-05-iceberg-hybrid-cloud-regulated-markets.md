@@ -11,11 +11,12 @@ draft: false
 image: "/images/blog.png"
 canonical: "https://iceberglakehouse.com/posts/iceberg-hybrid-cloud-regulated-markets/"
 ---
-> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/iceberg-hybrid-cloud-regulated-markets/).
 
 # How Apache Iceberg Resolves the Hybrid-Cloud Challenge in Heavily Regulated Markets
 
 Financial institutions in Japan, Germany, and similar regulated markets face a specific architectural problem. Their regulators require sensitive data to stay on-premises or within a defined geographic boundary. Their data teams want cloud-scale analytics. Those two requirements pull in opposite directions, and proprietary cloud warehouses make the conflict worse.
+
+> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/iceberg-hybrid-cloud-regulated-markets/).
 
 Apache Iceberg resolves this by separating what the data is stored as from where it is stored and which engine queries it. That separation gives regulated enterprises a path to hybrid-cloud analytics that doesn't compromise data residency compliance.
 
@@ -33,7 +34,7 @@ The result is a two-system architecture that most regulated enterprises default 
 
 Iceberg tables store their data in Parquet files on object storage. That storage can be on-premises (using S3-compatible systems like MinIO or Ceph), in a private cloud, or in a public cloud region that meets residency requirements. The Iceberg table format itself doesn't dictate where the storage lives.
 
-The Iceberg catalog :  which tracks table metadata, schema, and file locations ,  is also storage-agnostic. You can run an open-source Iceberg REST catalog entirely within your own data center. Compute engines connect to that catalog to discover tables and get file locations. No data ever leaves your controlled environment unless you explicitly configure an engine to move it.
+The Iceberg catalog : which tracks table metadata, schema, and file locations, is also storage-agnostic. You can run an open-source Iceberg REST catalog entirely within your own data center. Compute engines connect to that catalog to discover tables and get file locations. No data ever leaves your controlled environment unless you explicitly configure an engine to move it.
 
 This creates an architecture where:
 
@@ -64,7 +65,7 @@ Not all data in a regulated institution is sensitive. General ledger aggregates,
 
 The challenge is joining sensitive on-premises tables with non-sensitive cloud tables in a single query. Iceberg's open catalog standard makes this possible through catalog federation. A query engine connected to both catalogs can reference tables from each in the same SQL statement. The engine plans the query, reads from each location according to the credentials it holds, and assembles the result.
 
-Dremio's query federation handles this pattern directly. It connects to multiple catalogs :  one on-premises, one in the cloud ,  and presents them in a unified namespace. An analyst writes a single SQL query. Dremio handles the cross-environment execution, applying access control from each catalog at the appropriate step.
+Dremio's query federation handles this pattern directly. It connects to multiple catalogs : one on-premises, one in the cloud, and presents them in a unified namespace. An analyst writes a single SQL query. Dremio handles the cross-environment execution, applying access control from each catalog at the appropriate step.
 
 The on-premises data never moves to the cloud. The cloud data never gets pulled into the on-premises system unnecessarily. Predicate pushdown filters data at the source before it crosses the network boundary.
 

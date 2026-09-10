@@ -15,7 +15,6 @@ draft: false
 image: "/images/blog.png"
 canonical: "https://iceberglakehouse.com/posts/2026-03-07-apache-arrow/"
 ---
-> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-03-07-apache-arrow/).
 
 *Read the complete Open Source and the Lakehouse series:*
 * [Part 1: Apache Software Foundation: History, Purpose, and Process](/blog/2026-04-apache-software-foundation)
@@ -25,6 +24,8 @@ canonical: "https://iceberglakehouse.com/posts/2026-03-07-apache-arrow/"
 * [Part 5: What is Apache Arrow?](/blog/2026-04-apache-arrow)
 * [Part 6: Assembling the Apache Lakehouse](/blog/2026-04-assembling-apache-lakehouse)
 * [Part 7: Agentic Analytics on the Apache Lakehouse](/blog/2026-04-agentic-analytics)
+
+> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-03-07-apache-arrow/).
 
 If you pull a million records from a database into a Python notebook, the query runs instantly, but the transfer feels endlessly slow. Your compute engine wastes the majority of that time quietly translating data layouts. 
 

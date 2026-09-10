@@ -15,7 +15,6 @@ slug: 2026-05-kafka-streaming-operations
 draft: false
 image: "/images/blog/kafka-streaming-operations/kafka-zookeeper-vs-kraft-architecture.png"
 ---
-
 # Kafka 4.0 Changes Streaming Platform Operations
 
 Apache Kafka 4.0 shipped on March 18, 2025, and it made one thing official: ZooKeeper is gone. Not deprecated, not optional, removed. Every new Kafka 4.0 cluster runs in KRaft mode. If your team still runs ZooKeeper-based brokers, you cannot do an in-place upgrade to 4.0. That's the short version of what changed.
@@ -24,7 +23,7 @@ The longer version is more interesting. Kafka 4.0 also marks two other operation
 
 Together, these changes rewrite several operating model assumptions that platform teams have held since 2015. Here's what they mean in practice.
 
----
+--
 
 ## The End of ZooKeeper: What KRaft Actually Changes
 
@@ -40,11 +39,11 @@ The operational implications are substantial.
 
 **Faster controller failover.** In ZooKeeper-based Kafka, a controller failover triggered a ZooKeeper session timeout, which could take 18 to 30 seconds under default configurations before the election completed and a new controller began serving metadata. KRaft uses a heartbeat-based leader detection mechanism with typical election times under 5 seconds in most environments.
 
-**Higher partition limits.** ZooKeeper stored partition metadata in memory, which capped practical cluster limits at around 200,000 partitions before memory pressure and election latency became problematic. KRaft's metadata log approach scales to millions of partitions on the same hardware. For teams running high-fanout event platforms with many small topics, this removes a hard architectural ceiling.
+**Higher partition limits.** ZooKeeper stored partition metadata in memory, which capped practical cluster limits at around 200, 000 partitions before memory pressure and election latency became problematic. KRaft's metadata log approach scales to millions of partitions on the same hardware. For teams running high-fanout event platforms with many small topics, this removes a hard architectural ceiling.
 
 **What doesn't change.** Your producer and consumer code still works the same way. Your topics, partitions, and consumer groups remain intact after migration. The client-facing API is backward compatible. The operational change is entirely on the broker and infrastructure side.
 
----
+--
 
 ## The Upgrade Path: Why You Can't Jump Directly to 4.0
 
@@ -67,7 +66,7 @@ One more constraint: Kafka 4.0 raises the minimum Java version requirements. Bro
 
 ![Six-step Kafka 4.0 migration roadmap from auditing the current ZooKeeper setup through MirrorMaker 2 replication and gradual traffic cutover](/images/blog/kafka-streaming-operations/kafka-40-migration-roadmap.png)
 
----
+--
 
 ## KIP-848: The New Consumer Group Protocol
 
@@ -101,7 +100,7 @@ Several configuration properties that consumers previously managed client-side a
 
 If you use Kafka Streams, note that Streams has a separate roadmap (KIP-1071) for adopting the new protocol. Do not enable `group.protocol=consumer` for Kafka Streams applications until the Streams version you're running explicitly supports it.
 
----
+--
 
 ## Removed APIs and Protocol Changes
 
@@ -115,7 +114,7 @@ Kafka 4.0 also removes several legacy components that were deprecated in earlier
 
 **Queues for Kafka (KIP-932).** This feature, in early access, enables point-to-point queue semantics where a message is consumed by exactly one consumer, rather than being broadcast to all subscribers in a partition-based group. For teams building task queue patterns on top of Kafka, this removes the need for external workarounds like single-partition topics or external coordination. Early access means the API may change before it stabilizes.
 
----
+--
 
 ## What This Means for Platform Operations
 
@@ -129,7 +128,7 @@ Schema Registry, ksqlDB, and other Confluent Platform components that store meta
 
 The clearest near-term win from 4.0 for most teams is not the architectural change but the operational simplification. Running one fewer distributed system (with its own leader election, connection pooling, Jute serialization format, and 4-letter word commands) reduces the number of things that can fail at 2 a.m.
 
----
+--
 
 ## Conclusion
 
@@ -137,7 +136,7 @@ Kafka 4.0 marks the end of a decade-long dependency on ZooKeeper. The migration 
 
 Plan for three specific compatibility items before starting: Java version requirements, removed legacy API versions, and the log4j configuration format change. None of them are blockers, but all three will cause silent failures if you don't check them ahead of time.
 
----
+--
 
 ## Producer Configuration for Throughput vs. Reliability
 
@@ -145,28 +144,28 @@ Kafka producer configuration involves a fundamental tradeoff: higher throughput 
 
 **High-throughput, tolerant of some data loss (metrics, telemetry):**
 ```properties
-acks=1                          # Leader acknowledges only
-batch.size=131072               # 128 KB batches
-linger.ms=20                    # Wait up to 20ms to fill batch
-compression.type=lz4            # Fast compression
-enable.idempotence=false        # No dedup overhead
+acks=1 # Leader acknowledges only
+batch.size=131072 # 128 KB batches
+linger.ms=20 # Wait up to 20ms to fill batch
+compression.type=lz4 # Fast compression
+enable.idempotence=false # No dedup overhead
 max.in.flight.requests.per.connection=5
 ```
 
 **Exactly-once semantics (financial transactions, CDC events):**
 ```properties
-acks=all                        # All in-sync replicas acknowledge
-enable.idempotence=true         # Deduplicate retries at the broker
-transactional.id=my-producer-001  # Enable transactions
-transaction.timeout.ms=60000    # 60 second transaction window
-max.in.flight.requests.per.connection=5  # Required with idempotence
-batch.size=65536               # 64 KB batches (smaller for latency)
-linger.ms=5                    # Short linger for latency
+acks=all # All in-sync replicas acknowledge
+enable.idempotence=true # Deduplicate retries at the broker
+transactional.id=my-producer-001 # Enable transactions
+transaction.timeout.ms=60000 # 60 second transaction window
+max.in.flight.requests.per.connection=5 # Required with idempotence
+batch.size=65536 # 64 KB batches (smaller for latency)
+linger.ms=5 # Short linger for latency
 ```
 
 The `enable.idempotence=true` setting ensures that retried producer sends don't create duplicate messages. The broker assigns each producer a unique PID (Producer ID) and sequence numbers to each message, allowing it to detect and discard duplicates. For CDC pipelines and financial event streams, idempotent producers are essential.
 
----
+--
 
 ## Consumer Lag Monitoring in Production
 
@@ -179,38 +178,38 @@ The standard tools for consumer lag monitoring:
 ```yaml
 # Alertmanager rule for consumer lag
 groups:
-  - name: kafka_consumer_lag
-    rules:
-      - alert: KafkaConsumerGroupHighLag
-        expr: kafka_consumergroup_lag{consumergroup="analytics-events-processor"} > 100000
-        for: 10m
-        labels:
-          severity: warning
-        annotations:
-          summary: "Consumer group {{ $labels.consumergroup }} is lagging"
-          description: "Lag of {{ $value }} messages on topic {{ $labels.topic }}, partition {{ $labels.partition }}"
-      
-      - alert: KafkaConsumerGroupCriticalLag
-        expr: kafka_consumergroup_lag{consumergroup="analytics-events-processor"} > 1000000
-        for: 5m
-        labels:
-          severity: critical
+ - name: kafka_consumer_lag
+ rules:
+ - alert: KafkaConsumerGroupHighLag
+ expr: kafka_consumergroup_lag{consumergroup="analytics-events-processor"} > 100000
+ for: 10m
+ labels:
+ severity: warning
+ annotations:
+ summary: "Consumer group {{ $labels.consumergroup }} is lagging"
+ description: "Lag of {{ $value }} messages on topic {{ $labels.topic }}, partition {{ $labels.partition }}"
+ 
+ - alert: KafkaConsumerGroupCriticalLag
+ expr: kafka_consumergroup_lag{consumergroup="analytics-events-processor"} > 1000000
+ for: 5m
+ labels:
+ severity: critical
 ```
 
-**Lag-in-seconds vs. lag-in-messages:** Message count lag is misleading when message sizes vary significantly. A lag of 100,000 small metrics events is very different from a lag of 100,000 10-KB transaction records. When possible, combine message lag with throughput metrics to estimate time-to-recovery:
+**Lag-in-seconds vs. lag-in-messages:** Message count lag is misleading when message sizes vary significantly. A lag of 100, 000 small metrics events is very different from a lag of 100, 000 10-KB transaction records. When possible, combine message lag with throughput metrics to estimate time-to-recovery:
 
 ```python
 def estimate_catchup_time(current_lag_messages, consumer_throughput_msgs_per_sec, producer_throughput_msgs_per_sec):
-    """Estimate time for a consumer to catch up with a given lag."""
-    net_catchup_rate = consumer_throughput_msgs_per_sec - producer_throughput_msgs_per_sec
-    if net_catchup_rate <= 0:
-        return float('inf')  # Consumer can't catch up at current rates
-    return current_lag_messages / net_catchup_rate  # Returns seconds to catch up
+ """Estimate time for a consumer to catch up with a given lag."""
+ net_catchup_rate = consumer_throughput_msgs_per_sec - producer_throughput_msgs_per_sec
+ if net_catchup_rate <= 0:
+ return float('inf') # Consumer can't catch up at current rates
+ return current_lag_messages / net_catchup_rate # Returns seconds to catch up
 ```
 
 If `estimate_catchup_time()` returns infinity (the consumer isn't keeping up with the producer even without the backlog), the issue isn't lag, it's consumer throughput. Adding more consumer instances or optimizing the processing logic is the correct intervention, not simply monitoring the lag number.
 
----
+--
 
 ## Kafka and the Streaming Lakehouse Stack
 
@@ -227,7 +226,7 @@ Understanding which component is the bottleneck at each scale level helps teams 
 
 Operational observability across this entire stack is what OpenLineage (for lineage) and Prometheus/Grafana (for metrics) enable, providing a unified view of where the streaming pipeline stands at any given moment.
 
----
+--
 
 ### Go Deeper on Streaming Data Architecture
 

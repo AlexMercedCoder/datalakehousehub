@@ -1,7 +1,7 @@
 ---
 title: "The Era of Zero-ETL Federation: Fueling AI Agents with Real-Time Cross-Enterprise Data"
 date: 2026-05-28T09:00:00Z
-description: "Zero-ETL federation lets AI agents join real-time CRM data with historical lakehouse tables instantly. Learn the architecture, tradeoffs, and how Dremio enables it."
+description: "Zero-ETL federation lets AI agents join real-time CRM data with historical lakehouse tables instantly."
 author: "Alex Merced"
 category: "Agentic Lakehouse"
 tags:
@@ -10,7 +10,6 @@ slug: "zero-etl-federation-ai-agents"
 draft: false
 image: "/images/blog.png"
 ---
-
 # The Era of Zero-ETL Federation: Fueling AI Agents with Real-Time Cross-Enterprise Data
 
 ETL pipelines were the right answer in 2010. You pulled data from operational systems nightly, transformed it, and loaded it into the warehouse. Analysts got yesterday's data by 8 AM. The tradeoff was acceptable.
@@ -33,7 +32,7 @@ For agentic analytics focused on current business conditions, batch ETL creates 
 
 **Incomplete cross-system joins:** When a customer churn prediction agent needs to join support ticket data (from a real-time source) with purchase history (in the lakehouse), a batch ETL approach requires either waiting for the next batch or running two separate analyses that can't be easily joined.
 
-**Decision lag:** Agents supporting operational decisions :  sales prioritization, inventory allocation, customer routing ,  need current data to produce actionable recommendations. A 12-hour lag in the underlying data produces recommendations that are 12 hours behind reality.
+**Decision lag:** Agents supporting operational decisions : sales prioritization, inventory allocation, customer routing, need current data to produce actionable recommendations. A 12-hour lag in the underlying data produces recommendations that are 12 hours behind reality.
 
 ## The Federation Architecture
 
@@ -86,17 +85,12 @@ With zero-ETL federation, the agent writes one query:
 
 ```sql
 SELECT 
-  s.account_id,
-  s.churn_date,
-  s.contract_value,
-  SUM(r.revenue_usd) AS lifetime_revenue,
-  COUNT(DISTINCT z.ticket_id) AS support_tickets_lifetime,
-  AVG(z.resolution_days) AS avg_resolution_days
+ s.account_id, s.churn_date, s.contract_value, SUM(r.revenue_usd) AS lifetime_revenue, COUNT(DISTINCT z.ticket_id) AS support_tickets_lifetime, AVG(z.resolution_days) AS avg_resolution_days
 FROM salesforce.accounts s
-  JOIN datalake.canonical_revenue r ON s.account_id = r.customer_id
-  JOIN zendesk.tickets z ON s.account_id = z.account_id
+ JOIN datalake.canonical_revenue r ON s.account_id = r.customer_id
+ JOIN zendesk.tickets z ON s.account_id = z.account_id
 WHERE s.status = 'churned'
-  AND s.churn_date BETWEEN '2026-01-01' AND '2026-03-31'
+ AND s.churn_date BETWEEN '2026-01-01' AND '2026-03-31'
 GROUP BY 1, 2, 3
 ORDER BY lifetime_revenue DESC
 ```

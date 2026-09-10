@@ -15,7 +15,6 @@ slug: 2026-05-real-time-lakehouse-flink
 draft: false
 image: "/images/blog/real-time-lakehouse-flink/flink-static-vs-dynamic-sink-comparison.png"
 ---
-
 # Real-Time Lakehouse Patterns with Apache Flink and Iceberg
 
 Most streaming pipelines solve the wrong problem. Teams spend months building infrastructure to move data fast, then discover their downstream lakehouse tables are a mess: thousands of tiny files per partition, schemas that drift silently across topics, and compaction jobs fighting live writes at 3 a.m. The ingestion is fast, but the data is barely usable.
@@ -24,7 +23,7 @@ Apache Flink 2.1, released in July 2025, explicitly frames itself as a unified r
 
 This post walks through how to actually build that architecture, including the configuration details teams usually skip and the failure modes nobody documents until something breaks in production.
 
----
+--
 
 ## Why the Traditional Kafka-to-Lakehouse Pattern Breaks Down
 
@@ -38,7 +37,7 @@ The third problem is operational rigidity. A traditional Flink job defines its s
 
 The Dynamic Iceberg Sink addresses all three.
 
----
+--
 
 ## The Dynamic Iceberg Sink: How It Works
 
@@ -56,7 +55,7 @@ The Dynamic Sink adds three capabilities that change this:
 
 ![Real-time lakehouse pipeline from Kafka topics through Apache Flink job and Dynamic Iceberg Sink to Iceberg tables, BI tools, and ML pipelines](/images/blog/real-time-lakehouse-flink/flink-realtime-lakehouse-architecture.png)
 
----
+--
 
 ## Setting Up the Pipeline: From Kafka to Iceberg
 
@@ -65,20 +64,11 @@ Here's a minimal working configuration using Flink SQL. This assumes Flink 2.1, 
 ### Define the Kafka Source
 
 ```sql
--- Create a Kafka source table in Flink SQL
+- Create a Kafka source table in Flink SQL
 CREATE TABLE kafka_events (
-  `topic`    STRING METADATA FROM 'topic' VIRTUAL,
-  `payload`  STRING,
-  `ts`       TIMESTAMP(3) METADATA FROM 'timestamp',
-  WATERMARK FOR `ts` AS `ts` - INTERVAL '5' SECOND
+ `topic` STRING METADATA FROM 'topic' VIRTUAL, `payload` STRING, `ts` TIMESTAMP(3) METADATA FROM 'timestamp', WATERMARK FOR `ts` AS `ts` - INTERVAL '5' SECOND
 ) WITH (
-  'connector'                  = 'kafka',
-  'topic-pattern'              = 'events\\..*',
-  'properties.bootstrap.servers' = 'kafka-broker:9092',
-  'properties.group.id'        = 'flink-iceberg-ingestor',
-  'scan.startup.mode'          = 'latest-offset',
-  'format'                     = 'avro-confluent',
-  'avro-confluent.schema-registry.url' = 'http://schema-registry:8081'
+ 'connector' = 'kafka', 'topic-pattern' = 'events\\..*', 'properties.bootstrap.servers' = 'kafka-broker:9092', 'properties.group.id' = 'flink-iceberg-ingestor', 'scan.startup.mode' = 'latest-offset', 'format' = 'avro-confluent', 'avro-confluent.schema-registry.url' = 'http://schema-registry:8081'
 );
 ```
 
@@ -89,12 +79,12 @@ The `topic-pattern` parameter is key. This single source definition captures all
 Exactly-once semantics in Flink are a function of checkpointing, not a toggle you set on the Iceberg connector. The Iceberg sink participates in Flink's checkpointing protocol: when a Flink checkpoint completes, the Iceberg sink commits the data files written during that interval as a new Iceberg snapshot. If the job fails before a checkpoint completes, the uncommitted files are orphaned and the offset position rolls back to the last successful checkpoint.
 
 ```sql
--- Enable exactly-once checkpointing
-SET 'execution.checkpointing.interval'            = '5min';
-SET 'execution.checkpointing.mode'                = 'EXACTLY_ONCE';
-SET 'execution.checkpointing.timeout'             = '10min';
-SET 'state.backend'                               = 'rocksdb';
-SET 'state.backend.incremental'                   = 'true';
+- Enable exactly-once checkpointing
+SET 'execution.checkpointing.interval' = '5min';
+SET 'execution.checkpointing.mode' = 'EXACTLY_ONCE';
+SET 'execution.checkpointing.timeout' = '10min';
+SET 'state.backend' = 'rocksdb';
+SET 'state.backend.incremental' = 'true';
 ```
 
 Five minutes is a reasonable starting checkpoint interval for most production workloads. Shorter intervals produce more files per hour; longer intervals increase recovery time if the job fails. The tradeoff is latency versus operational stability.
@@ -102,21 +92,21 @@ Five minutes is a reasonable starting checkpoint interval for most production wo
 ### Configure the Dynamic Iceberg Sink
 
 ```sql
--- Write to Iceberg using the dynamic sink (DataStream API example)
+- Write to Iceberg using the dynamic sink (DataStream API example)
 FlinkSink.forRowData(inputStream)
-    .tableLoader(TableLoader.fromCatalog(catalogLoader, TableIdentifier.of("default", "events_raw")))
-    .upsertMode(false)
-    .writeParallelism(8)
-    .set("write.target-file-size-bytes", String.valueOf(128 * 1024 * 1024)) // 128 MB
-    .set("write.distribution-mode", "hash")
-    .append();
+ .tableLoader(TableLoader.fromCatalog(catalogLoader, TableIdentifier.of("default", "events_raw")))
+ .upsertMode(false)
+ .writeParallelism(8)
+ .set("write.target-file-size-bytes", String.valueOf(128 * 1024 * 1024)) // 128 MB
+ .set("write.distribution-mode", "hash")
+ .append();
 ```
 
 For the Dynamic Sink variant that auto-routes to multiple tables based on a routing field, the configuration is handled through `DynamicRecordWriter` in the Iceberg 1.10 DataStream API. The routing key must be present in each record and map to a valid Iceberg table identifier in your catalog.
 
 ![Sequence diagram showing schema evolution flow from Kafka Producer through Flink Job and Dynamic Iceberg Sink to Iceberg Catalog and S3 Storage](/images/blog/real-time-lakehouse-flink/flink-schema-evolution-sequence.png)
 
----
+--
 
 ## Schema Evolution Without Restarts
 
@@ -132,7 +122,7 @@ In a static Flink pipeline, this silently drops the field or crashes the job dep
 
 One important constraint: Iceberg only supports widening schema evolution, not narrowing. You can add columns, rename columns (with full compatibility tracking), and widen numeric types (e.g., `int` to `long`). You cannot drop columns via the Dynamic Sink's schema evolution path. Dropping a column requires an explicit catalog operation outside the streaming job.
 
----
+--
 
 ## Operational Patterns: Static Sink vs. Dynamic Iceberg Sink
 
@@ -144,11 +134,11 @@ The tradeoff is schema control. With static sinks, your Flink job's schema defin
 
 For most production teams, the right answer is to combine the Dynamic Sink with Confluent Schema Registry compatibility rules. Set the Schema Registry to `FULL_TRANSITIVE` compatibility on your topics, which ensures producers can only make backward-compatible schema changes. The Dynamic Sink then handles the Iceberg-side evolution automatically, while the Schema Registry enforces that producers don't break downstream consumers.
 
----
+--
 
 ## Managing Small Files from Streaming Writes
 
-Every Flink checkpoint produces at least one data file per active partition. With a 5-minute checkpoint interval and data spread across 20 partitions, you produce at least 20 files every 5 minutes. Over 24 hours, that's 5,760 small files per day before any other workload pressure.
+Every Flink checkpoint produces at least one data file per active partition. With a 5-minute checkpoint interval and data spread across 20 partitions, you produce at least 20 files every 5 minutes. Over 24 hours, that's 5, 760 small files per day before any other workload pressure.
 
 The files don't need to be large to cause problems. Query planners read manifest files to build execution plans, and each manifest entry is a file reference. Scanning thousands of manifest entries before reading a single data row degrades planning performance, even when the data itself is small.
 
@@ -160,21 +150,20 @@ There are two approaches to controlling this, and you need both.
 
 ```java
 // Run Iceberg compaction natively inside a Flink job
-TableLoader loader = TableLoader.fromCatalog(catalogLoader,
-    TableIdentifier.of("default", "events_raw"));
+TableLoader loader = TableLoader.fromCatalog(catalogLoader, TableIdentifier.of("default", "events_raw"));
 
 RewriteDataFilesSparkAction rewrite = SparkActions
-    .get()
-    .rewriteDataFiles(table)
-    .option("target-file-size-bytes", Long.toString(128L * 1024 * 1024))
-    .filter(Expressions.lessThan("ts", currentHourMinus2()));
+ .get()
+ .rewriteDataFiles(table)
+ .option("target-file-size-bytes", Long.toString(128L * 1024 * 1024))
+ .filter(Expressions.lessThan("ts", currentHourMinus2()));
 
 RewriteDataFilesSparkAction.Result result = rewrite.execute();
 ```
 
 A critical operational rule: never compact the hot partition currently receiving streaming writes. The compaction job reads a set of files, rewrites them into larger files, and commits a new snapshot that removes the original files. If your streaming job is concurrently writing to that same partition, the commit can conflict. Restrict compaction to cold partitions, those at least one or two intervals behind the current streaming boundary.
 
----
+--
 
 ## When Flink Is the Right Choice (and When It Isn't)
 
@@ -184,7 +173,7 @@ If your use case is straightforward topic-to-table ingestion with no joins or tr
 
 Where Flink's real-time lakehouse pattern becomes clearly superior is in multi-source, multi-table scenarios with evolving schemas. If you're ingesting 50 Kafka topics, performing lightweight enrichment from reference tables, and landing data into 50 Iceberg tables where new fields appear regularly, that's Flink's strongest use case and where the Dynamic Sink's automation provides direct operational savings.
 
----
+--
 
 ## Conclusion
 
@@ -192,7 +181,7 @@ The real-time lakehouse is not a marketing concept. It's a specific set of archi
 
 Start with a checkpoint interval of 5 minutes, set your target file size to 128 MB, configure Schema Registry with full transitive compatibility, and don't compact the hot partition. Those four decisions alone will prevent most of the operational problems that make streaming lakehouses painful to run.
 
----
+--
 
 ### Build on the Lakehouse
 

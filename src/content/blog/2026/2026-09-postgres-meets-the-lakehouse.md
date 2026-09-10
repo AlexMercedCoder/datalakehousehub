@@ -16,9 +16,10 @@ draft: false
 image: "/images/blog.png"
 canonical: https://iceberglakehouse.com/posts/postgres-meets-the-lakehouse/
 ---
-> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/postgres-meets-the-lakehouse/).
 
 For a long time the answer to "we need analytics on our Postgres data" was a pipeline. Replicate the transactional tables into a warehouse or a lake, transform them there, and query them with an engine built for scans. The pipeline was the tax you paid for keeping the operational database operational. Postgres was not going to scan a billion rows quickly, and nobody expected it to.
+
+> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/postgres-meets-the-lakehouse/).
 
 Three developments in 2025 and 2026 have changed the question. Snowflake acquired Crunchy Data in June 2025 and open-sourced its Postgres lakehouse extension as pg_lake in November 2025, under the Apache license. Databricks acquired Neon and the team behind pg_mooncake. And the DuckDB ecosystem produced pg_duckdb, which embeds DuckDB's vectorized engine inside Postgres, alongside DuckLake, a lakehouse format that uses Postgres as its catalog. The result is that a Postgres server can now read and write Apache Iceberg tables on object storage, run analytical queries on them at columnar-engine speed, and act as the catalog for a small lakehouse, all through the Postgres wire protocol and the Postgres SQL dialect.
 
@@ -79,7 +80,7 @@ Two adjacent projects round out the picture. DuckLake is a lakehouse format from
 ## Comparison
 
 | | pg_lake | pg_duckdb | pg_mooncake | DuckLake (with Postgres catalog) |
-|---|---|---|---|---|
+|--|--|--|--|--|
 | Origin and steward | Crunchy Data, now Snowflake, Apache 2.0 | DuckDB Labs, Hydra, MotherDuck, MIT | Mooncake Labs, now Databricks | DuckDB Labs |
 | Engine hosting | Separate `pgduck_server` process, one DuckDB instance | In-process, one DuckDB per backend | DuckDB | DuckDB, outside Postgres |
 | Iceberg tables owned by Postgres | Yes, v2, full transaction semantics | Not the focus | Mirrors of heap tables | No, DuckLake format |
@@ -147,7 +148,7 @@ Concurrency is high or spiky. A hundred analysts running ad hoc queries, or an a
 
 Retention is long and cold. A decade of event history at petabyte scale belongs on object storage under a catalog with tiering and maintenance policies, read by engines built for it.
 
-Most organizations are on both sides of these lines at once, for different data. The realistic architecture is not "Postgres or the lakehouse" but "which tables are Postgres's and which are the lakehouse's," with Iceberg as the format that lets both read the other's.
+Most organizations are on both sides of these lines at once, for different data. The realistic architecture is not "Postgres or the lakehouse" but "which tables are Postgres's and which are the lakehouse's, " with Iceberg as the format that lets both read the other's.
 
 ### A Sizing Rule of Thumb
 
@@ -193,11 +194,7 @@ Create an Iceberg table and load it from the operational data:
 CREATE EXTENSION IF NOT EXISTS pg_lake_iceberg;
 
 CREATE TABLE analytics.orders_iceberg (
-  order_id     BIGINT NOT NULL,
-  customer_id  BIGINT NOT NULL,
-  placed_at    TIMESTAMPTZ NOT NULL,
-  amount       NUMERIC(12,2),
-  status       TEXT
+ order_id BIGINT NOT NULL, customer_id BIGINT NOT NULL, placed_at TIMESTAMPTZ NOT NULL, amount NUMERIC(12, 2), status TEXT
 ) USING iceberg
 WITH (location = 's3://lake/pg/analytics/orders_iceberg');
 
@@ -212,9 +209,7 @@ The `INSERT` writes Parquet files to the location and commits an Iceberg snapsho
 Query it with Postgres SQL, executed by DuckDB:
 
 ```sql
-SELECT date_trunc('month', placed_at) AS month,
-       count(*)                       AS orders,
-       sum(amount)                    AS revenue
+SELECT date_trunc('month', placed_at) AS month, count(*) AS orders, sum(amount) AS revenue
 FROM analytics.orders_iceberg
 WHERE status = 'delivered'
 GROUP BY 1
@@ -238,13 +233,12 @@ Read a Parquet file and an external Iceberg table without importing them:
 
 ```sql
 CREATE FOREIGN TABLE staging.events_raw ()
-  SERVER pg_lake
-  OPTIONS (path 's3://lake/raw/events/2026-08/*.parquet');
+ SERVER pg_lake
+ OPTIONS (path 's3://lake/raw/events/2026-08/*.parquet');
 
 CREATE FOREIGN TABLE shared.customers ()
-  SERVER pg_lake
-  OPTIONS (path 's3://lake/warehouse/crm/customers/metadata/00412-....metadata.json',
-           format 'iceberg');
+ SERVER pg_lake
+ OPTIONS (path 's3://lake/warehouse/crm/customers/metadata/00412-....metadata.json', format 'iceberg');
 
 SELECT c.segment, count(*)
 FROM staging.events_raw e
@@ -269,7 +263,7 @@ A downstream `add_files` or a PyIceberg script registers the Parquet into a REST
 The most common reason teams evaluate pg_lake is a CDC pipeline they want to retire: Debezium reading the Postgres write-ahead log, Kafka carrying it, a sink writing Iceberg, and a maintenance job on the result. For the tables where Postgres is the only writer and the analytical consumers can read a Postgres-owned Iceberg table, pg_lake replaces the whole chain with a scheduled statement.
 
 ```sql
--- runs every five minutes via pg_cron
+- runs every five minutes via pg_cron
 INSERT INTO analytics.orders_iceberg
 SELECT order_id, customer_id, placed_at, amount, status
 FROM public.orders

@@ -16,15 +16,16 @@ draft: false
 image: "/images/blog.png"
 canonical: "https://iceberglakehouse.com/posts/2026-03-context-claude-web/"
 ---
-> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-03-context-claude-web/).
 
 Claude's web interface at claude.ai combines one of the largest context windows in the industry with a structured Project system that makes it genuinely useful for sustained, complex work. While many AI chat interfaces are limited to one-off conversations, Claude Web is designed for ongoing engagement where the AI accumulates understanding of your work over time. The key to unlocking that potential is managing context deliberately rather than treating each conversation as a blank slate.
+
+> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-03-context-claude-web/).
 
 This guide covers every context management strategy available in Claude Web, from basic conversation techniques to advanced Project workflows that make Claude function as a persistent research and development partner.
 
 ## How Claude Web Handles Context
 
-Claude Web uses the conversation thread as its primary context unit. Every message you send, every response Claude generates, every file you upload, and every artifact Claude creates stays in the conversation's context window. Models like Claude Sonnet 4.5 and Opus 4.6 support context windows up to 1 million tokens, which means Claude can hold the equivalent of roughly 750,000 words of conversation, documents, and code in memory at once.
+Claude Web uses the conversation thread as its primary context unit. Every message you send, every response Claude generates, every file you upload, and every artifact Claude creates stays in the conversation's context window. Models like Claude Sonnet 4.5 and Opus 4.6 support context windows up to 1 million tokens, which means Claude can hold the equivalent of roughly 750, 000 words of conversation, documents, and code in memory at once.
 
 But a large context window does not eliminate the need for context management. In fact, it makes it more important. With 1 million tokens available, it is easy to fill the window with irrelevant information that dilutes Claude's attention. The goal is not to maximize how much context you provide, but to maximize how relevant that context is.
 
@@ -103,7 +104,7 @@ who are familiar with batch ETL but new to stream processing.
 You can upload various file types as project knowledge:
 
 | File Type | Best For | Notes |
-|---|---|---|
+|--|--|--|
 | **PDF** | Research papers, specs, published docs | Claude extracts text; complex layouts may lose formatting |
 | **Markdown** | Style guides, outlines, structured notes | Cleanest parsing, best for AI consumption |
 | **Text** | Code files, logs, configuration | Direct text ingestion |

@@ -15,9 +15,10 @@ draft: false
 image: "/images/blog.png"
 canonical: "https://iceberglakehouse.com/posts/2026-02-sl-how-to-build-semantic-layer/"
 ---
-> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-02-sl-how-to-build-semantic-layer/).
 
 ![Building a semantic layer : Bronze, Silver, and Gold tiers](/images/blog/semantic-layer/build-semantic-layer.png)
+
+> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-02-sl-how-to-build-semantic-layer/).
 
 Most teams start building a semantic layer the wrong way: they open their BI tool, create a few calculated fields, and call it done. Six months later, three dashboards define "churn" differently, nobody trusts the numbers, and the data team is debugging metric discrepancies instead of building new features.
 
@@ -44,7 +45,7 @@ This exercise is harder than it sounds. You will discover that "Monthly Active U
 Inventory every system that feeds into your analytics:
 
 | Source Type | Examples | Access Pattern |
-|---|---|---|
+|--|--|--|
 | Transactional databases | PostgreSQL, MySQL, SQL Server | Federated query (read-only) |
 | Cloud data lakes | S3 (Parquet/Iceberg), Azure Data Lake | Direct scan or catalog |
 | SaaS platforms | Salesforce, HubSpot, Stripe | API extraction or replication |
@@ -77,11 +78,7 @@ Example:
 ```sql
 CREATE VIEW silver.orders_enriched AS
 SELECT
-    o.OrderID,
-    o.OrderDate,
-    o.Total AS OrderTotal,
-    c.Region,
-    c.Segment
+ o.OrderID, o.OrderDate, o.Total AS OrderTotal, c.Region, c.Segment
 FROM bronze.orders_raw o
 JOIN bronze.customers_raw c ON o.CustomerID = c.CustomerID
 WHERE o.Total > 0 AND o.Status = 'completed';
@@ -102,7 +99,7 @@ An undocumented semantic layer is a semantic layer nobody uses. Every table and 
 - Where it comes from
 - Any known limitations or caveats
 
-This is tedious work. Modern platforms accelerate it with AI. Dremio's generative AI, for example, can auto-generate Wiki descriptions by sampling table data, and suggest Labels (tags like "PII," "Finance," "Certified") for governance and discoverability. The AI provides a 70% first draft. Your data team fills in the domain-specific context.
+This is tedious work. Modern platforms accelerate it with AI. Dremio's generative AI, for example, can auto-generate Wiki descriptions by sampling table data, and suggest Labels (tags like "PII, " "Finance, " "Certified") for governance and discoverability. The AI provides a 70% first draft. Your data team fills in the domain-specific context.
 
 This documentation serves two audiences: human analysts browsing the catalog, and AI agents that need context to generate accurate SQL. Both benefit from rich, accurate descriptions.
 

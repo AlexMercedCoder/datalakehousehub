@@ -16,9 +16,10 @@ draft: false
 image: "/images/blog.png"
 canonical: "https://iceberglakehouse.com/posts/2026-03-context-claude-desktop/"
 ---
-> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-03-context-claude-desktop/).
 
 Claude Desktop takes everything available in Claude Web and adds three capabilities that fundamentally change how you manage context: MCP server connections that link Claude to external tools and data sources, direct local file access that eliminates the upload-download cycle, and Computer Use that lets Claude interact with your desktop environment. These additions make Claude Desktop the right choice when your work requires live data, local file system access, or integration with tools that Claude Web cannot reach.
+
+> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-03-context-claude-desktop/).
 
 This guide explains how to leverage each of Claude Desktop's context management features, when to use them, and how they complement the Projects, artifacts, and conversation patterns covered in the Claude Web guide.
 
@@ -27,7 +28,7 @@ This guide explains how to leverage each of Claude Desktop's context management 
 Claude Desktop shares the same core features as Claude Web: Projects with instructions and knowledge files, artifacts, and the same large context windows (up to 1 million tokens). The key additions are:
 
 | Feature | Claude Web | Claude Desktop |
-|---|---|---|
+|--|--|--|
 | **Projects** | Yes | Yes |
 | **Artifacts** | Yes | Yes |
 | **Knowledge files** | Yes | Yes |
@@ -81,19 +82,15 @@ MCP servers are configured in Claude Desktop's settings as JSON:
 
 ```json
 {
-  "mcpServers": {
-    "filesystem": {
-      "command": "npx",
-      "args": ["-y", "@anthropic/mcp-server-filesystem", "/path/to/project"]
-    },
-    "postgres": {
-      "command": "npx",
-      "args": ["-y", "@anthropic/mcp-server-postgres"],
-      "env": {
-        "DATABASE_URL": "postgresql://user:pass@localhost:5432/mydb"
-      }
-    }
-  }
+ "mcpServers": {
+ "filesystem": {
+ "command": "npx", "args": ["-y", "@anthropic/mcp-server-filesystem", "/path/to/project"]
+ }, "postgres": {
+ "command": "npx", "args": ["-y", "@anthropic/mcp-server-postgres"], "env": {
+ "DATABASE_URL": "postgresql://user:pass@localhost:5432/mydb"
+ }
+ }
+ }
 }
 ```
 
@@ -207,7 +204,7 @@ Add MCP servers for the external systems you work with regularly:
 ### Step 3: Use the Right Tool for Each Context Need
 
 | Context Need | Best Approach |
-|---|---|
+|--|--|
 | Project conventions and style | Project Instructions |
 | Stable reference documents | Project Knowledge Files |
 | Current code and config files | Filesystem MCP |

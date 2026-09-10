@@ -1,7 +1,7 @@
 ---
 title: "What is Data Gravity?"
 meta_title: "What is Data Gravity? | Expert Data Lakehouse & AI Glossary"
-description: "A conceptual idea representing how significantly large data volumes continuously attract supporting applications strongly solidifying surrounding architectural networks. Learn the architecture, mechanics, and real-world value of Data Gravity in the modern data stack."
+description: "A conceptual idea representing how significantly large data volumes continuously attract supporting applications strongly solidifying surrounding."
 ---
 
 ## What is Data Gravity?

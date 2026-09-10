@@ -14,13 +14,14 @@ draft: false
 image: "/images/blog.png"
 canonical: "https://iceberglakehouse.com/posts/2024-10-all-about-parquet-part-08/"
 ---
+
+In previous posts, we explored the internal workings of the Parquet format and how it optimizes storage and performance. Now, it's time to dive into the practical side: how to **read and write Parquet files in Python**. With libraries like **PyArrow** and **FastParquet**, Python makes working with Parquet easy and efficient. In this post, we’ll walk through how to use these tools to handle Parquet files, covering both reading from and writing to Parquet.
+
 > **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2024-10-all-about-parquet-part-08/).
 
 - [Free Copy of Apache Iceberg the Definitive Guide](https://hello.dremio.com/wp-apache-iceberg-the-definitive-guide-reg.html?utm_source=alexmerced&utm_medium=external_blog&utm_campaign=allaboutparquet)
 - [Free Apache Iceberg Crash Course](https://hello.dremio.com/webcast-an-apache-iceberg-lakehouse-crash-course-reg.html?utm_source=alexmerced&utm_medium=external_blog&utm_campaign=allaboutparquet)
 - [Iceberg Lakehouse Engineering Video Playlist](https://www.youtube.com/watch?v=SIriNcVIGJQ&list=PLsLAVBjQJO0p0Yq1fLkoHvt2lEJj5pcYe)
-
-In previous posts, we explored the internal workings of the Parquet format and how it optimizes storage and performance. Now, it's time to dive into the practical side: how to **read and write Parquet files in Python**. With libraries like **PyArrow** and **FastParquet**, Python makes working with Parquet easy and efficient. In this post, we’ll walk through how to use these tools to handle Parquet files, covering both reading from and writing to Parquet.
 
 ## Why Use Parquet in Python?
 
@@ -54,9 +55,7 @@ import pyarrow.parquet as pq
 
 # Create a sample DataFrame
 df = pd.DataFrame({
-    'Name': ['Alice', 'Bob', 'Charlie'],
-    'Age': [25, 30, 35],
-    'Salary': [50000, 60000, 70000]
+ 'Name': ['Alice', 'Bob', 'Charlie'], 'Age': [25, 30, 35], 'Salary': [50000, 60000, 70000]
 })
 
 # Convert the DataFrame to an Arrow Table
@@ -117,9 +116,7 @@ import fastparquet as fp
 
 # Create a sample DataFrame
 df = pd.DataFrame({
-    'Name': ['Alice', 'Bob', 'Charlie'],
-    'Age': [25, 30, 35],
-    'Salary': [50000, 60000, 70000]
+ 'Name': ['Alice', 'Bob', 'Charlie'], 'Age': [25, 30, 35], 'Salary': [50000, 60000, 70000]
 })
 
 # Write the DataFrame to a Parquet file

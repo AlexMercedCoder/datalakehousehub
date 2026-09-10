@@ -1,7 +1,7 @@
 ---
 title: "What is Apache Hudi?"
 meta_title: "What is Apache Hudi? | Expert Data Lakehouse Architecture Guide"
-description: "A comprehensive guide to Apache Hudi. Learn about its incremental data processing, upset capabilities, merge-on-read architecture, and streaming data lakehouse integrations."
+description: "A comprehensive guide to Apache Hudi. Learn about its incremental data processing, upset capabilities, merge-on-read architecture, and streaming data."
 ---
 
 # What is Apache Hudi?

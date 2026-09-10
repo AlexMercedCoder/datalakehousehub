@@ -14,9 +14,10 @@ tags:
 slug: "semantic-layer-federation-three-clouds"
 draft: false
 ---
-> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/semantic-layer-federation-three-clouds/).
 
 A global retailer's revenue dashboard needs four sources. Orders are in an Apache Iceberg table on S3 in Virginia. Customers are in an Iceberg table on Google Cloud Storage in Belgium, inherited from an acquisition. Inventory is in a PostgreSQL database on Azure in a sovereign region that regulators say cannot leave. Currency rates come from a SaaS API cached in a small table nobody remembers creating. The dashboard wants revenue by customer segment by product category in local currency, refreshed hourly, under two seconds.
+
+> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/semantic-layer-federation-three-clouds/).
 
 The standard answer is to replicate. Copy customers and inventory to Virginia every night, build the dashboard there, and accept that the numbers are a day old and the copy jobs are somebody's problem. Three years in, that company has 40 replication pipelines, 11 copies of the customer table in various states of freshness, an egress line item that finance asks about every quarter, and a security review that found four of the copies had wider permissions than the source.
 
@@ -28,7 +29,7 @@ This article is about how that works at the level of mechanism: how a federated 
 
 Replication is the default because it is what every tool knows how to do. An ETL job reads a source and writes a copy. A warehouse has native loaders for it. Every team has done it. It has three costs that stay hidden until the estate spans clouds.
 
-Egress fees are the visible one. Moving a byte out of a cloud region costs money, typically 5 to 12 cents per gigabyte across cloud boundaries and less within a provider's regions. A nightly full copy of a 500-gigabyte customer table from GCP to AWS is $25 to $60 a night, or up to $22,000 a year, for one table. Incremental copies help, but they require change tracking on the source, and the operational databases that most need it are the ones least likely to have it configured.
+Egress fees are the visible one. Moving a byte out of a cloud region costs money, typically 5 to 12 cents per gigabyte across cloud boundaries and less within a provider's regions. A nightly full copy of a 500-gigabyte customer table from GCP to AWS is $25 to $60 a night, or up to $22, 000 a year, for one table. Incremental copies help, but they require change tracking on the source, and the operational databases that most need it are the ones least likely to have it configured.
 
 Pipeline latency is the second. A copy is stale by the length of its refresh interval. The dashboard shows yesterday's segments joined to today's orders, and nobody notices until a segment migration makes the join produce nonsense. Shortening the interval raises the egress cost and the operational load.
 
@@ -50,48 +51,46 @@ It decomposes the query by source. The join between orders and customers spans t
 
 It pushes down aggressively. A `WHERE order_date >= '2026-08-01'` on orders goes to the Iceberg scan in Virginia, where it becomes partition pruning and file skipping against the Iceberg metadata. A `WHERE country = 'DE'` on customers goes to the GCS scan. A projection of five columns from a 200-column inventory table goes to PostgreSQL as a `SELECT` of five columns. What crosses the network from each source is the filtered, projected result of its subtree, not the table.
 
-It chooses a join strategy based on the sizes that come back. If the Belgium subtree returns 50,000 customer rows and the Virginia subtree returns 20 million order rows, the planner broadcasts the customers to wherever the orders are being processed rather than shipping the orders. A cost-based planner with source statistics makes this decision. One without them guesses, and the guess is what produces the 2-terabyte cross-cloud transfer that shows up on the egress bill.
+It chooses a join strategy based on the sizes that come back. If the Belgium subtree returns 50, 000 customer rows and the Virginia subtree returns 20 million order rows, the planner broadcasts the customers to wherever the orders are being processed rather than shipping the orders. A cost-based planner with source statistics makes this decision. One without them guesses, and the guess is what produces the 2-terabyte cross-cloud transfer that shows up on the egress bill.
 
 Here is the query and the shape of the plan it produces:
 
 ```sql
 SELECT
-  c.segment,
-  i.category,
-  SUM(o.amount * fx.rate_to_usd) AS revenue_usd
-FROM sales.revenue_base o            -- Iceberg on S3, us-east-1
-JOIN customers.dim_customer c        -- Iceberg on GCS, europe-west1
-  ON o.customer_id = c.id
-JOIN inventory.products i            -- PostgreSQL on Azure, sovereign region
-  ON o.product_id = i.product_id
-JOIN reference.fx_rates fx           -- small cached table
-  ON o.currency = fx.currency AND o.order_date = fx.rate_date
+ c.segment, i.category, SUM(o.amount * fx.rate_to_usd) AS revenue_usd
+FROM sales.revenue_base o, Iceberg on S3, us-east-1
+JOIN customers.dim_customer c, Iceberg on GCS, europe-west1
+ ON o.customer_id = c.id
+JOIN inventory.products i, PostgreSQL on Azure, sovereign region
+ ON o.product_id = i.product_id
+JOIN reference.fx_rates fx, small cached table
+ ON o.currency = fx.currency AND o.order_date = fx.rate_date
 WHERE o.order_date >= DATE '2026-08-01'
-  AND o.status = 'completed'
-  AND c.country = 'DE'
+ AND o.status = 'completed'
+ AND c.country = 'DE'
 GROUP BY c.segment, i.category;
 ```
 
 ```
 HashAggregate [segment, category] SUM(amount * rate_to_usd)
 +- HashJoin (product_id)
-   +- HashJoin (currency, order_date)
-   |  +- HashJoin (customer_id)              -- broadcast customers (small side)
-   |  |  +- IcebergScan s3://lake-us/sales/orders
-   |  |  |     filter: order_date >= 2026-08-01 AND status = 'completed'
-   |  |  |     project: customer_id, product_id, currency, order_date, amount
-   |  |  |     partition pruning: order_date, files scanned: 41 of 12,880
-   |  |  +- IcebergScan gs://lake-eu/customers/dim_customer
-   |  |        filter: country = 'DE'
-   |  |        project: id, segment
-   |  |        rows returned: 48,212
-   |  +- Scan reference.fx_rates (cached)
-   +- JdbcScan postgresql://inventory.sovereign/products
-         pushed SQL: SELECT product_id, category FROM products
-         rows returned: 31,004
+ +- HashJoin (currency, order_date)
+ | +- HashJoin (customer_id), broadcast customers (small side)
+ | | +- IcebergScan s3://lake-us/sales/orders
+ | | | filter: order_date >= 2026-08-01 AND status = 'completed'
+ | | | project: customer_id, product_id, currency, order_date, amount
+ | | | partition pruning: order_date, files scanned: 41 of 12, 880
+ | | +- IcebergScan gs://lake-eu/customers/dim_customer
+ | | filter: country = 'DE'
+ | | project: id, segment
+ | | rows returned: 48, 212
+ | +- Scan reference.fx_rates (cached)
+ +- JdbcScan postgresql://inventory.sovereign/products
+ pushed SQL: SELECT product_id, category FROM products
+ rows returned: 31, 004
 ```
 
-Read the plan bottom-up. The Virginia scan pruned 12,839 of 12,880 files using the date predicate against Iceberg metadata and read five of the table's columns. The Belgium scan returned 48,000 rows out of a multi-million-row table because the country filter pushed down. The Azure scan returned two columns of a 31,000-row product table. What crossed cloud boundaries was roughly 48,000 customer rows and 31,000 product rows. The 20 million order rows never left Virginia, because the planner broadcast the small sides to the large side.
+Read the plan bottom-up. The Virginia scan pruned 12, 839 of 12, 880 files using the date predicate against Iceberg metadata and read five of the table's columns. The Belgium scan returned 48, 000 rows out of a multi-million-row table because the country filter pushed down. The Azure scan returned two columns of a 31, 000-row product table. What crossed cloud boundaries was roughly 48, 000 customer rows and 31, 000 product rows. The 20 million order rows never left Virginia, because the planner broadcast the small sides to the large side.
 
 That plan is what "without physical replication" means in practice. Not zero bytes crossing clouds, but only the bytes the query needs, chosen by a planner that knows where each table lives.
 
@@ -111,12 +110,12 @@ Here is what defining that reflection looks like:
 
 ```sql
 ALTER VIEW sales.revenue
-  CREATE AGGREGATE REFLECTION revenue_by_segment_category
-  USING
-    DIMENSIONS (segment, category, order_date BY DAY, country)
-    MEASURES   (revenue_usd (SUM), order_count (COUNT))
-  PARTITION BY (order_date)
-  LOCALSORT BY (segment);
+ CREATE AGGREGATE REFLECTION revenue_by_segment_category
+ USING
+ DIMENSIONS (segment, category, order_date BY DAY, country)
+ MEASURES (revenue_usd (SUM), order_count (COUNT))
+ PARTITION BY (order_date)
+ LOCALSORT BY (segment);
 ```
 
 The `order_date BY DAY` dimension is what lets the planner satisfy a weekly or monthly query by rolling up the daily grain. The `PARTITION BY` on date keeps refresh incremental where the engine supports it: only the partitions whose source data changed get recomputed. The storage location follows the engine's configuration for the space that holds the view, which in this design is the Virginia S3 bucket.
@@ -124,7 +123,7 @@ The `order_date BY DAY` dimension is what lets the planner satisfy a weekly or m
 This is where the economics of federation become clear. Compare two designs for the same dashboard:
 
 | | Replicate customers and inventory to Virginia | Federate, with aggregate reflection in Virginia |
-|---|---|---|
+|--|--|--|
 | Cross-cloud bytes per day | Full or incremental copy of two tables (tens to hundreds of GB) | Filtered join inputs at refresh (tens to hundreds of MB) |
 | Copies of the customer table | Two (source plus Virginia replica) | One |
 | Freshness | Copy interval (hours to a day) | Reflection refresh interval (minutes to an hour) |
@@ -141,7 +140,7 @@ The semantic layer is a graph of views. In a multi-cloud estate the shape of tha
 
 **Tier by physical proximity first, then by business meaning.** The bottom tier of views maps one to one onto physical tables and does nothing but rename and cast. Every bottom-tier view is single-source, so every query against it pushes down completely. The middle tier joins within a source where possible (orders to order lines, both in Virginia) and across sources only where the business model requires it (orders to customers). The top tier is what consumers query and is where cross-source joins are allowed to appear. This layering means the expensive cross-cloud joins are concentrated in a small number of top-tier views, which are exactly the ones to accelerate.
 
-**Keep dimensions small and near their facts.** A dimension table that is joined to a fact on another cloud is the thing that crosses the wire. Customers at 50,000 rows after a country filter is fine. Customers at 50 million rows with no filter is not. Design the middle tier so that the dimension side of every cross-cloud join is pre-filtered by the view definition (a `country IN (...)` list, a `status = 'active'` filter) or is small enough that broadcast is cheap. If a dimension is large and unfilterable, that is the one case where a regional replica is worth maintaining, and it should be a reflection rather than a pipeline so the engine tracks its freshness.
+**Keep dimensions small and near their facts.** A dimension table that is joined to a fact on another cloud is the thing that crosses the wire. Customers at 50, 000 rows after a country filter is fine. Customers at 50 million rows with no filter is not. Design the middle tier so that the dimension side of every cross-cloud join is pre-filtered by the view definition (a `country IN (...)` list, a `status = 'active'` filter) or is small enough that broadcast is cheap. If a dimension is large and unfilterable, that is the one case where a regional replica is worth maintaining, and it should be a reflection rather than a pipeline so the engine tracks its freshness.
 
 **Put the metric definition in exactly one view.** `revenue_usd` is defined in `sales.revenue` and nowhere else. The Belgium team's dashboard and the Virginia team's dashboard both read `sales.revenue`. If the Belgium team needs revenue in euros, they get a view over `sales.revenue` that applies a rate, not a parallel definition. This is the discipline that makes "same number in every region" true rather than aspirational, and it is the discipline that the Apache Ossie (incubating) semantic model specification is meant to make portable: the one definition can be exported as an Ossie document and consumed by a BI tool or agent framework without re-implementation.
 
@@ -150,41 +149,35 @@ The semantic layer is a graph of views. In a multi-cloud estate the shape of tha
 Here is the graph for the running example, with the tier and source for each view:
 
 ```sql
--- Bottom tier: single-source, rename and cast only.
+- Bottom tier: single-source, rename and cast only.
 CREATE VIEW staging.orders AS
-SELECT order_id, customer_id, product_id, currency,
-       CAST(order_date AS DATE) AS order_date,
-       CAST(amount AS DECIMAL(18,2)) AS amount, status
-FROM lake_us.sales.orders;                                   -- Iceberg, S3 us-east-1
+SELECT order_id, customer_id, product_id, currency, CAST(order_date AS DATE) AS order_date, CAST(amount AS DECIMAL(18, 2)) AS amount, status
+FROM lake_us.sales.orders;, Iceberg, S3 us-east-1
 
 CREATE VIEW staging.customers AS
 SELECT id, segment, country, created_at
-FROM lake_eu.customers.dim_customer;                         -- Iceberg, GCS europe-west1
+FROM lake_eu.customers.dim_customer;, Iceberg, GCS europe-west1
 
 CREATE VIEW staging.products AS
 SELECT product_id, category, sku
-FROM inventory_pg.public.products;                           -- PostgreSQL, Azure sovereign
+FROM inventory_pg.public.products;, PostgreSQL, Azure sovereign
 
--- Middle tier: within-source joins and pre-filters.
+- Middle tier: within-source joins and pre-filters.
 CREATE VIEW sales.completed_orders AS
-SELECT * FROM staging.orders WHERE status = 'completed';     -- still single-source
+SELECT * FROM staging.orders WHERE status = 'completed';, still single-source
 
 CREATE VIEW customers.active_eu AS
 SELECT id, segment, country FROM staging.customers
-WHERE country IN ('DE','FR','NL','BE','AT');                 -- pre-filtered dimension
+WHERE country IN ('DE', 'FR', 'NL', 'BE', 'AT');, pre-filtered dimension
 
--- Top tier: the one cross-source join, the one metric definition.
+- Top tier: the one cross-source join, the one metric definition.
 CREATE VIEW sales.revenue AS
 SELECT
-  o.order_id, o.order_date, o.currency,
-  c.segment, c.country,
-  p.category,
-  o.amount * fx.rate_to_usd AS revenue_usd,
-  1 AS order_count
+ o.order_id, o.order_date, o.currency, c.segment, c.country, p.category, o.amount * fx.rate_to_usd AS revenue_usd, 1 AS order_count
 FROM sales.completed_orders o
 JOIN customers.active_eu c ON o.customer_id = c.id
-JOIN staging.products p     ON o.product_id = p.product_id
-JOIN reference.fx_rates fx  ON o.currency = fx.currency AND o.order_date = fx.rate_date;
+JOIN staging.products p ON o.product_id = p.product_id
+JOIN reference.fx_rates fx ON o.currency = fx.currency AND o.order_date = fx.rate_date;
 ```
 
 Three tiers, four sources, one cross-source view, one metric. The aggregate reflection from the previous section sits on `sales.revenue`. Every dashboard, notebook, and agent reads `sales.revenue` or something above it.
@@ -205,15 +198,15 @@ Reflections inherit this. An aggregate reflection over `sales.revenue` holds pre
 
 The egress argument is easy to wave at and worth putting numbers on. Take the running example and price the two designs for one year, using 12 cents per gigabyte as the cross-provider rate (the top of the typical range, so this favors replication).
 
-Replication, nightly full copy. The customer table is 500 gigabytes on GCS. A nightly full copy to S3 is 500 gigabytes of GCP egress a day, which at 12 cents is $60 a day, or $21,900 a year, for one table. Add the inventory table from Azure (say 40 gigabytes, $4.80 a day, $1,750 a year) and the replication design costs roughly $23,650 a year in egress alone, before compute for the copy jobs, storage for the replicas, and the engineer-hours to maintain both pipelines.
+Replication, nightly full copy. The customer table is 500 gigabytes on GCS. A nightly full copy to S3 is 500 gigabytes of GCP egress a day, which at 12 cents is $60 a day, or $21, 900 a year, for one table. Add the inventory table from Azure (say 40 gigabytes, $4.80 a day, $1, 750 a year) and the replication design costs roughly $23, 650 a year in egress alone, before compute for the copy jobs, storage for the replicas, and the engineer-hours to maintain both pipelines.
 
 Replication, incremental. If both sources support change tracking and the daily delta is 2 percent, the egress drops to about $470 a year. That is a real improvement and it is also the version that requires CDC configured on a PostgreSQL database in a sovereign region and change tracking on an Iceberg table that a different team owns, plus a merge step on the replica side. Most teams that report "incremental" replication are running full copies on the tables where CDC was never set up.
 
-Federation with hourly reflection refresh. The refresh runs the federated plan. From the profile above, the cross-cloud inputs are roughly 48,000 customer rows and 31,000 product rows, which is a few megabytes. Call it 150 megabytes per refresh to be generous about wider projections. Hourly, that is 3.5 gigabytes a day and about 1,280 gigabytes a year, or $154 a year at 12 cents. The order table never moves. The dimension tables move only their filtered projections.
+Federation with hourly reflection refresh. The refresh runs the federated plan. From the profile above, the cross-cloud inputs are roughly 48, 000 customer rows and 31, 000 product rows, which is a few megabytes. Call it 150 megabytes per refresh to be generous about wider projections. Hourly, that is 3.5 gigabytes a day and about 1, 280 gigabytes a year, or $154 a year at 12 cents. The order table never moves. The dimension tables move only their filtered projections.
 
 | Design | Cross-provider egress per year | Freshness | Pipelines |
-|---|---|---|---|
-| Nightly full replication | About $23,650 | 24 hours | 2 copy jobs plus schema sync |
+|--|--|--|--|
+| Nightly full replication | About $23, 650 | 24 hours | 2 copy jobs plus schema sync |
 | Incremental replication (CDC on both sources) | About $470 | Hours | 2 CDC pipelines plus 2 merge jobs |
 | Federation, hourly aggregate reflection refresh | About $154 | 1 hour | 0 pipelines, 1 reflection definition |
 
@@ -223,7 +216,7 @@ Where the model breaks is a top-tier view that cannot be pre-filtered. A join be
 
 ## Freshness Contracts and Refresh Scheduling
 
-A federated semantic layer replaces "how stale is the replica" with "how stale is the reflection," and the second question is easier because the engine answers it.
+A federated semantic layer replaces "how stale is the replica" with "how stale is the reflection, " and the second question is easier because the engine answers it.
 
 Every reflection has a refresh policy: on a schedule, on source change where the engine can detect it, or never (a static snapshot). For Iceberg sources, the engine can detect change by comparing the table's current snapshot ID to the one the reflection was built from, which makes "refresh when the source commits" cheap to implement and accurate. For a PostgreSQL source with no change tracking, the refresh is scheduled.
 
@@ -252,7 +245,7 @@ The second is that the definition the agent uses is the same one the dashboard u
 Engine-level federation of the kind described here is one of several ways to present distributed data as one model. Here is how they compare on the multi-cloud dimensions:
 
 | | Engine-level federation with semantic layer (Dremio, Trino with a modeling layer) | Catalog federation (Apache Polaris federated catalogs) | Warehouse-native external tables | Data mesh with per-domain replicas |
-|---|---|---|---|---|
+|--|--|--|--|--|
 | What is unified | Meaning: views, metrics, policies | Tables: one namespace and one grant model | Access: remote tables readable in one engine | Ownership: each domain publishes its own products |
 | Cross-source joins | Planned and pushed down by the engine | Left to the engine reading the federated catalog | Executed by the warehouse, often with limited pushdown | Executed by consumers over replicas |
 | Acceleration | Reflections placed by geography | None (catalog only) | Warehouse materialized views, single cloud | Replicas are the acceleration |

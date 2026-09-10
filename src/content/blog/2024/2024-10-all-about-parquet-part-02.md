@@ -14,13 +14,14 @@ draft: false
 image: "/images/blog.png"
 canonical: "https://iceberglakehouse.com/posts/2024-10-all-about-parquet-part-02/"
 ---
+
+In the first post of this series, we introduced the Apache Parquet file format and touched upon one of its key features - columnar storage. Now, we’ll take a deeper dive into what this columnar storage model is, how it works, and why it’s so efficient for big data analytics. Understanding Parquet's columnar architecture is key to leveraging its full potential in optimizing data storage and query performance.
+
 > **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2024-10-all-about-parquet-part-02/).
 
 - [Free Copy of Apache Iceberg the Definitive Guide](https://hello.dremio.com/wp-apache-iceberg-the-definitive-guide-reg.html?utm_source=alexmerced&utm_medium=external_blog&utm_campaign=allaboutparquet)
 - [Free Apache Iceberg Crash Course](https://hello.dremio.com/webcast-an-apache-iceberg-lakehouse-crash-course-reg.html?utm_source=alexmerced&utm_medium=external_blog&utm_campaign=allaboutparquet)
 - [Iceberg Lakehouse Engineering Video Playlist](https://www.youtube.com/watch?v=SIriNcVIGJQ&list=PLsLAVBjQJO0p0Yq1fLkoHvt2lEJj5pcYe)
-
-In the first post of this series, we introduced the Apache Parquet file format and touched upon one of its key features - columnar storage. Now, we’ll take a deeper dive into what this columnar storage model is, how it works, and why it’s so efficient for big data analytics. Understanding Parquet's columnar architecture is key to leveraging its full potential in optimizing data storage and query performance.
 
 ## What is Columnar Storage?
 
@@ -57,7 +58,7 @@ Another benefit of Parquet’s columnar model is that it enables better parallel
 Understanding how Parquet organizes data internally can help you fine-tune how you store and query your datasets.
 
 - **Columns and Row Groups**: Parquet organizes data into **row groups**, which contain chunks of column data. A row group contains all the data for a subset of rows, but the data for each column is stored separately. This allows for efficient I/O when reading subsets of rows or columns.
-  
+ 
 - **Pages**: Within each column chunk, data is further divided into **pages**. Parquet uses pages to store column data more granularly, which helps optimize compression and read performance. Each page is typically a few megabytes in size, and Parquet stores statistics about the data in each page, making it easier to skip irrelevant pages during query execution.
 
 ## Use Cases for Columnar Storage

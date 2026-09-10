@@ -1,7 +1,7 @@
 ---
 title: "What is Apache Spark?"
 meta_title: "What is Apache Spark? | Expert Data Lakehouse Architecture Guide"
-description: "A comprehensive guide to Apache Spark. Learn about in-memory distributed computing, resilient distributed datasets (RDDs), the Catalyst Optimizer, and modern data processing."
+description: "A comprehensive guide to Apache Spark. Learn about in-memory distributed computing, resilient distributed datasets (RDDs), the Catalyst Optimizer."
 ---
 
 # What is Apache Spark?

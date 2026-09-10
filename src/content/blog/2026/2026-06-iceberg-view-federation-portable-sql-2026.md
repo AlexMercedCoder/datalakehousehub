@@ -1,6 +1,6 @@
 ---
 title: "The 2026 Guide to Iceberg View Federation"
-description: "Iceberg views standardize SQL view definitions across engines, enabling view federation across Polaris, Nessie, and Gravitino catalogs. How Snowflake Horizon, Databricks Unity Catalog, and open source catalogs handle portable SQL."
+description: "Iceberg views standardize SQL view definitions across engines, enabling view federation across Polaris, Nessie, and Gravitino catalogs."
 date: 2026-06-08T09:00:00Z
 slug: "iceberg-view-federation-portable-sql-2026"
 draft: false
@@ -15,7 +15,6 @@ tags:
   - "Polaris views"
   - "Snowflake Horizon views"
 ---
-
 A view is the simplest and most powerful abstraction in data engineering. It is a saved SQL query that behaves like a table. Users query the view, not the underlying tables, and the engine resolves the SQL at query time. Every major query engine supports views. The problem is that each engine stores view metadata in a proprietary format. A view created in Trino cannot be read by Spark, even if they share the same Iceberg catalog and the same underlying data.
 
 The Apache Iceberg View Specification solves this problem. It defines an open metadata format for SQL views, analogous to how Iceberg defines an open format for table metadata. A view stored in the Iceberg format can be created by one engine, read by any other Iceberg-compatible engine, and federated across catalogs. The view definition, schema, dialect, and version history are all stored in standard Iceberg metadata files, portable across the entire ecosystem.
@@ -29,7 +28,7 @@ The Iceberg view spec (format version 1) was adopted by the Apache Iceberg commu
 **View metadata file structure:**
 
 | Field | Requirement | Description |
-|-------|-------------|-------------|
+|----|-------|-------|
 | view-uuid | required | UUID identifying the view, generated at creation |
 | format-version | required | Must be 1 |
 | location | required | Base path for view metadata files |
@@ -45,9 +44,7 @@ Each version has its own representation. The spec currently supports only one re
 
 ```json
 {
-  "type": "sql",
-  "sql": "SELECT COUNT(1), CAST(event_ts AS DATE) FROM events GROUP BY 2",
-  "dialect": "spark"
+ "type": "sql", "sql": "SELECT COUNT(1), CAST(event_ts AS DATE) FROM events GROUP BY 2", "dialect": "spark"
 }
 ```
 
@@ -143,6 +140,6 @@ The practical value is straightforward: a view defined once in Polaris works in 
 
 For teams running multiple query engines across a common Iceberg catalog, adopting Iceberg views is the single highest-impact step they can take toward portable, governed SQL. The alternative (duplicating view definitions in each engine) creates maintenance debt that grows with every schema change, every engine upgrade, and every new team member who needs to understand the data.
 
----
+--
 
 *For the full Iceberg view specification, visit [iceberg.apache.org/view-spec](https://iceberg.apache.org/view-spec/). To deploy Iceberg views in a governed, multi-engine lakehouse, start a free trial at [dremio.com/get-started](https://www.dremio.com/get-started).*

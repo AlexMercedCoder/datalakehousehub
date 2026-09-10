@@ -2,7 +2,7 @@
 title: "The State of Agentic AI Standards in 2026: MCP, A2A, WebMCP, OSI, and the Protocol Stack Taking Shape"
 date: 2026-07-06T12:00:00Z
 canonical: https://iceberglakehouse.com/posts/state-of-agentic-ai-standards-2026/
-description: "The agentic AI protocol stack is solidifying in 2026 — MCP for tools, A2A for agents, WebMCP for the web, OSI for semantics, payments, identity, and security."
+description: "The agentic AI protocol stack is solidifying in 2026, MCP for tools, A2A for agents, WebMCP for the web, OSI for semantics, payments, identity."
 author: "Alex Merced"
 category: "Agentic AI"
 tags:
@@ -18,11 +18,12 @@ draft: false
 image: "/images/blog.png"
 bannerImage: "/images/blog.png"
 ---
-> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/state-of-agentic-ai-standards-2026/).
 
 # The State of Agentic AI Standards in 2026: MCP, A2A, WebMCP, OSI, and the Protocol Stack Taking Shape
 
 *By Alex Merced, Head of Developer Relations at Dremio*
+
+> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/state-of-agentic-ai-standards-2026/).
 
 In 2023, an AI agent was a demo. In 2024, it was a framework. In 2025, it was a hundred incompatible frameworks. And in 2026, something genuinely new is happening: the agent world is growing a protocol stack, a set of open standards that determine how agents reach tools, talk to websites, talk to each other, understand business meaning, pay for things, and show their work to humans.
 
@@ -148,7 +149,7 @@ One more analytical lens before the guidance, because knowing what the stack ref
 
 Nothing in the stack standardizes how an agent thinks. Reasoning strategies, planning loops, memory architectures, model choice, and orchestration patterns all remain deliberately outside every specification, and that restraint is a feature. MCP does not care whether the caller is a single model or a swarm. A2A standardizes the envelope of delegation while staying silent on the intelligence inside either party. The protocols learned the web's lesson: HTTP never standardized how a server generates a page, and that silence is exactly what let the application layer innovate for thirty years. The competitive frontier for agent products stays wide open above the plumbing, which is why every vendor could afford to adopt the plumbing.
 
-Nothing yet standardizes evaluation and trust in results. There is no protocol for "how confident is this answer," no standard for attaching provenance and evaluation scores to agent outputs, no shared way to express "this analysis used these definitions against these snapshots of these tables." The pieces exist in fragments, the semantic layer supplies definitional provenance, table formats supply data versioning, audit logs supply the trail, but the assembled artifact, a verifiable answer, has no spec. I suspect this becomes a serious standards conversation by 2027, and the data world will supply much of its raw material, because lineage and reproducibility are problems we have been solving for a decade.
+Nothing yet standardizes evaluation and trust in results. There is no protocol for "how confident is this answer, " no standard for attaching provenance and evaluation scores to agent outputs, no shared way to express "this analysis used these definitions against these snapshots of these tables." The pieces exist in fragments, the semantic layer supplies definitional provenance, table formats supply data versioning, audit logs supply the trail, but the assembled artifact, a verifiable answer, has no spec. I suspect this becomes a serious standards conversation by 2027, and the data world will supply much of its raw material, because lineage and reproducibility are problems we have been solving for a decade.
 
 And nothing standardizes the economics. When agent traffic replaces human traffic on a website, when agents comparison-shop at machine speed, when a vendor's API becomes a line item in a thousand agents' budgets, the technical protocols are ready and the business models are not. WebMCP can express what a site permits, and llms.txt can express what it offers, but neither expresses what the site gets in return, and the tension between agent-friendly and revenue-sustaining is unresolved across the industry. Payment protocols are a partial answer for explicit transactions. The implicit economy of attention and advertising has no agent-era equivalent yet, and that vacuum, more than any technical gap, is what makes the agentic web layer the hardest to predict.
 

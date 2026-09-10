@@ -14,9 +14,10 @@ tags:
 slug: "decoupled-data-lakehouse-multi-engine-rest-catalogs"
 draft: false
 ---
-> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/decoupled-data-lakehouse-multi-engine-rest-catalogs/).
 
 Every few years a data team discovers, mid-contract-renewal, exactly how much of their platform they do not control. The data sits in the vendor's format. The metadata lives in the vendor's catalog. The security policies exist only in the vendor's console. Moving any workload means moving all of it, and the vendor's pricing team knows that better than anyone. The technical name for this position is coupling, and the commercial name for it is the renewal quote.
+
+> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/decoupled-data-lakehouse-multi-engine-rest-catalogs/).
 
 The decoupled lakehouse is the architecture that ends that position, and it is buildable today with boring, shipping technology: open file formats on commodity object storage, an open table format on top, an open catalog protocol coordinating everything, and compute engines that come and go as workloads deserve. The piece that completed the picture, later than the others and more consequentially, is the Apache Iceberg REST catalog specification, which turned the catalog from the last point of lock-in into the interface that makes engine plurality practical.
 
@@ -41,7 +42,7 @@ None of this says bundled platforms are irrational purchases. It says the bundle
 The decoupled lakehouse separates the warehouse bundle into layers with open interfaces between them, and the discipline that makes it work is simple to state: every layer is replaceable because every seam is a standard.
 
 | Layer | Role | Open standard at the seam |
-|---|---|---|
+|--|--|--|
 | Object storage | Durable, cheap bytes | S3-compatible APIs everywhere |
 | File format | Columnar data encoding | Apache Parquet |
 | Table format | Tables, snapshots, schema, statistics | Apache Iceberg |
@@ -67,7 +68,7 @@ Semantics deserve their line in the stack because meaning is the next thing wort
 
 For years the lakehouse pitch had a quiet weakness that practitioners knew and slides omitted. Open formats made data readable by every engine, and coordination still lived somewhere, and that somewhere was fragmented: a Hive Metastore here, a cloud-specific catalog there, each engine shipping its own connector for each catalog type, and the connector matrix growing multiplicatively. Worse, the catalog is where the estate's most valuable coordination happens, and whoever owned it owned the real switching costs. Openness at the format layer with coupling at the catalog layer was lock-in with extra steps.
 
-Understand what the catalog actually does and the stakes become obvious. The catalog answers "where is the current metadata for this table," which sounds clerical and is everything: it is the atomic pointer swap that makes commits safe, the arbiter when two engines write concurrently, the namespace that makes tables discoverable, and, in its modern form, the authority that decides who accesses what and hands out the credentials to do it. Every engine's correctness depends on agreeing with every other engine about the current state of every table, and the catalog is the agreement.
+Understand what the catalog actually does and the stakes become obvious. The catalog answers "where is the current metadata for this table, " which sounds clerical and is everything: it is the atomic pointer swap that makes commits safe, the arbiter when two engines write concurrently, the namespace that makes tables discoverable, and, in its modern form, the authority that decides who accesses what and hands out the credentials to do it. Every engine's correctness depends on agreeing with every other engine about the current state of every table, and the catalog is the agreement.
 
 That is why the REST catalog specification is the most consequential piece of Iceberg infrastructure since the format itself. It standardizes the coordination layer as an HTTP protocol: any engine implementing the client speaks to any catalog implementing the server, and the connector matrix collapses from engines-times-catalogs to engines-plus-catalogs. The catalog becomes a component you choose, run, and, when justified, replace, with the tables never moving. Practitioners have demonstrated exactly that swap, the same tables on the same object storage served through different catalog implementations in succession, queries returning identical answers while only the coordination layer changed underneath. Five years ago that sentence described science fiction.
 
@@ -97,7 +98,7 @@ Credential vending inverts the flow. Engines hold no storage credentials at all.
 
 Remote signing extends the model for the sharpest requirements. With vending, an engine briefly holds a table-scoped token. With remote signing, it holds nothing: every individual storage request is pre-signed by the catalog, scoped to one file and one operation, so even a compromised engine process possesses no reusable credential. The cost is a catalog round trip per request, which is why this mode is reserved for the data that justifies it, and the ecosystem is converging on standard configuration for it, with signer endpoint properties aligning across catalog implementations so engines set it up uniformly.
 
-Identity itself deserves one paragraph, because vending presumes the catalog knows who is asking. The pattern that works: every engine, job, and human authenticates to the catalog as a distinct principal through the organization's identity provider, service principals for machines, federated identity for people, with client credentials from a secret manager rather than baked into configuration. The principal-per-consumer discipline is what makes the audit trail mean something, "the Spark batch role read the orders table" instead of "the shared service account did everything," and it costs nothing extra at setup time and a re-onboarding project if retrofitted later. Set it up right on day one and the security review of every future engine addition becomes a form, not a meeting.
+Identity itself deserves one paragraph, because vending presumes the catalog knows who is asking. The pattern that works: every engine, job, and human authenticates to the catalog as a distinct principal through the organization's identity provider, service principals for machines, federated identity for people, with client credentials from a secret manager rather than baked into configuration. The principal-per-consumer discipline is what makes the audit trail mean something, "the Spark batch role read the orders table" instead of "the shared service account did everything, " and it costs nothing extra at setup time and a re-onboarding project if retrofitted later. Set it up right on day one and the security review of every future engine addition becomes a form, not a meeting.
 
 Step back and notice what happened architecturally: security decoupled from compute. The property that made the bundled warehouse defensible to security teams, one enforcement point, survived the unbundling by moving to the catalog, and it arrived improved, because the catalog enforces on every access path rather than only the SQL one. This, more than any performance argument, is what makes multi-engine architectures approvable in serious organizations, and it is the feature to scrutinize hardest when choosing a catalog implementation.
 
@@ -164,14 +165,10 @@ DuckDB, serving laptops and CI, attaches to the identical estate:
 
 ```sql
 CREATE SECRET lakehouse_auth (
-    TYPE iceberg,
-    CLIENT_ID 'DUCKDB_CLIENT_ID',
-    CLIENT_SECRET 'DUCKDB_SECRET',
-    OAUTH2_SERVER_URI 'https://catalog.example.com/api/catalog/v1/oauth/tokens'
+ TYPE iceberg, CLIENT_ID 'DUCKDB_CLIENT_ID', CLIENT_SECRET 'DUCKDB_SECRET', OAUTH2_SERVER_URI 'https://catalog.example.com/api/catalog/v1/oauth/tokens'
 );
 ATTACH 'prod' AS lakehouse (
-    TYPE iceberg,
-    ENDPOINT 'https://catalog.example.com/api/catalog'
+ TYPE iceberg, ENDPOINT 'https://catalog.example.com/api/catalog'
 );
 SELECT count(*) FROM lakehouse.sales.orders;
 ```
@@ -210,7 +207,7 @@ The end state, several quarters later, is the portfolio from earlier sections, w
 
 **The migration that stalls at eighty percent.** The final decoupling failure is incompletion: the easy workloads move, the hard fifth remains on the old platform indefinitely, and the organization pays both platforms' full operational costs forever, which is worse than either endpoint. The defense is set at the start: every workload gets a disposition, move, retire, or deliberately remain, with "remain" being a decision with an owner and an annual review rather than a default. An estate is decoupled when every coupling left in it is one somebody chose on purpose and can name the reason for.
 
-**Optionality theater.** The subtlest failure: an organization adopts the open stack and then rebuilds coupling on top, proprietary transformations only one engine runs, semantics defined inside one tool, operational dependence on one vendor's extensions, while the slideware still says decoupled. The audit is one question asked yearly per layer: what breaks if we replace this? If the answer at any layer is "everything," that layer has quietly re-coupled, and naming it is most of the fix.
+**Optionality theater.** The subtlest failure: an organization adopts the open stack and then rebuilds coupling on top, proprietary transformations only one engine runs, semantics defined inside one tool, operational dependence on one vendor's extensions, while the slideware still says decoupled. The audit is one question asked yearly per layer: what breaks if we replace this? If the answer at any layer is "everything, " that layer has quietly re-coupled, and naming it is most of the fix.
 
 ## The Strategic Argument, Plainly
 

@@ -16,9 +16,10 @@ draft: false
 image: "/images/blog.png"
 canonical: "https://iceberglakehouse.com/posts/2026-03-context-claude-cowork/"
 ---
-> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-03-context-claude-cowork/).
 
 Claude CoWork represents a fundamentally different approach to AI context management. Unlike chat interfaces where you send messages and receive responses, CoWork is an autonomous agent that works on your local machine, reads and writes files directly, and executes multi-step tasks with minimal supervision. For knowledge workers who spend their days in documents, spreadsheets, and presentations, CoWork replaces the constant back-and-forth of copy-paste workflows with direct delegation.
+
+> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-03-context-claude-cowork/).
 
 This guide covers how to manage context effectively in CoWork, from setting up folder-level instructions to creating reusable workflows that run on schedule.
 
@@ -27,7 +28,7 @@ This guide covers how to manage context effectively in CoWork, from setting up f
 CoWork runs as part of the Claude Desktop application but operates in a distinct mode. The differences matter for context management:
 
 | Capability | Claude Web/Desktop Chat | Claude CoWork |
-|---|---|---|
+|--|--|--|
 | **Interaction model** | Conversational (you send, it responds) | Autonomous (you delegate, it executes) |
 | **File access** | Upload or MCP server | Direct local read/write |
 | **Output location** | In the chat window | On your file system |
@@ -67,7 +68,7 @@ Global instructions apply across all CoWork tasks regardless of which folder or 
 
 - Your preferred writing style and tone
 - Output format preferences (bullet points vs. prose, heading structure)
-- General constraints ("Always use metric units," "Write in American English")
+- General constraints ("Always use metric units, " "Write in American English")
 - Your role and expertise level
 
 These function similarly to Custom Instructions in ChatGPT but are specific to CoWork's autonomous execution mode.
@@ -197,12 +198,12 @@ Create a template folder with examples of your desired output format. In your fo
 
 ```
 /project/
-  /templates/
-    blog-post-template.md
-    report-template.md
-    email-template.md
-  /instructions.md (folder instructions referencing templates)
-  /output/
+ /templates/
+ blog-post-template.md
+ report-template.md
+ email-template.md
+ /instructions.md (folder instructions referencing templates)
+ /output/
 ```
 
 This approach gives CoWork concrete examples of "what good looks like" for every type of output it might produce.

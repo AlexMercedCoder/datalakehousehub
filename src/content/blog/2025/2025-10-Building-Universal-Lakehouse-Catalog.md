@@ -15,13 +15,14 @@ draft: false
 image: "/images/blog.png"
 canonical: "https://iceberglakehouse.com/posts/2025-10-Building-Universal-Lakehouse-Catalog/"
 ---
-> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2025-10-Building-Universal-Lakehouse-Catalog/).
 
 **Get Data Lakehouse Books:**
 - [Apache Iceberg: The Definitive Guide](https://drmevn.fyi/tableformatblog)
 - [Apache Polaris: The Defintive Guide](https://drmevn.fyi/tableformatblog-62P6t)
 - [Architecting an Apache Iceberg Lakehouse](https://hubs.la/Q03GfY4f0)
 - [The Apache Iceberg Digest: Vol. 1](https://www.puppygraph.com/ebooks/apache-iceberg-digest-vol-1)
+
+> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2025-10-Building-Universal-Lakehouse-Catalog/).
 
 **Lakehouse Community:**
 - [Join the Data Lakehouse Community](https://www.datalakehousehub.com)
@@ -84,21 +85,21 @@ This brings us to the real crossroads: if we need a standard API for universal l
 
 There are a few possibilities:
 
-- **Should it come from the Iceberg REST spec?**  
+- **Should it come from the Iceberg REST spec?** 
 That would keep things in the same family and build on an existing community standard. But Iceberg’s current REST spec is tightly scoped around Iceberg tables, and expanding it to cover other data types could be a big shift and expand the project beyond what the community may be comfortable with.
 
-- **Should it be defined inside a single catalog project like Polaris or Unity?**  
+- **Should it be defined inside a single catalog project like Polaris or Unity?** 
 A vendor-backed project can move quickly, implement end-to-end features, and ship a working solution but then be a source of lock-in. If an open standard catalog dominates, then it becomes the home of the API standard by default. 
 
-- **Is it acceptable if the spec starts with a vendor?**  
+- **Is it acceptable if the spec starts with a vendor?** 
 Maybe. If that vendor drives real adoption and the API is later opened up, it can evolve into a neutral standard. But it would need wide buy-in and careful governance, to avoid becoming another moving target.
 
 No matter how you look at it, there are really only two main paths forward:
 
-1. **An implementation becomes the de facto standard.**  
+1. **An implementation becomes the de facto standard.** 
 One catalog (open source or commercial) builds enough momentum that its API becomes the standard, similar to how S3 became the API for object storage.
 
-2. **A neutral API spec is created independently.**  
+2. **A neutral API spec is created independently.** 
 This would follow the Iceberg model, where the spec came first, then vendors and engines built around it.
 
 If history teaches us anything, it’s that vendor-driven standards can create long-term friction. S3 is a good example: it's ubiquitous, but it’s also tightly bound to a single provider’s roadmap leading to a whack-a-mole like catch up game for those who support the API they have no control over. That experience shaped how the industry approached table formats, this time, the community came together around Iceberg to avoid that kind of lock-in and vendor catch-up.
@@ -219,50 +220,50 @@ Let’s weigh the trade-offs.
 
 ### 1. **Flexibility and Expressiveness**
 
-- **Table Sources (Implementation-first)**  
-  ✅ Easier to move quickly, Polaris can prototype and evolve features as it is a younger project with a younger community that can reach consensus quicker.  
-  ✅ Can support structured and unstructured datasets with source-specific logic.  
-  ✅ Avoid the lock-in of a vendor implementation becoming the standard, since Apache Polaris is a incubating Apache Project anyone can deploy.
+- **Table Sources (Implementation-first)** 
+ ✅ Easier to move quickly, Polaris can prototype and evolve features as it is a younger project with a younger community that can reach consensus quicker. 
+ ✅ Can support structured and unstructured datasets with source-specific logic. 
+ ✅ Avoid the lock-in of a vendor implementation becoming the standard, since Apache Polaris is a incubating Apache Project anyone can deploy.
 
-- **Scan Planning Extension (API-first)**  
-  ✅ Treats all datasets as files with a metadata interface, engines don’t need to know anything about the metadata format.  
-  ✅ Opens the door for catalogs to expose Delta, Hudi, Paimon, or other sources using the same scan API.  
-  ⚠️ Metadata management becomes much more complex for the catalog, especially for large tables or real-time use cases.
+- **Scan Planning Extension (API-first)** 
+ ✅ Treats all datasets as files with a metadata interface, engines don’t need to know anything about the metadata format. 
+ ✅ Opens the door for catalogs to expose Delta, Hudi, Paimon, or other sources using the same scan API. 
+ ⚠️ Metadata management becomes much more complex for the catalog, especially for large tables or real-time use cases.
 
 In both scenarios, there is still always the question of a specific engines support for reading different file formats or metadata formats. Although, in both scenarios the catalog can still be the central listing governing access to all lakehouse datasets.
 
 ### 2. **Governance and Control**
 
-- **Table Sources**  
-  ✅ Catalog remains the system of record and point of governance.  
-  ✅ Supports configuration-based registration, access control, and credential vending.  
-  ⚠️ Each source type needs its own metadata strategy, increasing maintenance complexity.
+- **Table Sources** 
+ ✅ Catalog remains the system of record and point of governance. 
+ ✅ Supports configuration-based registration, access control, and credential vending. 
+ ⚠️ Each source type needs its own metadata strategy, increasing maintenance complexity.
 
-- **Scan Planning + Write Delegation**  
-  ✅ Centralizes all metadata handling, which could unify governance and simplify access rules.  
-  ⚠️ Puts more strain on catalog durability, uptime, and scalability, it's now a bigger bottleneck for reads and writes.
+- **Scan Planning + Write Delegation** 
+ ✅ Centralizes all metadata handling, which could unify governance and simplify access rules. 
+ ⚠️ Puts more strain on catalog durability, uptime, and scalability, it's now a bigger bottleneck for reads and writes.
 
 ### 3. **Ecosystem Alignment**
 
-- **Table Sources**  
-  ✅ Works well for ecosystems already aligned around Polaris or compatible systems.   
-  ⚠️ Other catalogs would need to implement Polaris-compatible logic to ensure portability. (We saw catalogs adopt the Iceberg REST Spec as it become the standard, so there is precedent)
+- **Table Sources** 
+ ✅ Works well for ecosystems already aligned around Polaris or compatible systems. 
+ ⚠️ Other catalogs would need to implement Polaris-compatible logic to ensure portability. (We saw catalogs adopt the Iceberg REST Spec as it become the standard, so there is precedent)
 
-- **REST Spec Extension**  
-  ✅ Builds on a known spec (Iceberg REST), which already has buy-in across many vendors.  
-  ✅ Keeps catalogs interchangeable if they adhere to the same read/write API contract.  
-  ⚠️ Requires coordination and consensus across the community, which can slow down adoption.
+- **REST Spec Extension** 
+ ✅ Builds on a known spec (Iceberg REST), which already has buy-in across many vendors. 
+ ✅ Keeps catalogs interchangeable if they adhere to the same read/write API contract. 
+ ⚠️ Requires coordination and consensus across the community, which can slow down adoption.
 
 ### 4. **Developer Experience**
 
-- **Table Sources**  
-  ✅ Clear division of responsibility: catalog governs metadata, engines execute logic.  
-  ✅ External services (source services) handle complexity and can evolve independently.  
-  ⚠️ Requires more infrastructure components to be deployed and maintained.
+- **Table Sources** 
+ ✅ Clear division of responsibility: catalog governs metadata, engines execute logic. 
+ ✅ External services (source services) handle complexity and can evolve independently. 
+ ⚠️ Requires more infrastructure components to be deployed and maintained.
 
-- **API Extensions**  
-  ✅ Simplifies engine logic, engines just hand off files and scan what they’re told.  
-  ⚠️ Catalog APIs become more complex and require tighter validation of inputs and outputs.
+- **API Extensions** 
+ ✅ Simplifies engine logic, engines just hand off files and scan what they’re told. 
+ ⚠️ Catalog APIs become more complex and require tighter validation of inputs and outputs.
 
 ### Summary
 

@@ -15,9 +15,10 @@ draft: false
 image: "/images/blog.png"
 canonical: https://iceberglakehouse.com/posts/orchestration-in-2026/
 ---
-> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/orchestration-in-2026/).
 
 The orchestration question used to be simple: Airflow, or something that wanted to be Airflow. It is not simple in 2026. Apache Airflow 3 shipped in April 2025 and has moved through three minor releases since, each adding capabilities that its competitors spent years selling as differentiators. Prefect announced on July 13, 2026 that it is acquiring Dagster Labs, with both products continuing under their own names and licenses, which puts the two most widely adopted alternatives to Airflow inside one company. And a growing share of lakehouse pipelines do not run on any of the three, because the events that should trigger them, a snapshot committed, a file landed, a message published, are handled by the catalog, the object store, or a streaming engine directly.
+
+> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/orchestration-in-2026/).
 
 For a team running an Apache Iceberg lakehouse the question is not which tool has the nicest UI. It is which combination of scheduling, dependency tracking, execution, and observability fits pipelines whose units of work are table snapshots rather than task completions. This article covers what orchestration has to do for a lakehouse, where each of the three major orchestrators stands as of mid-2026, what the Prefect acquisition means in practice, when event-driven triggering replaces an orchestrator entirely, and how the same pipeline looks in each model. I work at Dremio, and none of the tools discussed here is a Dremio product, though all of them are used to drive Dremio and every other engine.
 
@@ -111,7 +112,7 @@ A meaningful fraction of lakehouse pipelines in 2026 have no orchestrator in the
 
 The building blocks are familiar. Object stores emit notifications when objects land. Message brokers carry those notifications and any other event. Serverless functions and streaming engines subscribe and act. What is new is that the lakehouse itself has become a source of events worth reacting to.
 
-**Snapshot commits as events.** A commit to an Iceberg table is a discrete, observable event. REST catalogs are beginning to expose commit notifications, and where they do not, a lightweight poller on the `snapshots` metadata table detects new commits within seconds. A downstream job that runs "when orders has a new snapshot" is more precise than one that runs "when the orders DAG task succeeds," because it triggers on the actual outcome and works regardless of which engine or tool produced the commit.
+**Snapshot commits as events.** A commit to an Iceberg table is a discrete, observable event. REST catalogs are beginning to expose commit notifications, and where they do not, a lightweight poller on the `snapshots` metadata table detects new commits within seconds. A downstream job that runs "when orders has a new snapshot" is more precise than one that runs "when the orders DAG task succeeds, " because it triggers on the actual outcome and works regardless of which engine or tool produced the commit.
 
 **Streaming engines as orchestrators.** Apache Flink reading from Kafka and writing to Iceberg is a continuously running pipeline that needs no scheduler. Its checkpoints are its retries. Its backpressure is its rate control. For event data, this replaces a DAG entirely, and the orchestrator's role shrinks to monitoring the Flink job's health.
 
@@ -126,7 +127,7 @@ The tradeoff is dependency tracking and observability. An event-driven system kn
 ## Comparison
 
 | Dimension | Airflow 3.3 | Dagster (2026) | Prefect 3 | Event-driven |
-|---|---|---|---|---|
+|--|--|--|--|--|
 | Core model | DAGs of tasks, with assets as a scheduling layer | Graph of assets, tasks derived | Python flows and tasks, events and automations | Subscriptions to storage, catalog, or broker events |
 | Table-grained lineage | Assets, with partitioning since 3.2 | Native, with partitions, checks, and freshness | Optional via `@materialize` | None unless built |
 | Snapshot-aware triggering | Asset watchers plus a custom poller or provider | Sensors plus declarative automation | Events plus automations | Native where the catalog emits commit events |
@@ -172,15 +173,15 @@ Because triggering on snapshots is the single most useful lakehouse-specific pra
 from pyiceberg.catalog import load_catalog
 
 def latest_snapshot(table_name: str) -> int | None:
-    table = load_catalog("polaris").load_table(table_name)
-    snap = table.current_snapshot()
-    return snap.snapshot_id if snap else None
+ table = load_catalog("polaris").load_table(table_name)
+ snap = table.current_snapshot()
+ return snap.snapshot_id if snap else None
 
 def new_snapshot_since(table_name: str, last_seen: int | None) -> int | None:
-    current = latest_snapshot(table_name)
-    if current is not None and current != last_seen:
-        return current
-    return None
+ current = latest_snapshot(table_name)
+ if current is not None and current != last_seen:
+ return current
+ return None
 ```
 
 In Airflow 3 this is the body of a deferrable sensor, or with a REST catalog that publishes commit notifications to a queue, it is replaced by an asset watcher and needs no polling at all. The last-seen ID lives in the task state store from Airflow 3.3, so it survives restarts. In Dagster it is a sensor that yields a `RunRequest` with the snapshot ID as a tag, and the cursor mechanism stores the last-seen value. In Prefect it is a small flow on a short schedule that emits an `iceberg.snapshot.committed` event, and automations react to the event.
@@ -199,22 +200,21 @@ from airflow.sdk import Asset
 
 @asset(schedule="@hourly", uri="iceberg://lake/raw/orders")
 def raw_orders():
-    from ingest import load_orders_to_iceberg
-    return load_orders_to_iceberg()   # returns new snapshot id
+ from ingest import load_orders_to_iceberg
+ return load_orders_to_iceberg() # returns new snapshot id
 
-@asset(schedule=[Asset("iceberg://lake/raw/orders")],
-       uri="iceberg://lake/analytics/fct_orders")
+@asset(schedule=[Asset("iceberg://lake/raw/orders")], uri="iceberg://lake/analytics/fct_orders")
 def fct_orders():
-    from dbt_runner import run_model
-    return run_model("fct_orders")
+ from dbt_runner import run_model
+ return run_model("fct_orders")
 
 @dag(schedule=[Asset("iceberg://lake/analytics/fct_orders")])
 def maintain_fct_orders():
-    @task
-    def compact():
-        from maintenance import rewrite_data_files
-        return rewrite_data_files("analytics.fct_orders")
-    compact()
+ @task
+ def compact():
+ from maintenance import rewrite_data_files
+ return rewrite_data_files("analytics.fct_orders")
+ compact()
 
 maintain_fct_orders()
 ```
@@ -228,33 +228,27 @@ import dagster as dg
 
 @dg.asset
 def raw_orders() -> dg.MaterializeResult:
-    from ingest import load_orders_to_iceberg
-    snap = load_orders_to_iceberg()
-    return dg.MaterializeResult(metadata={"snapshot_id": snap})
+ from ingest import load_orders_to_iceberg
+ snap = load_orders_to_iceberg()
+ return dg.MaterializeResult(metadata={"snapshot_id": snap})
 
-@dg.asset(deps=[raw_orders],
-          automation_condition=dg.AutomationCondition.eager())
+@dg.asset(deps=[raw_orders], automation_condition=dg.AutomationCondition.eager())
 def fct_orders() -> dg.MaterializeResult:
-    from dbt_runner import run_model
-    return dg.MaterializeResult(metadata={"snapshot_id": run_model("fct_orders")})
+ from dbt_runner import run_model
+ return dg.MaterializeResult(metadata={"snapshot_id": run_model("fct_orders")})
 
 @dg.asset_check(asset=fct_orders)
 def fct_orders_has_rows():
-    from checks import row_count
-    return dg.AssetCheckResult(passed=row_count("analytics.fct_orders") > 0)
+ from checks import row_count
+ return dg.AssetCheckResult(passed=row_count("analytics.fct_orders") > 0)
 
-@dg.asset(deps=[fct_orders],
-          automation_condition=dg.AutomationCondition.eager())
+@dg.asset(deps=[fct_orders], automation_condition=dg.AutomationCondition.eager())
 def fct_orders_compacted():
-    from maintenance import rewrite_data_files
-    rewrite_data_files("analytics.fct_orders")
+ from maintenance import rewrite_data_files
+ rewrite_data_files("analytics.fct_orders")
 
 defs = dg.Definitions(
-    assets=[raw_orders, fct_orders, fct_orders_compacted],
-    asset_checks=[fct_orders_has_rows],
-    schedules=[dg.ScheduleDefinition(name="hourly", cron_schedule="0 * * * *",
-                                     target=dg.AssetSelection.assets(raw_orders))],
-)
+ assets=[raw_orders, fct_orders, fct_orders_compacted], asset_checks=[fct_orders_has_rows], schedules=[dg.ScheduleDefinition(name="hourly", cron_schedule="0 * * * *", target=dg.AssetSelection.assets(raw_orders))], )
 ```
 
 The eager automation condition materializes each downstream asset whenever its upstream does. The check runs after the fact table materializes and its result is part of the asset's history. In practice the dbt model is a `dbt_assets` component rather than a wrapped function, and it appears in the graph with every other model.
@@ -267,27 +261,25 @@ from prefect.events import emit_event
 
 @task(retries=3)
 def ingest():
-    from ingest import load_orders_to_iceberg
-    return load_orders_to_iceberg()
+ from ingest import load_orders_to_iceberg
+ return load_orders_to_iceberg()
 
 @task
 def transform():
-    from dbt_runner import run_model
-    return run_model("fct_orders")
+ from dbt_runner import run_model
+ return run_model("fct_orders")
 
 @task
 def compact():
-    from maintenance import rewrite_data_files
-    return rewrite_data_files("analytics.fct_orders")
+ from maintenance import rewrite_data_files
+ return rewrite_data_files("analytics.fct_orders")
 
 @flow
 def orders_pipeline():
-    raw_snap = ingest()
-    fct_snap = transform()
-    compact()
-    emit_event(event="iceberg.snapshot.committed",
-               resource={"prefect.resource.id": "table.analytics.fct_orders",
-                         "snapshot_id": str(fct_snap)})
+ raw_snap = ingest()
+ fct_snap = transform()
+ compact()
+ emit_event(event="iceberg.snapshot.committed", resource={"prefect.resource.id": "table.analytics.fct_orders", "snapshot_id": str(fct_snap)})
 ```
 
 The flow is a plain sequence, and the interesting part is the event at the end. An automation subscribed to `iceberg.snapshot.committed` for that resource triggers whatever should follow, in this flow or another, without the flow knowing about it. Scheduling is a deployment setting, not code.

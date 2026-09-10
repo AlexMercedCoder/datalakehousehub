@@ -14,14 +14,14 @@ draft: false
 image: "/images/blog.png"
 canonical: "https://iceberglakehouse.com/posts/2024-10-intro-to-github-actions/"
 ---
+
+GitHub Actions is widely recognized as a powerful tool for automating tasks in software development. It's commonly used for tasks like running tests, building applications, and deploying to production environments. However, the true potential of GitHub Actions extends far beyond software development. Whether you're orchestrating complex data pipelines, automating ETL jobs, or even generating reports, GitHub Actions offers a flexible and scalable solution.
+
 > **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2024-10-intro-to-github-actions/).
 
 - [Free Copy of Apache Iceberg the Definitive Guide](https://hello.dremio.com/wp-apache-iceberg-the-definitive-guide-reg.html?utm_content=alexmerced&utm_medium=influencer&utm_source=ev_externalblog&utm_campaign=githubactionsintro)
 - [Free Apache Iceberg Crash Course](https://hello.dremio.com/webcast-an-apache-iceberg-lakehouse-crash-course-reg.html?utm_content=alexmerced&utm_medium=influencer&utm_source=ev_externalblog&utm_campaign=githubactionsintro)
 - [Iceberg Lakehouse Engineering Video Playlist](https://www.youtube.com/watch?v=SIriNcVIGJQ&list=PLsLAVBjQJO0p0Yq1fLkoHvt2lEJj5pcYe)
-
-
-GitHub Actions is widely recognized as a powerful tool for automating tasks in software development. It's commonly used for tasks like running tests, building applications, and deploying to production environments. However, the true potential of GitHub Actions extends far beyond software development. Whether you're orchestrating complex data pipelines, automating ETL jobs, or even generating reports, GitHub Actions offers a flexible and scalable solution.
 
 In this blog, we'll dive deep into how GitHub Actions can be used not just in traditional CI/CD pipelines but also across various data engineering workflows. By the end, you'll understand how to leverage GitHub Actions to automate processes from software development to data engineering, unlocking new efficiencies and streamlining tasks you may not have realized could be automated. Let's explore the possibilities!
 
@@ -32,9 +32,9 @@ GitHub Actions is a platform that allows developers to automate workflows direct
 ### Key Components of GitHub Actions
 
 - **Workflows**: A collection of jobs, defined in YAML files, that automate tasks in your repository. Each workflow can be triggered by different events (like code pushes) and is stored in the `.github/workflows` directory.
-  
+ 
 - **Jobs**: A job is a set of steps that execute on the same runner. Jobs are executed in parallel by default, though they can be configured to run sequentially if needed.
-  
+ 
 - **Steps**: These are individual tasks that make up a job. Each step can run commands, scripts, or use actions to complete a specific part of the job.
 
 - **Actions**: Actions are reusable components that allow you to automate specific tasks within your workflow. These can be pre-built (available in the GitHub Marketplace) or custom actions that you define yourself.
@@ -141,7 +141,7 @@ In more complex data engineering projects, orchestration tools like Apache Airfl
 For instance:
 - GitHub Actions can trigger the execution of dbt models, transforming raw data into analytics-ready datasets.
 - Actions can trigger Airflow DAGs (Directed Acyclic Graphs) to orchestrate data pipelines across multiple stages.
-  
+ 
 This integration allows you to maintain and deploy your data models and orchestrations seamlessly through GitHub, using a single platform for both development and data workflows.
 
 ### Data Quality and Validation
@@ -264,20 +264,20 @@ Each workflow file needs the following basic structure:
 
 ```yaml
 name: My Workflow # Give your workflow a name
-on:               # Define the trigger for the workflow
-  push:           # Example: trigger on push events
-    branches:
-      - main      # Run the workflow only when pushing to the 'main' branch
+on: # Define the trigger for the workflow
+ push: # Example: trigger on push events
+ branches:
+ - main # Run the workflow only when pushing to the 'main' branch
 
-jobs:             # Define the jobs the workflow will run
-  build:          # Example job name
-    runs-on: ubuntu-latest   # Specify the environment for the job
-    steps:                    # Define the steps within the job
-      - name: Checkout code   # A step to checkout the repository
-        uses: actions/checkout@v2
+jobs: # Define the jobs the workflow will run
+ build: # Example job name
+ runs-on: ubuntu-latest # Specify the environment for the job
+ steps: # Define the steps within the job
+ - name: Checkout code # A step to checkout the repository
+ uses: actions/checkout@v2
 
-      - name: Run a script    # A step to run a custom script
-        run: echo "Hello, world!"
+ - name: Run a script # A step to run a custom script
+ run: echo "Hello, world!"
 ```
 
 ### Step 3: Triggers for Workflows
@@ -292,14 +292,14 @@ The on field defines when the workflow should be triggered. GitHub Actions provi
 
 ```yaml
 on:
-  push:
-    branches:
-      - main
-  pull_request:
-    branches:
-      - main
-  schedule:
-    - cron: '0 0 * * *'  # Run daily at midnight (UTC)
+ push:
+ branches:
+ - main
+ pull_request:
+ branches:
+ - main
+ schedule:
+ - cron: '0 0 * * *' # Run daily at midnight (UTC)
 ```
 
 ### Step 4: Defining Jobs and Steps
@@ -313,14 +313,14 @@ In the example below, we define a test job that runs on ubuntu-latest and includ
 
 ```yaml
 jobs:
-  test:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v2
+ test:
+ runs-on: ubuntu-latest
+ steps:
+ - name: Checkout repository
+ uses: actions/checkout@v2
 
-      - name: Run tests
-        run: npm test
+ - name: Run tests
+ run: npm test
 ```
 
 ### Step 5: Using Pre-built Actions
@@ -331,19 +331,19 @@ Example of using a pre-built action to set up a Python environment:
 
 ```yaml
 jobs:
-  setup-python:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v2
+ setup-python:
+ runs-on: ubuntu-latest
+ steps:
+ - name: Checkout repository
+ uses: actions/checkout@v2
 
-      - name: Set up Python 3.8
-        uses: actions/setup-python@v2
-        with:
-          python-version: 3.8
+ - name: Set up Python 3.8
+ uses: actions/setup-python@v2
+ with:
+ python-version: 3.8
 
-      - name: Install dependencies
-        run: pip install -r requirements.txt
+ - name: Install dependencies
+ run: pip install -r requirements.txt
 ```
 ### Step 6: Running and Monitoring Workflows
 
@@ -388,14 +388,14 @@ name: Example Workflow
 on: [push]
 
 jobs:
-  example-job:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
+ example-job:
+ runs-on: ubuntu-latest
+ steps:
+ - name: Checkout code
+ uses: actions/checkout@v2
 
-      - name: Use API Key
-        run: curl -H "Authorization: Bearer ${{ secrets.API_KEY }}" https://api.example.com
+ - name: Use API Key
+ run: curl -H "Authorization: Bearer ${{ secrets.API_KEY }}" https://api.example.com
 ```
 In this example:
 
@@ -419,15 +419,15 @@ name: Deploy to Production
 on: [push]
 
 jobs:
-  deploy:
-    runs-on: ubuntu-latest
-    environment: production
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
+ deploy:
+ runs-on: ubuntu-latest
+ environment: production
+ steps:
+ - name: Checkout code
+ uses: actions/checkout@v2
 
-      - name: Deploy using Production API Key
-        run: curl -H "Authorization: Bearer ${{ secrets.PROD_API_KEY }}" https://api.production.com
+ - name: Deploy using Production API Key
+ run: curl -H "Authorization: Bearer ${{ secrets.PROD_API_KEY }}" https://api.production.com
 ```
 
 ### Step 4: Managing Organization-Level Secrets
@@ -467,21 +467,21 @@ name: Parallel Jobs Example
 on: [push]
 
 jobs:
-  test:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-      - name: Run tests
-        run: npm test
+ test:
+ runs-on: ubuntu-latest
+ steps:
+ - name: Checkout code
+ uses: actions/checkout@v2
+ - name: Run tests
+ run: npm test
 
-  build:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-      - name: Build project
-        run: npm run build
+ build:
+ runs-on: ubuntu-latest
+ steps:
+ - name: Checkout code
+ uses: actions/checkout@v2
+ - name: Build project
+ run: npm run build
 ```
 
 In this example, both the test and build jobs will run simultaneously. GitHub Actions automatically schedules the jobs to run in parallel, optimizing the workflow's overall execution time.
@@ -493,22 +493,22 @@ Example of a workflow where the build job depends on the test job:
 
 ```yaml
 jobs:
-  test:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-      - name: Run tests
-        run: npm test
+ test:
+ runs-on: ubuntu-latest
+ steps:
+ - name: Checkout code
+ uses: actions/checkout@v2
+ - name: Run tests
+ run: npm test
 
-  build:
-    needs: test
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-      - name: Build project
-        run: npm run build
+ build:
+ needs: test
+ runs-on: ubuntu-latest
+ steps:
+ - name: Checkout code
+ uses: actions/checkout@v2
+ - name: Build project
+ run: npm run build
 ```
 Here, the build job will only start once the test job has completed successfully.
 
@@ -523,23 +523,23 @@ name: Matrix Build Example
 on: [push]
 
 jobs:
-  test:
-    runs-on: ${{ matrix.os }}
-    strategy:
-      matrix:
-        os: [ubuntu-latest, windows-latest, macos-latest]
-        node: [12, 14, 16]
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-      - name: Set up Node.js
-        uses: actions/setup-node@v2
-        with:
-          node-version: ${{ matrix.node }}
-      - name: Install dependencies
-        run: npm install
-      - name: Run tests
-        run: npm test
+ test:
+ runs-on: ${{ matrix.os }}
+ strategy:
+ matrix:
+ os: [ubuntu-latest, windows-latest, macos-latest]
+ node: [12, 14, 16]
+ steps:
+ - name: Checkout code
+ uses: actions/checkout@v2
+ - name: Set up Node.js
+ uses: actions/setup-node@v2
+ with:
+ node-version: ${{ matrix.node }}
+ - name: Install dependencies
+ run: npm install
+ - name: Run tests
+ run: npm test
 ```
 
 #### In this example:
@@ -555,12 +555,12 @@ For example, if you want to skip testing Node.js 12 on macOS, you can modify the
 
 ```yaml
 strategy:
-  matrix:
-    os: [ubuntu-latest, windows-latest, macos-latest]
-    node: [12, 14, 16]
-    exclude:
-      - os: macos-latest
-        node: 12
+ matrix:
+ os: [ubuntu-latest, windows-latest, macos-latest]
+ node: [12, 14, 16]
+ exclude:
+ - os: macos-latest
+ node: 12
 ```
 
 This will run all combinations except Node.js 12 on macOS, reducing unnecessary testing and saving resources.
@@ -572,10 +572,10 @@ To enable fail-fast:
 
 ```yaml
 strategy:
-  matrix:
-    os: [ubuntu-latest, windows-latest, macos-latest]
-    node: [12, 14, 16]
-    fail-fast: true
+ matrix:
+ os: [ubuntu-latest, windows-latest, macos-latest]
+ node: [12, 14, 16]
+ fail-fast: true
 ```
 
 ### Step 6: Best Practices for Parallelism and Matrix Builds
@@ -607,27 +607,27 @@ Here’s an example of caching npm dependencies for a Node.js project:
 
 ```yaml
 jobs:
-  build:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-      
-      - name: Set up Node.js
-        uses: actions/setup-node@v2
-        with:
-          node-version: '14'
-      
-      - name: Cache npm dependencies
-        uses: actions/cache@v3
-        with:
-          path: ~/.npm
-          key: ${{ runner.os }}-npm-cache-${{ hashFiles('package-lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-npm-cache-
-      
-      - name: Install dependencies
-        run: npm install
+ build:
+ runs-on: ubuntu-latest
+ steps:
+ - name: Checkout code
+ uses: actions/checkout@v2
+ 
+ - name: Set up Node.js
+ uses: actions/setup-node@v2
+ with:
+ node-version: '14'
+ 
+ - name: Cache npm dependencies
+ uses: actions/cache@v3
+ with:
+ path: ~/.npm
+ key: ${{ runner.os }}-npm-cache-${{ hashFiles('package-lock.json') }}
+ restore-keys: |
+ ${{ runner.os }}-npm-cache-
+ 
+ - name: Install dependencies
+ run: npm install
 ```
 In this example:
 
@@ -653,7 +653,7 @@ key: build-artifacts-${{ runner.os }}-v1
 
 ```yaml
 restore-keys: |
-  ${{ runner.os }}-npm-cache-
+ ${{ runner.os }}-npm-cache-
 ```
 
 ### Step 4: Caching for Different Languages
@@ -662,48 +662,48 @@ GitHub Actions caching can be used across a variety of languages and frameworks.
 #### Python (pip) Cache Example
 ```yaml
 jobs:
-  build:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
+ build:
+ runs-on: ubuntu-latest
+ steps:
+ - name: Checkout code
+ uses: actions/checkout@v2
 
-      - name: Set up Python
-        uses: actions/setup-python@v2
-        with:
-          python-version: '3.8'
+ - name: Set up Python
+ uses: actions/setup-python@v2
+ with:
+ python-version: '3.8'
 
-      - name: Cache pip dependencies
-        uses: actions/cache@v3
-        with:
-          path: ~/.cache/pip
-          key: ${{ runner.os }}-pip-${{ hashFiles('requirements.txt') }}
-          restore-keys: |
-            ${{ runner.os }}-pip-
+ - name: Cache pip dependencies
+ uses: actions/cache@v3
+ with:
+ path: ~/.cache/pip
+ key: ${{ runner.os }}-pip-${{ hashFiles('requirements.txt') }}
+ restore-keys: |
+ ${{ runner.os }}-pip-
 
-      - name: Install dependencies
-        run: pip install -r requirements.txt
+ - name: Install dependencies
+ run: pip install -r requirements.txt
 ```
 
 #### Maven (Java) Cache Example
 ```yaml
 jobs:
-  build:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
+ build:
+ runs-on: ubuntu-latest
+ steps:
+ - name: Checkout code
+ uses: actions/checkout@v2
 
-      - name: Cache Maven dependencies
-        uses: actions/cache@v3
-        with:
-          path: ~/.m2/repository
-          key: ${{ runner.os }}-maven-${{ hashFiles('pom.xml') }}
-          restore-keys: |
-            ${{ runner.os }}-maven-
+ - name: Cache Maven dependencies
+ uses: actions/cache@v3
+ with:
+ path: ~/.m2/repository
+ key: ${{ runner.os }}-maven-${{ hashFiles('pom.xml') }}
+ restore-keys: |
+ ${{ runner.os }}-maven-
 
-      - name: Build with Maven
-        run: mvn clean install
+ - name: Build with Maven
+ run: mvn clean install
 ```
 
 ### Step 5: Best Practices for Caching
@@ -767,8 +767,8 @@ Example of adding a step to print environment variables for debugging:
 
 ```yaml
 steps:
-  - name: Print environment variables
-    run: env
+ - name: Print environment variables
+ run: env
 ```
 
 ### Step 4: Using Debugging Mode
@@ -787,16 +787,16 @@ Example using the `slackapi/slack-github-action` to send a Slack notification wh
 
 ```yaml
 jobs:
-  notify:
-    runs-on: ubuntu-latest
-    if: failure()
-    steps:
-      - name: Send Slack notification on failure
-        uses: slackapi/slack-github-action@v1.23.0
-        with:
-          slack-bot-token: ${{ secrets.SLACK_BOT_TOKEN }}
-          channel-id: 'YOUR_CHANNEL_ID'
-          text: "Workflow failed: ${{ github.workflow }} - ${{ github.run_id }}"
+ notify:
+ runs-on: ubuntu-latest
+ if: failure()
+ steps:
+ - name: Send Slack notification on failure
+ uses: slackapi/slack-github-action@v1.23.0
+ with:
+ slack-bot-token: ${{ secrets.SLACK_BOT_TOKEN }}
+ channel-id: 'YOUR_CHANNEL_ID'
+ text: "Workflow failed: ${{ github.workflow }} - ${{ github.run_id }}"
 ```
 
 This example sends a message to your Slack channel whenever a workflow fails, allowing you to react quickly to issues.

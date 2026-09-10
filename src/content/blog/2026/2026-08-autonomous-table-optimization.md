@@ -1,7 +1,7 @@
 ---
 title: "Autonomous Table Optimization When Your Query Workload Stops Being Predictable"
 date: 2026-08-04T09:00:00Z
-description: "Autonomous table optimization when query workloads stop being predictable: observing file layout and query patterns, scoring compaction work, adaptive sort order, and cost discipline."
+description: "Autonomous table optimization when query workloads stop being predictable: observing file layout and query patterns, scoring compaction work, adaptive."
 author: "Alex Merced"
 category: "Apache Iceberg"
 tags:
@@ -16,11 +16,11 @@ image: "/images/blog.png"
 canonical: "https://iceberglakehouse.com/posts/autonomous-table-optimization/"
 ---
 
-> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/autonomous-table-optimization/).
-
 # Autonomous Table Optimization When Your Query Workload Stops Being Predictable
 
 *By Alex Merced, Data Lakehouse and AI Evangelist*
+
+> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/autonomous-table-optimization/).
 
 Table maintenance used to be a scheduling problem. You knew which tables were hot, you knew that dashboards filtered on order date and region, and you knew the batch window ran from 1am to 4am. You wrote a compaction job with a sort order matching the known filters, put it on a cron, and it worked for two years.
 
@@ -68,12 +68,8 @@ Autonomous optimization is a control loop, and control loops need measurements. 
 
 ```sql
 SELECT
-    partition,
-    COUNT(*)                                            AS file_count,
-    ROUND(AVG(file_size_in_bytes) / 1048576.0, 1)       AS avg_mb,
-    ROUND(SUM(file_size_in_bytes) / 1073741824.0, 2)    AS total_gb,
-    SUM(CASE WHEN file_size_in_bytes < 33554432
-             THEN 1 ELSE 0 END)                         AS small_files
+ partition, COUNT(*) AS file_count, ROUND(AVG(file_size_in_bytes) / 1048576.0, 1) AS avg_mb, ROUND(SUM(file_size_in_bytes) / 1073741824.0, 2) AS total_gb, SUM(CASE WHEN file_size_in_bytes < 33554432
+ THEN 1 ELSE 0 END) AS small_files
 FROM prod.sales.orders.files
 GROUP BY partition
 ORDER BY small_files DESC;
@@ -85,10 +81,7 @@ Small file count per partition is the primary compaction trigger. Average file s
 
 ```sql
 SELECT
-    d.file_path,
-    f.record_count                                        AS total_rows,
-    d.record_count                                        AS deleted_rows,
-    ROUND(100.0 * d.record_count / f.record_count, 1)     AS pct_deleted
+ d.file_path, f.record_count AS total_rows, d.record_count AS deleted_rows, ROUND(100.0 * d.record_count / f.record_count, 1) AS pct_deleted
 FROM prod.sales.orders.delete_files d
 JOIN prod.sales.orders.files f ON d.file_path = f.file_path
 WHERE 100.0 * d.record_count / f.record_count > 20
@@ -115,11 +108,11 @@ A workable scoring shape:
 
 ```
 compaction_score =
-      w1 * (small_file_count / target_file_count)
-    + w2 * (queries_last_7d / max_queries_any_partition)
-    + w3 * (deleted_row_pct / 100)
-    - w4 * (rewrite_bytes / total_table_bytes)
-    - w5 * (commits_last_1h / max_commits_any_partition)
+ w1 * (small_file_count / target_file_count)
+ + w2 * (queries_last_7d / max_queries_any_partition)
+ + w3 * (deleted_row_pct / 100)
+ - w4 * (rewrite_bytes / total_table_bytes)
+ - w5 * (commits_last_1h / max_commits_any_partition)
 ```
 
 The point is not these particular weights. It is that priority is a function of both how bad the layout is and how much anybody cares, and that the cost of fixing it appears with a negative sign.
@@ -140,18 +133,9 @@ The procedures are standard, and the interesting part is the parameters an auton
 
 ```sql
 CALL prod.system.rewrite_data_files(
-    table       => 'sales.orders',
-    strategy    => 'sort',
-    sort_order  => 'region ASC NULLS LAST, order_date ASC',
-    where       => 'order_date >= DATE ''2026-07-01''',
-    options     => map(
-        'target-file-size-bytes',   '536870912',
-        'min-input-files',          '8',
-        'max-concurrent-file-group-rewrites', '4',
-        'partial-progress.enabled', 'true',
-        'partial-progress.max-commits', '10',
-        'rewrite-job-order',        'bytes-desc'
-    )
+ table => 'sales.orders', strategy => 'sort', sort_order => 'region ASC NULLS LAST, order_date ASC', where => 'order_date >= DATE ''2026-07-01''', options => map(
+ 'target-file-size-bytes', '536870912', 'min-input-files', '8', 'max-concurrent-file-group-rewrites', '4', 'partial-progress.enabled', 'true', 'partial-progress.max-commits', '10', 'rewrite-job-order', 'bytes-desc'
+ )
 );
 ```
 
@@ -171,10 +155,7 @@ For the sort itself, z-ordering is the option when multiple columns matter rough
 
 ```sql
 CALL prod.system.rewrite_data_files(
-    table      => 'sales.orders',
-    strategy   => 'sort',
-    sort_order => 'zorder(region, product_line)',
-    where      => 'order_date >= DATE ''2026-07-01'''
+ table => 'sales.orders', strategy => 'sort', sort_order => 'zorder(region, product_line)', where => 'order_date >= DATE ''2026-07-01'''
 );
 ```
 
@@ -184,19 +165,15 @@ The other three jobs are simpler.
 
 ```sql
 CALL prod.system.expire_snapshots(
-    table              => 'sales.orders',
-    older_than         => TIMESTAMP '2026-07-05 00:00:00',
-    retain_last        => 10,
-    max_concurrent_deletes => 8
+ table => 'sales.orders', older_than => TIMESTAMP '2026-07-05 00:00:00', retain_last => 10, max_concurrent_deletes => 8
 );
 
 CALL prod.system.remove_orphan_files(
-    table      => 'sales.orders',
-    older_than => TIMESTAMP '2026-08-01 00:00:00'
+ table => 'sales.orders', older_than => TIMESTAMP '2026-08-01 00:00:00'
 );
 
 CALL prod.system.rewrite_manifests(
-    table => 'sales.orders'
+ table => 'sales.orders'
 );
 ```
 
@@ -224,17 +201,9 @@ Every engine exposes query history with some form of plan detail. What you need 
 
 ```sql
 CREATE TABLE ops.optimizer.predicate_usage (
-    table_name        STRING,
-    column_name       STRING,
-    predicate_type    STRING,   -- equality, range, in_list, like
-    observed_at       TIMESTAMP,
-    queries           BIGINT,
-    avg_selectivity   DOUBLE,   -- rows returned / rows scanned
-    avg_bytes_read    BIGINT,
-    avg_bytes_returned BIGINT,
-    avg_planning_ms   BIGINT,
-    avg_execution_ms  BIGINT,
-    workload_class    STRING    -- agent, dashboard, pipeline, adhoc
+ table_name STRING, column_name STRING, predicate_type STRING, equality, range, in_list, like
+ observed_at TIMESTAMP, queries BIGINT, avg_selectivity DOUBLE, rows returned / rows scanned
+ avg_bytes_read BIGINT, avg_bytes_returned BIGINT, avg_planning_ms BIGINT, avg_execution_ms BIGINT, workload_class STRING, agent, dashboard, pipeline, adhoc
 )
 USING iceberg
 PARTITIONED BY (days(observed_at));
@@ -246,16 +215,12 @@ The analysis query that drives sort order selection reads from it directly.
 
 ```sql
 SELECT
-    column_name,
-    SUM(queries)                                          AS total_queries,
-    ROUND(AVG(avg_selectivity), 4)                        AS selectivity,
-    ROUND(SUM(queries * avg_bytes_read) / 1073741824.0, 1) AS gb_read,
-    ROUND(SUM(queries * avg_bytes_returned)
-          / NULLIF(SUM(queries * avg_bytes_read), 0), 6)   AS read_efficiency
+ column_name, SUM(queries) AS total_queries, ROUND(AVG(avg_selectivity), 4) AS selectivity, ROUND(SUM(queries * avg_bytes_read) / 1073741824.0, 1) AS gb_read, ROUND(SUM(queries * avg_bytes_returned)
+ / NULLIF(SUM(queries * avg_bytes_read), 0), 6) AS read_efficiency
 FROM ops.optimizer.predicate_usage
 WHERE table_name = 'sales.orders'
-  AND workload_class = 'agent'
-  AND observed_at >= current_date - INTERVAL '28' DAY
+ AND workload_class = 'agent'
+ AND observed_at >= current_date - INTERVAL '28' DAY
 GROUP BY column_name
 ORDER BY gb_read DESC;
 ```
@@ -272,7 +237,7 @@ Walking one table through the loop makes the scoring concrete.
 
 A CDC target table holds eighteen months of order data, partitioned by month on the order date. Ingestion commits every thirty seconds. Agents query it heavily, dashboards query it moderately, and a nightly pipeline scans it fully.
 
-**Observation.** The current month's partition holds 41,000 files averaging 6 MB. The previous eleven months average 340 files at 380 MB each. Predicate analysis shows agent queries filter on `customer_segment` in 61 percent of queries with average selectivity of 0.03, and on `order_date` in 88 percent with selectivity of 0.4. The table's sort order is `order_id`, chosen three years ago when a lookup pattern mattered.
+**Observation.** The current month's partition holds 41, 000 files averaging 6 MB. The previous eleven months average 340 files at 380 MB each. Predicate analysis shows agent queries filter on `customer_segment` in 61 percent of queries with average selectivity of 0.03, and on `order_date` in 88 percent with selectivity of 0.4. The table's sort order is `order_id`, chosen three years ago when a lookup pattern mattered.
 
 **Scoring.** The current partition scores extremely high on small file count and high on query frequency. It scores negatively on recent commit rate, since ingestion is active. The eleven historical partitions score low on layout and moderate on query frequency.
 
@@ -294,11 +259,8 @@ Track two numbers per table per week: maintenance compute consumed, and query co
 
 ```sql
 SELECT
-    table_name,
-    SUM(maintenance_compute_sec)          AS maint_sec,
-    SUM(estimated_query_savings_sec)      AS saved_sec,
-    ROUND(SUM(estimated_query_savings_sec)
-          / NULLIF(SUM(maintenance_compute_sec), 0), 2) AS return_ratio
+ table_name, SUM(maintenance_compute_sec) AS maint_sec, SUM(estimated_query_savings_sec) AS saved_sec, ROUND(SUM(estimated_query_savings_sec)
+ / NULLIF(SUM(maintenance_compute_sec), 0), 2) AS return_ratio
 FROM ops.optimizer.maintenance_log
 WHERE run_at >= current_date - INTERVAL '30' DAY
 GROUP BY table_name

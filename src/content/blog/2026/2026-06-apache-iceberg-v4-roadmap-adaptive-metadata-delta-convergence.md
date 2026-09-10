@@ -1,6 +1,6 @@
 ---
 title: "Apache Iceberg v4 Roadmap: Adaptive Metadata Trees, Single-File Commits, and the Delta Convergence"
-description: "A deep technical breakdown of Apache Iceberg v4's proposed architecture: adaptive metadata trees, one-file commits, relative paths, column families, and what the Delta 5.0 convergence actually means for your data platform."
+description: "A deep technical breakdown of Apache Iceberg v4's proposed architecture: adaptive metadata trees, one-file commits, relative paths, column families."
 date: 2026-06-08T09:00:00Z
 slug: "apache-iceberg-v4-roadmap-adaptive-metadata-delta-convergence"
 draft: false
@@ -13,7 +13,6 @@ tags:
   - data-engineering
   - lakehouse-architecture
 ---
-
 Apache Iceberg v4 is not a single feature release. It is a set of architectural proposals: adaptive metadata trees, single-file commits, relative table paths, column families, and an extensible statistics model. These proposals rework how Iceberg handles metadata at scale. Separately, Databricks has proposed that **Delta Lake 5.0 adopt the same metadata structure**, which would end the decade-long schism between the two formats at the metadata level. This article walks through every proposal, the pain points each one solves, the community debates still unresolved, and what teams should do while the spec is still under discussion.
 
 ![Iceberg v4 metadata architecture evolution](/images/blog/june8batch/apache-iceberg-v4-roadmap-adaptive-metadata-delta-convergence-diagram-1.png)
@@ -117,29 +116,19 @@ Machine learning feature engineering produces tables with thousands of columns. 
 Column families let the table author group columns into independently stored and versioned sets:
 
 ```
--- schema definition
+- schema definition
 CREATE TABLE features (
-  uuid STRING,
-  -- core columns
-  created_at TIMESTAMP,
-  -- feature group A: freshness indicators
-  family freshness (
-    days_since_purchase INT,
-    recency_score FLOAT,
-    avg_visit_interval FLOAT
-  ),
-  -- feature group B: behavioral features (refreshed separately)
-  family behavioral (
-    lifetime_value FLOAT,
-    churn_probability FLOAT,
-    category_affinity MAP<STRING, FLOAT>
-  ),
-  -- feature group C: real-time signals (updated every minute)
-  family realtime (
-    session_active BOOLEAN,
-    current_cart_value FLOAT,
-    page_velocity INT
-  )
+ uuid STRING, core columns
+ created_at TIMESTAMP, feature group A: freshness indicators
+ family freshness (
+ days_since_purchase INT, recency_score FLOAT, avg_visit_interval FLOAT
+ ), feature group B: behavioral features (refreshed separately)
+ family behavioral (
+ lifetime_value FLOAT, churn_probability FLOAT, category_affinity MAP<STRING, FLOAT>
+ ), feature group C: real-time signals (updated every minute)
+ family realtime (
+ session_active BOOLEAN, current_cart_value FLOAT, page_velocity INT
+ )
 ) USING iceberg;
 ```
 
@@ -208,11 +197,11 @@ Iceberg v4 is in the proposal phase. No specification draft has been published. 
 - **Iceberg Summit 2026 session recordings**, particularly "Breaking the Mold: Re-thinking Iceberg Metadata Structure in V4" ([watch](https://youtu.be/ymUCDJV19tE)) and the closing panel on ecosystem innovations ([watch](https://youtu.be/szWvGm5busw)).
 - **Databricks Data + AI Summit 2026** session "Delta + Iceberg, Better Together" for the Delta 5.0 convergence details and timeline.
 - **Proposed v4 features per the community roadmap**:
-  - Adaptive metadata tree: spec draft targeted late 2026
-  - Single-file commits: bundled with adaptive tree
-  - Relative paths: independent proposal, could ship earlier
-  - Column families: could ship as a v3.x extension before v4
-  - Extensible statistics: earliest viable Q1 2027
+ - Adaptive metadata tree: spec draft targeted late 2026
+ - Single-file commits: bundled with adaptive tree
+ - Relative paths: independent proposal, could ship earlier
+ - Column families: could ship as a v3.x extension before v4
+ - Extensible statistics: earliest viable Q1 2027
 
 ### Where Dremio Fits
 
@@ -229,6 +218,6 @@ The Dremio MCP server and AI Agent can take advantage of faster metadata plannin
 
 Iceberg v4 reworks the metadata architecture that has served the format since 2017. Adaptive metadata trees replace manifest-based indirection with a flatter, columnar structure that reduces commit latency and planning overhead. Relative paths make tables portable across clouds. Column families tackle the ML wide-table problem head-on. And the Delta 5.0 convergence, if it ships as proposed, closes the metadata-level gap between the two formats, shifting competitive differentiation to catalogs, governance, and semantic layers.
 
-For teams planning their 2026–2027 data architecture, the right approach is to view v4 as a direction, not a deliverable. Design for the principles v4 embodies: scalable metadata, portable tables, column-aligned storage, and format-neutral interoperability, without depending on any v4 proposal that has not shipped. The Iceberg community's strongest asset is its track record of shipping spec changes in collaboration with dozens of engine and platform vendors. The v4 roadmap continues that tradition with its most ambitious set of architectural proposals yet.
+For teams planning their 2026-2027 data architecture, the right approach is to view v4 as a direction, not a deliverable. Design for the principles v4 embodies: scalable metadata, portable tables, column-aligned storage, and format-neutral interoperability, without depending on any v4 proposal that has not shipped. The Iceberg community's strongest asset is its track record of shipping spec changes in collaboration with dozens of engine and platform vendors. The v4 roadmap continues that tradition with its most ambitious set of architectural proposals yet.
 
 For more detail on the Iceberg Summit 2026 announcements and the full session library, visit the [Iceberg Summit 2026 YouTube Playlist](https://youtube.com/playlist?list=PLkifVhhWtccxSA6VskdKdLnIwCJevOqFL). To try Iceberg querying with Dremio's semantic layer and agent interfaces, start a free trial at [dremio.com/get-started](https://www.dremio.com/get-started).

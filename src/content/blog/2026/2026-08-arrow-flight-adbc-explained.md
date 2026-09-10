@@ -14,11 +14,12 @@ slug: "arrow-flight-adbc-explained"
 draft: false
 image: "/images/blog.png"
 canonical: https://iceberglakehouse.com/posts/arrow-flight-adbc-explained/
+description: "A data scientist runs a query against a warehouse. The engine finishes the scan in three seconds."
 ---
 
-> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/arrow-flight-adbc-explained/).
-
 A data scientist runs a query against a warehouse. The engine finishes the scan in three seconds. Then the notebook sits there for four minutes while the result set trickles into a DataFrame. The query was fast. The download was not.
+
+> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/arrow-flight-adbc-explained/).
 
 I have watched this play out in dozens of environments, and the reaction is almost always the same. People blame the engine, add compute, rewrite the SQL, then blame the network. The engine was rarely the problem. The problem sits in the seam between the database and the application, where a columnar result set gets shredded into rows, serialized one value at a time, pushed over the wire, and reassembled into columns on the other side.
 
@@ -102,7 +103,7 @@ Partial results and real progress reporting out of a standard protocol is not a 
 
 ## Arrow Flight SQL, or Giving Flight a Vocabulary
 
-Flight by itself is deliberately generic. A descriptor holds "an arbitrary binary command," which is another way of saying every vendor invents its own. Two Flight services with identical capabilities end up mutually incomprehensible, and a client has to learn each one.
+Flight by itself is deliberately generic. A descriptor holds "an arbitrary binary command, " which is another way of saying every vendor invents its own. Two Flight services with identical capabilities end up mutually incomprehensible, and a client has to learn each one.
 
 Arrow Flight SQL closes that hole. It defines a standard set of Protobuf command messages that get packed into the descriptor, plus a standard set of actions, so that one client library talks to any conforming server.
 
@@ -177,7 +178,7 @@ location = "grpc://localhost:32010"
 
 client = flight.FlightClient(location=location)
 options = flight.FlightCallOptions(
-    headers=[(b"authorization", f"bearer {token}".encode("utf-8"))]
+ headers=[(b"authorization", f"bearer {token}".encode("utf-8"))]
 )
 
 query = """
@@ -188,14 +189,14 @@ WHERE trip_distance_mi > 10
 
 # Step one: ask. The server plans the query and describes where results live.
 flight_info = client.get_flight_info(
-    flight.FlightDescriptor.for_command(query), options
+ flight.FlightDescriptor.for_command(query), options
 )
 
 # Step two: receive. One DoGet per endpoint.
 tables = []
 for endpoint in flight_info.endpoints:
-    reader = client.do_get(endpoint.ticket, options)
-    tables.append(reader.read_all())
+ reader = client.do_get(endpoint.ticket, options)
+ tables.append(reader.read_all())
 ```
 
 Three things in that snippet are worth pointing at.
@@ -217,27 +218,20 @@ from adbc_driver_flightsql import ConnectionOptions, DatabaseOptions
 uri = "flightsql://localhost:32010?transport=tcp"
 
 conn = adbc_driver_flightsql.dbapi.connect(
-    uri,
-    db_kwargs={
-        adbc_driver_manager.DatabaseOptions.USERNAME.value: os.environ["DREMIO_USER"],
-        adbc_driver_manager.DatabaseOptions.PASSWORD.value: os.environ["DREMIO_PASS"],
-        DatabaseOptions.WITH_MAX_MSG_SIZE.value: "134217728",
-    },
-)
+ uri, db_kwargs={
+ adbc_driver_manager.DatabaseOptions.USERNAME.value: os.environ["DREMIO_USER"], adbc_driver_manager.DatabaseOptions.PASSWORD.value: os.environ["DREMIO_PASS"], DatabaseOptions.WITH_MAX_MSG_SIZE.value: "134217728", }, )
 
 # Timeouts are floating-point seconds and are not set by default.
 conn.adbc_connection.set_options(**{
-    ConnectionOptions.TIMEOUT_QUERY.value: 300.0,
-    ConnectionOptions.TIMEOUT_FETCH.value: 300.0,
-})
+ ConnectionOptions.TIMEOUT_QUERY.value: 300.0, ConnectionOptions.TIMEOUT_FETCH.value: 300.0, })
 
 with conn.cursor() as cur:
-    cur.execute("""
-        SELECT vendor_id, pickup_datetime, trip_distance_mi
-        FROM Samples."samples.dremio.com"."NYC-taxi-trips"
-        WHERE trip_distance_mi > 10
-    """)
-    table = cur.fetch_arrow_table()
+ cur.execute("""
+ SELECT vendor_id, pickup_datetime, trip_distance_mi
+ FROM Samples."samples.dremio.com"."NYC-taxi-trips"
+ WHERE trip_distance_mi > 10
+ """)
+ table = cur.fetch_arrow_table()
 
 conn.close()
 ```
@@ -257,7 +251,7 @@ The part I want to emphasize is what happens if you point this at PostgreSQL ins
 ## What the Data Path Looks Like End to End
 
 | Path | Server-side work | Wire format | Client-side work | Parallel fetch |
-|---|---|---|---|---|
+|--|--|--|--|--|
 | Classic JDBC or ODBC to a columnar engine | Transpose columns to rows, encode per value | Vendor-specific row protocol | Decode per value, transpose back to columns | No, one connection |
 | Flight SQL JDBC driver | None, batches go out as Arrow IPC | Arrow IPC over gRPC | Driver materializes rows for the JDBC API | Yes, across endpoints |
 | ADBC over Flight SQL | None, batches go out as Arrow IPC | Arrow IPC over gRPC | None, buffers are used in place | Yes, across endpoints |

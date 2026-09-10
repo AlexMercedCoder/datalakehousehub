@@ -14,9 +14,10 @@ tags:
 slug: "iceberg-row-lineage"
 draft: false
 ---
-> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/iceberg-row-lineage/).
 
 Every roundup of Apache Iceberg v3 runs the same order: deletion vectors first, the Variant type second, and then, somewhere in the back half, a sentence about row lineage before the geospatial types close the show. The billing is understandable, deletes and Variant solve pains people already feel, and it is going to look wrong in retrospect, because row lineage is the v3 feature that changes what a table is. For the first time in the format's history, a row has an identity: a stable identifier assigned at birth, carried across every update, alongside a marker recording when the row was last touched. Identity is the primitive that change data capture, incremental computation, deduplication, auditing, and machine learning reproducibility have all been faking with application-level keys and timestamp guessing, and v3 builds it into the format itself, mandatory, for every table.
+
+> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/iceberg-row-lineage/).
 
 This article gives the buried feature the standalone treatment it deserves. We will establish why immutable-file tables never had row identity and what the absence cost, walk the two fields the specification adds and the genuinely clever inheritance mechanism that makes them nearly free to write, follow identity through updates, deletes, and compaction where the subtleties live, build the changelog recipe that turns two metadata columns into a CDC feed, survey what becomes possible downstream, and finish with the fine print, engine support unevenness, the identity-versus-key distinction, and the costs, because a feature this quietly foundational deserves precision rather than cheerleading.
 
@@ -62,7 +63,7 @@ The spec's answer is inheritance: write null, and let null mean "compute me from
 
 Walk the allocation once to see the bookkeeping cohere. A table's next-row-ID stands at 600. A commit lands three new data files of 25, 25, and 50 rows. The snapshot takes first-row-ID 600, the files take assigned first-row-IDs 600, 625, and 650 through their manifest entries, rows within each file take consecutive IDs from their file's base by position, and the table's next-row-ID advances to 700 for whoever commits next. A concurrent writer that lost the race and retried simply inherits a later allocation on its successful attempt, correctness by construction, no coordination beyond the commit that was already atomic. Identity assignment rode the existing machinery and added, at write time, approximately nothing.
 
-The design's admirable second half is the physical-versus-virtual flexibility. For fresh appends, the fields stay virtual, null on disk, derived on read, free. The moment derivation stops being possible, the fields materialize: an engine updating a row must carry its existing `_row_id` forward physically into the new file, because the new file's position arithmetic knows nothing of the row's origin, and a compaction rewriting files must write both fields as physical columns for every row it moves, preserving inherited values that position-based derivation can no longer reconstruct. Virtual when derivable, physical when not, and the boundary between the two is exactly the boundary between "row is where it was born" and "row has moved," which brings us to the interesting part of any identity system: what happens when things change.
+The design's admirable second half is the physical-versus-virtual flexibility. For fresh appends, the fields stay virtual, null on disk, derived on read, free. The moment derivation stops being possible, the fields materialize: an engine updating a row must carry its existing `_row_id` forward physically into the new file, because the new file's position arithmetic knows nothing of the row's origin, and a compaction rewriting files must write both fields as physical columns for every row it moves, preserving inherited values that position-based derivation can no longer reconstruct. Virtual when derivable, physical when not, and the boundary between the two is exactly the boundary between "row is where it was born" and "row has moved, " which brings us to the interesting part of any identity system: what happens when things change.
 
 ## Identity Under Change: Updates, Deletes, Compaction, and the Edges
 
@@ -70,7 +71,7 @@ An identity system proves itself at the transitions, so walk each one, because t
 
 An update preserves identity and refreshes the timestamp. When an engine updates a row, whatever the physical mechanism, copy-on-write rewriting the file, or merge-on-read marking the old position in a deletion vector and appending the replacement, the semantic contract is the same: the new version of the row carries the old `_row_id`, written physically into the new file, and takes a fresh `_last_updated_sequence_number`, the updating commit's. Ten updates later, one identity, ten timestamps in history, current timestamp visible. This is the contract that makes everything downstream work, and it is a contract engines implement, which is the honest phrasing: the specification defines how lineage is preserved, and an engine that processes an update as an unlinked delete-plus-insert produces a new identity where a continued one belonged. Mature v3 writers preserve, the reference implementation's paths preserve, and the engine-support section returns to the ones that do not yet, because a lineage chain is only as strong as the least careful writer on the table.
 
-A delete ends an identity, and re-insertion does not resurrect it. The deleted row's `_row_id` simply stops appearing in subsequent snapshots, which is precisely how deletion becomes detectable, and a later insert of the same business key mints a fresh identity, because the format never knew about your keys. Pipelines with delete-then-reload habits, backfill jobs that clear and rewrite partitions, will see identity discontinuities across the reload boundary, correct by the format's lights and surprising to anyone who conflated `_row_id` with their key. The distinction filed earlier cashes out here: lineage answers "did the format carry this physical row forward," and only your keys answer "is this the same customer."
+A delete ends an identity, and re-insertion does not resurrect it. The deleted row's `_row_id` simply stops appearing in subsequent snapshots, which is precisely how deletion becomes detectable, and a later insert of the same business key mints a fresh identity, because the format never knew about your keys. Pipelines with delete-then-reload habits, backfill jobs that clear and rewrite partitions, will see identity discontinuities across the reload boundary, correct by the format's lights and surprising to anyone who conflated `_row_id` with their key. The distinction filed earlier cashes out here: lineage answers "did the format carry this physical row forward, " and only your keys answer "is this the same customer."
 
 Compaction preserves identity by materializing it. A rewrite job consumes files whose rows carry inherited, virtual lineage, and produces files where derivation-by-position points at the wrong ancestry, so the spec obliges the compactor to write `_row_id` and `_last_updated_sequence_number` as physical columns in its outputs, carrying every row's inherited values across the move. Done right, compaction is invisible to lineage, the same identities, the same timestamps, new coordinates, and note what did not change: `_last_updated_sequence_number` stays put through compaction, because relocation is not modification, which is exactly the property that lets change-detection queries ignore maintenance churn instead of misreading every compaction as a mass update. Done wrong, a lineage-oblivious rewriter severs every chain it touches, and reading engines that require the bookkeeping fail loudly on files missing their first-row-ID metadata, a failure mode already visible in engine documentation and much preferable to silent identity loss. Add the shred-aware compaction requirement from the Variant story and the theme repeats: in v3, maintenance tooling is no longer generic Parquet plumbing, it is a spec-obligated participant, and "does your compactor preserve lineage" joins the vendor-evaluation checklist.
 
@@ -82,17 +83,17 @@ And the equality-delete history explains a design scar worth knowing. Lineage wa
 
 ## A Row's Biography, End to End
 
-Assemble the transition rules into one life story, because a single tracked row makes the whole system concrete. Follow order 8675309 through five commits on a v3 table whose next-row-ID stood at 4,000 when the story starts.
+Assemble the transition rules into one life story, because a single tracked row makes the whole system concrete. Follow order 8675309 through five commits on a v3 table whose next-row-ID stood at 4, 000 when the story starts.
 
-Commit at sequence 21, the insert. The order lands in a new data file at position 12. The writer wrote nulls for both lineage fields, the snapshot took first-row-ID 4,000, the file's manifest entry assigned it a base within that allocation, and readers derive the row's identity: `_row_id` 4,012, `_last_updated_sequence_number` 21, both virtual, costing zero bytes.
+Commit at sequence 21, the insert. The order lands in a new data file at position 12. The writer wrote nulls for both lineage fields, the snapshot took first-row-ID 4, 000, the file's manifest entry assigned it a base within that allocation, and readers derive the row's identity: `_row_id` 4, 012, `_last_updated_sequence_number` 21, both virtual, costing zero bytes.
 
-Commit at sequence 25, a status update, merge-on-read. The engine marks position 12 in the original file's deletion vector and appends the updated row to a fresh file, physically writing `_row_id` 4,012, preserved, and `_last_updated_sequence_number` 25, refreshed. The identity crossed files, the derivation stopped being possible, the materialization rule fired exactly on cue. A changelog between sequences 21 and 25 reports one UPDATE for identity 4,012, before and after status attached.
+Commit at sequence 25, a status update, merge-on-read. The engine marks position 12 in the original file's deletion vector and appends the updated row to a fresh file, physically writing `_row_id` 4, 012, preserved, and `_last_updated_sequence_number` 25, refreshed. The identity crossed files, the derivation stopped being possible, the materialization rule fired exactly on cue. A changelog between sequences 21 and 25 reports one UPDATE for identity 4, 012, before and after status attached.
 
-Commit at sequence 30, compaction. A rewrite job consolidates the region's small files, including both files from this row's history, masked original and live replacement, into one large file. The compactor, spec-obliged, writes the surviving row with physical `_row_id` 4,012 and `_last_updated_sequence_number` 25, unchanged, because relocation is not modification. A changelog spanning the compaction reports nothing for this row, which is the maintenance-invisibility guarantee observed in the wild.
+Commit at sequence 30, compaction. A rewrite job consolidates the region's small files, including both files from this row's history, masked original and live replacement, into one large file. The compactor, spec-obliged, writes the surviving row with physical `_row_id` 4, 012 and `_last_updated_sequence_number` 25, unchanged, because relocation is not modification. A changelog spanning the compaction reports nothing for this row, which is the maintenance-invisibility guarantee observed in the wild.
 
-Commit at sequence 34, a second update, copy-on-write this time. The row's file rewrites without it in the old form and with its new version carrying 4,012 and 34. Same identity, third timestamp, two physical mechanisms behind two updates, one semantic contract over both.
+Commit at sequence 34, a second update, copy-on-write this time. The row's file rewrites without it in the old form and with its new version carrying 4, 012 and 34. Same identity, third timestamp, two physical mechanisms behind two updates, one semantic contract over both.
 
-Commit at sequence 40, the delete. Identity 4,012 stops appearing. A changelog from 34 to current reports one DELETE, and when a reconciliation job re-inserts the order next week from the source system, the row returns as identity 4,713 or wherever the counter stands, a new biography for the same business key, which is the identity-versus-key line drawn in data rather than prose.
+Commit at sequence 40, the delete. Identity 4, 012 stops appearing. A changelog from 34 to current reports one DELETE, and when a reconciliation job re-inserts the order next week from the source system, the row returns as identity 4, 713 or wherever the counter stands, a new biography for the same business key, which is the identity-versus-key line drawn in data rather than prose.
 
 Five commits, one long integer, and every question the old world answered with key joins and guesswork, when did this change, what changed it, is this the same row, answered by two columns and the snapshot log. Pin the biography to the wall next to the changelog recipe, because between them they are the feature.
 
@@ -102,33 +103,24 @@ Now the payoff mechanics: turning the two columns into a change feed with nothin
 
 ```sql
 WITH old_snap AS (
-    SELECT _row_id,
-           _last_updated_sequence_number AS seq,
-           *
-    FROM   lake.sales.orders
-    VERSION AS OF 8271744332764321989      -- the older snapshot
-),
-new_snap AS (
-    SELECT _row_id,
-           _last_updated_sequence_number AS seq,
-           *
-    FROM   lake.sales.orders               -- current snapshot
+ SELECT _row_id, _last_updated_sequence_number AS seq, *
+ FROM lake.sales.orders
+ VERSION AS OF 8271744332764321989, the older snapshot
+), new_snap AS (
+ SELECT _row_id, _last_updated_sequence_number AS seq, *
+ FROM lake.sales.orders, current snapshot
 )
 SELECT
-    CASE
-        WHEN o._row_id IS NULL THEN 'INSERT'
-        WHEN n._row_id IS NULL THEN 'DELETE'
-        ELSE 'UPDATE'
-    END                                    AS change_type,
-    coalesce(n._row_id, o._row_id)         AS row_identity,
-    n.seq                                  AS changed_in_sequence,
-    o.order_status                         AS before_status,
-    n.order_status                         AS after_status
+ CASE
+ WHEN o._row_id IS NULL THEN 'INSERT'
+ WHEN n._row_id IS NULL THEN 'DELETE'
+ ELSE 'UPDATE'
+ END AS change_type, coalesce(n._row_id, o._row_id) AS row_identity, n.seq AS changed_in_sequence, o.order_status AS before_status, n.order_status AS after_status
 FROM old_snap o
 FULL OUTER JOIN new_snap n USING (_row_id)
-WHERE o._row_id IS NULL                    -- inserts
-   OR n._row_id IS NULL                    -- deletes
-   OR n.seq > o.seq;                       -- updates
+WHERE o._row_id IS NULL, inserts
+ OR n._row_id IS NULL, deletes
+ OR n.seq > o.seq;, updates
 ```
 
 Read the query's logic against the semantics established above, because every line leans on a guarantee. An identity present only in the new snapshot is an insert, present only in the old is a delete, and present in both with a newer sequence number is an update, with the before-and-after values sitting on the same joined row, ready for downstream application. The join key is a single long, not a five-column business key, which changes the arithmetic of running this at scale, and the sequence-number filter is what makes the update detection exact rather than value-diffing every column. Compaction between the snapshots contributes nothing, same identities, same sequence numbers, filtered out by the update condition doing nothing, which is the maintenance-invisibility property earning its keep.
@@ -147,7 +139,7 @@ CDC sheds its sidecar. The pipelines that mirrored operational databases into th
 
 Incremental computation gets its missing primitive. Materialized view maintenance, the aggregate that should update from changed rows rather than recompute from all rows, needs exactly what the watermark pattern provides: the delta since last processed, precisely scoped, cheaply retrieved. This is why platform engineering around incremental view maintenance names row-level tracking as a prerequisite, and why the ecosystem's convergence is telling, with Delta's row tracking serving the same role for its incremental machinery and every Iceberg v3 table carrying the capability by mandate. The materialized views, the derived tables, the feature pipelines that refresh on schedules today are the installed base for lineage-driven incremental refresh tomorrow, and the cost curve between "recompute the world" and "apply the delta" is the same proportionality argument this site has been making all year, now available at the row grain.
 
-Idempotence gets a receipt. Exactly-once processing across restarts and retries has always needed somewhere to record "applied through here," and a watermark over `_last_updated_sequence_number` is that record, storage-level, engine-agnostic, surviving the consumer's own crashes. Reprocessing jobs, backfill reconciliation, cross-system sync all inherit a common grammar: identity says which row, sequence says which version, and together they make "have I seen this change" a lookup instead of a heuristic. Deduplication sharpens the same way: the classic dedup job groups on guessed keys and keeps an arbitrary winner, while a lineage-aware version distinguishes the genuinely duplicated ingestion, one business key, multiple identities, from the legitimately updated row, one identity, advancing sequence, and cleans the first without touching the second, a distinction the key-only version structurally cannot draw. Every pipeline that ever shipped a "dedupe carefully, updates look like duplicates" comment in its code knows exactly which distinction that is.
+Idempotence gets a receipt. Exactly-once processing across restarts and retries has always needed somewhere to record "applied through here, " and a watermark over `_last_updated_sequence_number` is that record, storage-level, engine-agnostic, surviving the consumer's own crashes. Reprocessing jobs, backfill reconciliation, cross-system sync all inherit a common grammar: identity says which row, sequence says which version, and together they make "have I seen this change" a lookup instead of a heuristic. Deduplication sharpens the same way: the classic dedup job groups on guessed keys and keeps an arbitrary winner, while a lineage-aware version distinguishes the genuinely duplicated ingestion, one business key, multiple identities, from the legitimately updated row, one identity, advancing sequence, and cleans the first without touching the second, a distinction the key-only version structurally cannot draw. Every pipeline that ever shipped a "dedupe carefully, updates look like duplicates" comment in its code knows exactly which distinction that is.
 
 Audit and compliance get row-grain answers. When did this row last change, and in which commit, becomes a SELECT, joinable through the snapshot log to timestamps, operations, and, where platforms stamp them, committing principals. Walking a row's full history, its value at every snapshot where its sequence number advanced, becomes a bounded query over history rather than a forensic reconstruction. The caveats stay attached, history begins at the v3 boundary, lineage is physical continuity not business identity, but within those lines, the audit story moves from "we believe, based on our keys" to "the format records."
 

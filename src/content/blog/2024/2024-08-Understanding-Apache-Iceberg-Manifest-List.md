@@ -14,14 +14,15 @@ draft: false
 image: "/images/blog.png"
 canonical: "https://iceberglakehouse.com/posts/2024-8-understanding-apache-iceberg-manifest-list/"
 ---
-> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2024-8-understanding-apache-iceberg-manifest-list/).
-
-- [Free Copy of Apache Iceberg: The Definitive Guide](https://hello.dremio.com/wp-apache-iceberg-the-definitive-guide-reg.html?utm_source=ev_external_blog&utm_medium=social_free&utm_campaign=manifestlistblog&utm_content=alexmerced&utm_term=external_blog)
-- [Free Apache Iceberg Crash Course](https://hello.dremio.com/webcast-an-apache-iceberg-lakehouse-crash-course-reg.html?utm_source=ev_external_blog&utm_medium=social_free&utm_campaign=manifestlistblog&utm_content=alexmerced&utm_term=external_blog)
 
 ## Introduction
 
 Apache Iceberg is an open lakehouse table format designed to take datasets in distributed file systems and turn them into database like tables. It has gained popularity for its ability to handle complex data engineering challenges, such as ensuring data consistency, enabling schema evolution, and supporting efficient query execution. One of the critical components that make this possible is its robust metadata management.
+
+> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2024-8-understanding-apache-iceberg-manifest-list/).
+
+- [Free Copy of Apache Iceberg: The Definitive Guide](https://hello.dremio.com/wp-apache-iceberg-the-definitive-guide-reg.html?utm_source=ev_external_blog&utm_medium=social_free&utm_campaign=manifestlistblog&utm_content=alexmerced&utm_term=external_blog)
+- [Free Apache Iceberg Crash Course](https://hello.dremio.com/webcast-an-apache-iceberg-lakehouse-crash-course-reg.html?utm_source=ev_external_blog&utm_medium=social_free&utm_campaign=manifestlistblog&utm_content=alexmerced&utm_term=external_blog)
 
 We will focus on a crucial aspect of Iceberg's metadata architecture: the **Manifest List** file. The Manifest List plays a pivotal role in Iceberg's snapshot mechanism, helping to track changes across the dataset and optimize query performance. Understanding the purpose of the Manifest List, the details it contains, and how query engines utilize it to plan which data files to scan is essential for data engineers looking to maximize the efficiency of their data lakehouses.
 
@@ -34,7 +35,7 @@ The **Manifest List** is a fundamental component within Apache Iceberg’s archi
 The primary role of the Manifest List is to efficiently manage and track the state of data within a snapshot. Unlike traditional systems where entire directories or large sets of files are scanned to identify relevant data, Iceberg uses the Manifest List to keep this process highly efficient. 
 
 - **Efficient Data Tracking**: The Manifest List keeps a concise record of all manifest files, which in turn track the actual data files. This layered approach ensures that only the necessary metadata is accessed during query planning, significantly reducing the overhead.
-  
+ 
 - **Atomic Snapshot Management**: Every time a new snapshot is created, a new Manifest List is written. This allows for atomic updates, meaning that the changes to the dataset (like adding or removing data files) are committed in one go, ensuring consistency and isolation.
 
 - **Optimization of Query Execution**: By summarizing information about the data in the manifests, the Manifest List allows query engines to quickly determine which parts of the data are relevant to a query, thus skipping over unnecessary files.
@@ -75,52 +76,21 @@ Each of these fields in the Manifest List provides critical metadata that links 
 
 ```json
 {
-  "manifest-list": [
-    {
-      "manifest_path": "s3://bucket/path/to/manifest1.avro",
-      "manifest_length": 1048576,
-      "partition_spec_id": 1,
-      "content": 0,
-      "sequence_number": 1001,
-      "min_sequence_number": 1000,
-      "added_files_count": 5,
-      "existing_files_count": 10,
-      "deleted_files_count": 2,
-      "added_rows_count": 500000,
-      "existing_rows_count": 1000000,
-      "deleted_rows_count": 200000,
-      "partitions": [
-        {
-          "contains_null": false,
-          "contains_nan": false,
-          "lower_bound": "2023-01-01",
-          "upper_bound": "2023-01-31"
-        }
-      ]
-    },
-    {
-      "manifest_path": "s3://bucket/path/to/manifest2.avro",
-      "manifest_length": 2097152,
-      "partition_spec_id": 2,
-      "content": 0,
-      "sequence_number": 1002,
-      "min_sequence_number": 1001,
-      "added_files_count": 8,
-      "existing_files_count": 7,
-      "deleted_files_count": 3,
-      "added_rows_count": 750000,
-      "existing_rows_count": 700000,
-      "deleted_rows_count": 150000,
-      "partitions": [
-        {
-          "contains_null": true,
-          "contains_nan": false,
-          "lower_bound": "2023-02-01",
-          "upper_bound": "2023-02-28"
-        }
-      ]
-    }
-  ]
+ "manifest-list": [
+ {
+ "manifest_path": "s3://bucket/path/to/manifest1.avro", "manifest_length": 1048576, "partition_spec_id": 1, "content": 0, "sequence_number": 1001, "min_sequence_number": 1000, "added_files_count": 5, "existing_files_count": 10, "deleted_files_count": 2, "added_rows_count": 500000, "existing_rows_count": 1000000, "deleted_rows_count": 200000, "partitions": [
+ {
+ "contains_null": false, "contains_nan": false, "lower_bound": "2023-01-01", "upper_bound": "2023-01-31"
+ }
+ ]
+ }, {
+ "manifest_path": "s3://bucket/path/to/manifest2.avro", "manifest_length": 2097152, "partition_spec_id": 2, "content": 0, "sequence_number": 1002, "min_sequence_number": 1001, "added_files_count": 8, "existing_files_count": 7, "deleted_files_count": 3, "added_rows_count": 750000, "existing_rows_count": 700000, "deleted_rows_count": 150000, "partitions": [
+ {
+ "contains_null": true, "contains_nan": false, "lower_bound": "2023-02-01", "upper_bound": "2023-02-28"
+ }
+ ]
+ }
+ ]
 }
 ```
 

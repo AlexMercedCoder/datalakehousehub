@@ -14,9 +14,10 @@ draft: false
 image: "/images/blog.png"
 canonical: https://iceberglakehouse.com/posts/iceberg-default-values-and-field-ids/
 ---
-> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/iceberg-default-values-and-field-ids/).
 
 An engineer runs `ALTER TABLE orders ADD COLUMN channel STRING` against a 200-terabyte table. The command returns in under a second. Every query afterward sees the new column, old rows show `NULL`, and nothing was rewritten. The same engineer then renames `customer_id` to `account_id`, moves it to the front of the schema, and drops a column that had been there for three years. Still under a second. Still no rewrite. Queries against snapshots from last month return the old schema, and queries against the current snapshot return the new one, reading the same Parquet files.
+
+> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/iceberg-default-values-and-field-ids/).
 
 Most people who use Iceberg know this works. Far fewer know why. The answer is two pieces of metadata design that the spec gets right and that most file formats and older table formats got wrong: every column has a permanent integer ID that never changes and is never reused, and every column added after the table was created can carry a default value that readers apply to files written before the column existed.
 
@@ -44,9 +45,9 @@ Every field in an Iceberg schema, including nested fields inside structs, lists,
 
 **IDs are unique within a table, not just within a schema.** A table's metadata holds a list of every schema it has ever had, each with a `schema-id`, and a `current-schema-id` pointing at the active one. Because field IDs come from a table-wide counter, an ID means the same thing in every schema in the list. Schema 0 and schema 4 agree that ID 7 is the customer identifier, whatever it was called in each.
 
-**The top of the integer range is reserved.** The spec forbids user field IDs greater than 2,147,483,447, which is `Integer.MAX_VALUE - 200`. That reserved range holds metadata columns that engines expose in user queries: `_file` for the path of the file a row came from, `_pos` for the row's position, `_spec_id`, `_partition`, and in v3 the row-lineage columns `_row_id` and `_last_updated_sequence_number`. Reserving IDs for these means an engine can project them alongside user columns using the same ID-based machinery without colliding with anything a user adds.
+**The top of the integer range is reserved.** The spec forbids user field IDs greater than 2, 147, 483, 447, which is `Integer.MAX_VALUE - 200`. That reserved range holds metadata columns that engines expose in user queries: `_file` for the path of the file a row came from, `_pos` for the row's position, `_spec_id`, `_partition`, and in v3 the row-lineage columns `_row_id` and `_last_updated_sequence_number`. Reserving IDs for these means an engine can project them alongside user columns using the same ID-based machinery without colliding with anything a user adds.
 
-**Partition fields have a separate ID space.** A partition spec's fields carry their own `field-id`, starting at 1,000 in the reference implementation and tracked by `last-partition-id`. A partition field references its source column by `source-id`, which is a schema field ID. So the partition spec `{"source-id": 4, "field-id": 1000, "name": "ts_day", "transform": "day"}` says: partition field 1000, named `ts_day`, is the day transform applied to schema field 4. If schema field 4 is renamed, the partition spec does not change, because it refers to the ID.
+**Partition fields have a separate ID space.** A partition spec's fields carry their own `field-id`, starting at 1, 000 in the reference implementation and tracked by `last-partition-id`. A partition field references its source column by `source-id`, which is a schema field ID. So the partition spec `{"source-id": 4, "field-id": 1000, "name": "ts_day", "transform": "day"}` says: partition field 1000, named `ts_day`, is the day transform applied to schema field 4. If schema field 4 is renamed, the partition spec does not change, because it refers to the ID.
 
 **Identifier fields are a set of IDs.** A schema can declare `identifier-field-ids`, the list of field IDs that together identify a row. This is what engines use for upserts and what equality delete files use to match rows. Because it is a list of IDs rather than names, renaming a key column does not break the table's row identity.
 
@@ -54,22 +55,11 @@ Here is what a small schema looks like in the metadata JSON, with the nested IDs
 
 ```json
 {
-  "type": "struct",
-  "schema-id": 2,
-  "identifier-field-ids": [1],
-  "fields": [
-    { "id": 1, "name": "order_id", "required": true, "type": "long" },
-    { "id": 2, "name": "account_id", "required": true, "type": "long" },
-    { "id": 3, "name": "placed_at", "required": true, "type": "timestamptz" },
-    { "id": 4, "name": "items", "required": false,
-      "type": { "type": "list", "element-id": 5, "element-required": true,
-                "element": { "type": "struct", "fields": [
-                  { "id": 6, "name": "sku", "required": true, "type": "string" },
-                  { "id": 7, "name": "qty", "required": true, "type": "int" }
-                ] } } },
-    { "id": 8, "name": "channel", "required": true, "type": "string",
-      "initial-default": "web", "write-default": "web" }
-  ]
+ "type": "struct", "schema-id": 2, "identifier-field-ids": [1], "fields": [
+ { "id": 1, "name": "order_id", "required": true, "type": "long" }, { "id": 2, "name": "account_id", "required": true, "type": "long" }, { "id": 3, "name": "placed_at", "required": true, "type": "timestamptz" }, { "id": 4, "name": "items", "required": false, "type": { "type": "list", "element-id": 5, "element-required": true, "element": { "type": "struct", "fields": [
+ { "id": 6, "name": "sku", "required": true, "type": "string" }, { "id": 7, "name": "qty", "required": true, "type": "int" }
+ ] } } }, { "id": 8, "name": "channel", "required": true, "type": "string", "initial-default": "web", "write-default": "web" }
+ ]
 }
 ```
 
@@ -123,7 +113,7 @@ Several spec rules constrain how defaults are used.
 **Struct defaults are composed from field defaults.** A default for a struct-typed field is either `null` or an empty object `{}`. It never contains values for the struct's fields. Each nested field carries its own `initial-default` and `write-default`, and the reader assembles the effective struct default by filling each field from its own default. The spec's example is a struct `point` with fields `x` and `y` each defaulting to 0:
 
 | `point` default | Data value | Result |
-|---|---|---|
+|--|--|--|
 | `null` | (missing) | `null` |
 | `null` | `{"x": 3}` | `{"x": 3, "y": 0}` |
 | `{}` | (missing) | `{"x": 0, "y": 0}` |
@@ -140,7 +130,7 @@ The second row is the subtle one. Even when the struct's own default is null, a 
 Changing a column's type without rewriting data is possible only when every existing value is representable in the new type and every existing statistic remains valid. The spec enumerates exactly which promotions meet that bar.
 
 | From | v1 and v2 | v3 and later | Constraint |
-|---|---|---|---|
+|--|--|--|--|
 | `unknown` | | any type | The `unknown` type is v3-only and holds only nulls, so anything is a widening |
 | `int` | `long` | `long` | |
 | `date` | | `timestamp`, `timestamp_ns` | Not to `timestamptz` variants. Out-of-range values must fail at runtime |
@@ -189,11 +179,9 @@ import org.apache.iceberg.types.Types;
 Table table = catalog.loadTable(TableIdentifier.of("sales", "orders"));
 
 table.updateSchema()
-    .addRequiredColumn(
-        "channel",
-        Types.StringType.get(),
-        Literal.of("web"))   // sets both initial-default and write-default
-    .commit();
+ .addRequiredColumn(
+ "channel", Types.StringType.get(), Literal.of("web")) // sets both initial-default and write-default
+ .commit();
 ```
 
 The `addRequiredColumn` overload that takes a `Literal` is the v3 API. It sets `initial-default` and `write-default` to the same value, which is the only way a required column can be added to a table with data. Calling the two-argument overload without a default on a table that already has rows fails validation, because old files have no value for a required field and no default to fall back on.
@@ -204,12 +192,7 @@ After the commit, the new metadata file differs from the old in four places. The
 
 ```json
 {
-  "id": 8,
-  "name": "channel",
-  "required": true,
-  "type": "string",
-  "initial-default": "web",
-  "write-default": "web"
+ "id": 8, "name": "channel", "required": true, "type": "string", "initial-default": "web", "write-default": "web"
 }
 ```
 
@@ -219,8 +202,8 @@ To change the write default later:
 
 ```java
 table.updateSchema()
-    .updateColumnDefault("channel", Literal.of("app"))
-    .commit();
+ .updateColumnDefault("channel", Literal.of("app"))
+ .commit();
 ```
 
 This produces schema 3 with `write-default: "app"` and `initial-default` still `"web"`. Files written from now on that omit `channel` store `"app"` physically. Old files still resolve to `"web"`. Nothing was rewritten, and the history of what the default was at each point is preserved in the schemas list.
@@ -283,7 +266,7 @@ The v3 additions to schema evolution are recent enough that engine support is st
 
 **Engine coverage for defaults.** Reading `initial-default` is required for v3 conformance and every engine that reads v3 tables implements it. Writing defaults through SQL DDL is arriving engine by engine, and the split between engines that support write defaults only and engines that support both is closing. Expect `ALTER TABLE ... ADD COLUMN ... DEFAULT` to behave identically across Spark, Flink, Trino, Dremio, and the commercial warehouses within a couple of release cycles.
 
-**Typed statistics in v4.** Format version 4 moves per-column statistics out of byte-keyed maps and into typed structs, where each field's stats struct gets an ID range of 200 starting at `10,000 + 200 * field-id`. The 4-byte-versus-8-byte inference rule for promoted bounds goes away in v4, because the stats struct records the bound in the field's current type. This is a direct cleanup of the promotion mechanics described above.
+**Typed statistics in v4.** Format version 4 moves per-column statistics out of byte-keyed maps and into typed structs, where each field's stats struct gets an ID range of 200 starting at `10, 000 + 200 * field-id`. The 4-byte-versus-8-byte inference rule for promoted bounds goes away in v4, because the stats struct records the bound in the field's current type. This is a direct cleanup of the promotion mechanics described above.
 
 **More promotion paths.** With v3's `unknown` and v4's typed stats, the community has discussed additional widenings that were previously blocked by the bound-decoding problem, such as `int` to `decimal` or `string` to `variant`. None are in the spec today, and the byte-length inference constraint is the reason. Watch the dev list for proposals that become possible once v4 tables are common.
 

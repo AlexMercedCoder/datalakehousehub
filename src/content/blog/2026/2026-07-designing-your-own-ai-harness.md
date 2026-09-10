@@ -1,7 +1,7 @@
 ---
 title: "Designing Your Own AI Harness: A Deep Dive Into the Architecture of Agent Loops, Tools, Context, and Control"
 date: 2026-07-06T09:00:00Z
-description: "A deep dive into custom AI harness architecture: model layers, tool design, context management, permissions, control budgets, persistence, orchestration, and evaluation systems."
+description: "A deep dive into custom AI harness architecture: model layers, tool design, context management, permissions, control budgets, persistence, orchestration."
 author: "Alex Merced"
 category: "Agentic AI"
 tags:
@@ -16,9 +16,9 @@ image: /images/blog.png
 canonical: https://iceberglakehouse.com/posts/designing-your-own-ai-harness/
 ---
 
-> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/designing-your-own-ai-harness/).
-
 *By Alex Merced, Head of Developer Relations at Dremio*
+
+> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/designing-your-own-ai-harness/).
 
 The most underappreciated finding in applied AI this year fits in one statistic: a major framework team took the same model, changed nothing about it, rebuilt only the machinery around it, and watched their score on a leading agent benchmark jump from the low fifties to the mid sixties, vaulting from the middle of the pack into the top five. No new model. No fine-tuning. Just a better harness.
 
@@ -96,7 +96,7 @@ Then contain the blast radius structurally, because permission checks are necess
 
 The loop needs to know when to stop, and giving it that knowledge is a small subsystem with outsized returns.
 
-Enforce budgets on four axes: steps, a maximum number of loop iterations, wall-clock time, tokens, and cost, checked every turn, with graceful degradation on exhaustion, the agent is told the budget state and asked to conclude, summarize progress, and hand off, rather than being killed mid-thought. Budgets convert the failure mode from "runaway agent burned two hundred dollars overnight" to "agent stopped at its limit and left a status note," which is the entire difference between a system you can schedule and one you must babysit.
+Enforce budgets on four axes: steps, a maximum number of loop iterations, wall-clock time, tokens, and cost, checked every turn, with graceful degradation on exhaustion, the agent is told the budget state and asked to conclude, summarize progress, and hand off, rather than being killed mid-thought. Budgets convert the failure mode from "runaway agent burned two hundred dollars overnight" to "agent stopped at its limit and left a status note, " which is the entire difference between a system you can schedule and one you must babysit.
 
 Define stop conditions beyond budgets: explicit task-completion signals, validation gates, the task is done when the tests pass, not when the model says so, and escalation paths, conditions under which the agent must stop and ask a human, encoded as rules rather than hoped for as judgment. Handle the long-horizon cases deliberately: checkpointing, serializing loop state so sessions survive crashes and resume across machines, is the feature that graph-based runtimes give you and hand-rolled loops usually lack until the first painful loss, and for continuous work, the pattern of re-injecting the standing objective into fresh context windows keeps a persistent agent on-mission across context resets. And treat repeated failure as a first-class signal: the same tool failing three times, the same file edited in circles, are loop pathologies your control layer should detect and break, with the state handed to a human, because the model will not always notice it is stuck, and the harness must.
 

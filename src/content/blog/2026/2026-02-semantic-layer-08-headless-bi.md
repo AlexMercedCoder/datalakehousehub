@@ -15,9 +15,10 @@ draft: false
 image: "/images/blog.png"
 canonical: "https://iceberglakehouse.com/posts/2026-02-sl-headless-bi-semantic-layer/"
 ---
-> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-02-sl-headless-bi-semantic-layer/).
 
 ![Headless BI : one semantic layer serving all consumers](/images/blog/semantic-layer/headless-bi.png)
+
+> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-02-sl-headless-bi-semantic-layer/).
 
 Your organization uses Tableau for executive dashboards, Power BI for operational reports, and Python notebooks for data science. Revenue is defined in Tableau's calculated field, Power BI's DAX measure, and a SQL query inside a Jupyter notebook. Three tools. Three definitions. None of them match.
 
@@ -44,7 +45,7 @@ Headless BI is an architecture pattern where metric definitions and business log
 In a headless architecture:
 - Metrics are defined once in a platform-neutral semantic layer
 - Definitions are exposed via standard interfaces: SQL, JDBC, ODBC, Arrow Flight, REST
-- Any tool :  Tableau, Power BI, Python, an AI agent, a custom app ,  connects to the same definitions
+- Any tool : Tableau, Power BI, Python, an AI agent, a custom app, connects to the same definitions
 - Adding a new visualization tool requires zero metric migration
 
 The semantic layer becomes a shared service. Visualization tools consume it. They don't own it.
@@ -52,7 +53,7 @@ The semantic layer becomes a shared service. Visualization tools consume it. The
 ## Tool-Specific vs. Universal Semantic Layer
 
 | Dimension | Tool-Specific Model | Universal Semantic Layer |
-|---|---|---|
+|--|--|--|
 | Where metrics are defined | Inside each BI tool | Centralized, tool-independent |
 | Number of Revenue definitions | One per tool | One total |
 | Formula change process | Update every tool | Update once, propagates |

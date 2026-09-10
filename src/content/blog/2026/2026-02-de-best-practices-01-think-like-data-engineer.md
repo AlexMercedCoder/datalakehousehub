@@ -15,9 +15,10 @@ draft: false
 image: "/images/blog.png"
 canonical: "https://iceberglakehouse.com/posts/2026-02-debp-think-like-data-engineer/"
 ---
-> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-02-debp-think-like-data-engineer/).
 
 ![Data flowing through a system of interconnected pipeline stages from sources to consumers](/images/blog/debp/data-engineer-mindset.png)
+
+> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-02-debp-think-like-data-engineer/).
 
 The median lifespan of a popular data tool is about three years. The tool you master today may be deprecated or replaced by the time your next project ships. What doesn't change are the principles underneath: how data flows, how systems fail, how contracts between producers and consumers work, and how to decompose messy requirements into clean, maintainable pipelines.
 
@@ -25,7 +26,7 @@ Thinking like a data engineer means solving problems at the systems level, not t
 
 ## Tools Change : Principles Don't
 
-Every year brings a new orchestrator, a new streaming framework, a new columnar format. Teams that build their expertise around a specific tool struggle when the landscape shifts. Teams that build expertise around principles :  idempotency, schema contracts, data quality at the source, composable stages ,  adopt new tools without starting over.
+Every year brings a new orchestrator, a new streaming framework, a new columnar format. Teams that build their expertise around a specific tool struggle when the landscape shifts. Teams that build expertise around principles : idempotency, schema contracts, data quality at the source, composable stages, adopt new tools without starting over.
 
 The question is never "How do I do this in Tool X?" The question is "What problem am I solving, and what properties does the solution need to have?" Once you answer that, the tool choice becomes a constraint-matching exercise.
 

@@ -14,9 +14,10 @@ tags:
 slug: "iceberg-is-becoming-a-library"
 draft: false
 ---
-> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/iceberg-is-becoming-a-library/).
 
 Categories in data infrastructure are quieter than features, and more consequential. For eight years, Apache Iceberg belonged to the category "table format": a specification that query engines implement, a treaty among big compute systems about how to share tables safely. You experienced Iceberg through an engine, or you did not experience it at all. That category is dissolving in front of us. In 2026, Iceberg is something applications link: a component inside services, notebooks, agent runtimes, browser tabs, and other people's databases, doing its work wherever the code already runs, with no engine in sight.
+
+> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/iceberg-is-becoming-a-library/).
 
 The evidence is not one announcement but a convergence. Native libraries in Python, Rust, Go, and C++ ship on quarterly cadences from the Apache project itself. Embedded engines, DuckDB, Polars, DataFusion, read and write governed tables from inside ordinary processes, and DuckDB does it from WebAssembly in a browser. The REST catalog protocol keeps absorbing responsibilities, commits, credentials, now scan planning, that once made clients heavy, so a complete participant keeps getting smaller. And the format itself grew a File Format API, a pluggable boundary between its metadata core and its physical storage, which is the kind of interface a component has and a monolith does not.
 
@@ -79,25 +80,19 @@ import duckdb
 from pyiceberg.catalog import load_catalog
 
 catalog = load_catalog(
-    "prod",
-    uri="https://catalog.example.com",
-    token="<token>",
-)
+ "prod", uri="https://catalog.example.com", token="<token>", )
 
 table = catalog.load_table("sales.orders")
 
 # Governed scan: catalog auth, snapshot isolation, vended credentials
 orders = table.scan(
-    row_filter="region = 'EMEA'",
-    selected_fields=("order_id", "total", "order_date"),
-).to_arrow()
+ row_filter="region = 'EMEA'", selected_fields=("order_id", "total", "order_date"), ).to_arrow()
 
 # In-process analytics over the Arrow data, no cluster anywhere
 result = duckdb.sql("""
-    SELECT date_trunc('month', order_date) AS month,
-           sum(total) AS revenue
-    FROM orders
-    GROUP BY 1 ORDER BY 1
+ SELECT date_trunc('month', order_date) AS month, sum(total) AS revenue
+ FROM orders
+ GROUP BY 1 ORDER BY 1
 """).fetchall()
 ```
 
@@ -135,7 +130,7 @@ Patterns earn trust when someone designs one in full, so take the second pattern
 
 The scenario: a Go payments service emits transaction events, currently to a broker for later landing, and the team wants the service appending to a governed Iceberg table directly through iceberg-go and a REST catalog.
 
-Start with the arithmetic that decides everything, commit frequency. A commit per event, at 200 events per second, is 17 million snapshots a day, each with metadata writes and catalog contention, an absurdity nobody designs on purpose and several teams have built by accident through an innocent-looking loop. A commit per second is 86,400 snapshots a day, still hostile to metadata and to every reader's planning. A commit every five minutes is 288 a day, boring and correct for a workload whose consumers are analytical. So the service buffers: events accumulate in memory or local spill, a flush fires on a size threshold or a timer, whichever first, and one flush is one Parquet file, one commit. Latency-sensitive consumers who cannot wait five minutes are the signal this workload still wants a broker in front, which is a fine answer, the pattern removes mandatory infrastructure, not useful infrastructure.
+Start with the arithmetic that decides everything, commit frequency. A commit per event, at 200 events per second, is 17 million snapshots a day, each with metadata writes and catalog contention, an absurdity nobody designs on purpose and several teams have built by accident through an innocent-looking loop. A commit per second is 86, 400 snapshots a day, still hostile to metadata and to every reader's planning. A commit every five minutes is 288 a day, boring and correct for a workload whose consumers are analytical. So the service buffers: events accumulate in memory or local spill, a flush fires on a size threshold or a timer, whichever first, and one flush is one Parquet file, one commit. Latency-sensitive consumers who cannot wait five minutes are the signal this workload still wants a broker in front, which is a fine answer, the pattern removes mandatory infrastructure, not useful infrastructure.
 
 Next, the commit loop's failure behavior. The REST commit is optimistic: the service's commit can lose a race, receive a clean conflict, and need a retry against refreshed table state, so the flush path is built idempotent and retry-aware from day one, with backoff, a retry budget, and spill-to-disk when the catalog is unreachable, so a catalog incident degrades to delayed data rather than lost data. The credential posture comes free with discipline: the service holds catalog credentials only, storage access rides vended, expiring grants per flush.
 
@@ -160,7 +155,7 @@ None of this diminishes the big engines, and the point deserves stating plainly 
 The redraw compresses into a comparison worth pinning:
 
 | Dimension | Engine era | Library era |
-|---|---|---|
+|--|--|--|
 | Who participates | A handful of heavyweight engines | Any software linking a library |
 | Path to the data | Through an engine endpoint | Direct, catalog-mediated |
 | Unit of compute | Cluster | Whatever process is already running |

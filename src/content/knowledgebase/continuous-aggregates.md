@@ -1,7 +1,7 @@
 ---
 title: "What is Continuous Aggregates?"
 meta_title: "What is Continuous Aggregates? | Expert Data Lakehouse & AI Glossary"
-description: "Dynamic materialized views that automatically update their calculations in the background as new data streams into the system. Learn the architecture, mechanics, and real-world value of Continuous Aggregates in the modern data stack."
+description: "Dynamic materialized views that automatically update their calculations in the background as new data streams into the system."
 ---
 
 ## What is Continuous Aggregates?

@@ -2,7 +2,7 @@
 title: "OpenLineage as the Spine of Data Observability"
 date: 2026-05-24T11:10:00Z
 pubDatetime: 2026-05-24T11:10:00Z
-description: "OpenLineage provides a standard API for collecting pipeline lineage across Airflow, Spark, Flink, and dbt. Learn how it powers blast radius analysis and incident triage."
+description: "OpenLineage provides a standard API for collecting pipeline lineage across Airflow, Spark, Flink, and dbt."
 author: "Alex Merced"
 category: "Data Engineering"
 tags:
@@ -17,15 +17,16 @@ draft: false
 image: "/images/blog/openlineage-observability/openlineage-integration-ecosystem.png"
 canonical: "https://iceberglakehouse.com/posts/2026-05-24-openlineage-observability/"
 ---
-> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-05-24-openlineage-observability/).
 
 # OpenLineage as the Spine of Data Observability
 
 Data platform incidents follow a predictable pattern. A pipeline fails or a dashboard goes stale. Someone opens Slack and asks which table feeds that dashboard. Someone else checks the Airflow UI and traces it to a Spark job. A third person pulls up the dbt DAG and realizes the issue is three steps upstream in a staging model that reads from an Iceberg table that failed due to a schema change two days ago. The entire investigation takes hours of manual archaeology.
 
+> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-05-24-openlineage-observability/).
+
 OpenLineage was built to make this archaeology unnecessary. It provides a standardized API for tools across the data stack (Airflow, Spark, Flink, dbt) to emit structured lineage events as pipelines run. Those events flow to a lineage backend (Marquez, DataHub, or similar) that assembles them into a searchable, queryable dependency graph. When something breaks, the graph shows exactly which downstream assets are affected without requiring a human to trace the dependency tree manually.
 
----
+--
 
 ## What OpenLineage Actually Is
 
@@ -41,7 +42,7 @@ The core event types are:
 
 Each event carries **facets**, structured metadata payloads that extend the base event with specific information. The `SchemaDatasetFacet` records column names and types for a dataset. The `DataQualityMetricsInputDatasetFacet` records row counts and null rates for input datasets. The `SqlJobFacet` records the SQL query associated with a job. Facets are extensible: you can define custom facets for organization-specific metadata without breaking the standard format.
 
----
+--
 
 ## Integration Across the Stack
 
@@ -57,7 +58,7 @@ The value of OpenLineage comes from its coverage. A single tool emitting lineage
 
 **dbt:** The `dbt-ol` integration captures lineage from dbt model executions. Each `dbt run` emits events for every model that runs, recording the `ref()` and `source()` dependencies as dataset relationships, and the compiled SQL as a facet on the job event.
 
----
+--
 
 ## Blast Radius Analysis in Practice
 
@@ -70,14 +71,14 @@ A practical scenario: an analyst drops a column from the `stg_events` Iceberg ta
 ```bash
 # Query Marquez for downstream consumers of stg_events
 curl -X GET "http://marquez:5000/api/v1/datasets/my_namespace/stg_events/lineage?depth=3" \
-  | jq '.graph | [.[] | select(.type == "DATASET")] | map(.id)'
+ | jq '.graph | [.[] | select(.type == "DATASET")] | map(.id)'
 ```
 
 The response shows every downstream dataset and job that reads from `stg_events`, up to three hops downstream. You discover that `fct_sessions`, `dashboard_kpis`, and the ML training Airflow DAG all have direct or indirect dependencies on the column you planned to drop. What looked like a safe cleanup is now a breaking change that requires coordinating with three teams before executing.
 
 This is not a theoretical benefit. In organizations running OpenLineage at scale, the difference between this query and manual archaeology is measured in hours.
 
----
+--
 
 ## The OpenLineage Event Model in Practice
 
@@ -99,27 +100,19 @@ job_name = "my_custom_etl"
 namespace = "production"
 
 client.emit(
-    RunEvent(
-        eventType=RunState.START,
-        eventTime=datetime.now(timezone.utc).isoformat(),
-        run=Run(runId=run_id),
-        job=Job(namespace=namespace, name=job_name),
-        inputs=[
-            Dataset(namespace=namespace, name="raw_events", 
-                   facets={"schema": SchemaDatasetFacet(
-                       fields=[SchemaField("event_id", "BIGINT"),
-                               SchemaField("event_type", "STRING"),
-                               SchemaField("ts", "TIMESTAMP")]
-                   )})
-        ],
-        outputs=[
-            Dataset(namespace=namespace, name="stg_events")
-        ]
-    )
+ RunEvent(
+ eventType=RunState.START, eventTime=datetime.now(timezone.utc).isoformat(), run=Run(runId=run_id), job=Job(namespace=namespace, name=job_name), inputs=[
+ Dataset(namespace=namespace, name="raw_events", facets={"schema": SchemaDatasetFacet(
+ fields=[SchemaField("event_id", "BIGINT"), SchemaField("event_type", "STRING"), SchemaField("ts", "TIMESTAMP")]
+ )})
+ ], outputs=[
+ Dataset(namespace=namespace, name="stg_events")
+ ]
+ )
 )
 ```
 
----
+--
 
 ## Backends: Marquez and DataHub
 
@@ -129,7 +122,7 @@ DataHub provides a more complete data catalog experience, integrating lineage wi
 
 For organizations that need enterprise governance features alongside lineage (access control, data classification, business glossary) DataHub or commercial platforms like Atlan or Alation that support OpenLineage ingestion are the better fit.
 
----
+--
 
 ## Conclusion
 
@@ -137,7 +130,7 @@ OpenLineage addresses the observability gap that has made data platform incident
 
 By standardizing the lineage event format across tools, OpenLineage makes it possible to build a single, authoritative dependency graph that spans the entire platform. That graph makes blast radius analysis instant and root cause investigation tractable without manual archaeology.
 
----
+--
 
 ## Column-Level Lineage: The Next Frontier
 
@@ -151,43 +144,32 @@ For custom Python pipelines, column-level lineage requires explicitly declaring 
 
 ```python
 from openlineage.client.facet import (
-    ColumnLineageDatasetFacet,
-    ColumnLineageDatasetFacetFieldsAdditional,
-    ColumnLineageDatasetFacetFieldsAdditionalInputFields
+ ColumnLineageDatasetFacet, ColumnLineageDatasetFacetFieldsAdditional, ColumnLineageDatasetFacetFieldsAdditionalInputFields
 )
 
 # Declare column-level lineage for a custom transformation
 column_lineage = ColumnLineageDatasetFacet(
-    fields={
-        "total_spend": ColumnLineageDatasetFacetFieldsAdditional(
-            inputFields=[
-                ColumnLineageDatasetFacetFieldsAdditionalInputFields(
-                    namespace="production",
-                    name="raw_orders",
-                    field="order_amount"
-                )
-            ],
-            transformationDescription="SUM over 90-day window",
-            transformationType="AGGREGATE"
-        ),
-        "customer_segment": ColumnLineageDatasetFacetFieldsAdditional(
-            inputFields=[
-                ColumnLineageDatasetFacetFieldsAdditionalInputFields(
-                    namespace="production",
-                    name="raw_orders",
-                    field="total_spend"
-                )
-            ],
-            transformationDescription="CASE WHEN segment classification",
-            transformationType="CONDITIONAL"
-        )
-    }
+ fields={
+ "total_spend": ColumnLineageDatasetFacetFieldsAdditional(
+ inputFields=[
+ ColumnLineageDatasetFacetFieldsAdditionalInputFields(
+ namespace="production", name="raw_orders", field="order_amount"
+ )
+ ], transformationDescription="SUM over 90-day window", transformationType="AGGREGATE"
+ ), "customer_segment": ColumnLineageDatasetFacetFieldsAdditional(
+ inputFields=[
+ ColumnLineageDatasetFacetFieldsAdditionalInputFields(
+ namespace="production", name="raw_orders", field="total_spend"
+ )
+ ], transformationDescription="CASE WHEN segment classification", transformationType="CONDITIONAL"
+ )
+ }
 )
 ```
 
 Column-level lineage is more expensive to collect and store than dataset-level lineage, but for high-value data products where understanding transformation provenance is critical, the investment is justified.
 
----
+--
 
 ## SLA Tracking with OpenLineage
 
@@ -198,15 +180,11 @@ OpenLineage events carry completion timestamps that backends can use for SLA mon
 ```bash
 # Check recent runs of a job for SLA compliance
 curl "http://marquez:5000/api/v1/jobs/production/fct_daily_revenue_etl/runs?limit=10" | \
-  jq '.runs[] | {
-    run_id: .id,
-    started_at: .startedAt,
-    ended_at: .endedAt,
-    state: .state,
-    duration_minutes: (
-      ((.endedAt | fromdateiso8601) - (.startedAt | fromdateiso8601)) / 60 | round
-    )
-  }'
+ jq '.runs[] | {
+ run_id: .id, started_at: .startedAt, ended_at: .endedAt, state: .state, duration_minutes: (
+ ((.endedAt | fromdateiso8601) - (.startedAt | fromdateiso8601)) / 60 | round
+ )
+ }'
 ```
 
 Building SLA monitoring on top of OpenLineage data requires three components:
@@ -217,7 +195,7 @@ Building SLA monitoring on top of OpenLineage data requires three components:
 
 This approach treats SLA monitoring as a metadata query problem rather than an infrastructure monitoring problem, you're checking the lineage graph for expected events, not polling health endpoints.
 
----
+--
 
 ## Integrating OpenLineage with Data Quality Tools
 
@@ -228,27 +206,19 @@ The data quality facets in the OpenLineage spec allow quality monitoring tools l
 from openlineage.client.facet import DataQualityMetricsInputDatasetFacet
 
 quality_facet = DataQualityMetricsInputDatasetFacet(
-    rowCount=1_542_783,
-    bytes=2_847_291_024,
-    columnMetrics={
-        "user_id": {
-            "nullCount": 0,
-            "distinctCount": 1_542_783,
-            "quantiles": {"0.1": 1000, "0.5": 500000, "0.9": 1400000}
-        },
-        "order_amount": {
-            "nullCount": 127,
-            "min": 0.01,
-            "max": 49999.99,
-            "sum": 87_293_441.50
-        }
-    }
+ rowCount=1_542_783, bytes=2_847_291_024, columnMetrics={
+ "user_id": {
+ "nullCount": 0, "distinctCount": 1_542_783, "quantiles": {"0.1": 1000, "0.5": 500000, "0.9": 1400000}
+ }, "order_amount": {
+ "nullCount": 127, "min": 0.01, "max": 49999.99, "sum": 87_293_441.50
+ }
+ }
 )
 ```
 
 When a data quality check fails, the OpenLineage backend shows the failure alongside the pipeline run event. Downstream SLA monitoring can check not just whether the pipeline completed but whether it completed with passing quality metrics.
 
----
+--
 
 ## Building a Data Observability Culture
 
@@ -262,7 +232,7 @@ The third is making lineage visible to data consumers, not just platform enginee
 
 The barrier to this visibility is often not technical but organizational. Platform teams that treat lineage data as internal infrastructure rather than a consumer-facing feature miss the organizational benefit. The goal is a culture where "check the lineage" is a natural first response to data questions, the same way "check the logs" is a natural first response to software incidents.
 
----
+--
 
 ## OpenLineage and Data Catalog Integration
 
@@ -274,7 +244,7 @@ This integration enables impact analysis at catalog query time. When a data engi
 
 Automated impact notification takes this further. Governance platforms that integrate with OpenLineage can automatically notify owners of downstream assets when an upstream table's schema changes. The Iceberg `SchemaChange` event, emitted through OpenLineage when a column is added or type is changed, triggers notifications to every team that owns a downstream asset consuming that schema. This replaces informal Slack notifications and runbook checklist items with automated, reliable communication.
 
----
+--
 
 ### Build Reliable Data Platforms
 

@@ -1,22 +1,83 @@
 ---
 import Base from "@/layouts/Base.astro";
-import Default from "@/layouts/Default.astro";
+import KnowledgebaseSingle from "@/layouts/KnowledgebaseSingle.astro";
 import { getSinglePage } from "@/lib/contentParser.astro";
 
 export async function getStaticPaths() {
   const pages = await getSinglePage("knowledgebase");
 
-  const paths = pages.map((page) => ({
-    params: {
-      slug: page.id,
-    },
-    props: { page },
-  }));
-  return paths;
+  return pages.map((page: any, index: number) => {
+    const currentWords = new Set(
+      page.data.title
+        .toLowerCase()
+        .split(/[^a-z0-9]+/)
+        .filter((w: string) => w.length > 3)
+    );
+
+    const scored = pages
+      .filter((p: any) => p.id !== page.id)
+      .map((p: any) => {
+        const words = p.data.title
+          .toLowerCase()
+          .split(/[^a-z0-9]+/)
+          .filter((w: string) => w.length > 3);
+        const overlap = words.filter((w: string) => currentWords.has(w)).length;
+        return { page: p, score: overlap };
+      });
+
+    scored.sort((a, b) => b.score - a.score);
+    let related = scored.slice(0, 3).map(s => s.page);
+    if (scored[0]?.score === 0) {
+      const neighbor1 = pages[(index + 1) % pages.length];
+      const neighbor2 = pages[(index + 2) % pages.length];
+      const neighbor3 = pages[(index + 3) % pages.length];
+      related = [neighbor1, neighbor2, neighbor3];
+    }
+
+    return {
+      params: {
+        slug: page.id,
+      },
+      props: { page, relatedTerms: related },
+    };
+  });
 }
 
-const { page } = Astro.props;
-const { title, meta_title, description, image } = page.data;
+const { page, relatedTerms } = Astro.props;
+const { title, meta_title, description, image, canonical } = page.data;
+
+const breadcrumbSchema = {
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  itemListElement: [
+    {
+      "@type": "ListItem",
+      position: 1,
+      name: "Home",
+      item: "https://datalakehousehub.com",
+    },
+    {
+      "@type": "ListItem",
+      position: 2,
+      name: "Knowledge Base",
+      item: "https://datalakehousehub.com/knowledgebase",
+    },
+    {
+      "@type": "ListItem",
+      position: 3,
+      name: title,
+      item: `https://datalakehousehub.com/knowledgebase/${page.id}`,
+    },
+  ],
+};
+
+const definedTermSchema = {
+  "@context": "https://schema.org",
+  "@type": "DefinedTerm",
+  name: title,
+  description: description,
+  inDefinedTermSet: "https://datalakehousehub.com/knowledgebase",
+};
 ---
 
 <Base
@@ -24,13 +85,10 @@ const { title, meta_title, description, image } = page.data;
   meta_title={meta_title}
   description={description}
   image={image}
+  canonical={canonical}
 >
-  <script type="application/ld+json" set:html={JSON.stringify({
-    "@context": "https://schema.org",
-    "@type": "DefinedTerm",
-    "name": title,
-    "description": description,
-    "inDefinedTermSet": "https://datalakehousehub.com/knowledgebase"
-  })} />
-  <Default data={page} />
+  <script type="application/ld+json" set:html={JSON.stringify(definedTermSchema)} />
+  <script type="application/ld+json" set:html={JSON.stringify(breadcrumbSchema)} />
+  <KnowledgebaseSingle data={page} relatedTerms={relatedTerms} />
 </Base>
+

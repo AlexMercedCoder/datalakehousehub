@@ -15,9 +15,10 @@ draft: false
 image: "/images/blog.png"
 canonical: "https://iceberglakehouse.com/posts/2026-02-debp-testing-data-pipelines/"
 ---
-> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-02-debp-testing-data-pipelines/).
 
 ![Data pipeline testing pyramid with schema tests at the base, contract tests in the middle, and regression tests at the top](/images/blog/debp/testing-pyramid.png)
+
+> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-02-debp-testing-data-pipelines/).
 
 Ask an application developer how they test their code and they'll describe unit tests, integration tests, CI/CD pipelines, and coverage metrics. Ask a data engineer the same question and the most common answer is: "we check the dashboard."
 
@@ -54,13 +55,13 @@ Schema tests are the simplest and most impactful place to start. After every pip
 **Uniqueness.** Primary key columns have no duplicates. Duplicate order IDs mean double-counted revenue.
 
 ```sql
--- Example schema and contract tests
--- Check for unexpected nulls
+- Example schema and contract tests
+- Check for unexpected nulls
 SELECT COUNT(*) AS null_count
 FROM orders
 WHERE order_id IS NULL OR customer_id IS NULL;
 
--- Check for duplicates
+- Check for duplicates
 SELECT order_id, COUNT(*) AS cnt
 FROM orders
 GROUP BY order_id
@@ -73,13 +74,13 @@ HAVING COUNT(*) > 1;
 
 Schema tests verify structure. Data validation tests verify content. Run these after every pipeline execution, before marking the job as successful:
 
-**Range checks.** Numeric values fall within expected bounds. An order total of -$500 or $999,999,999 is likely a bug. Define acceptable ranges per column and flag outliers.
+**Range checks.** Numeric values fall within expected bounds. An order total of -$500 or $999, 999, 999 is likely a bug. Define acceptable ranges per column and flag outliers.
 
 **Referential integrity.** Foreign keys reference existing records. An order with `product_id = 12345` should correspond to a row in the products table. Missing references indicate either missing data or a pipeline timing issue.
 
 **Freshness checks.** The most recent event timestamp is within the expected window. If a daily pipeline's output contains no events from today, something went wrong : even if the job succeeded.
 
-**Volume checks.** Row counts fall within historical norms. A daily feed that normally produces 50,000 rows but arrives with 500 should trigger an alert. Use percentage thresholds (±20% from the trailing 7-day average) to avoid false positives.
+**Volume checks.** Row counts fall within historical norms. A daily feed that normally produces 50, 000 rows but arrives with 500 should trigger an alert. Use percentage thresholds (±20% from the trailing 7-day average) to avoid false positives.
 
 **Custom business rules.** Domain-specific assertions. "Every invoice must have at least one line item." "No employee should have a start date in the future." These rules encode business knowledge that generic tests can't capture.
 

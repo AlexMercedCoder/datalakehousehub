@@ -16,11 +16,12 @@ draft: false
 image: "/images/blog.png"
 canonical: "https://iceberglakehouse.com/posts/2026-03-connector-google-bigquery/"
 ---
-> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-03-connector-google-bigquery/).
 
 Google BigQuery is Google Cloud's serverless data warehouse. If your organization uses Google Cloud Platform, BigQuery is where your analytics data, marketing attribution, Google Analytics exports, and machine learning model outputs live. BigQuery is powerful within Google's ecosystem, but it creates challenges when your data spans multiple clouds or when costs grow with usage.
 
-BigQuery's on-demand pricing charges per terabyte scanned. For organizations with large datasets queried frequently :  especially by dashboards that refresh automatically ,  this can result in monthly bills that grow unpredictably. And connecting BigQuery data to non-Google tools and other cloud providers requires data exports, cross-cloud networking, or third-party ETL platforms.
+> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-03-connector-google-bigquery/).
+
+BigQuery's on-demand pricing charges per terabyte scanned. For organizations with large datasets queried frequently : especially by dashboards that refresh automatically, this can result in monthly bills that grow unpredictably. And connecting BigQuery data to non-Google tools and other cloud providers requires data exports, cross-cloud networking, or third-party ETL platforms.
 
 Dremio Cloud connects to BigQuery and queries it alongside data from AWS, Azure, on-premises databases, and any other connected source. You get multi-cloud federation without data movement, AI-powered analytics, and cost optimization through Reflections.
 
@@ -68,7 +69,7 @@ In the Dremio console, click **"+"** in the left sidebar and select **Google Big
 ### 3. Configure Advanced Settings
 
 | Setting | Purpose |
-|---|---|
+|--|--|
 | **Caching Enabled** | Cache BigQuery metadata locally for faster schema browsing |
 | **Billing Project** | Specify which GCP project is billed for queries (important for cross-project access) |
 | **Connection Properties** | Custom parameters for the BigQuery connection |
@@ -85,12 +86,9 @@ Optionally restrict access, then click **Save**.
 ## Query BigQuery Data from Dremio
 
 ```sql
--- Query BigQuery marketing data
+- Query BigQuery marketing data
 SELECT
-  campaign_name,
-  SUM(clicks) AS total_clicks,
-  SUM(conversions) AS total_conversions,
-  ROUND(SUM(conversions) * 100.0 / NULLIF(SUM(clicks), 0), 2) AS conversion_rate
+ campaign_name, SUM(clicks) AS total_clicks, SUM(conversions) AS total_conversions, ROUND(SUM(conversions) * 100.0 / NULLIF(SUM(clicks), 0), 2) AS conversion_rate
 FROM "bigquery-marketing".analytics.campaign_metrics
 WHERE date >= '2024-01-01' AND date < '2024-07-01'
 GROUP BY campaign_name
@@ -103,20 +101,16 @@ Join BigQuery marketing data with AWS-hosted application data and Azure revenue:
 
 ```sql
 SELECT
-  bq.campaign_name,
-  bq.total_clicks,
-  bq.total_conversions,
-  SUM(pg.order_total) AS attributed_revenue,
-  ROUND(SUM(pg.order_total) / NULLIF(bq.total_conversions, 0), 2) AS revenue_per_conversion
+ bq.campaign_name, bq.total_clicks, bq.total_conversions, SUM(pg.order_total) AS attributed_revenue, ROUND(SUM(pg.order_total) / NULLIF(bq.total_conversions, 0), 2) AS revenue_per_conversion
 FROM (
-  SELECT campaign_name, user_id, SUM(clicks) AS total_clicks, SUM(conversions) AS total_conversions
-  FROM "bigquery-marketing".analytics.campaign_clicks
-  WHERE date >= '2024-01-01'
-  GROUP BY campaign_name, user_id
+ SELECT campaign_name, user_id, SUM(clicks) AS total_clicks, SUM(conversions) AS total_conversions
+ FROM "bigquery-marketing".analytics.campaign_clicks
+ WHERE date >= '2024-01-01'
+ GROUP BY campaign_name, user_id
 ) bq
 JOIN "postgres-orders".public.orders pg
-  ON bq.user_id = pg.customer_id
-  AND pg.order_date >= '2024-01-01'
+ ON bq.user_id = pg.customer_id
+ AND pg.order_date >= '2024-01-01'
 GROUP BY bq.campaign_name, bq.total_clicks, bq.total_conversions
 ORDER BY attributed_revenue DESC;
 ```
@@ -128,16 +122,11 @@ Three clouds, one query, zero ETL.
 ```sql
 CREATE VIEW analytics.gold.campaign_performance AS
 SELECT
-  bq.campaign_name,
-  SUM(bq.clicks) AS total_clicks,
-  SUM(bq.conversions) AS total_conversions,
-  ROUND(SUM(bq.conversions) * 100.0 / NULLIF(SUM(bq.clicks), 0), 2) AS conversion_rate_pct,
-  SUM(bq.cost) AS total_ad_spend,
-  CASE
-    WHEN SUM(bq.conversions) * 100.0 / NULLIF(SUM(bq.clicks), 0) > 5 THEN 'High Performer'
-    WHEN SUM(bq.conversions) * 100.0 / NULLIF(SUM(bq.clicks), 0) > 2 THEN 'Average'
-    ELSE 'Underperforming'
-  END AS campaign_grade
+ bq.campaign_name, SUM(bq.clicks) AS total_clicks, SUM(bq.conversions) AS total_conversions, ROUND(SUM(bq.conversions) * 100.0 / NULLIF(SUM(bq.clicks), 0), 2) AS conversion_rate_pct, SUM(bq.cost) AS total_ad_spend, CASE
+ WHEN SUM(bq.conversions) * 100.0 / NULLIF(SUM(bq.clicks), 0) > 5 THEN 'High Performer'
+ WHEN SUM(bq.conversions) * 100.0 / NULLIF(SUM(bq.clicks), 0) > 2 THEN 'Average'
+ ELSE 'Underperforming'
+ END AS campaign_grade
 FROM "bigquery-marketing".analytics.campaign_metrics bq
 GROUP BY bq.campaign_name;
 ```
@@ -165,25 +154,18 @@ A marketing executive can ask Claude "Compare our Q1 campaign performance agains
 Use AI directly in queries against BigQuery data:
 
 ```sql
--- Classify campaign performance with AI
+- Classify campaign performance with AI
 SELECT
-  campaign_name,
-  total_clicks,
-  conversion_rate_pct,
-  AI_CLASSIFY(
-    'Based on these marketing metrics, recommend a budget action',
-    'Campaign: ' || campaign_name || ', Clicks: ' || CAST(total_clicks AS VARCHAR) || ', Conversion Rate: ' || CAST(conversion_rate_pct AS VARCHAR) || '%',
-    ARRAY['Increase Budget', 'Maintain Budget', 'Decrease Budget', 'Pause Campaign']
-  ) AS budget_recommendation
+ campaign_name, total_clicks, conversion_rate_pct, AI_CLASSIFY(
+ 'Based on these marketing metrics, recommend a budget action', 'Campaign: ' || campaign_name || ', Clicks: ' || CAST(total_clicks AS VARCHAR) || ', Conversion Rate: ' || CAST(conversion_rate_pct AS VARCHAR) || '%', ARRAY['Increase Budget', 'Maintain Budget', 'Decrease Budget', 'Pause Campaign']
+ ) AS budget_recommendation
 FROM analytics.gold.campaign_performance;
 
--- Generate executive summaries
+- Generate executive summaries
 SELECT
-  campaign_name,
-  AI_GENERATE(
-    'Write a brief performance summary for this marketing campaign',
-    'Campaign: ' || campaign_name || ', Clicks: ' || CAST(total_clicks AS VARCHAR) || ', Conversions: ' || CAST(total_conversions AS VARCHAR) || ', Spend: $' || CAST(total_ad_spend AS VARCHAR)
-  ) AS performance_summary
+ campaign_name, AI_GENERATE(
+ 'Write a brief performance summary for this marketing campaign', 'Campaign: ' || campaign_name || ', Clicks: ' || CAST(total_clicks AS VARCHAR) || ', Conversions: ' || CAST(total_conversions AS VARCHAR) || ', Spend: $' || CAST(total_ad_spend AS VARCHAR)
+ ) AS performance_summary
 FROM analytics.gold.campaign_performance
 WHERE campaign_grade = 'High Performer';
 ```
@@ -241,7 +223,7 @@ For data staying in BigQuery, create manual Reflections to eliminate per-TB scan
 ### BigQuery Pricing Models
 
 | Model | How It's Priced | Dremio's Impact |
-|---|---|---|
+|--|--|--|
 | **On-Demand** | $6.25 per TB scanned | Reflections eliminate repeat scans : 50-80% cost reduction |
 | **Editions (Standard/Enterprise/Enterprise Plus)** | Slot reservations (autoscaling) | Reflections reduce slot utilization, enabling lower commitments |
 | **Flat Rate** | Fixed slot reservations | Reflections free up slots for other workloads |
@@ -251,12 +233,9 @@ For data staying in BigQuery, create manual Reflections to eliminate per-TB scan
 BigQuery is the default export destination for Google Analytics 4 data. GA4 exports create daily event tables (`events_YYYYMMDD`) with nested schemas. Dremio handles this pattern:
 
 ```sql
--- Query GA4 events from BigQuery through Dremio
+- Query GA4 events from BigQuery through Dremio
 SELECT
-  event_name,
-  COUNT(*) AS event_count,
-  COUNT(DISTINCT user_pseudo_id) AS unique_users,
-  DATE_TRUNC('day', CAST(event_timestamp AS TIMESTAMP)) AS event_day
+ event_name, COUNT(*) AS event_count, COUNT(DISTINCT user_pseudo_id) AS unique_users, DATE_TRUNC('day', CAST(event_timestamp AS TIMESTAMP)) AS event_day
 FROM "bigquery-analytics".analytics_12345678.events_*
 WHERE event_name IN ('page_view', 'purchase', 'add_to_cart')
 GROUP BY 1, 4

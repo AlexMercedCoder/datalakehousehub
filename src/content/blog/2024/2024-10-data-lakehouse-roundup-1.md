@@ -13,8 +13,7 @@ slug: 2024-10-data-lakehouse-roundup-1
 draft: false
 image: "/images/blog.png"
 ---
-
-I’m excited to kick off a new series called "Data Lakehouse Roundup," where I’ll cover the latest developments in the data lakehouse space, approximately every quarter. These articles are designed to quickly bring you up to speed on new releases and features related to data lakehouses. Each edition will start with a brief overview of key trends, followed by a roundup of major news from the past few months. Let’s dive in!
+I’m excited to kick off a new series called "Data Lakehouse Roundup, " where I’ll cover the latest developments in the data lakehouse space, approximately every quarter. These articles are designed to quickly bring you up to speed on new releases and features related to data lakehouses. Each edition will start with a brief overview of key trends, followed by a roundup of major news from the past few months. Let’s dive in!
 
 ## Trends
 

@@ -15,9 +15,10 @@ draft: false
 image: "/images/blog.png"
 canonical: "https://iceberglakehouse.com/posts/2026-02-dm-denormalization-when-why/"
 ---
-> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-02-dm-denormalization-when-why/).
 
 ![Normalized model with many interconnected tables vs. denormalized wide flat table](/images/blog/data-modeling/denormalization-overview.png)
+
+> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-02-dm-denormalization-when-why/).
 
 Normalization is the first rule taught in database design. Eliminate redundancy. Store each fact once. Use foreign keys. It's the right rule for transactional systems. And it's the wrong rule for most analytics workloads.
 
@@ -38,7 +39,7 @@ Normalization (Third Normal Form and beyond) organizes data so that each piece o
 - More complex SQL (longer queries, more error-prone)
 - Harder self-service (analysts struggle with multi-join queries)
 
-For an OLTP system processing 10,000 inserts per second, normalization is correct. For an OLAP system answering "revenue by region by quarter," it's a performance bottleneck.
+For an OLTP system processing 10, 000 inserts per second, normalization is correct. For an OLAP system answering "revenue by region by quarter, " it's a performance bottleneck.
 
 ## What Denormalization Actually Means
 
@@ -72,12 +73,12 @@ The key insight: denormalization trades write-time simplicity for read-time simp
 
 **When consistency matters more than speed.** Financial systems with audit requirements often need the strict integrity that normalization provides.
 
-**Small datasets.** If the query joins 5 tables with 1,000 rows each, denormalization won't improve performance noticeably. The overhead of redundancy isn't worth the marginal speed gain.
+**Small datasets.** If the query joins 5 tables with 1, 000 rows each, denormalization won't improve performance noticeably. The overhead of redundancy isn't worth the marginal speed gain.
 
 ## The Tradeoffs
 
 | Benefit | Cost |
-|---|---|
+|--|--|
 | Fewer joins per query | Update anomalies (same data in multiple places) |
 | Faster read performance | Larger storage footprint |
 | Simpler SQL for analysts | Pipeline complexity (keeping redundant data in sync) |
@@ -93,13 +94,7 @@ A view can join and flatten multiple normalized tables into a single logical tab
 ```sql
 CREATE VIEW v_orders_enriched AS
 SELECT
-    o.order_id,
-    o.order_date,
-    c.customer_name,
-    c.city AS customer_city,
-    p.product_name,
-    p.category AS product_category,
-    o.quantity * o.unit_price AS revenue
+ o.order_id, o.order_date, c.customer_name, c.city AS customer_city, p.product_name, p.category AS product_category, o.quantity * o.unit_price AS revenue
 FROM orders o
 JOIN customers c ON o.customer_id = c.customer_id
 JOIN products p ON o.product_id = p.product_id;
@@ -107,7 +102,7 @@ JOIN products p ON o.product_id = p.product_id;
 
 Analysts query `v_orders_enriched` without knowing the underlying structure. The join logic is defined once and reused by everyone.
 
-The tradeoff: views execute the joins at query time. For very large datasets, this can be slow. Platforms like [Dremio](https://www.dremio.com/blog/5-ways-dremio-reflections-outsmart-traditional-materialized-views/?utm_source=ev_buffer&utm_medium=influencer&utm_campaign=next-gen-dremio&utm_term=blog-021826-02-18-2026&utm_content=alexmerced) solve this with Reflections , which physically materialize the view's results in an optimized format, updated automatically. Users still query the logical view, but the engine substitutes the pre-computed Reflection for performance. You get the simplicity of denormalization, the consistency of normalization, and the speed of materialization.
+The tradeoff: views execute the joins at query time. For very large datasets, this can be slow. Platforms like [Dremio](https://www.dremio.com/blog/5-ways-dremio-reflections-outsmart-traditional-materialized-views/?utm_source=ev_buffer&utm_medium=influencer&utm_campaign=next-gen-dremio&utm_term=blog-021826-02-18-2026&utm_content=alexmerced) solve this with Reflections, which physically materialize the view's results in an optimized format, updated automatically. Users still query the logical view, but the engine substitutes the pre-computed Reflection for performance. You get the simplicity of denormalization, the consistency of normalization, and the speed of materialization.
 
 ## What to Do Next
 

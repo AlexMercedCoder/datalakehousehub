@@ -14,9 +14,10 @@ draft: false
 image: "/images/blog.png"
 canonical: "https://iceberglakehouse.com/posts/iceberg-v3-deletion-vectors-merge-on-read-dml-performance/"
 ---
-> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/iceberg-v3-deletion-vectors-merge-on-read-dml-performance/).
 
 Deleting one row from a data lake used to mean rewriting a whole file. If a 512 MB Parquet file held a million rows and you needed to delete one of them, the classic copy-on-write approach read the file, dropped the row, and wrote a fresh 512 MB file, all to remove a single record. That write amplification is the reason updates and deletes were historically painful on immutable file formats, and it is the problem that deletion vectors and merge-on-read tables set out to reduce.
+
+> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/iceberg-v3-deletion-vectors-merge-on-read-dml-performance/).
 
 Before going further, a note on terminology and status. The details of deletion vectors in [Apache Iceberg](https://iceberg.apache.org/spec/) v3 continue to evolve, and I have not pinned every naming and layout detail against the current spec for this article. Where I describe deletion vectors, treat it as the direction the format is moving rather than a fixed guarantee about a specific release, and confirm exact terminology and status against the official [Iceberg spec](https://iceberg.apache.org/spec/#delete-formats) and release notes before you build on it. The physical tradeoff I describe, faster writes in exchange for read-time merge work and compaction discipline, holds regardless of the exact names.
 
@@ -40,12 +41,12 @@ Iceberg supports two strategies for handling row-level changes, and understandin
 
 **Merge-on-read (MOR)** takes the opposite approach at write time. Instead of rewriting data files, it writes separate delete information that records which rows are logically deleted. The original data files stay put. At read time, the engine combines the data files with the delete information and filters out the deleted rows on the fly. The write is cheap because you only wrote a small delete record, not a rewritten data file. The cost moves to read time, where every scan must apply the deletes.
 
-Consider a concrete example. You have a table with 1,000 data files and you need to delete 500 rows spread one per file across 500 of them. Under COW, you rewrite 500 data files, potentially tens of gigabytes, to remove 500 rows. The delete is slow and expensive, but afterward reads are as fast as ever. Under MOR, you write delete information covering those 500 rows, which is tiny, and the delete completes quickly. But now every read of those 500 files has to apply the deletes, and if you keep issuing small deletes, the delete information piles up and reads get progressively slower until you compact.
+Consider a concrete example. You have a table with 1, 000 data files and you need to delete 500 rows spread one per file across 500 of them. Under COW, you rewrite 500 data files, potentially tens of gigabytes, to remove 500 rows. The delete is slow and expensive, but afterward reads are as fast as ever. Under MOR, you write delete information covering those 500 rows, which is tiny, and the delete completes quickly. But now every read of those 500 files has to apply the deletes, and if you keep issuing small deletes, the delete information piles up and reads get progressively slower until you compact.
 
 Neither is universally better. They are a tradeoff you choose based on your write pattern and read latency requirements. Here is the comparison laid out directly.
 
 | Dimension | Copy-on-Write (COW) | Merge-on-Read (MOR) |
-| --- | --- | --- |
+| -- | -- | -- |
 | Write speed | Slow for scattered changes; rewrites whole files | Fast; writes small delete information |
 | Write amplification | High when changes are sparse across large files | Low; only delete records are written |
 | Read complexity | Simple; scan data files directly | Higher; must merge deletes at scan time |
@@ -67,7 +68,7 @@ The direction deletion vectors take is to make this row-level delete tracking mo
 
 Whatever the physical representation, the planning problem is the same. The query engine must map delete information to the relevant data files. When it plans a scan, it does not just enumerate data files; it also gathers the delete files or vectors that apply to each data file, so the reader can combine them. This mapping is part of Iceberg metadata planning, and its efficiency matters, because if planning has to sift through thousands of unrelated delete files to find the ones that apply, planning itself becomes a bottleneck before a single row is read.
 
-There is a meaningful difference between the two ways deletes have historically been expressed, and it explains part of the motivation for the deletion-vector direction. Equality deletes say "delete every row where this column equals this value," which is compact to write but expensive to apply, because the reader must evaluate the predicate against rows to find matches. Positional deletes say "delete these exact row positions in this exact file," which is more work to produce but far cheaper to apply, because the reader just skips the listed positions. Deletion vectors push the positional approach further by encoding those positions as a bitmap tied to a single data file, which is both compact and fast to apply. The trend across these representations is consistent: move cost away from read time, where it happens on every query, and toward write and compaction time, where it happens once. That is the right direction for analytical tables that are read far more often than they are written.
+There is a meaningful difference between the two ways deletes have historically been expressed, and it explains part of the motivation for the deletion-vector direction. Equality deletes say "delete every row where this column equals this value, " which is compact to write but expensive to apply, because the reader must evaluate the predicate against rows to find matches. Positional deletes say "delete these exact row positions in this exact file, " which is more work to produce but far cheaper to apply, because the reader just skips the listed positions. Deletion vectors push the positional approach further by encoding those positions as a bitmap tied to a single data file, which is both compact and fast to apply. The trend across these representations is consistent: move cost away from read time, where it happens on every query, and toward write and compaction time, where it happens once. That is the right direction for analytical tables that are read far more often than they are written.
 
 ## Read-Time Costs and Engine Responsibilities
 

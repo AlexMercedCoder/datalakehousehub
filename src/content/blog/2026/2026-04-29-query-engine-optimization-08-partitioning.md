@@ -2,7 +2,7 @@
 title: "Partitioning, Sharding, and Data Distribution Strategies"
 date: 2026-04-29T09:08:00Z
 pubDatetime: 2026-04-29T09:08:00Z
-description: "Hash partitioning distributes data evenly. Range partitioning enables fast range scans. Both create tradeoffs. Here is how databases divide data across storage and nodes."
+description: "Hash partitioning distributes data evenly. Range partitioning enables fast range scans. Both create tradeoffs."
 author: "Alex Merced"
 category: "Data Engineering"
 tags:
@@ -14,11 +14,12 @@ draft: false
 image: "/images/blog/query-engine-optimization/08-partitioning-partition-types.png"
 canonical: "https://iceberglakehouse.com/posts/2026-04-29-query-engine-08/"
 ---
-> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-04-29-query-engine-08/).
 
-<!-- Meta Description: Hash partitioning distributes data evenly. Range partitioning enables fast range scans. Both create tradeoffs. Here is how databases divide data across storage and nodes. -->
-<!-- Primary Keyword: data partitioning -->
-<!-- Secondary Keywords: database sharding, partition pruning, data distribution -->
+<!- Meta Description: Hash partitioning distributes data evenly. Range partitioning enables fast range scans. Both create tradeoffs. Here is how databases divide data across storage and nodes. ->
+<!- Primary Keyword: data partitioning ->
+<!- Secondary Keywords: database sharding, partition pruning, data distribution ->
+
+> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-04-29-query-engine-08/).
 
 *Read the complete Query Engine Optimization series:*
 * [Part 1: How Query Engines Think: The Tradeoffs Behind Every Data System](/blog/2026-04-29-query-engine-optimization-01-overview)
@@ -85,7 +86,7 @@ Bucketing (Hive, Spark) and clustering (BigQuery, Snowflake, Dremio) go beyond p
 
 **Bucketing** hashes data by a key into a fixed number of buckets within each partition. If two tables are bucketed by the same key into the same number of buckets, they can be joined without a shuffle because matching keys are guaranteed to be in the same bucket. This is called a bucket join or sort-merge bucket join.
 
-**Clustering** sorts data within files by a designated column. This makes zone maps (min/max statistics) more effective because sorting clusters similar values together, narrowing the min/max range per file. A file where `customer_id` ranges from 1 to 1,000,000 has a useless zone map for selective filters. A file where `customer_id` ranges from 500 to 600 will be skipped by any filter outside that range.
+**Clustering** sorts data within files by a designated column. This makes zone maps (min/max statistics) more effective because sorting clusters similar values together, narrowing the min/max range per file. A file where `customer_id` ranges from 1 to 1, 000, 000 has a useless zone map for selective filters. A file where `customer_id` ranges from 500 to 600 will be skipped by any filter outside that range.
 
 Dremio automates clustering through its table optimization jobs. When Dremio compacts an Iceberg table, it sorts the data by frequently filtered columns, tightening the min/max ranges and improving subsequent query pruning without manual intervention.
 
@@ -111,7 +112,7 @@ Skew arises from several sources:
 ## Where Real Systems Land
 
 | System | Partitioning Strategy | Pruning | Clustering | Skew Handling |
-|---|---|---|---|---|
+|--|--|--|--|--|
 | PostgreSQL | Range, list, hash (native) | Yes | Manual (CLUSTER command) | Manual |
 | Spark | Hash (shuffle), range (sort) | Yes | Bucketing | AQE skew join |
 | Hive | Directory-based (date, region) | Yes | Bucketing | Manual |

@@ -15,13 +15,12 @@ slug: 2025-04-what-are-ai-agents
 draft: false
 image: "/images/blog.png"
 ---
-
-## Free Resources  
-- **[Free Apache Iceberg Course](https://hello.dremio.com/webcast-an-apache-iceberg-lakehouse-crash-course-reg.html?utm_source=ev_external_blog&utm_medium=influencer&utm_campaign=AItoLLMS&utm_content=alexmerced&utm_term=external_blog)**  
-- **[Free Copy of “Apache Iceberg: The Definitive Guide”](https://hello.dremio.com/wp-apache-iceberg-the-definitive-guide-reg.html?utm_source=ev_external_blog&utm_medium=influencer&utm_campaign=AItoLLMS&utm_content=alexmerced&utm_term=external_blog)**  
-- **[2025 Apache Iceberg Architecture Guide](https://medium.com/data-engineering-with-dremio/2025-guide-to-architecting-an-iceberg-lakehouse-9b19ed42c9de)**  
-- **[How to Join the Iceberg Community](https://medium.alexmerced.blog/guide-to-finding-apache-iceberg-events-near-you-and-being-part-of-the-greater-iceberg-community-0c38ae785ddb)**  
-- **[Iceberg Lakehouse Engineering Video Playlist](https://youtube.com/playlist?list=PLsLAVBjQJO0p0Yq1fLkoHvt2lEJj5pcYe&si=WTSnqjXZv6Glkc3y)**  
+## Free Resources 
+- **[Free Apache Iceberg Course](https://hello.dremio.com/webcast-an-apache-iceberg-lakehouse-crash-course-reg.html?utm_source=ev_external_blog&utm_medium=influencer&utm_campaign=AItoLLMS&utm_content=alexmerced&utm_term=external_blog)** 
+- **[Free Copy of “Apache Iceberg: The Definitive Guide”](https://hello.dremio.com/wp-apache-iceberg-the-definitive-guide-reg.html?utm_source=ev_external_blog&utm_medium=influencer&utm_campaign=AItoLLMS&utm_content=alexmerced&utm_term=external_blog)** 
+- **[2025 Apache Iceberg Architecture Guide](https://medium.com/data-engineering-with-dremio/2025-guide-to-architecting-an-iceberg-lakehouse-9b19ed42c9de)** 
+- **[How to Join the Iceberg Community](https://medium.alexmerced.blog/guide-to-finding-apache-iceberg-events-near-you-and-being-part-of-the-greater-iceberg-community-0c38ae785ddb)** 
+- **[Iceberg Lakehouse Engineering Video Playlist](https://youtube.com/playlist?list=PLsLAVBjQJO0p0Yq1fLkoHvt2lEJj5pcYe&si=WTSnqjXZv6Glkc3y)** 
 - **[Ultimate Apache Iceberg Resource Guide](https://medium.com/data-engineering-with-dremio/ultimate-directory-of-apache-iceberg-resources-e3e02efac62e)** 
 
 We’ve explored how Large Language Models (LLMs) work, and how we can improve their performance with fine-tuning, prompt engineering, and retrieval-augmented generation (RAG). These enhancements are powerful - but they’re still fundamentally *stateless* and reactive.
@@ -73,14 +72,14 @@ Decides what information (memory, documents, tool results) gets included in each
 
 ## LLM vs AI Agent : Key Differences
 
-| Capability         | LLM                  | AI Agent                          |
-|--------------------|----------------------|------------------------------------|
-| Input              | Prompt               | Prompt + tools + state             |
-| Memory             | Ephemeral (context)  | Persistent (via external memory)   |
-| Reasoning          | Single-shot          | Multi-step planning                |
-| Action-taking      | No                   | Yes (tools, APIs, workflows)       |
-| Autonomy           | None                 | Optional (user- or goal-directed)  |
-| Adaptability       | Static behavior      | Dynamic, can learn from feedback   |
+| Capability | LLM | AI Agent |
+|----------|-----------|------------------|
+| Input | Prompt | Prompt + tools + state |
+| Memory | Ephemeral (context) | Persistent (via external memory) |
+| Reasoning | Single-shot | Multi-step planning |
+| Action-taking | No | Yes (tools, APIs, workflows) |
+| Autonomy | None | Optional (user- or goal-directed) |
+| Adaptability | Static behavior | Dynamic, can learn from feedback |
 
 LLMs are the engine. Agents are the vehicle.
 
@@ -103,7 +102,7 @@ Instead of just answering questions, agents:
 - Offer next actions (e.g., generate reports)
 
 ### 3. **Research Agents**
-Given a broad prompt like *“summarize recent news on AI regulation,”* agents:
+Given a broad prompt like *“summarize recent news on AI regulation, ”* agents:
 - Plan a research strategy
 - Browse the web or internal data
 - Synthesize and refine results

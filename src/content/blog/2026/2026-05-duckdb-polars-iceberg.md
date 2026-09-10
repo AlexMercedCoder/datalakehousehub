@@ -16,17 +16,18 @@ draft: false
 image: "/images/blog/duckdb-polars-iceberg/duckdb-vs-polars-feature-comparison.png"
 canonical: "https://iceberglakehouse.com/posts/2026-05-24-duckdb-polars-iceberg/"
 ---
-> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-05-24-duckdb-polars-iceberg/).
 
 # Using DuckDB and Polars to Query Iceberg Tables
 
 Two years ago, DuckDB and Polars were single-process analytical tools with limited lakehouse integration. You could read Parquet files from S3 using either, but writing to a catalog-managed Iceberg table required Spark or Flink. That constraint has been removed.
 
+> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-05-24-duckdb-polars-iceberg/).
+
 DuckDB 1.4 LTS, released in September 2025, shipped with Iceberg write support. Polars extended its streaming engine's sink capabilities to include Iceberg tables in 2026. Both tools now offer a complete read-write path to Iceberg tables managed by REST Catalogs like Apache Polaris, Nessie, and Amazon S3 Tables. DuckDB went further: by December 2025, the DuckDB-Wasm build included the Iceberg extension, enabling browser-based read and write access to Iceberg REST Catalogs with no backend server.
 
 This post covers what's actually different about these two tools and how to integrate both into a lakehouse workflow.
 
----
+--
 
 ## DuckDB and Iceberg: What Changed in 1.4
 
@@ -35,24 +36,22 @@ DuckDB has supported reading Iceberg tables since earlier releases through its `
 To connect to an Iceberg table through a REST Catalog:
 
 ```sql
--- Install and load the Iceberg extension
+- Install and load the Iceberg extension
 INSTALL iceberg;
 LOAD iceberg;
 
--- Configure a REST catalog connection
+- Configure a REST catalog connection
 CREATE SECRET iceberg_catalog (
-    TYPE iceberg_rest,
-    ENDPOINT 'https://my-polaris-catalog.example.com/api/catalog',
-    CREDENTIAL 'Bearer my-oauth-token'
+ TYPE iceberg_rest, ENDPOINT 'https://my-polaris-catalog.example.com/api/catalog', CREDENTIAL 'Bearer my-oauth-token'
 );
 
--- Attach the catalog
+- Attach the catalog
 ATTACH 'my_namespace' AS my_lake (TYPE iceberg_rest, SECRET 'iceberg_catalog');
 
--- Query a table
+- Query a table
 SELECT * FROM my_lake.events WHERE event_date = '2025-05-24';
 
--- Write to a table
+- Write to a table
 INSERT INTO my_lake.events 
 SELECT * FROM read_parquet('s3://staging/events-2025-05-24/*.parquet');
 ```
@@ -61,7 +60,7 @@ The write constraint to be aware of: DuckDB implements updates and deletes using
 
 DuckDB-Wasm's Iceberg integration is more architecturally novel. The browser build uses JavaScript's Fetch API to handle HTTP requests, meaning DuckDB-Wasm can communicate with Iceberg REST Catalog endpoints directly from a browser tab. This enables analytics dashboards and data exploration tools that run entirely client-side, with the browser reading Iceberg table metadata and Parquet data from S3 directly, without any server-side query layer.
 
----
+--
 
 ## Polars and Iceberg: The Streaming Sink
 
@@ -77,9 +76,9 @@ lf = pl.scan_iceberg("s3://my-bucket/iceberg/events/")
 
 # Apply transformations lazily
 result = lf.filter(
-    pl.col("event_date") == "2025-05-24"
+ pl.col("event_date") == "2025-05-24"
 ).select(
-    ["user_id", "event_type", "amount"]
+ ["user_id", "event_type", "amount"]
 ).sort("amount", descending=True)
 
 # Collect (execute) locally
@@ -93,21 +92,20 @@ import polars as pl
 
 # Stream-process a large dataset and sink to Iceberg
 (
-    pl.scan_parquet("s3://staging/raw-events/**/*.parquet")
-    .filter(pl.col("event_type").is_in(["purchase", "signup"]))
-    .with_columns([
-        pl.col("ts").dt.date().alias("event_date")
-    ])
-    .sink_iceberg(
-        "s3://my-bucket/iceberg/events/",
-        mode="append"
-    )
+ pl.scan_parquet("s3://staging/raw-events/**/*.parquet")
+ .filter(pl.col("event_type").is_in(["purchase", "signup"]))
+ .with_columns([
+ pl.col("ts").dt.date().alias("event_date")
+ ])
+ .sink_iceberg(
+ "s3://my-bucket/iceberg/events/", mode="append"
+ )
 )
 ```
 
 The streaming sink processes input in chunks, writing Parquet files incrementally rather than accumulating everything in memory before writing. This makes Polars a practical ETL engine for medium-scale data movement workloads where data exceeds available RAM but doesn't require the cluster-level parallelism of Spark or Flink.
 
----
+--
 
 ## Polars Cloud: From Local to Distributed
 
@@ -123,20 +121,17 @@ from polars_cloud import ComputeContext
 
 # Define a cloud compute context
 ctx = ComputeContext(
-    provider="aws",
-    cpu=64,
-    memory_gb=256,
-    region="us-east-1"
+ provider="aws", cpu=64, memory_gb=256, region="us-east-1"
 )
 
 # Same LazyFrame code as local development
 result = (
-    pl.scan_iceberg("s3://my-data-lake/iceberg/events/")
-    .filter(pl.col("revenue") > 1000)
-    .group_by("region")
-    .agg(pl.sum("revenue"))
-    .remote(ctx)  # Execute remotely
-    .collect()
+ pl.scan_iceberg("s3://my-data-lake/iceberg/events/")
+ .filter(pl.col("revenue") > 1000)
+ .group_by("region")
+ .agg(pl.sum("revenue"))
+ .remote(ctx) # Execute remotely
+ .collect()
 )
 ```
 
@@ -144,7 +139,7 @@ Polars Cloud also supports a distributed engine in open beta, which enables hori
 
 MotherDuck provides an analogous capability for DuckDB: cloud-executed DuckDB with a hybrid execution model that can run part of a query locally and part remotely, optimizing network data movement for analytical queries against remote Iceberg tables.
 
----
+--
 
 ## Feature Comparison
 
@@ -172,7 +167,7 @@ A common pattern is a staged development approach:
 
 This workflow eliminates a significant development cost: the local development loop for Spark pipelines requires either running a local Spark cluster (expensive to set up and maintain) or submitting jobs to a remote cluster (slow iteration cycles). With DuckDB and Polars, the local development loop runs in seconds rather than minutes.
 
----
+--
 
 ## DuckDB for Embedded Analytics and Browser Applications
 
@@ -187,7 +182,7 @@ DuckDB's embedding capabilities go well beyond notebook analytics. As a library 
 import * as duckdb from '@duckdb/duckdb-wasm';
 
 const db = await duckdb.createDuckDB({
-    query: { castTimestampToDate: true }
+ query: { castTimestampToDate: true }
 });
 const conn = await db.connect();
 
@@ -196,62 +191,49 @@ await conn.query("INSTALL iceberg; LOAD iceberg;");
 
 // Configure catalog access
 await conn.query(`
-    CREATE SECRET iceberg_catalog (
-        TYPE iceberg_rest,
-        ENDPOINT 'https://catalog.example.com/api/catalog',
-        CREDENTIAL 'Bearer ${userToken}'
-    );
+ CREATE SECRET iceberg_catalog (
+ TYPE iceberg_rest, ENDPOINT 'https://catalog.example.com/api/catalog', CREDENTIAL 'Bearer ${userToken}'
+ );
 `);
 
-// Query directly from browser -- no server required
+// Query directly from browser, no server required
 const result = await conn.query(`
-    SELECT region, SUM(amount) as total_revenue
-    FROM iceberg_catalog.main.orders
-    WHERE event_date >= '2025-01-01'
-    GROUP BY region
-    ORDER BY total_revenue DESC
+ SELECT region, SUM(amount) as total_revenue
+ FROM iceberg_catalog.main.orders
+ WHERE event_date >= '2025-01-01'
+ GROUP BY region
+ ORDER BY total_revenue DESC
 `);
 ```
 
 This client-side analytics pattern has real performance advantages for interactive dashboards. Users get sub-second query responses for exploratory analytics without waiting for a centralized query service to process their request.
 
----
+--
 
 ## Practical Patterns: DuckDB for Data Quality Profiling
 
 One area where DuckDB shines specifically is data quality profiling during ingestion validation. Before writing to an Iceberg table, you can run statistical profiling queries in DuckDB to validate the incoming data meets quality thresholds:
 
 ```sql
--- Profile incoming data before writing to Iceberg
+- Profile incoming data before writing to Iceberg
 WITH stats AS (
-    SELECT
-        COUNT(*) AS total_rows,
-        COUNT(*) FILTER (WHERE user_id IS NULL) AS null_user_ids,
-        COUNT(*) FILTER (WHERE amount < 0) AS negative_amounts,
-        MIN(event_date) AS earliest_date,
-        MAX(event_date) AS latest_date,
-        COUNT(DISTINCT user_id) AS unique_users
-    FROM read_parquet('s3://staging/incoming/*.parquet')
+ SELECT
+ COUNT(*) AS total_rows, COUNT(*) FILTER (WHERE user_id IS NULL) AS null_user_ids, COUNT(*) FILTER (WHERE amount < 0) AS negative_amounts, MIN(event_date) AS earliest_date, MAX(event_date) AS latest_date, COUNT(DISTINCT user_id) AS unique_users
+ FROM read_parquet('s3://staging/incoming/*.parquet')
 )
 SELECT
-    total_rows,
-    (null_user_ids::FLOAT / total_rows) AS null_rate,
-    negative_amounts,
-    earliest_date,
-    latest_date,
-    unique_users,
-    CASE
-        WHEN null_user_ids::FLOAT / total_rows > 0.01 THEN 'FAIL: null rate > 1%'
-        WHEN negative_amounts > 0 THEN 'FAIL: negative amounts found'
-        WHEN latest_date > CURRENT_DATE THEN 'FAIL: future dates found'
-        ELSE 'PASS'
-    END AS quality_check
+ total_rows, (null_user_ids::FLOAT / total_rows) AS null_rate, negative_amounts, earliest_date, latest_date, unique_users, CASE
+ WHEN null_user_ids::FLOAT / total_rows > 0.01 THEN 'FAIL: null rate > 1%'
+ WHEN negative_amounts > 0 THEN 'FAIL: negative amounts found'
+ WHEN latest_date > CURRENT_DATE THEN 'FAIL: future dates found'
+ ELSE 'PASS'
+ END AS quality_check
 FROM stats;
 ```
 
 This lightweight profiling step, running in seconds on DuckDB before an Iceberg write, catches data quality issues that would otherwise corrupt the production table and require an expensive rollback and re-ingest.
 
----
+--
 
 ## Polars for ML Feature Preprocessing
 
@@ -262,34 +244,27 @@ import polars as pl
 
 # Define a feature engineering pipeline for a churn model
 feature_pipeline = (
-    pl.scan_iceberg("s3://data-lake/iceberg/user_events/")
-    .filter(pl.col("event_date") >= pl.lit("2024-01-01"))
-    .with_columns([
-        # Recency: days since last purchase
-        (pl.lit("2025-05-24").str.to_date() - pl.col("last_purchase_date"))
-        .dt.total_days()
-        .alias("days_since_purchase"),
-        
-        # Frequency: purchases in last 30 days  
-        pl.col("purchase_count_30d").alias("frequency"),
-        
-        # Monetary: average purchase value
-        (pl.col("total_spend_90d") / pl.col("purchase_count_90d"))
-        .fill_nan(0.0)
-        .alias("avg_purchase_value"),
-        
-        # Engagement: session count last 7 days
-        pl.col("session_count_7d").alias("engagement"),
-    ])
-    .select(["user_id", "days_since_purchase", "frequency", "avg_purchase_value", "engagement", "is_churned"])
-    # Write features to training dataset
-    .sink_iceberg("s3://data-lake/iceberg/churn_features/", mode="overwrite")
+ pl.scan_iceberg("s3://data-lake/iceberg/user_events/")
+ .filter(pl.col("event_date") >= pl.lit("2024-01-01"))
+ .with_columns([
+ # Recency: days since last purchase
+ (pl.lit("2025-05-24").str.to_date() - pl.col("last_purchase_date"))
+ .dt.total_days()
+ .alias("days_since_purchase"), # Frequency: purchases in last 30 days 
+ pl.col("purchase_count_30d").alias("frequency"), # Monetary: average purchase value
+ (pl.col("total_spend_90d") / pl.col("purchase_count_90d"))
+ .fill_nan(0.0)
+ .alias("avg_purchase_value"), # Engagement: session count last 7 days
+ pl.col("session_count_7d").alias("engagement"), ])
+ .select(["user_id", "days_since_purchase", "frequency", "avg_purchase_value", "engagement", "is_churned"])
+ # Write features to training dataset
+ .sink_iceberg("s3://data-lake/iceberg/churn_features/", mode="overwrite")
 )
 ```
 
 The same pipeline runs locally against a sample for development and at full scale via Polars Cloud for production. No Spark job code, no cluster management, just Python and Polars.
 
----
+--
 
 ## DuckDB-Wasm: Browser-Native Analytics Without a Backend
 
@@ -301,7 +276,7 @@ The practical limitation is that DuckDB-Wasm operates within browser memory cons
 
 Several open-source observability and BI tools are already built on DuckDB-Wasm: Evidence, Observable Framework, and Rill all use DuckDB as their embedded query engine. The pattern of "ship the query engine with the application, not the data" is becoming a standard architecture for lightweight analytics tools.
 
----
+--
 
 ## When to Scale Up: Recognizing the Limits of Single-Engine Processing
 
@@ -319,7 +294,7 @@ The practical signals that a workload has outgrown single-process analytics:
 
 The transition from local analytics to distributed infrastructure is not a failure of the local tools. It's a success signal; the platform has grown to the scale where distributed compute investment pays off. DuckDB and Polars remain valuable at that scale too, in their appropriate roles: DuckDB for developer-local exploration and testing, Polars for Python-based feature engineering pipelines that run as Kubernetes jobs, and both as components in larger orchestrated workflows.
 
----
+--
 
 ## Conclusion
 

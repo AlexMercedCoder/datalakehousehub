@@ -1,7 +1,7 @@
 ---
 title: "What is ReAct Framework?"
 meta_title: "What is ReAct Framework? | Expert Data Lakehouse & AI Glossary"
-description: "An operational framework allowing autonomous agents to interleave reasoning processes directly with external programmatic tool actions. Learn the architecture, mechanics, and real-world value of ReAct Framework in the modern data stack."
+description: "An operational framework allowing autonomous agents to interleave reasoning processes directly with external programmatic tool actions."
 ---
 
 ## What is ReAct Framework?

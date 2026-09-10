@@ -15,9 +15,10 @@ draft: false
 image: "/images/blog.png"
 canonical: "https://iceberglakehouse.com/posts/2026-02-sl-semantic-layer-best-practices/"
 ---
-> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-02-sl-semantic-layer-best-practices/).
 
 ![Semantic layer best practices checklist : checks and mistakes](/images/blog/semantic-layer/best-practices.png)
+
+> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-02-sl-semantic-layer-best-practices/).
 
 Semantic layers don't fail because the technology is wrong. They fail because of design decisions made in the first two weeks : choices that seem reasonable at the time and create compounding problems for months afterward.
 
@@ -35,7 +36,7 @@ This principle extends to AI agents. If your AI generates its own metric formula
 
 ## Mistake 2: Skipping the Bronze Layer
 
-**What happens**: A data engineer creates a Silver view that joins raw source tables directly, mixing data cleanup (type casting, column renaming) with business logic (filters, calculations) in a single query. When the source schema changes :  a column is renamed, a type is modified ,  the Silver view breaks.
+**What happens**: A data engineer creates a Silver view that joins raw source tables directly, mixing data cleanup (type casting, column renaming) with business logic (filters, calculations) in a single query. When the source schema changes : a column is renamed, a type is modified, the Silver view breaks.
 
 **Why it's common**: The Bronze layer feels redundant. It's just a 1:1 mapping of the source. Why add a layer that doesn't change anything?
 
@@ -67,7 +68,7 @@ This step feels slow. It's the fastest path to adoption. A semantic layer that u
 
 ## Mistake 5: Treating Documentation as Optional
 
-**What happens**: Views are created with no Wikis, no column descriptions, no Labels. The semantic layer works for the person who built it. Everyone else :  analysts, AI agents, new team members ,  can't figure out what the views mean.
+**What happens**: Views are created with no Wikis, no column descriptions, no Labels. The semantic layer works for the person who built it. Everyone else : analysts, AI agents, new team members, can't figure out what the views mean.
 
 **Why it's common**: Documentation takes time. Deadlines are tight. Teams plan to "add documentation later." Later never comes.
 
@@ -86,7 +87,7 @@ Undocumented views are invisible to AI agents. If the Wiki is empty, the AI agen
 
 **Why it's common**: BI tools make it easy to apply filters and security rules. Data platforms require more setup. Teams take the easy path.
 
-**The fix**: Enforce access policies at the semantic layer, not the BI layer. Row-level security and column masking should be applied on the virtual datasets (views). Every query path :  dashboard, notebook, API, AI agent ,  inherits the same rules.
+**The fix**: Enforce access policies at the semantic layer, not the BI layer. Row-level security and column masking should be applied on the virtual datasets (views). Every query path : dashboard, notebook, API, AI agent, inherits the same rules.
 
 Dremio implements this through Fine-Grained Access Control (FGAC): policies defined as UDFs at the view level. A regional manager queries `business.revenue` and automatically sees only their region, regardless of how they access the data. No security gaps between tools.
 

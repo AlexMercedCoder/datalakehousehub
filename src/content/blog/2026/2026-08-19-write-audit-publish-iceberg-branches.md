@@ -14,9 +14,10 @@ tags:
 slug: "write-audit-publish-iceberg-branches"
 draft: false
 ---
-> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/write-audit-publish-iceberg-branches/).
 
 Software engineering solved its most important quality problem decades ago with a single structural idea, applied everywhere and questioned nowhere: changes do not land on main until they have passed review somewhere that is not main. The branch, the pull request, the CI gate, the merge, every part of that ritual exists to guarantee one property, that what consumers depend on only ever moves from one good state to another good state, with the checking done in between, out of sight. Data engineering spent the same decades publishing directly to production and apologizing afterward: the pipeline writes to the table consumers read, the bad batch lands at 3 a.m., the dashboards drink it at 8, and the quality checks, where they exist, run after the damage in the morning's post-hoc sweep.
+
+> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/write-audit-publish-iceberg-branches/).
 
 Write-Audit-Publish inverts the order, and Apache Iceberg's branching made the inversion cheap enough to be the default. The pattern is exactly its name: write the new data to a branch of the production table, audit the branched state with every check the table's contract demands, and publish by fast-forwarding the main branch only when the audit passes, atomically, with consumers never seeing an unvalidated byte. It is the pull-request workflow, applied to data, on the table format's native machinery, and several of my recent articles have leaned on it in passing, the quality agents staging containment on branches, the governance discipline gating changes, with a promise to treat the mechanics in depth. This is that article.
 
@@ -65,12 +66,12 @@ With the machinery in place, the pattern is three moves, and the SQL shows how l
 Write stages the change on a branch. The pipeline creates its working branch from main's current state and lands the batch there, through whatever write shape the pipeline uses, append, merge, overwrite, with the branch absorbing it all invisibly:
 
 ```sql
--- Create the staging branch for this batch
+- Create the staging branch for this batch
 ALTER TABLE lake.sales.orders
 CREATE BRANCH etl_batch_2026_08_19
 RETAIN 2 DAYS;
 
--- Land the batch on the branch
+- Land the batch on the branch
 INSERT INTO lake.sales.orders.branch_etl_batch_2026_08_19
 SELECT * FROM staging.orders_incoming;
 ```
@@ -78,20 +79,20 @@ SELECT * FROM staging.orders_incoming;
 Audit interrogates the branched state. The checks run real queries against the branch, full scale, real data, production context, asserting whatever the table's quality contract declares, and the results gate rather than alert:
 
 ```sql
--- Uniqueness on the business key, post-merge
+- Uniqueness on the business key, post-merge
 SELECT COUNT(*) AS dup_keys FROM (
-    SELECT order_id
-    FROM lake.sales.orders.branch_etl_batch_2026_08_19
-    GROUP BY order_id
-    HAVING COUNT(*) > 1
+ SELECT order_id
+ FROM lake.sales.orders.branch_etl_batch_2026_08_19
+ GROUP BY order_id
+ HAVING COUNT(*) > 1
 );
 
--- Volume sanity against the batch manifest
+- Volume sanity against the batch manifest
 SELECT COUNT(*) AS rows_landed
 FROM lake.sales.orders.branch_etl_batch_2026_08_19
 WHERE ingest_batch_id = '2026-08-19';
 
--- Reconciliation: totals conserved from source to branch
+- Reconciliation: totals conserved from source to branch
 SELECT SUM(amount) AS branch_total
 FROM lake.sales.orders.branch_etl_batch_2026_08_19
 WHERE order_date = DATE '2026-08-19';
@@ -101,13 +102,11 @@ Publish is a fast-forward. Checks pass, and main advances to the branch's head i
 
 ```sql
 CALL lake.system.fast_forward(
-  table => 'sales.orders',
-  branch => 'main',
-  to => 'etl_batch_2026_08_19'
+ table => 'sales.orders', branch => 'main', to => 'etl_batch_2026_08_19'
 );
 ```
 
-Checks fail, and the publish simply does not happen: the branch stays for diagnosis, main never moved, consumers never knew, and the pipeline's failure mode changed species, from "bad data shipped" to "good data is late," which is the trade every serious estate takes every time once it sees the two priced side by side.
+Checks fail, and the publish simply does not happen: the branch stays for diagnosis, main never moved, consumers never knew, and the pipeline's failure mode changed species, from "bad data shipped" to "good data is late, " which is the trade every serious estate takes every time once it sees the two priced side by side.
 
 Two variations complete the pattern's vocabulary for the cases the basic flow does not fit. Cherry-picking publishes a single commit from a branch rather than its whole head, the surgical option when a staging branch accumulated several changes and only one should ship, and the older WAP idiom's descendant, useful and deliberately exceptional, because a branch whose commits need triage before publish is usually a branch doing too many jobs. And the rebase-shaped situation, main advancing while a long-lived review branch sat, gets the honest treatment: fast-forward requires main to be an ancestor of the branch, so a stale branch either re-stages against current main or its changes replay onto a fresh branch, which is the same discipline long-lived code branches learn, and the same conclusion, keep staging branches short-lived and the problem stays theoretical.
 

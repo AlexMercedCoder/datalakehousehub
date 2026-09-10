@@ -14,11 +14,12 @@ draft: false
 image: "/images/blog.png"
 canonical: "https://iceberglakehouse.com/posts/semantic-view-autopilot-dynamic-metric-definition-governance/"
 ---
-> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/semantic-view-autopilot-dynamic-metric-definition-governance/).
 
 Most data glossaries are wrong by the time you read them. A column gets renamed, a metric changes its grain, a new product line ships, and the human who was supposed to update the documentation is three sprints behind. The glossary that was accurate in January describes a schema that no longer exists in July. For a human analyst this is an annoyance they route around by asking a colleague. For an AI agent that treats the glossary as ground truth, it is a source of confident, wrong answers.
 
-That failure mode is why "semantic view autopilot," the idea of using AI to draft table descriptions, column labels, metric definitions, and logical views, has real appeal. The administrative burden of keeping a semantic layer current is exactly the kind of work that outpaces manual effort. But the appeal comes with a trap. AI can generate a definition that reads perfectly and means something subtly false. Business meaning is not something a model can fully infer from schema and samples, and it is not something you should let a model publish unreviewed to the tools your agents depend on.
+> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/semantic-view-autopilot-dynamic-metric-definition-governance/).
+
+That failure mode is why "semantic view autopilot, " the idea of using AI to draft table descriptions, column labels, metric definitions, and logical views, has real appeal. The administrative burden of keeping a semantic layer current is exactly the kind of work that outpaces manual effort. But the appeal comes with a trap. AI can generate a definition that reads perfectly and means something subtly false. Business meaning is not something a model can fully infer from schema and samples, and it is not something you should let a model publish unreviewed to the tools your agents depend on.
 
 So the honest version of this capability is narrower and more useful than "AI writes your semantic layer." It is: AI drafts, humans review, and only approved definitions reach production. The win is faster curation, not unchecked automation. Let me lay out where the automation genuinely helps, where it goes wrong, and what governance has to look like for you to trust the output.
 
@@ -62,7 +63,7 @@ Some concrete failure modes.
 
 **Plausible-but-wrong business definitions.** A column named `revenue` might be gross, net, recognized, billed, or an internal estimate. The model sees `revenue`, sees dollar-shaped numbers, and writes "total revenue in USD." That description is fluent, confident, and possibly false in a way that matters enormously for financial reporting. The failure is invisible precisely because the output looks correct.
 
-**Ambiguous business terms.** Words like "active," "customer," "churned," and "conversion" have organization-specific definitions that no amount of schema inspection can recover. Is a customer active if they logged in, if they transacted, if their subscription is current? The answer lives in a policy document or in someone's head, not in the data. A model will pick the most common industry meaning, which may be exactly wrong for your business.
+**Ambiguous business terms.** Words like "active, " "customer, " "churned, " and "conversion" have organization-specific definitions that no amount of schema inspection can recover. Is a customer active if they logged in, if they transacted, if their subscription is current? The answer lives in a policy document or in someone's head, not in the data. A model will pick the most common industry meaning, which may be exactly wrong for your business.
 
 **Sensitive and regulated fields.** A model summarizing columns can inadvertently surface or mislabel fields containing personal data, financial details, or health information. It might describe a column in a way that reveals what it contains to users who should not see it, or it might fail to flag a field that needs masking. Sensitive data handling cannot be left to inference.
 
@@ -70,7 +71,7 @@ Some concrete failure modes.
 
 The common thread is that these errors are cheap to produce and expensive to catch, and an agent consuming them will not catch them at all. This is exactly why review is not optional. The model's fluency is a feature for drafting and a hazard for publishing. You want the fluency in the draft and a human's judgment on the gate.
 
-One more failure mode deserves attention because it compounds over time: confident drift. A model asked to regenerate definitions periodically may produce a slightly different description each run, not because anything changed but because generation is not deterministic. If you republish those regenerated descriptions automatically, your semantic layer starts to shimmer, with the meaning of a metric quietly rewording itself over months until it says something different from where it started. The defense is to treat each generation as a candidate diff against the approved version, not as a fresh replacement. A reviewer sees "here is what changed and why," approves or rejects the change, and the approved definition stays stable until a real reason to change it appears. Generation should propose deltas, not silently overwrite meaning.
+One more failure mode deserves attention because it compounds over time: confident drift. A model asked to regenerate definitions periodically may produce a slightly different description each run, not because anything changed but because generation is not deterministic. If you republish those regenerated descriptions automatically, your semantic layer starts to shimmer, with the meaning of a metric quietly rewording itself over months until it says something different from where it started. The defense is to treat each generation as a candidate diff against the approved version, not as a fresh replacement. A reviewer sees "here is what changed and why, " approves or rejects the change, and the approved definition stays stable until a real reason to change it appears. Generation should propose deltas, not silently overwrite meaning.
 
 ## Where the Economics Actually Work
 
@@ -106,18 +107,18 @@ Here is the flow I would put in place, and the diagram below describes the path 
 
 ```
 Schema + samples + lineage + query logs
-        |
-        v
-   AI generates draft definition
-        |
-        v
-   Automated tests (grain, nulls, row counts, types)
-        |
-        v
-   Human owner review + approval
-        |
-        v
-   Published to agent-facing semantic layer
+ |
+ v
+ AI generates draft definition
+ |
+ v
+ Automated tests (grain, nulls, row counts, types)
+ |
+ v
+ Human owner review + approval
+ |
+ v
+ Published to agent-facing semantic layer
 ```
 
 Two gates, not one. Automated tests catch the mechanical failures; a human owner catches the meaning.

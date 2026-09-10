@@ -16,9 +16,10 @@ draft: false
 image: "/images/blog.png"
 canonical: "https://iceberglakehouse.com/posts/2026-03-aitool-openwork/"
 ---
-> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-03-aitool-openwork/).
 
 OpenWork is an open-source desktop AI agent built on the OpenCode engine. It runs entirely on your machine with your own API keys, giving you full control over your data and your AI costs. Dremio is a unified lakehouse platform built on open standards like Apache Iceberg, Apache Arrow, and Apache Polaris.
+
+> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-03-aitool-openwork/).
 
 Both tools share a local-first philosophy. Dremio stores data in open formats with no vendor lock-in. OpenWork runs on your hardware with no cloud dependency for the agent itself. Connecting them creates an open-source analytics stack where your coding agent queries your lakehouse without sending data through third-party services.
 
@@ -60,15 +61,13 @@ Add the Dremio server to your `opencode.json`:
 
 ```json
 {
-  "mcp": {
-    "dremio": {
-      "url": "https://YOUR_PROJECT_MCP_URL",
-      "auth": {
-        "type": "oauth",
-        "clientId": "YOUR_CLIENT_ID"
-      }
-    }
-  }
+ "mcp": {
+ "dremio": {
+ "url": "https://YOUR_PROJECT_MCP_URL", "auth": {
+ "type": "oauth", "clientId": "YOUR_CLIENT_ID"
+ }
+ }
+ }
 }
 ```
 
@@ -87,23 +86,21 @@ For Dremio Software deployments, use the open-source [dremio-mcp](https://github
 git clone https://github.com/dremio/dremio-mcp
 cd dremio-mcp
 uv run dremio-mcp-server config create dremioai \
-  --uri https://your-dremio-instance.com \
-  --pat YOUR_PERSONAL_ACCESS_TOKEN
+ -uri https://your-dremio-instance.com \
+ -pat YOUR_PERSONAL_ACCESS_TOKEN
 ```
 
 Configure OpenWork to run the local server:
 
 ```json
 {
-  "mcp": {
-    "dremio": {
-      "command": "uv",
-      "args": [
-        "run", "--directory", "/path/to/dremio-mcp",
-        "dremio-mcp-server", "run"
-      ]
-    }
-  }
+ "mcp": {
+ "dremio": {
+ "command": "uv", "args": [
+ "run", "-directory", "/path/to/dremio-mcp", "dremio-mcp-server", "run"
+ ]
+ }
+ }
 }
 ```
 
@@ -194,11 +191,11 @@ Create a project structure with reference docs:
 
 ```
 project-root/
-  AGENTS.md
-  docs/
-    dremio-sql-reference.md
-    team-schemas.md
-    dremioframe-patterns.md
+ AGENTS.md
+ docs/
+ dremio-sql-reference.md
+ team-schemas.md
+ dremioframe-patterns.md
 ```
 
 Reference the docs in your AGENTS.md so OpenWork reads them on demand. Populate with your actual table schemas exported from Dremio, team-specific SQL patterns, and dremioframe code snippets.
@@ -209,10 +206,10 @@ OpenWork inherits OpenCode's custom agent system. Create dedicated Dremio agents
 
 ```markdown
 # .opencode/agents/dremio-analyst.md
----
+--
 description: Dremio data analyst agent
 mode: subagent
----
+--
 
 You are a data analyst working with Dremio Cloud.
 1. Use the MCP connection to explore tables
@@ -289,12 +286,12 @@ Serve lakehouse data to other applications:
 
 > "Build a FastAPI application that connects to Dremio using dremioframe. Create endpoints for device metrics, alert summaries, and historical trends. Include request validation, response caching with a 5-minute TTL, and auto-generated API docs."
 
-OpenWork generates the complete server with proper error handling and connection management. Run `uvicorn main:app --reload` for a local API connected to your lakehouse.
+OpenWork generates the complete server with proper error handling and connection management. Run `uvicorn main:app -reload` for a local API connected to your lakehouse.
 
 ## Which Approach Should You Use?
 
 | Approach | Setup Time | What You Get | Best For |
-|----------|-----------|--------------|----------|
+|-----|------|-------|-----|
 | MCP Server | 5 minutes | Live queries, schema browsing, catalog | NL data exploration, building apps |
 | AGENTS.md | 10 minutes | Convention enforcement, cross-tool portable | Multi-tool teams |
 | Pre-Built Skills | 5 minutes | Broad Dremio knowledge | Quick start |

@@ -1,7 +1,7 @@
 ---
 title: "When Gatekeepers Panic: The Encyclopédie, Open AI Models, and the Politics of Accessible Knowledge"
 date: 2026-07-06T09:00:00Z
-description: "The fight over open AI models mirrors the 18th-century suppression of Diderot's Encyclopédie, revealing the same pattern of institutional fear of accessible knowledge."
+description: "The fight over open AI models mirrors the 18th-century suppression of Diderot's Encyclopédie, revealing the same pattern of institutional fear."
 author: "Alex Merced"
 category: "AI & Society"
 tags:
@@ -16,13 +16,13 @@ image: /images/blog.png
 canonical: https://iceberglakehouse.com/posts/when-gatekeepers-panic/
 ---
 
-> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/when-gatekeepers-panic/).
-
 *By Alex Merced*
+
+> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/when-gatekeepers-panic/).
 
 In 1759, Pope Clement XIII ordered the owners of a book to hand their copies to a priest for burning. The penalty for refusal was excommunication. That same year, King Louis XV of France banned the book outright. The offending work was not a heresy tract or a revolutionary pamphlet. It was an encyclopedia.
 
-In 2026, lawmakers across 45 American states have introduced more than 1,500 bills aimed at artificial intelligence. Executives at the largest AI labs argue in front of Congress that freely downloadable models pose risks the public cannot handle. Lobbyists push agencies to issue guidance that scares enterprises away from open alternatives. The offending technology is not a weapon. It is a tool that answers questions.
+In 2026, lawmakers across 45 American states have introduced more than 1, 500 bills aimed at artificial intelligence. Executives at the largest AI labs argue in front of Congress that freely downloadable models pose risks the public cannot handle. Lobbyists push agencies to issue guidance that scares enterprises away from open alternatives. The offending technology is not a weapon. It is a tool that answers questions.
 
 These two moments sit 275 years apart. The technology changed. The argument did not. In both cases, powerful institutions faced a tool that put knowledge directly into the hands of ordinary people. In both cases, those institutions reached for the same playbook: warn of danger, demand licensing, restrict distribution, and protect the intermediary's seat at the table.
 
@@ -32,7 +32,7 @@ This article walks through the history of the fight over Diderot's Encyclopédie
 
 The Encyclopédie, ou Dictionnaire raisonné des sciences, des arts et des métiers, began as a modest translation project. French publisher André Le Breton wanted a French version of Ephraim Chambers' English Cyclopaedia. He hired Denis Diderot, a broke translator and philosopher, to run it. Diderot had bigger ideas. He recruited the mathematician Jean le Rond d'Alembert as co-editor and expanded the plan into something without precedent: a complete survey of human knowledge, written by more than 140 contributors, spanning science, philosophy, politics, religion, and the manual trades.
 
-Publication ran from 1751 to 1772. The finished work filled 28 volumes, with 17 volumes of text and 11 volumes of engraved plates. Contributors included Voltaire, Rousseau, and Montesquieu. The entry count passed 60,000. Nothing on this scale had existed before.
+Publication ran from 1751 to 1772. The finished work filled 28 volumes, with 17 volumes of text and 11 volumes of engraved plates. Contributors included Voltaire, Rousseau, and Montesquieu. The entry count passed 60, 000. Nothing on this scale had existed before.
 
 Two design choices made the project explosive. The first was its treatment of the trades. Diderot sent writers into workshops to document how glassmakers, weavers, printers, and metalworkers actually did their work. The plates illustrated tools, techniques, and processes that guilds had guarded for centuries. Craft knowledge that took a seven-year apprenticeship to access now sat on a page anyone with the subscription price and reading ability was free to study.
 
@@ -68,7 +68,7 @@ Three different institutions, three different fears, one common thread. Each had
 
 Now shift to the present. The numbers tell the story of an institutional reaction gathering speed.
 
-In 2023, American state legislatures introduced fewer than 200 bills addressing artificial intelligence. In 2024, the count passed 600, with nearly 100 enacted. In 2025, all 50 states introduced AI bills for the first time, 1,208 in total, with 145 becoming law. By March 2026, lawmakers in 45 states had introduced 1,561 more, surpassing the entire 2024 total before most sessions even finished. Congress, meanwhile, has passed exactly one AI-specific federal law, the Take It Down Act covering nonconsensual deepfake imagery.
+In 2023, American state legislatures introduced fewer than 200 bills addressing artificial intelligence. In 2024, the count passed 600, with nearly 100 enacted. In 2025, all 50 states introduced AI bills for the first time, 1, 208 in total, with 145 becoming law. By March 2026, lawmakers in 45 states had introduced 1, 561 more, surpassing the entire 2024 total before most sessions even finished. Congress, meanwhile, has passed exactly one AI-specific federal law, the Take It Down Act covering nonconsensual deepfake imagery.
 
 The bills cover algorithmic discrimination, hiring decisions, chatbot safety for minors, deepfakes, insurance underwriting, and dozens of other categories. Some address genuine, documented harms. Nonconsensual intimate imagery is a real injury with real victims. Algorithmic discrimination in lending and hiring has a real evidentiary record. Child safety in companion chatbots responds to real tragedies. Nothing in the historical parallel excuses harm or argues against accountability for it.
 
@@ -104,7 +104,7 @@ One irony deserves its own paragraph. The labs argue that Chinese open models ar
 
 One more chapter of the Encyclopédie story deserves attention, since it predicts the endgame of the current fight. The original folio edition was a luxury product. A full subscription cost roughly the annual income of a skilled worker. The bans of 1759 targeted this expensive, traceable, subscriber-listed edition, and the censors counted the containment a success.
 
-Then the price collapsed. Publishers outside French control, in Geneva, Neuchâtel, and Lausanne, issued cheaper quarto and octavo reprints in the 1770s. The historian Robert Darnton traced the numbers in his study of the trade. Around 25,000 sets of the Encyclopédie circulated in Europe before 1789, and the cheap editions sold most of them, reaching lawyers, doctors, merchants, and provincial administrators far below the original subscriber class. The banned book became a bestseller in the very country that banned it, smuggled across the border in bales. The censorship regime raised the price of access for a decade and a half. It changed the destination of the profits from Paris to Switzerland. It stopped nothing.
+Then the price collapsed. Publishers outside French control, in Geneva, Neuchâtel, and Lausanne, issued cheaper quarto and octavo reprints in the 1770s. The historian Robert Darnton traced the numbers in his study of the trade. Around 25, 000 sets of the Encyclopédie circulated in Europe before 1789, and the cheap editions sold most of them, reaching lawyers, doctors, merchants, and provincial administrators far below the original subscriber class. The banned book became a bestseller in the very country that banned it, smuggled across the border in bales. The censorship regime raised the price of access for a decade and a half. It changed the destination of the profits from Paris to Switzerland. It stopped nothing.
 
 The AI version of the cheap quarto edition already exists, and it arrived through the same mechanism: producers outside the incumbents' jurisdiction who noticed the demand. DeepSeek trained frontier-adjacent models for a reported fraction of American budgets and released the weights. Qwen, Kimi, and GLM followed on aggressive cadences. Distillation, the practice of training a small model on the outputs of a large one, compresses frontier capability into packages that run on consumer hardware, exactly the way octavo printing compressed 28 folio volumes into something a country lawyer's shelf held. The closed labs call distillation theft, an accusation with real legal substance and limited practical force, and the same tone the Paris guild took toward the Swiss printers. Nathan Lambert notes that an open weight model reaching top-tier closed capability is now inevitable, and that this inevitability, more than any specific harm, is what drives the regulatory push.
 
@@ -164,7 +164,7 @@ The second part of the answer concedes the strongest point of the speed objectio
 
 The 18th century ran this experiment too, with the roles cast the same way. Individual readers absorbed the Encyclopédie within a subscription cycle. French institutions took four decades and a revolution to adjust. The countries that fared best were not the ones whose institutions moved fastest to restrict. They were the ones whose institutions restricted least. They kept the widest channel open for individual adaptation until the formal structures caught up. The Dutch printed what France banned and captured the publishing economy. Britain, with the loosest censorship in Europe, absorbed radical print culture without a revolution. The turbulence correlated with suppression, not with openness. Institutions that fought the adaptation of their own citizens converted a manageable adjustment into a rupture.
 
-The lesson transfers cleanly. Institutional lag is survivable when individuals are free to adapt ahead of the institutions. It becomes catastrophic when institutions use their lag as a reason to hold individuals back to institutional speed. The 1,561 state bills of early 2026 are not all equal on this test. Bills that target specific harms, deepfake abuse, discriminatory decisions, child safety, let individual adaptation proceed and clean up genuine damage. Bills that gate model access, mandate approval regimes, or impose liability structures only incumbents can carry, hold the public to the speed of the slowest regulator. The first category is institutions doing their job. The second is institutions doing the guilds' job.
+The lesson transfers cleanly. Institutional lag is survivable when individuals are free to adapt ahead of the institutions. It becomes catastrophic when institutions use their lag as a reason to hold individuals back to institutional speed. The 1, 561 state bills of early 2026 are not all equal on this test. Bills that target specific harms, deepfake abuse, discriminatory decisions, child safety, let individual adaptation proceed and clean up genuine damage. Bills that gate model access, mandate approval regimes, or impose liability structures only incumbents can carry, hold the public to the speed of the slowest regulator. The first category is institutions doing their job. The second is institutions doing the guilds' job.
 
 ## The Legitimate Core of the Fear
 

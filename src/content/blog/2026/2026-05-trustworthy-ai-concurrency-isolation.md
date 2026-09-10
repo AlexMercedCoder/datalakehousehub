@@ -1,7 +1,7 @@
 ---
 title: "Trustworthy AI in the Agentic Lakehouse: Reconciling Concurrency and Isolation Contracts"
 date: 2026-05-28T09:00:00Z
-description: "Hundreds of AI agents querying simultaneously create concurrency and isolation problems. Learn how Iceberg OCC, Dremio FGAC, and guardrail policies ensure trustworthy AI in the lakehouse."
+description: "Hundreds of AI agents querying simultaneously create concurrency and isolation problems. Learn how Iceberg OCC, Dremio FGAC, and guardrail policies ensure."
 author: "Alex Merced"
 category: "Agentic Lakehouse"
 tags:
@@ -10,10 +10,9 @@ slug: "trustworthy-ai-concurrency-isolation"
 draft: false
 image: "/images/blog.png"
 ---
-
 # Trustworthy AI in the Agentic Lakehouse: Reconciling Concurrency and Isolation Contracts
 
-A single AI agent querying your lakehouse is manageable. A hundred AI agents :  running automated monitoring, answering stakeholder questions, generating reports, and powering agentic workflows ,  create concurrency and isolation problems that traditional data architectures weren't designed for.
+A single AI agent querying your lakehouse is manageable. A hundred AI agents : running automated monitoring, answering stakeholder questions, generating reports, and powering agentic workflows, create concurrency and isolation problems that traditional data architectures weren't designed for.
 
 Human analysts are slow. They ask questions sequentially, pause to think, and rarely trigger more than a handful of concurrent queries against the same table. AI agents are fast and relentless. They can run dozens of queries per minute, issue transactions that interleave with other agents' writes, and hit edge cases in concurrency control that human query patterns never surface.
 

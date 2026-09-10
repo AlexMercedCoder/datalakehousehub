@@ -17,11 +17,11 @@ image: "/images/blog.png"
 canonical: "https://iceberglakehouse.com/posts/iceberg-across-the-hyperscalers/"
 ---
 
-> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/iceberg-across-the-hyperscalers/).
-
 # Apache Iceberg Support Across the Major Hyperscalers
 
 Every few weeks I get a version of the same question. A team has standardized on Apache Iceberg, they run most of their workloads on one cloud, and they want to know whether that cloud's Iceberg support is real or whether it is a checkbox on a slide. The answer is never a simple yes or no, because "Iceberg support" is not one feature. It is five or six separate capabilities that a vendor can ship independently, and each of the three big clouds has shipped them in a different order.
+
+> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/iceberg-across-the-hyperscalers/).
 
 A note on where this comes from. I have spent the last several years working with teams wiring these services together, writing and teaching about open table formats, and most of what follows comes from watching those projects succeed and fail rather than from vendor documentation alone. I have a stake in open formats staying open, and I try to be plain about the tradeoffs on every side.
 
@@ -124,7 +124,7 @@ Azure also has a non-Fabric story that predates all this, since Synapse Analytic
 ## Side by side
 
 | Capability | AWS | Google Cloud | Microsoft Azure |
-| --- | --- | --- | --- |
+| -- | -- | -- | -- |
 | Native Iceberg storage primitive | S3 Tables table buckets, Iceberg built into the object store | Cloud Storage with catalog-managed tables | OneLake, Delta-native with Iceberg virtualization |
 | Managed Iceberg REST catalog | S3 Tables catalog API and Glue Data Catalog Iceberg REST endpoint | Lakehouse runtime catalog, formerly BigLake metastore | OneLake table APIs, Iceberg REST Catalog spec |
 | Warehouse engine integration | Redshift, including RMS tables through Iceberg APIs | BigQuery Iceberg managed tables with multi-statement transactions | Fabric Warehouse and SQL analytics endpoint over OneLake |
@@ -163,7 +163,7 @@ Orphan files pile up from failed jobs. A writer that dies after writing data fil
 
 The three clouds handle this differently, and it is one of the clearest points of separation. S3 Tables run compaction, snapshot management, and unreferenced file removal continually as a property of the table bucket. BigQuery-managed Iceberg tables get warehouse-style automatic management. Fabric manages its own tables inside Fabric. Tables you create yourself on general purpose storage with a self-managed catalog get exactly the maintenance you schedule and no more.
 
-My advice on this has not changed in years. If you run self-managed tables, make maintenance a named pipeline with an owner, a schedule, and alerting, the same as any production job. If you use a managed table type, verify what the maintenance policy actually does and confirm it is on. The failure mode is silent. Nothing breaks. Queries just get slower every week until somebody profiles a dashboard and finds 400,000 files where 4,000 belong.
+My advice on this has not changed in years. If you run self-managed tables, make maintenance a named pipeline with an owner, a schedule, and alerting, the same as any production job. If you use a managed table type, verify what the maintenance policy actually does and confirm it is on. The failure mode is silent. Nothing breaks. Queries just get slower every week until somebody profiles a dashboard and finds 400, 000 files where 4, 000 belong.
 
 ## Where cross-cloud setups break
 
@@ -193,38 +193,23 @@ The payoff for the REST catalog standard is that a single client library talks t
 from pyiceberg.catalog import load_catalog
 from azure.identity import DefaultAzureCredential
 
-# --- AWS: Glue Data Catalog Iceberg REST endpoint ---
+# -- AWS: Glue Data Catalog Iceberg REST endpoint --
 # SigV4 signing is the key detail. The endpoint is a standard Iceberg
 # REST catalog, but AWS authenticates it with its own request signing
 # rather than a bearer token, so the client signs each call as a
 # "glue" service request in the target region.
 aws_catalog = load_catalog(
-    "aws_lakehouse",
-    **{
-        "type": "rest",
-        "uri": "https://glue.us-east-1.amazonaws.com/iceberg",
-        "rest.sigv4-enabled": "true",
-        "rest.signing-name": "glue",
-        "rest.signing-region": "us-east-1",
-    },
-)
+ "aws_lakehouse", **{
+ "type": "rest", "uri": "https://glue.us-east-1.amazonaws.com/iceberg", "rest.sigv4-enabled": "true", "rest.signing-name": "glue", "rest.signing-region": "us-east-1", }, )
 
-# --- Google Cloud: Lakehouse runtime catalog (BigLake metastore) ---
+# -- Google Cloud: Lakehouse runtime catalog (BigLake metastore) --
 # The warehouse value is a full resource path, not a bucket URI.
-# That is the tell that the catalog, not the storage location,
-# is the unit of organization on Google Cloud.
+# That is the tell that the catalog, not the storage location, # is the unit of organization on Google Cloud.
 gcp_catalog = load_catalog(
-    "gcp_lakehouse",
-    **{
-        "type": "rest",
-        "uri": "https://biglake.googleapis.com/iceberg/v1/restcatalog",
-        "warehouse": "gs://my-lakehouse-bucket/warehouse",
-        "header.X-Goog-User-Project": "my-project-id",
-        "token": gcp_access_token,
-    },
-)
+ "gcp_lakehouse", **{
+ "type": "rest", "uri": "https://biglake.googleapis.com/iceberg/v1/restcatalog", "warehouse": "gs://my-lakehouse-bucket/warehouse", "header.X-Goog-User-Project": "my-project-id", "token": gcp_access_token, }, )
 
-# --- Microsoft: OneLake table APIs ---
+# -- Microsoft: OneLake table APIs --
 # The catalog name is workspaceID/dataItemID, which scopes the client
 # to one Fabric data item. The token audience is Azure Storage, the
 # same audience used for OneLake filesystem calls.
@@ -232,19 +217,13 @@ credential = DefaultAzureCredential()
 onelake_token = credential.get_token("https://storage.azure.com/.default").token
 
 azure_catalog = load_catalog(
-    "onelake",
-    **{
-        "type": "rest",
-        "uri": "https://onelake.table.fabric.microsoft.com/iceberg",
-        "warehouse": "<workspace-id>/<data-item-id>",
-        "token": onelake_token,
-    },
-)
+ "onelake", **{
+ "type": "rest", "uri": "https://onelake.table.fabric.microsoft.com/iceberg", "warehouse": "<workspace-id>/<data-item-id>", "token": onelake_token, }, )
 
 # From here the API is identical regardless of which catalog you loaded.
 for catalog in (aws_catalog, gcp_catalog, azure_catalog):
-    for namespace in catalog.list_namespaces():
-        print(namespace, catalog.list_tables(namespace))
+ for namespace in catalog.list_namespaces():
+ print(namespace, catalog.list_tables(namespace))
 ```
 
 Walk through what differs and what does not.
@@ -258,19 +237,14 @@ The `warehouse` parameter means something different on each cloud. On Google it 
 Spark configuration follows the same shape. You set `spark.sql.catalog.<name>` to `org.apache.iceberg.spark.SparkCatalog`, set `catalog-impl` or `type` to point at REST, and supply the same URI and auth values. The Iceberg Spark runtime JAR handles the rest.
 
 ```sql
--- Once the catalog is registered, ordinary SQL works against any of them.
+- Once the catalog is registered, ordinary SQL works against any of them.
 CREATE TABLE aws_lakehouse.sales.orders (
-    order_id      BIGINT,
-    customer_id   BIGINT,
-    order_ts      TIMESTAMP,
-    amount        DECIMAL(12,2),
-    payload       VARIANT
+ order_id BIGINT, customer_id BIGINT, order_ts TIMESTAMP, amount DECIMAL(12, 2), payload VARIANT
 )
 USING iceberg
 PARTITIONED BY (days(order_ts))
 TBLPROPERTIES (
-    'format-version' = '3',
-    'write.target-file-size-bytes' = '536870912'
+ 'format-version' = '3', 'write.target-file-size-bytes' = '536870912'
 );
 ```
 
@@ -280,15 +254,15 @@ Two properties there matter for portability. Setting `format-version` explicitly
 
 Here is the decision path I walk teams through.
 
-**If your workloads are already on one cloud and staying there,** use that cloud's managed Iceberg path and take the maintenance automation. The interoperability arguments matter less when there is one consumer, and the operational savings are immediate.
+**If your workloads are already on one cloud and staying there, ** use that cloud's managed Iceberg path and take the maintenance automation. The interoperability arguments matter less when there is one consumer, and the operational savings are immediate.
 
-**If you have a real second engine, on the same cloud or another one,** the catalog decision becomes the architecture decision. Pick a catalog whose REST implementation supports the full set of operations both engines need, verify credential vending on both clients, and designate exactly one catalog as the writer of record per table.
+**If you have a real second engine, on the same cloud or another one, ** the catalog decision becomes the architecture decision. Pick a catalog whose REST implementation supports the full set of operations both engines need, verify credential vending on both clients, and designate exactly one catalog as the writer of record per table.
 
-**If you are on Azure and Iceberg is a hard requirement rather than a preference,** understand the virtualization model before committing. Delta-native storage with generated Iceberg metadata behaves well for read interoperability and has constraints on the write side. Confirm the current state of write support against Microsoft's documentation for your specific pattern, because this area has been moving quickly.
+**If you are on Azure and Iceberg is a hard requirement rather than a preference, ** understand the virtualization model before committing. Delta-native storage with generated Iceberg metadata behaves well for read interoperability and has constraints on the write side. Confirm the current state of write support against Microsoft's documentation for your specific pattern, because this area has been moving quickly.
 
-**If you expect to move data between clouds regularly,** stop and cost it out first. Egress and cross-region planning latency dominate. Copying a narrow subset on a schedule often beats live cross-cloud reads, and federation at the query layer beats both for exploratory work.
+**If you expect to move data between clouds regularly, ** stop and cost it out first. Egress and cross-region planning latency dominate. Copying a narrow subset on a schedule often beats live cross-cloud reads, and federation at the query layer beats both for exploratory work.
 
-**If your organization has a policy requirement for vendor-neutral infrastructure,** run an open catalog such as Apache Polaris yourself or through a vendor, and treat cloud-native catalogs as federated sources rather than as the system of record.
+**If your organization has a policy requirement for vendor-neutral infrastructure, ** run an open catalog such as Apache Polaris yourself or through a vendor, and treat cloud-native catalogs as federated sources rather than as the system of record.
 
 One habit is worth more than any of the above. Write down, for every table, which catalog owns it, which system writes to it, what its format version is, and who runs its maintenance. Four facts per table. Teams that keep that list have calm migrations. Teams that do not spend their migration doing forensics.
 

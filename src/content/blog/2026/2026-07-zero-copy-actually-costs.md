@@ -1,6 +1,6 @@
 ---
 title: "What Zero-Copy Actually Costs"
-description: "Six architectures share the phrase zero-copy, and they have different costs, failure modes, and governance stories. A walk through federation, virtualization, sharing protocols, and materialization."
+description: "Six architectures share the phrase zero-copy, and they have different costs, failure modes, and governance stories."
 date: 2026-07-25T09:00:00Z
 author: "Alex Merced"
 category: "Data Engineering"
@@ -16,9 +16,9 @@ image: "/images/blog.png"
 canonical: https://iceberglakehouse.com/posts/zero-copy-actually-costs/
 ---
 
-> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/zero-copy-actually-costs/).
-
 A vendor demo I watched last year ended with a slide that said "no data movement." Thirty seconds earlier, the presenter had run a query joining a cloud warehouse table to an operational database and returned results in four seconds. Both statements were true. The bytes still moved. They moved over a network, from one region, into an engine, and then most of them were discarded after a filter that the remote system never saw.
+
+> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/zero-copy-actually-costs/).
 
 The phrase "zero-copy" has become the most overloaded term in data architecture. Six genuinely different architectures use it, they have different failure modes, different cost profiles, and different governance stories, and buyers keep comparing them as if they were the same thing. A team picks the wrong one, discovers the cost in production, and concludes that federation does not work or that sharing is slow. Usually the technology was fine and the fit was wrong.
 
@@ -91,12 +91,12 @@ Reading the same logical data through three of these patterns makes the differen
 ```python
 import delta_sharing
 
-profile = "config.share"          # endpoint, token, expiration
+profile = "config.share" # endpoint, token, expiration
 client = delta_sharing.SharingClient(profile)
 
 for share in client.list_shares():
-    for schema in client.list_schemas(share):
-        print([t.name for t in client.list_tables(schema)])
+ for schema in client.list_schemas(share):
+ print([t.name for t in client.list_tables(schema)])
 
 url = f"{profile}#sales_share.public.orders"
 df = delta_sharing.load_as_pandas(url, limit=1_000_000)
@@ -107,23 +107,18 @@ The token authorizes the recipient against the provider's sharing server. The se
 **Catalog federation over the Iceberg REST specification.** Here the recipient's engine treats a remote catalog as one of its own.
 
 ```sql
--- Register an external Iceberg REST catalog as a linked database.
+- Register an external Iceberg REST catalog as a linked database.
 CREATE CATALOG INTEGRATION partner_iceberg
-    CATALOG_SOURCE = ICEBERG_REST
-    REST_CONFIG = (
-        CATALOG_URI = 'https://partner.example.com/api/catalog',
-        WAREHOUSE = 'shared_analytics'
-    )
-    REST_AUTHENTICATION = (
-        TYPE = OAUTH,
-        OAUTH_TOKEN_URI = 'https://partner.example.com/oauth/tokens',
-        OAUTH_CLIENT_ID = '<client-id>',
-        OAUTH_CLIENT_SECRET = '<secret>',
-        OAUTH_ALLOWED_SCOPES = ('PRINCIPAL_ROLE:ALL')
-    )
-    ENABLED = TRUE;
+ CATALOG_SOURCE = ICEBERG_REST
+ REST_CONFIG = (
+ CATALOG_URI = 'https://partner.example.com/api/catalog', WAREHOUSE = 'shared_analytics'
+ )
+ REST_AUTHENTICATION = (
+ TYPE = OAUTH, OAUTH_TOKEN_URI = 'https://partner.example.com/oauth/tokens', OAUTH_CLIENT_ID = '<client-id>', OAUTH_CLIENT_SECRET = '<secret>', OAUTH_ALLOWED_SCOPES = ('PRINCIPAL_ROLE:ALL')
+ )
+ ENABLED = TRUE;
 
--- Tables discovered through that catalog now query like local ones.
+- Tables discovered through that catalog now query like local ones.
 SELECT region, SUM(amount)
 FROM partner_db.public.orders
 WHERE order_date >= '2026-07-01'
@@ -139,10 +134,10 @@ EXPLAIN
 SELECT c.account_tier, COUNT(*) AS open_orders
 FROM lakehouse.sales.orders AS o
 JOIN crm_postgres.public.accounts AS c
-  ON o.customer_id = c.customer_id
+ ON o.customer_id = c.customer_id
 WHERE o.status = 'OPEN'
-  AND c.region = 'EMEA'
-  AND c.created_at >= DATE '2024-01-01'
+ AND c.region = 'EMEA'
+ AND c.created_at >= DATE '2024-01-01'
 GROUP BY c.account_tier;
 ```
 
@@ -183,7 +178,7 @@ The failure this causes is not technical. It is a conversation where two teams b
 ## Putting the Six Side by Side
 
 | Pattern | Copies data | Main cost | Freshness | Best fit | Worst fit |
-|---|---|---|---|---|---|
+|--|--|--|--|--|--|
 | Federated query | No | Network, repeated scan, source load | Source-current | Reference data, low query volume, data you cannot copy | High-concurrency dashboards, heavy joins across sources |
 | Format virtualization | No | Metadata generation, translation fidelity | Near source-current | Cross-format interoperability on one storage estate | Cases needing format-specific features on both sides |
 | Sharing protocol | No | Provider egress, no local optimization | Provider's published snapshot | Cross-organization and cross-platform delivery | Chatty access patterns from distant regions |

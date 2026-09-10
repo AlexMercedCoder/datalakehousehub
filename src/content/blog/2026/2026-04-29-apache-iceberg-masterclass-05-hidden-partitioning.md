@@ -2,7 +2,7 @@
 title: "Hidden Partitioning: How Iceberg Eliminates Accidental Full Table Scans"
 date: 2026-04-29T09:05:00Z
 pubDatetime: 2026-04-29T09:05:00Z
-description: "Iceberg's hidden partitioning separates physical layout from user queries using transform functions. Here is how it works and why it eliminates accidental full scans."
+description: "Iceberg's hidden partitioning separates physical layout from user queries using transform functions."
 author: "Alex Merced"
 category: "Data Lakehouse"
 tags:
@@ -14,11 +14,12 @@ draft: false
 image: "/images/blog/apache-iceberg-masterclass/05-hidden-partitioning-exposed-vs-hidden-partitioning.png"
 canonical: "https://iceberglakehouse.com/posts/2026-04-29-iceberg-masterclass-05/"
 ---
-> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-04-29-iceberg-masterclass-05/).
 
-<!-- Meta Description: Iceberg's hidden partitioning separates physical layout from user queries using transform functions. Here is how it works and why it eliminates accidental full scans. -->
-<!-- Primary Keyword: Iceberg hidden partitioning -->
-<!-- Secondary Keywords: partition transforms, accidental full table scan, bucket partitioning -->
+<!- Meta Description: Iceberg's hidden partitioning separates physical layout from user queries using transform functions. Here is how it works and why it eliminates accidental full scans. ->
+<!- Primary Keyword: Iceberg hidden partitioning ->
+<!- Secondary Keywords: partition transforms, accidental full table scan, bucket partitioning ->
+
+> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-04-29-iceberg-masterclass-05/).
 
 *Read the complete Apache Iceberg Masterclass series:*
 * [Part 1: What Are Table Formats and Why Were They Needed?](/blog/2026-04-29-apache-iceberg-masterclass-01-table-formats)
@@ -47,10 +48,10 @@ The most expensive mistake in data lake querying is the accidental full table sc
 In Hive, a table partitioned by `year`, `month`, and `day` requires queries to filter on those exact columns:
 
 ```sql
--- Hive: This prunes correctly
+- Hive: This prunes correctly
 SELECT * FROM orders WHERE year = 2024 AND month = 3 AND day = 15
 
--- Hive: This scans EVERYTHING (no pruning)
+- Hive: This scans EVERYTHING (no pruning)
 SELECT * FROM orders WHERE order_date = '2024-03-15'
 ```
 
@@ -63,7 +64,7 @@ This happens because Hive partitioning is "exposed." The physical partition colu
 Iceberg flips this model. Users filter on the source column (`order_date`), and the engine automatically maps the filter to the partition values using [transform functions](https://iceberg.apache.org/spec/#partitioning).
 
 ```sql
--- Iceberg: This prunes correctly. Always.
+- Iceberg: This prunes correctly. Always.
 SELECT * FROM orders WHERE order_date = '2024-03-15'
 ```
 
@@ -85,7 +86,7 @@ Iceberg defines six [partition transforms](https://iceberg.apache.org/spec/#part
 ### Temporal Transforms
 
 | Transform | Input | Output | Use Case |
-|---|---|---|---|
+|--|--|--|--|
 | `year(ts)` | `2024-03-15 10:30:00` | `2024` | Low-volume tables, yearly reporting |
 | `month(ts)` | `2024-03-15 10:30:00` | `2024-03` | Medium-volume tables, monthly queries |
 | `day(ts)` | `2024-03-15 10:30:00` | `2024-03-15` | High-volume tables, daily queries |
@@ -96,7 +97,7 @@ The temporal transforms are hierarchical. If a table is partitioned by `day(ts)`
 ### Value Transforms
 
 | Transform | Input | Output | Use Case |
-|---|---|---|---|
+|--|--|--|--|
 | `truncate(N, col)` | `'New York'` (N=3) | `'New'` | Grouping strings by prefix |
 | `bucket(N, col)` | `12345` (N=16) | `7` | Even distribution of high-cardinality columns |
 
@@ -127,7 +128,7 @@ This is the same pruning cascade described in [Part 3](/blog/2026-04-29-apache-i
 The choice of partition transform depends on data volume and query patterns:
 
 | Scenario | Recommended Transform | Rationale |
-|---|---|---|
+|--|--|--|
 | 10 GB/day of event data | `day(event_time)` | Each day is one partition (~10 GB), well-sized files |
 | 1 TB/day of event data | `hour(event_time)` | Each hour is ~42 GB, prevents oversized partitions |
 | 500 MB/month of reports | `month(report_date)` | Monthly partitions keep file counts manageable |
@@ -144,10 +145,7 @@ Iceberg supports multi-column partition specs:
 
 ```sql
 CREATE TABLE events (
-  event_id BIGINT,
-  event_time TIMESTAMP,
-  user_id BIGINT,
-  event_type STRING
+ event_id BIGINT, event_time TIMESTAMP, user_id BIGINT, event_type STRING
 ) PARTITIONED BY (day(event_time), bucket(32, user_id))
 ```
 

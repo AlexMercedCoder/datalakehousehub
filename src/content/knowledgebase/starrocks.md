@@ -1,7 +1,7 @@
 ---
 title: "What is StarRocks?"
 meta_title: "What is StarRocks? | Expert Data Lakehouse & AI Glossary"
-description: "A high-performance analytical database designed for real-time, multi-dimensional analytics and blazing fast query speeds. Learn the architecture, mechanics, and real-world value of StarRocks in the modern data stack."
+description: "A high-performance analytical database designed for real-time, multi-dimensional analytics and blazing fast query speeds."
 ---
 
 ## What is StarRocks?

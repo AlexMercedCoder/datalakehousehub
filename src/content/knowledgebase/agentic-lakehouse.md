@@ -2,6 +2,7 @@
 title: "What is the Agentic Lakehouse?"
 meta_title: "What is an Agentic Lakehouse? | Expert Data Architecture Guide"
 description: "A comprehensive guide to the Agentic Lakehouse. Learn how Dremio’s architecture exposes massive open data specifically for autonomous AI consumption."
+canonical: "https://iceberglakehouse.com/agentic-lakehouse/"
 ---
 
 # What is the Agentic Lakehouse?

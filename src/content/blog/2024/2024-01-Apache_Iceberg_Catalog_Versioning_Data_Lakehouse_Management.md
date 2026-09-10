@@ -13,9 +13,10 @@ tags:
   - Apache Iceberg
 canonical: "https://iceberglakehouse.com/posts/2024-1-apache-iceberg-git-life-catalog-versioning/"
 ---
-> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2024-1-apache-iceberg-git-life-catalog-versioning/).
 
 Managing vast amounts of data efficiently and effectively is crucial for any organization aiming to leverage its data for strategic decisions. The key to unlocking this potential lies in advanced data management practices, particularly in versioning and catalog management. This is where the combined power of Dremio’s Lakehouse Management features and Project Nessie's catalog-level versioning comes into play.
+
+> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2024-1-apache-iceberg-git-life-catalog-versioning/).
 
 > [Blog: Try Dremio and Nessie on your laptop](https://www.dremio.com/blog/intro-to-dremio-nessie-and-apache-iceberg-on-your-laptop/?utm_source=alexmerced&utm_medium=external_blog&utm_campaign=legacy_post)
 
@@ -34,74 +35,65 @@ One of the standout features of Dremio's Lakehouse Management is its [automated 
 To truly appreciate the impact of these advancements in data management, let’s dive into a practical example. This example can be in any Dremio environment with a self-managed Nessie catalog or an Arctic catalog from Dremio Cloud. We'll breakdown this example after the code snippet.
 
 ```sql
--- Creating the main employee data table in the default branch
+- Creating the main employee data table in the default branch
 CREATE TABLE HR_EmployeeData (
-    employeeId INT,
-    employeeName VARCHAR,
-    department VARCHAR,
-    salary FLOAT,
-    startDate DATE
+ employeeId INT, employeeName VARCHAR, department VARCHAR, salary FLOAT, startDate DATE
 );
 
--- Creating a staging table for incoming employee data updates in the default branch
+- Creating a staging table for incoming employee data updates in the default branch
 CREATE TABLE HR_StagingEmployeeData (
-    employeeId INT,
-    employeeName VARCHAR,
-    department VARCHAR,
-    salary FLOAT,
-    startDate DATE
+ employeeId INT, employeeName VARCHAR, department VARCHAR, salary FLOAT, startDate DATE
 );
 
--- Inserting sample employee data into the staging table
+- Inserting sample employee data into the staging table
 INSERT INTO HR_StagingEmployeeData (employeeId, employeeName, department, salary, startDate) VALUES
-(1, 'John Doe', 'Finance', 55000, '2021-01-01'),
-(2, 'Jane Smith', 'Marketing', -48000, '2022-01-02'),  -- Negative salary (problematic)
-(3, 'Alice Johnson', 'IT', 62000, '2023-02-15');       -- Future date (problematic)
+(1, 'John Doe', 'Finance', 55000, '2021-01-01'), (2, 'Jane Smith', 'Marketing', -48000, '2022-01-02'), Negative salary (problematic)
+(3, 'Alice Johnson', 'IT', 62000, '2023-02-15');, Future date (problematic)
 
--- Creating a new branch for data integration
+- Creating a new branch for data integration
 CREATE BRANCH HR_dataIntegration_010224;
 
--- Switching to the dataIntegration branch
+- Switching to the dataIntegration branch
 USE BRANCH HR_dataIntegration_010224;
 
--- Merging staging data into the EmployeeData table on the dataIntegration branch
+- Merging staging data into the EmployeeData table on the dataIntegration branch
 MERGE INTO HR_EmployeeData AS target
 USING HR_StagingEmployeeData AS source
 ON target.employeeId = source.employeeId
 WHEN MATCHED THEN
-    UPDATE SET employeeName = source.employeeName, department = source.department, salary = source.salary, startDate = source.startDate
+ UPDATE SET employeeName = source.employeeName, department = source.department, salary = source.salary, startDate = source.startDate
 WHEN NOT MATCHED THEN
-    INSERT (employeeId, employeeName, department, salary, startDate) VALUES (source.employeeId, source.employeeName, source.department, source.salary, source.startDate);
+ INSERT (employeeId, employeeName, department, salary, startDate) VALUES (source.employeeId, source.employeeName, source.department, source.salary, source.startDate);
 
--- Performing data quality checks on the dataIntegration branch
--- Check for non-negative salaries
+- Performing data quality checks on the dataIntegration branch
+- Check for non-negative salaries
 SELECT COUNT(*) AS InvalidSalaryCount
 FROM HR_EmployeeData
 WHERE salary < 0;
 
--- Check for valid start dates (not in the future)
+- Check for valid start dates (not in the future)
 SELECT COUNT(*) AS InvalidStartDateCount
 FROM HR_EmployeeData
 WHERE startDate > CURRENT_DATE;
 
--- QUERY MAIN BRANCH
+- QUERY MAIN BRANCH
 SELECT * FROM HR_EmployeeData AT BRANCH main;
 
--- QUERY INGESTION BRANCH
+- QUERY INGESTION BRANCH
 SELECT * FROM HR_EmployeeData AT BRANCH HR_dataIntegration_010224;
 
--- Assuming checks have passed, switch back to the main branch and merge changes from dataIntegration
+- Assuming checks have passed, switch back to the main branch and merge changes from dataIntegration
 USE BRANCH main;
 MERGE BRANCH HR_dataIntegration_010224 INTO main;
 
--- QUERY MAIN BRANCH
+- QUERY MAIN BRANCH
 SELECT * FROM HR_EmployeeData AT BRANCH main;
 
--- QUERY INGESTION BRANCH
+- QUERY INGESTION BRANCH
 SELECT * FROM HR_EmployeeData AT BRANCH HR_dataIntegration_010224;
 
--- The checks for data quality (negative salaries and future start dates) are simplified for this example.
--- In a real-world scenario, more sophisticated validation logic and error handling would be required.
+- The checks for data quality (negative salaries and future start dates) are simplified for this example.
+- In a real-world scenario, more sophisticated validation logic and error handling would be required.
 ```
 
 In our scenario, we start by establishing two tables within our Dremio environment:
@@ -119,9 +111,7 @@ We simulate real-world data entries by inserting sample sales records into the `
 
 ```sql
 INSERT INTO DACStagingSalesData (id, productId, saleAmount, saleDate) VALUES
-(1, 101, 150.0, '2022-01-01'),
-(2, 102, -50.0, '2022-01-02'),
-(3, 103, 200.0, '2023-01-03');
+(1, 101, 150.0, '2022-01-01'), (2, 102, -50.0, '2022-01-02'), (3, 103, 200.0, '2023-01-03');
 ```
 
 Here’s where Nessie’s branching model plays a pivotal role. We create a new branch called dataIntegration_010224 for integrating our staging data. This branch acts as a sandbox where we can safely test and validate our data before it affects the main dataset.

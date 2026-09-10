@@ -1,7 +1,8 @@
 ---
 title: "What is Iceberg Catalog?"
 meta_title: "What is Iceberg Catalog? | Expert Data Lakehouse & AI Glossary"
-description: "A centralized repository tracking absolute current references maintaining atomic operational guarantees over table state pointers. Learn the architecture, mechanics, and real-world value of Iceberg Catalog in the modern data stack."
+description: "A centralized repository tracking absolute current references maintaining atomic operational guarantees over table state pointers."
+canonical: "https://iceberglakehouse.com/iceberg/iceberg-catalog/"
 ---
 
 ## What is Iceberg Catalog?

@@ -1,6 +1,6 @@
 ---
 title: "Iceberg Remote Signing for Regulated Datasets"
-description: "Iceberg REST catalog remote signing provides per-file pre-signed URL access for regulated datasets. How it differs from credential vending, audit trail capabilities, and Snowflake implementation for PII/compliance workloads."
+description: "Iceberg REST catalog remote signing provides per-file pre-signed URL access for regulated datasets."
 date: 2026-06-08T09:00:00Z
 slug: "iceberg-remote-signing-regulated-datasets"
 draft: false
@@ -14,7 +14,6 @@ tags:
   - "credential vs remote signing"
   - "PII data lakehouse"
 ---
-
 When a compute engine requests a file from object storage, the engine needs credentials. In a traditional architecture, those credentials are static keys with bucket-wide permissions. If they leak, every file in the bucket is exposed. Credential vending improves this by issuing short-lived, table-scoped tokens. But even vended credentials carry risk: the token can be used to read any file within its scope, and a compromised token grants file-level read or write access for its duration.
 
 Remote signing goes a step further. The compute engine never receives storage credentials at all. Instead, the engine requests a pre-signed URL for each specific file it needs to read or write. The signing endpoint returns a one-time-use URL that is scoped to a single object, a single operation (GET or PUT), and a short time window (typically 60-300 seconds). A leaked signed URL exposes one file for minutes, not one table for hours.
@@ -40,7 +39,7 @@ The IOMETE blog on Iceberg access delegation provides a useful analogy: "Remote 
 ## Remote Signing vs Credential Vending
 
 | Aspect | Credential Vending | Remote Signing |
-|--------|-------------------|----------------|
+|----|----------|--------|
 | What the engine receives | Short-lived storage tokens | Pre-signed individual request URLs |
 | Token scope | Table path (multiple files) | Single file |
 | Token duration | 5-60 minutes (configurable) | 60-300 seconds per URL |
@@ -70,7 +69,7 @@ Use remote signing when:
 Use credential vending when:
 
 - Performance is more important than per-file audit. Credential vending requires one catalog call per table, not per file.
-- Your workload reads many small files. A table with 10,000 small Parquet files would generate 10,000 signing requests, adding seconds of latency.
+- Your workload reads many small files. A table with 10, 000 small Parquet files would generate 10, 000 signing requests, adding seconds of latency.
 - Your object store is not S3-compatible. The current remote signing spec covers S3 only (via S3SignRequest). ADLS and GCS fall back to credential vending.
 - Your data is not regulated and your compliance requirements are satisfied by table-level access logs.
 
@@ -82,12 +81,12 @@ As of the v3 GA (May 2026), Snowflake supports remote signing for S3-based Icebe
 
 ```sql
 CREATE CATALOG INTEGRATION my_iceberg_catalog
-  CATALOG_SOURCE = ICEBERG_REST
-  REST_CONFIG = (
-    CATALOG_URI = 'https://horizon.snowflake.example.com/iceberg/rest'
-    REMOTE_SIGNING_ENABLED = TRUE
-    CREDENTIAL_VENDING_ENABLED = TRUE
-  );
+ CATALOG_SOURCE = ICEBERG_REST
+ REST_CONFIG = (
+ CATALOG_URI = 'https://horizon.snowflake.example.com/iceberg/rest'
+ REMOTE_SIGNING_ENABLED = TRUE
+ CREDENTIAL_VENDING_ENABLED = TRUE
+ );
 ```
 
 Both credential vending and remote signing can be enabled simultaneously. The engine requests its preferred delegation mode, and the catalog returns credentials or pre-signed URLs accordingly. If the engine requests remote signing but the storage backend does not support it, the catalog falls back to credential vending with a warning in the response headers.
@@ -127,9 +126,9 @@ Remote signing adds latency to the query path. Each file access requires a round
 
 The overhead is negligible for queries that read hundreds of files. Storage access latency (10-50 ms per S3 GET) dominates the query time. The signing overhead adds roughly 1-5% to the query latency for most workloads.
 
-The overhead becomes significant for metadata-heavy operations. Reading 10,000 small Parquet files (a common pattern in unoptimized Iceberg tables) would require 10,000 signing requests. Even with aggressive parallelism, the signing endpoint sees a spike of 10,000 requests, and the engine waits for all responses before proceeding. This is why remote signing is best paired with regular compaction jobs that reduce file count. A compacted table with 50-500 files sees minimal signing overhead.
+The overhead becomes significant for metadata-heavy operations. Reading 10, 000 small Parquet files (a common pattern in unoptimized Iceberg tables) would require 10, 000 signing requests. Even with aggressive parallelism, the signing endpoint sees a spike of 10, 000 requests, and the engine waits for all responses before proceeding. This is why remote signing is best paired with regular compaction jobs that reduce file count. A compacted table with 50-500 files sees minimal signing overhead.
 
-The signing endpoint itself must be provisioned for peak throughput. A catalog serving hundreds of concurrent queries may process 10,000-50,000 signing requests per second. Snowflake's Horizon Catalog backend (Polaris) is designed for this scale, with the signing service running on dedicated infrastructure separate from the metadata serving path.
+The signing endpoint itself must be provisioned for peak throughput. A catalog serving hundreds of concurrent queries may process 10, 000-50, 000 signing requests per second. Snowflake's Horizon Catalog backend (Polaris) is designed for this scale, with the signing service running on dedicated infrastructure separate from the metadata serving path.
 
 ## Server-Side Scan Planning with Remote Signing
 
@@ -161,6 +160,6 @@ The tradeoff is performance overhead for metadata-heavy queries. Remote signing 
 
 Snowflake Horizon Catalog, Apache Polaris, and the Iceberg REST spec all support remote signing for S3 storage. The combination of server-side scan planning (Iceberg 1.11+) with remote signing creates a governed data access path where the compute engine never sees storage credentials and never reads masked columns. For regulated lakehouse deployments, this is the most secure architecture available today.
 
----
+--
 
 *For the Iceberg REST catalog specification and remote signing details, visit [iceberg.apache.org/spec](https://iceberg.apache.org/spec). To implement remote signing in a governed multi-engine lakehouse, start a free trial at [dremio.com/get-started](https://www.dremio.com/get-started).*

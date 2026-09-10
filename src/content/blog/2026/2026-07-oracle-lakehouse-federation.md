@@ -1,6 +1,6 @@
 ---
 title: "Federating Oracle With an Open Lakehouse Instead of Migrating It"
-description: "Federate first so analytics work now, migrate what benefits from migrating, and leave the rest where it is indefinitely. Here's how pushdown and view layers make it work."
+description: "Federate first so analytics work now, migrate what benefits from migrating, and leave the rest where it is indefinitely."
 date: 2026-07-28T09:00:00Z
 author: "Alex Merced"
 category: "Apache Iceberg"
@@ -15,11 +15,11 @@ image: "/images/blog.png"
 canonical: "https://iceberglakehouse.com/posts/oracle-lakehouse-federation/"
 ---
 
-> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/oracle-lakehouse-federation/).
-
 # Federating Oracle With an Open Lakehouse Instead of Migrating It
 
 A team is eighteen months into moving reporting off Oracle. Forty percent of the tables are in Iceberg. The remaining sixty percent are the hard ones: schemas nobody fully understands, tables with triggers, and three that a compliance process depends on in ways documented only in a 2014 email.
+
+> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/oracle-lakehouse-federation/).
 
 Meanwhile every analytical question spanning both halves requires either a nightly export or a manual join, and the business has stopped believing the migration will finish.
 
@@ -54,7 +54,7 @@ So a plan whose value depends on finishing is a plan that does not deliver. Fede
 The two sequencings differ in when value arrives and in what happens if you stop.
 
 | | Migration-first | Federation-first |
-|---|---|---|
+|--|--|--|
 | First cross-system analytics | On completion | Week one |
 | Value if the program stops early | None | Proportional to what was built |
 | Consumer coordination cost | Once per table migrated | Once, at the view layer |
@@ -119,19 +119,16 @@ Three practices keep this healthy.
 **Shape queries so the small side is small.** A cross-source join filtered heavily on the lakehouse side transfers little. The same join with the filter on the Oracle side and nothing on the lakehouse side transfers a lot. This is within your control when you write the view.
 
 ```sql
--- Shape matters more than syntax. This join sends a filtered, aggregated
--- query to Oracle and reads a pruned partition set from Iceberg.
+- Shape matters more than syntax. This join sends a filtered, aggregated
+- query to Oracle and reads a pruned partition set from Iceberg.
 SELECT
-    i.region,
-    i.product_category,
-    sum(i.net_revenue_usd)  AS revenue_usd,
-    max(o.credit_limit)     AS credit_limit
+ i.region, i.product_category, sum(i.net_revenue_usd) AS revenue_usd, max(o.credit_limit) AS credit_limit
 FROM lakehouse.gold.order_lines i
 JOIN oracle_erp.finance.customer_credit o
-  ON i.customer_id = o.customer_id
-WHERE i.order_date >= DATE '2026-07-01'          -- prunes Iceberg partitions
-  AND o.credit_status = 'ACTIVE'                 -- pushes into Oracle
-  AND o.region_code IN ('EU', 'NA')              -- pushes into Oracle
+ ON i.customer_id = o.customer_id
+WHERE i.order_date >= DATE '2026-07-01', prunes Iceberg partitions
+ AND o.credit_status = 'ACTIVE', pushes into Oracle
+ AND o.region_code IN ('EU', 'NA'), pushes into Oracle
 GROUP BY 1, 2;
 ```
 
@@ -178,21 +175,15 @@ Concretely, the layer has three properties.
 ```sql
 CREATE OR REPLACE VIEW analytics.sales.orders_enriched AS
 SELECT
-    i.order_id,
-    i.customer_id,
-    i.order_date,
-    i.net_revenue_usd,
-    -- Oracle stores region codes; the lakehouse uses names. Reconcile here.
-    coalesce(r.region_name, 'UNKNOWN')                      AS region_name,
-    -- Oracle treats empty string as null. Normalize so joins behave.
-    nullif(trim(o.credit_status), '')                       AS credit_status,
-    -- Oracle NUMBER to a defined precision, once, not per consumer
-    cast(o.credit_limit AS decimal(18, 2))                  AS credit_limit_usd
+ i.order_id, i.customer_id, i.order_date, i.net_revenue_usd, Oracle stores region codes; the lakehouse uses names. Reconcile here.
+ coalesce(r.region_name, 'UNKNOWN') AS region_name, Oracle treats empty string as null. Normalize so joins behave.
+ nullif(trim(o.credit_status), '') AS credit_status, Oracle NUMBER to a defined precision, once, not per consumer
+ cast(o.credit_limit AS decimal(18, 2)) AS credit_limit_usd
 FROM lakehouse.gold.order_lines i
 LEFT JOIN oracle_erp.finance.customer_credit o
-  ON i.customer_id = o.customer_id
+ ON i.customer_id = o.customer_id
 LEFT JOIN lakehouse.ref.regions r
-  ON o.region_code = r.region_code
+ ON o.region_code = r.region_code
 WHERE i.order_status <> 'CANCELLED';
 ```
 
@@ -291,23 +282,17 @@ When a table does move, federation is what makes the move boring. Here is the se
 **Run both in parallel and reconcile.** Keep Oracle authoritative. Load the Iceberg copy on a schedule. Compare them daily on row count, on aggregate totals for the numeric columns, and on a sample of individual rows by key.
 
 ```sql
--- Reconciliation: run daily during the parallel period
+- Reconciliation: run daily during the parallel period
 SELECT
-    'row_count'                               AS check_name,
-    (SELECT count(*) FROM oracle_erp.finance.customer_credit) AS source_value,
-    (SELECT count(*) FROM lakehouse.finance.customer_credit)  AS target_value
+ 'row_count' AS check_name, (SELECT count(*) FROM oracle_erp.finance.customer_credit) AS source_value, (SELECT count(*) FROM lakehouse.finance.customer_credit) AS target_value
 UNION ALL
 SELECT
-    'credit_limit_sum',
-    (SELECT sum(credit_limit) FROM oracle_erp.finance.customer_credit),
-    (SELECT sum(credit_limit_usd) FROM lakehouse.finance.customer_credit)
+ 'credit_limit_sum', (SELECT sum(credit_limit) FROM oracle_erp.finance.customer_credit), (SELECT sum(credit_limit_usd) FROM lakehouse.finance.customer_credit)
 UNION ALL
 SELECT
-    'active_customers',
-    (SELECT count(*) FROM oracle_erp.finance.customer_credit
-      WHERE credit_status = 'ACTIVE'),
-    (SELECT count(*) FROM lakehouse.finance.customer_credit
-      WHERE credit_status = 'ACTIVE');
+ 'active_customers', (SELECT count(*) FROM oracle_erp.finance.customer_credit
+ WHERE credit_status = 'ACTIVE'), (SELECT count(*) FROM lakehouse.finance.customer_credit
+ WHERE credit_status = 'ACTIVE');
 ```
 
 Run this for two weeks. Discrepancies in this window are almost always type or null handling, and finding them here costs nothing.

@@ -16,9 +16,10 @@ draft: false
 image: "/images/blog.png"
 canonical: "https://iceberglakehouse.com/posts/2026-03-aitool-jetbrains-ai/"
 ---
-> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-03-aitool-jetbrains-ai/).
 
 JetBrains AI Assistant is built into IntelliJ IDEA, PyCharm, DataGrip, and every JetBrains IDE. It provides AI chat, inline code generation, multi-file refactoring, and agentic background workers that can autonomously execute multi-step tasks. Dremio is a unified lakehouse platform that provides business context through its semantic layer, universal data access through query federation, and interactive speed through Reflections and Apache Arrow.
+
+> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-03-aitool-jetbrains-ai/).
 
 Connecting them gives the AI Assistant the context it needs to write accurate Dremio SQL, generate data pipelines, and build applications against your lakehouse. JetBrains IDEs are especially strong for data engineering: DataGrip provides native database tooling, IntelliJ supports full-stack development, and PyCharm is the standard for Python data work. Adding Dremio context to the AI Assistant turns these IDEs into data-aware development environments.
 
@@ -89,7 +90,7 @@ For Dremio Software deployments, configure the dremio-mcp server as STDIO transp
 Name: Dremio
 Type: STDIO
 Command: uv
-Arguments: run --directory /path/to/dremio-mcp dremio-mcp-server run
+Arguments: run -directory /path/to/dremio-mcp dremio-mcp-server run
 ```
 
 ## Approach 2: Use Project Rules for Dremio Context
@@ -169,10 +170,10 @@ Create a comprehensive rules setup in `.aiassistant/rules/`:
 
 ```
 .aiassistant/rules/
-  dremio-sql.md           # SQL conventions
-  dremio-python.md        # dremioframe patterns
-  dremio-schemas.md       # Team table schemas
-  dremio-api.md           # REST API patterns
+ dremio-sql.md # SQL conventions
+ dremio-python.md # dremioframe patterns
+ dremio-schemas.md # Team table schemas
+ dremio-api.md # REST API patterns
 ```
 
 Export your actual schemas from Dremio and keep them as a rule file. The AI Assistant reads all files in the `rules/` directory and applies them to relevant interactions.
@@ -230,7 +231,7 @@ IntelliJ's HTTP client lets you test the endpoints directly from the IDE.
 ## Which Approach Should You Use?
 
 | Approach | Setup Time | What You Get | Best For |
-|----------|-----------|--------------|----------|
+|-----|------|-------|-----|
 | MCP Server | 5 minutes | Live queries, schema browsing, catalog exploration | Data analysis, SQL generation, real-time access |
 | Project Rules | 10 minutes | Convention enforcement, persistent AI context | Teams with specific standards per IDE |
 | Pre-Built Skills | 5 minutes | Comprehensive Dremio knowledge (CLI, SDK, SQL, API) | Quick start with broad coverage |

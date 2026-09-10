@@ -14,11 +14,12 @@ draft: false
 image: "/images/blog/apache-iceberg-masterclass/10-maintaining-iceberg-maintenance-operations.png"
 canonical: "https://iceberglakehouse.com/posts/2026-04-29-iceberg-masterclass-10/"
 ---
-> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-04-29-iceberg-masterclass-10/).
 
-<!-- Meta Description: Keep Iceberg tables fast with compaction, snapshot expiry, orphan cleanup, and manifest rewriting. Here is when and how to run each operation. -->
-<!-- Primary Keyword: Iceberg table maintenance -->
-<!-- Secondary Keywords: compaction, snapshot expiry, orphan file cleanup, OPTIMIZE TABLE -->
+<!- Meta Description: Keep Iceberg tables fast with compaction, snapshot expiry, orphan cleanup, and manifest rewriting. Here is when and how to run each operation. ->
+<!- Primary Keyword: Iceberg table maintenance ->
+<!- Secondary Keywords: compaction, snapshot expiry, orphan file cleanup, OPTIMIZE TABLE ->
+
+> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-04-29-iceberg-masterclass-10/).
 
 *Read the complete Apache Iceberg Masterclass series:*
 * [Part 1: What Are Table Formats and Why Were They Needed?](/blog/2026-04-29-apache-iceberg-masterclass-01-table-formats)
@@ -71,10 +72,10 @@ OPTIMIZE TABLE analytics.orders REWRITE DATA USING SORT (order_date, customer_id
 Snapshot expiry removes old snapshots from the metadata. After expiry, the snapshot and its exclusive data files are eligible for cleanup. You typically retain snapshots for a window (e.g., 7 days) to support time travel, then expire everything older.
 
 ```sql
--- Spark
+- Spark
 CALL system.expire_snapshots('analytics.orders', TIMESTAMP '2024-04-22 00:00:00')
 
--- Dremio
+- Dremio
 ALTER TABLE analytics.orders EXPIRE SNAPSHOTS OLDER_THAN = '2024-04-22 00:00:00'
 ```
 
@@ -83,7 +84,7 @@ ALTER TABLE analytics.orders EXPIRE SNAPSHOTS OLDER_THAN = '2024-04-22 00:00:00'
 After snapshots are expired, the data files they exclusively referenced become orphans. Orphan cleanup scans the storage directory, compares files against the current metadata, and deletes files that are not referenced by any snapshot.
 
 ```sql
--- Spark
+- Spark
 CALL system.remove_orphan_files('analytics.orders')
 ```
 
@@ -96,7 +97,7 @@ Running orphan cleanup too aggressively can delete files from long-running write
 Over many commits, manifests accumulate. A single snapshot's manifest list might reference hundreds of small manifests from individual commits. Manifest rewriting consolidates them into fewer, larger manifests.
 
 ```sql
--- Spark
+- Spark
 CALL system.rewrite_manifests('analytics.orders')
 ```
 
@@ -107,14 +108,12 @@ This speeds up scan planning because the engine reads fewer manifest files. Each
 Standard compaction (BIN_PACK) merges small files without changing the data order. Sort-order compaction rewrites files with data sorted by specified columns, which tightens the min/max statistics and makes [file skipping](/blog/2026-04-29-apache-iceberg-masterclass-03-iceberg-metadata-performance) more effective:
 
 ```sql
--- Dremio sort-order compaction
+- Dremio sort-order compaction
 OPTIMIZE TABLE analytics.orders REWRITE DATA USING SORT (order_date, customer_id)
 
--- Spark sort-order compaction
+- Spark sort-order compaction
 CALL system.rewrite_data_files(
-  table => 'analytics.orders',
-  strategy => 'sort',
-  sort_order => 'order_date ASC NULLS LAST, customer_id ASC NULLS LAST'
+ table => 'analytics.orders', strategy => 'sort', sort_order => 'order_date ASC NULLS LAST, customer_id ASC NULLS LAST'
 )
 ```
 
@@ -125,7 +124,7 @@ Sort-order compaction is more expensive than BIN_PACK because it reads, sorts, a
 Decide how long to keep historical data accessible through time travel:
 
 | Retention Need | Recommended Snapshot Retention |
-|---|---|
+|--|--|
 | Debugging recent issues | 7 days |
 | Monthly reporting compliance | 30 days |
 | Regulatory audit requirements | 90+ days |
@@ -157,7 +156,7 @@ Build a monitoring layer that checks table health metrics ([Part 9](/blog/2026-0
 Use a platform that handles maintenance autonomously. [Dremio's automatic table optimization](https://www.dremio.com/blog/table-optimization-in-dremio/) runs compaction, expiry, and cleanup for tables managed by Open Catalog without any user configuration. AWS [S3 Tables](/blog/2026-04-29-apache-iceberg-masterclass-08-embedded-catalogs) provides built-in compaction.
 
 | Approach | Effort | Risk | Best For |
-|---|---|---|---|
+|--|--|--|--|
 | Manual | High | High (can forget) | Full control needs |
 | Semi-Automated | Medium | Medium | Custom thresholds |
 | Fully Automated | None | Low | Most production tables |
@@ -165,7 +164,7 @@ Use a platform that handles maintenance autonomously. [Dremio's automatic table 
 ## Recommended Maintenance Schedule
 
 | Operation | Frequency | Recommendation |
-|---|---|---|
+|--|--|--|
 | Compaction | Daily (heavy tables), weekly (light) | Trigger when avg file size < 64 MB |
 | Snapshot expiry | Daily | Retain 7-30 days for time travel |
 | Orphan cleanup | Weekly | Safety delay of 3+ days |

@@ -13,7 +13,6 @@ slug: model-not-moat-semantic-lakehouse-layer-enterprise-ai
 draft: false
 image: "/images/blog.png"
 ---
-
 # The Model Is Not the Moat
 
 
@@ -89,7 +88,7 @@ I would also require a visible refusal path. If the metric is not certified for 
 ## Operational Checklist
 
 | Area | Question to answer | Why it matters |
-|---|---|---|
+|--|--|--|
 | Ownership | Who owns the semantic definition, the lineage trace, and the AI tool? | Incidents need named owners, not shared confusion. |
 | Scope | Which metrics are approved for AI access in this rollout? | A narrow surface is easier to certify and govern. |
 | Identity | Which agent identities are mapped to which semantic objects? | Machine-speed access needs machine-enforced policy. |

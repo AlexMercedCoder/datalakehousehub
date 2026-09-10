@@ -14,7 +14,6 @@ draft: false
 image: "/images/blog.png"
 canonical: "https://iceberglakehouse.com/posts/2026-01-rag-isnt-the-problem/"
 ---
-> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-01-rag-isnt-the-problem/).
 
 **Get Data Lakehouse Books:**
 - [Apache Iceberg: The Definitive Guide](https://drmevn.fyi/tableformatblog)
@@ -22,18 +21,20 @@ canonical: "https://iceberglakehouse.com/posts/2026-01-rag-isnt-the-problem/"
 - [Architecting an Apache Iceberg Lakehouse](https://hubs.la/Q03GfY4f0)
 - [The Apache Iceberg Digest: Vol. 1](https://www.puppygraph.com/ebooks/apache-iceberg-digest-vol-1)
 
+> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-01-rag-isnt-the-problem/).
+
 **Lakehouse Community:**
 - [Join the Data Lakehouse Community](https://www.datalakehousehub.com)
 - [Data Lakehouse Blog Roll](https://lakehouseblogs.com)
 - [OSS Community Listings](https://osscommunity.com)
 - [Dremio Lakehouse Developer Hub](https://developer.dremio.com)
 
----
+--
 
-Retrieval-augmented generation looks deceptively simple.  
-Embed documents.  
-Store vectors.  
-Retrieve context.  
+Retrieval-augmented generation looks deceptively simple. 
+Embed documents. 
+Store vectors. 
+Retrieve context. 
 Ask an LLM to answer questions.
 
 Early demos reinforce this illusion. A small corpus. Clean documents. Few users. Results look impressive. Many teams conclude that success depends on choosing the right model or the best vector database.
@@ -60,7 +61,7 @@ Data quality issues amplify the problem. Duplicate documents inflate embeddings.
 
 Governance is the most underestimated failure point. Many RAG pipelines ignore permissions or apply them too late. This creates two bad outcomes. Either the system leaks sensitive data, or engineers restrict access so aggressively that answers become incomplete. Both outcomes erode trust.
 
-Semantic ambiguity adds another layer of friction. Business terms rarely mean one thing. “Revenue,” “active customer,” or “churn” vary by team and context. Vector similarity cannot resolve these differences. Without shared definitions, RAG systems retrieve text, not meaning.
+Semantic ambiguity adds another layer of friction. Business terms rarely mean one thing. “Revenue, ” “active customer, ” or “churn” vary by team and context. Vector similarity cannot resolve these differences. Without shared definitions, RAG systems retrieve text, not meaning.
 
 These failures have nothing to do with LLM quality. They stem from weak data foundations.
 

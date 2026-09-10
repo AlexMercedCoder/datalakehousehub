@@ -16,9 +16,10 @@ draft: false
 image: "/images/blog.png"
 canonical: "https://iceberglakehouse.com/posts/2026-03-aitool-openai-codex/"
 ---
-> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-03-aitool-openai-codex/).
 
 OpenAI Codex CLI is a terminal-based coding agent built in Rust. It reads your codebase, writes files, executes commands, and supports MCP for connecting to external data services. Dremio is a unified lakehouse platform that provides the business context, universal data access, and query speed that coding agents need to produce accurate, working analytics code.
+
+> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-03-aitool-openai-codex/).
 
 Codex uses `AGENTS.md` as its primary context file. This is an open standard designed to work across multiple AI tools, so the Dremio configuration you write for Codex also works with other AGENTS.md-compatible tools. That portability matters if your team uses different agents.
 
@@ -36,9 +37,9 @@ If you do not already have Codex CLI installed:
 
 1. **Install Node.js** (version 22 or later) from [nodejs.org](https://nodejs.org/).
 2. **Install Codex** globally via npm:
-   ```bash
-   npm install -g @openai/codex
-   ```
+ ```bash
+ npm install -g @openai/codex
+ ```
 3. **Launch Codex** by running `codex` in your terminal from any project directory.
 4. **Authenticate** with your OpenAI API key. Codex uses the `OPENAI_API_KEY` environment variable.
 
@@ -69,15 +70,13 @@ Codex reads MCP configuration from its settings. Add the Dremio server to your M
 
 ```json
 {
-  "mcpServers": {
-    "dremio": {
-      "url": "https://YOUR_PROJECT_MCP_URL",
-      "auth": {
-        "type": "oauth",
-        "clientId": "YOUR_CLIENT_ID"
-      }
-    }
-  }
+ "mcpServers": {
+ "dremio": {
+ "url": "https://YOUR_PROJECT_MCP_URL", "auth": {
+ "type": "oauth", "clientId": "YOUR_CLIENT_ID"
+ }
+ }
+ }
 }
 ```
 
@@ -99,23 +98,21 @@ For Dremio Software deployments, use the open-source [dremio-mcp](https://github
 git clone https://github.com/dremio/dremio-mcp
 cd dremio-mcp
 uv run dremio-mcp-server config create dremioai \
-  --uri https://your-dremio-instance.com \
-  --pat YOUR_PERSONAL_ACCESS_TOKEN
+ -uri https://your-dremio-instance.com \
+ -pat YOUR_PERSONAL_ACCESS_TOKEN
 ```
 
 Then configure Codex to run the local server:
 
 ```json
 {
-  "mcpServers": {
-    "dremio": {
-      "command": "uv",
-      "args": [
-        "run", "--directory", "/path/to/dremio-mcp",
-        "dremio-mcp-server", "run"
-      ]
-    }
-  }
+ "mcpServers": {
+ "dremio": {
+ "command": "uv", "args": [
+ "run", "-directory", "/path/to/dremio-mcp", "dremio-mcp-server", "run"
+ ]
+ }
+ }
 }
 ```
 
@@ -249,11 +246,11 @@ Create a directory structure that pairs your `AGENTS.md` with reference document
 
 ```
 project-root/
-  AGENTS.md
-  docs/
-    dremio-sql-reference.md
-    team-schemas.md
-    dremioframe-patterns.md
+ AGENTS.md
+ docs/
+ dremio-sql-reference.md
+ team-schemas.md
+ dremioframe-patterns.md
 ```
 
 In your `AGENTS.md`, reference these files so Codex reads them when needed:
@@ -338,12 +335,12 @@ Serve lakehouse data to other applications:
 
 > "Create a FastAPI service that connects to Dremio and serves customer analytics. Add endpoints for cohort analysis, retention metrics, and revenue forecasting. Include request validation, response caching, and health checks."
 
-Codex generates a complete API server ready for `uvicorn main:app --reload`.
+Codex generates a complete API server ready for `uvicorn main:app -reload`.
 
 ## Which Approach Should You Use?
 
 | Approach | Setup Time | What You Get | Best For |
-|----------|-----------|--------------|----------|
+|-----|------|-------|-----|
 | MCP Server | 5 minutes | Live queries, schema browsing, catalog exploration | Data analysis, SQL generation, real-time access |
 | AGENTS.md | 10 minutes | Convention enforcement, doc references, portable config | Teams needing cross-tool consistency |
 | Pre-Built Skills | 5 minutes | Comprehensive Dremio knowledge (CLI, SDK, SQL, API) | Quick start with broad coverage |

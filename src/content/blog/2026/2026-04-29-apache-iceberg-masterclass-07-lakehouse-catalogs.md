@@ -14,11 +14,12 @@ draft: false
 image: "/images/blog/apache-iceberg-masterclass/07-lakehouse-catalogs-catalog-role.png"
 canonical: "https://iceberglakehouse.com/posts/2026-04-29-iceberg-masterclass-07/"
 ---
-> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-04-29-iceberg-masterclass-07/).
 
-<!-- Meta Description: Lakehouse catalogs store metadata pointers, manage namespaces, and enforce access control. Here is the complete catalog landscape from Polaris to Glue. -->
-<!-- Primary Keyword: lakehouse catalogs -->
-<!-- Secondary Keywords: Iceberg REST catalog, Apache Polaris, Nessie, catalog landscape -->
+<!- Meta Description: Lakehouse catalogs store metadata pointers, manage namespaces, and enforce access control. Here is the complete catalog landscape from Polaris to Glue. ->
+<!- Primary Keyword: lakehouse catalogs ->
+<!- Secondary Keywords: Iceberg REST catalog, Apache Polaris, Nessie, catalog landscape ->
+
+> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-04-29-iceberg-masterclass-07/).
 
 *Read the complete Apache Iceberg Masterclass series:*
 * [Part 1: What Are Table Formats and Why Were They Needed?](/blog/2026-04-29-apache-iceberg-masterclass-01-table-formats)
@@ -61,7 +62,7 @@ The [Iceberg REST Catalog specification](https://iceberg.apache.org/spec/#rest-c
 The key operations:
 
 | Endpoint | Purpose |
-|---|---|
+|--|--|
 | `GET /v1/namespaces/{ns}/tables/{table}` | Load table metadata location |
 | `POST /v1/namespaces/{ns}/tables` | Create a new table |
 | `POST /v1/namespaces/{ns}/tables/{table}` | Commit a table update (CAS) |
@@ -121,7 +122,7 @@ This is why many architects recommend picking a catalog that will serve as the s
 The decision depends on three factors:
 
 | Priority | Recommended Approach |
-|---|---|
+|--|--|
 | Multi-engine, vendor-neutral | REST catalog (Polaris or Lakekeeper) |
 | AWS-native, minimal ops | AWS Glue |
 | Databricks ecosystem | Unity Catalog |

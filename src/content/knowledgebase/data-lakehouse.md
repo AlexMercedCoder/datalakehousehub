@@ -1,7 +1,7 @@
 ---
 title: "What is Data Lakehouse?"
 meta_title: "What is Data Lakehouse? | Expert Data Lakehouse & AI Glossary"
-description: "A modern data architecture combining the flexibility of a data lake with the management features of a data warehouse. Learn the architecture, mechanics, and real-world value of Data Lakehouse in the modern data stack."
+description: "A modern data architecture combining the flexibility of a data lake with the management features of a data warehouse."
 ---
 
 ## What is Data Lakehouse?

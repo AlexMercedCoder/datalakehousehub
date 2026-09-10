@@ -1,7 +1,7 @@
 ---
 title: "Real-Time BI: Enabling Sub-Second Queries on Apache Iceberg Data Lakehouses"
 date: 2026-05-28T09:00:00Z
-description: "Sub-second queries on Apache Iceberg are achievable with the right architecture. Learn how Reflections, C3 cache, and query acceleration close the BI latency gap."
+description: "Sub-second queries on Apache Iceberg are achievable with the right architecture. Learn how Reflections, C3 cache, and query acceleration close the BI."
 author: "Alex Merced"
 category: "Data Lakehouse"
 tags:
@@ -10,10 +10,9 @@ slug: "real-time-bi-iceberg-lakehouse"
 draft: false
 image: "/images/blog.png"
 ---
-
 # Real-Time BI: Enabling Sub-Second Queries on Apache Iceberg Data Lakehouses
 
-The standard knock on cloud object storage for analytics is latency. S3 GET requests average 20–50 milliseconds each. A dashboard query that scans 10,000 files issues 10,000 of those requests, which means 3–8 minutes of wall time before the analyst sees a result. That's not a BI experience : it's a batch report.
+The standard knock on cloud object storage for analytics is latency. S3 GET requests average 20-50 milliseconds each. A dashboard query that scans 10, 000 files issues 10, 000 of those requests, which means 3-8 minutes of wall time before the analyst sees a result. That's not a BI experience : it's a batch report.
 
 Sub-second interactive BI on Apache Iceberg is achievable, but it requires understanding which parts of the latency problem you're solving and which tools solve each part.
 
@@ -35,7 +34,7 @@ The cheapest way to reduce file scan latency is to stop creating small files in 
 
 Target file size for Iceberg tables optimized for analytical read workloads is 128 MB to 512 MB per file. Files smaller than 10 MB are a performance liability : they add metadata overhead and force the engine to issue more GET requests for the same amount of data.
 
-Partition your tables by the column most commonly used in query filters. If 80% of your queries filter by `region` and `date`, partition by region and date. The Iceberg planner will skip files in non-matching partitions without reading them at all. A query against a table with 1 million files might only scan 5,000 files after partition pruning : effectively a 200x reduction in scan work.
+Partition your tables by the column most commonly used in query filters. If 80% of your queries filter by `region` and `date`, partition by region and date. The Iceberg planner will skip files in non-matching partitions without reading them at all. A query against a table with 1 million files might only scan 5, 000 files after partition pruning : effectively a 200x reduction in scan work.
 
 For streaming data sources that write many small files continuously, run daily compaction to merge them. Dremio's Automatic Table Optimization handles this as a background job.
 
@@ -86,11 +85,11 @@ Those workarounds are the precursors to data swamps. When the underlying platfor
 
 Not all queries need sub-second response. Building a tiered SLA model aligns your investment in acceleration with actual user expectations.
 
-**Tier 1 : Executive dashboards and operational metrics:** Target sub-second response (under 1 second). Use Aggregate Reflections that refresh every 5–15 minutes. These are the queries your business depends on checking multiple times per day.
+**Tier 1 : Executive dashboards and operational metrics:** Target sub-second response (under 1 second). Use Aggregate Reflections that refresh every 5-15 minutes. These are the queries your business depends on checking multiple times per day.
 
 **Tier 2 : Analyst self-service queries:** Target under 10 seconds. Use Raw Reflections on commonly-queried tables and rely on C3 cache for warm queries. Analysts can tolerate a brief wait, but anything over 30 seconds breaks the investigation flow.
 
-**Tier 3 :  Ad-hoc and historical analysis:** Target under 2 minutes. No special acceleration ,  optimized file layout and partition pruning do the work. These queries run occasionally and analysts don't expect instant results.
+**Tier 3 : Ad-hoc and historical analysis:** Target under 2 minutes. No special acceleration, optimized file layout and partition pruning do the work. These queries run occasionally and analysts don't expect instant results.
 
 Document these tiers explicitly and share them with your user community. Unrealistic expectations of sub-second response for complex historical queries create dissatisfaction even when the platform is working correctly.
 
@@ -98,7 +97,7 @@ Document these tiers explicitly and share them with your user community. Unreali
 
 Sub-second BI and real-time data freshness are in tension. Reflections that deliver sub-second response are snapshots of data at their last refresh time. A Reflection refreshed every 15 minutes has data that's up to 15 minutes stale.
 
-For most BI use cases, 15-minute freshness is acceptable. Intraday revenue dashboards that update every 15 minutes are genuinely useful for business monitoring. Where freshness matters at a finer granularity :  transaction monitoring, fraud detection, live operational dashboards ,  you need either very frequent Reflection refreshes or direct query paths against the most recent data files.
+For most BI use cases, 15-minute freshness is acceptable. Intraday revenue dashboards that update every 15 minutes are genuinely useful for business monitoring. Where freshness matters at a finer granularity : transaction monitoring, fraud detection, live operational dashboards, you need either very frequent Reflection refreshes or direct query paths against the most recent data files.
 
 Dremio handles this through incremental Reflection refresh: instead of recomputing the entire Reflection from scratch, it reads only the new Iceberg snapshots since the last refresh and appends the new aggregates. An incremental refresh on a table that receives hourly updates takes seconds, not minutes, making 5-minute refresh intervals practical.
 

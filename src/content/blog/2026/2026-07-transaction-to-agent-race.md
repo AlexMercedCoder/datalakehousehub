@@ -1,6 +1,6 @@
 ---
 title: "Three Vendors Are Rebuilding the Path From Transaction to Agent"
-description: "Databricks, Snowflake, and SAP are closing the gap between operational databases and analytical platforms through acquisition, betting on different layers of the same five-part architecture."
+description: "Databricks, Snowflake, and SAP are closing the gap between operational databases and analytical platforms through acquisition, betting on different layers."
 date: 2026-07-25T09:00:00Z
 author: "Alex Merced"
 category: "Data Engineering"
@@ -16,9 +16,9 @@ image: "/images/blog.png"
 canonical: https://iceberglakehouse.com/posts/transaction-to-agent-race/
 ---
 
-> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/transaction-to-agent-race/).
-
 A customer changes their shipping address in your order system at 9:14 a.m. At 9:20 a.m. someone asks an AI agent where that order is going. The agent reads a table that was last refreshed at 6:00 a.m. and answers with the old address. Nobody did anything wrong. The change landed in Postgres, the change data capture job runs hourly, the transformation job runs after that, and the semantic model was built on the output of the transformation job. Every link in that chain works exactly as designed. The design is the problem.
+
+> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/transaction-to-agent-race/).
 
 That six-minute question exposes the most expensive structural gap in enterprise data: the system that records what happened and the system that explains what happened are different systems, and the distance between them is measured in pipelines, staff, and hours. For twenty years we accepted that distance because humans read dashboards on a daily cadence. Agents do not. An agent asked to approve a refund, reroute a shipment, or flag a fraud pattern operates on the timescale of the transaction, not the timescale of the nightly batch.
 
@@ -97,7 +97,7 @@ SAP's stated goal for the combination is that Business Data Cloud becomes an Ice
 Line the three up and the convergence is striking.
 
 | Layer | Databricks | Snowflake | SAP |
-|---|---|---|---|
+|--|--|--|--|
 | Operational store | Lakebase, from Neon, serverless with branching | Snowflake Postgres, from Crunchy Data, dedicated instances | SAP HANA Cloud plus the ERP systems of record |
 | Path to analytics | LTAP writes Delta and Iceberg at write time | Openflow, Datastream, Dynamic Tables | Replication flows plus federation, Iceberg-native storage |
 | Open format at rest | Delta and Iceberg, managed Iceberg GA | Iceberg v3 GA, managed Iceberg storage | Iceberg through Dremio, with Polaris and Arrow |
@@ -121,7 +121,7 @@ Change capture starts at the write-ahead log. Postgres logical replication decod
 
 The events then have to become table state. Insert, update, and delete arrive as separate events, and an analytical table has to fold them into the current row. Iceberg gives you two strategies. Copy-on-write rewrites every data file that contains an affected row at commit time, which makes reads fast and writes expensive. Merge-on-read writes a delete file alongside the new data and lets the reader reconcile at scan time, which makes writes cheap and reads progressively slower until compaction runs. Iceberg v3 replaced positional delete files with deletion vectors, a compact bitmap per data file, which cuts the reader's reconciliation cost significantly. Streaming CDC into an Iceberg table without a maintenance strategy is the single most common way teams end up with a slow lakehouse.
 
-Commit frequency is the next constraint. Every Iceberg commit produces a new metadata file and a new snapshot, and commits to the same table serialize through the catalog. A pipeline committing every five seconds produces 17,280 snapshots a day per table. Query planning walks manifests, snapshot expiration jobs fall behind, and the metadata directory becomes the bottleneck long before the data directory does. This is exactly the pressure that drove the Iceberg v4 design work on single-file commits and a more adaptive metadata tree.
+Commit frequency is the next constraint. Every Iceberg commit produces a new metadata file and a new snapshot, and commits to the same table serialize through the catalog. A pipeline committing every five seconds produces 17, 280 snapshots a day per table. Query planning walks manifests, snapshot expiration jobs fall behind, and the metadata directory becomes the bottleneck long before the data directory does. This is exactly the pressure that drove the Iceberg v4 design work on single-file commits and a more adaptive metadata tree.
 
 Federation has its own physics. Pushdown is the whole game. When you query a federated Postgres table with a filter and an aggregate, the engine either pushes the filter and aggregate into Postgres and pulls back a small result, or it pulls the rows across the wire and aggregates locally. The difference is three orders of magnitude. Pushdown breaks on function calls the remote system does not understand, on joins across two different sources, and on type mismatches that force a cast. Federation is excellent for reference data, for sources with low query volume, and for anything you are legally not allowed to copy. It is a poor substitute for replication under heavy concurrent analytical load, and a vendor that tells you otherwise is selling.
 
@@ -133,17 +133,15 @@ Here is the shape of the pattern in real syntax. Start with the catalog, because
 from pyspark.sql import SparkSession
 
 spark = (
-    SparkSession.builder
-    .config("spark.sql.extensions",
-            "org.apache.iceberg.spark.extensions.IcebergSparkSessionExtensions")
-    .config("spark.sql.catalog.lakehouse", "org.apache.iceberg.spark.SparkCatalog")
-    .config("spark.sql.catalog.lakehouse.type", "rest")
-    .config("spark.sql.catalog.lakehouse.uri", "https://polaris.example.com/api/catalog")
-    .config("spark.sql.catalog.lakehouse.warehouse", "operational_mirror")
-    .config("spark.sql.catalog.lakehouse.credential", "<client-id>:<client-secret>")
-    .config("spark.sql.catalog.lakehouse.header.X-Iceberg-Access-Delegation",
-            "vended-credentials")
-    .getOrCreate()
+ SparkSession.builder
+ .config("spark.sql.extensions", "org.apache.iceberg.spark.extensions.IcebergSparkSessionExtensions")
+ .config("spark.sql.catalog.lakehouse", "org.apache.iceberg.spark.SparkCatalog")
+ .config("spark.sql.catalog.lakehouse.type", "rest")
+ .config("spark.sql.catalog.lakehouse.uri", "https://polaris.example.com/api/catalog")
+ .config("spark.sql.catalog.lakehouse.warehouse", "operational_mirror")
+ .config("spark.sql.catalog.lakehouse.credential", "<client-id>:<client-secret>")
+ .config("spark.sql.catalog.lakehouse.header.X-Iceberg-Access-Delegation", "vended-credentials")
+ .getOrCreate()
 )
 ```
 
@@ -154,23 +152,18 @@ Now the CDC merge. Assume a stream job has landed a batch of change events into 
 ```sql
 MERGE INTO lakehouse.sales.orders AS t
 USING (
-    SELECT order_id, customer_id, status, ship_to, amount, op, lsn
-    FROM (
-        SELECT *,
-               ROW_NUMBER() OVER (PARTITION BY order_id ORDER BY lsn DESC) AS rn
-        FROM lakehouse.staging.orders_cdc
-        WHERE lsn > (SELECT COALESCE(MAX(last_lsn), 0) FROM lakehouse.sales.orders_watermark)
-    )
-    WHERE rn = 1
+ SELECT order_id, customer_id, status, ship_to, amount, op, lsn
+ FROM (
+ SELECT *, ROW_NUMBER() OVER (PARTITION BY order_id ORDER BY lsn DESC) AS rn
+ FROM lakehouse.staging.orders_cdc
+ WHERE lsn > (SELECT COALESCE(MAX(last_lsn), 0) FROM lakehouse.sales.orders_watermark)
+ )
+ WHERE rn = 1
 ) AS s
 ON t.order_id = s.order_id
 WHEN MATCHED AND s.op = 'D' THEN DELETE
 WHEN MATCHED AND s.op IN ('U', 'I') THEN UPDATE SET
-    t.customer_id = s.customer_id,
-    t.status      = s.status,
-    t.ship_to     = s.ship_to,
-    t.amount      = s.amount,
-    t.last_lsn    = s.lsn
+ t.customer_id = s.customer_id, t.status = s.status, t.ship_to = s.ship_to, t.amount = s.amount, t.last_lsn = s.lsn
 WHEN NOT MATCHED AND s.op IN ('U', 'I') THEN INSERT *
 ```
 
@@ -180,18 +173,13 @@ Then the maintenance, which is not optional:
 
 ```sql
 CALL lakehouse.system.rewrite_data_files(
-    table => 'sales.orders',
-    strategy => 'sort',
-    sort_order => 'customer_id ASC',
-    options => map('min-input-files', '25', 'target-file-size-bytes', '536870912')
+ table => 'sales.orders', strategy => 'sort', sort_order => 'customer_id ASC', options => map('min-input-files', '25', 'target-file-size-bytes', '536870912')
 );
 
 CALL lakehouse.system.rewrite_manifests(table => 'sales.orders');
 
 CALL lakehouse.system.expire_snapshots(
-    table => 'sales.orders',
-    older_than => TIMESTAMP '2026-07-18 00:00:00',
-    retain_last => 100
+ table => 'sales.orders', older_than => TIMESTAMP '2026-07-18 00:00:00', retain_last => 100
 );
 
 CALL lakehouse.system.remove_orphan_files(table => 'sales.orders');
@@ -203,15 +191,12 @@ Finally, the federated join that makes the whole thing worth building:
 
 ```sql
 SELECT
-    o.order_id,
-    o.status,
-    c.account_tier,
-    c.region
+ o.order_id, o.status, c.account_tier, c.region
 FROM lakehouse.sales.orders AS o
 JOIN crm.public.accounts AS c
-  ON o.customer_id = c.customer_id
+ ON o.customer_id = c.customer_id
 WHERE o.status = 'IN_TRANSIT'
-  AND c.region = 'EMEA'
+ AND c.region = 'EMEA'
 ```
 
 Nothing about that query tells you `orders` lives in Iceberg on object storage and `accounts` lives in a Postgres instance the CRM team owns. That is the point. The engine plans the scan against Iceberg with partition and statistics pruning, pushes the region filter into Postgres, and joins the two small result sets. Check the query profile to confirm the pushdown actually happened, because when it does not, this exact query pulls a million CRM rows across the network every time an agent asks about EMEA shipments.

@@ -1,7 +1,7 @@
 ---
 title: What Are Recursive Language Models?
 date: 2026-01-10T09:00:00Z
-description: Recursive Language Models (RLMs) are a new class of language models that can call themselves to break down complex tasks into manageable parts. This article explores how RLMs work, the problems they solve, and why they represent a significant shift in language model capabilities.
+description: "Recursive Language Models (RLMs) are a new class of language models that can call themselves to break down complex tasks into manageable parts."
 author: "Alex Merced"
 category: "AI"
 bannerImage: "https://i.imgur.com/cpoMZQ8.png"
@@ -15,7 +15,6 @@ draft: false
 image: "/images/blog.png"
 canonical: "https://iceberglakehouse.com/posts/2026-01-recursive-langauge-models/"
 ---
-> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-01-recursive-langauge-models/).
 
 **Get Data Lakehouse Books:**
 - [Apache Iceberg: The Definitive Guide](https://drmevn.fyi/tableformatblog)
@@ -23,13 +22,15 @@ canonical: "https://iceberglakehouse.com/posts/2026-01-recursive-langauge-models
 - [Architecting an Apache Iceberg Lakehouse](https://hubs.la/Q03GfY4f0)
 - [The Apache Iceberg Digest: Vol. 1](https://www.puppygraph.com/ebooks/apache-iceberg-digest-vol-1)
 
+> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-01-recursive-langauge-models/).
+
 **Lakehouse Community:**
 - [Join the Data Lakehouse Community](https://www.datalakehousehub.com)
 - [Data Lakehouse Blog Roll](https://lakehouseblogs.com)
 - [OSS Community Listings](https://osscommunity.com)
 - [Dremio Lakehouse Developer Hub](https://developer.dremio.com)
 
----
+--
 
 Recursive Language Models (RLMs) are language models that call themselves.
 
@@ -53,7 +54,7 @@ If you ask a regular LLM to solve a logic puzzle, it has to juggle the entire so
 
 ![Image description](https://dev-to-uploads.s3.amazonaws.com/uploads/articles/nqyodm8imk6zrniirz3h.png)
 
-Prompt engineering helps, but only up to a point. You can ask the model to “think step by step” or “show your work,” and that can improve results. But these tricks don’t change how the model actually runs. It still generates everything in one session, with no built-in way to modularize or reuse logic.
+Prompt engineering helps, but only up to a point. You can ask the model to “think step by step” or “show your work, ” and that can improve results. But these tricks don’t change how the model actually runs. It still generates everything in one session, with no built-in way to modularize or reuse logic.
 
 Recursive Language Models change this. They treat complex tasks as programs. The model doesn’t just answer - it writes code-like calls to itself. Those calls are evaluated in real time, and their results are folded back into the response.
 
@@ -177,5 +178,3 @@ This structure matters. It makes models more reliable on complex tasks. It makes
 We’re still early in this space. But the idea is simple and powerful: give models the tools to use themselves. From there, a new class of language systems can emerge - not just fluent, but recursive, modular, and built to handle depth.
 
 RLMs don’t just make better answers. They make better models.
-
-

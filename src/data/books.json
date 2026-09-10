@@ -3,7 +3,7 @@
   "source": "https://alexmerced.com/entity/books.json",
   "catalog": "https://books.alexmerced.com/",
   "intro": "Books by Alex Merced on lakehouse architecture, Apache Iceberg, catalogs, and agentic analytics. Several are free.",
-  "totalInCatalog": 65,
+  "totalInCatalog": 66,
   "count": 27,
   "books": [
     {

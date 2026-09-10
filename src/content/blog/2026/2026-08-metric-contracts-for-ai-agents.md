@@ -1,7 +1,7 @@
 ---
 title: "Metric Contracts as the Interface AI Agents Actually Need"
 date: 2026-08-04T09:00:00Z
-description: "Metric contracts as the interface AI agents need: calculation, inclusion rules, grain, temporal semantics, ownership, semantic versioning, and testing metrics in CI."
+description: "Metric contracts as the interface AI agents need: calculation, inclusion rules, grain, temporal semantics, ownership, semantic versioning, and testing."
 author: "Alex Merced"
 category: "AI & Agents"
 tags:
@@ -16,11 +16,11 @@ image: "/images/blog.png"
 canonical: "https://iceberglakehouse.com/posts/metric-contracts-for-ai-agents/"
 ---
 
-> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/metric-contracts-for-ai-agents/).
-
 # Metric Contracts as the Interface AI Agents Actually Need
 
 *By Alex Merced, Data Lakehouse and AI Evangelist*
+
+> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/metric-contracts-for-ai-agents/).
 
 Two teams present in the same meeting. Sales says pipeline conversion is 24 percent. Finance says it is 19. Both numbers came from the same warehouse. Both are defensible. The rest of the meeting is spent reconciling them instead of deciding anything, and the reconciliation produces a third number that nobody uses afterward.
 
@@ -58,60 +58,60 @@ Here is a contract with the parts that earn their place. The shape follows Apach
 
 ```yaml
 metric:
-  name: pipeline_conversion_rate
-  version: 2.1.0
-  label: Pipeline Conversion Rate
-  owner: revenue-operations
-  status: active
+ name: pipeline_conversion_rate
+ version: 2.1.0
+ label: Pipeline Conversion Rate
+ owner: revenue-operations
+ status: active
 
-  description: >
-    Share of qualified opportunities created in a period that reached
-    Closed Won within 180 days of creation. Denominator is fixed at
-    creation cohort, so the value for a recent period rises as the
-    cohort matures.
+ description: >
+ Share of qualified opportunities created in a period that reached
+ Closed Won within 180 days of creation. Denominator is fixed at
+ creation cohort, so the value for a recent period rises as the
+ cohort matures.
 
-  calculation:
-    numerator:   COUNT(DISTINCT opportunity.id) FILTER (WHERE opportunity.stage = 'closed_won')
-    denominator: COUNT(DISTINCT opportunity.id)
-    type: ratio
+ calculation:
+ numerator: COUNT(DISTINCT opportunity.id) FILTER (WHERE opportunity.stage = 'closed_won')
+ denominator: COUNT(DISTINCT opportunity.id)
+ type: ratio
 
-  grain: opportunity_cohort
+ grain: opportunity_cohort
 
-  filters:
-    - opportunity.qualified_at IS NOT NULL
-    - opportunity.record_type != 'internal'
-    - opportunity.amount >= 0
+ filters:
+ - opportunity.qualified_at IS NOT NULL
+ - opportunity.record_type != 'internal'
+ - opportunity.amount >= 0
 
-  temporal:
-    cohort_date_column: opportunity.qualified_at
-    attribution_window_days: 180
-    fiscal_calendar: acme_fy_feb_start
-    late_arrival_policy: restate
+ temporal:
+ cohort_date_column: opportunity.qualified_at
+ attribution_window_days: 180
+ fiscal_calendar: acme_fy_feb_start
+ late_arrival_policy: restate
 
-  valid_dimensions:
-    - account.segment
-    - account.region
-    - opportunity.product_line
-    - opportunity.source_channel
+ valid_dimensions:
+ - account.segment
+ - account.region
+ - opportunity.product_line
+ - opportunity.source_channel
 
-  invalid_dimensions:
-    - opportunity.stage        # slicing by stage makes the ratio meaningless
-    - contact.title            # grain mismatch, produces fan-out
+ invalid_dimensions:
+ - opportunity.stage # slicing by stage makes the ratio meaningless
+ - contact.title # grain mismatch, produces fan-out
 
-  tests:
-    - name: bounded
-      assert: value BETWEEN 0 AND 1
-    - name: matches_known_period
-      fixture: fy25_q2
-      expect: 0.2371
-      tolerance: 0.0001
-    - name: dimension_sum_consistency
-      assert: weighted_sum_over(account.region) == total
+ tests:
+ - name: bounded
+ assert: value BETWEEN 0 AND 1
+ - name: matches_known_period
+ fixture: fy25_q2
+ expect: 0.2371
+ tolerance: 0.0001
+ - name: dimension_sum_consistency
+ assert: weighted_sum_over(account.region) == total
 
-  lifecycle:
-    supersedes: 2.0.0
-    deprecates_on: 2026-10-01
-    breaking_change: false
+ lifecycle:
+ supersedes: 2.0.0
+ deprecates_on: 2026-10-01
+ breaking_change: false
 ```
 
 Several fields there are the ones teams omit and later wish they had.
@@ -143,9 +143,9 @@ The rule that makes this work is that a major version bump means both versions a
 Requesting a specific version should be possible and defaulting to latest-major should be the norm.
 
 ```
-GET /metrics/pipeline_conversion_rate            → latest active major
-GET /metrics/pipeline_conversion_rate@2          → latest 2.x
-GET /metrics/pipeline_conversion_rate@2.1.0      → exact
+GET /metrics/pipeline_conversion_rate → latest active major
+GET /metrics/pipeline_conversion_rate@2 → latest 2.x
+GET /metrics/pipeline_conversion_rate@2.1.0 → exact
 ```
 
 Automated consumers pin to a major. Exploratory consumers take the default. Anything pinned to an exact version gets a warning when a patch is available, since patch changes are the ones that should be adopted automatically.
@@ -160,33 +160,29 @@ A contract that is not tested is documentation. Four test classes catch the fail
 
 ```python
 def test_pipeline_conversion_matches_fy25_q2(metric_engine, fixture_fy25_q2):
-    result = metric_engine.query(
-        metric="pipeline_conversion_rate",
-        version="2.1.0",
-        period="FY25-Q2",
-        dataset=fixture_fy25_q2,
-    )
-    assert abs(result.value - 0.2371) < 0.0001
+ result = metric_engine.query(
+ metric="pipeline_conversion_rate", version="2.1.0", period="FY25-Q2", dataset=fixture_fy25_q2, )
+ assert abs(result.value - 0.2371) < 0.0001
 ```
 
 **Consistency tests** assert internal coherence. The metric sliced by region and recombined equals the unsliced total. The metric at monthly grain summed over a quarter equals the quarterly value, where that is expected to hold. These catch grain and fan-out bugs, which are the subtlest class and the ones that produce plausible wrong answers.
 
 ```python
 def test_region_slices_recombine(metric_engine):
-    total = metric_engine.query(metric="net_revenue", period="2026-Q2").value
-    by_region = metric_engine.query(
-        metric="net_revenue", period="2026-Q2", dimensions=["account.region"]
-    )
-    assert abs(sum(r.value for r in by_region) - total) < 0.01
+ total = metric_engine.query(metric="net_revenue", period="2026-Q2").value
+ by_region = metric_engine.query(
+ metric="net_revenue", period="2026-Q2", dimensions=["account.region"]
+ )
+ assert abs(sum(r.value for r in by_region) - total) < 0.01
 ```
 
 **Cross-version tests** assert that a patch change did not move the number and that a major change moved it by the amount the author expected. This one converts a review comment into an enforceable check.
 
 ```python
 def test_patch_change_preserves_value(metric_engine):
-    old = metric_engine.query(metric="net_revenue", version="3.2.0", period="2026-Q1")
-    new = metric_engine.query(metric="net_revenue", version="3.2.1", period="2026-Q1")
-    assert old.value == new.value, "patch version changed the result, bump minor or major"
+ old = metric_engine.query(metric="net_revenue", version="3.2.0", period="2026-Q1")
+ new = metric_engine.query(metric="net_revenue", version="3.2.1", period="2026-Q1")
+ assert old.value == new.value, "patch version changed the result, bump minor or major"
 ```
 
 Wire these into the same pipeline that reviews the definition change. A pull request that modifies a metric runs its tests, reports the value delta against the previous version, and requires the owner's approval. That workflow is what makes a metric an engineering artifact rather than a spreadsheet convention.
@@ -237,13 +233,10 @@ Before writing new contracts, inventory the ones that exist implicitly. They are
 
 ```sql
 SELECT
-    normalized_expression,
-    COUNT(*)                   AS uses,
-    COUNT(DISTINCT user_name)  AS authors,
-    MAX(start_time)            AS last_used
+ normalized_expression, COUNT(*) AS uses, COUNT(DISTINCT user_name) AS authors, MAX(start_time) AS last_used
 FROM query_history_expressions
 WHERE expression_type = 'aggregate'
-  AND referenced_tables LIKE '%orders%'
+ AND referenced_tables LIKE '%orders%'
 GROUP BY normalized_expression
 ORDER BY uses DESC
 LIMIT 50;

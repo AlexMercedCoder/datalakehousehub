@@ -1,6 +1,6 @@
 ---
 title: "Governing What Agents Cost You"
-description: "Agents break the four assumptions analytics platforms were built on. A practical guide to identity, budgets, semantic layers, caching, and instrumentation for agent workloads."
+description: "Agents break the four assumptions analytics platforms were built on. A practical guide to identity, budgets, semantic layers, caching, and instrumentation."
 date: 2026-07-25T09:00:00Z
 author: "Alex Merced"
 category: "AI & Agents"
@@ -16,9 +16,9 @@ image: "/images/blog.png"
 canonical: https://iceberglakehouse.com/posts/agent-cost-governance/
 ---
 
-> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/agent-cost-governance/).
-
 A platform team I spoke with watched their query volume rise 40 times in six weeks. No new dashboards, no new users, no new data sources. What changed was that three product teams shipped agents, and each agent issues somewhere between eight and sixty queries per user request depending on how many reasoning steps the task takes and how many of them fail and retry.
+
+> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/agent-cost-governance/).
 
 Their compute bill tripled. The part that hurt more than the bill was that nobody was able to say which agent caused it, because every agent connected with the same service account.
 
@@ -67,7 +67,7 @@ The harder half is the delegation chain. When a user asks an agent, which calls 
 Where full propagation is unavailable, an adequate approximation is a per-agent principal plus a request identifier passed as a query tag or session property, correlated with your application logs. That gets you attribution without waiting for the platform to catch up.
 
 ```sql
--- Per-agent principal with narrow, explicit grants.
+- Per-agent principal with narrow, explicit grants.
 CREATE ROLE agent_support_triage;
 
 GRANT USAGE ON CATALOG lakehouse TO ROLE agent_support_triage;
@@ -75,7 +75,7 @@ GRANT USAGE ON SCHEMA lakehouse.support TO ROLE agent_support_triage;
 GRANT SELECT ON TABLE lakehouse.support.tickets TO ROLE agent_support_triage;
 GRANT SELECT ON TABLE lakehouse.support.ticket_metrics TO ROLE agent_support_triage;
 
--- No access to the wider estate. Not customer PII, not finance, not raw events.
+- No access to the wider estate. Not customer PII, not finance, not raw events.
 ```
 
 The grant list being short is the point. Agents get scoped to the tables their job requires, and the review of that list is a security review that a human user rarely receives. The upside of agents arriving is that they force an access hygiene conversation that most organizations have deferred for years.
@@ -131,44 +131,20 @@ The third is where the industry converged, which is why nearly every data platfo
 ```python
 # What an agent's data tool should expose: business concepts, not tables.
 TOOLS = [
-    {
-        "name": "query_metric",
-        "description": (
-            "Retrieve a governed business metric. Metrics are defined once "
-            "in the catalog and return consistent values across all callers."
-        ),
-        "input_schema": {
-            "type": "object",
-            "properties": {
-                "metric": {
-                    "type": "string",
-                    "enum": ["net_revenue", "active_customers",
-                             "open_tickets", "avg_resolution_hours"],
-                },
-                "group_by": {
-                    "type": "array",
-                    "items": {"type": "string",
-                              "enum": ["region", "segment", "month", "product"]},
-                },
-                "filters": {"type": "object"},
-                "time_range": {"type": "string"},
-            },
-            "required": ["metric"],
-        },
-    },
-    {
-        "name": "check_freshness",
-        "description": (
-            "Return the last update time of the data behind a metric. "
-            "Call this before acting on anything time-sensitive."
-        ),
-        "input_schema": {
-            "type": "object",
-            "properties": {"metric": {"type": "string"}},
-            "required": ["metric"],
-        },
-    },
-]
+ {
+ "name": "query_metric", "description": (
+ "Retrieve a governed business metric. Metrics are defined once "
+ "in the catalog and return consistent values across all callers."
+ ), "input_schema": {
+ "type": "object", "properties": {
+ "metric": {
+ "type": "string", "enum": ["net_revenue", "active_customers", "open_tickets", "avg_resolution_hours"], }, "group_by": {
+ "type": "array", "items": {"type": "string", "enum": ["region", "segment", "month", "product"]}, }, "filters": {"type": "object"}, "time_range": {"type": "string"}, }, "required": ["metric"], }, }, {
+ "name": "check_freshness", "description": (
+ "Return the last update time of the data behind a metric. "
+ "Call this before acting on anything time-sensitive."
+ ), "input_schema": {
+ "type": "object", "properties": {"metric": {"type": "string"}}, "required": ["metric"], }, }, ]
 ```
 
 Four properties of that tool definition matter more than the code.
@@ -196,19 +172,12 @@ Five measurements make agent cost governable. Collect them from day one, because
 **Cache hit rate by level.** Tells you whether the caching investment is landing, and which level to work on next.
 
 ```sql
--- Daily agent cost and behavior summary from query history.
+- Daily agent cost and behavior summary from query history.
 SELECT
-    user_name                                        AS principal,
-    DATE(start_time)                                 AS day,
-    COUNT(*)                                         AS queries,
-    SUM(bytes_scanned) / POWER(1024, 4)              AS tb_scanned,
-    AVG(total_elapsed_time_ms) / 1000.0              AS avg_seconds,
-    SUM(CASE WHEN execution_status = 'FAIL' THEN 1 ELSE 0 END) AS failures,
-    SUM(CASE WHEN result_from_cache THEN 1 ELSE 0 END) AS cache_hits,
-    COUNT(DISTINCT query_tag)                        AS distinct_requests
+ user_name AS principal, DATE(start_time) AS day, COUNT(*) AS queries, SUM(bytes_scanned) / POWER(1024, 4) AS tb_scanned, AVG(total_elapsed_time_ms) / 1000.0 AS avg_seconds, SUM(CASE WHEN execution_status = 'FAIL' THEN 1 ELSE 0 END) AS failures, SUM(CASE WHEN result_from_cache THEN 1 ELSE 0 END) AS cache_hits, COUNT(DISTINCT query_tag) AS distinct_requests
 FROM platform.account_usage.query_history
 WHERE start_time >= DATEADD(day, -7, CURRENT_TIMESTAMP())
-  AND user_name LIKE 'agent_%'
+ AND user_name LIKE 'agent_%'
 GROUP BY 1, 2
 ORDER BY tb_scanned DESC;
 ```
@@ -219,17 +188,17 @@ The `distinct_requests` column, populated from a query tag your agent framework 
 
 Numbers make this concrete, and the model is simple enough to build in a spreadsheet during a planning meeting.
 
-Start with four inputs. User requests per day, call it 2,000. Queries per request, the amplification factor, call it 12. Average bytes scanned per query, call it 4 GB. And your platform's cost per terabyte scanned, which varies widely but sits in the low single-digit dollars on most consumption pricing.
+Start with four inputs. User requests per day, call it 2, 000. Queries per request, the amplification factor, call it 12. Average bytes scanned per query, call it 4 GB. And your platform's cost per terabyte scanned, which varies widely but sits in the low single-digit dollars on most consumption pricing.
 
-That gives 24,000 queries a day scanning 96 TB, which at three dollars per terabyte is roughly 288 dollars a day, or about 8,600 dollars a month, for one agent product with 2,000 daily requests.
+That gives 24, 000 queries a day scanning 96 TB, which at three dollars per terabyte is roughly 288 dollars a day, or about 8, 600 dollars a month, for one agent product with 2, 000 daily requests.
 
 Now apply the four controls and watch what each one does.
 
-**Schema caching in the agent session** removes the orientation queries, which are frequently 40 percent of the count and almost none of the bytes. Query count drops to 14,400. Cost barely moves, but concurrency pressure and platform overhead drop sharply, and latency per request improves noticeably.
+**Schema caching in the agent session** removes the orientation queries, which are frequently 40 percent of the count and almost none of the bytes. Query count drops to 14, 400. Cost barely moves, but concurrency pressure and platform overhead drop sharply, and latency per request improves noticeably.
 
-**A semantic layer with pre-aggregated metrics** changes the bytes, which is where the money is. Metric requests that scanned 4 GB of raw events now scan tens of megabytes of aggregate. If half the analytical queries resolve against aggregates, average bytes per query falls to around 2 GB. Monthly cost drops to roughly 4,300 dollars.
+**A semantic layer with pre-aggregated metrics** changes the bytes, which is where the money is. Metric requests that scanned 4 GB of raw events now scan tens of megabytes of aggregate. If half the analytical queries resolve against aggregates, average bytes per query falls to around 2 GB. Monthly cost drops to roughly 4, 300 dollars.
 
-**Result caching with a five-minute window** catches retries and duplicate questions across concurrent users. A 20 percent hit rate on the remaining traffic takes it to about 3,400 dollars.
+**Result caching with a five-minute window** catches retries and duplicate questions across concurrent users. A 20 percent hit rate on the remaining traffic takes it to about 3, 400 dollars.
 
 **Fixing a retry loop** found by watching success rate takes another slice off the top. Retry traffic is pure waste and commonly runs 10 to 25 percent of query volume in an untuned deployment.
 
@@ -344,7 +313,7 @@ There is a cultural point underneath both. Agents make previously abstract data 
 ## The Controls at a Glance
 
 | Control | Effort | What it fixes | Where it lives |
-|---|---|---|---|
+|--|--|--|--|
 | Principal per agent | Hours | Attribution, scoping, revocation | Catalog |
 | Query timeout | Minutes | Runaway queries | Platform |
 | Bytes scanned cap | Hours | Missing-filter scans | Platform |

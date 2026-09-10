@@ -1,7 +1,7 @@
 ---
 title: "What is Materialized Views?"
 meta_title: "What is Materialized Views? | Expert Data Lakehouse & AI Glossary"
-description: "Precomputed data tables containing the results of a query, vastly accelerating access times for complex aggregations. Learn the architecture, mechanics, and real-world value of Materialized Views in the modern data stack."
+description: "Precomputed data tables containing the results of a query, vastly accelerating access times for complex aggregations."
 ---
 
 ## What is Materialized Views?

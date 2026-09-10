@@ -14,9 +14,10 @@ tags:
 slug: "agent-driven-iceberg-storage-tiering"
 draft: false
 ---
-> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/agent-driven-iceberg-storage-tiering/).
 
-A five-year-old event table holds 900 terabytes across 3,000 daily partitions. Query logs for the last quarter show that 94 percent of scans touch the most recent 90 days. Another 5 percent touch the prior year, mostly month-end reports. The remaining 1 percent reach into the four years before that, a few hundred queries a quarter, most of them audits and one-off investigations. Every byte of those 900 terabytes sits in standard object storage at the same price per gigabyte, and the storage line item for that one table is larger than the compute bill for querying it.
+A five-year-old event table holds 900 terabytes across 3, 000 daily partitions. Query logs for the last quarter show that 94 percent of scans touch the most recent 90 days. Another 5 percent touch the prior year, mostly month-end reports. The remaining 1 percent reach into the four years before that, a few hundred queries a quarter, most of them audits and one-off investigations. Every byte of those 900 terabytes sits in standard object storage at the same price per gigabyte, and the storage line item for that one table is larger than the compute bill for querying it.
+
+> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/agent-driven-iceberg-storage-tiering/).
 
 The fix is obvious in outline: move the cold partitions to a cheaper storage tier. The reasons it does not happen are specific. Nobody knows exactly which partitions are cold, because the heatmap lives in query logs nobody aggregates. Moving files under an Apache Iceberg table looks dangerous, because the metadata references every file by path. And the storage tiers have different latency and retrieval-cost characteristics that a careless move turns into broken dashboards or a surprise bill.
 
@@ -33,7 +34,7 @@ The second family is offline archive tiers. Objects keep their key but cannot be
 Here is how the tiers line up on the properties that matter for a table:
 
 | Tier | Access latency | Retrieval fee | Minimum duration | Storage price relative to standard | Safe for live queries |
-|---|---|---|---|---|---|
+|--|--|--|--|--|--|
 | S3 Standard | ms | none | none | 1.0x | yes |
 | S3 Standard-IA | ms | per GB | 30 days | ~0.55x | yes |
 | S3 Glacier Instant Retrieval | ms | per GB, higher | 90 days | ~0.17x | yes, with retrieval cost |
@@ -77,37 +78,25 @@ The engine's query log tells you what was read. Dremio's job history records, pe
 Joining the two produces the heatmap. Here is the core of it in SQL, using Dremio's system tables for the query side and Iceberg's metadata table for the partition side. The exact column names differ by engine, but the join is the point:
 
 ```sql
--- Partitions and their weight, from Iceberg metadata
+- Partitions and their weight, from Iceberg metadata
 WITH partitions AS (
-  SELECT
-    partition."day" AS day,
-    file_count,
-    record_count,
-    total_data_file_size_in_bytes AS bytes
-  FROM TABLE(table_partitions('lake.events.web_clicks'))
-),
-
--- Partition reads, from the engine's query log over the trailing 90 days
+ SELECT
+ partition."day" AS day, file_count, record_count, total_data_file_size_in_bytes AS bytes
+ FROM TABLE(table_partitions('lake.events.web_clicks'))
+), - Partition reads, from the engine's query log over the trailing 90 days
 scans AS (
-  SELECT
-    CAST(REGEXP_EXTRACT(scanned_partition, 'day=([0-9-]+)', 1) AS DATE) AS day,
-    COUNT(DISTINCT job_id) AS query_count,
-    MAX(submitted_ts)      AS last_read_at
-  FROM sys.project.history.jobs
-  CROSS JOIN UNNEST(scanned_partitions) AS t(scanned_partition)
-  WHERE dataset_path = 'lake.events.web_clicks'
-    AND submitted_ts >= CURRENT_DATE - INTERVAL '90' DAY
-    AND query_state = 'COMPLETED'
-  GROUP BY 1
+ SELECT
+ CAST(REGEXP_EXTRACT(scanned_partition, 'day=([0-9-]+)', 1) AS DATE) AS day, COUNT(DISTINCT job_id) AS query_count, MAX(submitted_ts) AS last_read_at
+ FROM sys.project.history.jobs
+ CROSS JOIN UNNEST(scanned_partitions) AS t(scanned_partition)
+ WHERE dataset_path = 'lake.events.web_clicks'
+ AND submitted_ts >= CURRENT_DATE - INTERVAL '90' DAY
+ AND query_state = 'COMPLETED'
+ GROUP BY 1
 )
 
 SELECT
-  p.day,
-  p.bytes,
-  p.file_count,
-  COALESCE(s.query_count, 0) AS query_count_90d,
-  s.last_read_at,
-  CURRENT_DATE - p.day AS age_days
+ p.day, p.bytes, p.file_count, COALESCE(s.query_count, 0) AS query_count_90d, s.last_read_at, CURRENT_DATE - p.day AS age_days
 FROM partitions p
 LEFT JOIN scans s ON s.day = p.day
 ORDER BY p.day;
@@ -129,10 +118,10 @@ The cost model is the core. For each partition and each candidate tier, the agen
 
 ```
 monthly_cost(partition, tier) =
-    bytes * storage_price(tier)
-  + expected_bytes_read_per_month * retrieval_price(tier)
-  + expected_requests_per_month * request_price(tier)
-  + early_deletion_risk(partition, tier)
+ bytes * storage_price(tier)
+ + expected_bytes_read_per_month * retrieval_price(tier)
+ + expected_requests_per_month * request_price(tier)
+ + early_deletion_risk(partition, tier)
 ```
 
 The first term is what tiering saves. The second and third are what it costs when the partition is read. The fourth is the expected cost of having to move or delete the partition before its minimum duration elapses, which is a function of how stable the partition is (has it received writes in the last N days) and whether maintenance is scheduled to touch it.
@@ -147,26 +136,26 @@ evaluation_window_days: 90
 heatmap_source: dremio_job_history
 
 tiers:
-  - name: standard
-    storage_class: STANDARD
-  - name: cold_online
-    storage_class: GLACIER_IR
-    min_age_days: 180
-    max_reads_per_window: 10
-    min_partition_age_since_last_write_days: 30
-  - name: archive
-    storage_class: DEEP_ARCHIVE
-    min_age_days: 1095
-    max_reads_per_window: 0
-    requires_approval: true
-    restore_sla_hours: 24
+ - name: standard
+ storage_class: STANDARD
+ - name: cold_online
+ storage_class: GLACIER_IR
+ min_age_days: 180
+ max_reads_per_window: 10
+ min_partition_age_since_last_write_days: 30
+ - name: archive
+ storage_class: DEEP_ARCHIVE
+ min_age_days: 1095
+ max_reads_per_window: 0
+ requires_approval: true
+ restore_sla_hours: 24
 
 guardrails:
-  never_tier_partitions_newer_than_days: 90
-  max_bytes_transitioned_per_run: 50 TB
-  max_partitions_transitioned_per_run: 200
-  pause_if_compaction_scheduled_within_days: 7
-  dry_run: false
+ never_tier_partitions_newer_than_days: 90
+ max_bytes_transitioned_per_run: 50 TB
+ max_partitions_transitioned_per_run: 200
+ pause_if_compaction_scheduled_within_days: 7
+ dry_run: false
 ```
 
 Read the policy top to bottom. Partitions under 90 days old are never touched, regardless of reads. A partition can go to the online cold tier once it is 180 days old, has fewer than 10 reads in the 90-day window, and has not been written to in 30 days. The offline archive tier requires the partition to be three years old with zero reads in the window, and requires a human to approve the move, because moving to an offline tier means a query that touches the partition will fail until a restore completes. The guardrails cap how much the agent moves per run so a heatmap error does not tier half the table in one pass, and the agent stands down if compaction is scheduled soon.
@@ -180,59 +169,50 @@ from collections import defaultdict
 s3 = boto3.client("s3")
 
 def files_for_partition(catalog, table_id, partition_value):
-    """List data file paths for one partition from the Iceberg 'files' metadata table."""
-    table = catalog.load_table(table_id)
-    files = table.inspect.files().to_pylist()
-    return [f["file_path"] for f in files if f["partition"]["day"] == partition_value]
+ """List data file paths for one partition from the Iceberg 'files' metadata table."""
+ table = catalog.load_table(table_id)
+ files = table.inspect.files().to_pylist()
+ return [f["file_path"] for f in files if f["partition"]["day"] == partition_value]
 
 def tag_for_tier(bucket, key, tier_name):
-    s3.put_object_tagging(
-        Bucket=bucket, Key=key,
-        Tagging={"TagSet": [{"Key": "iceberg-tier", "Value": tier_name}]},
-    )
+ s3.put_object_tagging(
+ Bucket=bucket, Key=key, Tagging={"TagSet": [{"Key": "iceberg-tier", "Value": tier_name}]}, )
 
 def execute_plan(catalog, table_id, plan, guardrails):
-    """
-    plan: list of (partition_value, target_tier_name, estimated_bytes)
-    Applies tags. A bucket lifecycle rule transitions tagged objects.
-    """
-    moved_bytes = 0
-    moved_parts = 0
-    by_tier = defaultdict(int)
-    for partition_value, tier, est_bytes in plan:
-        if moved_bytes + est_bytes > guardrails["max_bytes"]:
-            break
-        if moved_parts >= guardrails["max_partitions"]:
-            break
-        for path in files_for_partition(catalog, table_id, partition_value):
-            bucket, key = path.replace("s3://", "").split("/", 1)
-            if not guardrails["dry_run"]:
-                tag_for_tier(bucket, key, tier)
-            by_tier[tier] += 1
-        moved_bytes += est_bytes
-        moved_parts += 1
-        record_transition(table_id, partition_value, tier, est_bytes)
-    return {"partitions": moved_parts, "bytes": moved_bytes, "files_by_tier": dict(by_tier)}
+ """
+ plan: list of (partition_value, target_tier_name, estimated_bytes)
+ Applies tags. A bucket lifecycle rule transitions tagged objects.
+ """
+ moved_bytes = 0
+ moved_parts = 0
+ by_tier = defaultdict(int)
+ for partition_value, tier, est_bytes in plan:
+ if moved_bytes + est_bytes > guardrails["max_bytes"]:
+ break
+ if moved_parts >= guardrails["max_partitions"]:
+ break
+ for path in files_for_partition(catalog, table_id, partition_value):
+ bucket, key = path.replace("s3://", "").split("/", 1)
+ if not guardrails["dry_run"]:
+ tag_for_tier(bucket, key, tier)
+ by_tier[tier] += 1
+ moved_bytes += est_bytes
+ moved_parts += 1
+ record_transition(table_id, partition_value, tier, est_bytes)
+ return {"partitions": moved_parts, "bytes": moved_bytes, "files_by_tier": dict(by_tier)}
 ```
 
 The lifecycle rule that pairs with it lives on the bucket and is managed as infrastructure:
 
 ```json
 {
-  "Rules": [
-    {
-      "ID": "iceberg-tier-cold-online",
-      "Filter": { "Tag": { "Key": "iceberg-tier", "Value": "cold_online" } },
-      "Status": "Enabled",
-      "Transitions": [{ "Days": 0, "StorageClass": "GLACIER_IR" }]
-    },
-    {
-      "ID": "iceberg-tier-archive",
-      "Filter": { "Tag": { "Key": "iceberg-tier", "Value": "archive" } },
-      "Status": "Enabled",
-      "Transitions": [{ "Days": 0, "StorageClass": "DEEP_ARCHIVE" }]
-    }
-  ]
+ "Rules": [
+ {
+ "ID": "iceberg-tier-cold-online", "Filter": { "Tag": { "Key": "iceberg-tier", "Value": "cold_online" } }, "Status": "Enabled", "Transitions": [{ "Days": 0, "StorageClass": "GLACIER_IR" }]
+ }, {
+ "ID": "iceberg-tier-archive", "Filter": { "Tag": { "Key": "iceberg-tier", "Value": "archive" } }, "Status": "Enabled", "Transitions": [{ "Days": 0, "StorageClass": "DEEP_ARCHIVE" }]
+ }
+ ]
 }
 ```
 
@@ -250,18 +230,18 @@ Put the pieces together on the table from the opening, using round numbers and t
 
 The heatmap says 90 days (about 135 terabytes at 1.5 terabytes a day) are hot, the prior year (about 550 terabytes) is warm with a few hundred reads a quarter concentrated in month-end reports, and the four years before that (about 215 terabytes, the table was smaller then) had a few hundred reads in total, mostly from two compliance jobs and a handful of investigations.
 
-The policy keeps the first 90 days in Standard: 135 terabytes at roughly $23 per terabyte-month is about $3,100 a month.
+The policy keeps the first 90 days in Standard: 135 terabytes at roughly $23 per terabyte-month is about $3, 100 a month.
 
-The prior year goes to Glacier Instant Retrieval: 550 terabytes at roughly $4 per terabyte-month is about $2,200 a month in storage. The month-end reports read maybe 20 terabytes across the year's partitions each month, and the retrieval fee at roughly $30 per terabyte is about $600 a month. Total about $2,800 a month, against roughly $12,600 a month in Standard. The reports still run. They are a little slower on first byte.
+The prior year goes to Glacier Instant Retrieval: 550 terabytes at roughly $4 per terabyte-month is about $2, 200 a month in storage. The month-end reports read maybe 20 terabytes across the year's partitions each month, and the retrieval fee at roughly $30 per terabyte is about $600 a month. Total about $2, 800 a month, against roughly $12, 600 a month in Standard. The reports still run. They are a little slower on first byte.
 
 The four oldest years are where the decision splits. If the two compliance jobs are predictable (first of the month, known partitions), they go to Deep Archive at roughly $1 per terabyte-month, about $215 a month, with the compliance jobs' first step being a restore request the day before. If investigations are unpredictable, they go to Glacier Instant Retrieval at about $860 a month with a retrieval fee on the rare read. Say the team picks Deep Archive for the three oldest years and Glacier IR for the fourth, splitting the difference: about $150 a month for the archive and about $215 for the Glacier IR year, call it $365.
 
 | Segment | Size | Before (Standard) | After | Tier |
-|---|---|---|---|---|
-| Last 90 days | 135 TB | ~$3,100 | ~$3,100 | Standard |
-| Prior year | 550 TB | ~$12,600 | ~$2,800 incl. retrieval | Glacier IR |
-| Years 2 to 5 | 215 TB | ~$4,900 | ~$365 | Deep Archive plus one year Glacier IR |
-| Total | 900 TB | ~$20,600 / month | ~$6,300 / month | |
+|--|--|--|--|--|
+| Last 90 days | 135 TB | ~$3, 100 | ~$3, 100 | Standard |
+| Prior year | 550 TB | ~$12, 600 | ~$2, 800 incl. retrieval | Glacier IR |
+| Years 2 to 5 | 215 TB | ~$4, 900 | ~$365 | Deep Archive plus one year Glacier IR |
+| Total | 900 TB | ~$20, 600 / month | ~$6, 300 / month | |
 
 That is a 70 percent reduction, with the hot path unchanged, the warm reports working, and the cold reads on an explicit restore path. The prices are approximate and they move, but the ratios are stable, and the point is that the split between tiers is decided by the heatmap and the read pattern rather than by age alone. A different table with a different heatmap gets a different split, and the agent computes it rather than an engineer guessing.
 
@@ -320,7 +300,7 @@ The `pause_if_compaction_scheduled_within_days` guardrail in the policy is the s
 Here is the lifecycle of a daily partition under a coordinated policy:
 
 | Age | Maintenance state | Tier | Reads |
-|---|---|---|---|
+|--|--|--|--|
 | 0 to 7 days | Receiving late-arriving rows, small files | Standard | Hot |
 | 7 to 30 days | Compacted, stable | Standard | Hot |
 | 30 to 180 days | Snapshot history expired past it | Standard | Warm |

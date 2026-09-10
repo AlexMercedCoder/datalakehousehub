@@ -13,15 +13,16 @@ draft: false
 image: "/images/blog.png"
 canonical: "https://iceberglakehouse.com/posts/2025-02-crash-course-on-langchain/"
 ---
-> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2025-02-crash-course-on-langchain/).
 
 ## Free Resources  
-- **[Free Apache Iceberg Course](https://hello.dremio.com/webcast-an-apache-iceberg-lakehouse-crash-course-reg.html?utm_source=ev_external_blog&utm_medium=influencer&utm_campaign=intro_langchain&utm_content=alexmerced&utm_term=external_blog)**  
-- **[Free Copy of “Apache Iceberg: The Definitive Guide”](https://hello.dremio.com/wp-apache-iceberg-the-definitive-guide-reg.html?utm_source=ev_external_blog&utm_medium=influencer&utm_campaign=lakehouse-benefits-solu&utm_content=alexmerced&utm_term=external_blog)**  
-- **[2025 Apache Iceberg Architecture Guide](https://medium.com/data-engineering-with-dremio/2025-guide-to-architecting-an-iceberg-lakehouse-9b19ed42c9de)**  
-- **[How to Join the Iceberg Community](https://medium.alexmerced.blog/guide-to-finding-apache-iceberg-events-near-you-and-being-part-of-the-greater-iceberg-community-0c38ae785ddb)**  
-- **[Iceberg Lakehouse Engineering Video Playlist](https://youtube.com/playlist?list=PLsLAVBjQJO0p0Yq1fLkoHvt2lEJj5pcYe&si=WTSnqjXZv6Glkc3y)**  
-- **[Ultimate Apache Iceberg Resource Guide](https://medium.com/data-engineering-with-dremio/ultimate-directory-of-apache-iceberg-resources-e3e02efac62e)**  
+- **[Free Apache Iceberg Course](https://hello.dremio.com/webcast-an-apache-iceberg-lakehouse-crash-course-reg.html?utm_source=ev_external_blog&utm_medium=influencer&utm_campaign=intro_langchain&utm_content=alexmerced&utm_term=external_blog)** 
+- **[Free Copy of “Apache Iceberg: The Definitive Guide”](https://hello.dremio.com/wp-apache-iceberg-the-definitive-guide-reg.html?utm_source=ev_external_blog&utm_medium=influencer&utm_campaign=lakehouse-benefits-solu&utm_content=alexmerced&utm_term=external_blog)** 
+- **[2025 Apache Iceberg Architecture Guide](https://medium.com/data-engineering-with-dremio/2025-guide-to-architecting-an-iceberg-lakehouse-9b19ed42c9de)** 
+- **[How to Join the Iceberg Community](https://medium.alexmerced.blog/guide-to-finding-apache-iceberg-events-near-you-and-being-part-of-the-greater-iceberg-community-0c38ae785ddb)** 
+- **[Iceberg Lakehouse Engineering Video Playlist](https://youtube.com/playlist?list=PLsLAVBjQJO0p0Yq1fLkoHvt2lEJj5pcYe&si=WTSnqjXZv6Glkc3y)** 
+- **[Ultimate Apache Iceberg Resource Guide](https://medium.com/data-engineering-with-dremio/ultimate-directory-of-apache-iceberg-resources-e3e02efac62e)**
+
+> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2025-02-crash-course-on-langchain/).
 
 ## Introduction
 
@@ -49,10 +50,10 @@ LangChain automates and streamlines these steps, making it easier to build compl
 
 ### Key Use Cases
 LangChain is widely used for:
-- **Chatbots & Virtual Assistants** – Retaining conversation context and improving responses.
-- **Retrieval-Augmented Generation (RAG)** – Enhancing LLM responses by fetching external data sources.
-- **Data Processing & Summarization** – Analyzing and summarizing large documents.
-- **AI Agents** – Creating autonomous agents that interact with external APIs and databases.
+- **Chatbots & Virtual Assistants** - Retaining conversation context and improving responses.
+- **Retrieval-Augmented Generation (RAG)** - Enhancing LLM responses by fetching external data sources.
+- **Data Processing & Summarization** - Analyzing and summarizing large documents.
+- **AI Agents** - Creating autonomous agents that interact with external APIs and databases.
 
 By leveraging LangChain’s modular architecture, you can integrate various **models, tools, and memory mechanisms** to build dynamic AI-driven applications.
 
@@ -68,8 +69,7 @@ Prompt templates help structure the input given to an LLM. Instead of writing st
 from langchain.prompts import PromptTemplate
 
 template = PromptTemplate(
-    input_variables=["topic"],
-    template="Explain {topic} in simple terms."
+ input_variables=["topic"], template="Explain {topic} in simple terms."
 )
 
 formatted_prompt = template.format(topic="LangChain")
@@ -130,18 +130,14 @@ from langchain.agents import initialize_agent, AgentType
 from langchain.tools import Tool
 
 def add_numbers(a, b):
-    return a + b
+ return a + b
 
 tool = Tool(
-    name="Calculator",
-    func=add_numbers,
-    description="Adds two numbers."
+ name="Calculator", func=add_numbers, description="Adds two numbers."
 )
 
 agent = initialize_agent(
-    tools=[tool],
-    llm=llm,
-    agent=AgentType.ZERO_SHOT_REACT_DESCRIPTION
+ tools=[tool], llm=llm, agent=AgentType.ZERO_SHOT_REACT_DESCRIPTION
 )
 
 response = agent.run("What is 3 + 5?")
@@ -156,10 +152,10 @@ By understanding these core concepts, you can start building more structured and
 
 Before we start building with LangChain, we need to install the necessary packages. LangChain is modular, meaning that different functionalities are split across separate libraries. The main ones you'll need are:
 
-- **`langchain`** – The core LangChain library.
-- **`langchain_community`** – A collection of integrations for third-party tools and services.
-- **`langchain_openai`** – A dedicated package for working with OpenAI models.
-- **`openai`** – The OpenAI Python SDK for API access.
+- **`langchain`** - The core LangChain library.
+- **`langchain_community`** - A collection of integrations for third-party tools and services.
+- **`langchain_openai`** - A dedicated package for working with OpenAI models.
+- **`openai`** - The OpenAI Python SDK for API access.
 
 ### **1. Installing LangChain and Dependencies**
 You can install the required libraries using `pip`:
@@ -238,8 +234,7 @@ A prompt template ensures that user input is formatted consistently before being
 from langchain.prompts import PromptTemplate
 
 template = PromptTemplate(
-    input_variables=["topic"],
-    template="Explain {topic} in simple terms."
+ input_variables=["topic"], template="Explain {topic} in simple terms."
 )
 
 formatted_prompt = template.format(topic="machine learning")
@@ -293,19 +288,15 @@ from langchain.tools import Tool
 
 # Defining a simple addition function
 def add_numbers(a, b):
-    return a + b
+ return a + b
 
 tool = Tool(
-    name="Calculator",
-    func=add_numbers,
-    description="Adds two numbers."
+ name="Calculator", func=add_numbers, description="Adds two numbers."
 )
 
 # Creating an agent with the tool
 agent = initialize_agent(
-    tools=[tool],
-    llm=llm,
-    agent=AgentType.ZERO_SHOT_REACT_DESCRIPTION
+ tools=[tool], llm=llm, agent=AgentType.ZERO_SHOT_REACT_DESCRIPTION
 )
 
 # Running the agent
@@ -318,9 +309,9 @@ This enables the LLM to recognize when to use the calculator tool instead of res
 ### What’s Next?
 Now that we've covered basic LangChain functionalities, you can start experimenting with more advanced features like:
 
-- **Retrieval-Augmented Generation (RAG) –** Enhancing LLMs with external knowledge sources.
-- **Vector Databases –** Storing and retrieving information efficiently.
-- **Custom Tools and APIs –** Expanding agents to interact with real-world data.
+- **Retrieval-Augmented Generation (RAG) -** Enhancing LLMs with external knowledge sources.
+- **Vector Databases -** Storing and retrieving information efficiently.
+- **Custom Tools and APIs -** Expanding agents to interact with real-world data.
 
 In the next section, we'll discuss best practices for using LangChain efficiently and how to scale applications for production use.
 
@@ -328,7 +319,7 @@ In the next section, we'll discuss best practices for using LangChain efficientl
 
 Now that you understand the basics of LangChain: connecting to LLMs, structuring prompts, using chains, memory, and agents, let’s discuss some best practices for building efficient and scalable applications.
 
----
+--
 
 ### **1. Optimize Prompt Engineering**
 - Use **clear and structured prompt templates** to get better responses from LLMs.
@@ -340,8 +331,7 @@ Now that you understand the basics of LangChain: connecting to LLMs, structuring
 from langchain.prompts import PromptTemplate
 
 template = PromptTemplate(
-    input_variables=["word"],
-    template="Convert the following word into plural form: {word}\n\nExample:\n- dog -> dogs\n- cat -> cats\n- book -> ?"
+ input_variables=["word"], template="Convert the following word into plural form: {word}\n\nExample:\n- dog -> dogs\n- cat -> cats\n- book -> ?"
 )
 
 print(template.format(word="tree"))
@@ -353,9 +343,9 @@ Providing examples improves the model's accuracy.
 Only use conversation memory when necessary (e.g., chatbots).
 
 **Choose the right memory type:**
-- **ConversationBufferMemory –** Stores all conversation history.
-- **ConversationSummaryMemory –** Summarizes past interactions.
-- **ConversationKGMemory –** Extracts key facts from a conversation.
+- **ConversationBufferMemory -** Stores all conversation history.
+- **ConversationSummaryMemory -** Summarizes past interactions.
+- **ConversationKGMemory -** Extracts key facts from a conversation.
 
 #### Example: Using Summary Memory
 ```python
@@ -422,10 +412,10 @@ from langchain.cache import InMemoryCache
 from langchain.chains import LLMChain
 
 llm_chain = LLMChain(llm=llm, prompt=template)
-llm_chain.cache = InMemoryCache()  # Enable caching
+llm_chain.cache = InMemoryCache() # Enable caching
 
 response1 = llm_chain.run("machine learning")
-response2 = llm_chain.run("machine learning")  # Cached response
+response2 = llm_chain.run("machine learning") # Cached response
 print(response2)
 ```
 
@@ -445,19 +435,19 @@ In this guide, we covered:
 
 By applying these concepts, you can start building **custom AI-powered solutions** with real-world impact.
 
----
+--
 
 ### **Where to Go from Here?**
 If you're ready to take the next step, consider:
-1. **Building a LangChain Project** – Try creating a chatbot, document summarizer, or an AI-driven search engine.
-2. **Exploring Vector Databases** – Learn how to integrate Pinecone, FAISS, or ChromaDB for RAG applications.
-3. **Joining the Community** – Engage with other developers on [LangChain's GitHub](https://github.com/langchain-ai/langchain) or [Discord](https://discord.gg/langchain).
+1. **Building a LangChain Project** - Try creating a chatbot, document summarizer, or an AI-driven search engine.
+2. **Exploring Vector Databases** - Learn how to integrate Pinecone, FAISS, or ChromaDB for RAG applications.
+3. **Joining the Community** - Engage with other developers on [LangChain's GitHub](https://github.com/langchain-ai/langchain) or [Discord](https://discord.gg/langchain).
 
 LangChain is continuously evolving, and staying updated with the latest features will help you build **more advanced and efficient AI applications**. Start experimenting and bring your AI ideas to life!
 
-- **[Free Apache Iceberg Course](https://hello.dremio.com/webcast-an-apache-iceberg-lakehouse-crash-course-reg.html?utm_source=ev_external_blog&utm_medium=influencer&utm_campaign=intro_langchain&utm_content=alexmerced&utm_term=external_blog)**  
-- **[Free Copy of “Apache Iceberg: The Definitive Guide”](https://hello.dremio.com/wp-apache-iceberg-the-definitive-guide-reg.html?utm_source=ev_external_blog&utm_medium=influencer&utm_campaign=lakehouse-benefits-solu&utm_content=alexmerced&utm_term=external_blog)**  
-- **[2025 Apache Iceberg Architecture Guide](https://medium.com/data-engineering-with-dremio/2025-guide-to-architecting-an-iceberg-lakehouse-9b19ed42c9de)**  
-- **[How to Join the Iceberg Community](https://medium.alexmerced.blog/guide-to-finding-apache-iceberg-events-near-you-and-being-part-of-the-greater-iceberg-community-0c38ae785ddb)**  
-- **[Iceberg Lakehouse Engineering Video Playlist](https://youtube.com/playlist?list=PLsLAVBjQJO0p0Yq1fLkoHvt2lEJj5pcYe&si=WTSnqjXZv6Glkc3y)**  
+- **[Free Apache Iceberg Course](https://hello.dremio.com/webcast-an-apache-iceberg-lakehouse-crash-course-reg.html?utm_source=ev_external_blog&utm_medium=influencer&utm_campaign=intro_langchain&utm_content=alexmerced&utm_term=external_blog)** 
+- **[Free Copy of “Apache Iceberg: The Definitive Guide”](https://hello.dremio.com/wp-apache-iceberg-the-definitive-guide-reg.html?utm_source=ev_external_blog&utm_medium=influencer&utm_campaign=lakehouse-benefits-solu&utm_content=alexmerced&utm_term=external_blog)** 
+- **[2025 Apache Iceberg Architecture Guide](https://medium.com/data-engineering-with-dremio/2025-guide-to-architecting-an-iceberg-lakehouse-9b19ed42c9de)** 
+- **[How to Join the Iceberg Community](https://medium.alexmerced.blog/guide-to-finding-apache-iceberg-events-near-you-and-being-part-of-the-greater-iceberg-community-0c38ae785ddb)** 
+- **[Iceberg Lakehouse Engineering Video Playlist](https://youtube.com/playlist?list=PLsLAVBjQJO0p0Yq1fLkoHvt2lEJj5pcYe&si=WTSnqjXZv6Glkc3y)** 
 - **[Ultimate Apache Iceberg Resource Guide](https://medium.com/data-engineering-with-dremio/ultimate-directory-of-apache-iceberg-resources-e3e02efac62e)**

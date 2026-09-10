@@ -13,9 +13,10 @@ draft: false
 image: "/images/blog.png"
 canonical: "https://iceberglakehouse.com/posts/policy-layer-security-policy-enforcement-autonomous-multi-agent-systems/"
 ---
-> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/policy-layer-security-policy-enforcement-autonomous-multi-agent-systems/).
 
-An autonomous agent can issue a thousand queries in the time it takes a human to read the results of one. That speed is the whole reason to build agent systems, and it is also the reason a prompt is not a security boundary. If the only thing standing between an agent and a full export of your customer table is an instruction in its system prompt that says "do not export sensitive data," you do not have a control. You have a suggestion, and a non-deterministic system is under no obligation to follow it.
+An autonomous agent can issue a thousand queries in the time it takes a human to read the results of one. That speed is the whole reason to build agent systems, and it is also the reason a prompt is not a security boundary. If the only thing standing between an agent and a full export of your customer table is an instruction in its system prompt that says "do not export sensitive data, " you do not have a control. You have a suggestion, and a non-deterministic system is under no obligation to follow it.
+
+> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/policy-layer-security-policy-enforcement-autonomous-multi-agent-systems/).
 
 The policy layer is the part of an agent architecture that turns suggestions into enforcement. It is the control surface that sits in the analytical path and decides, at runtime, whether a given query, export, or write is allowed to proceed. This post covers why policy cannot be optional for autonomous agents, the difference between an agent being aware of policy and a system enforcing it, the specific controls that matter (query limits, egress quotas, pre-execution checks, isolation pools), and where a governed query engine fits inside a larger policy-controlled system.
 
@@ -98,7 +99,7 @@ Isolation pools also give you a graduated trust model rather than a binary one. 
 The table below maps common risks to the policy control that addresses each and the audit signal that reveals it.
 
 | Risk | Policy control | Audit signal |
-| --- | --- | --- |
+| -- | -- | -- |
 | Bulk exfiltration in one query | Rows, bytes, and result-size limits | Query blocked at limit |
 | Drip exfiltration via many calls | Per-agent egress quota | Cumulative volume nears quota |
 | Unauthorized data combination | Cross-domain join check | Denied join attempt logged |
@@ -107,7 +108,7 @@ The table below maps common risks to the policy control that addresses each and 
 | Runaway agent resource use | Isolation pool with strict quotas | Concurrency and rate limits hit |
 | Untraceable actions | Named agent identity | Every action attributed in logs |
 
-One honest limitation. A policy layer raises the cost and lowers the ceiling of what a misbehaving agent can do, but it does not make the system unbreakable. Policies can be misconfigured, a gap between two controls can be exploited, and an agent with legitimately broad permissions can still misuse them within policy. The policy layer is defense in depth, not a single perfect gate. Its value is that it makes the common failure modes bounded and observable, and it converts "trust the prompt" into "enforce and audit at runtime," which is a large improvement even though it is not absolute.
+One honest limitation. A policy layer raises the cost and lowers the ceiling of what a misbehaving agent can do, but it does not make the system unbreakable. Policies can be misconfigured, a gap between two controls can be exploited, and an agent with legitimately broad permissions can still misuse them within policy. The policy layer is defense in depth, not a single perfect gate. Its value is that it makes the common failure modes bounded and observable, and it converts "trust the prompt" into "enforce and audit at runtime, " which is a large improvement even though it is not absolute.
 
 ## Where the Lakehouse Query Layer Fits
 

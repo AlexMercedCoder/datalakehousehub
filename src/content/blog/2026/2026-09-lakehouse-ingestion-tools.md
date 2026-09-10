@@ -16,9 +16,10 @@ draft: false
 image: "/images/blog.png"
 canonical: https://iceberglakehouse.com/posts/lakehouse-ingestion-tools/
 ---
-> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/lakehouse-ingestion-tools/).
 
 Ingestion used to end at a warehouse. A connector pulled from Salesforce or Postgres, wrote to a staging schema in Snowflake or BigQuery, and the warehouse handled the rest. The lakehouse changes the destination. The connector now writes Apache Iceberg tables to object storage, registers them through a REST catalog, and hands them to whichever engines are reading. What the connector does with schema evolution, how often it commits, how it represents a deleted row, and who compacts the files afterward all become the ingestion tool's responsibility, because there is no warehouse to absorb the mistakes.
+
+> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/lakehouse-ingestion-tools/).
 
 The tools have changed too. Fivetran completed its merger with dbt Labs on June 1, 2026, after acquiring Census and Tobiko Data in 2025, and now sells ingestion, transformation, and a managed lake as one product. Airbyte remains the open-source connector platform and has made Iceberg a first-class destination. dlt has become the code-first option for teams that write ingestion in Python and increasingly for AI agents that generate it. And a separate tier of change-data-capture (CDC) and streaming tools, from Debezium and the Kafka Connect Iceberg sink to managed services, handles the workloads where a batch connector is the wrong shape.
 
@@ -30,7 +31,7 @@ A warehouse destination is a database that accepts rows. An Iceberg destination 
 
 **Schema mapping and evolution.** The tool infers or receives a source schema and maps it to Iceberg types. When the source adds a column, the tool has to add it to the Iceberg schema with a new field ID. When a column's type widens, the tool has to apply a legal Iceberg promotion or fall back to something safe. A tool that maps every uncertain type to `string` produces tables nobody wants to query.
 
-**Commit semantics.** Every flush is a snapshot. A tool that commits every thirty seconds produces 2,880 snapshots a day and a matching number of small files. A tool that commits hourly produces stale data. The cadence is a tuning decision the tool has to expose.
+**Commit semantics.** Every flush is a snapshot. A tool that commits every thirty seconds produces 2, 880 snapshots a day and a matching number of small files. A tool that commits hourly produces stale data. The cadence is a tuning decision the tool has to expose.
 
 **Delete and update representation.** A source row deleted or updated has to become either a rewritten data file (copy-on-write), a delete file or deletion vector (merge-on-read), or an appended change record with an operation flag. Which one the tool chooses determines read performance, storage growth, and what compaction has to do.
 
@@ -61,7 +62,7 @@ The commit cadence question is sharpest for CDC. A tool that flushes every chang
 The right shape depends on the source more than on the tool, and a short decision table captures most cases.
 
 | Source | Preferred shape | Reason |
-|---|---|---|
+|--|--|--|
 | SaaS application API (CRM, billing, support) | Batch, incremental on a modified timestamp | No transaction log to read. APIs rate-limit and paginate. Minutes of latency is fine |
 | Operational database, low change rate | Batch, incremental on `updated_at`, merge disposition | CDC infrastructure is not worth it for a table that changes a few thousand rows a day |
 | Operational database, high change rate or deletes matter | Log-based CDC, upsert into current state | Query-based extraction misses deletes and hammers the source. The log is the only complete signal |
@@ -159,7 +160,7 @@ The choice within this tier is mostly about whether the team runs Kafka. If it d
 ## Comparison
 
 | | Fivetran | Airbyte | dlt | Debezium + Connect sink | Managed CDC |
-|---|---|---|---|---|---|
+|--|--|--|--|--|--|
 | Model | Managed service | Open-source platform, self-host or cloud | Python library | Kafka-based streaming | Managed streaming |
 | Source coverage | Widest, vendor-maintained | Wide, mixed maintenance, custom builder | Anything Python can reach, plus verified sources | Databases with log access, plus any Kafka topic | Databases and streams |
 | CDC | Log-based, mature | Embedded Debezium | Postgres logical replication, Debezium sources | Native | Native |
@@ -180,7 +181,7 @@ Across all of these, five questions determine whether a tool works for a specifi
 
 **How often does it commit?** Configurable batch intervals, and a sensible default, are the difference between a table with a hundred snapshots a day and one with ten thousand. Tools that commit per record or per page of an API response produce tables that need constant compaction.
 
-**Who compacts?** If the answer is "the tool," confirm that it does, on what cadence, and whether it also expires snapshots and removes orphans. If the answer is "you," budget for it from day one, because CDC tables without compaction degrade within days.
+**Who compacts?** If the answer is "the tool, " confirm that it does, on what cadence, and whether it also expires snapshots and removes orphans. If the answer is "you, " budget for it from day one, because CDC tables without compaction degrade within days.
 
 **Can the table be tuned?** Partitioning on the columns queries filter on, sort order, target file size, and metrics on the right columns are what make the table fast. A tool that owns the table and exposes none of these produces a table that works and is slow. Some teams land tool-written tables in a raw layer and rewrite into a tuned layer, which is a valid design and doubles storage.
 
@@ -190,7 +191,7 @@ Because most tools leave maintenance to the team, the maintenance job for ingest
 
 A batch tool committing hourly with merge disposition produces 24 `overwrite` snapshots a day, each with a handful of new files and, on merge-on-read tables, a handful of delete files. Compaction with a delete-file threshold every few hours, manifest rewrite daily, and snapshot expiry at seven days keeps such a table healthy at near-zero cost.
 
-A CDC sink committing every minute produces 1,440 snapshots a day. Manifest merging at the default threshold of 100 handles the manifest count, but `commit.manifest.min-count-to-merge` lowered to 20 keeps planning faster. Compaction has to run at least every few hours, targeting files with deletes attached, or the delete file count climbs into the thousands. Snapshot expiry has to be aggressive, one to three days, because each snapshot pins files and 1,440 snapshots a day for a week is 10,000 snapshots of metadata. `write.metadata.delete-after-commit.enabled` should be on, or the metadata directory collects 1,440 JSON files a day.
+A CDC sink committing every minute produces 1, 440 snapshots a day. Manifest merging at the default threshold of 100 handles the manifest count, but `commit.manifest.min-count-to-merge` lowered to 20 keeps planning faster. Compaction has to run at least every few hours, targeting files with deletes attached, or the delete file count climbs into the thousands. Snapshot expiry has to be aggressive, one to three days, because each snapshot pins files and 1, 440 snapshots a day for a week is 10, 000 snapshots of metadata. `write.metadata.delete-after-commit.enabled` should be on, or the metadata directory collects 1, 440 JSON files a day.
 
 An append-only event stream produces the same snapshot rate with no delete files, so compaction is about file size rather than deletes, and can run less often on a bin-packing strategy with a sort order if queries filter on a key.
 
@@ -208,16 +209,11 @@ from dlt.sources.sql_database import sql_database
 
 source = sql_database("postgresql://app:secret@db:5432/shop").with_resources("orders")
 source.orders.apply_hints(
-    primary_key="order_id",
-    incremental=dlt.sources.incremental("updated_at"),
-    write_disposition="merge",
-)
+ primary_key="order_id", incremental=dlt.sources.incremental("updated_at"), write_disposition="merge", )
 
 pipeline = dlt.pipeline(
-    pipeline_name="shop_orders",
-    destination="iceberg",       # dltHub Iceberg destination, REST catalog configured in secrets
-    dataset_name="raw",
-)
+ pipeline_name="shop_orders", destination="iceberg", # dltHub Iceberg destination, REST catalog configured in secrets
+ dataset_name="raw", )
 info = pipeline.run(source)
 print(info)
 ```
@@ -230,23 +226,9 @@ The catalog configuration lives in `.dlt/secrets.toml` with the REST URI, wareho
 
 ```json
 {
-  "name": "orders-iceberg-sink",
-  "config": {
-    "connector.class": "org.apache.iceberg.connect.IcebergSinkConnector",
-    "topics": "shop.public.orders",
-    "iceberg.catalog.type": "rest",
-    "iceberg.catalog.uri": "https://polaris.internal/api/catalog",
-    "iceberg.catalog.warehouse": "analytics",
-    "iceberg.catalog.credential": "client-id:client-secret",
-    "iceberg.catalog.header.X-Iceberg-Access-Delegation": "vended-credentials",
-    "iceberg.tables": "raw.orders",
-    "iceberg.tables.upsert-mode-enabled": "true",
-    "iceberg.tables.auto-create-enabled": "true",
-    "iceberg.tables.evolve-schema-enabled": "true",
-    "iceberg.control.commit.interval-ms": "60000",
-    "transforms": "debezium",
-    "transforms.debezium.type": "org.apache.iceberg.connect.transforms.DebeziumTransform"
-  }
+ "name": "orders-iceberg-sink", "config": {
+ "connector.class": "org.apache.iceberg.connect.IcebergSinkConnector", "topics": "shop.public.orders", "iceberg.catalog.type": "rest", "iceberg.catalog.uri": "https://polaris.internal/api/catalog", "iceberg.catalog.warehouse": "analytics", "iceberg.catalog.credential": "client-id:client-secret", "iceberg.catalog.header.X-Iceberg-Access-Delegation": "vended-credentials", "iceberg.tables": "raw.orders", "iceberg.tables.upsert-mode-enabled": "true", "iceberg.tables.auto-create-enabled": "true", "iceberg.tables.evolve-schema-enabled": "true", "iceberg.control.commit.interval-ms": "60000", "transforms": "debezium", "transforms.debezium.type": "org.apache.iceberg.connect.transforms.DebeziumTransform"
+ }
 }
 ```
 
@@ -274,7 +256,7 @@ The design accepts that tool-written tables are not perfectly laid out and that 
 
 ## Failure Modes
 
-**Small files from short commit intervals.** A CDC sink committing every ten seconds produces 8,640 snapshots and tens of thousands of files per day per table. Reads slow, metadata grows, and compaction runs constantly. The commit interval and the compaction cadence have to be set together.
+**Small files from short commit intervals.** A CDC sink committing every ten seconds produces 8, 640 snapshots and tens of thousands of files per day per table. Reads slow, metadata grows, and compaction runs constantly. The commit interval and the compaction cadence have to be set together.
 
 **Equality delete accumulation on v2.** A streaming upsert table on format version 2 with no compaction has every reader applying thousands of equality delete files. The symptom is read latency growing linearly with days since last compaction. Upgrade to v3 where the writer supports deletion vectors, and compact on a schedule regardless.
 

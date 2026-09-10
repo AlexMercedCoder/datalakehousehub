@@ -14,11 +14,12 @@ draft: false
 image: "/images/blog/apache-iceberg-masterclass/02-metadata-structures-iceberg-metadata-tree.png"
 canonical: "https://iceberglakehouse.com/posts/2026-04-29-iceberg-masterclass-02/"
 ---
-> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-04-29-iceberg-masterclass-02/).
 
-<!-- Meta Description: Iceberg uses a metadata tree, Delta Lake uses a transaction log, Hudi uses a timeline. Here is exactly how each format organizes metadata and why it matters. -->
-<!-- Primary Keyword: table format metadata -->
-<!-- Secondary Keywords: Apache Iceberg metadata, Delta Lake transaction log, manifest files -->
+<!- Meta Description: Iceberg uses a metadata tree, Delta Lake uses a transaction log, Hudi uses a timeline. Here is exactly how each format organizes metadata and why it matters. ->
+<!- Primary Keyword: table format metadata ->
+<!- Secondary Keywords: Apache Iceberg metadata, Delta Lake transaction log, manifest files ->
+
+> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-04-29-iceberg-masterclass-02/).
 
 *Read the complete Apache Iceberg Masterclass series:*
 * [Part 1: What Are Table Formats and Why Were They Needed?](/blog/2026-04-29-apache-iceberg-masterclass-01-table-formats)
@@ -103,7 +104,7 @@ The tradeoff is a dependency on a running database process for metadata manageme
 ![Five approaches to table metadata from file-based to database-backed](/images/blog/apache-iceberg-masterclass/02-metadata-structures-metadata-architecture-comparison.png)
 
 | Dimension | Iceberg | Delta Lake | Hudi | Paimon | DuckLake |
-|---|---|---|---|---|---|
+|--|--|--|--|--|--|
 | **Metadata format** | JSON + Avro files | JSON + Parquet files | Avro instant files | Snapshot + LSM files | SQL database tables |
 | **Metadata location** | Object storage | `_delta_log/` directory | `.hoodie/` directory | Table directory | External database |
 | **Multi-level pruning** | Yes (manifest list + manifests) | No (flat file list) | Partial (index-based) | No (bucket-level) | Via SQL queries |

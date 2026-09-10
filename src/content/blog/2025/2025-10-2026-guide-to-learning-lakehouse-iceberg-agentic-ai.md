@@ -14,7 +14,6 @@ slug: 2025-10-2026-guide-to-learning-lakehouse-iceberg-agentic-ai
 draft: false
 image: "/images/blog.png"
 ---
-
 The data world is evolving fast. Just a few years ago, building a modern analytics stack meant stitching together tools, ETL pipelines, and compromises. Today, open standards like Apache Iceberg, modular architectures like the data lakehouse, and emerging patterns like Agentic AI are reshaping how teams store, manage, and use data.
 
 But with all this innovation comes one challenge: where do you start?
@@ -88,7 +87,7 @@ A table format is only as useful as the catalog that organizes it. Iceberg catal
 ### Apache Iceberg Table Optimization
 Keeping Iceberg tables fast requires more than good schema design. Over time, data fragmentation, small files, and metadata sprawl can slow queries and inflate costs. The articles in this section show how to maintain healthy tables through compaction, clustering, and automatic optimization. You’ll also learn how modern platforms like Dremio manage this maintenance autonomously so performance tuning doesn’t become a full‑time job.
 
-- [Optimizing Apache Iceberg Tables – Manual and Automatic](https://www.dremio.com/blog/optimizing-iceberg-tables/?utm_source=ev_external_blog&utm_medium=influencer&utm_campaign=iceberg&utm_term=2026-content-guide&utm_content=alexmerced)
+- [Optimizing Apache Iceberg Tables - Manual and Automatic](https://www.dremio.com/blog/optimizing-iceberg-tables/?utm_source=ev_external_blog&utm_medium=influencer&utm_campaign=iceberg&utm_term=2026-content-guide&utm_content=alexmerced)
 - [Apache Iceberg Table Performance Management with Dremio’s OPTIMIZE](https://www.dremio.com/blog/apache-iceberg-table-performance-management-with-dremios-optimize/?utm_source=ev_external_blog&utm_medium=influencer&utm_campaign=iceberg&utm_term=2026-content-guide&utm_content=alexmerced)
 - [Minimizing Iceberg Table Management with Smart Writing](https://www.dremio.com/blog/minimizing-iceberg-table-management-with-smart-writing/?utm_source=ev_external_blog&utm_medium=influencer&utm_campaign=iceberg&utm_term=2026-content-guide&utm_content=alexmerced)
 - [Apache Iceberg Table Storage Management with Dremio’s VACUUM TABLE](https://www.dremio.com/blog/apache-iceberg-table-storage-management-with-dremios-vacuum-table/?utm_source=ev_external_blog&utm_medium=influencer&utm_campaign=iceberg&utm_term=2026-content-guide&utm_content=alexmerced)

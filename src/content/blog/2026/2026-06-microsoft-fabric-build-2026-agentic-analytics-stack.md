@@ -1,6 +1,6 @@
 ---
 title: "Microsoft Fabric Build 2026 Agentic Analytics Stack"
-description: "Microsoft Build 2026 revealed an agentic analytics stack built on Fabric IQ, OneLake Iceberg support, and semantic models. The architecture shows how Microsoft competes with open lakehouse platforms."
+description: "Microsoft Build 2026 revealed an agentic analytics stack built on Fabric IQ, OneLake Iceberg support, and semantic models."
 date: 2026-06-08T09:00:00Z
 slug: "microsoft-fabric-build-2026-agentic-analytics-stack"
 draft: false
@@ -15,7 +15,6 @@ tags:
   - "Microsoft Build 2026"
   - "Iceberg OneLake"
 ---
-
 ## The Build 2026 Data Story
 
 Microsoft Build 2026, held June 2-4, marked a clear shift in the company's data strategy. The theme was agentic applications, and the data foundation was Microsoft Fabric. The opening blog post by the Azure Database team put it directly: "The challenge is no longer model capability, but consistent, shared data context across the business" (source: Microsoft Azure Blog, June 2026).
@@ -96,7 +95,7 @@ The Fabric IQ architecture handles the rest. Data refresh is continuous through 
 
 ## HorizonDB and the Database Hub
 
-Azure HorizonDB, announced in public preview at Build 2026, represents Microsoft's vision for AI-native transactional databases. It is a fully managed, PostgreSQL-compatible database with elastic storage up to 128 TB, scale-out compute up to 3,072 vCores, and sub-millisecond multi-zone commit latency.
+Azure HorizonDB, announced in public preview at Build 2026, represents Microsoft's vision for AI-native transactional databases. It is a fully managed, PostgreSQL-compatible database with elastic storage up to 128 TB, scale-out compute up to 3, 072 vCores, and sub-millisecond multi-zone commit latency.
 
 For the agentic analytics stack, HorizonDB fills the transactional gap. Fabric IQ provides analytical context through OneLake and semantic models. HorizonDB provides operational context through its PostgreSQL-compatible query surface, vector search, and integrated AI model management. An AI agent can query Fabric IQ for "what was last quarter's revenue by region" and HorizonDB for "what are the current inventory levels for those regions' top products."
 
@@ -110,6 +109,6 @@ Microsoft Fabric at Build 2026 is a platform designed for the agentic era. Rayfi
 
 The Iceberg v2 limitation is the main gap for teams that need v3 features like row lineage or deletion vectors. But for teams already in the Microsoft ecosystem, Fabric IQ offers the shortest path from data to agentic applications. The platform handles integration, governance, and AI connectivity in one stack. The trade-off is the lock-in. For teams that value open formats and multi-engine flexibility, a federated approach with Dremio may be a better fit.
 
----
+--
 
 **Building an agentic analytics stack on open Iceberg tables?** Dremio's lakehouse platform queries Iceberg tables across clouds and catalogs without data movement, while the AI Semantic Layer provides governed business context for AI agents. No lock-in, no format conversion tricks. [Learn more at dremio.com](https://www.dremio.com).

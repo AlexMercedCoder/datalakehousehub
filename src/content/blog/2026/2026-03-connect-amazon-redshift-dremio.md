@@ -16,9 +16,10 @@ draft: false
 image: "/images/blog.png"
 canonical: "https://iceberglakehouse.com/posts/2026-03-connector-amazon-redshift/"
 ---
-> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-03-connector-amazon-redshift/).
 
 Amazon Redshift is AWS's managed data warehouse, designed for petabyte-scale analytics. If your organization chose Redshift for analytical workloads, you've built data pipelines, ETL jobs, and dashboards around it. But as data ecosystems grow, Redshift's limitations become painfully clear: connecting data outside Redshift requires ETL or Redshift Spectrum (additional cost per TB scanned), sharing Redshift data with non-AWS tools means exporting to S3, and Redshift's concurrency limits constrain how many dashboards and users can query simultaneously.
+
+> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-03-connector-amazon-redshift/).
 
 Dremio Cloud connects to Redshift and queries it alongside every other data source in your organization. Instead of moving all your data into Redshift, or exporting Redshift data out, Dremio federates across sources and accelerates repeated queries with Reflections so your Redshift cluster handles less load.
 
@@ -32,7 +33,7 @@ Redshift Data Sharing allows sharing data between Redshift clusters. But it only
 
 With Redshift Serverless, you pay per RPU-second consumed. Every query, including repeated dashboard queries, consumes RPUs. Dremio Reflections eliminate RPU consumption for cached queries : a direct and measurable cost reduction. For Serverless users, the ROI from Reflections is immediately visible in the AWS billing dashboard.
 
-Redshift's RA3 instances introduced compute-storage separation using Managed Storage backed by S3. While this improved scalability, all queries still consume RA3 compute resources. Dremio provides a complementary compute layer: Reflections handle repetitive analytical workloads while RA3 focuses on the data transformations and ingestion pipelines that require Redshift's native capabilities. This architectural separation :  Redshift for data engineering, Dremio for analytics serving ,  maximizes the value of both platforms.
+Redshift's RA3 instances introduced compute-storage separation using Managed Storage backed by S3. While this improved scalability, all queries still consume RA3 compute resources. Dremio provides a complementary compute layer: Reflections handle repetitive analytical workloads while RA3 focuses on the data transformations and ingestion pipelines that require Redshift's native capabilities. This architectural separation : Redshift for data engineering, Dremio for analytics serving, maximizes the value of both platforms.
 
 ## Why Redshift Users Need Dremio
 
@@ -85,7 +86,7 @@ Master Credentials (username/password) or Secret Resource URL (AWS Secrets Manag
 ### 4. Configure Advanced Options
 
 | Setting | Purpose | Default |
-|---|---|---|
+|--|--|--|
 | **Record fetch size** | Rows per batch from Redshift | 200 |
 | **Maximum Idle Connections** | Connection pool management | 8 |
 | **Connection Idle Time** | Seconds before idle connections close | 60 |
@@ -97,11 +98,7 @@ Master Credentials (username/password) or Secret Resource URL (AWS Secrets Manag
 
 ```sql
 SELECT
-  date_trunc('month', sale_date) AS month,
-  product_category,
-  SUM(revenue) AS monthly_revenue,
-  COUNT(DISTINCT customer_id) AS unique_customers,
-  ROUND(SUM(revenue) / COUNT(DISTINCT customer_id), 2) AS revenue_per_customer
+ date_trunc('month', sale_date) AS month, product_category, SUM(revenue) AS monthly_revenue, COUNT(DISTINCT customer_id) AS unique_customers, ROUND(SUM(revenue) / COUNT(DISTINCT customer_id), 2) AS revenue_per_customer
 FROM "redshift-warehouse".public.sales
 WHERE sale_date >= '2024-01-01'
 GROUP BY 1, 2
@@ -114,24 +111,18 @@ Run Redshift-native SQL through Dremio when you need Redshift-specific functions
 
 ```sql
 SELECT * FROM TABLE(
-  "redshift-warehouse".EXTERNAL_QUERY(
-    'SELECT TOP 100 querytxt, elapsed, starttime FROM stl_query WHERE starttime > GETDATE() - 7 ORDER BY elapsed DESC'
-  )
+ "redshift-warehouse".EXTERNAL_QUERY(
+ 'SELECT TOP 100 querytxt, elapsed, starttime FROM stl_query WHERE starttime > GETDATE() - 7 ORDER BY elapsed DESC'
+ )
 );
 ```
 
 ## Federate Redshift with Other Sources
 
 ```sql
--- Join Redshift sales with PostgreSQL CRM and S3 marketing data
+- Join Redshift sales with PostgreSQL CRM and S3 marketing data
 SELECT
-  c.customer_name,
-  c.segment,
-  SUM(s.revenue) AS total_revenue,
-  COUNT(s.sale_id) AS total_sales,
-  m.campaign_name,
-  m.attribution_channel,
-  ROUND(SUM(s.revenue) / NULLIF(m.campaign_spend, 0), 2) AS roas
+ c.customer_name, c.segment, SUM(s.revenue) AS total_revenue, COUNT(s.sale_id) AS total_sales, m.campaign_name, m.attribution_channel, ROUND(SUM(s.revenue) / NULLIF(m.campaign_spend, 0), 2) AS roas
 FROM "postgres-crm".public.customers c
 JOIN "redshift-warehouse".public.sales s ON c.customer_id = s.customer_id
 LEFT JOIN "s3-marketing".attribution.customer_campaigns m ON c.customer_id = m.customer_id
@@ -145,17 +136,11 @@ ORDER BY total_revenue DESC;
 ```sql
 CREATE VIEW analytics.gold.sales_performance AS
 SELECT
-  s.product_category,
-  date_trunc('month', s.sale_date) AS month,
-  SUM(s.revenue) AS revenue,
-  COUNT(*) AS transactions,
-  COUNT(DISTINCT s.customer_id) AS unique_buyers,
-  ROUND(SUM(s.revenue) / COUNT(*), 2) AS avg_transaction_value,
-  CASE
-    WHEN SUM(s.revenue) > 500000 THEN 'Top Performer'
-    WHEN SUM(s.revenue) > 100000 THEN 'Solid'
-    ELSE 'Emerging'
-  END AS performance_tier
+ s.product_category, date_trunc('month', s.sale_date) AS month, SUM(s.revenue) AS revenue, COUNT(*) AS transactions, COUNT(DISTINCT s.customer_id) AS unique_buyers, ROUND(SUM(s.revenue) / COUNT(*), 2) AS avg_transaction_value, CASE
+ WHEN SUM(s.revenue) > 500000 THEN 'Top Performer'
+ WHEN SUM(s.revenue) > 100000 THEN 'Solid'
+ ELSE 'Emerging'
+ END AS performance_tier
 FROM "redshift-warehouse".public.sales s
 GROUP BY s.product_category, date_trunc('month', s.sale_date);
 ```
@@ -181,26 +166,19 @@ A VP of Sales asks Claude "Compare our Q1 revenue per customer across product ca
 ### AI SQL Functions
 
 ```sql
--- Generate strategic recommendations from sales data
+- Generate strategic recommendations from sales data
 SELECT
-  product_category,
-  revenue,
-  performance_tier,
-  AI_GENERATE(
-    'Write a strategic recommendation for this product category',
-    'Category: ' || product_category || ', Revenue: $' || CAST(revenue AS VARCHAR) || ', Tier: ' || performance_tier || ', Avg Transaction: $' || CAST(avg_transaction_value AS VARCHAR)
-  ) AS strategic_recommendation
+ product_category, revenue, performance_tier, AI_GENERATE(
+ 'Write a strategic recommendation for this product category', 'Category: ' || product_category || ', Revenue: $' || CAST(revenue AS VARCHAR) || ', Tier: ' || performance_tier || ', Avg Transaction: $' || CAST(avg_transaction_value AS VARCHAR)
+ ) AS strategic_recommendation
 FROM analytics.gold.sales_performance
 WHERE month = DATE_TRUNC('month', CURRENT_DATE - INTERVAL '1' MONTH);
 
--- Classify product categories for budget allocation
+- Classify product categories for budget allocation
 SELECT
-  product_category,
-  AI_CLASSIFY(
-    'Based on this sales performance, classify the marketing budget priority',
-    'Revenue: $' || CAST(revenue AS VARCHAR) || ', Customers: ' || CAST(unique_buyers AS VARCHAR) || ', Avg Transaction: $' || CAST(avg_transaction_value AS VARCHAR),
-    ARRAY['Increase Investment', 'Maintain Investment', 'Optimize Spend', 'Reduce Budget']
-  ) AS budget_recommendation
+ product_category, AI_CLASSIFY(
+ 'Based on this sales performance, classify the marketing budget priority', 'Revenue: $' || CAST(revenue AS VARCHAR) || ', Customers: ' || CAST(unique_buyers AS VARCHAR) || ', Avg Transaction: $' || CAST(avg_transaction_value AS VARCHAR), ARRAY['Increase Investment', 'Maintain Investment', 'Optimize Spend', 'Reduce Budget']
+ ) AS budget_recommendation
 FROM analytics.gold.sales_performance
 WHERE month >= DATE_TRUNC('month', CURRENT_DATE - INTERVAL '3' MONTH);
 ```
@@ -257,7 +235,7 @@ For data that stays in Redshift, create manual Reflections to reduce cluster loa
 ### Redshift Pricing Models
 
 | Model | How It's Priced | Dremio's Impact |
-|---|---|---|
+|--|--|--|
 | **RA3 Provisioned** | Per-node-hour + managed storage | Reflections reduce node utilization, enabling cluster downsizing |
 | **DC2 Provisioned** | Per-node-hour, SSD storage included | Same as RA3 : lower utilization means fewer nodes needed |
 | **Serverless** | Per RPU-hour (compute consumed) | Reflections eliminate RPU consumption for cached queries |
@@ -271,7 +249,7 @@ A typical dashboard workload might include:
 - Weekly scheduled reports generating 100+ queries
 
 With Dremio Reflections, only the Reflection refresh queries hit Redshift. If Reflections refresh hourly:
-- Dashboard queries drop from 1,920/day to 24/day (hourly Reflection refresh × 24 hours) : a **98.7% reduction**
+- Dashboard queries drop from 1, 920/day to 24/day (hourly Reflection refresh × 24 hours) : a **98.7% reduction**
 - Ad-hoc queries matching Reflection patterns are served from cache : zero Redshift load
 - Scheduled reports matching Reflections run instantly
 

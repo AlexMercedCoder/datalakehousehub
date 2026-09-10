@@ -1,7 +1,7 @@
 ---
 title: "Designing Policy-Aware Telemetry Tables for AI Systems in Apache Iceberg"
 date: 2026-08-04T09:00:00Z
-description: "Designing policy-aware AI telemetry tables in Apache Iceberg: what to log, tamper evidence, retention against conflicting deletion requirements, and tracing agent decisions."
+description: "Designing policy-aware AI telemetry tables in Apache Iceberg: what to log, tamper evidence, retention against conflicting deletion requirements."
 author: "Alex Merced"
 category: "AI & Agents"
 tags:
@@ -16,11 +16,11 @@ image: "/images/blog.png"
 canonical: "https://iceberglakehouse.com/posts/policy-aware-ai-telemetry-iceberg/"
 ---
 
-> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/policy-aware-ai-telemetry-iceberg/).
-
 # Designing Policy-Aware Telemetry Tables for AI Systems in Apache Iceberg
 
 *By Alex Merced, Data Lakehouse and AI Evangelist*
+
+> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/policy-aware-ai-telemetry-iceberg/).
 
 Two days ago, on August 2, 2026, the EU AI Act's Article 50 transparency obligations came into application. Many teams had that date circled for a different reason: it was originally when the bulk of the high-risk regime was due to bite. That part moved. Standalone Annex III high-risk systems now have until December 2, 2027, and AI embedded in regulated products under Annex I until August 2, 2028, following the Digital Omnibus on AI that the European Parliament endorsed on June 16, 2026 and the Council gave final approval to on June 29.
 
@@ -74,37 +74,17 @@ The **invocations** table is the top-level record of a request and its outcome.
 
 ```sql
 CREATE TABLE governance.ai.invocations (
-    invocation_id      STRING,
-    session_id         STRING,
-    system_id          STRING,   -- which AI system, for per-system obligations
-    surface            STRING,
-    principal          STRING,   -- authenticated requester
-    on_behalf_of       STRING,   -- end user, where an agent acts for someone
-    started_at         TIMESTAMP,
-    completed_at       TIMESTAMP,
-
-    model_id           STRING,
-    model_version      STRING,
-    config_hash        STRING,   -- prompt and settings fingerprint
-    input_summary      STRING,
-    output_summary     STRING,
-    reasoning          STRING,
-
-    human_review       STRING,   -- not_required, pending, approved, rejected
-    reviewed_by        STRING,
-    reviewed_at        TIMESTAMP,
-
-    outcome            STRING,
-    error_class        STRING,
-    tokens_in          BIGINT,
-    tokens_out         BIGINT
+ invocation_id STRING, session_id STRING, system_id STRING, which AI system, for per-system obligations
+ surface STRING, principal STRING, authenticated requester
+ on_behalf_of STRING, end user, where an agent acts for someone
+ started_at TIMESTAMP, completed_at TIMESTAMP, model_id STRING, model_version STRING, config_hash STRING, prompt and settings fingerprint
+ input_summary STRING, output_summary STRING, reasoning STRING, human_review STRING, not_required, pending, approved, rejected
+ reviewed_by STRING, reviewed_at TIMESTAMP, outcome STRING, error_class STRING, tokens_in BIGINT, tokens_out BIGINT
 )
 USING iceberg
 PARTITIONED BY (days(started_at), system_id)
 TBLPROPERTIES (
-    'format-version'      = '3',
-    'write.update.mode'   = 'merge-on-read',
-    'write.delete.mode'   = 'merge-on-read'
+ 'format-version' = '3', 'write.update.mode' = 'merge-on-read', 'write.delete.mode' = 'merge-on-read'
 );
 ```
 
@@ -112,19 +92,9 @@ The **tool calls** table records every action the system took, and it is the hig
 
 ```sql
 CREATE TABLE governance.ai.tool_calls (
-    call_id            STRING,
-    invocation_id      STRING,
-    sequence_no        INT,
-    tool_name          STRING,
-    parameters         VARIANT,
-    generated_query    STRING,
-    data_source        STRING,
-    snapshot_id        BIGINT,   -- Iceberg snapshot the answer came from
-    data_as_of         TIMESTAMP,
-    rows_returned      BIGINT,
-    policy_decisions   VARIANT,  -- which policies evaluated, and how
-    outcome            STRING,
-    called_at          TIMESTAMP
+ call_id STRING, invocation_id STRING, sequence_no INT, tool_name STRING, parameters VARIANT, generated_query STRING, data_source STRING, snapshot_id BIGINT, Iceberg snapshot the answer came from
+ data_as_of TIMESTAMP, rows_returned BIGINT, policy_decisions VARIANT, which policies evaluated, and how
+ outcome STRING, called_at TIMESTAMP
 )
 USING iceberg
 PARTITIONED BY (days(called_at))
@@ -135,18 +105,7 @@ The **effects** table records what changed in the world and whether it was verif
 
 ```sql
 CREATE TABLE governance.ai.effects (
-    effect_id          STRING,
-    invocation_id      STRING,
-    action_type        STRING,
-    target_system      STRING,
-    target_entity      STRING,
-    parameters         VARIANT,
-    idempotency_key    STRING,
-    executed_at        TIMESTAMP,
-    expected_effect_by TIMESTAMP,
-    verified_at        TIMESTAMP,
-    verification_state STRING,
-    compensated_at     TIMESTAMP
+ effect_id STRING, invocation_id STRING, action_type STRING, target_system STRING, target_entity STRING, parameters VARIANT, idempotency_key STRING, executed_at TIMESTAMP, expected_effect_by TIMESTAMP, verified_at TIMESTAMP, verification_state STRING, compensated_at TIMESTAMP
 )
 USING iceberg
 PARTITIONED BY (days(executed_at));
@@ -172,11 +131,7 @@ Four properties combine into a defensible position.
 
 ```sql
 SELECT
-    snapshot_id,
-    committed_at,
-    operation,
-    summary['added-records']    AS added,
-    summary['deleted-records']  AS deleted
+ snapshot_id, committed_at, operation, summary['added-records'] AS added, summary['deleted-records'] AS deleted
 FROM governance.ai.invocations.snapshots
 ORDER BY committed_at DESC
 LIMIT 50;
@@ -219,13 +174,11 @@ Three techniques resolve most of the tension.
 **Make targeted deletion cheap.** When a record genuinely has to be removed, Iceberg V3 deletion vectors make row-level deletes efficient on the read side, and merge-on-read means the delete does not rewrite gigabytes. Partitioning by day and by system keeps the affected file set small.
 
 ```sql
--- remove identifying free text while retaining the auditable record
+- remove identifying free text while retaining the auditable record
 UPDATE governance.ai.invocations
-SET input_summary = NULL,
-    output_summary = NULL,
-    reasoning = '[redacted per retention tier 2]'
+SET input_summary = NULL, output_summary = NULL, reasoning = '[redacted per retention tier 2]'
 WHERE started_at < current_date - INTERVAL '180' DAY
-  AND reasoning IS NOT NULL;
+ AND reasoning IS NOT NULL;
 ```
 
 Write the retention policy down as a document that maps each column to a tier and a duration, get it reviewed by whoever owns privacy, and implement it as code that runs on a schedule. A policy that exists only as an intention is worse than no policy, because it creates an expectation you are not meeting.
@@ -240,25 +193,10 @@ The reason to build this properly is the day someone asks a specific question. T
 
 ```sql
 SELECT
-    i.invocation_id,
-    i.started_at,
-    i.on_behalf_of,
-    i.model_id,
-    i.model_version,
-    i.human_review,
-    i.reasoning,
-    t.sequence_no,
-    t.tool_name,
-    t.data_source,
-    t.snapshot_id,
-    t.data_as_of,
-    t.rows_returned,
-    e.action_type,
-    e.target_entity,
-    e.verification_state
+ i.invocation_id, i.started_at, i.on_behalf_of, i.model_id, i.model_version, i.human_review, i.reasoning, t.sequence_no, t.tool_name, t.data_source, t.snapshot_id, t.data_as_of, t.rows_returned, e.action_type, e.target_entity, e.verification_state
 FROM governance.ai.invocations i
 LEFT JOIN governance.ai.tool_calls t ON t.invocation_id = i.invocation_id
-LEFT JOIN governance.ai.effects    e ON e.invocation_id = i.invocation_id
+LEFT JOIN governance.ai.effects e ON e.invocation_id = i.invocation_id
 WHERE i.invocation_id = '01JQ...'
 ORDER BY t.sequence_no;
 ```
@@ -269,14 +207,9 @@ That single result set answers all six questions from earlier, which is the test
 
 ```sql
 SELECT
-    model_id,
-    model_version,
-    date_trunc('day', started_at)                     AS day,
-    COUNT(*)                                           AS invocations,
-    SUM(CASE WHEN human_review = 'rejected'
-             THEN 1 ELSE 0 END)                        AS rejected,
-    ROUND(100.0 * SUM(CASE WHEN human_review = 'rejected'
-             THEN 1 ELSE 0 END) / COUNT(*), 2)         AS reject_pct
+ model_id, model_version, date_trunc('day', started_at) AS day, COUNT(*) AS invocations, SUM(CASE WHEN human_review = 'rejected'
+ THEN 1 ELSE 0 END) AS rejected, ROUND(100.0 * SUM(CASE WHEN human_review = 'rejected'
+ THEN 1 ELSE 0 END) / COUNT(*), 2) AS reject_pct
 FROM governance.ai.invocations
 WHERE started_at >= current_date - INTERVAL '90' DAY
 GROUP BY model_id, model_version, 3
@@ -289,16 +222,11 @@ A rejection rate that steps up on the day a model version changed is the correla
 
 ```sql
 SELECT
-    i.on_behalf_of,
-    t.data_source,
-    COUNT(*)                        AS accesses,
-    SUM(t.rows_returned)            AS rows_seen,
-    MIN(t.called_at)                AS first_access,
-    MAX(t.called_at)                AS last_access
+ i.on_behalf_of, t.data_source, COUNT(*) AS accesses, SUM(t.rows_returned) AS rows_seen, MIN(t.called_at) AS first_access, MAX(t.called_at) AS last_access
 FROM governance.ai.tool_calls t
 JOIN governance.ai.invocations i ON i.invocation_id = t.invocation_id
 WHERE t.data_source = 'hr.compensation'
-  AND t.called_at >= current_date - INTERVAL '365' DAY
+ AND t.called_at >= current_date - INTERVAL '365' DAY
 GROUP BY 1, 2
 ORDER BY rows_seen DESC;
 ```

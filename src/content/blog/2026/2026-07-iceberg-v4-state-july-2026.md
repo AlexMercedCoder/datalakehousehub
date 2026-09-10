@@ -16,11 +16,12 @@ draft: false
 image: "/images/blog.png"
 bannerImage: "/images/blog.png"
 ---
-> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/iceberg-v4-state-july-2026/).
 
 # The State of Apache Iceberg v4 in July 2026: What the Dev List Tells Us About the Format's Next Chapter
 
 *By Alex Merced, Head of Developer Relations at Dremio*
+
+> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/iceberg-v4-state-july-2026/).
 
 If you want to know where Apache Iceberg is headed, do not read the press releases. Read the dev mailing list.
 
@@ -172,7 +173,7 @@ Every time I present on v4, at meetups, on the podcast, or in customer conversat
 
 **What is the single most important thread to watch for the rest of 2026?** If I had to pick one, it is the single-file commits sync track, including the partition tuple question, because it is the keystone. The root manifest design determines what snapshot offloading offloads into, what the bitmap structures index, what change detection walks, and what commit costs look like for every workload. Most of the other proposals flex to fit whatever shape it settles into. Second place goes to efficient column updates, because its layering question, Iceberg or Parquet or both, is the most genuinely undecided architecture call on the board, and its resolution will say a lot about how the two projects divide responsibility for the next decade.
 
-**Where do I follow all this without making it a part-time job?** Three tiers, by effort. Lowest effort: follow recaps from people who read the source, and check the official spec page occasionally for language that says "v4 and later," since spec text is ground truth. Medium effort: skim the dev list archives monthly at lists.apache.org, subjects only, and open anything tagged DISCUSS or VOTE that touches your workload. Highest effort: subscribe to the list and read the design documents linked from the big threads, which is where the diagrams and cost analyses live. The community does all of this in the open specifically so that you can. Take them up on it.
+**Where do I follow all this without making it a part-time job?** Three tiers, by effort. Lowest effort: follow recaps from people who read the source, and check the official spec page occasionally for language that says "v4 and later, " since spec text is ground truth. Medium effort: skim the dev list archives monthly at lists.apache.org, subjects only, and open anything tagged DISCUSS or VOTE that touches your workload. Highest effort: subscribe to the list and read the design documents linked from the big threads, which is where the diagrams and cost analyses live. The community does all of this in the open specifically so that you can. Take them up on it.
 
 ## Why This All Coheres
 

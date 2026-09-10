@@ -12,7 +12,6 @@ tags:
   - Data Lake
   - Data Modeling
 ---
-
 [Subscribe to my Data Youtube Channel and Podcasts, Links Here](https://bio.alexmerced.com/data)
 
 Data Vault modeling is an approach to data warehouse design that offers a unique method for handling complex data from disparate sources in a way that is agile, flexible, and scalable. Developed by Dan Linstedt in the early 2000s, Data Vault modeling addresses many of the challenges associated with traditional data warehousing methods, such as the star schema and snowflake schema. By emphasizing the separation of concerns between the structure of data and the integration of data, Data Vault enables businesses to adapt quickly to changes in their data environment, making it an ideal choice for dynamic, fast-paced industries.
@@ -102,30 +101,30 @@ Hubs represent the core business concepts. In this scenario, we have:
 
 #### Hub Customer (Hub_Customer)
 
-| Column Name | Description          |
-|-------------|----------------------|
-| HUB_ID      | Unique identifier    |
-| CUSTOMER_ID | Business key (ID)    |
-| LOAD_DATE   | Date of record entry |
-| RECORD_SOURCE | Source of data    |
+| Column Name | Description |
+|-------|-----------|
+| HUB_ID | Unique identifier |
+| CUSTOMER_ID | Business key (ID) |
+| LOAD_DATE | Date of record entry |
+| RECORD_SOURCE | Source of data |
 
 #### Hub Product (Hub_Product)
 
-| Column Name | Description          |
-|-------------|----------------------|
-| HUB_ID      | Unique identifier    |
-| PRODUCT_ID  | Business key (ID)    |
-| LOAD_DATE   | Date of record entry |
-| RECORD_SOURCE | Source of data    |
+| Column Name | Description |
+|-------|-----------|
+| HUB_ID | Unique identifier |
+| PRODUCT_ID | Business key (ID) |
+| LOAD_DATE | Date of record entry |
+| RECORD_SOURCE | Source of data |
 
 #### Hub Order (Hub_Order)
 
-| Column Name | Description         |
-|-------------|---------------------|
-| HUB_ID      | Unique identifier   |
-| ORDER_ID    | Business key (ID)   |
-| LOAD_DATE   | Date of record entry|
-| RECORD_SOURCE | Source of data   |
+| Column Name | Description |
+|-------|-----------|
+| HUB_ID | Unique identifier |
+| ORDER_ID | Business key (ID) |
+| LOAD_DATE | Date of record entry|
+| RECORD_SOURCE | Source of data |
 
 ### Link
 
@@ -133,14 +132,14 @@ Links model the relationships between Hubs. In this case, we have:
 
 #### Link Order Details (Link_OrderDetails)
 
-| Column Name  | Description                   |
-|--------------|-------------------------------|
-| LINK_ID      | Unique identifier             |
-| ORDER_HUB_ID | Foreign key to Hub_Order      |
-| PRODUCT_HUB_ID | Foreign key to Hub_Product  |
+| Column Name | Description |
+|-------|----------------|
+| LINK_ID | Unique identifier |
+| ORDER_HUB_ID | Foreign key to Hub_Order |
+| PRODUCT_HUB_ID | Foreign key to Hub_Product |
 | CUSTOMER_HUB_ID | Foreign key to Hub_Customer|
-| LOAD_DATE    | Date of record entry          |
-| RECORD_SOURCE | Source of data               |
+| LOAD_DATE | Date of record entry |
+| RECORD_SOURCE | Source of data |
 
 ### Satellites
 
@@ -148,35 +147,35 @@ Satellites provide descriptive details and historical information about Hubs and
 
 #### Satellite for Customer (Sat_CustomerDetails)
 
-| Column Name   | Description                   |
-|---------------|-------------------------------|
-| HUB_ID        | Foreign key to Hub_Customer   |
-| NAME          | Customer's name               |
-| EMAIL         | Customer's email              |
-| LOAD_DATE     | Date of record entry          |
-| RECORD_SOURCE | Source of data                |
+| Column Name | Description |
+|--------|----------------|
+| HUB_ID | Foreign key to Hub_Customer |
+| NAME | Customer's name |
+| EMAIL | Customer's email |
+| LOAD_DATE | Date of record entry |
+| RECORD_SOURCE | Source of data |
 
 #### Satellite for Product (Sat_ProductDetails)
 
-| Column Name   | Description                 |
-|---------------|-----------------------------|
-| HUB_ID        | Foreign key to Hub_Product  |
-| NAME          | Product name                |
-| DESCRIPTION   | Product description         |
-| PRICE         | Product price               |
-| LOAD_DATE     | Date of record entry        |
-| RECORD_SOURCE | Source of data              |
+| Column Name | Description |
+|--------|---------------|
+| HUB_ID | Foreign key to Hub_Product |
+| NAME | Product name |
+| DESCRIPTION | Product description |
+| PRICE | Product price |
+| LOAD_DATE | Date of record entry |
+| RECORD_SOURCE | Source of data |
 
 #### Satellite for Order Details (Sat_OrderInfo)
 
-| Column Name    | Description                    |
-|----------------|--------------------------------|
-| LINK_ID        | Foreign key to Link_OrderDetails |
-| QUANTITY       | Quantity ordered               |
-| ORDER_DATE     | Date of the order              |
-| DELIVERY_DATE  | Expected delivery date         |
-| LOAD_DATE      | Date of record entry           |
-| RECORD_SOURCE  | Source of data                 |
+| Column Name | Description |
+|--------|----------------|
+| LINK_ID | Foreign key to Link_OrderDetails |
+| QUANTITY | Quantity ordered |
+| ORDER_DATE | Date of the order |
+| DELIVERY_DATE | Expected delivery date |
+| LOAD_DATE | Date of record entry |
+| RECORD_SOURCE | Source of data |
 
 Continuing from our example of Data Vault modeling with customer orders, let's delve into how these models are used in practice and the benefits they offer.
 

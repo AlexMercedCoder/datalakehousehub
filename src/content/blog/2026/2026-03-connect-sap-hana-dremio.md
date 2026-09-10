@@ -16,9 +16,10 @@ draft: false
 image: "/images/blog.png"
 canonical: "https://iceberglakehouse.com/posts/2026-03-connector-sap-hana/"
 ---
-> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-03-connector-sap-hana/).
 
 SAP HANA is the in-memory database platform that powers SAP S/4HANA, SAP BW/4HANA, and custom enterprise applications across finance, manufacturing, logistics, and supply chain. It's fast for SAP-native analytics : real-time financial reporting, material requirements planning, and production analytics run directly on HANA's in-memory columnar engine. But SAP HANA exists in a walled garden.
+
+> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-03-connector-sap-hana/).
 
 Connecting HANA data to non-SAP tools requires SAP Data Intelligence, SAP Business Technology Platform (BTP), or custom ABAP extractors : all of which add significant cost and complexity. Sharing HANA data with teams that don't use SAP tools (marketing running Tableau, data science using Python, operations using Power BI) means building export pipelines that duplicate data, add latency, and create governance gaps.
 
@@ -40,7 +41,7 @@ SAP HANA licenses are tied to memory allocation : the more memory provisioned, t
 
 ### AI Analytics on SAP Data
 
-SAP's AI capabilities (SAP Joule, embedded analytics) are tightly coupled to SAP applications. Dremio's AI Agent, MCP Server, and AI SQL Functions provide AI analytics that span SAP and non-SAP data sources , enabling cross-functional insights that SAP's tools can't deliver alone.
+SAP's AI capabilities (SAP Joule, embedded analytics) are tightly coupled to SAP applications. Dremio's AI Agent, MCP Server, and AI SQL Functions provide AI analytics that span SAP and non-SAP data sources, enabling cross-functional insights that SAP's tools can't deliver alone.
 
 ## Prerequisites
 
@@ -71,7 +72,7 @@ Master Credentials (username/password) or Secret Resource URL (AWS Secrets Manag
 ### 4. Configure Advanced Options
 
 | Setting | Purpose | Default |
-|---|---|---|
+|--|--|--|
 | **Record fetch size** | Rows per batch from HANA | 200 |
 | **Maximum Idle Connections** | Connection pool management | 8 |
 | **Connection Idle Time** | Seconds before idle connections close | 60 |
@@ -83,20 +84,15 @@ Master Credentials (username/password) or Secret Resource URL (AWS Secrets Manag
 ## Query SAP HANA Data
 
 ```sql
--- Query material inventory data
+- Query material inventory data
 SELECT material_id, material_desc, plant, stock_quantity, unit_of_measure
 FROM "sap-hana".SAPABAP1.MARD
 WHERE plant = '1000' AND stock_quantity > 100
 ORDER BY stock_quantity DESC;
 
--- Financial reporting: GL Account balances
+- Financial reporting: GL Account balances
 SELECT
-  gl_account,
-  company_code,
-  fiscal_year,
-  SUM(debit_amount) AS total_debits,
-  SUM(credit_amount) AS total_credits,
-  SUM(debit_amount) - SUM(credit_amount) AS net_balance
+ gl_account, company_code, fiscal_year, SUM(debit_amount) AS total_debits, SUM(credit_amount) AS total_credits, SUM(debit_amount) - SUM(credit_amount) AS net_balance
 FROM "sap-hana".SAPABAP1.BSEG
 WHERE fiscal_year = '2024'
 GROUP BY gl_account, company_code, fiscal_year
@@ -106,20 +102,13 @@ ORDER BY net_balance DESC;
 ## Federate SAP with Non-SAP Sources
 
 ```sql
--- Join SAP material data with external supplier and demand data
+- Join SAP material data with external supplier and demand data
 SELECT
-  m.material_desc,
-  m.stock_quantity,
-  m.plant,
-  s.supplier_name,
-  s.lead_time_days,
-  s.unit_cost,
-  d.forecasted_demand_30d,
-  CASE
-    WHEN m.stock_quantity < d.forecasted_demand_30d * 0.5 THEN 'Critical - Reorder Now'
-    WHEN m.stock_quantity < d.forecasted_demand_30d THEN 'Watch - Order Soon'
-    ELSE 'Adequate'
-  END AS inventory_status
+ m.material_desc, m.stock_quantity, m.plant, s.supplier_name, s.lead_time_days, s.unit_cost, d.forecasted_demand_30d, CASE
+ WHEN m.stock_quantity < d.forecasted_demand_30d * 0.5 THEN 'Critical - Reorder Now'
+ WHEN m.stock_quantity < d.forecasted_demand_30d THEN 'Watch - Order Soon'
+ ELSE 'Adequate'
+ END AS inventory_status
 FROM "sap-hana".SAPABAP1.MARD m
 JOIN "postgres-procurement".public.suppliers s ON m.material_id = s.material_id
 LEFT JOIN "s3-forecasting".demand.material_forecasts d ON m.material_id = d.material_id AND m.plant = d.plant
@@ -134,17 +123,12 @@ SAP handles material masters, PostgreSQL has supplier details, S3 has demand for
 ```sql
 CREATE VIEW analytics.gold.inventory_health AS
 SELECT
-  m.material_id,
-  m.material_desc,
-  m.plant,
-  m.stock_quantity,
-  CASE
-    WHEN m.stock_quantity = 0 THEN 'Out of Stock'
-    WHEN m.stock_quantity < 50 THEN 'Low Stock'
-    WHEN m.stock_quantity < 200 THEN 'Adequate'
-    ELSE 'Overstocked'
-  END AS stock_status,
-  ROUND(m.stock_quantity * s.unit_cost, 2) AS inventory_value_usd
+ m.material_id, m.material_desc, m.plant, m.stock_quantity, CASE
+ WHEN m.stock_quantity = 0 THEN 'Out of Stock'
+ WHEN m.stock_quantity < 50 THEN 'Low Stock'
+ WHEN m.stock_quantity < 200 THEN 'Adequate'
+ ELSE 'Overstocked'
+ END AS stock_status, ROUND(m.stock_quantity * s.unit_cost, 2) AS inventory_value_usd
 FROM "sap-hana".SAPABAP1.MARD m
 LEFT JOIN "postgres-procurement".public.suppliers s ON m.material_id = s.material_id;
 ```
@@ -172,26 +156,19 @@ A supply chain manager asks Claude "Show me all critical reorder items combining
 ### AI SQL Functions
 
 ```sql
--- Classify inventory risk with AI
+- Classify inventory risk with AI
 SELECT
-  material_desc,
-  stock_quantity,
-  stock_status,
-  AI_CLASSIFY(
-    'Based on inventory levels and value, recommend a procurement action',
-    'Material: ' || material_desc || ', Stock: ' || CAST(stock_quantity AS VARCHAR) || ', Status: ' || stock_status || ', Value: $' || CAST(inventory_value_usd AS VARCHAR),
-    ARRAY['Rush Order', 'Standard Reorder', 'Monitor', 'Liquidate Excess']
-  ) AS procurement_action
+ material_desc, stock_quantity, stock_status, AI_CLASSIFY(
+ 'Based on inventory levels and value, recommend a procurement action', 'Material: ' || material_desc || ', Stock: ' || CAST(stock_quantity AS VARCHAR) || ', Status: ' || stock_status || ', Value: $' || CAST(inventory_value_usd AS VARCHAR), ARRAY['Rush Order', 'Standard Reorder', 'Monitor', 'Liquidate Excess']
+ ) AS procurement_action
 FROM analytics.gold.inventory_health
 WHERE stock_status IN ('Out of Stock', 'Low Stock', 'Overstocked');
 
--- Generate supplier evaluation summaries
+- Generate supplier evaluation summaries
 SELECT
-  s.supplier_name,
-  AI_GENERATE(
-    'Write a one-sentence supplier performance summary',
-    'Supplier: ' || s.supplier_name || ', Lead Time: ' || CAST(s.lead_time_days AS VARCHAR) || ' days, Unit Cost: $' || CAST(s.unit_cost AS VARCHAR) || ', Materials Supplied: ' || CAST(COUNT(m.material_id) AS VARCHAR)
-  ) AS performance_summary
+ s.supplier_name, AI_GENERATE(
+ 'Write a one-sentence supplier performance summary', 'Supplier: ' || s.supplier_name || ', Lead Time: ' || CAST(s.lead_time_days AS VARCHAR) || ' days, Unit Cost: $' || CAST(s.unit_cost AS VARCHAR) || ', Materials Supplied: ' || CAST(COUNT(m.material_id) AS VARCHAR)
+ ) AS performance_summary
 FROM "postgres-procurement".public.suppliers s
 JOIN "sap-hana".SAPABAP1.MARD m ON s.material_id = m.material_id
 GROUP BY s.supplier_name, s.lead_time_days, s.unit_cost;
@@ -218,7 +195,7 @@ Dremio's Fine-Grained Access Control (FGAC) adds governance that SAP's built-in 
 - **Row-level filtering:** Restrict data by company code, plant, or region based on the querying user's role. A plant manager sees only their plant's data.
 - **Unified policies:** Same governance applies across SAP HANA, PostgreSQL, S3, BigQuery, and all other sources.
 
-These policies apply across SQL Runner, BI tools (Arrow Flight/ODBC), AI Agent, and MCP Server , ensuring consistent access control regardless of how data is queried.
+These policies apply across SQL Runner, BI tools (Arrow Flight/ODBC), AI Agent, and MCP Server, ensuring consistent access control regardless of how data is queried.
 
 ## Connect BI Tools via Arrow Flight
 
@@ -250,7 +227,7 @@ SAP HANA rarely exists in isolation. Dremio helps connect the SAP landscape with
 
 ### SAP S/4HANA Integration
 
-S/4HANA stores business-critical data in HANA tables. Dremio connects to the underlying HANA database and reads these tables directly, bypassing the need for SAP BTP, SAP Analytics Cloud, or custom OData/RFC extractors. This gives analysts SQL access to S/4HANA data :  sales orders, material documents, financial postings ,  alongside non-SAP sources.
+S/4HANA stores business-critical data in HANA tables. Dremio connects to the underlying HANA database and reads these tables directly, bypassing the need for SAP BTP, SAP Analytics Cloud, or custom OData/RFC extractors. This gives analysts SQL access to S/4HANA data : sales orders, material documents, financial postings, alongside non-SAP sources.
 
 ### SAP BW/4HANA Bridge
 
@@ -259,13 +236,13 @@ SAP BW/4HANA creates InfoProviders and ADSO tables in HANA. Dremio can query the
 ### Common SAP + Non-SAP Analytics Patterns
 
 | SAP Data (HANA) | Non-SAP Data | Analytics Use Case |
-|---|---|---|
+|--|--|--|
 | Sales orders (VBAK/VBAP) | CRM opportunities (PostgreSQL) | Pipeline-to-revenue tracking |
 | Material documents (MSEG) | IoT sensor data (S3) | Predictive maintenance |
 | Financial postings (BSEG) | External market data (BigQuery) | Financial benchmarking |
 | Employee master (PA0001) | Recruitment data (MongoDB) | Workforce analytics |
 
-Dremio's federation engine joins SAP tables with non-SAP sources without extracting SAP data to external systems , maintaining SAP as the system of record.
+Dremio's federation engine joins SAP tables with non-SAP sources without extracting SAP data to external systems, maintaining SAP as the system of record.
 
 ### SAP HANA Licensing Considerations
 

@@ -15,13 +15,12 @@ slug: 2025-04-model-context-protocol
 draft: false
 image: "/images/blog.png"
 ---
-
-## Free Resources  
-- **[Free Apache Iceberg Course](https://hello.dremio.com/webcast-an-apache-iceberg-lakehouse-crash-course-reg.html?utm_source=ev_external_blog&utm_medium=influencer&utm_campaign=AItoLLMS&utm_content=alexmerced&utm_term=external_blog)**  
-- **[Free Copy of “Apache Iceberg: The Definitive Guide”](https://hello.dremio.com/wp-apache-iceberg-the-definitive-guide-reg.html?utm_source=ev_external_blog&utm_medium=influencer&utm_campaign=AItoLLMS&utm_content=alexmerced&utm_term=external_blog)**  
-- **[2025 Apache Iceberg Architecture Guide](https://medium.com/data-engineering-with-dremio/2025-guide-to-architecting-an-iceberg-lakehouse-9b19ed42c9de)**  
-- **[How to Join the Iceberg Community](https://medium.alexmerced.blog/guide-to-finding-apache-iceberg-events-near-you-and-being-part-of-the-greater-iceberg-community-0c38ae785ddb)**  
-- **[Iceberg Lakehouse Engineering Video Playlist](https://youtube.com/playlist?list=PLsLAVBjQJO0p0Yq1fLkoHvt2lEJj5pcYe&si=WTSnqjXZv6Glkc3y)**  
+## Free Resources 
+- **[Free Apache Iceberg Course](https://hello.dremio.com/webcast-an-apache-iceberg-lakehouse-crash-course-reg.html?utm_source=ev_external_blog&utm_medium=influencer&utm_campaign=AItoLLMS&utm_content=alexmerced&utm_term=external_blog)** 
+- **[Free Copy of “Apache Iceberg: The Definitive Guide”](https://hello.dremio.com/wp-apache-iceberg-the-definitive-guide-reg.html?utm_source=ev_external_blog&utm_medium=influencer&utm_campaign=AItoLLMS&utm_content=alexmerced&utm_term=external_blog)** 
+- **[2025 Apache Iceberg Architecture Guide](https://medium.com/data-engineering-with-dremio/2025-guide-to-architecting-an-iceberg-lakehouse-9b19ed42c9de)** 
+- **[How to Join the Iceberg Community](https://medium.alexmerced.blog/guide-to-finding-apache-iceberg-events-near-you-and-being-part-of-the-greater-iceberg-community-0c38ae785ddb)** 
+- **[Iceberg Lakehouse Engineering Video Playlist](https://youtube.com/playlist?list=PLsLAVBjQJO0p0Yq1fLkoHvt2lEJj5pcYe&si=WTSnqjXZv6Glkc3y)** 
 - **[Ultimate Apache Iceberg Resource Guide](https://medium.com/data-engineering-with-dremio/ultimate-directory-of-apache-iceberg-resources-e3e02efac62e)** 
 
 We’ve spent the last few posts exploring the growing power of AI agents - how they can reason, plan, and take actions across complex tasks. And we’ve looked at the frameworks that help us build these agents. But if you’ve worked with them, you’ve likely hit a wall:
@@ -35,7 +34,7 @@ What if we had a **standard** that let **any agent talk to any data source or to
 
 That’s exactly what the **Model Context Protocol (MCP)** brings to the table.
 
-And if you’re from the data engineering world, MCP is to AI agents what the **Apache Iceberg REST protocol** is to analytics:  
+And if you’re from the data engineering world, MCP is to AI agents what the **Apache Iceberg REST protocol** is to analytics: 
 > A universal, pluggable interface that enables many clients to interact with many servers - without tight coupling.
 
 ## What Is the Model Context Protocol (MCP)?
@@ -59,13 +58,13 @@ This allows you to **plug in new capabilities without rearchitecting your agent 
 
 Let’s draw the parallel:
 
-| Concept                | Apache Iceberg REST                 | Model Context Protocol (MCP)              |
-|------------------------|-------------------------------------|-------------------------------------------|
-| Standardized API       | REST endpoints for table ops        | JSON-RPC messages for context/tools       |
-| Decouples client/server| Any engine ↔ any Iceberg catalog    | Any LLM/agent ↔ any tool or data backend  |
-| Multi-client support   | Spark, Trino, Flink, Dremio         | Claude, custom agents, IDEs, terminals    |
-| Pluggable backends     | S3, HDFS, Minio, Pure Storage, GCS            | Filesystem, APIs, databases, web services |
-| Interoperable tooling  | REST = portable across ecosystems   | MCP = portable across LLM environments    |
+| Concept | Apache Iceberg REST | Model Context Protocol (MCP) |
+|------------|-------------------|----------------------|
+| Standardized API | REST endpoints for table ops | JSON-RPC messages for context/tools |
+| Decouples client/server| Any engine ↔ any Iceberg catalog | Any LLM/agent ↔ any tool or data backend |
+| Multi-client support | Spark, Trino, Flink, Dremio | Claude, custom agents, IDEs, terminals |
+| Pluggable backends | S3, HDFS, Minio, Pure Storage, GCS | Filesystem, APIs, databases, web services |
+| Interoperable tooling | REST = portable across ecosystems | MCP = portable across LLM environments |
 
 Just as Iceberg REST made it possible for **Dremio** to talk to a table created in **Snowflake**, MCP allows a tool exposed in **Python on your laptop** to be used by an LLM in **Claude Desktop**, a VS Code agent, or even a web-based chatbot.
 

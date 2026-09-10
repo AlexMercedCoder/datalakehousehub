@@ -16,9 +16,10 @@ draft: false
 image: "/images/blog.png"
 canonical: "https://iceberglakehouse.com/posts/2026-03-connector-mongodb/"
 ---
-> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-03-connector-mongodb/).
 
 MongoDB is the most popular NoSQL document database. It stores data in flexible JSON-like documents, making it ideal for applications with evolving schemas : user profiles, product catalogs, IoT sensor data, and content management systems. But MongoDB's document model creates analytics challenges: you can't run SQL joins natively, aggregation pipelines are complex, and connecting MongoDB data to relational sources requires custom application code or ETL.
+
+> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-03-connector-mongodb/).
 
 Dremio Cloud connects to MongoDB and exposes its collections as SQL-queryable tables. Nested documents appear as structured columns, and you can join MongoDB data with relational databases, data lakes, and cloud warehouses using standard SQL.
 
@@ -49,29 +50,25 @@ Dremio Cloud connects to MongoDB and exposes its collections as SQL-queryable ta
 2. Enter **Name**, **Host**, **Port** (27017).
 3. **Authentication Type:** Choose Standard (username/password) or No Authentication.
 4. Configure **Advanced Options**:
-   - **Use SSL:** Enable for MongoDB Atlas or SSL-configured instances.
-   - **Auth Database:** The database used for authentication (default: `admin`).
-   - **Read preference:** Control whether queries hit primary or secondary replicas (`primary`, `primaryPreferred`, `secondary`, `secondaryPreferred`, `nearest`).
-   - **Subpartition size:** Controls how Dremio partitions large collections for parallel reads.
+ - **Use SSL:** Enable for MongoDB Atlas or SSL-configured instances.
+ - **Auth Database:** The database used for authentication (default: `admin`).
+ - **Read preference:** Control whether queries hit primary or secondary replicas (`primary`, `primaryPreferred`, `secondary`, `secondaryPreferred`, `nearest`).
+ - **Subpartition size:** Controls how Dremio partitions large collections for parallel reads.
 5. Configure **Reflection Refresh** and **Metadata**.
 6. Set **Privileges** and **Save**.
 
 ## Query MongoDB Data with SQL
 
 ```sql
--- Query a MongoDB collection as a SQL table
+- Query a MongoDB collection as a SQL table
 SELECT user_id, name, email, signup_date
 FROM "mongo-users".app.users
 WHERE signup_date > '2024-01-01'
 ORDER BY signup_date DESC;
 
--- Access nested fields
+- Access nested fields
 SELECT
-  user_id,
-  name,
-  address.city AS city,
-  address.state AS state,
-  preferences.theme AS ui_theme
+ user_id, name, address.city AS city, address.state AS state, preferences.theme AS ui_theme
 FROM "mongo-users".app.users
 WHERE address.state = 'CA';
 ```
@@ -81,15 +78,10 @@ WHERE address.state = 'CA';
 MongoDB documents frequently contain arrays. Use `FLATTEN` to expand them into rows:
 
 ```sql
--- If each user document has an orders array
+- If each user document has an orders array
 SELECT
-  u.user_id,
-  u.name,
-  o.order_id,
-  o.total_amount,
-  o.order_date
-FROM "mongo-users".app.users u,
-  FLATTEN(u.orders) AS t(o)
+ u.user_id, u.name, o.order_id, o.total_amount, o.order_date
+FROM "mongo-users".app.users u, FLATTEN(u.orders) AS t(o)
 WHERE o.total_amount > 100
 ORDER BY o.order_date DESC;
 ```
@@ -97,13 +89,9 @@ ORDER BY o.order_date DESC;
 ## Federate MongoDB with Relational Sources
 
 ```sql
--- Join MongoDB user profiles with PostgreSQL orders and S3 analytics
+- Join MongoDB user profiles with PostgreSQL orders and S3 analytics
 SELECT
-  m.name AS customer_name,
-  m.address.city AS city,
-  COUNT(pg.order_id) AS total_orders,
-  SUM(pg.amount) AS total_spent,
-  COUNT(s3.event_id) AS engagement_events
+ m.name AS customer_name, m.address.city AS city, COUNT(pg.order_id) AS total_orders, SUM(pg.amount) AS total_spent, COUNT(s3.event_id) AS engagement_events
 FROM "mongo-users".app.users m
 LEFT JOIN "postgres-orders".public.orders pg ON m.user_id = pg.customer_id
 LEFT JOIN "s3-events".clickstream.events s3 ON m.user_id = s3.user_id
@@ -116,17 +104,11 @@ ORDER BY total_spent DESC;
 ```sql
 CREATE VIEW analytics.gold.customer_profile AS
 SELECT
-  m.user_id,
-  m.name,
-  m.email,
-  m.address.city AS city,
-  m.address.state AS state,
-  m.signup_date,
-  CASE
-    WHEN m.subscription.tier = 'premium' THEN 'Premium'
-    WHEN m.subscription.tier = 'pro' THEN 'Pro'
-    ELSE 'Free'
-  END AS subscription_tier
+ m.user_id, m.name, m.email, m.address.city AS city, m.address.state AS state, m.signup_date, CASE
+ WHEN m.subscription.tier = 'premium' THEN 'Premium'
+ WHEN m.subscription.tier = 'pro' THEN 'Pro'
+ ELSE 'Free'
+ END AS subscription_tier
 FROM "mongo-users".app.users m;
 ```
 
@@ -159,28 +141,19 @@ Now your team can ask Claude "Show me user growth trends by subscription tier fr
 Use Dremio's built-in AI SQL functions to enrich MongoDB data directly in queries:
 
 ```sql
--- Classify users based on their MongoDB profile data
+- Classify users based on their MongoDB profile data
 SELECT
-  name,
-  subscription_tier,
-  city,
-  state,
-  AI_CLASSIFY(
-    'Based on this user profile, classify their likely engagement level',
-    'Name: ' || name || ', Subscription: ' || subscription_tier || ', City: ' || city || ', State: ' || state,
-    ARRAY['Highly Engaged', 'Active', 'At Risk', 'Churned']
-  ) AS engagement_prediction
+ name, subscription_tier, city, state, AI_CLASSIFY(
+ 'Based on this user profile, classify their likely engagement level', 'Name: ' || name || ', Subscription: ' || subscription_tier || ', City: ' || city || ', State: ' || state, ARRAY['Highly Engaged', 'Active', 'At Risk', 'Churned']
+ ) AS engagement_prediction
 FROM analytics.gold.customer_profile
 WHERE subscription_tier IN ('Premium', 'Pro');
 
--- Generate personalized outreach messages
+- Generate personalized outreach messages
 SELECT
-  name,
-  subscription_tier,
-  AI_GENERATE(
-    'Write a one-sentence personalized upgrade message for this user',
-    'User: ' || name || ', Current Tier: ' || subscription_tier || ', Location: ' || city || ', ' || state
-  ) AS upgrade_message
+ name, subscription_tier, AI_GENERATE(
+ 'Write a one-sentence personalized upgrade message for this user', 'User: ' || name || ', Current Tier: ' || subscription_tier || ', Location: ' || city || ', ' || state
+ ) AS upgrade_message
 FROM analytics.gold.customer_profile
 WHERE subscription_tier = 'Free';
 ```
@@ -250,15 +223,10 @@ MongoDB stores data as nested JSON documents. Dremio automatically converts nest
 - **Arrays** can be flattened using `FLATTEN()` to create one row per array element
 
 ```sql
--- Flatten nested order items from MongoDB documents
+- Flatten nested order items from MongoDB documents
 SELECT
-  o.customer_id,
-  o.order_date,
-  f.item_name,
-  f.quantity,
-  f.unit_price
-FROM "mongodb-app".ecommerce.orders o,
-LATERAL FLATTEN(o.items) AS f(item_name, quantity, unit_price);
+ o.customer_id, o.order_date, f.item_name, f.quantity, f.unit_price
+FROM "mongodb-app".ecommerce.orders o, LATERAL FLATTEN(o.items) AS f(item_name, quantity, unit_price);
 ```
 
 This SQL approach is simpler than MongoDB's aggregation pipeline (`$unwind`, `$lookup`, `$group`) for most analytical queries.
@@ -268,7 +236,7 @@ This SQL approach is simpler than MongoDB's aggregation pipeline (`$unwind`, `$l
 MongoDB Atlas Data Federation provides SQL-like access to MongoDB data. Key differences:
 
 | Feature | Dremio Cloud | Atlas Data Federation |
-|---|---|---|
+|--|--|--|
 | **Cross-source joins** | PostgreSQL, S3, Snowflake, etc. | MongoDB + S3 only |
 | **Reflections** | ✅ Cache results | ❌ Query every time |
 | **AI Agent** | ✅ Natural language queries | ❌ |

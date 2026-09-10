@@ -15,9 +15,10 @@ draft: false
 image: "/images/blog.png"
 canonical: "https://iceberglakehouse.com/posts/2026-02-dm-star-schema-vs-snowflake/"
 ---
-> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-02-dm-star-schema-vs-snowflake/).
 
 ![Star schema with central fact table surrounded by denormalized dimension tables](/images/blog/data-modeling/star-vs-snowflake.png)
+
+> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-02-dm-star-schema-vs-snowflake/).
 
 Both star schemas and snowflake schemas are dimensional models. They both organize data into fact tables (measurable events) and dimension tables (context about those events). The difference is how they structure the dimensions.
 
@@ -29,7 +30,7 @@ Dimensional modeling separates data into two types:
 
 **Fact tables** store measurable events : a sale, a page view, a shipment, a login. Each row represents one event. Columns include numeric measures (revenue, quantity, duration) and foreign keys pointing to dimension tables.
 
-**Dimension tables** provide context for facts , who (customer), what (product), when (date), where (location), how (channel). Dimensions describe the "business words" people use to filter, group, and label their analysis.
+**Dimension tables** provide context for facts, who (customer), what (product), when (date), where (location), how (channel). Dimensions describe the "business words" people use to filter, group, and label their analysis.
 
 Star and snowflake schemas differ in how they organize those dimension tables.
 
@@ -63,7 +64,7 @@ In a snowflake schema, dimensions are normalized into sub-tables. Instead of one
 ## Side-by-Side Comparison
 
 | Aspect | Star Schema | Snowflake Schema |
-|---|---|---|
+|--|--|--|
 | Dimension structure | Denormalized (flat) | Normalized (branching) |
 | Tables per query | Fewer (4-6 typical) | More (8-12 typical) |
 | Query performance | Faster | Slower (more joins) |

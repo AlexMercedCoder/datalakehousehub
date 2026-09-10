@@ -16,6 +16,9 @@ draft: false
 image: "/images/blog.png"
 canonical: "https://iceberglakehouse.com/posts/2025-01-xtable-or-uniform/"
 ---
+
+The value of the [lakehouse model](https://www.datalakehousehub.com), along with the concept of "shifting left" by moving more data modeling and processing from the data warehouse to the data lake, has seen significant buy-in and adoption over the past few years. A lakehouse integrates data warehouse functionality into a data lake using open table formats, offering the best of both worlds for analytics and storage.
+
 > **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2025-01-xtable-or-uniform/).
 
 - [Blog: What is a Data Lakehouse and a Table Format?](https://www.dremio.com/blog/apache-iceberg-crash-course-what-is-a-data-lakehouse-and-a-table-format/?utm_source=ev_external_blog&utm_medium=influencer&utm_campaign=xtable-uniform&utm_content=alexmerced&utm_term=external_blog)
@@ -23,9 +26,6 @@ canonical: "https://iceberglakehouse.com/posts/2025-01-xtable-or-uniform/"
 - [Free Apache Iceberg Crash Course](https://hello.dremio.com/webcast-an-apache-iceberg-lakehouse-crash-course-reg.html?utm_source=ev_external_blog&utm_medium=influencer&utm_campaign=xtable-uniform&utm_content=alexmerced&utm_term=external_blog)
 - [Lakehouse Catalog Course](https://hello.dremio.com/webcast-an-in-depth-exploration-on-the-world-of-data-lakehouse-catalogs-reg.html?utm_source=ev_external_blog&utm_medium=influencer&utm_campaign=xtable-uniform&utm_content=alexmerced&utm_term=external_blog)
 - [Iceberg Lakehouse Engineering Video Playlist](https://www.youtube.com/watch?v=SIriNcVIGJQ&list=PLsLAVBjQJO0p0Yq1fLkoHvt2lEJj5pcYe)
-
-
-The value of the [lakehouse model](https://www.datalakehousehub.com), along with the concept of "shifting left" by moving more data modeling and processing from the data warehouse to the data lake, has seen significant buy-in and adoption over the past few years. A lakehouse integrates data warehouse functionality into a data lake using open table formats, offering the best of both worlds for analytics and storage. 
 
 Enabling lakehouse architecture with open table formats like Apache Iceberg, Delta Lake, Apache Hudi, and Apache Paimon has introduced the need to manage interoperability between these formats, especially at the boundaries of data systems. While many lakehouse implementations operate seamlessly with a single table format, scenarios arise where multiple formats are involved. To address these challenges, several solutions have emerged.
 
@@ -39,17 +39,17 @@ There are primarily two types of interoperability solutions for working across d
 
 These solutions focus on maintaining metadata for the same data files in multiple formats, enabling seamless interaction across systems.
 
-**Apache XTable:**  
+**Apache XTable:** 
 An open-source project initially developed at Onehouse and now managed by the community, Apache XTable enables bi-directional metadata conversion between different table formats. It includes incremental metadata update features, ensuring efficiency and consistency. For Iceberg, XTable generates the metadata, which can then be registered with your preferred catalog.
 
-**Delta Lake Uniform:**  
+**Delta Lake Uniform:** 
 A feature of the Delta Lake format, Delta Lake Uniform allows you to natively write to Delta Lake tables while maintaining a secondary metadata set in Iceberg or Hudi. For Iceberg, it can sync these tables to a Hive Metastore or Unity Catalog. When used with Unity Catalog, these tables can also be exposed for reading through an Iceberg REST Catalog interface, enabling greater flexibility and integration.
 
 ### 2. Data Unification Platforms
 
 Unified Lakehouse Platforms like **Dremio** or open-source query engines such as **Trino** provide another solution by allowing queries across multiple formats without requiring metadata conversion. This approach enables various table formats to coexist while being queried seamlessly.
 
-**Dremio’s Advantage with Apache Arrow and Reflections:**  
+**Dremio’s Advantage with Apache Arrow and Reflections:** 
 Dremio leverages the power of Apache Arrow to enable in-memory columnar processing, delivering greater performance to Trino. Additionally, Dremio’s **Reflections** feature provides pre-aggregated, incremental materializations that significantly accelerate query response times especially when paired with Apache Iceberg tables. With its built-in semantic layer, Dremio ensures uniform data models that can be consistently utilized across different teams and tools. This capability enables seamless collaboration, allowing data engineers, analysts, and BI tools to consume data efficiently without requiring duplicate efforts for model creation or maintenance.
 
 ## The Use Cases and Which Solution to Use

@@ -2,7 +2,7 @@
 title: "Partition Evolution: Change Your Partitioning Without Rewriting Data"
 date: 2026-04-29T09:04:00Z
 pubDatetime: 2026-04-29T09:04:00Z
-description: "Iceberg lets you change partition schemes without rewriting data. Here is how partition evolution works internally and why Hive-style partitioning could not do this."
+description: "Iceberg lets you change partition schemes without rewriting data. Here is how partition evolution works internally and why Hive-style partitioning could."
 author: "Alex Merced"
 category: "Data Lakehouse"
 tags:
@@ -14,11 +14,12 @@ draft: false
 image: "/images/blog/apache-iceberg-masterclass/04-partition-evolution-hive-partition-directories.png"
 canonical: "https://iceberglakehouse.com/posts/2026-04-29-iceberg-masterclass-04/"
 ---
-> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-04-29-iceberg-masterclass-04/).
 
-<!-- Meta Description: Iceberg lets you change partition schemes without rewriting data. Here is how partition evolution works internally and why Hive-style partitioning could not do this. -->
-<!-- Primary Keyword: Iceberg partition evolution -->
-<!-- Secondary Keywords: partition spec, hidden partitioning, Hive partitioning limitations -->
+<!- Meta Description: Iceberg lets you change partition schemes without rewriting data. Here is how partition evolution works internally and why Hive-style partitioning could not do this. ->
+<!- Primary Keyword: Iceberg partition evolution ->
+<!- Secondary Keywords: partition spec, hidden partitioning, Hive partitioning limitations ->
+
+> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-04-29-iceberg-masterclass-04/).
 
 *Read the complete Apache Iceberg Masterclass series:*
 * [Part 1: What Are Table Formats and Why Were They Needed?](/blog/2026-04-29-apache-iceberg-masterclass-01-table-formats)
@@ -71,12 +72,9 @@ Iceberg separates the logical partition specification from the physical data lay
 Every Iceberg table has a [partition spec](https://iceberg.apache.org/spec/#partitioning) that defines how source columns map to partition values. The spec does not create directories. Instead, it records partition values as metadata in manifest entries alongside each data file.
 
 ```sql
--- Create a table partitioned by month
+- Create a table partitioned by month
 CREATE TABLE orders (
-  order_id BIGINT,
-  order_date DATE,
-  amount DECIMAL(10,2),
-  status STRING
+ order_id BIGINT, order_date DATE, amount DECIMAL(10, 2), status STRING
 ) PARTITIONED BY (month(order_date))
 ```
 
@@ -149,7 +147,7 @@ Two options:
 ## How Other Formats Handle This
 
 | Format | Partition Change Approach | Data Rewrite? | Multiple Specs? |
-|---|---|---|---|
+|--|--|--|--|
 | **Iceberg** | Metadata-only spec evolution | No | Yes, coexist |
 | **Delta Lake** | Liquid Clustering (adaptive) | Background rewrite | N/A (clustering-based) |
 | **Hudi** | Re-partition with full rewrite | Yes | No |

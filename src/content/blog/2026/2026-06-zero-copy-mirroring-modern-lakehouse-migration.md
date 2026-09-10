@@ -13,7 +13,6 @@ tags:
   - "metadata translation"
   - "transactional parity"
 ---
-
 Zero-copy mirroring gives teams a safer migration path because they can expose a lakehouse surface before they duplicate every byte or rewrite every workload. That is the useful lens for zero-copy lakehouse mirroring in June 2026. The market is not short on announcements. What matters is whether the new pattern changes ownership, performance, governance, and agent readiness in a way your team can operate.
 
 ![zero-copy lakehouse mirroring architecture diagram](/images/blog/june8batch/zero-copy-mirroring-modern-lakehouse-migration-diagram-1.png)
@@ -62,7 +61,7 @@ A lakehouse platform needs five capabilities to serve agents reliably: query fed
 ## Implementation checklist
 
 | Decision | What to document | Why it matters |
-|---|---|---|
+|--|--|--|
 | Table contract | Format version, schema rules, snapshot policy, and rollback plan | Engines need the same understanding of the table. |
 | Catalog authority | Production catalog, namespaces, commit rules, and role model | Multi-engine systems need one source of table truth. |
 | Engine matrix | Read, write, merge, delete, schema, and view support by engine | A feature is not production-ready until the exact operation is tested. |
