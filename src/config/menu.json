@@ -218,8 +218,16 @@
           "url": "https://alexmercedmedia.com"
         },
         {
+          "text": "Branding.AlexMerced.com",
+          "url": "https://branding.alexmerced.com"
+        },
+        {
           "text": "Books",
           "url": "https://books.alexmerced.com"
+        },
+        {
+          "text": "Resources.AlexMerced.com",
+          "url": "https://resources.alexmerced.com"
         },
         {
           "text": "AlexMercedCoder.dev",
@@ -239,16 +247,48 @@
           "url": "https://iceberglakehouse.com"
         },
         {
+          "text": "DataLakehouse.help",
+          "url": "https://datalakehouse.help"
+        },
+        {
+          "text": "OpenDataLakehouse.com",
+          "url": "https://opendatalakehouse.com"
+        },
+        {
           "text": "AgenticLakehouse.com",
           "url": "https://agenticlakehouse.com"
+        },
+        {
+          "text": "AgenticAnalyticsNow.com",
+          "url": "https://agenticanalyticsnow.com"
+        },
+        {
+          "text": "OpenAgenticPlatform.com",
+          "url": "https://openagenticplatform.com"
+        },
+        {
+          "text": "AlexMercedAI.com",
+          "url": "https://www.alexmercedai.com"
+        },
+        {
+          "text": "DataAIWiki.com",
+          "url": "https://dataaiwiki.com"
         },
         {
           "text": "SemanticLakehouse.com",
           "url": "https://semanticlakehouse.com"
         },
         {
+          "text": "OpenLakehouse.AlexMerced.com",
+          "url": "https://openlakehouse.alexmerced.com"
+        },
+        {
           "text": "DataEngnr.com",
           "url": "https://dataengnr.com"
+        },
+        {
+          "text": "WeekOfData.com",
+          "url": "https://weekofdata.com"
         }
       ]
     },
@@ -258,6 +298,10 @@
         {
           "text": "AlexMerced.blog",
           "url": "https://alexmerced.blog"
+        },
+        {
+          "text": "Tuts.AlexMercedCoder.dev",
+          "url": "https://tuts.alexmercedcoder.dev"
         },
         {
           "text": "GrokOverflow.com",
@@ -270,6 +314,14 @@
         {
           "text": "AlexMercedMusic.com",
           "url": "https://alexmercedmusic.com"
+        },
+        {
+          "text": "AlexMercedLibertarian.com",
+          "url": "https://alexmercedlibertarian.com"
+        },
+        {
+          "text": "D6Storyteller.AlexMerced.com",
+          "url": "https://d6storyteller.alexmerced.com"
         }
       ]
     }
