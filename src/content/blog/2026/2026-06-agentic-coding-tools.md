@@ -1,4 +1,5 @@
 ---
+slug: "agentic-coding-tools"
 title: "Agentic Coding Tools in 2026: A Practical Comparison"
 description: "Compare Codex, Claude Code, OpenCode, Gemini CLI, and GitHub Copilot CLI by workflow, model choice, governance, and cost controls."
 date: 2026-06-08T09:00:00Z

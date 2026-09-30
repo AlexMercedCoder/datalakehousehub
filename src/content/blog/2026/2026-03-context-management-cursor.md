@@ -1,4 +1,5 @@
 ---
+slug: "2026-03-context-management-cursor"
 title: "Cursor Context Management: Rules, Indexing, and MCP"
 description: "A practical guide to Cursor project rules, codebase indexing, attached context, model selection, and MCP tools."
 date: 2026-03-15T10:00:00Z

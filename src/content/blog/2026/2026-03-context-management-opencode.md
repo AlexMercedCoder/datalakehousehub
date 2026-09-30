@@ -1,4 +1,5 @@
 ---
+slug: "2026-03-context-management-opencode"
 title: "OpenCode Context Management: Rules, Agents, Models, and MCP"
 description: "Configure OpenCode project instructions, agent modes, model providers, context compaction, and MCP tools without relying on stale syntax."
 date: 2026-03-15T10:00:00Z

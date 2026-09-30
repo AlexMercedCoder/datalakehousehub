@@ -3,7 +3,7 @@
     "title": "The Data Lakehouse Hub",
     "base_url": "https://datalakehousehub.com",
     "base_path": "/",
-    "trailing_slash": false,
+    "trailing_slash": true,
     "favicon": "/images/logosquare.png",
     "logo": "/images/logo_v2_transparent.png",
     "logo_width": "152",

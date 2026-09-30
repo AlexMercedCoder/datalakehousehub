@@ -5,21 +5,21 @@ const failures = [];
 
 const pages = [
   {
-    path: "blog/2026/2026-03-context-management-cursor/index.html",
+    path: "blog/2026-03-context-management-cursor/index.html",
     canonical:
-      "https://datalakehousehub.com/blog/2026/2026-03-context-management-cursor",
+      "https://datalakehousehub.com/blog/2026-03-context-management-cursor/",
     title: "Cursor Context Management",
   },
   {
-    path: "blog/2026/2026-03-context-management-opencode/index.html",
+    path: "blog/2026-03-context-management-opencode/index.html",
     canonical:
-      "https://datalakehousehub.com/blog/2026/2026-03-context-management-opencode",
+      "https://datalakehousehub.com/blog/2026-03-context-management-opencode/",
     title: "OpenCode Context Management",
   },
   {
-    path: "blog/2026/2026-06-agentic-coding-tools/index.html",
+    path: "blog/agentic-coding-tools/index.html",
     canonical:
-      "https://datalakehousehub.com/blog/2026/2026-06-agentic-coding-tools",
+      "https://datalakehousehub.com/blog/agentic-coding-tools/",
     title: "Agentic Coding Tools in 2026",
   },
 ];
@@ -45,16 +45,23 @@ for (const page of pages) {
 
 const sitemap = readFileSync(new URL("sitemap-0.xml", dist), "utf8");
 for (const page of pages) {
-  const sitemapUrl = page.canonical.replace(/\/$/, "");
+  const sitemapUrl = page.canonical;
   if (!sitemap.includes(`<loc>${sitemapUrl}</loc>`)) {
     failures.push(`Priority page missing from sitemap: ${sitemapUrl}`);
   }
 }
 
-for (const excluded of ["/search", "/elements"]) {
+for (const excluded of ["/search/", "/elements/"]) {
   if (sitemap.includes(`<loc>https://datalakehousehub.com${excluded}</loc>`)) {
     failures.push(`Excluded utility page appears in sitemap: ${excluded}`);
   }
+}
+
+const redirecting = [...sitemap.matchAll(/<loc>([^<]+)<\/loc>/g)]
+  .map((m) => m[1])
+  .filter((u) => !u.endsWith("/"));
+if (redirecting.length > 0) {
+  failures.push(`${redirecting.length} sitemap URLs lack a trailing slash, e.g. ${redirecting[0]}`);
 }
 
 if (failures.length > 0) {
