@@ -25,7 +25,7 @@ canonical: "https://iceberglakehouse.com/posts/2025-05-intro-to-data-engineering
 - **[Iceberg Lakehouse Engineering Video Playlist](https://youtube.com/playlist?list=PLsLAVBjQJO0p0Yq1fLkoHvt2lEJj5pcYe&si=WTSnqjXZv6Glkc3y)** 
 - **[Ultimate Apache Iceberg Resource Guide](https://medium.com/data-engineering-with-dremio/ultimate-directory-of-apache-iceberg-resources-e3e02efac62e)**
 
-> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2025-05-intro-to-data-engineering-concepts-16/).
+> **Cross-posted.** This article's canonical home is [Alex Merced's Lakehouse Blog](https://iceberglakehouse.com/posts/2025-05-intro-to-data-engineering-concepts-16/).
 
 Data lakes and data warehouses each brought strengths and limitations to the way organizations manage analytics. Lakes offered flexibility and scale, but lacked consistency and performance. Warehouses delivered speed and structure, but often at the cost of rigidity and duplication. The data lakehouse aims to unify the best of both worlds.
 

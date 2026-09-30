@@ -21,7 +21,7 @@ canonical: "https://iceberglakehouse.com/posts/2026-05-24-iceberg-cdc-pipelines/
 
 Change Data Capture pipelines expose one of Apache Iceberg's most persistent weaknesses: its original mechanism for handling updates and deletes. When you stream CDC events into Iceberg using merge-on-read semantics, you accumulate delete files. Each update or delete operation for a row creates a separate positional delete file that the query engine must reconcile against the original data file at read time. The delete files pile up between compaction runs. Read performance degrades. Compaction becomes a continuous obligation.
 
-> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-05-24-iceberg-cdc-pipelines/).
+> **Cross-posted.** This article's canonical home is [Alex Merced's Lakehouse Blog](https://iceberglakehouse.com/posts/2026-05-24-iceberg-cdc-pipelines/).
 
 Iceberg format version 3, ratified in 2024 and moving to full production stability with the Apache Iceberg 1.11.0 release in May 2026, replaces this design with binary deletion vectors. Combined with native row lineage tracking, these two changes reshape how CDC pipelines can be built and maintained. They don't eliminate all CDC complexity, but they remove the structural weaknesses that made Iceberg an awkward fit for high-churn streaming workloads.
 

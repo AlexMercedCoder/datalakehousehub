@@ -1,7 +1,7 @@
 ---
 title: "What Iceberg Table Maintenance Actually Costs"
 date: 2026-09-10T12:00:00Z
-canonical: https://iceberglakehouse.com/posts/iceberg-maintenance-budget/
+canonical: "https://iceberglakehouse.com/posts/iceberg-maintenance-budget/"
 description: "A cost model for compaction, snapshot expiry, orphan cleanup, and manifest rewriting: what each operation spends, on which meter, and how to set a schedule."
 author: "Alex Merced"
 category: "Apache Iceberg"
@@ -17,7 +17,7 @@ image: "/images/blog.png"
 bannerImage: "/images/blog.png"
 ---
 
-> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/iceberg-maintenance-budget/).
+> **Cross-posted.** This article's canonical home is [Alex Merced's Lakehouse Blog](https://iceberglakehouse.com/posts/iceberg-maintenance-budget/).
 
 Someone eventually asks the question, usually in a quarterly planning meeting: why are we running a Spark cluster every night against tables nobody queried that day?
 

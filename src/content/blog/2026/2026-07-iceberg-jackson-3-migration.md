@@ -19,7 +19,7 @@ canonical: "https://iceberglakehouse.com/posts/iceberg-jackson-3-migration/"
 
 A team upgrades to Spring Boot 4. The build breaks in a place nobody expected: a service that reads Iceberg table metadata through `iceberg-core`. Spring Boot 4 ships Jackson 3 as its default JSON library. Iceberg's core module is built against Jackson 2, and Jackson types appear in the signatures the service calls.
 
-> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/iceberg-jackson-3-migration/).
+> **Cross-posted.** This article's canonical home is [Alex Merced's Lakehouse Blog](https://iceberglakehouse.com/posts/iceberg-jackson-3-migration/).
 
 Two Jackson versions on one classpath is not itself fatal, because Jackson 3 changed its Maven coordinates specifically so both can coexist. What breaks is the code sitting between them, which has to decide which Jackson a given object belongs to.
 

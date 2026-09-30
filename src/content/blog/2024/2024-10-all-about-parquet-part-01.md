@@ -17,7 +17,7 @@ canonical: "https://iceberglakehouse.com/posts/2024-10-all-about-parquet-part-01
 
 Managing and processing large datasets efficiently is crucial for many organizations. One of the key factors in data efficiency is the format in which data is stored and retrieved. Among the numerous file formats available, **Apache Parquet** has emerged as a popular choice, particularly in big data and cloud-based environments. But what exactly is the Parquet file format, and why is it so widely adopted? In this post, we’ll introduce you to the key concepts behind Parquet, its structure, and why it has become a go-to solution for data engineers and analysts alike.
 
-> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2024-10-all-about-parquet-part-01/).
+> **Cross-posted.** This article's canonical home is [Alex Merced's Lakehouse Blog](https://iceberglakehouse.com/posts/2024-10-all-about-parquet-part-01/).
 
 - [Free Copy of Apache Iceberg the Definitive Guide](https://hello.dremio.com/wp-apache-iceberg-the-definitive-guide-reg.html?utm_source=alexmerced&utm_medium=external_blog&utm_campaign=allaboutparquet)
 - [Free Apache Iceberg Crash Course](https://hello.dremio.com/webcast-an-apache-iceberg-lakehouse-crash-course-reg.html?utm_source=alexmerced&utm_medium=external_blog&utm_campaign=allaboutparquet)

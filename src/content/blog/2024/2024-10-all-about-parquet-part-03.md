@@ -17,7 +17,7 @@ canonical: "https://iceberglakehouse.com/posts/2024-10-all-about-parquet-part-03
 
 In the previous post, we explored the benefits of Parquet’s columnar storage model. Now, let’s delve deeper into the internal structure of a Parquet file. Understanding how Parquet organizes data into **pages**, **row groups**, and **columns** will give you valuable insights into how Parquet achieves its efficiency in storage and query execution. This knowledge will also help you make informed decisions when working with Parquet files in your data pipelines.
 
-> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2024-10-all-about-parquet-part-03/).
+> **Cross-posted.** This article's canonical home is [Alex Merced's Lakehouse Blog](https://iceberglakehouse.com/posts/2024-10-all-about-parquet-part-03/).
 
 - [Free Copy of Apache Iceberg the Definitive Guide](https://hello.dremio.com/wp-apache-iceberg-the-definitive-guide-reg.html?utm_source=alexmerced&utm_medium=external_blog&utm_campaign=allaboutparquet)
 - [Free Apache Iceberg Crash Course](https://hello.dremio.com/webcast-an-apache-iceberg-lakehouse-crash-course-reg.html?utm_source=alexmerced&utm_medium=external_blog&utm_campaign=allaboutparquet)

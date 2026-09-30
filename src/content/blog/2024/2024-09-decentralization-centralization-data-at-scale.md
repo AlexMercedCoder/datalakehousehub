@@ -16,7 +16,7 @@ canonical: "https://iceberglakehouse.com/posts/2024-9-virtualization-lakehouse-m
 
 As data continues to grow exponentially in scale, speed, and variety, organizations are grappling with the challenges of managing and leveraging vast amounts of information. Traditional data architectures, reliant on extensive pipelines and disparate data in databases, data lakes and warehouses each with their own user access and governance challenges, are proving too slow, rigid, and costly to meet modern business needs. The crux of the problem lies in data silos: isolated pockets of data curated by a central team, that hinder collaboration, slow decision-making, and lead to inefficiencies.
 
-> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2024-9-virtualization-lakehouse-mesh-data-at-scale/).
+> **Cross-posted.** This article's canonical home is [Alex Merced's Lakehouse Blog](https://iceberglakehouse.com/posts/2024-9-virtualization-lakehouse-mesh-data-at-scale/).
 
 - [Free Copy of Apache Iceberg: The Definitive Guide](https://hello.dremio.com/wp-apache-iceberg-the-definitive-guide-reg.html?utm_source=ev_external_blog&utm_medium=influencer&utm_campaign=decentcent&utm_content=alexmerced&utm_term=external_blog)
 - [Free Apache Iceberg Crash Course](https://hello.dremio.com/webcast-an-apache-iceberg-lakehouse-crash-course-reg.html?utm_source=ev_external_blog&utm_medium=influencer&utm_campaign=decentcent&utm_content=alexmerced&utm_term=external_blog)

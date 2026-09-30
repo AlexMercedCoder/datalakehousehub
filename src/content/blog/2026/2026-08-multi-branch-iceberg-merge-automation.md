@@ -17,7 +17,7 @@ draft: false
 
 A data engineering team of 30 has adopted Apache Iceberg's branching for everything. Each ingestion stream writes to its own branch. Each transformation job stages output on a branch and publishes to main after validation. Each engineer gets a branch per feature. On a busy day there are 40 active branches on the core fact tables, and the merge queue into main has become the bottleneck: publishes wait behind each other, a validation that ran on a branch is stale by the time the branch merges, and twice a week somebody fast-forwards over a change they did not know about.
 
-> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/multi-branch-iceberg-merge-automation/).
+> **Cross-posted.** This article's canonical home is [Alex Merced's Lakehouse Blog](https://iceberglakehouse.com/posts/multi-branch-iceberg-merge-automation/).
 
 Iceberg's branching primitives are sound. What the team is missing is the layer above them: a merge policy, an automated conflict check, a validation step that runs against the actual merge result, and a commit queue that keeps 40 writers from turning main's optimistic concurrency into a retry storm. Git solved this decade ago for source code with rebase, merge queues, and required checks. The same ideas apply to Iceberg, with one important difference: an Iceberg branch is a pointer to a snapshot, and "merging" two snapshots is not a three-way textual merge but a decision about which files and which deletes end up in the result.
 

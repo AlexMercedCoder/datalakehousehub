@@ -17,7 +17,7 @@ canonical: "https://iceberglakehouse.com/posts/2025-11-introducing-dremioframe-d
 
 If you're a data analyst or Python developer who prefers chaining expressive `.select()` and `.mutate()` calls over writing raw SQL, you're going to love `dremioframe` : the unofficial Python DataFrame library for Dremio (currently in Alpha).
 
-> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2025-11-introducing-dremioframe-dataframe-python-library/).
+> **Cross-posted.** This article's canonical home is [Alex Merced's Lakehouse Blog](https://iceberglakehouse.com/posts/2025-11-introducing-dremioframe-dataframe-python-library/).
 
 Dremio has always made it easy to query across cloud and on-prem datasets using SQL. Some users prefer the ergonomics of DataFrame-style APIs, where transformations are composable, readable, and testable : especially when working in notebooks or building data pipelines in Python.
 

@@ -13,10 +13,10 @@ tags:
 slug: "semantic-failure-catalog-ai-agent-queries"
 draft: false
 image: "/images/blog.png"
-canonical: https://iceberglakehouse.com/posts/semantic-failure-catalog-ai-agent-queries/
+canonical: "https://iceberglakehouse.com/posts/semantic-failure-catalog-ai-agent-queries/"
 ---
 
-> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/semantic-failure-catalog-ai-agent-queries/).
+> **Cross-posted.** This article's canonical home is [Alex Merced's Lakehouse Blog](https://iceberglakehouse.com/posts/semantic-failure-catalog-ai-agent-queries/).
 
 A query can be syntactically valid, reference only real tables and columns, run without error, and still return a wrong business number. The Semantic Failure Catalog lists twelve of these patterns, each with a reproducible example, the metadata needed to detect it, and a working detection test.
 

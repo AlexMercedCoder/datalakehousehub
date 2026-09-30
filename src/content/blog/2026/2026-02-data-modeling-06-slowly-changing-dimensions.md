@@ -18,7 +18,7 @@ canonical: "https://iceberglakehouse.com/posts/2026-02-dm-slowly-changing-dimens
 
 ![Dimension timeline showing attribute values changing across time periods](/images/blog/data-modeling/slowly-changing-dimensions.png)
 
-> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-02-dm-slowly-changing-dimensions/).
+> **Cross-posted.** This article's canonical home is [Alex Merced's Lakehouse Blog](https://iceberglakehouse.com/posts/2026-02-dm-slowly-changing-dimensions/).
 
 Dimensions change. A customer moves cities. A product gets reclassified. An employee changes departments. How your data model handles these changes determines whether your historical reports are accurate or misleading.
 

@@ -21,7 +21,7 @@ canonical: "https://iceberglakehouse.com/posts/building-air-gapped-iceberg-lakeh
 
 *By Alex Merced, Data Lakehouse and AI Evangelist*
 
-> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/building-air-gapped-iceberg-lakehouse/).
+> **Cross-posted.** This article's canonical home is [Alex Merced's Lakehouse Blog](https://iceberglakehouse.com/posts/building-air-gapped-iceberg-lakehouse/).
 
 A hospital system wants a lakehouse. Their security review says patient data never leaves facilities they control. A defense contractor wants the same architecture inside an enclave with no route to the public internet. A bank in a jurisdiction with data residency law wants it inside one country's borders, on hardware they own.
 

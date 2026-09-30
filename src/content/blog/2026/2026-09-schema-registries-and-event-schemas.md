@@ -14,12 +14,12 @@ tags:
 slug: "schema-registries-and-event-schemas"
 draft: false
 image: "/images/blog.png"
-canonical: https://iceberglakehouse.com/posts/schema-registries-and-event-schemas/
+canonical: "https://iceberglakehouse.com/posts/schema-registries-and-event-schemas/"
 ---
 
 A Kafka topic carries order events. A producer team adds a field. Downstream, three consumers keep working because the serialization format tolerates an unknown field, and a fourth crashes because it validates strictly. The Iceberg sink writing that topic to the lakehouse adds a column, which is the correct behavior. Two weeks later a producer changes a field's type from string to integer, and the sink cannot add that as a promotion, so it either fails the connector or coerces the column to string, and every downstream query that cast it breaks.
 
-> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/schema-registries-and-event-schemas/).
+> **Cross-posted.** This article's canonical home is [Alex Merced's Lakehouse Blog](https://iceberglakehouse.com/posts/schema-registries-and-event-schemas/).
 
 None of that is a Kafka problem or an Iceberg problem. It is a schema governance gap between two systems that both have schema evolution rules, and different ones. Kafka's schema registry governs what a producer is allowed to publish. Iceberg's spec governs what a table's schema is allowed to become. The rules overlap and do not match, and the sink between them is where the mismatch surfaces.
 

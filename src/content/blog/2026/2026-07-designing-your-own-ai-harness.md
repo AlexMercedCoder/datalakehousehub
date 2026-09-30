@@ -13,12 +13,12 @@ tags:
 slug: designing-your-own-ai-harness
 draft: false
 image: /images/blog.png
-canonical: https://iceberglakehouse.com/posts/designing-your-own-ai-harness/
+canonical: "https://iceberglakehouse.com/posts/designing-your-own-ai-harness/"
 ---
 
 *By Alex Merced, Head of Developer Relations at Dremio*
 
-> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/designing-your-own-ai-harness/).
+> **Cross-posted.** This article's canonical home is [Alex Merced's Lakehouse Blog](https://iceberglakehouse.com/posts/designing-your-own-ai-harness/).
 
 The most underappreciated finding in applied AI this year fits in one statistic: a major framework team took the same model, changed nothing about it, rebuilt only the machinery around it, and watched their score on a leading agent benchmark jump from the low fifties to the mid sixties, vaulting from the middle of the pack into the top five. No new model. No fine-tuning. Just a better harness.
 

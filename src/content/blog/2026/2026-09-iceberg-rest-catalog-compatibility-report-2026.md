@@ -1,7 +1,7 @@
 ---
 title: "The 2026 Iceberg REST Catalog Compatibility Report"
 date: 2026-09-10T12:00:00Z
-canonical: https://iceberglakehouse.com/posts/iceberg-rest-catalog-compatibility-report-2026/
+canonical: "https://iceberglakehouse.com/posts/iceberg-rest-catalog-compatibility-report-2026/"
 description: "A repeatable test for what an Iceberg REST catalog actually serves, a scoring scheme that separates design from breakage, and the 2026 evidence across seven catalogs."
 author: "Alex Merced"
 category: "Apache Iceberg"
@@ -17,7 +17,7 @@ image: "/images/blog.png"
 bannerImage: "/images/blog.png"
 ---
 
-> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/iceberg-rest-catalog-compatibility-report-2026/).
+> **Cross-posted.** This article's canonical home is [Alex Merced's Lakehouse Blog](https://iceberglakehouse.com/posts/iceberg-rest-catalog-compatibility-report-2026/).
 
 Every lakehouse vendor now ships an Apache Iceberg REST catalog. Every one of them says it implements the same specification. Then you point PyIceberg at one of them, run the same script that worked yesterday against a different catalog, and `createView` returns a 404. Or `updateNamespaceProperties` returns a 400 asking for a field that does not exist in the specification. Or a drop that worked in staging is refused in production because purge semantics differ between the two catalogs you happen to be using.
 

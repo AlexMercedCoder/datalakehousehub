@@ -10,7 +10,7 @@ tags:
 slug: "federation-and-lakehouse"
 draft: false
 image: "/images/blog.png"
-canonical: https://iceberglakehouse.com/posts/federation-and-lakehouse/
+canonical: "https://iceberglakehouse.com/posts/federation-and-lakehouse/"
 description: "By Alex Merced, Head of Developer Relations at Dremio"
 ---
 
@@ -18,7 +18,7 @@ description: "By Alex Merced, Head of Developer Relations at Dremio"
 
 *By Alex Merced, Head of Developer Relations at Dremio*
 
-> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/federation-and-lakehouse/).
+> **Cross-posted.** This article's canonical home is [Alex Merced's Lakehouse Blog](https://iceberglakehouse.com/posts/federation-and-lakehouse/).
 
 Every data strategy document written this decade contains some version of the same sentence: we need a single place to access all our data. The sentence is right. The trouble starts on the next page, because there are two fundamentally different ways to build that single place, and the industry has spent years arguing about them as if they were rivals.
 

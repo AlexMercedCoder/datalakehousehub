@@ -12,7 +12,11 @@ tags:
 slug: ltap-lakehouse-transactional-analytical-processing-2026
 draft: false
 image: "/images/blog.png"
+canonical: "https://iceberglakehouse.com/posts/ltap-lakehouse-transactional-analytical-processing-2026/"
 ---
+
+> **Cross-posted.** This article's canonical home is [Alex Merced's Lakehouse Blog](https://iceberglakehouse.com/posts/ltap-lakehouse-transactional-analytical-processing-2026/).
+
 # What Is LTAP in the Lakehouse?
 
 

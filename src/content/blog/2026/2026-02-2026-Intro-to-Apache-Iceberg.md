@@ -15,12 +15,12 @@ tags:
 slug: 2026-02-intro-to-Apache-Iceberg
 draft: false
 image: "/images/blog.png"
-canonical: "https://iceberglakehouse.com/posts/2026-02-intro-to-Apache-Iceberg/"
+canonical: "https://iceberglakehouse.com/posts/2026-02-intro-to-apache-iceberg/"
 ---
 
 Apache Iceberg is an open-source table format for large analytic datasets. It defines how data files stored on object storage (S3, ADLS, GCS) are organized into a logical table with a schema, partition layout, and consistent point-in-time snapshots. If you've heard the term "data lakehouse, " Iceberg is the layer that makes it possible by bringing warehouse-grade reliability to data lake storage.
 
-> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-02-intro-to-Apache-Iceberg/).
+> **Cross-posted.** This article's canonical home is [Alex Merced's Lakehouse Blog](https://iceberglakehouse.com/posts/2026-02-intro-to-apache-iceberg/).
 
 This post covers what Iceberg is, how its metadata works under the hood, what changed across specification versions 1 through 3, what's being proposed for v4, and how to get started using Iceberg tables with [Dremio](https://www.dremio.com/get-started) in about ten minutes.
 

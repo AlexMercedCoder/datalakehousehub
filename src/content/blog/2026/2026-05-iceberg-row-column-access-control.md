@@ -16,7 +16,7 @@ canonical: "https://iceberglakehouse.com/posts/iceberg-row-column-access-control
 
 Apache Iceberg handles table format, schema evolution, and metadata management. What it doesn't handle is access control. The spec defines how data is structured and stored, not who can see which rows or whether a phone number column gets masked for certain users.
 
-> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/iceberg-row-column-access-control/).
+> **Cross-posted.** This article's canonical home is [Alex Merced's Lakehouse Blog](https://iceberglakehouse.com/posts/iceberg-row-column-access-control/).
 
 That gap isn't a flaw : it's a design choice. Security belongs in the catalog and query engine layer, not in the file format. But it means you need to understand which layer does which job before you assume your Iceberg tables are actually secured.
 

@@ -12,7 +12,11 @@ tags:
 slug: databricks-summit-2026-lakehouse-agentic-ai-operating-layer
 draft: false
 image: "/images/blog.png"
+canonical: "https://iceberglakehouse.com/posts/databricks-summit-2026-lakehouse-agentic-ai-operating-layer/"
 ---
+
+> **Cross-posted.** This article's canonical home is [Alex Merced's Lakehouse Blog](https://iceberglakehouse.com/posts/databricks-summit-2026-lakehouse-agentic-ai-operating-layer/).
+
 # Lakehouse as the Operating Layer for Agentic AI
 
 

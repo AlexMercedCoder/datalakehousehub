@@ -16,7 +16,7 @@ canonical: "https://iceberglakehouse.com/posts/hybrid-lakehouse-regulated-market
 
 A bank, a hospital network, and a defense contractor walk into a cloud migration and all three stop at the same wall: their data is not allowed to move. Not "would be inconvenient to move." Not allowed. A regulator, a national data residency law, or a contractual sovereignty clause says the bytes must stay inside a specific facility, jurisdiction, or network boundary. For teams in these positions, the standard advice to centralize everything in a public cloud data platform is a non-starter, and no amount of enthusiasm about analytics changes that.
 
-> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/hybrid-lakehouse-regulated-markets-on-prem-public-metadata/).
+> **Cross-posted.** This article's canonical home is [Alex Merced's Lakehouse Blog](https://iceberglakehouse.com/posts/hybrid-lakehouse-regulated-markets-on-prem-public-metadata/).
 
 The good news is that the lakehouse pattern does not actually require centralization. What it requires is open table formats, an open catalog, and an engine that can query data where it lives. Once you separate those ideas from "put it all in one cloud account, " a hybrid design becomes possible: keep regulated data on-prem in private object storage, expose only the metadata and views that policy permits, and let governed analytics run against curated surfaces. This article walks through that design, its moving parts, and its honest limits.
 

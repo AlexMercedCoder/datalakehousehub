@@ -19,7 +19,7 @@ canonical: "https://iceberglakehouse.com/posts/2026-03-context-gemini-web-notebo
 
 Google's AI ecosystem for knowledge work consists of two deeply integrated tools: Gemini (the conversational AI at gemini.google.com) and NotebookLM (the research-focused assistant at notebooklm.google.com). In early 2026, these two platforms became interoperable, allowing Gemini to access information stored in NotebookLM notebooks. This integration creates something unique in the AI landscape: a persistent knowledge infrastructure where documents you upload once become available across both conversational and research interfaces.
 
-> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-03-context-gemini-web-notebooklm/).
+> **Cross-posted.** This article's canonical home is [Alex Merced's Lakehouse Blog](https://iceberglakehouse.com/posts/2026-03-context-gemini-web-notebooklm/).
 
 This guide covers context management strategies for both Gemini Web and NotebookLM, with a focus on how to use them together for maximum effectiveness.
 

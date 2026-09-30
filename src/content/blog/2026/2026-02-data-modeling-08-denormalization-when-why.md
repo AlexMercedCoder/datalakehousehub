@@ -18,7 +18,7 @@ canonical: "https://iceberglakehouse.com/posts/2026-02-dm-denormalization-when-w
 
 ![Normalized model with many interconnected tables vs. denormalized wide flat table](/images/blog/data-modeling/denormalization-overview.png)
 
-> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-02-dm-denormalization-when-why/).
+> **Cross-posted.** This article's canonical home is [Alex Merced's Lakehouse Blog](https://iceberglakehouse.com/posts/2026-02-dm-denormalization-when-why/).
 
 Normalization is the first rule taught in database design. Eliminate redundancy. Store each fact once. Use foreign keys. It's the right rule for transactional systems. And it's the wrong rule for most analytics workloads.
 

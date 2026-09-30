@@ -12,7 +12,11 @@ tags:
 slug: iceberg-v4-performance-root-manifests-combined-calls
 draft: false
 image: "/images/blog.png"
+canonical: "https://iceberglakehouse.com/posts/iceberg-v4-performance-root-manifests-combined-calls/"
 ---
+
+> **Cross-posted.** This article's canonical home is [Alex Merced's Lakehouse Blog](https://iceberglakehouse.com/posts/iceberg-v4-performance-root-manifests-combined-calls/).
+
 # Iceberg v4 Performance: Root Manifests and Calls
 
 

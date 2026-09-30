@@ -19,7 +19,7 @@ canonical: "https://iceberglakehouse.com/posts/2026-03-connector-dremio-open-cat
 
 Every Dremio Cloud account starts with a built-in Open Catalog : a fully managed Apache Iceberg catalog with integrated storage. When you create a Dremio Cloud project, you immediately have a catalog where you can create namespaces (folders), tables, and views without connecting any external sources, configuring storage, or setting up credentials.
 
-> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-03-connector-dremio-open-catalog/).
+> **Cross-posted.** This article's canonical home is [Alex Merced's Lakehouse Blog](https://iceberglakehouse.com/posts/2026-03-connector-dremio-open-catalog/).
 
 This isn't a bare-bones starting point. The built-in Open Catalog is a production-grade Iceberg catalog with automated performance management, Autonomous Reflections, time travel, branching, and full DML support. It's the fastest path from "sign up" to "running analytics."
 

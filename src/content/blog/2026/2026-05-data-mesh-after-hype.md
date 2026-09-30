@@ -23,7 +23,7 @@ canonical: "https://iceberglakehouse.com/posts/2026-05-24-data-mesh-after-hype/"
 
 When Zhamak Dehghani published the original data mesh papers at Thoughtworks in 2019 and 2020, the response split sharply between organizations that saw it as a fundamental rethinking of data platform architecture and skeptics who viewed it as a repackaging of existing domain-driven design concepts applied to data teams.
 
-> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-05-24-data-mesh-after-hype/).
+> **Cross-posted.** This article's canonical home is [Alex Merced's Lakehouse Blog](https://iceberglakehouse.com/posts/2026-05-24-data-mesh-after-hype/).
 
 Both groups were partially right. The conceptual insight in data mesh (that the bottleneck in enterprise data platforms is organizational, not technical, and that treating data as a product published by domain teams addresses scaling problems that no amount of centralized engineering can solve) was valuable and largely correct. The implementation turned out to be significantly harder and more context-dependent than the original framing suggested.
 

@@ -17,7 +17,7 @@ canonical: "https://iceberglakehouse.com/posts/rest-catalog-v2-standard-iceberg-
 
 A single BI dashboard refresh can trigger dozens of catalog calls before a single byte of table data is scanned. An AI agent investigating a revenue anomaly can trigger hundreds. Each of those calls loads a namespace, resolves a table identifier, fetches a metadata pointer, reads the current metadata file, and vends temporary credentials. When one analyst ran one query, that overhead was invisible. Now that engines, semantic layers, and autonomous agents all hammer the same [Apache Iceberg REST catalog](https://iceberg.apache.org/rest-catalog-spec/) at once, the overhead is the bottleneck. The scan is fast. Getting ready to scan is slow.
 
-> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/rest-catalog-v2-standard-iceberg-scaling-protocol-debt/).
+> **Cross-posted.** This article's canonical home is [Alex Merced's Lakehouse Blog](https://iceberglakehouse.com/posts/rest-catalog-v2-standard-iceberg-scaling-protocol-debt/).
 
 That gap between planning cost and execution cost is what I want to work through here. The Iceberg REST catalog protocol solved a real problem: it replaced a pile of engine-specific catalog integrations with one HTTP contract that Spark, Flink, Trino, Dremio, and others can speak. But the first version of that contract was designed for a world with fewer clients issuing fewer, larger queries. The workloads have changed. The protocol is starting to show its age in ways that are worth naming precisely.
 

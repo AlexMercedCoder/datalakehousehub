@@ -10,7 +10,7 @@ tags:
 slug: "lakehouse-encryption-deep-dive"
 draft: false
 image: "/images/blog.png"
-canonical: https://iceberglakehouse.com/posts/lakehouse-encryption-deep-dive/
+canonical: "https://iceberglakehouse.com/posts/lakehouse-encryption-deep-dive/"
 description: "By Alex Merced, Head of Developer Relations at Dremio"
 ---
 
@@ -18,7 +18,7 @@ description: "By Alex Merced, Head of Developer Relations at Dremio"
 
 *By Alex Merced, Head of Developer Relations at Dremio*
 
-> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/lakehouse-encryption-deep-dive/).
+> **Cross-posted.** This article's canonical home is [Alex Merced's Lakehouse Blog](https://iceberglakehouse.com/posts/lakehouse-encryption-deep-dive/).
 
 For years, the open lakehouse had an honest gap that practitioners whispered about and slide decks skipped: encryption. Not the checkbox kind, every cloud bucket has offered that for a decade, but the real kind, where the data itself is cryptographically protected in a way that survives a compromised bucket, satisfies a regulator, and still works when five different query engines from five different vendors need to read the same table. That last clause is the hard part, and it is why encryption arrived at the lakehouse years after transactions, evolution, and time travel.
 

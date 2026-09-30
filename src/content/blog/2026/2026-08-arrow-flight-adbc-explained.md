@@ -13,13 +13,13 @@ tags:
 slug: "arrow-flight-adbc-explained"
 draft: false
 image: "/images/blog.png"
-canonical: https://iceberglakehouse.com/posts/arrow-flight-adbc-explained/
+canonical: "https://iceberglakehouse.com/posts/arrow-flight-adbc-explained/"
 description: "A data scientist runs a query against a warehouse. The engine finishes the scan in three seconds."
 ---
 
 A data scientist runs a query against a warehouse. The engine finishes the scan in three seconds. Then the notebook sits there for four minutes while the result set trickles into a DataFrame. The query was fast. The download was not.
 
-> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/arrow-flight-adbc-explained/).
+> **Cross-posted.** This article's canonical home is [Alex Merced's Lakehouse Blog](https://iceberglakehouse.com/posts/arrow-flight-adbc-explained/).
 
 I have watched this play out in dozens of environments, and the reaction is almost always the same. People blame the engine, add compute, rewrite the SQL, then blame the network. The engine was rarely the problem. The problem sits in the seam between the database and the application, where a columnar result set gets shredded into rows, serialized one value at a time, pushed over the wire, and reassembled into columns on the other side.
 

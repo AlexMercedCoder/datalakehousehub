@@ -19,7 +19,7 @@ canonical: "https://iceberglakehouse.com/posts/2026-03-context-claude-desktop/"
 
 Claude Desktop takes everything available in Claude Web and adds three capabilities that fundamentally change how you manage context: MCP server connections that link Claude to external tools and data sources, direct local file access that eliminates the upload-download cycle, and Computer Use that lets Claude interact with your desktop environment. These additions make Claude Desktop the right choice when your work requires live data, local file system access, or integration with tools that Claude Web cannot reach.
 
-> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-03-context-claude-desktop/).
+> **Cross-posted.** This article's canonical home is [Alex Merced's Lakehouse Blog](https://iceberglakehouse.com/posts/2026-03-context-claude-desktop/).
 
 This guide explains how to leverage each of Claude Desktop's context management features, when to use them, and how they complement the Projects, artifacts, and conversation patterns covered in the Claude Web guide.
 

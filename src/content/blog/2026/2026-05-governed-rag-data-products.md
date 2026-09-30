@@ -23,7 +23,7 @@ canonical: "https://iceberglakehouse.com/posts/2026-05-24-governed-rag-data-prod
 
 The first generation of enterprise RAG deployments had a serious trust problem. Organizations gave AI assistants access to the data warehouse (or to a vector store filled with documents scraped from internal wikis and Confluence) and discovered that the answers came back authoritative-sounding but frequently wrong, stale, or based on data the querying user wasn't supposed to see.
 
-> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-05-24-governed-rag-data-products/).
+> **Cross-posted.** This article's canonical home is [Alex Merced's Lakehouse Blog](https://iceberglakehouse.com/posts/2026-05-24-governed-rag-data-products/).
 
 The "give the model warehouse access" approach conflates two separate problems: retrieval (finding relevant context) and governance (ensuring the retrieved context is accurate, fresh, and appropriate for the user). When these problems aren't separated architecturally, you get an AI system that confidently answers questions using data it shouldn't have accessed, or that retrieves stale snapshots from a document store that hasn't been updated in six months.
 

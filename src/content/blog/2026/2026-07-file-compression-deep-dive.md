@@ -10,7 +10,7 @@ tags:
 slug: "file-compression-deep-dive"
 draft: false
 image: "/images/blog.png"
-canonical: https://iceberglakehouse.com/posts/file-compression-deep-dive/
+canonical: "https://iceberglakehouse.com/posts/file-compression-deep-dive/"
 description: "By Alex Merced, Head of Developer Relations at Dremio"
 ---
 
@@ -18,7 +18,7 @@ description: "By Alex Merced, Head of Developer Relations at Dremio"
 
 *By Alex Merced, Head of Developer Relations at Dremio*
 
-> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/file-compression-deep-dive/).
+> **Cross-posted.** This article's canonical home is [Alex Merced's Lakehouse Blog](https://iceberglakehouse.com/posts/file-compression-deep-dive/).
 
 Somewhere in your data platform right now, a single configuration property is quietly deciding a meaningful percentage of your storage bill, your query latency, and your compute spend. It is probably set to whatever the defaults were in 2019, nobody has looked at it since, and it is the compression codec.
 

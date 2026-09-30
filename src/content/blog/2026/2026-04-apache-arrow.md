@@ -25,7 +25,7 @@ canonical: "https://iceberglakehouse.com/posts/2026-03-07-apache-arrow/"
 * [Part 6: Assembling the Apache Lakehouse](/blog/2026-04-assembling-apache-lakehouse)
 * [Part 7: Agentic Analytics on the Apache Lakehouse](/blog/2026-04-agentic-analytics)
 
-> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-03-07-apache-arrow/).
+> **Cross-posted.** This article's canonical home is [Alex Merced's Lakehouse Blog](https://iceberglakehouse.com/posts/2026-03-07-apache-arrow/).
 
 If you pull a million records from a database into a Python notebook, the query runs instantly, but the transfer feels endlessly slow. Your compute engine wastes the majority of that time quietly translating data layouts. 
 

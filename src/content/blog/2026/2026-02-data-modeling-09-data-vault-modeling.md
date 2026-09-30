@@ -18,7 +18,7 @@ canonical: "https://iceberglakehouse.com/posts/2026-02-dm-data-vault-modeling/"
 
 ![Data Vault model showing Hubs, Links, and Satellites as interconnected components](/images/blog/data-modeling/data-vault-overview.png)
 
-> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-02-dm-data-vault-modeling/).
+> **Cross-posted.** This article's canonical home is [Alex Merced's Lakehouse Blog](https://iceberglakehouse.com/posts/2026-02-dm-data-vault-modeling/).
 
 Dimensional modeling works well when your source systems are stable and your business questions are predictable. But what happens when sources change constantly, new systems get added every quarter, and regulatory requirements demand a full audit trail of every attribute change?
 

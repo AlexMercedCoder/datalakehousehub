@@ -12,12 +12,12 @@ tags:
 slug: "iceberg-default-values-and-field-ids"
 draft: false
 image: "/images/blog.png"
-canonical: https://iceberglakehouse.com/posts/iceberg-default-values-and-field-ids/
+canonical: "https://iceberglakehouse.com/posts/iceberg-default-values-and-field-ids/"
 ---
 
 An engineer runs `ALTER TABLE orders ADD COLUMN channel STRING` against a 200-terabyte table. The command returns in under a second. Every query afterward sees the new column, old rows show `NULL`, and nothing was rewritten. The same engineer then renames `customer_id` to `account_id`, moves it to the front of the schema, and drops a column that had been there for three years. Still under a second. Still no rewrite. Queries against snapshots from last month return the old schema, and queries against the current snapshot return the new one, reading the same Parquet files.
 
-> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/iceberg-default-values-and-field-ids/).
+> **Cross-posted.** This article's canonical home is [Alex Merced's Lakehouse Blog](https://iceberglakehouse.com/posts/iceberg-default-values-and-field-ids/).
 
 Most people who use Iceberg know this works. Far fewer know why. The answer is two pieces of metadata design that the spec gets right and that most file formats and older table formats got wrong: every column has a permanent integer ID that never changes and is never reused, and every column added after the table was created can carry a default value that readers apply to files written before the column existed.
 

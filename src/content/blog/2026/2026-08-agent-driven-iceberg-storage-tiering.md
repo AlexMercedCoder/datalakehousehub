@@ -17,7 +17,7 @@ draft: false
 
 A five-year-old event table holds 900 terabytes across 3, 000 daily partitions. Query logs for the last quarter show that 94 percent of scans touch the most recent 90 days. Another 5 percent touch the prior year, mostly month-end reports. The remaining 1 percent reach into the four years before that, a few hundred queries a quarter, most of them audits and one-off investigations. Every byte of those 900 terabytes sits in standard object storage at the same price per gigabyte, and the storage line item for that one table is larger than the compute bill for querying it.
 
-> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/agent-driven-iceberg-storage-tiering/).
+> **Cross-posted.** This article's canonical home is [Alex Merced's Lakehouse Blog](https://iceberglakehouse.com/posts/agent-driven-iceberg-storage-tiering/).
 
 The fix is obvious in outline: move the cold partitions to a cheaper storage tier. The reasons it does not happen are specific. Nobody knows exactly which partitions are cold, because the heatmap lives in query logs nobody aggregates. Moving files under an Apache Iceberg table looks dangerous, because the metadata references every file by path. And the storage tiers have different latency and retrieval-cost characteristics that a careless move turns into broken dashboards or a surprise bill.
 

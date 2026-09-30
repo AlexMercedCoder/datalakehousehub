@@ -13,12 +13,12 @@ tags:
 slug: "sovereign-lakehouse"
 draft: false
 image: "/images/blog.png"
-canonical: https://iceberglakehouse.com/posts/sovereign-lakehouse/
+canonical: "https://iceberglakehouse.com/posts/sovereign-lakehouse/"
 ---
 
 A manufacturer in southern Germany asked me a question during an architecture review that I have thought about since. Their data sat in a Frankfurt region. Their contract specified EU processing. Their auditor had signed off. Then somebody asked where the catalog ran, and the answer was a software-as-a-service control plane in Virginia.
 
-> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/sovereign-lakehouse/).
+> **Cross-posted.** This article's canonical home is [Alex Merced's Lakehouse Blog](https://iceberglakehouse.com/posts/sovereign-lakehouse/).
 
 The data files never left Germany. The metadata about them did: table names, column names, partition values, row counts, and the credentials that gate access to every byte. For a table named `patients_oncology_2026` partitioned by `treatment_center`, the metadata alone tells you a great deal, and it was sitting under a jurisdiction the compliance review never examined.
 

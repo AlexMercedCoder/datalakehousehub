@@ -20,7 +20,7 @@ canonical: "https://iceberglakehouse.com/posts/mcp-governed-semantic-layer/"
 
 *By Alex Merced, Data Lakehouse and AI Evangelist*
 
-> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/mcp-governed-semantic-layer/).
+> **Cross-posted.** This article's canonical home is [Alex Merced's Lakehouse Blog](https://iceberglakehouse.com/posts/mcp-governed-semantic-layer/).
 
 An executive asks an AI assistant what revenue looked like last quarter. The assistant writes SQL against the warehouse, sums an amount column, and returns a number. The number is wrong, in the specific way that is hardest to catch: it includes cancelled orders, excludes a revenue stream that lives in a different table, and counts a currency conversion at the wrong date.
 

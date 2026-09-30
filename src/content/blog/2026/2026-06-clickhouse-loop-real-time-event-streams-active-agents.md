@@ -12,7 +12,11 @@ tags:
 slug: clickhouse-loop-real-time-event-streams-active-agents
 draft: false
 image: "/images/blog.png"
+canonical: "https://iceberglakehouse.com/posts/clickhouse-loop-real-time-event-streams-active-agents/"
 ---
+
+> **Cross-posted.** This article's canonical home is [Alex Merced's Lakehouse Blog](https://iceberglakehouse.com/posts/clickhouse-loop-real-time-event-streams-active-agents/).
+
 # ClickHouse in the Loop for Active Agents
 
 

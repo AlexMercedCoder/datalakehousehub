@@ -19,7 +19,7 @@ canonical: "https://iceberglakehouse.com/posts/mcp-apache-polaris/"
 
 An engineer opens Cursor, types "what tables do we have in the sales namespace, and which ones have a customer_id column, " and gets an answer in four seconds. No Slack message to the data team. No hunting through a wiki page last updated in 2023.
 
-> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/mcp-apache-polaris/).
+> **Cross-posted.** This article's canonical home is [Alex Merced's Lakehouse Blog](https://iceberglakehouse.com/posts/mcp-apache-polaris/).
 
 Getting to that four seconds requires a plumbing decision most teams get wrong on the first try. The tempting approach is to hand the agent database credentials and a SQL client. That works in a demo and fails in production, because credentials do not expire, permissions do not follow the user, and nobody can reconstruct afterward what the agent actually touched.
 

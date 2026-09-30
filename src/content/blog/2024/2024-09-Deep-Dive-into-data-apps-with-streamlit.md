@@ -18,7 +18,7 @@ canonical: "https://iceberglakehouse.com/posts/2024-9-deep-dive-into-data-apps-w
 
 The ability to quickly develop and deploy interactive applications is invaluable. **Streamlit** is a powerful tool that enables data scientists and developers to create intuitive web apps with minimal code. Coupled with the [**Python Data Science Notebook Docker Image**](https://hub.docker.com/r/alexmerced/datanotebook), which comes pre-loaded with essential data science libraries, setting up a robust environment for building Streamlit apps has never been easier.
 
-> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2024-9-deep-dive-into-data-apps-with-streamlit/).
+> **Cross-posted.** This article's canonical home is [Alex Merced's Lakehouse Blog](https://iceberglakehouse.com/posts/2024-9-deep-dive-into-data-apps-with-streamlit/).
 
 ## What is Streamlit?
 

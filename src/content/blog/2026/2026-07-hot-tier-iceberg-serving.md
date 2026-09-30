@@ -19,7 +19,7 @@ canonical: "https://iceberglakehouse.com/posts/hot-tier-iceberg-serving/"
 
 A fraud detection agent evaluates a transaction. It needs the customer's activity over the last four hours, their ninety-day baseline, and the merchant's recent decline rate. Two of those live in an Iceberg table refreshed every ten minutes. One needs data from four seconds ago.
 
-> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/hot-tier-iceberg-serving/).
+> **Cross-posted.** This article's canonical home is [Alex Merced's Lakehouse Blog](https://iceberglakehouse.com/posts/hot-tier-iceberg-serving/).
 
 The lakehouse answers two of the three questions well and cannot answer the third at all, because the data has not been committed yet. So the team adds a second store for recent activity, and now they have two systems, two schemas, and application code that knows where the boundary is.
 

@@ -17,7 +17,7 @@ canonical: "https://iceberglakehouse.com/posts/iceberg-variant-type-semi-structu
 
 A single LLM response is not a single value. It carries the generated text, a reasoning trace, one or more tool calls with their arguments, source references, a confidence field, token usage counts, and sometimes an error object. Store a million of those responses and you have a dataset where every row is a small nested document, the shapes vary from row to row, and the fields you care about are buried two or three levels deep. This is the normal shape of AI data, and it does not fit a rigid columnar schema without a fight. A native variant-style type in [Apache Iceberg](https://iceberg.apache.org/spec/) is the format's answer to that mismatch.
 
-> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/iceberg-variant-type-semi-structured-ai-datasets/).
+> **Cross-posted.** This article's canonical home is [Alex Merced's Lakehouse Blog](https://iceberglakehouse.com/posts/iceberg-variant-type-semi-structured-ai-datasets/).
 
 One caveat up front on status. Native semi-structured support in Iceberg has been moving through standardization, and the exact type naming and binary layout continue to settle. I have not pinned every detail to a specific release for this article, so treat "variant type" here as a standardization direction rather than a finished production guarantee, and confirm current status and naming against the [Iceberg type system docs](https://iceberg.apache.org/spec/#schemas-and-data-types) and the [Iceberg GitHub proposals](https://github.com/apache/iceberg) before building on it. The design argument for why this matters stands regardless of the release timeline.
 

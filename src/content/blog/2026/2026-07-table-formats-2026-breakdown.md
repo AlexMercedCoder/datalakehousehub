@@ -12,7 +12,7 @@ tags:
 slug: "table-formats-2026-breakdown"
 draft: false
 image: "/images/blog.png"
-canonical: https://iceberglakehouse.com/posts/table-formats-2026-breakdown/
+canonical: "https://iceberglakehouse.com/posts/table-formats-2026-breakdown/"
 description: "By Alex Merced, Head of Developer Relations at Dremio"
 ---
 
@@ -20,7 +20,7 @@ description: "By Alex Merced, Head of Developer Relations at Dremio"
 
 *By Alex Merced, Head of Developer Relations at Dremio*
 
-> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/table-formats-2026-breakdown/).
+> **Cross-posted.** This article's canonical home is [Alex Merced's Lakehouse Blog](https://iceberglakehouse.com/posts/table-formats-2026-breakdown/).
 
 The table format war is over, and the table formats are not. Both halves of that sentence are true, both matter, and the tension between them is exactly why this article needs to exist.
 

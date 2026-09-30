@@ -19,7 +19,7 @@ canonical: "https://iceberglakehouse.com/posts/2026-04-29-iceberg-masterclass-14
 <!- Primary Keyword: Dremio Cloud Apache Iceberg ->
 <!- Secondary Keywords: Dremio Cloud tutorial, Iceberg hands-on, COPY INTO, semantic layer ->
 
-> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-04-29-iceberg-masterclass-14/).
+> **Cross-posted.** This article's canonical home is [Alex Merced's Lakehouse Blog](https://iceberglakehouse.com/posts/2026-04-29-iceberg-masterclass-14/).
 
 *Read the complete Apache Iceberg Masterclass series:*
 * [Part 1: What Are Table Formats and Why Were They Needed?](/blog/2026-04-29-apache-iceberg-masterclass-01-table-formats)

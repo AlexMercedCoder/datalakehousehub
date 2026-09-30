@@ -20,7 +20,7 @@ canonical: "https://iceberglakehouse.com/posts/mcp-supply-chain-decision-loops/"
 
 *By Alex Merced, Data Lakehouse and AI Evangelist*
 
-> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/mcp-supply-chain-decision-loops/).
+> **Cross-posted.** This article's canonical home is [Alex Merced's Lakehouse Blog](https://iceberglakehouse.com/posts/mcp-supply-chain-decision-loops/).
 
 A supply chain control tower shows a red tile. A supplier's on-time delivery rate dropped below threshold four days ago. The tile has been red for four days because the planner who owns that category has been in meetings, and the alert email went to a distribution list with two hundred people on it.
 

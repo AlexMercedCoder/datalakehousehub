@@ -1,7 +1,7 @@
 ---
 title: "Serving Iceberg Tables From Two Regions"
 date: 2026-09-10T12:00:00Z
-canonical: https://iceberglakehouse.com/posts/iceberg-two-region-serving/
+canonical: "https://iceberglakehouse.com/posts/iceberg-two-region-serving/"
 description: "Three multi-region topologies that work and one that mostly does not, what an Iceberg commit costs across regions, and where the catalog has to live."
 author: "Alex Merced"
 category: "Apache Iceberg"
@@ -17,7 +17,7 @@ image: "/images/blog.png"
 bannerImage: "/images/blog.png"
 ---
 
-> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/iceberg-two-region-serving/).
+> **Cross-posted.** This article's canonical home is [Alex Merced's Lakehouse Blog](https://iceberglakehouse.com/posts/iceberg-two-region-serving/).
 
 A team in Frankfurt runs the same dashboards as a team in Virginia, against the same tables, and the Frankfurt queries take four times longer. The data is in us-east-1. Every scan pulls bytes across the Atlantic, pays the latency on every file open, and shows up on the egress line of the bill at the end of the month. Somebody proposes putting a copy of the data in eu-central-1, and the conversation stops being about performance and starts being about correctness.
 

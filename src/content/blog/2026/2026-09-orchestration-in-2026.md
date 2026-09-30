@@ -13,12 +13,12 @@ tags:
 slug: "orchestration-in-2026"
 draft: false
 image: "/images/blog.png"
-canonical: https://iceberglakehouse.com/posts/orchestration-in-2026/
+canonical: "https://iceberglakehouse.com/posts/orchestration-in-2026/"
 ---
 
 The orchestration question used to be simple: Airflow, or something that wanted to be Airflow. It is not simple in 2026. Apache Airflow 3 shipped in April 2025 and has moved through three minor releases since, each adding capabilities that its competitors spent years selling as differentiators. Prefect announced on July 13, 2026 that it is acquiring Dagster Labs, with both products continuing under their own names and licenses, which puts the two most widely adopted alternatives to Airflow inside one company. And a growing share of lakehouse pipelines do not run on any of the three, because the events that should trigger them, a snapshot committed, a file landed, a message published, are handled by the catalog, the object store, or a streaming engine directly.
 
-> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/orchestration-in-2026/).
+> **Cross-posted.** This article's canonical home is [Alex Merced's Lakehouse Blog](https://iceberglakehouse.com/posts/orchestration-in-2026/).
 
 For a team running an Apache Iceberg lakehouse the question is not which tool has the nicest UI. It is which combination of scheduling, dependency tracking, execution, and observability fits pipelines whose units of work are table snapshots rather than task completions. This article covers what orchestration has to do for a lakehouse, where each of the three major orchestrators stands as of mid-2026, what the Prefect acquisition means in practice, when event-driven triggering replaces an orchestrator entirely, and how the same pipeline looks in each model. I work at Dremio, and none of the tools discussed here is a Dremio product, though all of them are used to drive Dremio and every other engine.
 

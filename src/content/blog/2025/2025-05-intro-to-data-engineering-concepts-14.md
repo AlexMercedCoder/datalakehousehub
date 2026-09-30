@@ -25,7 +25,7 @@ canonical: "https://iceberglakehouse.com/posts/2025-05-intro-to-data-engineering
 - **[Iceberg Lakehouse Engineering Video Playlist](https://youtube.com/playlist?list=PLsLAVBjQJO0p0Yq1fLkoHvt2lEJj5pcYe&si=WTSnqjXZv6Glkc3y)** 
 - **[Ultimate Apache Iceberg Resource Guide](https://medium.com/data-engineering-with-dremio/ultimate-directory-of-apache-iceberg-resources-e3e02efac62e)**
 
-> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2025-05-intro-to-data-engineering-concepts-14/).
+> **Cross-posted.** This article's canonical home is [Alex Merced's Lakehouse Blog](https://iceberglakehouse.com/posts/2025-05-intro-to-data-engineering-concepts-14/).
 
 As data systems grow more complex and interconnected, the principles of DevOps: long applied to software engineering, have become increasingly relevant to data engineering. Continuous integration, infrastructure as code, testing, and automation aren’t just for deploying apps anymore. They’re essential for delivering reliable, maintainable, and scalable data pipelines.
 

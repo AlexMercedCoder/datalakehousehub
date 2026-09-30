@@ -22,7 +22,7 @@ canonical: "https://iceberglakehouse.com/posts/2026-05-24-finops-warehouse-cost/
 
 Warehouse costs are the most visible and most contentious line item on a data platform's budget. Every query is metered. Every dashboard refresh costs something. Engineering leaders who can't explain where costs are coming from can't make informed decisions about where to cut, where to invest, or how to set fair internal budgets by team.
 
-> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-05-24-finops-warehouse-cost/).
+> **Cross-posted.** This article's canonical home is [Alex Merced's Lakehouse Blog](https://iceberglakehouse.com/posts/2026-05-24-finops-warehouse-cost/).
 
 The problem has been interoperability. Snowflake exposes cost data in its own schema format. BigQuery provides cost information through the `JOBS_BY_PROJECT` view and billing export to BigQuery. AWS surfaces it through Cost Explorer and billing exports. None of these use a common format, which means building a unified view requires custom ETL jobs for each provider, jobs that break when providers change their export schemas.
 

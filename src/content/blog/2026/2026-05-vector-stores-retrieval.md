@@ -23,7 +23,7 @@ canonical: "https://iceberglakehouse.com/posts/2026-05-24-vector-stores-retrieva
 
 Vector retrieval has become a standard component in data platform architectures, not just an ML research topic. RAG pipelines use it to retrieve document context before generation. Recommendation systems use it to find similar items. Search applications use it to retrieve semantically relevant results that keyword search misses.
 
-> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-05-24-vector-stores-retrieval/).
+> **Cross-posted.** This article's canonical home is [Alex Merced's Lakehouse Blog](https://iceberglakehouse.com/posts/2026-05-24-vector-stores-retrieval/).
 
 The vector store market has matured rapidly. pgvector brings approximate nearest neighbor (ANN) search to PostgreSQL. Milvus provides a purpose-built distributed vector database designed for billions of vectors. Weaviate integrates hybrid dense and sparse search with a multi-modal retrieval model. LanceDB uses the Lance columnar format for disk-native vector retrieval optimized for ML workflows.
 

@@ -17,7 +17,7 @@ draft: false
 
 Categories in data infrastructure are quieter than features, and more consequential. For eight years, Apache Iceberg belonged to the category "table format": a specification that query engines implement, a treaty among big compute systems about how to share tables safely. You experienced Iceberg through an engine, or you did not experience it at all. That category is dissolving in front of us. In 2026, Iceberg is something applications link: a component inside services, notebooks, agent runtimes, browser tabs, and other people's databases, doing its work wherever the code already runs, with no engine in sight.
 
-> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/iceberg-is-becoming-a-library/).
+> **Cross-posted.** This article's canonical home is [Alex Merced's Lakehouse Blog](https://iceberglakehouse.com/posts/iceberg-is-becoming-a-library/).
 
 The evidence is not one announcement but a convergence. Native libraries in Python, Rust, Go, and C++ ship on quarterly cadences from the Apache project itself. Embedded engines, DuckDB, Polars, DataFusion, read and write governed tables from inside ordinary processes, and DuckDB does it from WebAssembly in a browser. The REST catalog protocol keeps absorbing responsibilities, commits, credentials, now scan planning, that once made clients heavy, so a complete participant keeps getting smaller. And the format itself grew a File Format API, a pluggable boundary between its metadata core and its physical storage, which is the kind of interface a component has and a monolith does not.
 

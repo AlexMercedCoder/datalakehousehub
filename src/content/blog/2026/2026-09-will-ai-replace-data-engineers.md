@@ -12,12 +12,12 @@ tags:
 slug: "will-ai-replace-data-engineers"
 draft: false
 image: "/images/blog.png"
-canonical: https://iceberglakehouse.com/posts/will-ai-replace-data-engineers/
+canonical: "https://iceberglakehouse.com/posts/will-ai-replace-data-engineers/"
 ---
 
 The question gets asked in two registers. One is genuine anxiety from people whose careers are in the balance, and it deserves a straight answer rather than reassurance. The other is a headline, usually attached to a vendor's productivity claim or a chief executive's remark about hiring, and it deserves skepticism.
 
-> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/will-ai-replace-data-engineers/).
+> **Cross-posted.** This article's canonical home is [Alex Merced's Lakehouse Blog](https://iceberglakehouse.com/posts/will-ai-replace-data-engineers/).
 
 The straight answer, as best the evidence supports it: no, AI is not replacing data engineers as a category, and yes, it is changing what the job consists of in ways that will make some people's current skill mix much less valuable. Both halves are true and the second half is the part worth planning around.
 

@@ -19,7 +19,7 @@ canonical: "https://iceberglakehouse.com/posts/2024-8-understanding-apache-icebe
 
 Apache Iceberg is an open lakehouse table format designed to take datasets in distributed file systems and turn them into database like tables. It has gained popularity for its ability to handle complex data engineering challenges, such as ensuring data consistency, enabling schema evolution, and supporting efficient query execution. One of the critical components that make this possible is its robust metadata management.
 
-> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2024-8-understanding-apache-iceberg-manifest-list/).
+> **Cross-posted.** This article's canonical home is [Alex Merced's Lakehouse Blog](https://iceberglakehouse.com/posts/2024-8-understanding-apache-iceberg-manifest-list/).
 
 - [Free Copy of Apache Iceberg: The Definitive Guide](https://hello.dremio.com/wp-apache-iceberg-the-definitive-guide-reg.html?utm_source=ev_external_blog&utm_medium=social_free&utm_campaign=manifestlistblog&utm_content=alexmerced&utm_term=external_blog)
 - [Free Apache Iceberg Crash Course](https://hello.dremio.com/webcast-an-apache-iceberg-lakehouse-crash-course-reg.html?utm_source=ev_external_blog&utm_medium=social_free&utm_campaign=manifestlistblog&utm_content=alexmerced&utm_term=external_blog)

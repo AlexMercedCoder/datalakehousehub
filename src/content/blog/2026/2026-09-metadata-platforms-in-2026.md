@@ -14,12 +14,12 @@ tags:
 slug: "metadata-platforms-in-2026"
 draft: false
 image: "/images/blog.png"
-canonical: https://iceberglakehouse.com/posts/metadata-platforms-in-2026/
+canonical: "https://iceberglakehouse.com/posts/metadata-platforms-in-2026/"
 ---
 
 The word "catalog" has meant two different things in data infrastructure for about a decade, and in 2026 the two are colliding.
 
-> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/metadata-platforms-in-2026/).
+> **Cross-posted.** This article's canonical home is [Alex Merced's Lakehouse Blog](https://iceberglakehouse.com/posts/metadata-platforms-in-2026/).
 
 The first meaning is the technical catalog: the service that maps a table name to its current metadata file and provides the atomic swap that makes commits safe. Apache Polaris, AWS Glue, Databricks Unity Catalog, Nessie, and every other Iceberg REST catalog implementation are technical catalogs. They are in the write path. A query engine cannot read or commit to a table without one. They know what tables exist, where they are, what schema they have, and who is allowed to touch them, because they have to.
 

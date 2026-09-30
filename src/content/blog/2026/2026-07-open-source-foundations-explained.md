@@ -12,7 +12,7 @@ tags:
 slug: "open-source-foundations-explained"
 draft: false
 image: "/images/blog.png"
-canonical: https://iceberglakehouse.com/posts/open-source-foundations-explained/
+canonical: "https://iceberglakehouse.com/posts/open-source-foundations-explained/"
 description: "By Alex Merced, Head of Developer Relations at Dremio"
 ---
 
@@ -20,7 +20,7 @@ description: "By Alex Merced, Head of Developer Relations at Dremio"
 
 *By Alex Merced, Head of Developer Relations at Dremio*
 
-> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/open-source-foundations-explained/).
+> **Cross-posted.** This article's canonical home is [Alex Merced's Lakehouse Blog](https://iceberglakehouse.com/posts/open-source-foundations-explained/).
 
 Writing about open data and AI means repeating the same phrases over and over: donated to the Apache Software Foundation, incubating at the Linux Foundation, graduated to a Top-Level Project, moved to neutral governance. I have used those phrases for years to explain why Iceberg won, why Polaris can be trusted, why Ossie matters, and why A2A consolidated its layer. What I have rarely stopped to explain is the institutions themselves: what a foundation actually is, what it does all day, how the major ones differ, and why those differences change the trajectory of the software you bet your platform on.
 

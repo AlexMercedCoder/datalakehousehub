@@ -19,7 +19,7 @@ canonical: "https://iceberglakehouse.com/posts/2026-03-connector-postgresql/"
 
 PostgreSQL powers more production applications than almost any other open-source database. It's where your customer records, transaction logs, product catalogs, and operational data live. But running analytics directly against PostgreSQL creates problems: heavy analytical queries compete with transactional workloads, cross-database joins require custom ETL, and your data team can't access PostgreSQL data alongside data in S3, Snowflake, or other systems without building pipelines.
 
-> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-03-connector-postgresql/).
+> **Cross-posted.** This article's canonical home is [Alex Merced's Lakehouse Blog](https://iceberglakehouse.com/posts/2026-03-connector-postgresql/).
 
 Dremio Cloud solves this by connecting directly to PostgreSQL and querying it in place. No data movement, no ETL pipelines, no replica databases. You write SQL in Dremio, and it pushes filtering and aggregation work back to PostgreSQL when possible, fetches only the results, and lets you join that data with any other connected source in the same query.
 

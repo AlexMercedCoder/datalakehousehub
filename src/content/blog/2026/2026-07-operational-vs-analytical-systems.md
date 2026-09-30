@@ -12,7 +12,7 @@ tags:
 slug: "operational-vs-analytical-systems"
 draft: false
 image: "/images/blog.png"
-canonical: https://iceberglakehouse.com/posts/operational-vs-analytical-systems/
+canonical: "https://iceberglakehouse.com/posts/operational-vs-analytical-systems/"
 description: "By Alex Merced, Head of Developer Relations at Dremio"
 ---
 
@@ -20,7 +20,7 @@ description: "By Alex Merced, Head of Developer Relations at Dremio"
 
 *By Alex Merced, Head of Developer Relations at Dremio*
 
-> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/operational-vs-analytical-systems/).
+> **Cross-posted.** This article's canonical home is [Alex Merced's Lakehouse Blog](https://iceberglakehouse.com/posts/operational-vs-analytical-systems/).
 
 Every data architecture ever drawn contains the same fault line, so old and so universal that most engineers stop seeing it: on one side, the systems that run the business, and on the other, the systems that understand it. The database behind your checkout page and the warehouse behind your dashboards. OLTP and OLAP, in the acronyms the industry has used since the 1990s.
 

@@ -20,7 +20,7 @@ canonical: "https://iceberglakehouse.com/posts/apache-polaris-1-7-0/"
 
 A Spark job commits a table update. The catalog writes the change to Postgres. Then the network drops between the catalog and the client, and the client never sees the response. The client does the sensible thing and retries. This time the catalog sees that the table has already moved past the base snapshot in the request, so it returns 409 Conflict. The client reads that 409 as a failed commit and deletes the metadata files it just wrote. The commit is now recorded in the catalog, and the files it points at are gone.
 
-> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/apache-polaris-1-7-0/).
+> **Cross-posted.** This article's canonical home is [Alex Merced's Lakehouse Blog](https://iceberglakehouse.com/posts/apache-polaris-1-7-0/).
 
 That is data loss. It comes from a network blip, not from a bug in anyone's query engine.
 

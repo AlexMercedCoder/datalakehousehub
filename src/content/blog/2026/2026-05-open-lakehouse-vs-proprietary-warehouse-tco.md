@@ -16,7 +16,7 @@ canonical: "https://iceberglakehouse.com/posts/open-lakehouse-vs-proprietary-war
 
 Before you sign a multiyear warehouse contract or commit to building an open lakehouse, you need the actual numbers. Not marketing claims : a breakdown of what each architecture costs at different scales, where the hidden charges accumulate, and at what point the economics of one approach overtake the other.
 
-> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/open-lakehouse-vs-proprietary-warehouse-tco/).
+> **Cross-posted.** This article's canonical home is [Alex Merced's Lakehouse Blog](https://iceberglakehouse.com/posts/open-lakehouse-vs-proprietary-warehouse-tco/).
 
 This post gives you the framework to run that comparison for your specific workload.
 

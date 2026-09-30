@@ -13,12 +13,12 @@ tags:
 slug: "inside-the-puffin-file-format"
 draft: false
 image: "/images/blog.png"
-canonical: https://iceberglakehouse.com/posts/inside-the-puffin-file-format/
+canonical: "https://iceberglakehouse.com/posts/inside-the-puffin-file-format/"
 ---
 
 A query joins a 2-billion-row fact table to a 40, 000-row dimension table. The optimizer has to decide which side to broadcast and which side to hash. It reads the manifests and finds row counts, min and max values, and null counts for every column in every file. What it does not find is how many distinct customer IDs exist in the fact table. Without that number it guesses, and a wrong guess means shuffling terabytes that a broadcast join avoids.
 
-> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/inside-the-puffin-file-format/).
+> **Cross-posted.** This article's canonical home is [Alex Merced's Lakehouse Blog](https://iceberglakehouse.com/posts/inside-the-puffin-file-format/).
 
 The same engine, a few minutes later, deletes 300 rows from a data file that holds 4 million. In format version 2 it writes a position delete file: a Parquet file listing the path of the data file and the position of each deleted row. Every subsequent read of that data file has to open the delete file, decode Parquet, build a set of positions, and filter. Do that across ten thousand data files and delete handling dominates query time.
 

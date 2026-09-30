@@ -18,7 +18,7 @@ canonical: "https://iceberglakehouse.com/posts/2026-02-sl-headless-bi-semantic-l
 
 ![Headless BI : one semantic layer serving all consumers](/images/blog/semantic-layer/headless-bi.png)
 
-> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-02-sl-headless-bi-semantic-layer/).
+> **Cross-posted.** This article's canonical home is [Alex Merced's Lakehouse Blog](https://iceberglakehouse.com/posts/2026-02-sl-headless-bi-semantic-layer/).
 
 Your organization uses Tableau for executive dashboards, Power BI for operational reports, and Python notebooks for data science. Revenue is defined in Tableau's calculated field, Power BI's DAX measure, and a SQL query inside a Jupyter notebook. Three tools. Three definitions. None of them match.
 

@@ -12,7 +12,11 @@ tags:
 slug: ai-ready-metadata-lineage-quality-llm-query-failures
 draft: false
 image: "/images/blog.png"
+canonical: "https://iceberglakehouse.com/posts/ai-ready-metadata-lineage-quality-llm-query-failures/"
 ---
+
+> **Cross-posted.** This article's canonical home is [Alex Merced's Lakehouse Blog](https://iceberglakehouse.com/posts/ai-ready-metadata-lineage-quality-llm-query-failures/).
+
 # AI-Ready Metadata Prevents Query Failures
 
 

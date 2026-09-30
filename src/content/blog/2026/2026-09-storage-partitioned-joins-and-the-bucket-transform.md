@@ -13,12 +13,12 @@ tags:
 slug: "storage-partitioned-joins-and-the-bucket-transform"
 draft: false
 image: "/images/blog.png"
-canonical: https://iceberglakehouse.com/posts/storage-partitioned-joins-and-the-bucket-transform/
+canonical: "https://iceberglakehouse.com/posts/storage-partitioned-joins-and-the-bucket-transform/"
 ---
 
 A nightly job joins a 3-billion-row orders table to a 400-million-row customers table on `customer_id`. Both are Apache Iceberg tables. Both are large enough that neither side fits in a broadcast. The engine does what engines do: it reads both tables, hashes every row by `customer_id`, shuffles both sides across the network so that matching keys land on the same worker, sorts, and merges. The shuffle moves close to a terabyte. The job takes ninety minutes and most of that time is spent moving data that is already sitting in files, waiting to be rearranged.
 
-> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/storage-partitioned-joins-and-the-bucket-transform/).
+> **Cross-posted.** This article's canonical home is [Alex Merced's Lakehouse Blog](https://iceberglakehouse.com/posts/storage-partitioned-joins-and-the-bucket-transform/).
 
 Now suppose both tables had been written with `bucket(64, customer_id)` as a partition field. Every row with a given `customer_id` in the orders table sits in one of 64 buckets, and every row with that same `customer_id` in the customers table sits in the bucket with the same number, because both tables computed the bucket with the same hash function on the same value. The engine can read bucket 17 from both tables and join them on one worker without a shuffle. It can do that for all 64 buckets in parallel. No exchange, no sort, and the job finishes in the time it takes to read the files once.
 

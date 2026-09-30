@@ -17,7 +17,7 @@ canonical: "https://iceberglakehouse.com/posts/iceberg-v3-deletion-vectors-merge
 
 Deleting one row from a data lake used to mean rewriting a whole file. If a 512 MB Parquet file held a million rows and you needed to delete one of them, the classic copy-on-write approach read the file, dropped the row, and wrote a fresh 512 MB file, all to remove a single record. That write amplification is the reason updates and deletes were historically painful on immutable file formats, and it is the problem that deletion vectors and merge-on-read tables set out to reduce.
 
-> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/iceberg-v3-deletion-vectors-merge-on-read-dml-performance/).
+> **Cross-posted.** This article's canonical home is [Alex Merced's Lakehouse Blog](https://iceberglakehouse.com/posts/iceberg-v3-deletion-vectors-merge-on-read-dml-performance/).
 
 Before going further, a note on terminology and status. The details of deletion vectors in [Apache Iceberg](https://iceberg.apache.org/spec/) v3 continue to evolve, and I have not pinned every naming and layout detail against the current spec for this article. Where I describe deletion vectors, treat it as the direction the format is moving rather than a fixed guarantee about a specific release, and confirm exact terminology and status against the official [Iceberg spec](https://iceberg.apache.org/spec/#delete-formats) and release notes before you build on it. The physical tradeoff I describe, faster writes in exchange for read-time merge work and compaction discipline, holds regardless of the exact names.
 

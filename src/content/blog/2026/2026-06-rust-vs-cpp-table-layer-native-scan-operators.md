@@ -12,7 +12,11 @@ tags:
 slug: rust-vs-cpp-table-layer-native-scan-operators
 draft: false
 image: "/images/blog.png"
+canonical: "https://iceberglakehouse.com/posts/rust-vs-cpp-table-layer-native-scan-operators/"
 ---
+
+> **Cross-posted.** This article's canonical home is [Alex Merced's Lakehouse Blog](https://iceberglakehouse.com/posts/rust-vs-cpp-table-layer-native-scan-operators/).
+
 # Rust vs C++ in Native Iceberg Scan Operators
 
 

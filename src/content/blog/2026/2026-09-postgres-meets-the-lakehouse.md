@@ -14,12 +14,12 @@ tags:
 slug: "postgres-meets-the-lakehouse"
 draft: false
 image: "/images/blog.png"
-canonical: https://iceberglakehouse.com/posts/postgres-meets-the-lakehouse/
+canonical: "https://iceberglakehouse.com/posts/postgres-meets-the-lakehouse/"
 ---
 
 For a long time the answer to "we need analytics on our Postgres data" was a pipeline. Replicate the transactional tables into a warehouse or a lake, transform them there, and query them with an engine built for scans. The pipeline was the tax you paid for keeping the operational database operational. Postgres was not going to scan a billion rows quickly, and nobody expected it to.
 
-> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/postgres-meets-the-lakehouse/).
+> **Cross-posted.** This article's canonical home is [Alex Merced's Lakehouse Blog](https://iceberglakehouse.com/posts/postgres-meets-the-lakehouse/).
 
 Three developments in 2025 and 2026 have changed the question. Snowflake acquired Crunchy Data in June 2025 and open-sourced its Postgres lakehouse extension as pg_lake in November 2025, under the Apache license. Databricks acquired Neon and the team behind pg_mooncake. And the DuckDB ecosystem produced pg_duckdb, which embeds DuckDB's vectorized engine inside Postgres, alongside DuckLake, a lakehouse format that uses Postgres as its catalog. The result is that a Postgres server can now read and write Apache Iceberg tables on object storage, run analytical queries on them at columnar-engine speed, and act as the catalog for a small lakehouse, all through the Postgres wire protocol and the Postgres SQL dialect.
 

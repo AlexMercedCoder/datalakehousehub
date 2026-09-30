@@ -17,7 +17,7 @@ draft: false
 
 The most common ingestion job in most companies is small. A vendor drops a CSV in a bucket every hour. A webhook delivers a few thousand JSON events a minute. A SaaS export lands nightly at a few hundred megabytes. For years, the standard answer to "get this into the lakehouse" was the same regardless of size: stand up a Spark job, or buy a managed pipeline tool, and accept that the smallest task in the platform runs on the heaviest machinery.
 
-> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/serverless-iceberg-ingestion-pyiceberg-duckdb/).
+> **Cross-posted.** This article's canonical home is [Alex Merced's Lakehouse Blog](https://iceberglakehouse.com/posts/serverless-iceberg-ingestion-pyiceberg-duckdb/).
 
 That answer is obsolete, and the tools that obsoleted it matured fast enough that many teams have not noticed. PyIceberg, the pure-Python implementation of Apache Iceberg, writes tables directly from any Python runtime, no JVM, no cluster. DuckDB, the in-process analytical engine, now reads and writes Iceberg tables through a REST catalog, with MERGE INTO and v3 table support landing in its recent extension releases. Between them, a complete ingestion pipeline fits inside a serverless function that runs for seconds and bills for seconds.
 

@@ -12,12 +12,12 @@ tags:
 slug: "iceberg-table-properties-that-matter"
 draft: false
 image: "/images/blog.png"
-canonical: https://iceberglakehouse.com/posts/iceberg-table-properties-that-matter/
+canonical: "https://iceberglakehouse.com/posts/iceberg-table-properties-that-matter/"
 ---
 
 Every Apache Iceberg table carries a `properties` map in its metadata file. The reference implementation defines somewhere north of a hundred keys that engines read from it, and the configuration page that lists them is organized alphabetically by prefix rather than by consequence. The result is that most tables run on defaults, and most tuning happens by copying a `TBLPROPERTIES` block from a blog post without knowing what each line does.
 
-> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/iceberg-table-properties-that-matter/).
+> **Cross-posted.** This article's canonical home is [Alex Merced's Lakehouse Blog](https://iceberglakehouse.com/posts/iceberg-table-properties-that-matter/).
 
 That is a problem because a handful of these properties decide whether a table stays healthy. Target file size determines how many files a query opens. Metrics mode determines whether a filter prunes files or scans them. Row-level operation mode determines whether an update rewrites gigabytes or writes kilobytes. Retention properties determine how far back you can recover and how fast storage grows. Get four or five of these right and the table runs well for years. Get them wrong and no amount of compaction catches up.
 

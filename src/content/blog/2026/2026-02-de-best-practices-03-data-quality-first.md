@@ -18,7 +18,7 @@ canonical: "https://iceberglakehouse.com/posts/2026-02-debp-data-quality-first/"
 
 ![Data quality checks enforced at the pipeline validation stage before data reaches consumers](/images/blog/debp/data-quality-pipeline.png)
 
-> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-02-debp-data-quality-first/).
+> **Cross-posted.** This article's canonical home is [Alex Merced's Lakehouse Blog](https://iceberglakehouse.com/posts/2026-02-debp-data-quality-first/).
 
 When an analyst finds null values in a revenue column, the typical response is to add a calculated field in the BI tool: `IF revenue IS NULL THEN 0`. That "fix" doesn't fix anything. It masks a problem at the source : and every downstream consumer has to independently discover and patch the same issue.
 

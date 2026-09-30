@@ -1,7 +1,7 @@
 ---
 title: "The State of Streaming to Apache Iceberg in July 2026: Every Path, Its Latency, and What to Do When Seconds Are Not Fast Enough"
 date: 2026-07-06T12:00:00Z
-canonical: https://iceberglakehouse.com/posts/streaming-to-iceberg-july-2026/
+canonical: "https://iceberglakehouse.com/posts/streaming-to-iceberg-july-2026/"
 description: "Every path for streaming data into Iceberg in 2026, Flink, Spark, Kafka Connect, broker-native, managed pipelines, with honest latency numbers."
 author: "Alex Merced"
 category: "Apache Iceberg"
@@ -22,7 +22,7 @@ bannerImage: "/images/blog.png"
 
 *By Alex Merced, Head of Developer Relations at Dremio*
 
-> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/streaming-to-iceberg-july-2026/).
+> **Cross-posted.** This article's canonical home is [Alex Merced's Lakehouse Blog](https://iceberglakehouse.com/posts/streaming-to-iceberg-july-2026/).
 
 The most common architecture question I get in 2026 is no longer "should we use Iceberg." That one is settled. The question now is "how fresh can our Iceberg tables be, " followed immediately by "and what do we do when that is not fresh enough."
 

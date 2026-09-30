@@ -11,7 +11,7 @@ tags:
 slug: "file-formats-renaissance"
 draft: false
 image: "/images/blog.png"
-canonical: https://iceberglakehouse.com/posts/file-formats-renaissance/
+canonical: "https://iceberglakehouse.com/posts/file-formats-renaissance/"
 description: "By Alex Merced, Head of Developer Relations at Dremio"
 ---
 
@@ -19,7 +19,7 @@ description: "By Alex Merced, Head of Developer Relations at Dremio"
 
 *By Alex Merced, Head of Developer Relations at Dremio*
 
-> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/file-formats-renaissance/).
+> **Cross-posted.** This article's canonical home is [Alex Merced's Lakehouse Blog](https://iceberglakehouse.com/posts/file-formats-renaissance/).
 
 For a decade, the file format layer was the most settled real estate in data. Apache Parquet held the analytical world, ORC held the Hive legacy estates, and the interesting arguments all happened in the layers above. Then, in the span of about three years, the bottom of the stack became the most intellectually active corner of the industry: a research wave produced BtrBlocks, FastLanes, ALP, and FSST, startups building AI infrastructure shipped Lance and Vortex, Meta open-sourced Nimble from its ML platform, and academic groups started publishing formats with names like F3, literally File Format for the Future.
 

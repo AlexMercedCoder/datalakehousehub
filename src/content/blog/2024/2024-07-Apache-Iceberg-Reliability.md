@@ -11,12 +11,12 @@ tags:
   - data lakehouse
   - data engineering
   - Apache Iceberg
-canonical: "https://iceberglakehouse.com/posts/2024-7-Apache-Iceberg-Reliability/"
+canonical: "https://iceberglakehouse.com/posts/2024-7-apache-iceberg-reliability/"
 ---
 
 [Apache Iceberg](https://www.dremio.com/blog/apache-iceberg-101-your-guide-to-learning-apache-iceberg-concepts-and-practices/) is a powerful table format designed to handle large analytic datasets reliably and efficiently. Reliability in data management is crucial for ensuring data integrity, consistency, and availability. This blog explores how Apache Iceberg addresses reliability concerns and provides robust solutions for data lakehouse architectures.
 
-> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2024-7-Apache-Iceberg-Reliability/).
+> **Cross-posted.** This article's canonical home is [Alex Merced's Lakehouse Blog](https://iceberglakehouse.com/posts/2024-7-apache-iceberg-reliability/).
 
 - [Get a Free Copy of "Apache Iceberg: The Definitive Guide"](https://bit.ly/am-iceberg-book)
 - [Sign Up for the Free Apache Iceberg Crash Course](https://bit.ly/am-2024-iceberg-live-crash-course-1)

@@ -11,12 +11,12 @@ tags:
 slug: 2024-9-Why-Dremio-Iceberg-Matters
 draft: false
 image: "/images/blog.png"
-canonical: "https://iceberglakehouse.com/posts/2024-9-Why-Dremio-Iceberg-Matters/"
+canonical: "https://iceberglakehouse.com/posts/2024-9-why-dremio-iceberg-matters/"
 ---
 
 Data architecture is an ever-evolving landscape. Over the years, we've witnessed the shift from on-premises data warehouses to on-premises data lakes, then to cloud-based data warehouses and lakes. Now we're seeing a growing trend toward hybrid infrastructure. One thing is clear: change is inevitable. That's why it's crucial to have a flexible architecture, allowing you to embrace future innovations without overhauling your entire data ecosystem.
 
-> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2024-9-Why-Dremio-Iceberg-Matters/).
+> **Cross-posted.** This article's canonical home is [Alex Merced's Lakehouse Blog](https://iceberglakehouse.com/posts/2024-9-why-dremio-iceberg-matters/).
 
 - [Free Copy of Apache Iceberg: The Definitive Guide](https://hello.dremio.com/wp-apache-iceberg-the-definitive-guide-reg.html?utm_source=ev_external_blog&utm_medium=influencer&utm_campaign=whypros&utm_content=alexmerced&utm_term=external_blog)
 - [Free Apache Iceberg Crash Course](https://hello.dremio.com/webcast-an-apache-iceberg-lakehouse-crash-course-reg.html?utm_source=ev_external_blog&utm_medium=influencer&utm_campaign=whypros&utm_content=alexmerced&utm_term=external_blog)

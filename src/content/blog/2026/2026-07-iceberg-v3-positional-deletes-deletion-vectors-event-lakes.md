@@ -10,7 +10,7 @@ tags:
 slug: "iceberg-v3-positional-deletes-deletion-vectors-event-lakes"
 draft: false
 image: "/images/blog.png"
-canonical: https://iceberglakehouse.com/posts/iceberg-v3-positional-deletes-deletion-vectors-event-lakes/
+canonical: "https://iceberglakehouse.com/posts/iceberg-v3-positional-deletes-deletion-vectors-event-lakes/"
 description: "Event data has a way of humbling neat architecture diagrams. It arrives late. It arrives twice. It arrives with incorrect attributes."
 ---
 
@@ -18,7 +18,7 @@ description: "Event data has a way of humbling neat architecture diagrams. It ar
 
 Event data has a way of humbling neat architecture diagrams. It arrives late. It arrives twice. It arrives with incorrect attributes. It needs privacy removals. It needs corrections after enrichment logic changes. It needs retractions when upstream systems discover that an event should not have been emitted in the first place.
 
-> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/iceberg-v3-positional-deletes-deletion-vectors-event-lakes/).
+> **Cross-posted.** This article's canonical home is [Alex Merced's Lakehouse Blog](https://iceberglakehouse.com/posts/iceberg-v3-positional-deletes-deletion-vectors-event-lakes/).
 
 For a long time, the lakehouse answer to change-heavy data was either to rewrite files or push the problem somewhere else. Rewriting works, but it can be expensive when the table is large and the correction is small. Pushing the problem elsewhere works until the "elsewhere" becomes another data store with its own governance and consistency problems.
 

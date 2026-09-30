@@ -17,7 +17,7 @@ draft: false
 
 Every few years a data team discovers, mid-contract-renewal, exactly how much of their platform they do not control. The data sits in the vendor's format. The metadata lives in the vendor's catalog. The security policies exist only in the vendor's console. Moving any workload means moving all of it, and the vendor's pricing team knows that better than anyone. The technical name for this position is coupling, and the commercial name for it is the renewal quote.
 
-> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/decoupled-data-lakehouse-multi-engine-rest-catalogs/).
+> **Cross-posted.** This article's canonical home is [Alex Merced's Lakehouse Blog](https://iceberglakehouse.com/posts/decoupled-data-lakehouse-multi-engine-rest-catalogs/).
 
 The decoupled lakehouse is the architecture that ends that position, and it is buildable today with boring, shipping technology: open file formats on commodity object storage, an open table format on top, an open catalog protocol coordinating everything, and compute engines that come and go as workloads deserve. The piece that completed the picture, later than the others and more consequentially, is the Apache Iceberg REST catalog specification, which turned the catalog from the last point of lock-in into the interface that makes engine plurality practical.
 

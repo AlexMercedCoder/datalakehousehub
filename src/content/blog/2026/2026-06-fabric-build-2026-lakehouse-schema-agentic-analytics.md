@@ -12,7 +12,11 @@ tags:
 slug: fabric-build-2026-lakehouse-schema-agentic-analytics
 draft: false
 image: "/images/blog.png"
+canonical: "https://iceberglakehouse.com/posts/fabric-build-2026-lakehouse-schema-agentic-analytics/"
 ---
+
+> **Cross-posted.** This article's canonical home is [Alex Merced's Lakehouse Blog](https://iceberglakehouse.com/posts/fabric-build-2026-lakehouse-schema-agentic-analytics/).
+
 # Fabric Agentic Analytics and Lakehouse Schema Design
 
 

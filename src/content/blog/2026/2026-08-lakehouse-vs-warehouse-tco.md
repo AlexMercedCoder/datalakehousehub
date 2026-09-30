@@ -20,7 +20,7 @@ canonical: "https://iceberglakehouse.com/posts/lakehouse-vs-warehouse-tco/"
 
 *By Alex Merced, Data Lakehouse and AI Evangelist*
 
-> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/lakehouse-vs-warehouse-tco/).
+> **Cross-posted.** This article's canonical home is [Alex Merced's Lakehouse Blog](https://iceberglakehouse.com/posts/lakehouse-vs-warehouse-tco/).
 
 Someone in finance forwards the cloud data warehouse invoice with a one-line question: why is this number growing faster than our data. An architect pulls up a comparison showing object storage at a fraction of the warehouse's per-terabyte rate, and the migration proposal writes itself.
 

@@ -17,7 +17,7 @@ draft: false
 
 Run a query that returns 50 million rows from a fast analytical engine and watch where the time goes. The engine plans the query in 200 milliseconds, scans a few gigabytes of Parquet in 3 seconds, and finishes executing. Then the client waits another 40 seconds. Nothing is wrong with the engine. The client is pulling results through a JDBC or ODBC driver, and that driver is converting every row from the server's wire format into driver objects, one field at a time, and then the application is converting those objects into a DataFrame, one field at a time again.
 
-> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/arrow-flight-sql-adbc-connectivity/).
+> **Cross-posted.** This article's canonical home is [Alex Merced's Lakehouse Blog](https://iceberglakehouse.com/posts/arrow-flight-sql-adbc-connectivity/).
 
 That last step is invisible in most monitoring, because it happens after the query "finishes" from the server's point of view and before the application code sees any data. It is also frequently the largest single cost in an analytical workload. A 2017 paper from CWI, "Don't Hold My Data Hostage, " measured client-side result transfer across common databases and found that serialization and driver overhead dominated end-to-end time for large results, in some cases by an order of magnitude over the query itself.
 

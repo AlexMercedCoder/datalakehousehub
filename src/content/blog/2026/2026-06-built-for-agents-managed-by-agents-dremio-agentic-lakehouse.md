@@ -12,7 +12,11 @@ tags:
 slug: built-for-agents-managed-by-agents-dremio-agentic-lakehouse
 draft: false
 image: "/images/blog.png"
+canonical: "https://iceberglakehouse.com/posts/built-for-agents-managed-by-agents-dremio-agentic-lakehouse/"
 ---
+
+> **Cross-posted.** This article's canonical home is [Alex Merced's Lakehouse Blog](https://iceberglakehouse.com/posts/built-for-agents-managed-by-agents-dremio-agentic-lakehouse/).
+
 # Built for Agents and Managed by Agents
 
 

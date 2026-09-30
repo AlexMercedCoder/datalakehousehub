@@ -21,7 +21,7 @@ canonical: "https://iceberglakehouse.com/posts/2026-05-24-duckdb-polars-iceberg/
 
 Two years ago, DuckDB and Polars were single-process analytical tools with limited lakehouse integration. You could read Parquet files from S3 using either, but writing to a catalog-managed Iceberg table required Spark or Flink. That constraint has been removed.
 
-> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-05-24-duckdb-polars-iceberg/).
+> **Cross-posted.** This article's canonical home is [Alex Merced's Lakehouse Blog](https://iceberglakehouse.com/posts/2026-05-24-duckdb-polars-iceberg/).
 
 DuckDB 1.4 LTS, released in September 2025, shipped with Iceberg write support. Polars extended its streaming engine's sink capabilities to include Iceberg tables in 2026. Both tools now offer a complete read-write path to Iceberg tables managed by REST Catalogs like Apache Polaris, Nessie, and Amazon S3 Tables. DuckDB went further: by December 2025, the DuckDB-Wasm build included the Iceberg extension, enabling browser-based read and write access to Iceberg REST Catalogs with no backend server.
 

@@ -20,7 +20,7 @@ canonical: "https://iceberglakehouse.com/posts/closed-loop-decision-agents/"
 
 *By Alex Merced, Data Lakehouse and AI Evangelist*
 
-> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/closed-loop-decision-agents/).
+> **Cross-posted.** This article's canonical home is [Alex Merced's Lakehouse Blog](https://iceberglakehouse.com/posts/closed-loop-decision-agents/).
 
 An agent reads a table, decides something, and calls an API that changes the world. That sentence contains a distributed systems problem that most teams discover in production.
 

@@ -16,7 +16,7 @@ canonical: "https://iceberglakehouse.com/posts/2024-1-open-lakehouse-engineering
 
 The concept of the **Open Lakehouse** has emerged as a beacon of flexibility and innovation. An Open Lakehouse represents a specialized form data lakehouse (bringing data warehouse like functionality/performance to data on a data lake), uniquely characterized by its commitment to open standards and technologies. At the core of this paradigm are tools like Apache Iceberg, Nessie, and Apache Arrow, which collectively empower organizations to build highly efficient, scalable, and interoperable data ecosystems.
 
-> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2024-1-open-lakehouse-engineering-resources/).
+> **Cross-posted.** This article's canonical home is [Alex Merced's Lakehouse Blog](https://iceberglakehouse.com/posts/2024-1-open-lakehouse-engineering-resources/).
 
 Unlike conventional data lakehouses which may have high levels of coupling between the storage formats, governance, optimization and more of their data with one vendor with few alternatives, an Open Lakehouse prioritizes the avoidance of vendor lock-in, ensuring that organizations maintain full control over their data infrastructure. This approach not only fosters a more adaptable and resilient data environment but also encourages a collaborative, community-driven development ethos that is instrumental in driving the field forward.
 

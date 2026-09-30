@@ -25,7 +25,7 @@ canonical: "https://iceberglakehouse.com/posts/2025-05-intro-to-data-engineering
 - **[Iceberg Lakehouse Engineering Video Playlist](https://youtube.com/playlist?list=PLsLAVBjQJO0p0Yq1fLkoHvt2lEJj5pcYe&si=WTSnqjXZv6Glkc3y)** 
 - **[Ultimate Apache Iceberg Resource Guide](https://medium.com/data-engineering-with-dremio/ultimate-directory-of-apache-iceberg-resources-e3e02efac62e)**
 
-> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2025-05-intro-to-data-engineering-concepts-03/).
+> **Cross-posted.** This article's canonical home is [Alex Merced's Lakehouse Blog](https://iceberglakehouse.com/posts/2025-05-intro-to-data-engineering-concepts-03/).
 
 Once data has been ingested into your system, the next step is to prepare it for actual use. This typically involves cleaning, transforming, and storing the data in a way that supports analysis, reporting, or further processing. This is where data pipelines come in, and at the center of pipeline design are two common strategies: ETL and ELT.
 

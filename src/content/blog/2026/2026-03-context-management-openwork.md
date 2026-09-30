@@ -19,7 +19,7 @@ canonical: "https://iceberglakehouse.com/posts/2026-03-context-openwork/"
 
 OpenWork is a desktop-native AI agent framework designed for local, multi-step task execution on your computer. Unlike browser-based AI tools or terminal agents, OpenWork operates as a desktop application that can interact with your file system, manage long-running sessions, and execute complex workflows autonomously. Its context management centers on Skills, session persistence, direct file system access, and a plugin architecture that extends its capabilities.
 
-> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-03-context-openwork/).
+> **Cross-posted.** This article's canonical home is [Alex Merced's Lakehouse Blog](https://iceberglakehouse.com/posts/2026-03-context-openwork/).
 
 This guide explains how to manage context effectively in OpenWork to delegate complex tasks, maintain continuity across sessions, and build reusable automation workflows.
 

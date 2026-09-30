@@ -19,7 +19,7 @@ canonical: "https://iceberglakehouse.com/posts/air-gapped-iceberg-lakehouse/"
 
 An engineer runs `pip install pyiceberg` on a classified network and it fails. There is no PyPI. There is no Maven Central, no Docker Hub, no GitHub. The deployment guide they are following assumes all four, on the first page, without saying so.
 
-> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/air-gapped-iceberg-lakehouse/).
+> **Cross-posted.** This article's canonical home is [Alex Merced's Lakehouse Blog](https://iceberglakehouse.com/posts/air-gapped-iceberg-lakehouse/).
 
 That is the first hour of every air-gapped lakehouse project, and it sets the tone. Nothing about the architecture is exotic. Iceberg on object storage with a REST catalog and a query engine is the same design everywhere. What changes is that every assumption about reaching the outside gets tested, and most of them are load-bearing without anyone having noticed.
 

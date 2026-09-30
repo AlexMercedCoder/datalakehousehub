@@ -19,7 +19,7 @@ canonical: "https://iceberglakehouse.com/posts/agent-telemetry-iceberg-audit/"
 
 An agent gives a customer-facing team a revenue number. Six weeks later someone asks where it came from. The application logs rolled off after 14 days. The tracing system has a span showing an LLM call took 3.2 seconds. Nobody can say which tables the agent read, what SQL it ran, which prompt produced that SQL, or whether a human approved anything.
 
-> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/agent-telemetry-iceberg-audit/).
+> **Cross-posted.** This article's canonical home is [Alex Merced's Lakehouse Blog](https://iceberglakehouse.com/posts/agent-telemetry-iceberg-audit/).
 
 That is not an unusual state. It is the default state, because the observability tooling most teams already run was built to answer "is the service healthy" and not "reconstruct this decision."
 

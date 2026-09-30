@@ -18,7 +18,7 @@ canonical: "https://iceberglakehouse.com/posts/2026-02-debp-design-data-pipeline
 
 ![Data pipeline architecture with four layers flowing from ingestion through staging, transformation, and serving](/images/blog/debp/pipeline-architecture.png)
 
-> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-02-debp-design-data-pipelines/).
+> **Cross-posted.** This article's canonical home is [Alex Merced's Lakehouse Blog](https://iceberglakehouse.com/posts/2026-02-debp-design-data-pipelines/).
 
 Most pipeline failures aren't caused by bad code. They're caused by no architecture. A script that reads from an API, transforms JSON, and writes to a database works fine on day one. On day ninety it fails at 3 AM because the API changed its response format, and the only way to recover is to rerun the entire pipeline from scratch : hoping that reprocessing three months of data doesn't create duplicates.
 

@@ -12,12 +12,12 @@ tags:
 slug: 2024-7-Understanding-Polaris-Apache-Iceberg-Catalog
 draft: false
 image: "/images/blog.png"
-canonical: "https://iceberglakehouse.com/posts/2024-7-Understanding-Polaris-Apache-Iceberg-Catalog/"
+canonical: "https://iceberglakehouse.com/posts/2024-7-understanding-polaris-apache-iceberg-catalog/"
 ---
 
 NOTE: I am working on a hands-on tutorial for Polaris, so please watch for the [Dremio Blog](https://www.dremio.com/blog) in the coming days. Also, check out many other great articles on the Dremio blog about Apache Iceberg, Data Lakehouses, and more.
 
-> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2024-7-Understanding-Polaris-Apache-Iceberg-Catalog/).
+> **Cross-posted.** This article's canonical home is [Alex Merced's Lakehouse Blog](https://iceberglakehouse.com/posts/2024-7-understanding-polaris-apache-iceberg-catalog/).
 
 - [Apache Iceberg Crash Course](https://hello.dremio.com/webcast-an-apache-iceberg-lakehouse-crash-course-reg.html)
 - [Free Copy of "Apache Iceberg: The Definitive Guide"](https://www.dremio.com/blog/the-evolution-of-apache-iceberg-catalogs/)

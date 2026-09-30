@@ -25,7 +25,7 @@ canonical: "https://iceberglakehouse.com/posts/2025-05-intro-to-data-engineering
 - **[Iceberg Lakehouse Engineering Video Playlist](https://youtube.com/playlist?list=PLsLAVBjQJO0p0Yq1fLkoHvt2lEJj5pcYe&si=WTSnqjXZv6Glkc3y)** 
 - **[Ultimate Apache Iceberg Resource Guide](https://medium.com/data-engineering-with-dremio/ultimate-directory-of-apache-iceberg-resources-e3e02efac62e)**
 
-> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2025-05-intro-to-data-engineering-concepts-07/).
+> **Cross-posted.** This article's canonical home is [Alex Merced's Lakehouse Blog](https://iceberglakehouse.com/posts/2025-05-intro-to-data-engineering-concepts-07/).
 
 Data warehouses serve as the analytical backbone for many organizations. They are purpose-built systems that store structured data optimized for fast querying and aggregation. While data lakes handle raw, unstructured data at scale, data warehouses focus on delivering clean, organized datasets to analysts, BI tools, and decision-makers.
 

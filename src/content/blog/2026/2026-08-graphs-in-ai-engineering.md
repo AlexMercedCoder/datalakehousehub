@@ -17,7 +17,7 @@ draft: false
 
 Ask an agent to ship a feature and watch what it does. It reads some files, decides on an order of operations, writes code, runs tests, fixes what broke, and declares itself done. Somewhere inside that run there was a plan. It had steps, the steps had dependencies, and some steps mattered more than others. You never saw it. It lived in the model's context window for the length of the session and evaporated when the session ended.
 
-> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/graphs-in-ai-engineering/).
+> **Cross-posted.** This article's canonical home is [Alex Merced's Lakehouse Blog](https://iceberglakehouse.com/posts/graphs-in-ai-engineering/).
 
 That plan was a graph. Every agent harness (the program that runs the model in a loop, manages tools, and enforces policy) builds one, privately, in its own shape, and throws it away. The one artifact that determines whether the tokens you are about to spend are spent well is the one artifact nobody writes down.
 

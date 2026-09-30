@@ -13,12 +13,12 @@ tags:
 slug: "tabular-foundation-models"
 draft: false
 image: "/images/blog.png"
-canonical: https://iceberglakehouse.com/posts/tabular-foundation-models/
+canonical: "https://iceberglakehouse.com/posts/tabular-foundation-models/"
 ---
 
 A finance team asks which of their 40, 000 open invoices will pay late. The data sits in a table with 22 columns: customer, terms, amount, history, region, past delinquency. Somebody points a large language model at it. The model reads a sample of rows, writes three paragraphs about risk factors, and produces a confident list that turns out to be roughly as accurate as sorting by amount.
 
-> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/tabular-foundation-models/).
+> **Cross-posted.** This article's canonical home is [Alex Merced's Lakehouse Blog](https://iceberglakehouse.com/posts/tabular-foundation-models/).
 
 That result is not a prompt engineering failure. It is a category error. The question is a supervised prediction problem over structured rows, and language models are not built to solve those. The tool that solves them well used to be gradient boosting, which requires a training pipeline, a tuning budget, and a model per problem. Since 2022 a third option has existed, and since roughly 2025 it has been good enough to change how enterprise prediction gets built.
 

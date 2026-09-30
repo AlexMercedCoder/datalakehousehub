@@ -1,7 +1,7 @@
 ---
 title: "The State of Agentic AI Standards in 2026: MCP, A2A, WebMCP, OSI, and the Protocol Stack Taking Shape"
 date: 2026-07-06T12:00:00Z
-canonical: https://iceberglakehouse.com/posts/state-of-agentic-ai-standards-2026/
+canonical: "https://iceberglakehouse.com/posts/state-of-agentic-ai-standards-2026/"
 description: "The agentic AI protocol stack is solidifying in 2026, MCP for tools, A2A for agents, WebMCP for the web, OSI for semantics, payments, identity."
 author: "Alex Merced"
 category: "Agentic AI"
@@ -23,7 +23,7 @@ bannerImage: "/images/blog.png"
 
 *By Alex Merced, Head of Developer Relations at Dremio*
 
-> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/state-of-agentic-ai-standards-2026/).
+> **Cross-posted.** This article's canonical home is [Alex Merced's Lakehouse Blog](https://iceberglakehouse.com/posts/state-of-agentic-ai-standards-2026/).
 
 In 2023, an AI agent was a demo. In 2024, it was a framework. In 2025, it was a hundred incompatible frameworks. And in 2026, something genuinely new is happening: the agent world is growing a protocol stack, a set of open standards that determine how agents reach tools, talk to websites, talk to each other, understand business meaning, pay for things, and show their work to humans.
 

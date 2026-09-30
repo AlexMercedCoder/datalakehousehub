@@ -12,7 +12,11 @@ tags:
 slug: server-side-commit-deconflicting-rest-catalogs
 draft: false
 image: "/images/blog.png"
+canonical: "https://iceberglakehouse.com/posts/server-side-commit-deconflicting-rest-catalogs/"
 ---
+
+> **Cross-posted.** This article's canonical home is [Alex Merced's Lakehouse Blog](https://iceberglakehouse.com/posts/server-side-commit-deconflicting-rest-catalogs/).
+
 # Server-Side Commit Deconflicting in REST Catalogs
 
 

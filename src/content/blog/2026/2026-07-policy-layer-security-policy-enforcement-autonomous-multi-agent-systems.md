@@ -16,7 +16,7 @@ canonical: "https://iceberglakehouse.com/posts/policy-layer-security-policy-enfo
 
 An autonomous agent can issue a thousand queries in the time it takes a human to read the results of one. That speed is the whole reason to build agent systems, and it is also the reason a prompt is not a security boundary. If the only thing standing between an agent and a full export of your customer table is an instruction in its system prompt that says "do not export sensitive data, " you do not have a control. You have a suggestion, and a non-deterministic system is under no obligation to follow it.
 
-> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/policy-layer-security-policy-enforcement-autonomous-multi-agent-systems/).
+> **Cross-posted.** This article's canonical home is [Alex Merced's Lakehouse Blog](https://iceberglakehouse.com/posts/policy-layer-security-policy-enforcement-autonomous-multi-agent-systems/).
 
 The policy layer is the part of an agent architecture that turns suggestions into enforcement. It is the control surface that sits in the analytical path and decides, at runtime, whether a given query, export, or write is allowed to proceed. This post covers why policy cannot be optional for autonomous agents, the difference between an agent being aware of policy and a system enforcing it, the specific controls that matter (query limits, egress quotas, pre-execution checks, isolation pools), and where a governed query engine fits inside a larger policy-controlled system.
 

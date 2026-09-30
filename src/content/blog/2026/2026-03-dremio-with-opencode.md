@@ -19,7 +19,7 @@ canonical: "https://iceberglakehouse.com/posts/2026-03-aitool-opencode/"
 
 OpenCode is an open-source, terminal-based AI coding agent released under the MIT license. It provides a TUI with split panes, uses the Language Server Protocol (LSP) for deep codebase understanding, and maintains persistent project context through file-based memory. Dremio is a unified lakehouse platform built on open standards like Apache Iceberg, Apache Arrow, and Apache Polaris.
 
-> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-03-aitool-opencode/).
+> **Cross-posted.** This article's canonical home is [Alex Merced's Lakehouse Blog](https://iceberglakehouse.com/posts/2026-03-aitool-opencode/).
 
 The open-source philosophy aligns. Dremio stores data in open formats with no vendor lock-in. OpenCode gives you full control over your AI coding agent with no proprietary restrictions. Connecting them means your open-source agent can query an open lakehouse, validate SQL against real schemas, and generate scripts using your team's actual conventions.
 

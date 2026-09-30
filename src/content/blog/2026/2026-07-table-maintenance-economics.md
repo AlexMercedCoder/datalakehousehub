@@ -13,12 +13,12 @@ tags:
 slug: "table-maintenance-economics"
 draft: false
 image: "/images/blog.png"
-canonical: https://iceberglakehouse.com/posts/table-maintenance-economics/
+canonical: "https://iceberglakehouse.com/posts/table-maintenance-economics/"
 ---
 
 A team I worked with had a dashboard that loaded in three seconds in January and forty seconds in June. Data volume grew 20 percent over that period. Nobody changed the query, the engine, or the cluster size. The table had 340, 000 data files where it should have had about 900, and 61, 000 snapshots where 100 was the sane number. The query was not slow. The planning was slow, and the planning was slow because nobody had run compaction since the table was created.
 
-> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/table-maintenance-economics/).
+> **Cross-posted.** This article's canonical home is [Alex Merced's Lakehouse Blog](https://iceberglakehouse.com/posts/table-maintenance-economics/).
 
 That story is common enough to be boring. What is more interesting is what happened to the market around it. In April 2026, Cyera, a data security company valued in the billions, paid somewhere between 100 and 130 million dollars for Ryft, a two-year-old startup whose product was automated Apache Iceberg table maintenance. Ryft had raised eight million dollars. It employed about fifteen people. Its technology scheduled compaction based on observed query and ingestion behavior, handled retention and compliance deletion, and kept tables optimized without an engineer writing cron jobs.
 

@@ -20,7 +20,7 @@ canonical: "https://iceberglakehouse.com/posts/agentic-analytics-tco-token-budge
 
 *By Alex Merced, Data Lakehouse and AI Evangelist*
 
-> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/agentic-analytics-tco-token-budgets/).
+> **Cross-posted.** This article's canonical home is [Alex Merced's Lakehouse Blog](https://iceberglakehouse.com/posts/agentic-analytics-tco-token-budgets/).
 
 The pilot ran for six weeks with forty users and cost less than a team lunch. Someone approved rolling it out to eight hundred people. The first full month's bill arrived with two line items that nobody had modeled: a model provider invoice several times the projection, and a lakehouse compute figure that had roughly tripled.
 

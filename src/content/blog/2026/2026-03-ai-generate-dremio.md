@@ -19,7 +19,7 @@ canonical: "https://iceberglakehouse.com/posts/2026-03-ai-ai-generate/"
 
 Unstructured text is the most underused data in most organizations. Customer emails sit in inboxes. Contract notes live in text fields. Meeting summaries exist as free-text columns in CRM systems. The information is there, but it's locked inside prose that SQL can't filter, join, or aggregate.
 
-> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-03-ai-ai-generate/).
+> **Cross-posted.** This article's canonical home is [Alex Merced's Lakehouse Blog](https://iceberglakehouse.com/posts/2026-03-ai-ai-generate/).
 
 Dremio's `AI_GENERATE` function breaks that lock. It sends unstructured text to an LLM and returns structured rows with typed columns. You define the output schema directly in SQL, and the LLM extracts the fields you specify. An email becomes a row with `sender`, `subject`, `priority`, and `action_items` columns. A contract note becomes a row with `party_name`, `contract_value`, `start_date`, and `terms`.
 

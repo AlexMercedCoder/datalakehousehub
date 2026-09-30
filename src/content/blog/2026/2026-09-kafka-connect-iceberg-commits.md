@@ -1,7 +1,7 @@
 ---
 title: "Kafka Connect to Iceberg: How the Commit Actually Works"
 date: 2026-09-10T12:00:00Z
-canonical: https://iceberglakehouse.com/posts/kafka-connect-iceberg-commits/
+canonical: "https://iceberglakehouse.com/posts/kafka-connect-iceberg-commits/"
 description: "Exactly-once semantics in the Iceberg sink connector: the coordinator, the control topic, offsets stored inside Iceberg snapshots, and where duplicates still get in."
 author: "Alex Merced"
 category: "Streaming"
@@ -17,7 +17,7 @@ image: "/images/blog.png"
 bannerImage: "/images/blog.png"
 ---
 
-> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/kafka-connect-iceberg-commits/).
+> **Cross-posted.** This article's canonical home is [Alex Merced's Lakehouse Blog](https://iceberglakehouse.com/posts/kafka-connect-iceberg-commits/).
 
 A team runs the Iceberg sink connector for six months without thinking about it. Then a Kafka Connect worker gets restarted during a deployment, and a downstream reconciliation turns up several thousand rows that exist twice. The connector documentation says exactly-once. The team's assumption was that exactly-once meant exactly once.
 

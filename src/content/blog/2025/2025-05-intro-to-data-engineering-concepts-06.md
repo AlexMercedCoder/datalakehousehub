@@ -25,7 +25,7 @@ canonical: "https://iceberglakehouse.com/posts/2025-05-intro-to-data-engineering
 - **[Iceberg Lakehouse Engineering Video Playlist](https://youtube.com/playlist?list=PLsLAVBjQJO0p0Yq1fLkoHvt2lEJj5pcYe&si=WTSnqjXZv6Glkc3y)** 
 - **[Ultimate Apache Iceberg Resource Guide](https://medium.com/data-engineering-with-dremio/ultimate-directory-of-apache-iceberg-resources-e3e02efac62e)**
 
-> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2025-05-intro-to-data-engineering-concepts-06/).
+> **Cross-posted.** This article's canonical home is [Alex Merced's Lakehouse Blog](https://iceberglakehouse.com/posts/2025-05-intro-to-data-engineering-concepts-06/).
 
 Behind every useful dashboard or analytics report lies a well-structured data model. Data modeling is the practice of shaping data into organized structures that are easy to query, analyze, and maintain. While it may sound abstract, modeling directly impacts how quickly and accurately data consumers can extract value from the information stored in your systems.
 

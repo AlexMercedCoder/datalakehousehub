@@ -10,7 +10,7 @@ tags:
 slug: "block-vs-object-storage-deep-dive"
 draft: false
 image: "/images/blog.png"
-canonical: https://iceberglakehouse.com/posts/block-vs-object-storage-deep-dive/
+canonical: "https://iceberglakehouse.com/posts/block-vs-object-storage-deep-dive/"
 description: "By Alex Merced, Head of Developer Relations at Dremio"
 ---
 
@@ -18,7 +18,7 @@ description: "By Alex Merced, Head of Developer Relations at Dremio"
 
 *By Alex Merced, Head of Developer Relations at Dremio*
 
-> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/block-vs-object-storage-deep-dive/).
+> **Cross-posted.** This article's canonical home is [Alex Merced's Lakehouse Blog](https://iceberglakehouse.com/posts/block-vs-object-storage-deep-dive/).
 
 Here is one of the strangest and most consequential plot twists in the history of data infrastructure: over the past decade, the analytics industry deliberately moved its data onto the slowest storage it could find, and got faster.
 

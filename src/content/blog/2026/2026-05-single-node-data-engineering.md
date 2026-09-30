@@ -21,7 +21,7 @@ canonical: "https://iceberglakehouse.com/posts/2026-05-23-single-node-data-engin
 <!- Primary Keyword: single-node data engineering ->
 <!- Secondary Keywords: columnar query engines, DuckDB vs Polars, lakehouse query engine, LakeSail Spark ->
 
-> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-05-23-single-node-data-engineering-duckdb-datafusion-polars-lakesail/).
+> **Cross-posted.** This article's canonical home is [Alex Merced's Lakehouse Blog](https://iceberglakehouse.com/posts/2026-05-23-single-node-data-engineering-duckdb-datafusion-polars-lakesail/).
 
 # Single-Node Data Engineering: DuckDB, DataFusion, Polars, and LakeSail
 

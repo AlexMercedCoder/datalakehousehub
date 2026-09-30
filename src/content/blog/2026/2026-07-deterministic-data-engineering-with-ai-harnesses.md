@@ -13,12 +13,12 @@ tags:
 slug: deterministic-data-engineering-with-ai-harnesses
 draft: false
 image: /images/blog.png
-canonical: https://iceberglakehouse.com/posts/deterministic-data-engineering-with-ai-harnesses/
+canonical: "https://iceberglakehouse.com/posts/deterministic-data-engineering-with-ai-harnesses/"
 ---
 
 *By Alex Merced, Head of Developer Relations at Dremio*
 
-> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/deterministic-data-engineering-with-ai-harnesses/).
+> **Cross-posted.** This article's canonical home is [Alex Merced's Lakehouse Blog](https://iceberglakehouse.com/posts/deterministic-data-engineering-with-ai-harnesses/).
 
 There is an apparent contradiction at the heart of using AI agents for data work, and resolving it properly is worth an entire article, because the teams that resolve it are quietly getting enormous value while the teams that do not are generating incidents.
 

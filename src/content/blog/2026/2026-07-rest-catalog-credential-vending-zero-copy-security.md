@@ -17,7 +17,7 @@ canonical: "https://iceberglakehouse.com/posts/rest-catalog-credential-vending-z
 
 Handing a query engine a long-lived cloud storage key so it can read an Iceberg table is one of the most common and most dangerous patterns in lakehouse deployments. That key is broad, hard to rotate, and once it exists it tends to spread into config files, notebooks, CI systems, and every engine cluster that touches the data. Credential vending replaces that pattern. Instead of distributing static keys, an Iceberg REST catalog issues short-lived, scoped storage credentials at the moment a client needs them, for exactly the table and operation the client is authorized to perform, expiring shortly after.
 
-> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/rest-catalog-credential-vending-zero-copy-security/).
+> **Cross-posted.** This article's canonical home is [Alex Merced's Lakehouse Blog](https://iceberglakehouse.com/posts/rest-catalog-credential-vending-zero-copy-security/).
 
 This post explains why static cloud keys break multi-engine lakehouses, how the credential vending handshake works, the important distinction between what the catalog controls and what object storage controls, how Polaris-style vending is configured at a conceptual level, and why this mechanism matters specifically for autonomous agents. The theme throughout: open lakehouses only work at enterprise scale when storage access is scoped, temporary, and mediated through a trusted catalog rather than granted directly.
 

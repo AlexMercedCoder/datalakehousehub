@@ -18,7 +18,7 @@ canonical: "https://iceberglakehouse.com/posts/2026-02-sl-what-is-a-semantic-lay
 
 ![Semantic layer concept : translating raw data into business terms](/images/blog/semantic-layer/semantic-layer-concept.png)
 
-> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-02-sl-what-is-a-semantic-layer/).
+> **Cross-posted.** This article's canonical home is [Alex Merced's Lakehouse Blog](https://iceberglakehouse.com/posts/2026-02-sl-what-is-a-semantic-layer/).
 
 Ask three teams in your company how they calculate "revenue" and you'll get three answers. Sales counts bookings. Finance counts recognized revenue. Marketing counts pipeline value. All three call it "revenue." All three get different numbers. Nobody knows which one is right.
 

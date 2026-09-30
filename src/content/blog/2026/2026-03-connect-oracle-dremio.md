@@ -19,7 +19,7 @@ canonical: "https://iceberglakehouse.com/posts/2026-03-connector-oracle/"
 
 Oracle Database runs the most critical enterprise applications in the world : ERP systems, financial ledgers, supply chain management, and HR platforms. These systems generate massive volumes of data that business teams want to analyze, but running analytical queries directly against Oracle is expensive (license costs scale with CPU usage), complex (Oracle-specific SQL dialects and tooling), and risky (heavy queries can impact transactional performance).
 
-> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-03-connector-oracle/).
+> **Cross-posted.** This article's canonical home is [Alex Merced's Lakehouse Blog](https://iceberglakehouse.com/posts/2026-03-connector-oracle/).
 
 Dremio Cloud connects to Oracle Database and queries it in place using standard SQL. You don't need to license additional Oracle tools, build ETL pipelines, or export data to a separate warehouse. Dremio pushes filters and aggregations to Oracle, fetches only the results, and lets you join Oracle data with every other source in your organization in a single query.
 

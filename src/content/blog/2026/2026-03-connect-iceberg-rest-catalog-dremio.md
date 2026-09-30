@@ -19,7 +19,7 @@ canonical: "https://iceberglakehouse.com/posts/2026-03-connector-iceberg-rest-ca
 
 The Apache Iceberg REST Catalog specification defines a standard HTTP API for managing Iceberg table metadata. Any catalog implementation that conforms to this specification : Apache Polaris, Amazon S3 Tables, Confluent Tableflow, Tabular, Apache Gravitino, and custom-built services, can connect to Dremio Cloud through a single connector type.
 
-> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-03-connector-iceberg-rest-catalog/).
+> **Cross-posted.** This article's canonical home is [Alex Merced's Lakehouse Blog](https://iceberglakehouse.com/posts/2026-03-connector-iceberg-rest-catalog/).
 
 This is the most flexible catalog connector Dremio offers. Instead of needing a purpose-built connector for every catalog vendor, the Iceberg REST Catalog connector works with any compliant implementation. As new catalogs emerge : and they're emerging rapidly in the open lakehouse ecosystem, this connector ensures Dremio supports them from day one.
 

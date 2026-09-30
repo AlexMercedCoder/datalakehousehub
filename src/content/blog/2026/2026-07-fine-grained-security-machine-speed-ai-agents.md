@@ -10,7 +10,7 @@ tags:
 slug: "fine-grained-security-machine-speed-ai-agents"
 draft: false
 image: "/images/blog.png"
-canonical: https://iceberglakehouse.com/posts/fine-grained-security-machine-speed-ai-agents/
+canonical: "https://iceberglakehouse.com/posts/fine-grained-security-machine-speed-ai-agents/"
 description: "AI agents change the security model for analytics. A human user may run a handful of queries, pause, interpret the answer, and ask a follow-up."
 ---
 
@@ -18,7 +18,7 @@ description: "AI agents change the security model for analytics. A human user ma
 
 AI agents change the security model for analytics. A human user may run a handful of queries, pause, interpret the answer, and ask a follow-up. An agent can inspect metadata, retrieve definitions, call tools, run queries, validate results, and request action in one fast loop.
 
-> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/fine-grained-security-machine-speed-ai-agents/).
+> **Cross-posted.** This article's canonical home is [Alex Merced's Lakehouse Blog](https://iceberglakehouse.com/posts/fine-grained-security-machine-speed-ai-agents/).
 
 That speed is useful. It also increases the cost of weak access control.
 

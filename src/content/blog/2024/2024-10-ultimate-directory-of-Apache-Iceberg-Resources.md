@@ -12,12 +12,12 @@ tags:
 slug: 2024-10-ultimate-directory-of-Apache-Iceberg-Resources
 draft: false
 image: "/images/blog.png"
-canonical: "https://iceberglakehouse.com/posts/2024-10-ultimate-directory-of-Apache-Iceberg-Resources/"
+canonical: "https://iceberglakehouse.com/posts/2024-10-ultimate-directory-of-apache-iceberg-resources/"
 ---
 
 This article is a comprehensive directory of Apache Iceberg resources, including educational materials, tutorials, and hands-on exercises. Whether you're a beginner or an experienced data engineer, this guide will help you navigate the world of Apache Iceberg and its applications.
 
-> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2024-10-ultimate-directory-of-Apache-Iceberg-Resources/).
+> **Cross-posted.** This article's canonical home is [Alex Merced's Lakehouse Blog](https://iceberglakehouse.com/posts/2024-10-ultimate-directory-of-apache-iceberg-resources/).
 
 ## Apache Iceberg?
 

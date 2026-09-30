@@ -13,12 +13,12 @@ tags:
 slug: "moving-iceberg-tables-between-catalogs"
 draft: false
 image: "/images/blog.png"
-canonical: https://iceberglakehouse.com/posts/moving-iceberg-tables-between-catalogs/
+canonical: "https://iceberglakehouse.com/posts/moving-iceberg-tables-between-catalogs/"
 ---
 
 A platform team has 3, 000 Iceberg tables in a Hive Metastore and 900 terabytes of Parquet behind them. They are moving to a REST catalog. Someone on the team asks how long the copy will take, and someone else starts pricing out the egress. Both questions are the wrong questions. An Iceberg table is not stored in its catalog. The catalog stores one string per table: the path of the current metadata file. Moving a table between catalogs means writing that string into a new catalog and deleting it from the old one. The 900 terabytes do not move.
 
-> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/moving-iceberg-tables-between-catalogs/).
+> **Cross-posted.** This article's canonical home is [Alex Merced's Lakehouse Blog](https://iceberglakehouse.com/posts/moving-iceberg-tables-between-catalogs/).
 
 That is the whole idea, and it is simple enough that people distrust it. The distrust is healthy, because while the operation is a pointer copy, the surrounding protocol has real hazards. Register a table in two catalogs at once and two engines commit divergent metadata to the same directory. Drop the table from the old catalog with the wrong flag and the catalog deletes every data file. Pick the wrong metadata file to register and the new catalog starts from a snapshot that is three days stale.
 

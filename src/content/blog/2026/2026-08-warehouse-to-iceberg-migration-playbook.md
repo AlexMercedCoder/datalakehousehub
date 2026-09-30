@@ -21,7 +21,7 @@ canonical: "https://iceberglakehouse.com/posts/warehouse-to-iceberg-migration-pl
 
 *By Alex Merced, Data Lakehouse and AI Evangelist*
 
-> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/warehouse-to-iceberg-migration-playbook/).
+> **Cross-posted.** This article's canonical home is [Alex Merced's Lakehouse Blog](https://iceberglakehouse.com/posts/warehouse-to-iceberg-migration-playbook/).
 
 The migration plan says twelve weeks. Week fourteen arrives and the team has moved four tables out of six hundred, because table number five turned out to feed a report that a regulator sees quarterly, and nobody can find who owns the SQL that builds it.
 

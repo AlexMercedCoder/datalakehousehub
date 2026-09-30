@@ -22,7 +22,7 @@ canonical: "https://iceberglakehouse.com/posts/2025-10-exploring-commerical-apac
 - [Architecting an Apache Iceberg Lakehouse](https://hubs.la/Q03GfY4f0)
 - [The Apache Iceberg Digest: Vol. 1](https://www.puppygraph.com/ebooks/apache-iceberg-digest-vol-1)
 
-> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2025-10-exploring-commerical-apache-iceberg-catalogs/).
+> **Cross-posted.** This article's canonical home is [Alex Merced's Lakehouse Blog](https://iceberglakehouse.com/posts/2025-10-exploring-commerical-apache-iceberg-catalogs/).
 
 **Lakehouse Community:**
 - [Join the Data Lakehouse Community](https://www.datalakehousehub.com)

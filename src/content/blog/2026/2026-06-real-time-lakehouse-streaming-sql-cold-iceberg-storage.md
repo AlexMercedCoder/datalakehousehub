@@ -12,7 +12,11 @@ tags:
 slug: real-time-lakehouse-streaming-sql-cold-iceberg-storage
 draft: false
 image: "/images/blog.png"
+canonical: "https://iceberglakehouse.com/posts/real-time-lakehouse-streaming-sql-cold-iceberg-storage/"
 ---
+
+> **Cross-posted.** This article's canonical home is [Alex Merced's Lakehouse Blog](https://iceberglakehouse.com/posts/real-time-lakehouse-streaming-sql-cold-iceberg-storage/).
+
 # The Real-Time Lakehouse with Streaming and Iceberg
 
 

@@ -20,7 +20,7 @@ canonical: "https://iceberglakehouse.com/posts/policy-aware-ai-telemetry-iceberg
 
 *By Alex Merced, Data Lakehouse and AI Evangelist*
 
-> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/policy-aware-ai-telemetry-iceberg/).
+> **Cross-posted.** This article's canonical home is [Alex Merced's Lakehouse Blog](https://iceberglakehouse.com/posts/policy-aware-ai-telemetry-iceberg/).
 
 Two days ago, on August 2, 2026, the EU AI Act's Article 50 transparency obligations came into application. Many teams had that date circled for a different reason: it was originally when the bulk of the high-risk regime was due to bite. That part moved. Standalone Annex III high-risk systems now have until December 2, 2027, and AI embedded in regulated products under Annex I until August 2, 2028, following the Digital Omnibus on AI that the European Parliament endorsed on June 16, 2026 and the Council gave final approval to on June 29.
 

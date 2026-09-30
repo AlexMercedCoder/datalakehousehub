@@ -17,7 +17,7 @@ draft: false
 
 The Variant type in Apache Iceberg v3 gets described in one sentence so often that the sentence has started doing damage: "store JSON without a schema and query it fast." The first half is the type. The second half is shredding, a separate specification with its own file layout, its own reconstruction rules, and its own operational behavior, and if you run Variant tables in production without understanding it, you will eventually stare at a query plan wondering why one table prunes beautifully and its twin scans everything.
 
-> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/variant-shredding-explained/).
+> **Cross-posted.** This article's canonical home is [Alex Merced's Lakehouse Blog](https://iceberglakehouse.com/posts/variant-shredding-explained/).
 
 This article is the internals piece. We are going below the SQL to the Parquet layer: how a Variant value is physically encoded, how the shredding specification turns one logical column into a tree of physical columns, the exact rules readers follow to reassemble values, how statistics flow from shredded columns up into Iceberg's metadata so scan planning can skip files, who decides what gets shredded and when, and the ways all of this degrades when data misbehaves. By the end you should be able to open a Parquet file from a Variant table, read its schema and column metadata, and explain precisely why a given query is fast or slow.
 

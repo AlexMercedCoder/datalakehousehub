@@ -22,7 +22,7 @@ canonical: "https://iceberglakehouse.com/posts/zero-copy-data-sharing-iceberg/"
 
 *By Alex Merced, Data Lakehouse and AI Evangelist*
 
-> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/zero-copy-data-sharing-iceberg/).
+> **Cross-posted.** This article's canonical home is [Alex Merced's Lakehouse Blog](https://iceberglakehouse.com/posts/zero-copy-data-sharing-iceberg/).
 
 A customer abandons a cart at 8 PM. That event lands in a warehouse table. A marketing platform needs it to trigger a journey, and a service platform needs it for context on the next support call. Under the architecture most enterprises still run, the event reaches those platforms after a nightly extract, a transform job, and a load into a third system that now holds its own copy.
 

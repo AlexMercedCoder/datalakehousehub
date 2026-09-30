@@ -16,7 +16,7 @@ canonical: "https://iceberglakehouse.com/posts/2024-3-06-apache-iceberg-the-grea
 
 [Apache Iceberg is an open-source table format](https://www.dremio.com/blog/apache-iceberg-101-your-guide-to-learning-apache-iceberg-concepts-and-practices/) designed for data lakehouse architectures, enabling the organization of data on data lakes in a manner similar to tables found in traditional databases and data warehouses. This innovative table format provides a crucial abstraction layer, allowing users to leverage database-like features on their data lakes. Among its key features are ACID transactions, which ensure data integrity and consistency, time travel capabilities that allow users to access historical data snapshots, and robust table evolution mechanisms for managing partitions and schema changes. By integrating these functionalities, [Apache Iceberg](https://iceberg.apache.org/) transforms data lakes into more structured and manageable environments, facilitating advanced data analytics and management tasks.
 
-> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2024-3-06-apache-iceberg-the-great-data-equalizer/).
+> **Cross-posted.** This article's canonical home is [Alex Merced's Lakehouse Blog](https://iceberglakehouse.com/posts/2024-3-06-apache-iceberg-the-great-data-equalizer/).
 
 > [Get a Free Copy of "Apache Iceberg: The Definitive Guide"](https://hello.dremio.com/wp-apache-iceberg-the-definitive-guide-reg.html)
 

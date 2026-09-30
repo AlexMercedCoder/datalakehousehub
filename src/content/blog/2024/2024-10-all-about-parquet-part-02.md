@@ -17,7 +17,7 @@ canonical: "https://iceberglakehouse.com/posts/2024-10-all-about-parquet-part-02
 
 In the first post of this series, we introduced the Apache Parquet file format and touched upon one of its key features - columnar storage. Now, we’ll take a deeper dive into what this columnar storage model is, how it works, and why it’s so efficient for big data analytics. Understanding Parquet's columnar architecture is key to leveraging its full potential in optimizing data storage and query performance.
 
-> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2024-10-all-about-parquet-part-02/).
+> **Cross-posted.** This article's canonical home is [Alex Merced's Lakehouse Blog](https://iceberglakehouse.com/posts/2024-10-all-about-parquet-part-02/).
 
 - [Free Copy of Apache Iceberg the Definitive Guide](https://hello.dremio.com/wp-apache-iceberg-the-definitive-guide-reg.html?utm_source=alexmerced&utm_medium=external_blog&utm_campaign=allaboutparquet)
 - [Free Apache Iceberg Crash Course](https://hello.dremio.com/webcast-an-apache-iceberg-lakehouse-crash-course-reg.html?utm_source=alexmerced&utm_medium=external_blog&utm_campaign=allaboutparquet)

@@ -19,7 +19,7 @@ canonical: "https://iceberglakehouse.com/posts/2026-03-connector-azure-synapse/"
 
 Microsoft Azure Synapse Analytics combines big data analytics and enterprise data warehousing into a single Azure-integrated platform. If your organization has chosen the Microsoft cloud ecosystem, your cleaned and modeled analytical data likely lives in Synapse dedicated SQL pools or serverless SQL pools. Synapse works well within Azure, but it creates challenges when you need to connect that data with AWS, Google Cloud, or on-premises databases. Azure Data Factory pipelines handle some of this, but they add cost, latency, and engineering complexity.
 
-> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-03-connector-azure-synapse/).
+> **Cross-posted.** This article's canonical home is [Alex Merced's Lakehouse Blog](https://iceberglakehouse.com/posts/2026-03-connector-azure-synapse/).
 
 Dremio Cloud connects to Azure Synapse and federates it with every other data source in your organization. Synapse queries push down to Synapse's engine for processing, and Dremio handles cross-source joins, query acceleration with Reflections, unified governance, and AI-powered analytics. You keep your investment in Synapse while extending its reach beyond the Azure ecosystem.
 

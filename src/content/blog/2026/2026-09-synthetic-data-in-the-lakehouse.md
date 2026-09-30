@@ -13,12 +13,12 @@ tags:
 slug: "synthetic-data-in-the-lakehouse"
 draft: false
 image: "/images/blog.png"
-canonical: https://iceberglakehouse.com/posts/synthetic-data-in-the-lakehouse/
+canonical: "https://iceberglakehouse.com/posts/synthetic-data-in-the-lakehouse/"
 ---
 
 A team needs to test a new pipeline against a year of production orders. Production has the data. Production also has names, addresses, payment tokens, and enough behavioral history that a single row identifies a customer. So the team does what teams do: they take a sample, run a script that replaces names with "Test User" and emails with `user{n}@example.com`, and load it into staging. The pipeline passes. In production it fails, because the masked data lost the correlation between region and payment method that a join depended on, and because nobody masked the free-text notes field, which still contains three customers' phone numbers.
 
-> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/synthetic-data-in-the-lakehouse/).
+> **Cross-posted.** This article's canonical home is [Alex Merced's Lakehouse Blog](https://iceberglakehouse.com/posts/synthetic-data-in-the-lakehouse/).
 
 Synthetic data is the attempt to do this properly: generate data that behaves like production for the purpose at hand, without being production. In a lakehouse the question has more surface than it used to, because the data is larger, the consumers are more numerous, and one of the consumers is now a model being trained or an agent being evaluated. It also has better tooling, because Apache Iceberg gives synthetic data somewhere to live with the same schema, statistics, partitioning, and governance as the real thing.
 

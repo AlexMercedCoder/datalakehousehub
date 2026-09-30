@@ -23,7 +23,7 @@ canonical: "https://iceberglakehouse.com/posts/2026-05-24-semantic-layers-text-t
 
 Text-to-SQL generated serious excitement when early demonstrations showed AI assistants turning plain English into working SQL. It also generated serious skepticism from the analytics engineers who knew what those SQL queries were actually running against: messy schemas with inconsistent column naming, duplicate business logic spread across dozens of views, and metric definitions that varied by team.
 
-> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-05-24-semantic-layers-text-to-sql/).
+> **Cross-posted.** This article's canonical home is [Alex Merced's Lakehouse Blog](https://iceberglakehouse.com/posts/2026-05-24-semantic-layers-text-to-sql/).
 
 Raw text-to-SQL, meaning a large language model receiving a database schema and a question and generating SQL directly, produces accurate results on toy datasets and embarrassing results on enterprise schemas. Accuracy rates around 40% on real-world enterprise schemas have been reported across several industry evaluations. That's below the threshold where any responsible team deploys it to business users.
 

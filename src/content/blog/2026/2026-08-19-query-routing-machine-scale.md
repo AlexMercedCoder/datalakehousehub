@@ -17,7 +17,7 @@ draft: false
 
 For most of the analytics era, query routing was a human problem with human solutions. Analysts learned which tool to open for which job, platform teams published guidance about where the big joins belonged, and the estate's workload distribution was the sum of a few hundred people's habits, corrected quarterly by a wiki page nobody read. The arrangement survived because the query population grew with headcount, which is to say slowly, and because humans absorb routing rules the way they absorb office norms, imperfectly and well enough.
 
-> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/query-routing-machine-scale/).
+> **Cross-posted.** This article's canonical home is [Alex Merced's Lakehouse Blog](https://iceberglakehouse.com/posts/query-routing-machine-scale/).
 
 Agents ended the arrangement. A single analytics assistant generates more query traffic than the department it serves, an estate's agent population multiplies that by dozens, and the traffic's character changes along with its volume: machine-issued queries cluster into repeated shapes, arrive in bursts that follow model behavior rather than business hours, chain into workflows where one slow step stalls a plan, and originate from principals that read no wiki and absorb no norms. The question "which engine, which resources, which path" now gets asked thousands of times an hour by systems that need the answer computed, not remembered, and computing it well is the difference between an estate that scales with its agents and one that melts under them.
 

@@ -23,7 +23,7 @@ canonical: "https://iceberglakehouse.com/posts/2026-05-24-lance-iceberg-multimod
 
 Apache Iceberg was designed for analytical workloads: columnar scans, partition pruning, SQL aggregations. It's excellent at returning the answer to "what was the average revenue by region for the last 30 days?" and poor at answering "give me the 500 training images most similar to this query image."
 
-> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-05-24-lance-iceberg-multimodal/).
+> **Cross-posted.** This article's canonical home is [Alex Merced's Lakehouse Blog](https://iceberglakehouse.com/posts/2026-05-24-lance-iceberg-multimodal/).
 
 The second question is random access retrieval from an embedding index, a fundamentally different access pattern. Columnar storage optimized for scan performance is inefficient for retrieving arbitrary rows by vector similarity. Iceberg tables store Parquet files, and Parquet files are optimized for column projection and predicate pushdown, not random row access.
 

@@ -19,7 +19,7 @@ canonical: "https://iceberglakehouse.com/posts/agentic-analytics-tco/"
 
 A data platform team gets a question from finance in month four of an agent rollout. The engine bill is up 38 percent and the model provider invoice arrived at a number nobody forecast. What is driving it?
 
-> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/agentic-analytics-tco/).
+> **Cross-posted.** This article's canonical home is [Alex Merced's Lakehouse Blog](https://iceberglakehouse.com/posts/agentic-analytics-tco/).
 
 The team cannot answer. Every agent runs under the same service account, so engine cost attributes to one line item labeled with a machine name. Token spend arrives as one figure from the provider with no breakdown by use case. The honest answer is that the money went somewhere and the instrumentation to say where was never built.
 

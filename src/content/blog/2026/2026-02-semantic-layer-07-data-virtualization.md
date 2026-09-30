@@ -18,7 +18,7 @@ canonical: "https://iceberglakehouse.com/posts/2026-02-sl-data-virtualization-se
 
 ![Data virtualization : connecting sources to a unified semantic layer without copying](/images/blog/semantic-layer/data-virtualization.png)
 
-> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-02-sl-data-virtualization-semantic-layer/).
+> **Cross-posted.** This article's canonical home is [Alex Merced's Lakehouse Blog](https://iceberglakehouse.com/posts/2026-02-sl-data-virtualization-semantic-layer/).
 
 Every data pipeline you build to move data from one system to another costs you three things: time to build it, money to run it, and freshness you lose while waiting for the next sync. Most analytics architectures accept this cost as unavoidable. It isn't.
 

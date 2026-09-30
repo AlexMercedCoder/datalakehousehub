@@ -12,7 +12,11 @@ tags:
 slug: snowflake-interoperable-lakehouse-production-lessons
 draft: false
 image: "/images/blog.png"
+canonical: "https://iceberglakehouse.com/posts/snowflake-interoperable-lakehouse-production-lessons/"
 ---
+
+> **Cross-posted.** This article's canonical home is [Alex Merced's Lakehouse Blog](https://iceberglakehouse.com/posts/snowflake-interoperable-lakehouse-production-lessons/).
+
 # Snowflake Interoperable Lakehouse Lessons
 
 

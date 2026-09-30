@@ -21,7 +21,7 @@ canonical: "https://iceberglakehouse.com/posts/iceberg-v3-deletion-vectors-merge
 
 *By Alex Merced, Data Lakehouse and AI Evangelist*
 
-> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/iceberg-v3-deletion-vectors-merge-on-read/).
+> **Cross-posted.** This article's canonical home is [Alex Merced's Lakehouse Blog](https://iceberglakehouse.com/posts/iceberg-v3-deletion-vectors-merge-on-read/).
 
 A change data capture pipeline lands updates from an operational database every thirty seconds. Under Iceberg V2 with merge-on-read, each of those commits writes a small positional delete file. By the end of a day, one 512 MB data file is associated with forty separate delete files. A query that touches that data file opens all forty, joins them against row positions, and masks the deleted rows before returning anything.
 

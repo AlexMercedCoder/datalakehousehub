@@ -17,7 +17,7 @@ draft: false
 
 Warehouse migrations have a reputation, and the reputation is earned. The classic project copies everything: export the tables, rebuild the schemas, port the pipelines, recreate the reports, run both systems in parallel until trust transfers, then cut over. Industry analyses of these projects find the same pattern year after year: significant delays in a large share of them, parallel-run periods that stretch from months into years, and organizations paying two full infrastructure bills long past the date the business case promised one. The migration becomes a residency.
 
-> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/zero-copy-warehouse-modernization-iceberg/).
+> **Cross-posted.** This article's canonical home is [Alex Merced's Lakehouse Blog](https://iceberglakehouse.com/posts/zero-copy-warehouse-modernization-iceberg/).
 
 The failure is not in the destination. Open lakehouse architectures on Apache Iceberg deliver what they promise. The failure is in the verb. Copying an estate means recreating every dependency the estate accumulated over a decade, all at once, under a project deadline, while the business keeps changing the source. There is a different verb available now, and this article is about it: connect first, copy last, and only copy what earns it.
 

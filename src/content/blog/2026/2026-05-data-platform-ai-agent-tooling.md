@@ -22,7 +22,7 @@ canonical: "https://iceberglakehouse.com/posts/data-platform-ai-agent-tooling/"
 <!- Primary Keyword: Data platform AI agent tooling ->
 <!- Secondary Keywords: agentic analytics, data platform agents, MCP server data, lakehouse AI agents ->
 
-> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/data-platform-ai-agent-tooling/).
+> **Cross-posted.** This article's canonical home is [Alex Merced's Lakehouse Blog](https://iceberglakehouse.com/posts/data-platform-ai-agent-tooling/).
 
 Every data platform vendor now offers some form of AI agent tooling. The approaches vary widely, from full agent authoring frameworks to MCP server endpoints to semantic layers designed for agent consumption. This article walks through eleven platforms and what each one offers for building, deploying, and running AI agents on your data.
 

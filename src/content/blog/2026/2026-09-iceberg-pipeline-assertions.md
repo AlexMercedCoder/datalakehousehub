@@ -1,7 +1,7 @@
 ---
 title: "What to Assert When You Test an Iceberg Pipeline"
 date: 2026-09-10T12:00:00Z
-canonical: https://iceberglakehouse.com/posts/iceberg-pipeline-assertions/
+canonical: "https://iceberglakehouse.com/posts/iceberg-pipeline-assertions/"
 description: "Fixtures, in-memory catalogs, and golden metadata: the assertions that catch wrong rows, unsafe reruns, schema drift, and concurrent-write corruption in CI."
 author: "Alex Merced"
 category: "Data Engineering"
@@ -17,7 +17,7 @@ image: "/images/blog.png"
 bannerImage: "/images/blog.png"
 ---
 
-> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/iceberg-pipeline-assertions/).
+> **Cross-posted.** This article's canonical home is [Alex Merced's Lakehouse Blog](https://iceberglakehouse.com/posts/iceberg-pipeline-assertions/).
 
 Here is a test that passes on every pipeline I have ever seen and proves almost nothing:
 

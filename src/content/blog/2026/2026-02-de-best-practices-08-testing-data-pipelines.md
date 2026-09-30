@@ -18,7 +18,7 @@ canonical: "https://iceberglakehouse.com/posts/2026-02-debp-testing-data-pipelin
 
 ![Data pipeline testing pyramid with schema tests at the base, contract tests in the middle, and regression tests at the top](/images/blog/debp/testing-pyramid.png)
 
-> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-02-debp-testing-data-pipelines/).
+> **Cross-posted.** This article's canonical home is [Alex Merced's Lakehouse Blog](https://iceberglakehouse.com/posts/2026-02-debp-testing-data-pipelines/).
 
 Ask an application developer how they test their code and they'll describe unit tests, integration tests, CI/CD pipelines, and coverage metrics. Ask a data engineer the same question and the most common answer is: "we check the dashboard."
 

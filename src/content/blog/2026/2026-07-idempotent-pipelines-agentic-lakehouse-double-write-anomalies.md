@@ -10,7 +10,7 @@ tags:
 slug: "idempotent-pipelines-agentic-lakehouse-double-write-anomalies"
 draft: false
 image: "/images/blog.png"
-canonical: https://iceberglakehouse.com/posts/idempotent-pipelines-agentic-lakehouse-double-write-anomalies/
+canonical: "https://iceberglakehouse.com/posts/idempotent-pipelines-agentic-lakehouse-double-write-anomalies/"
 description: "Agents retry. Networks fail. Jobs time out after doing some work. APIs return ambiguous responses. Schedulers run the same workflow twice."
 ---
 
@@ -18,7 +18,7 @@ description: "Agents retry. Networks fail. Jobs time out after doing some work. 
 
 Agents retry. Networks fail. Jobs time out after doing some work. APIs return ambiguous responses. Schedulers run the same workflow twice. A human clicks rerun. A model decides to repair a pipeline that is already being repaired.
 
-> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/idempotent-pipelines-agentic-lakehouse-double-write-anomalies/).
+> **Cross-posted.** This article's canonical home is [Alex Merced's Lakehouse Blog](https://iceberglakehouse.com/posts/idempotent-pipelines-agentic-lakehouse-double-write-anomalies/).
 
 That is why idempotency matters in the agentic lakehouse.
 

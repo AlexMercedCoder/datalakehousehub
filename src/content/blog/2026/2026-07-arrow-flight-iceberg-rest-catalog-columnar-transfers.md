@@ -10,7 +10,7 @@ tags:
 slug: "arrow-flight-iceberg-rest-catalog-columnar-transfers"
 draft: false
 image: "/images/blog.png"
-canonical: https://iceberglakehouse.com/posts/arrow-flight-iceberg-rest-catalog-columnar-transfers/
+canonical: "https://iceberglakehouse.com/posts/arrow-flight-iceberg-rest-catalog-columnar-transfers/"
 description: "Modern lakehouse architecture is easier to reason about when you separate two questions. The first question is how a system discovers and governs a table."
 ---
 
@@ -18,7 +18,7 @@ description: "Modern lakehouse architecture is easier to reason about when you s
 
 Modern lakehouse architecture is easier to reason about when you separate two questions. The first question is how a system discovers and governs a table. The second question is how data moves once a query has something to return.
 
-> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/arrow-flight-iceberg-rest-catalog-columnar-transfers/).
+> **Cross-posted.** This article's canonical home is [Alex Merced's Lakehouse Blog](https://iceberglakehouse.com/posts/arrow-flight-iceberg-rest-catalog-columnar-transfers/).
 
 Apache Iceberg REST Catalog and Apache Arrow Flight answer different parts of that puzzle. The Iceberg REST Catalog gives engines a standard way to interact with table metadata and catalog operations. Arrow Flight gives systems a high-performance way to move Arrow columnar data over RPC. One is mostly about the control plane. The other is mostly about the data plane.
 

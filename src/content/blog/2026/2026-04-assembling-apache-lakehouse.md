@@ -25,7 +25,7 @@ canonical: "https://iceberglakehouse.com/posts/2026-03-07-assembling-apache-lake
 * [Part 6: Assembling the Apache Lakehouse](/blog/2026-04-assembling-apache-lakehouse)
 * [Part 7: Agentic Analytics on the Apache Lakehouse](/blog/2026-04-agentic-analytics)
 
-> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-03-07-assembling-apache-lakehouse/).
+> **Cross-posted.** This article's canonical home is [Alex Merced's Lakehouse Blog](https://iceberglakehouse.com/posts/2026-03-07-assembling-apache-lakehouse/).
 
 For decades, the standard data architecture was monolithic. When you bought a data warehouse, you bought a single box where the vendor tightly coupled the storage format, the database rules, the metadata catalog, and the compute engine. If you wanted to query your data with a different tool, you had to physically extract the data from the warehouse and pay to store it somewhere else. 
 

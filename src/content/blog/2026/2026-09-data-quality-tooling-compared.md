@@ -13,12 +13,12 @@ tags:
 slug: "data-quality-tooling-compared"
 draft: false
 image: "/images/blog.png"
-canonical: https://iceberglakehouse.com/posts/data-quality-tooling-compared/
+canonical: "https://iceberglakehouse.com/posts/data-quality-tooling-compared/"
 ---
 
 A revenue dashboard shows a 40 percent drop for yesterday. Every pipeline reported success. Every dbt test passed. The orders table has a fresh snapshot with a plausible row count. Three hours of investigation later, the cause is a source system that started sending amounts in cents instead of dollars after an upgrade nobody announced. No test checked that. No test was going to, because nobody knew to write it.
 
-> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/data-quality-tooling-compared/).
+> **Cross-posted.** This article's canonical home is [Alex Merced's Lakehouse Blog](https://iceberglakehouse.com/posts/data-quality-tooling-compared/).
 
 That story has two halves, and data quality tooling has split along the same line. The first half is validation: rules written in advance, evaluated after a load, that fail when the data violates them. Great Expectations, Soda, and dbt tests are validation tools, and they catch what someone anticipated. The second half is anomaly detection: statistical monitoring of volume, freshness, distribution, and schema over time, that alerts when the data departs from its own history. Elementary, Monte Carlo, Anomalo, Bigeye, and the observability features in the major platforms are detection tools, and they catch what nobody anticipated.
 

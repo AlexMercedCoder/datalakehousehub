@@ -17,7 +17,7 @@ draft: false
 
 Ask four systems in the same company what "monthly active users" means and you get four answers. The BI tool counts distinct user IDs with at least one session in the calendar month. The product analytics platform counts users with at least one qualifying event in a trailing 30-day window. The finance model counts billable seats that logged in. The AI agent someone stood up last quarter asked the warehouse for "active users" and got whatever the first table with that column name returned. Every one of those definitions is defensible. Every one of them lives in a different tool, in a different format, and none of them can be read by the others.
 
-> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/apache-ossie-polaris-semantic-models/).
+> **Cross-posted.** This article's canonical home is [Alex Merced's Lakehouse Blog](https://iceberglakehouse.com/posts/apache-ossie-polaris-semantic-models/).
 
 That is the fragmentation problem semantic layers exist to solve, and for a decade the solution has been to pick one vendor's semantic layer and re-implement everything else against it. The metric definitions became a moat. The moment you wanted a second BI tool or a new agent framework, you re-typed the definitions, and they drifted.
 

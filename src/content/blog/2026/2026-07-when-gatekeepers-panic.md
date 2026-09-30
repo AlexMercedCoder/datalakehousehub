@@ -13,12 +13,12 @@ tags:
 slug: when-gatekeepers-panic
 draft: false
 image: /images/blog.png
-canonical: https://iceberglakehouse.com/posts/when-gatekeepers-panic/
+canonical: "https://iceberglakehouse.com/posts/when-gatekeepers-panic/"
 ---
 
 *By Alex Merced*
 
-> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/when-gatekeepers-panic/).
+> **Cross-posted.** This article's canonical home is [Alex Merced's Lakehouse Blog](https://iceberglakehouse.com/posts/when-gatekeepers-panic/).
 
 In 1759, Pope Clement XIII ordered the owners of a book to hand their copies to a priest for burning. The penalty for refusal was excommunication. That same year, King Louis XV of France banned the book outright. The offending work was not a heresy tract or a revolutionary pamphlet. It was an encyclopedia.
 

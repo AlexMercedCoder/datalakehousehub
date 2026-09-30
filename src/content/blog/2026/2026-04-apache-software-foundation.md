@@ -25,7 +25,7 @@ canonical: "https://iceberglakehouse.com/posts/2026-03-07-apache-software-founda
 * [Part 6: Assembling the Apache Lakehouse](/blog/2026-04-assembling-apache-lakehouse)
 * [Part 7: Agentic Analytics on the Apache Lakehouse](/blog/2026-04-agentic-analytics)
 
-> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-03-07-apache-software-foundation/).
+> **Cross-posted.** This article's canonical home is [Alex Merced's Lakehouse Blog](https://iceberglakehouse.com/posts/2026-03-07-apache-software-foundation/).
 
 If you build a modern data lakehouse, you inevitably stack Apache Iceberg, Apache Parquet, and Apache Arrow. These projects dictate how you store, query, and govern petabytes of data. But the code itself is only half the story. The legal and operational framework supporting that code dictates whether a project survives for decades or gets hijacked by a single vendor. 
 

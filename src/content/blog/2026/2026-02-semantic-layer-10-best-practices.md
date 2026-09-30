@@ -18,7 +18,7 @@ canonical: "https://iceberglakehouse.com/posts/2026-02-sl-semantic-layer-best-pr
 
 ![Semantic layer best practices checklist : checks and mistakes](/images/blog/semantic-layer/best-practices.png)
 
-> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-02-sl-semantic-layer-best-practices/).
+> **Cross-posted.** This article's canonical home is [Alex Merced's Lakehouse Blog](https://iceberglakehouse.com/posts/2026-02-sl-semantic-layer-best-practices/).
 
 Semantic layers don't fail because the technology is wrong. They fail because of design decisions made in the first two weeks : choices that seem reasonable at the time and create compounding problems for months afterward.
 

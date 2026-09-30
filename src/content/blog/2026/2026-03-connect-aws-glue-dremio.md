@@ -19,7 +19,7 @@ canonical: "https://iceberglakehouse.com/posts/2026-03-connector-aws-glue/"
 
 AWS Glue Data Catalog is AWS's managed metadata service for data lakes. It stores table definitions, schemas, partition information, and statistics for data stored in Amazon S3. If you've built your data lake on AWS using Apache Spark (on EMR), AWS Glue ETL jobs, or Amazon Athena, your table metadata lives in Glue. But Glue is just a catalog : a registry of what's where. To actually query the data, you need Athena (per-TB pricing), EMR clusters (infrastructure management), or Redshift Spectrum (additional cost).
 
-> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-03-connector-aws-glue/).
+> **Cross-posted.** This article's canonical home is [Alex Merced's Lakehouse Blog](https://iceberglakehouse.com/posts/2026-03-connector-aws-glue/).
 
 Dremio Cloud connects to your Glue Data Catalog and queries the underlying Iceberg tables with full read and write support. You get enterprise-grade SQL, Reflections for query acceleration, governance, and AI analytics : all on top of your existing Glue-managed lakehouse.
 

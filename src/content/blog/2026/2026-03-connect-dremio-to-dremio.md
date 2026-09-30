@@ -19,7 +19,7 @@ canonical: "https://iceberglakehouse.com/posts/2026-03-connector-dremio-to-dremi
 
 Dremio Cloud can connect to Dremio Software (self-managed) instances as a federated data source. This creates a hybrid deployment where Dremio Cloud serves as the primary query interface while accessing datasets managed by Dremio Software instances running in your own data centers or private cloud.
 
-> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-03-connector-dremio-to-dremio/).
+> **Cross-posted.** This article's canonical home is [Alex Merced's Lakehouse Blog](https://iceberglakehouse.com/posts/2026-03-connector-dremio-to-dremio/).
 
 This connector is designed for organizations that have existing Dremio Software deployments and are adopting Dremio Cloud for new workloads, or that need to federate data across a cloud-managed Dremio platform and on-premises Dremio instances.
 

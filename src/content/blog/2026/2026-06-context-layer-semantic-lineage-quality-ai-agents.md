@@ -13,7 +13,11 @@ tags:
 slug: context-layer-semantic-lineage-quality-ai-agents
 draft: false
 image: "/images/blog.png"
+canonical: "https://iceberglakehouse.com/posts/context-layer-semantic-lineage-quality-ai-agents/"
 ---
+
+> **Cross-posted.** This article's canonical home is [Alex Merced's Lakehouse Blog](https://iceberglakehouse.com/posts/context-layer-semantic-lineage-quality-ai-agents/).
+
 # The Context Layer for AI Agents
 
 

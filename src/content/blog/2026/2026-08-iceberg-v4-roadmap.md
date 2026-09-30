@@ -20,7 +20,7 @@ canonical: "https://iceberglakehouse.com/posts/iceberg-v4-roadmap/"
 
 *By Alex Merced, Data Lakehouse and AI Evangelist*
 
-> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/iceberg-v4-roadmap/).
+> **Cross-posted.** This article's canonical home is [Alex Merced's Lakehouse Blog](https://iceberglakehouse.com/posts/iceberg-v4-roadmap/).
 
 A Flink job commits every five seconds. Each commit writes one small Parquet file. It also writes a manifest, rewrites a manifest list, and writes a new `metadata.json`. Three metadata objects for one data file, seventeen thousand times a day, against object storage that starts throttling when you hammer the same prefix.
 

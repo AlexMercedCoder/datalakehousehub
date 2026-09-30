@@ -17,7 +17,7 @@ canonical: "https://iceberglakehouse.com/posts/2024-10-all-about-parquet-part-07
 
 In the previous posts, we’ve covered how Parquet optimizes storage through columnar storage, compression, and encoding. Now, let’s explore another essential feature that sets Parquet apart: **metadata**. Metadata in Parquet plays a crucial role in improving data efficiency, enabling faster queries and optimized storage. In this post, we’ll dive into the different types of metadata stored in Parquet files, how metadata improves query performance, and best practices for leveraging metadata in your data pipelines.
 
-> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2024-10-all-about-parquet-part-07/).
+> **Cross-posted.** This article's canonical home is [Alex Merced's Lakehouse Blog](https://iceberglakehouse.com/posts/2024-10-all-about-parquet-part-07/).
 
 - [Free Copy of Apache Iceberg the Definitive Guide](https://hello.dremio.com/wp-apache-iceberg-the-definitive-guide-reg.html?utm_source=alexmerced&utm_medium=external_blog&utm_campaign=allaboutparquet)
 - [Free Apache Iceberg Crash Course](https://hello.dremio.com/webcast-an-apache-iceberg-lakehouse-crash-course-reg.html?utm_source=alexmerced&utm_medium=external_blog&utm_campaign=allaboutparquet)

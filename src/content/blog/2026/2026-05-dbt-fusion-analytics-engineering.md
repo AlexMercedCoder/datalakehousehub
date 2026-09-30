@@ -22,7 +22,7 @@ canonical: "https://iceberglakehouse.com/posts/2026-05-24-dbt-fusion-analytics-e
 
 The dbt Core engine that analytics engineering teams have relied on since 2017 was built in Python at a time when the job of the tool was to template SQL and run it against a warehouse. It worked well for that job. It also inherited the constraints of a text-template system: SQL was a string to be rendered, not code to be analyzed. The engine had no understanding of column references, type compatibility, or cross-model dependencies beyond the explicit `ref()` calls that connected models in the DAG.
 
-> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-05-24-dbt-fusion-analytics-engineering/).
+> **Cross-posted.** This article's canonical home is [Alex Merced's Lakehouse Blog](https://iceberglakehouse.com/posts/2026-05-24-dbt-fusion-analytics-engineering/).
 
 dbt Fusion, launched as a public beta on May 28, 2025, is a ground-up rewrite of the dbt execution engine in Rust. It isn't a version update or a performance patch, it's a different execution model. SQL is now treated as an abstract syntax tree (AST) that the engine understands statically, before any query reaches the warehouse. The downstream effects of this architectural change touch everything from local development experience to CI pipeline cost.
 

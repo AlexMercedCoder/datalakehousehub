@@ -17,7 +17,7 @@ draft: false
 
 A security audit asks a simple question: who can read the `customers.pii` table, and when was that last changed? The data platform team opens four consoles. The Spark cluster has its own ACLs. The Trino deployment has a Ranger policy set. The BI tool has its own row-level security config. The catalog has grants that were entered by hand over two years. The answers differ. Nobody can say which one is authoritative, and nobody can say who changed what, when, or why, because none of it is in version control.
 
-> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/governance-as-code-lakehouse-rest-catalog/).
+> **Cross-posted.** This article's canonical home is [Alex Merced's Lakehouse Blog](https://iceberglakehouse.com/posts/governance-as-code-lakehouse-rest-catalog/).
 
 That is the state of most lakehouse governance today, and it is a direct consequence of how the lakehouse was assembled. Open table formats let many engines read the same data, which is the whole point. But each engine brought its own security model, so "many engines" became "many places to define permissions, " and the permissions drifted apart. The fix is not a better console. It is moving the definitions out of the engines and into the layer they all share, the catalog, and managing that layer the way infrastructure has been managed for a decade: as code, in Git, applied by a pipeline, with a plan step before every change and a drift check after.
 

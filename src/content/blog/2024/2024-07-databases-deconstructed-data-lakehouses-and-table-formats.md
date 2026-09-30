@@ -15,7 +15,7 @@ canonical: "https://iceberglakehouse.com/posts/2024-7-databases-decontstructed-v
 
 Databases and data warehouses are powerful systems that simplify working with data by abstracting many of the inherent challenges, including:
 
-> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2024-7-databases-decontstructed-value-of-data-lakehouses-and-table-formats/).
+> **Cross-posted.** This article's canonical home is [Alex Merced's Lakehouse Blog](https://iceberglakehouse.com/posts/2024-7-databases-decontstructed-value-of-data-lakehouses-and-table-formats/).
 
 - [Checkout out my Apache Iceberg Crash Course](https://bit.ly/am-2024-iceberg-live-crash-course-1)
 - [Get a free copy of Apache Iceberg the Definitive Guide](https://bit.ly/am-iceberg-book)

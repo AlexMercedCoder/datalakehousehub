@@ -10,7 +10,7 @@ tags:
 slug: "personal-vs-shared-context"
 draft: false
 image: "/images/blog.png"
-canonical: https://iceberglakehouse.com/posts/personal-vs-shared-context/
+canonical: "https://iceberglakehouse.com/posts/personal-vs-shared-context/"
 description: "By Alex Merced, Head of Developer Relations at Dremio"
 ---
 
@@ -18,7 +18,7 @@ description: "By Alex Merced, Head of Developer Relations at Dremio"
 
 *By Alex Merced, Head of Developer Relations at Dremio*
 
-> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/personal-vs-shared-context/).
+> **Cross-posted.** This article's canonical home is [Alex Merced's Lakehouse Blog](https://iceberglakehouse.com/posts/personal-vs-shared-context/).
 
 The most important discovery of the agent era fits in one sentence: most AI failures are context failures, not model failures. When your assistant gives a generic answer, forgets what you told it last week, invents a metric definition, or confidently applies last quarter's policy, the model underneath was usually working fine. What failed was the pipeline that decides what the model knows at the moment it answers.
 

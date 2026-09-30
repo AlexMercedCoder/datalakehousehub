@@ -19,7 +19,7 @@ canonical: "https://iceberglakehouse.com/posts/2025-11-dremio-next-gen-cloud-tut
 
 [Video Playlist of this Walkthough](https://www.youtube.com/playlist?list=PL-gIUf9e9CCvY0bcRBGu2SzFFR-yJGIB6)
 
-> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2025-11-dremio-next-gen-cloud-tutorial/).
+> **Cross-posted.** This article's canonical home is [Alex Merced's Lakehouse Blog](https://iceberglakehouse.com/posts/2025-11-dremio-next-gen-cloud-tutorial/).
 
 On November 13, at the [Subsurface Lakehouse Conference](https://www.dremio.com/subsurface?utm_source=ev_external_blog&utm_medium=influencer&utm_campaign=pag&utm_term=nextgencloudtut&utm_content=alexmerced) in New York City, Dremio announced and released [Dremio Next Gen Cloud](https://www.dremio.com/?utm_source=ev_external_blog&utm_medium=influencer&utm_campaign=pag&utm_term=nextgencloudtut&utm_content=alexmerced), the most complete and accessible version of its Lakehouse Platform to date. This release advances Dremio’s mission to make data lakehouses easy, fast, and affordable for organizations of any size.
 

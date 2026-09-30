@@ -20,7 +20,7 @@ canonical: "https://iceberglakehouse.com/posts/autonomous-table-optimization/"
 
 *By Alex Merced, Data Lakehouse and AI Evangelist*
 
-> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/autonomous-table-optimization/).
+> **Cross-posted.** This article's canonical home is [Alex Merced's Lakehouse Blog](https://iceberglakehouse.com/posts/autonomous-table-optimization/).
 
 Table maintenance used to be a scheduling problem. You knew which tables were hot, you knew that dashboards filtered on order date and region, and you knew the batch window ran from 1am to 4am. You wrote a compaction job with a sort order matching the known filters, put it on a cron, and it worked for two years.
 

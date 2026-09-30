@@ -21,7 +21,7 @@ canonical: "https://iceberglakehouse.com/posts/2026-05-24-paimon-vs-iceberg-muta
 
 Most lakehouse format comparisons skip the part that actually matters for streaming teams: how the format handles mutations. Apache Iceberg is excellent for append-heavy analytics, schema evolution, and multi-engine compatibility. But feed a high-churn CDC stream of updates and deletes into Iceberg using merge-on-read (MoR), and you're managing a growing pile of delete files that accumulate between compaction runs.
 
-> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-05-24-paimon-vs-iceberg-mutable-streams/).
+> **Cross-posted.** This article's canonical home is [Alex Merced's Lakehouse Blog](https://iceberglakehouse.com/posts/2026-05-24-paimon-vs-iceberg-mutable-streams/).
 
 Apache Paimon takes a different approach. Its Log-Structured Merge-tree (LSM-tree) architecture is designed from the ground up for continuous upserts. For the right workload (high-frequency mutations, Flink-native execution, real-time table freshness requirements) Paimon produces a cleaner operational profile than Iceberg. For the wrong workload, it's an unnecessary complexity burden.
 

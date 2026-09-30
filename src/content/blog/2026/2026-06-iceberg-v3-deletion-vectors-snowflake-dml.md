@@ -14,12 +14,9 @@ tags:
   - "copy-on-write Iceberg"
   - "Puffin files"
   - "Iceberg v3 performance"
-canonical: "https://iceberglakehouse.com/posts/2026-05-22-apache-iceberg-catalogs-explained/"
 ---
 
 A single row-level DELETE or UPDATE against a 2 TB fact table should not require rewriting hundreds of megabytes of Parquet files. That is the problem Apache Iceberg v3 deletion vectors solve, and it is the most consequential performance change to the Iceberg specification since the format was created.
-
-> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-05-22-apache-iceberg-catalogs-explained/).
 
 Deletion vectors became generally available on Snowflake on May 7, 2026, alongside Databricks Runtime 18.0+ and Amazon EMR 7.11. Early benchmarks from AWS show delete operations running 55% faster and consuming 73% less storage than the v2 positional delete approach. The mechanism is simple in concept (binary bitmaps stored in Puffin files) but the implications for merge-on-read performance, compaction strategy, and multi-engine interoperability are worth understanding in detail before you upgrade.
 

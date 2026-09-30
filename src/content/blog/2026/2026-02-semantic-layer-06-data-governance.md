@@ -18,7 +18,7 @@ canonical: "https://iceberglakehouse.com/posts/2026-02-sl-semantic-layer-data-go
 
 ![Data governance through a semantic layer : centralized policies and documentation](/images/blog/semantic-layer/governance-semantic.png)
 
-> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-02-sl-semantic-layer-data-governance/).
+> **Cross-posted.** This article's canonical home is [Alex Merced's Lakehouse Blog](https://iceberglakehouse.com/posts/2026-02-sl-semantic-layer-data-governance/).
 
 Most organizations have a data governance policy. It lives in a Confluence page. It defines who owns what data, what terms mean, and who should have access. And almost nobody follows it, because it's not enforced where queries actually run.
 

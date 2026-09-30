@@ -18,7 +18,7 @@ draft: false
 
 Here is a bill that surprises teams every quarter. A Flink pipeline streams change data capture events into an Apache Iceberg table, a few thousand updates per minute against a ten-terabyte fact table. The data itself is tiny. The cloud bill is not. Storage grows far faster than the data, object store API charges climb, and the nightly compaction job takes longer every week. Query latency creeps up too, because every read now wades through thousands of small files that exist only to say "these rows are gone."
 
-> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/apache-iceberg-v3-deletion-vectors-streaming-ingest/).
+> **Cross-posted.** This article's canonical home is [Alex Merced's Lakehouse Blog](https://iceberglakehouse.com/posts/apache-iceberg-v3-deletion-vectors-streaming-ingest/).
 
 None of that is a bug. It is the arithmetic of running row-level updates on immutable files, and for years Iceberg users paid it through one of two taxes: rewrite whole data files on every change, or accumulate delete files that readers reconcile at query time. The Iceberg v3 specification introduces deletion vectors to shrink both taxes at once, and as of the Apache Iceberg 1.11.0 release they are the stable, default mechanism for row-level deletes on v3 tables.
 

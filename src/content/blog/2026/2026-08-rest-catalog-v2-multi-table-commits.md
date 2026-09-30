@@ -20,7 +20,7 @@ canonical: "https://iceberglakehouse.com/posts/rest-catalog-v2-multi-table-commi
 
 *By Alex Merced, Data Lakehouse and AI Evangelist*
 
-> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/rest-catalog-v2-multi-table-commits/).
+> **Cross-posted.** This article's canonical home is [Alex Merced's Lakehouse Blog](https://iceberglakehouse.com/posts/rest-catalog-v2-multi-table-commits/).
 
 A dbt run updates a fact table and two dimension tables. The fact table commit succeeds. The second dimension commit fails on a conflict. For the next four minutes, every dashboard reading those three tables sees a fact table that references dimension rows that do not exist yet.
 

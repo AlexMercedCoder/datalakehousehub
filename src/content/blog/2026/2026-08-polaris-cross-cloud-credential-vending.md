@@ -21,7 +21,7 @@ canonical: "https://iceberglakehouse.com/posts/polaris-cross-cloud-credential-ve
 
 *By Alex Merced, Data Lakehouse and AI Evangelist*
 
-> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/polaris-cross-cloud-credential-vending/).
+> **Cross-posted.** This article's canonical home is [Alex Merced's Lakehouse Blog](https://iceberglakehouse.com/posts/polaris-cross-cloud-credential-vending/).
 
 Pull up the configuration for any Spark cluster that reads a data lake and look for the storage credentials. In most organizations you find an IAM role with read access to an entire warehouse bucket, or worse, an access key pair in a properties file that three teams share and nobody has rotated since the cluster was built.
 

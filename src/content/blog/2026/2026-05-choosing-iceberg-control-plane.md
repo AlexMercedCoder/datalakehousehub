@@ -21,7 +21,7 @@ canonical: "https://iceberglakehouse.com/posts/2026-05-24-choosing-iceberg-contr
 
 Modern data architecture is undergoing a quiet but fundamental shift. For years, teams focused on choosing the right open table format, debating the file-level mechanics of Delta Lake versus Apache Iceberg. Today, that format debate is largely settled by metadata interoperability.
 
-> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-05-24-choosing-iceberg-control-plane/).
+> **Cross-posted.** This article's canonical home is [Alex Merced's Lakehouse Blog](https://iceberglakehouse.com/posts/2026-05-24-choosing-iceberg-control-plane/).
 
 Databricks added native Iceberg support in June 2025, Google Cloud enabled BigQuery read/write interoperability with Iceberg-compatible engines in April 2026, and Snowflake continues to establish open catalogs as standard enterprise infrastructure. The real battleground has moved up the stack from file formats to the metadata control plane.
 

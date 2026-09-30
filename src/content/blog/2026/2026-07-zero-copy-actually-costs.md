@@ -13,12 +13,12 @@ tags:
 slug: "zero-copy-actually-costs"
 draft: false
 image: "/images/blog.png"
-canonical: https://iceberglakehouse.com/posts/zero-copy-actually-costs/
+canonical: "https://iceberglakehouse.com/posts/zero-copy-actually-costs/"
 ---
 
 A vendor demo I watched last year ended with a slide that said "no data movement." Thirty seconds earlier, the presenter had run a query joining a cloud warehouse table to an operational database and returned results in four seconds. Both statements were true. The bytes still moved. They moved over a network, from one region, into an engine, and then most of them were discarded after a filter that the remote system never saw.
 
-> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/zero-copy-actually-costs/).
+> **Cross-posted.** This article's canonical home is [Alex Merced's Lakehouse Blog](https://iceberglakehouse.com/posts/zero-copy-actually-costs/).
 
 The phrase "zero-copy" has become the most overloaded term in data architecture. Six genuinely different architectures use it, they have different failure modes, different cost profiles, and different governance stories, and buyers keep comparing them as if they were the same thing. A team picks the wrong one, discovers the cost in production, and concludes that federation does not work or that sharing is slow. Usually the technology was fine and the fit was wrong.
 

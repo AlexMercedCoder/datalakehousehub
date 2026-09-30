@@ -17,7 +17,7 @@ draft: false
 
 A global retailer's revenue dashboard needs four sources. Orders are in an Apache Iceberg table on S3 in Virginia. Customers are in an Iceberg table on Google Cloud Storage in Belgium, inherited from an acquisition. Inventory is in a PostgreSQL database on Azure in a sovereign region that regulators say cannot leave. Currency rates come from a SaaS API cached in a small table nobody remembers creating. The dashboard wants revenue by customer segment by product category in local currency, refreshed hourly, under two seconds.
 
-> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/semantic-layer-federation-three-clouds/).
+> **Cross-posted.** This article's canonical home is [Alex Merced's Lakehouse Blog](https://iceberglakehouse.com/posts/semantic-layer-federation-three-clouds/).
 
 The standard answer is to replicate. Copy customers and inventory to Virginia every night, build the dashboard there, and accept that the numbers are a day old and the copy jobs are somebody's problem. Three years in, that company has 40 replication pipelines, 11 copies of the customer table in various states of freshness, an egress line item that finance asks about every quarter, and a security review that found four of the copies had wider permissions than the source.
 

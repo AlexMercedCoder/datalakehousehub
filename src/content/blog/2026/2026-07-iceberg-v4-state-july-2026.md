@@ -1,7 +1,7 @@
 ---
 title: "The State of Apache Iceberg v4 in July 2026: What the Dev List Tells Us About the Format's Next Chapter"
 date: 2026-07-06T12:00:00Z
-canonical: https://iceberglakehouse.com/posts/iceberg-v4-state-july-2026/
+canonical: "https://iceberglakehouse.com/posts/iceberg-v4-state-july-2026/"
 description: "What the Iceberg v4 dev list tells us about adaptive metadata trees, single-file commits, column updates, and the format's next chapter in mid-2026."
 author: "Alex Merced"
 category: "Apache Iceberg"
@@ -21,7 +21,7 @@ bannerImage: "/images/blog.png"
 
 *By Alex Merced, Head of Developer Relations at Dremio*
 
-> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/iceberg-v4-state-july-2026/).
+> **Cross-posted.** This article's canonical home is [Alex Merced's Lakehouse Blog](https://iceberglakehouse.com/posts/iceberg-v4-state-july-2026/).
 
 If you want to know where Apache Iceberg is headed, do not read the press releases. Read the dev mailing list.
 

@@ -18,7 +18,7 @@ canonical: "https://iceberglakehouse.com/posts/2026-02-sl-semantic-layer-vs-metr
 
 ![Semantic layer vs metrics layer : the metrics layer is a subset](/images/blog/semantic-layer/semantic-vs-metrics.png)
 
-> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-02-sl-semantic-layer-vs-metrics-layer/).
+> **Cross-posted.** This article's canonical home is [Alex Merced's Lakehouse Blog](https://iceberglakehouse.com/posts/2026-02-sl-semantic-layer-vs-metrics-layer/).
 
 Both terms appear in every modern data architecture diagram. They're used interchangeably in conference talks, Slack threads, and vendor marketing. And almost nobody defines them precisely.
 

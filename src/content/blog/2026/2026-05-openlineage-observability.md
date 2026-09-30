@@ -22,7 +22,7 @@ canonical: "https://iceberglakehouse.com/posts/2026-05-24-openlineage-observabil
 
 Data platform incidents follow a predictable pattern. A pipeline fails or a dashboard goes stale. Someone opens Slack and asks which table feeds that dashboard. Someone else checks the Airflow UI and traces it to a Spark job. A third person pulls up the dbt DAG and realizes the issue is three steps upstream in a staging model that reads from an Iceberg table that failed due to a schema change two days ago. The entire investigation takes hours of manual archaeology.
 
-> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-05-24-openlineage-observability/).
+> **Cross-posted.** This article's canonical home is [Alex Merced's Lakehouse Blog](https://iceberglakehouse.com/posts/2026-05-24-openlineage-observability/).
 
 OpenLineage was built to make this archaeology unnecessary. It provides a standardized API for tools across the data stack (Airflow, Spark, Flink, dbt) to emit structured lineage events as pipelines run. Those events flow to a lineage backend (Marquez, DataHub, or similar) that assembles them into a searchable, queryable dependency graph. When something breaks, the graph shows exactly which downstream assets are affected without requiring a human to trace the dependency tree manually.
 

@@ -19,7 +19,7 @@ canonical: "https://iceberglakehouse.com/posts/2026-04-29-iceberg-masterclass-09
 <!- Primary Keyword: Iceberg storage degradation ->
 <!- Secondary Keywords: small file problem, orphan files, Iceberg table maintenance ->
 
-> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-04-29-iceberg-masterclass-09/).
+> **Cross-posted.** This article's canonical home is [Alex Merced's Lakehouse Blog](https://iceberglakehouse.com/posts/2026-04-29-iceberg-masterclass-09/).
 
 *Read the complete Apache Iceberg Masterclass series:*
 * [Part 1: What Are Table Formats and Why Were They Needed?](/blog/2026-04-29-apache-iceberg-masterclass-01-table-formats)

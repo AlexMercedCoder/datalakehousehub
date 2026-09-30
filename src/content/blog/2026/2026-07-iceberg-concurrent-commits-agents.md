@@ -19,7 +19,7 @@ canonical: "https://iceberglakehouse.com/posts/iceberg-concurrent-commits-agents
 
 A compaction job runs for three hours, rewrites 4, 000 files, and dies at the last step with `CommitFailedException: Cannot commit changes based on stale table metadata`. The cluster time is gone. The table is unchanged. Somebody reruns it that night and the same thing happens.
 
-> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/iceberg-concurrent-commits-agents/).
+> **Cross-posted.** This article's canonical home is [Alex Merced's Lakehouse Blog](https://iceberglakehouse.com/posts/iceberg-concurrent-commits-agents/).
 
 This is the most expensive failure mode in Apache Iceberg operations, and it is not a bug. It is optimistic concurrency control doing exactly what the design says it does. The writer assumed it was alone, did all its work, and found out at the end that it was not.
 

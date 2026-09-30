@@ -20,7 +20,7 @@ canonical: "https://iceberglakehouse.com/posts/batch-pipelines-into-apache-icebe
 
 The pipeline runs at 2 a.m. It reads yesterday's extract, does its transformations, and writes to an Apache Iceberg table. Six months later the same pipeline takes four times as long, the downstream dashboard takes 40 seconds to load, and somebody opens a ticket asking why the lakehouse is slow. Nothing broke. The pipeline is doing exactly what it was told. The problem is that nobody decided what it should have been told.
 
-> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/batch-pipelines-into-apache-iceberg/).
+> **Cross-posted.** This article's canonical home is [Alex Merced's Lakehouse Blog](https://iceberglakehouse.com/posts/batch-pipelines-into-apache-iceberg/).
 
 I have reviewed a lot of these pipelines. The failures are rarely exotic. They come from a handful of decisions that get made by default at the start and never revisited: how big a batch is, how often it commits, how the data lands on disk, who cleans up afterward, and what happens when two jobs touch the same table at the same time. Each of those decisions has a right answer that follows from your read patterns and your service level agreements, and each has a default that follows from whatever the engine did without being asked.
 

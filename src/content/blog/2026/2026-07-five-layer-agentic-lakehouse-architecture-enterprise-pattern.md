@@ -16,7 +16,7 @@ canonical: "https://iceberglakehouse.com/posts/five-layer-agentic-lakehouse-arch
 
 Hand an AI agent a database connection string and broad SQL access, and you have built the fastest possible path to an inconsistent, unauditable, and occasionally dangerous analytics system. The agent will query things it should not, define metrics however the schema suggests, and leave you no clean record of why it did what it did. The problem is not the agent's competence. It is that you gave it raw storage access with no layer in between to supply meaning, constrain actions, and enforce policy.
 
-> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/five-layer-agentic-lakehouse-architecture-enterprise-pattern/).
+> **Cross-posted.** This article's canonical home is [Alex Merced's Lakehouse Blog](https://iceberglakehouse.com/posts/five-layer-agentic-lakehouse-architecture-enterprise-pattern/).
 
 Trusted agentic analytics needs architectural boundaries, the same way a well-built application does not let the UI reach straight into the database. The pattern that has emerged for this is a five-layer model: Data, Knowledge, Agent, Tool, and Policy. Each layer has a distinct job, and the separation is what makes the whole system reviewable and safe. This post walks through each layer, what belongs in it, and where the boundaries between them matter most. It closes with a checklist you can run against your own architecture.
 

@@ -18,7 +18,7 @@ canonical: "https://iceberglakehouse.com/posts/2024-9-a-deep-dive-into-docker-co
 
 Docker Compose uses a YAML file (`docker-compose.yml`) to define services, networks, and volumes that make up your application. The structure is easy to understand and is highly configurable, allowing you to manage multiple containers with a single file.
 
-> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2024-9-a-deep-dive-into-docker-compose/).
+> **Cross-posted.** This article's canonical home is [Alex Merced's Lakehouse Blog](https://iceberglakehouse.com/posts/2024-9-a-deep-dive-into-docker-compose/).
 
 Here’s an overview of the basic components of a `docker-compose.yml` file:
 

@@ -17,7 +17,7 @@ draft: false
 
 A Spark job reads a 4 terabyte Apache Iceberg table, filters it down to a week of data, joins it against a dimension table, and aggregates. On paper the plan is simple. In the Spark UI, the scan stage takes 70 percent of the wall clock time, executors show long garbage collection pauses in the middle of the scan, and the CPU is busy but not busy doing anything you asked for. The work is decoding Parquet pages into Java objects, copying them into Spark's internal row format, and cleaning up the garbage afterward.
 
-> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/datafusion-comet-1-spark-iceberg/).
+> **Cross-posted.** This article's canonical home is [Alex Merced's Lakehouse Blog](https://iceberglakehouse.com/posts/datafusion-comet-1-spark-iceberg/).
 
 That cost is structural. Spark's execution engine runs on the Java Virtual Machine (JVM), and the JVM's memory model was not designed for scanning billions of columnar values. Every value that moves through the scan touches allocation, and every allocation eventually touches the garbage collector.
 

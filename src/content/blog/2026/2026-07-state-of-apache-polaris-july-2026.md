@@ -1,7 +1,7 @@
 ---
 title: "The State of Apache Polaris in July 2026: From Incubating Catalog to the Governance Layer of the Open Lakehouse"
 date: 2026-07-06T12:00:00Z
-canonical: https://iceberglakehouse.com/posts/state-of-apache-polaris-july-2026/
+canonical: "https://iceberglakehouse.com/posts/state-of-apache-polaris-july-2026/"
 description: "Apache Polaris as a TLP, federation, credential vending, semantic layers, lineage, and how the open catalog became the governance plane."
 author: "Alex Merced"
 category: "Apache Polaris"
@@ -22,7 +22,7 @@ bannerImage: "/images/blog.png"
 
 *By Alex Merced, Head of Developer Relations at Dremio*
 
-> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/state-of-apache-polaris-july-2026/).
+> **Cross-posted.** This article's canonical home is [Alex Merced's Lakehouse Blog](https://iceberglakehouse.com/posts/state-of-apache-polaris-july-2026/).
 
 I have a personal stake in this one, so let me declare it up front. Apache Polaris was co-created by Snowflake and Dremio, I work at Dremio, and I co-authored Apache Polaris: The Definitive Guide for O'Reilly. I have watched this project from the first commit, through donation to the Apache Software Foundation in August 2024, through eighteen months of incubation, and past its graduation to a Top-Level Project in February 2026. I am not a neutral observer. What I can promise instead is accuracy, receipts from the dev list, and honesty about what is finished versus what is still forming.
 

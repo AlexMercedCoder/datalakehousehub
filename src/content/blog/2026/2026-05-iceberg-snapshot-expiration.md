@@ -16,7 +16,7 @@ canonical: "https://iceberglakehouse.com/posts/iceberg-snapshot-expiration/"
 
 Iceberg tables accumulate snapshots by design. Every write : every INSERT, UPDATE, DELETE, or compaction, creates a new snapshot. That's how Iceberg provides time travel, rollback, and concurrent reads without locks. It's a good feature, until you never clean it up.
 
-> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/iceberg-snapshot-expiration/).
+> **Cross-posted.** This article's canonical home is [Alex Merced's Lakehouse Blog](https://iceberglakehouse.com/posts/iceberg-snapshot-expiration/).
 
 A production Iceberg table that takes 100 writes per day accumulates 36, 500 snapshots in a year. Each snapshot points to manifest files, which point to data files. The metadata scan that precedes every query has to process all of that history unless you expire the snapshots that fall outside your retention window.
 

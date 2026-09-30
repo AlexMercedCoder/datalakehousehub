@@ -17,7 +17,7 @@ draft: false
 
 For twenty years, the cost of an ambiguous metric was a meeting. Two dashboards disagreed, two teams defended their numbers, someone scheduled the reconciliation call, and the organization paid in hours and mild embarrassment. In 2026 the cost structure changed, because the consumers changed: business logic is now executed by agents, dozens of them, built on different frameworks, answering thousands of questions a day, each one an opportunity to re-derive "revenue" slightly differently at machine speed for an audience that cannot check the work. The ambiguous metric stopped being a meeting and became a defect generator, and the artifact that fixes it has a name worth taking seriously: the metric contract.
 
-> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/metric-contracts-2026/).
+> **Cross-posted.** This article's canonical home is [Alex Merced's Lakehouse Blog](https://iceberglakehouse.com/posts/metric-contracts-2026/).
 
 A metric contract is to business logic what a schema contract is to data and an API contract is to services: a versioned, owned, testable declaration of exactly what a business measure means, complete enough that any consumer, human, dashboard, or agent on any framework, computes it identically or does not compute it at all. The concept is not new, semantic layers have carried metric definitions for years, and 2026 is the year it hardened into a discipline, driven by the multi-agent estates that made informal definitions untenable and enabled by the interchange standards that made formal ones portable.
 

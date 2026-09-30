@@ -17,7 +17,7 @@ canonical: "https://iceberglakehouse.com/posts/2024-10-all-about-parquet-part-06
 
 In the last blog, we explored the various compression techniques supported by Parquet to reduce file size and improve query performance. But compression alone isn’t enough to maximize storage efficiency. Parquet also utilizes **encoding techniques** to further optimize how data is stored, especially for columns with repetitive or predictable patterns. In this post, we’ll dive into how encoding works in Parquet, the different types of encoding it supports, and how to use them to reduce storage footprint while maintaining performance.
 
-> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2024-10-all-about-parquet-part-06/).
+> **Cross-posted.** This article's canonical home is [Alex Merced's Lakehouse Blog](https://iceberglakehouse.com/posts/2024-10-all-about-parquet-part-06/).
 
 - [Free Copy of Apache Iceberg the Definitive Guide](https://hello.dremio.com/wp-apache-iceberg-the-definitive-guide-reg.html?utm_source=alexmerced&utm_medium=external_blog&utm_campaign=allaboutparquet)
 - [Free Apache Iceberg Crash Course](https://hello.dremio.com/webcast-an-apache-iceberg-lakehouse-crash-course-reg.html?utm_source=alexmerced&utm_medium=external_blog&utm_campaign=allaboutparquet)

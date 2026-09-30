@@ -23,7 +23,7 @@ canonical: "https://iceberglakehouse.com/posts/2025-06-what-is-an-api/"
 - **[Iceberg Lakehouse Engineering Video Playlist](https://youtube.com/playlist?list=PLsLAVBjQJO0p0Yq1fLkoHvt2lEJj5pcYe&si=WTSnqjXZv6Glkc3y)** 
 - **[Ultimate Apache Iceberg Resource Guide](https://medium.com/data-engineering-with-dremio/ultimate-directory-of-apache-iceberg-resources-e3e02efac62e)**
 
-> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2025-06-what-is-an-api/).
+> **Cross-posted.** This article's canonical home is [Alex Merced's Lakehouse Blog](https://iceberglakehouse.com/posts/2025-06-what-is-an-api/).
 
 Imagine walking into a restaurant in a foreign country where you don’t speak the language. You point at things, gesture wildly, maybe even draw pictures : anything to communicate what you want. But if you and the server spoke a common language like English or Spanish, things would go a lot smoother.
 

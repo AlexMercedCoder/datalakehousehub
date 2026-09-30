@@ -20,7 +20,7 @@ canonical: "https://iceberglakehouse.com/posts/agentic-lakehouse-mcp-architectur
 
 *By Alex Merced, Data Lakehouse and AI Evangelist*
 
-> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/agentic-lakehouse-mcp-architecture/).
+> **Cross-posted.** This article's canonical home is [Alex Merced's Lakehouse Blog](https://iceberglakehouse.com/posts/agentic-lakehouse-mcp-architecture/).
 
 Someone on your team connects an AI desktop client to a query engine, asks a question about last quarter, and gets an answer in fifteen seconds. It works. It is genuinely impressive, and the room reacts accordingly. Then somebody asks whether the sales team can have it, and the conversation stops.
 

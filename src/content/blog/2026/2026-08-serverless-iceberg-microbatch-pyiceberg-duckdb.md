@@ -17,7 +17,7 @@ draft: false
 
 A team has 40 event feeds landing in an object store. Most of them produce a few hundred megabytes an hour. A handful spike to a few gigabytes during business hours. The data needs to end up in Apache Iceberg tables within a few minutes of arrival so analysts and agents can query it. The obvious answer is a Spark Structured Streaming job, so the team stands one up. Six months later they are paying for a three-node cluster that sits at 8 percent CPU, they have a checkpoint directory nobody fully understands, and every version upgrade of Spark, Iceberg, and the cloud connector jar is a week of work.
 
-> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/serverless-iceberg-microbatch-pyiceberg-duckdb/).
+> **Cross-posted.** This article's canonical home is [Alex Merced's Lakehouse Blog](https://iceberglakehouse.com/posts/serverless-iceberg-microbatch-pyiceberg-duckdb/).
 
 The cluster was never the right tool. Spark exists to shuffle terabytes across hundreds of cores. Landing a few hundred megabytes an hour into a table is not that job. It is a job for a function that wakes up, reads a batch, writes a few Parquet files, commits to a catalog, and goes back to sleep.
 

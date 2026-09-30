@@ -19,7 +19,7 @@ canonical: "https://iceberglakehouse.com/posts/2026-03-connector-google-bigquery
 
 Google BigQuery is Google Cloud's serverless data warehouse. If your organization uses Google Cloud Platform, BigQuery is where your analytics data, marketing attribution, Google Analytics exports, and machine learning model outputs live. BigQuery is powerful within Google's ecosystem, but it creates challenges when your data spans multiple clouds or when costs grow with usage.
 
-> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-03-connector-google-bigquery/).
+> **Cross-posted.** This article's canonical home is [Alex Merced's Lakehouse Blog](https://iceberglakehouse.com/posts/2026-03-connector-google-bigquery/).
 
 BigQuery's on-demand pricing charges per terabyte scanned. For organizations with large datasets queried frequently : especially by dashboards that refresh automatically, this can result in monthly bills that grow unpredictably. And connecting BigQuery data to non-Google tools and other cloud providers requires data exports, cross-cloud networking, or third-party ETL platforms.
 

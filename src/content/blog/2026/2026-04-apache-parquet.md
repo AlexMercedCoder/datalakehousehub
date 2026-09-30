@@ -25,7 +25,7 @@ canonical: "https://iceberglakehouse.com/posts/2026-03-07-apache-parquet/"
 * [Part 6: Assembling the Apache Lakehouse](/blog/2026-04-assembling-apache-lakehouse)
 * [Part 7: Agentic Analytics on the Apache Lakehouse](/blog/2026-04-agentic-analytics)
 
-> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-03-07-apache-parquet/).
+> **Cross-posted.** This article's canonical home is [Alex Merced's Lakehouse Blog](https://iceberglakehouse.com/posts/2026-03-07-apache-parquet/).
 
 If you ask a data analyst to calculate the average transaction amount for the month of July using a massive CSV file, the compute engine must read every single line of that file. It reads the customer name, the address, the item SKUs, and the timestamps, just to find the single column it actually needs. At the petabyte scale, this row-based reading pattern guarantees slow analytics and high compute bills.
 

@@ -19,7 +19,7 @@ canonical: "https://iceberglakehouse.com/posts/2026-03-connector-mongodb/"
 
 MongoDB is the most popular NoSQL document database. It stores data in flexible JSON-like documents, making it ideal for applications with evolving schemas : user profiles, product catalogs, IoT sensor data, and content management systems. But MongoDB's document model creates analytics challenges: you can't run SQL joins natively, aggregation pipelines are complex, and connecting MongoDB data to relational sources requires custom application code or ETL.
 
-> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-03-connector-mongodb/).
+> **Cross-posted.** This article's canonical home is [Alex Merced's Lakehouse Blog](https://iceberglakehouse.com/posts/2026-03-connector-mongodb/).
 
 Dremio Cloud connects to MongoDB and exposes its collections as SQL-queryable tables. Nested documents appear as structured columns, and you can join MongoDB data with relational databases, data lakes, and cloud warehouses using standard SQL.
 

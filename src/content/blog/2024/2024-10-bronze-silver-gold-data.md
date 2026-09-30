@@ -16,7 +16,7 @@ canonical: "https://iceberglakehouse.com/posts/2024-10-bronze-silver-gold-data/"
 
 Organizing and curating data efficiently is key to delivering actionable insights. One of the most time-tested patterns for structuring data is the three-tier data organization pattern. This approach has been around for years, with each layer representing a different level of processing, from raw ingestion to fully prepared data ready for business use. While the names for these layers have changed over time, the concept remains foundational to managing data flows in complex environments.
 
-> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2024-10-bronze-silver-gold-data/).
+> **Cross-posted.** This article's canonical home is [Alex Merced's Lakehouse Blog](https://iceberglakehouse.com/posts/2024-10-bronze-silver-gold-data/).
 
 - [Apache Iceberg 101](https://www.dremio.com/lakehouse-deep-dives/apache-iceberg-101/?utm_source=ev_external_blog&utm_medium=influencer&utm_campaign=threelayers&utm_content=alexmerced&utm_term=external_blog)
 - [Hands-on Intro with Apache iceberg](https://www.dremio.com/blog/intro-to-dremio-nessie-and-apache-iceberg-on-your-laptop/?utm_source=ev_external_blog&utm_medium=influencer&utm_campaign=threelayers&utm_content=alexmerced&utm_term=external_blog)

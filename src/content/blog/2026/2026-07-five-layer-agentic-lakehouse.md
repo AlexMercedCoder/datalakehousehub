@@ -19,7 +19,7 @@ canonical: "https://iceberglakehouse.com/posts/five-layer-agentic-lakehouse/"
 
 An organization ships an analytics agent. It has access to the warehouse, a good model, and a well-written system prompt. Three weeks in, it has produced two wrong numbers that reached a meeting, one query that scanned a table nobody expected it to touch, and an answer nobody can reconstruct because the logs rolled off.
 
-> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/five-layer-agentic-lakehouse/).
+> **Cross-posted.** This article's canonical home is [Alex Merced's Lakehouse Blog](https://iceberglakehouse.com/posts/five-layer-agentic-lakehouse/).
 
 The reaction is usually to blame the model and try a better one. That reliably fails, because none of the three problems was a reasoning failure. The wrong numbers came from a table with an undocumented filter rule. The unexpected scan came from a permission that was broader than anyone had reviewed. The unreconstructible answer came from having no record of what the agent did.
 

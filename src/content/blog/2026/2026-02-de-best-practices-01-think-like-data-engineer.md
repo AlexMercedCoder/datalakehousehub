@@ -18,7 +18,7 @@ canonical: "https://iceberglakehouse.com/posts/2026-02-debp-think-like-data-engi
 
 ![Data flowing through a system of interconnected pipeline stages from sources to consumers](/images/blog/debp/data-engineer-mindset.png)
 
-> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-02-debp-think-like-data-engineer/).
+> **Cross-posted.** This article's canonical home is [Alex Merced's Lakehouse Blog](https://iceberglakehouse.com/posts/2026-02-debp-think-like-data-engineer/).
 
 The median lifespan of a popular data tool is about three years. The tool you master today may be deprecated or replaced by the time your next project ships. What doesn't change are the principles underneath: how data flows, how systems fail, how contracts between producers and consumers work, and how to decompose messy requirements into clean, maintainable pipelines.
 

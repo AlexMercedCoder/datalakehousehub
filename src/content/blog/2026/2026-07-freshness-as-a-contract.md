@@ -13,12 +13,12 @@ tags:
 slug: "freshness-as-a-contract"
 draft: false
 image: "/images/blog.png"
-canonical: https://iceberglakehouse.com/posts/freshness-as-a-contract/
+canonical: "https://iceberglakehouse.com/posts/freshness-as-a-contract/"
 ---
 
 An inventory agent rerouted a shipment last quarter for a company I spoke with, based on stock levels that were six hours old. The warehouse had already committed that stock to a different order. The agent was not wrong about the data it read. The data was wrong about the world, and nothing in the system told the agent how old the numbers were.
 
-> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/freshness-as-a-contract/).
+> **Cross-posted.** This article's canonical home is [Alex Merced's Lakehouse Blog](https://iceberglakehouse.com/posts/freshness-as-a-contract/).
 
 Dashboards handled this with a line of small text: "as of 6:00 a.m." A human reads that, adjusts, and asks someone if the decision matters. An agent reads the number, not the caption, and takes the action.
 

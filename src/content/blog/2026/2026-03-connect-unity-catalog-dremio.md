@@ -19,7 +19,7 @@ canonical: "https://iceberglakehouse.com/posts/2026-03-connector-unity-catalog/"
 
 Databricks Unity Catalog is Databricks' governance layer for data and AI assets. It manages Delta Lake tables, machine learning models, feature stores, and other data objects across Databricks workspaces. If your data engineering team uses Databricks for ETL and ML, your curated analytical datasets likely live in Unity Catalog as Delta Lake tables.
 
-> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-03-connector-unity-catalog/).
+> **Cross-posted.** This article's canonical home is [Alex Merced's Lakehouse Blog](https://iceberglakehouse.com/posts/2026-03-connector-unity-catalog/).
 
 With UniForm, Databricks generates Iceberg-compatible metadata for Delta Lake tables, making them readable by non-Databricks engines without data conversion. This is where Dremio Cloud enters the picture: connect to Unity Catalog through the UniForm Iceberg compatibility layer and query your Delta Lake tables alongside every other data source in your organization : with federation, governance, AI analytics, and performance acceleration that Databricks alone doesn't provide.
 

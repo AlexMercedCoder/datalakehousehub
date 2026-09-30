@@ -20,7 +20,7 @@ canonical: "https://iceberglakehouse.com/posts/high-concurrency-agent-writes-ice
 
 *By Alex Merced, Data Lakehouse and AI Evangelist*
 
-> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/high-concurrency-agent-writes-iceberg/).
+> **Cross-posted.** This article's canonical home is [Alex Merced's Lakehouse Blog](https://iceberglakehouse.com/posts/high-concurrency-agent-writes-iceberg/).
 
 The read path got all the attention. Agents query tables, a semantic layer keeps them honest, a catalog decides what they can see. That architecture is well understood by now.
 

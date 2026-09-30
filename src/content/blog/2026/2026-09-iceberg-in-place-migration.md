@@ -1,7 +1,7 @@
 ---
 title: "Migrating Into Iceberg Without Moving Data"
 date: 2026-09-10T12:00:00Z
-canonical: https://iceberglakehouse.com/posts/iceberg-in-place-migration/
+canonical: "https://iceberglakehouse.com/posts/iceberg-in-place-migration/"
 description: "add_files, snapshot, and migrate compared: the three in-place paths into Iceberg, the reconciliation each requires, the layout traps, and the rollback story."
 author: "Alex Merced"
 category: "Apache Iceberg"
@@ -17,7 +17,7 @@ image: "/images/blog.png"
 bannerImage: "/images/blog.png"
 ---
 
-> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/iceberg-in-place-migration/).
+> **Cross-posted.** This article's canonical home is [Alex Merced's Lakehouse Blog](https://iceberglakehouse.com/posts/iceberg-in-place-migration/).
 
 There are three ways to get an existing dataset into Iceberg and only one of them involves copying files. Teams reach for the copy by default, because it is the mental model everyone brings from warehouse migrations, and then discover that a 40 TB migration is a two-week job with a transfer bill attached.
 

@@ -17,7 +17,7 @@ draft: false
 
 Ask three systems in the same company what monthly recurring revenue was in July and you can get three answers, each computed correctly by its own definition, each defended by its own team, each feeding decisions. One came from a dashboard whose SQL a departed analyst tuned, one from a warehouse view written before the pricing model changed, one from a spreadsheet that finance trusts precisely because they can see the formula. The data was fine. The meaning was fragmented, and meaning fragments faster than data does, because every tool that touches data invites someone to redefine it there.
 
-> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/semantic-layer-federation-multi-cloud/).
+> **Cross-posted.** This article's canonical home is [Alex Merced's Lakehouse Blog](https://iceberglakehouse.com/posts/semantic-layer-federation-multi-cloud/).
 
 The semantic layer is the architectural answer: business definitions, metrics, models, relationships, and access rules, defined once, above the physical data, consumed by every tool through open interfaces. Federation is what makes the answer complete in the world enterprises actually inhabit, where the physical data spans two clouds, an on-premises estate, a lakehouse, and a warehouse or two that are not going anywhere this year: the semantic layer virtualizes across all of it, so one set of definitions governs data that never consolidates.
 

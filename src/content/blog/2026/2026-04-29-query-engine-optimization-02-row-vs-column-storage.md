@@ -19,7 +19,7 @@ canonical: "https://iceberglakehouse.com/posts/2026-04-29-query-engine-02/"
 <!- Primary Keyword: columnar vs row storage ->
 <!- Secondary Keywords: column-oriented database, row store performance, data storage layout ->
 
-> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-04-29-query-engine-02/).
+> **Cross-posted.** This article's canonical home is [Alex Merced's Lakehouse Blog](https://iceberglakehouse.com/posts/2026-04-29-query-engine-02/).
 
 *Read the complete Query Engine Optimization series:*
 * [Part 1: How Query Engines Think: The Tradeoffs Behind Every Data System](/blog/2026-04-29-query-engine-optimization-01-overview)

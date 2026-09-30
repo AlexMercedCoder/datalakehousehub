@@ -16,7 +16,7 @@ canonical: "https://iceberglakehouse.com/posts/2024-1-nessie-an-alternative-to-h
 
 Unlike traditional table formats, Apache Iceberg provides a comprehensive solution for handling big data's complexity, volume, and diversity. It's designed to improve data processing in various analytics engines like Apache Spark, Apache Flink, and others. One of Iceberg's key features is its ability to maintain massive datasets efficiently while ensuring reliable data snapshots, schema evolution, and hidden partitioning.
 
-> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2024-1-nessie-an-alternative-to-hive/).
+> **Cross-posted.** This article's canonical home is [Alex Merced's Lakehouse Blog](https://iceberglakehouse.com/posts/2024-1-nessie-an-alternative-to-hive/).
 
 However, the utility of Apache Iceberg is greatly enhanced by the use of a catalog. A catalog in the context of Iceberg tables is essentially a metadata management tool that tracks table locations, schema versions, and other critical information. The primary role of a catalog is to simplify the portability of tables between different computing tools and environments. It acts as a centralized repository for all table-related metadata, making it easier for users to manage, access, and evolve their data structures without losing consistency or integrity.
 

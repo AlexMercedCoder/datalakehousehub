@@ -22,7 +22,7 @@ canonical: "https://iceberglakehouse.com/posts/2026-05-24-composable-query-engin
 
 For most of data engineering history, a query engine was a monolithic system. You picked a database or warehouse, and it owned everything from the SQL parser through the disk I/O layer. The engine choice was also your storage choice, your catalog choice, and often your governance choice. Composability (the ability to mix and match components from different systems) was minimal.
 
-> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-05-24-composable-query-engines/).
+> **Cross-posted.** This article's canonical home is [Alex Merced's Lakehouse Blog](https://iceberglakehouse.com/posts/2026-05-24-composable-query-engines/).
 
 That design is being dismantled. Apache DataFusion provides an embeddable, modular query execution engine written in Rust. Meta's Velox provides a high-performance C++ execution kernel that plugs into Presto, Spark, and other systems. Substrait provides a cross-language plan representation format that lets query plans flow between different engines without recompilation or reparse. Apache Arrow provides the in-memory columnar format that eliminates serialization overhead when data moves between components.
 

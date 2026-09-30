@@ -21,7 +21,7 @@ canonical: "https://iceberglakehouse.com/posts/iceberg-across-the-hyperscalers/"
 
 Every few weeks I get a version of the same question. A team has standardized on Apache Iceberg, they run most of their workloads on one cloud, and they want to know whether that cloud's Iceberg support is real or whether it is a checkbox on a slide. The answer is never a simple yes or no, because "Iceberg support" is not one feature. It is five or six separate capabilities that a vendor can ship independently, and each of the three big clouds has shipped them in a different order.
 
-> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/iceberg-across-the-hyperscalers/).
+> **Cross-posted.** This article's canonical home is [Alex Merced's Lakehouse Blog](https://iceberglakehouse.com/posts/iceberg-across-the-hyperscalers/).
 
 A note on where this comes from. I have spent the last several years working with teams wiring these services together, writing and teaching about open table formats, and most of what follows comes from watching those projects succeed and fail rather than from vendor documentation alone. I have a stake in open formats staying open, and I try to be plain about the tradeoffs on every side.
 

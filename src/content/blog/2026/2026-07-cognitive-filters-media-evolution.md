@@ -15,7 +15,10 @@ tags:
 slug: "cognitive-filters-media-evolution"
 draft: false
 image: "/images/blog.png"
+canonical: "https://iceberglakehouse.com/posts/cognitive-filters-media-evolution/"
 ---
+
+> **Cross-posted.** This article's canonical home is [Alex Merced's Lakehouse Blog](https://iceberglakehouse.com/posts/cognitive-filters-media-evolution/).
 
 *By Alex Merced*
 

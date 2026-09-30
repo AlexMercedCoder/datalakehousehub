@@ -13,12 +13,12 @@ tags:
 slug: "laptop-scale-lakehouse"
 draft: false
 image: "/images/blog.png"
-canonical: https://iceberglakehouse.com/posts/laptop-scale-lakehouse/
+canonical: "https://iceberglakehouse.com/posts/laptop-scale-lakehouse/"
 ---
 
 A colleague spent forty minutes last month provisioning a cluster to profile a 90 GB Parquet dataset. Startup, dependency resolution, a permissions error, another restart, then the actual work, which took four minutes. I ran the same profiling on a laptop in under two, including the download.
 
-> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/laptop-scale-lakehouse/).
+> **Cross-posted.** This article's canonical home is [Alex Merced's Lakehouse Blog](https://iceberglakehouse.com/posts/laptop-scale-lakehouse/).
 
 That is not a story about clever tooling. It is a story about a threshold that got crossed quietly. Consumer hardware now carries 64 to 128 GB of unified memory and NVMe storage that reads several gigabytes per second. Columnar formats mean a query touching four of forty columns reads a tenth of the file. Single-node engines got genuinely fast. And the Iceberg REST catalog turned a laptop into a first-class client of the same governed tables the cluster reads.
 

@@ -18,7 +18,7 @@ canonical: "https://iceberglakehouse.com/posts/2026-02-dm-data-modeling-for-anal
 
 ![OLTP normalized model vs. OLAP denormalized model side by side](/images/blog/data-modeling/analytics-data-modeling.png)
 
-> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-02-dm-data-modeling-for-analytics/).
+> **Cross-posted.** This article's canonical home is [Alex Merced's Lakehouse Blog](https://iceberglakehouse.com/posts/2026-02-dm-data-modeling-for-analytics/).
 
 The data model that runs your production application is almost never the right model for analytics. Transactional systems are designed for fast writes : inserting orders, updating inventory, processing payments. Analytics systems are designed for fast reads, scanning millions of rows, aggregating across dimensions, filtering by date ranges.
 

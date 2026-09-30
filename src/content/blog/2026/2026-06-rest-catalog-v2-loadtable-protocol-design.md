@@ -12,7 +12,11 @@ tags:
 slug: rest-catalog-v2-loadtable-protocol-design
 draft: false
 image: "/images/blog.png"
+canonical: "https://iceberglakehouse.com/posts/rest-catalog-v2-loadtable-protocol-design/"
 ---
+
+> **Cross-posted.** This article's canonical home is [Alex Merced's Lakehouse Blog](https://iceberglakehouse.com/posts/rest-catalog-v2-loadtable-protocol-design/).
+
 # REST Catalog V2 LoadTable and Client Capability
 
 

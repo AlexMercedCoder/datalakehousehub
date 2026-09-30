@@ -16,7 +16,7 @@ canonical: "https://iceberglakehouse.com/posts/dremio-state-data-lakehouse-ai-re
 
 Most lakehouse roadmaps written in the last few years had the same top items: migrate off the expensive warehouse, cut storage costs, consolidate on open table formats. Those are still reasonable goals. They are also no longer the whole story, because the thing pulling on data platforms hardest right now is not cost. It is agents. The direction that data leaders are signaling, and that Dremio's [state of the data lakehouse and AI findings](https://www.dremio.com/resources/) point at, is a shift from the lakehouse as a place to store and query data toward the lakehouse as an operating foundation for AI.
 
-> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/dremio-state-data-lakehouse-ai-report-agentic-lakehouse/).
+> **Cross-posted.** This article's canonical home is [Alex Merced's Lakehouse Blog](https://iceberglakehouse.com/posts/dremio-state-data-lakehouse-ai-report-agentic-lakehouse/).
 
 I want to be careful with how I treat the report itself. Rather than quote survey percentages I cannot stand behind precisely, I am going to treat the findings as directional market signals: the shape of where enterprise priorities are moving, not a claim about an exact share of respondents. The signals are consistent and they line up with what teams are actually building. What they tell you is that the requirements for a lakehouse change once agents start doing real work on it, and that the platforms worth investing in now are the ones designed for that change.
 

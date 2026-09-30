@@ -22,7 +22,7 @@ canonical: "https://iceberglakehouse.com/posts/2026-05-24-mlflow-data-pipelines/
 
 The boundary between data engineering and ML engineering has always been somewhat artificial. A model degrades in production. Is it a model problem? The data feeding it changed. Is it a data pipeline problem? The features it receives don't match what it was trained on. Is it a feature store problem? These questions point to the same underlying issue: the observability tools for data pipelines and the observability tools for ML models are separate, making cross-boundary diagnosis difficult.
 
-> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-05-24-mlflow-data-pipelines/).
+> **Cross-posted.** This article's canonical home is [Alex Merced's Lakehouse Blog](https://iceberglakehouse.com/posts/2026-05-24-mlflow-data-pipelines/).
 
 MLflow 3, released in 2025, moved toward addressing this by expanding its scope beyond experiment tracking into GenAI tracing, agent evaluation, and closer integration with data quality monitoring. Databricks' Data Quality Monitoring feature provides a framework for applying model-style monitoring (drift detection, statistical distribution tracking) to datasets and pipeline outputs, not just model inference results.
 

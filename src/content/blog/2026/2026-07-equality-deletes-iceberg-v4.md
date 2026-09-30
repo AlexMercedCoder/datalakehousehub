@@ -19,7 +19,7 @@ canonical: "https://iceberglakehouse.com/posts/equality-deletes-iceberg-v4/"
 
 A Flink job writes upserts into an Apache Iceberg table at a few thousand rows per second. The write side looks healthy. Checkpoints land on time, the sink commits without backpressure, and the ingestion dashboard is a flat green line. Then an analyst runs a count on the same table and waits ninety seconds for a number that used to come back in four.
 
-> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/equality-deletes-iceberg-v4/).
+> **Cross-posted.** This article's canonical home is [Alex Merced's Lakehouse Blog](https://iceberglakehouse.com/posts/equality-deletes-iceberg-v4/).
 
 Nothing broke. The table accumulated equality delete files, and every reader now pays for them.
 

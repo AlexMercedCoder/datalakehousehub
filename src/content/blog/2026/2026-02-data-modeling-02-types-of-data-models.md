@@ -18,7 +18,7 @@ canonical: "https://iceberglakehouse.com/posts/2026-02-dm-types-of-data-models/"
 
 ![Three layers of data modeling from business concepts to database implementation](/images/blog/data-modeling/types-of-data-models.png)
 
-> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-02-dm-types-of-data-models/).
+> **Cross-posted.** This article's canonical home is [Alex Merced's Lakehouse Blog](https://iceberglakehouse.com/posts/2026-02-dm-types-of-data-models/).
 
 Most data teams jump straight from a stakeholder request to creating database tables. They skip the planning steps that prevent misalignment, redundancy, and rework. The result: tables that make sense to the engineer who built them but confuse everyone else.
 

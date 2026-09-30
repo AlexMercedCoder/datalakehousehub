@@ -25,7 +25,7 @@ canonical: "https://iceberglakehouse.com/posts/2026-03-07-agentic-analytics/"
 * [Part 6: Assembling the Apache Lakehouse](/blog/2026-04-assembling-apache-lakehouse)
 * [Part 7: Agentic Analytics on the Apache Lakehouse](/blog/2026-04-agentic-analytics)
 
-> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-03-07-agentic-analytics/).
+> **Cross-posted.** This article's canonical home is [Alex Merced's Lakehouse Blog](https://iceberglakehouse.com/posts/2026-03-07-agentic-analytics/).
 
 If you grant a Large Language Model direct access to a raw Amazon S3 bucket filled with Parquet files, it will fail to answer your business questions. AI agents possess immense processing power, but they lack inherent business knowledge. 
 

@@ -16,7 +16,7 @@ canonical: "https://iceberglakehouse.com/posts/iceberg-hybrid-cloud-regulated-ma
 
 Financial institutions in Japan, Germany, and similar regulated markets face a specific architectural problem. Their regulators require sensitive data to stay on-premises or within a defined geographic boundary. Their data teams want cloud-scale analytics. Those two requirements pull in opposite directions, and proprietary cloud warehouses make the conflict worse.
 
-> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/iceberg-hybrid-cloud-regulated-markets/).
+> **Cross-posted.** This article's canonical home is [Alex Merced's Lakehouse Blog](https://iceberglakehouse.com/posts/iceberg-hybrid-cloud-regulated-markets/).
 
 Apache Iceberg resolves this by separating what the data is stored as from where it is stored and which engine queries it. That separation gives regulated enterprises a path to hybrid-cloud analytics that doesn't compromise data residency compliance.
 

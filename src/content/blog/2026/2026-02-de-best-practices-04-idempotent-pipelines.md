@@ -18,7 +18,7 @@ canonical: "https://iceberglakehouse.com/posts/2026-02-debp-idempotent-pipelines
 
 ![Pipeline running multiple times and converging to the same result](/images/blog/debp/idempotent-pipeline.png)
 
-> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-02-debp-idempotent-pipelines/).
+> **Cross-posted.** This article's canonical home is [Alex Merced's Lakehouse Blog](https://iceberglakehouse.com/posts/2026-02-debp-idempotent-pipelines/).
 
 A pipeline runs, processes 100, 000 records, and loads them into the target table. Then it fails on a downstream step. The orchestrator retries the entire job. Now the table has 200, 000 records : 100, 000 of them duplicates. Revenue reports double. Dashboards misfire. Someone spends the next four hours manually deduplicating records and explaining to stakeholders why the numbers were wrong.
 

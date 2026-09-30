@@ -17,7 +17,7 @@ draft: false
 
 Look at the byte breakdown of a large Parquet table in a lakehouse and two column types dominate out of proportion to their row count. The first is high-cardinality strings: user agents, URLs, log messages, JSON fragments, free-text fields. The second is floating-point measurements: sensor readings, prices, model scores, embedding components. Both compress badly under the encodings Parquet has shipped for a decade, and both are becoming a larger share of what gets written as observability and AI workloads move into Apache Iceberg tables.
 
-> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/fsst-alp-parquet-encodings/).
+> **Cross-posted.** This article's canonical home is [Alex Merced's Lakehouse Blog](https://iceberglakehouse.com/posts/fsst-alp-parquet-encodings/).
 
 The symptom is easy to spot. Dictionary encoding on a string column with 40 million distinct values falls back to plain encoding, and a Zstandard block compressor gets a modest ratio on it while burning CPU on every read. A double column of sensor values compresses to maybe 80 percent of its raw size, because the low bits of IEEE 754 doubles look random to any byte-oriented compressor. You pay for storage, you pay for the bytes scanned, and you pay again for the decompression on every query.
 

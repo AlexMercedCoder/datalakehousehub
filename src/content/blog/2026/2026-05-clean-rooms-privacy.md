@@ -22,7 +22,7 @@ canonical: "https://iceberglakehouse.com/posts/2026-05-24-clean-rooms-privacy/"
 
 Every organization that wants to collaborate on data faces the same tension. The analysis is valuable, matching your customer purchase history against a partner's ad impression data reveals attribution patterns that neither party could see alone. The data is sensitive, sharing raw customer records with an external party creates PII exposure risk, regulatory compliance problems, and the permanent problem of data copies that live outside your control.
 
-> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-05-24-clean-rooms-privacy/).
+> **Cross-posted.** This article's canonical home is [Alex Merced's Lakehouse Blog](https://iceberglakehouse.com/posts/2026-05-24-clean-rooms-privacy/).
 
 The historical solutions to this tension have been inadequate. You can share nothing, and lose the analytical value. You can share everything, and accept the compliance and security risks. You can negotiate a complex data contract that creates a one-time data copy under strict terms, and hope neither party violates them.
 

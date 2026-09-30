@@ -17,7 +17,7 @@ draft: false
 
 Three agents answer the same question on the same afternoon. A finance agent, asked for last quarter's net revenue, sums completed orders, subtracts refunds, and reports $41.2 million. A sales agent, asked the same thing by a regional director, sums completed orders and reports $43.8 million, because nobody told it about refunds. A board-deck agent pulls "revenue" from a dashboard's cached tile and reports $42.6 million, which was right two weeks ago. All three are confident. All three cite their sources. The CFO gets three numbers and has to decide which agent to believe.
 
-> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/metric-contracts-code-multi-agent/).
+> **Cross-posted.** This article's canonical home is [Alex Merced's Lakehouse Blog](https://iceberglakehouse.com/posts/metric-contracts-code-multi-agent/).
 
 That is metric drift, and it existed before agents. Dashboards drifted from each other for a decade. What agents change is the speed and the volume: an agent framework that spins up a dozen specialized agents, each generating its own SQL, produces a dozen slightly different definitions of every metric it touches, and it does so hundreds of times a day with no reconciliation meeting. Drift that used to surface quarterly now surfaces per conversation.
 

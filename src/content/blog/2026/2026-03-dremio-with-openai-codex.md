@@ -19,7 +19,7 @@ canonical: "https://iceberglakehouse.com/posts/2026-03-aitool-openai-codex/"
 
 OpenAI Codex CLI is a terminal-based coding agent built in Rust. It reads your codebase, writes files, executes commands, and supports MCP for connecting to external data services. Dremio is a unified lakehouse platform that provides the business context, universal data access, and query speed that coding agents need to produce accurate, working analytics code.
 
-> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-03-aitool-openai-codex/).
+> **Cross-posted.** This article's canonical home is [Alex Merced's Lakehouse Blog](https://iceberglakehouse.com/posts/2026-03-aitool-openai-codex/).
 
 Codex uses `AGENTS.md` as its primary context file. This is an open standard designed to work across multiple AI tools, so the Dremio configuration you write for Codex also works with other AGENTS.md-compatible tools. That portability matters if your team uses different agents.
 

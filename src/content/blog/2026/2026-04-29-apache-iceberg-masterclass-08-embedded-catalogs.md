@@ -19,7 +19,7 @@ canonical: "https://iceberglakehouse.com/posts/2026-04-29-iceberg-masterclass-08
 <!- Primary Keyword: embedded Iceberg catalog ->
 <!- Secondary Keywords: S3 Tables, MinIO AI Stor, storage-managed catalog ->
 
-> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-04-29-iceberg-masterclass-08/).
+> **Cross-posted.** This article's canonical home is [Alex Merced's Lakehouse Blog](https://iceberglakehouse.com/posts/2026-04-29-iceberg-masterclass-08/).
 
 *Read the complete Apache Iceberg Masterclass series:*
 * [Part 1: What Are Table Formats and Why Were They Needed?](/blog/2026-04-29-apache-iceberg-masterclass-01-table-formats)

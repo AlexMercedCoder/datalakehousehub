@@ -19,7 +19,7 @@ canonical: "https://iceberglakehouse.com/posts/2026-03-connector-mysql/"
 
 MySQL runs more web applications, SaaS platforms, and e-commerce backends than any other database. It's fast for transactional reads and writes, but it becomes a bottleneck when your data team needs to run analytical queries, join MySQL data with other sources, or build dashboards that don't compete with application traffic.
 
-> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-03-connector-mysql/).
+> **Cross-posted.** This article's canonical home is [Alex Merced's Lakehouse Blog](https://iceberglakehouse.com/posts/2026-03-connector-mysql/).
 
 Dremio Cloud connects directly to MySQL and queries it in place. Your data stays where it is. Dremio pushes filters (called predicate pushdowns) to MySQL when possible, joins MySQL data with any other connected source, and accelerates repeated queries with pre-computed Reflections so your production database isn't hit by every dashboard refresh.
 

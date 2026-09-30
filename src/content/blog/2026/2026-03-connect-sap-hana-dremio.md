@@ -19,7 +19,7 @@ canonical: "https://iceberglakehouse.com/posts/2026-03-connector-sap-hana/"
 
 SAP HANA is the in-memory database platform that powers SAP S/4HANA, SAP BW/4HANA, and custom enterprise applications across finance, manufacturing, logistics, and supply chain. It's fast for SAP-native analytics : real-time financial reporting, material requirements planning, and production analytics run directly on HANA's in-memory columnar engine. But SAP HANA exists in a walled garden.
 
-> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-03-connector-sap-hana/).
+> **Cross-posted.** This article's canonical home is [Alex Merced's Lakehouse Blog](https://iceberglakehouse.com/posts/2026-03-connector-sap-hana/).
 
 Connecting HANA data to non-SAP tools requires SAP Data Intelligence, SAP Business Technology Platform (BTP), or custom ABAP extractors : all of which add significant cost and complexity. Sharing HANA data with teams that don't use SAP tools (marketing running Tableau, data science using Python, operations using Power BI) means building export pipelines that duplicate data, add latency, and create governance gaps.
 

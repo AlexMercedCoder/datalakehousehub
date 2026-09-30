@@ -12,7 +12,11 @@ tags:
 slug: beyond-metrics-lists-composable-semantic-layers-agents
 draft: false
 image: "/images/blog.png"
+canonical: "https://iceberglakehouse.com/posts/beyond-metrics-lists-composable-semantic-layers-agents/"
 ---
+
+> **Cross-posted.** This article's canonical home is [Alex Merced's Lakehouse Blog](https://iceberglakehouse.com/posts/beyond-metrics-lists-composable-semantic-layers-agents/).
+
 # Composable Semantic Layers for Analytical Agents
 
 

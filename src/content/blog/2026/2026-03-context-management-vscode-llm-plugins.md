@@ -19,7 +19,7 @@ canonical: "https://iceberglakehouse.com/posts/2026-03-context-vscode-llm-plugin
 
 Visual Studio Code is the most widely used code editor in the world, and its extensibility means you can integrate AI capabilities through a growing ecosystem of LLM plugins. Unlike purpose-built AI editors (Cursor, Windsurf, Zed), VS Code gives you the freedom to choose and combine AI extensions, configure them to your preferences, and even switch between providers without changing editors. The tradeoff is that context management is not as seamlessly integrated as in dedicated AI editors. It requires more deliberate configuration.
 
-> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-03-context-vscode-llm-plugins/).
+> **Cross-posted.** This article's canonical home is [Alex Merced's Lakehouse Blog](https://iceberglakehouse.com/posts/2026-03-context-vscode-llm-plugins/).
 
 This guide covers context management strategies for the most popular VS Code AI extensions: GitHub Copilot, Continue, Cline (formerly Claude Dev), Aider, and others. It explains what context management capabilities each offers and how to configure them for maximum effectiveness.
 

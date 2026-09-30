@@ -12,7 +12,11 @@ tags:
 slug: autonomous-materialization-ai-agents-table-performance
 draft: false
 image: "/images/blog.png"
+canonical: "https://iceberglakehouse.com/posts/autonomous-materialization-ai-agents-table-performance/"
 ---
+
+> **Cross-posted.** This article's canonical home is [Alex Merced's Lakehouse Blog](https://iceberglakehouse.com/posts/autonomous-materialization-ai-agents-table-performance/).
+
 # Autonomous Materialization for Agentic Analytics
 
 

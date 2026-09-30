@@ -16,7 +16,7 @@ canonical: "https://iceberglakehouse.com/posts/2024-1-why-choose-lakehouse-icebe
 
 Data is not just an asset but the cornerstone of business strategy. The way we manage, store, and process this invaluable resource has evolved dramatically. The traditional boundaries of data warehouses and lakes are blurring, giving rise to a new, more integrated approach: the **Data Lakehouse**. This innovative architecture combines the expansive storage capabilities of data lakes with the structured management and processing power of data warehouses, offering an unparalleled solution for modern data needs.
 
-> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2024-1-why-choose-lakehouse-iceberg-dremio/).
+> **Cross-posted.** This article's canonical home is [Alex Merced's Lakehouse Blog](https://iceberglakehouse.com/posts/2024-1-why-choose-lakehouse-iceberg-dremio/).
 
 When it comes to [Data Lakehouses](https://www.dremio.com/solutions/data-lakehouse/), technologies like [**Apache Iceberg**](https://bit.ly/am-iceberg-101) and [**Dremio**](https://bit.ly/am-dremio-get-started-external-blog) have emerged as frontrunners, each bringing unique strengths to the table. [Apache Iceberg](https://bit.ly/am-iceberg-101), an open table format, is gaining traction for its robustness and flexibility in handling large-scale data across different platforms. Meanwhile, [Dremio](https://bit.ly/am-dremio-get-started-external-blog) stands out as a comprehensive solution, integrating seamlessly with Iceberg to provide advanced data virtualization, query engine capabilities, and a robust semantic layer.
 

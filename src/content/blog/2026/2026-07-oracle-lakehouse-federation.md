@@ -19,7 +19,7 @@ canonical: "https://iceberglakehouse.com/posts/oracle-lakehouse-federation/"
 
 A team is eighteen months into moving reporting off Oracle. Forty percent of the tables are in Iceberg. The remaining sixty percent are the hard ones: schemas nobody fully understands, tables with triggers, and three that a compliance process depends on in ways documented only in a 2014 email.
 
-> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/oracle-lakehouse-federation/).
+> **Cross-posted.** This article's canonical home is [Alex Merced's Lakehouse Blog](https://iceberglakehouse.com/posts/oracle-lakehouse-federation/).
 
 Meanwhile every analytical question spanning both halves requires either a nightly export or a manual join, and the business has stopped believing the migration will finish.
 

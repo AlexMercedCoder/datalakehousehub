@@ -1,7 +1,7 @@
 ---
 title: "The State of Apache Parquet in 2026: The Quiet Format Enters Its Loudest Decade"
 date: 2026-07-06T12:00:00Z
-canonical: https://iceberglakehouse.com/posts/state-of-apache-parquet-2026/
+canonical: "https://iceberglakehouse.com/posts/state-of-apache-parquet-2026/"
 description: "Apache Parquet in 2026, variant types, geospatial, ALP encoding, footer redesign, the versioning debate, and how the decade-old format is renovating."
 author: "Alex Merced"
 category: "Apache Parquet"
@@ -21,7 +21,7 @@ bannerImage: "/images/blog.png"
 
 *By Alex Merced, Head of Developer Relations at Dremio*
 
-> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/state-of-apache-parquet-2026/).
+> **Cross-posted.** This article's canonical home is [Alex Merced's Lakehouse Blog](https://iceberglakehouse.com/posts/state-of-apache-parquet-2026/).
 
 Apache Parquet is thirteen years old, holds more of the world's analytical data than any format ever created, and for most of its life has been the least dramatic project in the data stack. It sat at the bottom, it worked, and the interesting arguments happened in the layers above it.
 

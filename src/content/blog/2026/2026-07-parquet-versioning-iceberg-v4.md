@@ -19,7 +19,7 @@ canonical: "https://iceberglakehouse.com/posts/parquet-versioning-iceberg-v4/"
 
 A Spark job writes a table. A Trino query against the same table fails with a decoding error on one column. Nothing in the Iceberg metadata looks wrong. The schema matches, the snapshot is current, the manifest lists the file. The file itself is fine, and Spark reads it back without complaint.
 
-> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/parquet-versioning-iceberg-v4/).
+> **Cross-posted.** This article's canonical home is [Alex Merced's Lakehouse Blog](https://iceberglakehouse.com/posts/parquet-versioning-iceberg-v4/).
 
 The problem is that Spark wrote a Parquet encoding that this Trino build does not implement, and nothing in the system was designed to tell you that in advance. Not the table format, not the catalog, not the file. You found out by running a query in production.
 

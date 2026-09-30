@@ -17,7 +17,7 @@ canonical: "https://iceberglakehouse.com/posts/2024-8-using-the-alexmerced-datan
 
 Sometimes, you want to spin up a quick data notebook environment when doing quick data work or practice. For this purpose, I've built the [alexerced/datanotebook](https://hub.docker.com/repository/docker/alexmerced/datanotebook/general) docker image, and this blog explains how you can use it for work you'd like to do. The most significant difference between this image and the [alexmerced/spark35notebook](https://hub.docker.com/repository/docker/alexmerced/spark35notebook/general) image is that while the image does have pySpark installed, it does not have Spark running within the same container. You don't have to worry about a token to access the notebook with this image (I'll probably do the same with my next spark image whenever I build it).
 
-> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2024-8-using-the-alexmerced-datanotebook-image/).
+> **Cross-posted.** This article's canonical home is [Alex Merced's Lakehouse Blog](https://iceberglakehouse.com/posts/2024-8-using-the-alexmerced-datanotebook-image/).
 
 - [Watch My Intro to Data Playlist](https://www.youtube.com/watch?v=nq8ETrTgT7o&list=PLsLAVBjQJO0p_4Nqz99tIjeoDYE97L0xY&pp=iAQB)
 - [Download Free Copy of "Apache Iceberg: The Definitive Guide"](https://drmevn.fyi/datanotebook830)

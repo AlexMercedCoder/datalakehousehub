@@ -17,7 +17,7 @@ draft: false
 
 A question has been making the rounds in lakehouse circles this year, usually phrased with some disbelief: someone points DuckDB, the in-process analytical database, at an Apache Iceberg REST catalog, creates a table, inserts rows, runs an update, and then repoints the same script at a completely different catalog from a completely different vendor, and it mostly just works. Practitioners have been trading notes on running near-identical DuckDB code against a half dozen or more catalog implementations, open source and commercial, self-hosted and managed. The disbelief is earned. Five years ago, "same code, different catalog" was not a claim anyone in this ecosystem made with a straight face, and the people making it now include the maintainers of the client itself.
 
-> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/seven-rest-catalogs-one-duckdb-script/).
+> **Cross-posted.** This article's canonical home is [Alex Merced's Lakehouse Blog](https://iceberglakehouse.com/posts/seven-rest-catalogs-one-duckdb-script/).
 
 So this article takes the question seriously and rigorously. What exactly is the same across catalogs, what quietly differs, and what does a fair seven-catalog test actually measure? We will look at what DuckDB's Iceberg extension can genuinely do in 2026, write the common code, then walk seven REST catalog implementations, Apache Polaris, Lakekeeper, Apache Gravitino, Nessie, AWS Glue, Databricks Unity Catalog, and Snowflake Open Catalog, through the places where sameness holds and the places where it ends. I will also lay out the test matrix worth running yourself, because the most useful output of this exercise is a repeatable protocol, not a screenshot.
 

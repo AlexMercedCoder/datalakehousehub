@@ -17,7 +17,7 @@ draft: false
 
 Picture a table with 40 million data files. Every one of those files has an entry in a manifest, and every entry carries per-column statistics for 300 columns. A query arrives that filters on one timestamp column and touches two others. To plan that query, the engine has to walk the manifests, compare the timestamp bounds of each file against the predicate, and decide which files to open. In theory that is a cheap job. The engine only needs three things per entry: the file path, the partition tuple, and the lower and upper bound of one column.
 
-> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/parquet-manifests-iceberg-v4/).
+> **Cross-posted.** This article's canonical home is [Alex Merced's Lakehouse Blog](https://iceberglakehouse.com/posts/parquet-manifests-iceberg-v4/).
 
 In practice, the engine reads everything. It reads the value counts for all 300 columns, the null counts for all 300, the sizes for all 300, the lower bounds for all 300, and the upper bounds for all 300. Then it throws 297 of them away. That is what happens when metadata lives in Apache Avro, a row-oriented format that hands you a whole record or nothing. On a small table nobody notices. On a table with tens of millions of files, planning time turns into minutes, and the cost of every query includes a large tax before a single byte of real data gets read.
 

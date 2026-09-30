@@ -17,7 +17,7 @@ canonical: "https://iceberglakehouse.com/posts/semantic-view-autopilot-dynamic-m
 
 Most data glossaries are wrong by the time you read them. A column gets renamed, a metric changes its grain, a new product line ships, and the human who was supposed to update the documentation is three sprints behind. The glossary that was accurate in January describes a schema that no longer exists in July. For a human analyst this is an annoyance they route around by asking a colleague. For an AI agent that treats the glossary as ground truth, it is a source of confident, wrong answers.
 
-> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/semantic-view-autopilot-dynamic-metric-definition-governance/).
+> **Cross-posted.** This article's canonical home is [Alex Merced's Lakehouse Blog](https://iceberglakehouse.com/posts/semantic-view-autopilot-dynamic-metric-definition-governance/).
 
 That failure mode is why "semantic view autopilot, " the idea of using AI to draft table descriptions, column labels, metric definitions, and logical views, has real appeal. The administrative burden of keeping a semantic layer current is exactly the kind of work that outpaces manual effort. But the appeal comes with a trap. AI can generate a definition that reads perfectly and means something subtly false. Business meaning is not something a model can fully infer from schema and samples, and it is not something you should let a model publish unreviewed to the tools your agents depend on.
 

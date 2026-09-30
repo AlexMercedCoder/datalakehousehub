@@ -18,7 +18,7 @@ canonical: "https://iceberglakehouse.com/posts/2026-02-sl-self-documenting-seman
 
 ![Self-documenting semantic layer : AI generating descriptions and labels automatically](/images/blog/semantic-layer/self-documenting.png)
 
-> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-02-sl-self-documenting-semantic-layer/).
+> **Cross-posted.** This article's canonical home is [Alex Merced's Lakehouse Blog](https://iceberglakehouse.com/posts/2026-02-sl-self-documenting-semantic-layer/).
 
 Every data team knows documentation is important. And almost every data team has a backlog of undocumented tables, unlabeled columns, and outdated descriptions that nobody has time to fix. The problem isn't motivation. It's that manual documentation doesn't scale.
 

@@ -18,7 +18,7 @@ canonical: "https://iceberglakehouse.com/posts/2026-02-dm-data-modeling-best-pra
 
 ![Checklist of data modeling quality markers with warning symbols on common mistakes](/images/blog/data-modeling/best-practices-checklist.png)
 
-> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-02-dm-data-modeling-best-practices/).
+> **Cross-posted.** This article's canonical home is [Alex Merced's Lakehouse Blog](https://iceberglakehouse.com/posts/2026-02-dm-data-modeling-best-practices/).
 
 A bad data model doesn't announce itself. It hides behind slow dashboards, conflicting numbers, confused analysts, and AI agents that generate wrong SQL. By the time someone identifies the model as the root cause, the team has already built dozens of reports on top of it.
 

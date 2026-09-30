@@ -19,7 +19,7 @@ canonical: "https://iceberglakehouse.com/posts/data-products-for-ai-agents/"
 
 An analytics agent gets read access to the data lake. Someone asks it for last quarter's revenue by region. It finds a table named `fact_orders`, writes a clean SELECT with a SUM and a GROUP BY, and returns a number that is 14 percent too high.
 
-> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/data-products-for-ai-agents/).
+> **Cross-posted.** This article's canonical home is [Alex Merced's Lakehouse Blog](https://iceberglakehouse.com/posts/data-products-for-ai-agents/).
 
 The SQL was valid. The table was real. The number was wrong, because `fact_orders` includes cancelled orders, and everyone on the data team knows to filter `status <> 'CANCELLED'`. Nobody wrote that down anywhere the agent looked.
 

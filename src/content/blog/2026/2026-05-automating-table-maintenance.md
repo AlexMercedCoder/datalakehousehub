@@ -21,7 +21,7 @@ canonical: "https://iceberglakehouse.com/posts/2026-05-24-automating-table-maint
 
 Table maintenance is one of those problems that feels manageable until it isn't. You run compaction manually when query performance degrades, schedule a VACUUM job after reports of slow planning times, and generally treat maintenance as reactive work. Then streaming pipelines arrive, partition counts multiply, and the files-per-partition metric climbs past the threshold where ad-hoc fixes stop working.
 
-> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-05-24-automating-table-maintenance/).
+> **Cross-posted.** This article's canonical home is [Alex Merced's Lakehouse Blog](https://iceberglakehouse.com/posts/2026-05-24-automating-table-maintenance/).
 
 The industry has moved on from treating compaction as an optional afterthought. Databricks made Predictive Optimization the default behavior for Unity Catalog managed tables in 2025. AWS S3 Tables provides continuous, automatic compaction for table bucket-stored Iceberg tables, and reduced processing fees for those operations by up to 90% in July 2025. The message is clear: manual maintenance scheduling is becoming the exception, not the norm.
 

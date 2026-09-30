@@ -10,7 +10,7 @@ tags:
 slug: "proprietary-warehouse-open-lakehouse-zero-copy-metadata-translation"
 draft: false
 image: "/images/blog.png"
-canonical: https://iceberglakehouse.com/posts/proprietary-warehouse-open-lakehouse-zero-copy-metadata-translation/
+canonical: "https://iceberglakehouse.com/posts/proprietary-warehouse-open-lakehouse-zero-copy-metadata-translation/"
 description: "Every warehouse migration sounds simpler before the first inventory. Then the team discovers old dashboards, hidden dependencies, undocumented stored."
 ---
 
@@ -18,7 +18,7 @@ description: "Every warehouse migration sounds simpler before the first inventor
 
 Every warehouse migration sounds simpler before the first inventory. Then the team discovers old dashboards, hidden dependencies, undocumented stored procedures, replicated tables, cost-center politics, permission shortcuts, and ten slightly different definitions of the same metric.
 
-> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/proprietary-warehouse-open-lakehouse-zero-copy-metadata-translation/).
+> **Cross-posted.** This article's canonical home is [Alex Merced's Lakehouse Blog](https://iceberglakehouse.com/posts/proprietary-warehouse-open-lakehouse-zero-copy-metadata-translation/).
 
 That is why I am careful with the phrase "zero-copy migration." It is attractive because nobody wants to pay twice for storage or run a risky big-bang rewrite. But true zero-copy depends on the current system, file layout, table metadata, storage location, access model, and target architecture. Sometimes zero-copy means registering existing files as open tables. Sometimes it means translating metadata while leaving data in place. Sometimes it really means low-copy migration with selective rewrites. Sometimes it is simply not possible without exporting data.
 

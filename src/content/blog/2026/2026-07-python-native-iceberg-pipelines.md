@@ -19,7 +19,7 @@ canonical: "https://iceberglakehouse.com/posts/python-native-iceberg-pipelines/"
 
 A data scientist has a transformation that takes forty lines of pandas. It reads two Iceberg tables, joins them, applies a scoring function from a library the team maintains, and writes the result back. Getting it into production means learning Spark, packaging the library into a JAR-compatible environment or fighting PySpark's dependency model, and waiting on a platform team to provision a cluster.
 
-> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/python-native-iceberg-pipelines/).
+> **Cross-posted.** This article's canonical home is [Alex Merced's Lakehouse Blog](https://iceberglakehouse.com/posts/python-native-iceberg-pipelines/).
 
 The transformation runs in eight seconds on a laptop against a sample. The path to production takes three weeks.
 

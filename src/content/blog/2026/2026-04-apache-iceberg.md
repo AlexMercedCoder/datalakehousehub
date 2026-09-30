@@ -25,7 +25,7 @@ canonical: "https://iceberglakehouse.com/posts/2026-03-07-apache-iceberg/"
 * [Part 6: Assembling the Apache Lakehouse](/blog/2026-04-assembling-apache-lakehouse)
 * [Part 7: Agentic Analytics on the Apache Lakehouse](/blog/2026-04-agentic-analytics)
 
-> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-03-07-apache-iceberg/).
+> **Cross-posted.** This article's canonical home is [Alex Merced's Lakehouse Blog](https://iceberglakehouse.com/posts/2026-03-07-apache-iceberg/).
 
 If you drop ten thousand Parquet files into an S3 bucket, you have a data swamp. You do not have a database. To run SQL queries against those files safely, your engine needs to know exactly which files belong to which table, what the columns are, and which files to ignore. Historically, Apache Hive solved this by tracking directories. Apache Iceberg solves this by tracking files. 
 

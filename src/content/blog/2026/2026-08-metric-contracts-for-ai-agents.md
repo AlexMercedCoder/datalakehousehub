@@ -20,7 +20,7 @@ canonical: "https://iceberglakehouse.com/posts/metric-contracts-for-ai-agents/"
 
 *By Alex Merced, Data Lakehouse and AI Evangelist*
 
-> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/metric-contracts-for-ai-agents/).
+> **Cross-posted.** This article's canonical home is [Alex Merced's Lakehouse Blog](https://iceberglakehouse.com/posts/metric-contracts-for-ai-agents/).
 
 Two teams present in the same meeting. Sales says pipeline conversion is 24 percent. Finance says it is 19. Both numbers came from the same warehouse. Both are defensible. The rest of the meeting is spent reconciling them instead of deciding anything, and the reconciliation produces a third number that nobody uses afterward.
 

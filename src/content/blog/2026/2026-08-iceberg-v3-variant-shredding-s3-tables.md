@@ -21,7 +21,7 @@ canonical: "https://iceberglakehouse.com/posts/iceberg-v3-variant-shredding-s3-t
 
 *By Alex Merced, Data Lakehouse and AI Evangelist*
 
-> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/iceberg-v3-variant-shredding-s3-tables/).
+> **Cross-posted.** This article's canonical home is [Alex Merced's Lakehouse Blog](https://iceberglakehouse.com/posts/iceberg-v3-variant-shredding-s3-tables/).
 
 Every data engineer has inherited the same table. It has four or five real columns and one column called `payload`, `raw`, `body`, or `event_json`. That column holds a string. Inside the string is JSON. Analysts query it with `json_extract` or `get_json_object` or whatever the engine calls the function, and every query reads the entire string for every row in every file the planner cannot rule out. A filter on one field inside that JSON reads gigabytes to return a handful of rows.
 

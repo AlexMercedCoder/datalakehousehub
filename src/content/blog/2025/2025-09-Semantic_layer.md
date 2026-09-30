@@ -24,7 +24,7 @@ canonical: "https://iceberglakehouse.com/posts/2025-09-composable-analytics-with
 - **[Iceberg Lakehouse Engineering Video Playlist](https://youtube.com/playlist?list=PLsLAVBjQJO0p0Yq1fLkoHvt2lEJj5pcYe&si=WTSnqjXZv6Glkc3y)** 
 - **[Ultimate Apache Iceberg Resource Guide](https://medium.com/data-engineering-with-dremio/ultimate-directory-of-apache-iceberg-resources-e3e02efac62e)**
 
-> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2025-09-composable-analytics-with-agents/).
+> **Cross-posted.** This article's canonical home is [Alex Merced's Lakehouse Blog](https://iceberglakehouse.com/posts/2025-09-composable-analytics-with-agents/).
 
 
 The promise of AI in analytics isn’t just faster answers, it’s **smarter, more flexible insights**. For that to happen, AI agents need not only access to data but also the ability to compose, extend, and recombine datasets on the fly. This is where Dremio’s **semantic layer** and **virtual datasets** come into play, providing the foundation for what AtScale calls *composable analytics*.

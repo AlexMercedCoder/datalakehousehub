@@ -17,7 +17,7 @@ draft: false
 
 Most of the coverage of Apache Iceberg 1.11 treats remote scan planning as a performance feature. The catalog plans the scan instead of the engine, the engine downloads less metadata, queries start faster. All of that is true, and for some workloads the numbers are meaningful. But the performance framing undersells what actually happened. When the catalog server decides which files a query is allowed to see, the catalog stops being a directory of table pointers and starts being an enforcement point. That is an architectural shift, not an optimization.
 
-> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/iceberg-rest-remote-scan-planning/).
+> **Cross-posted.** This article's canonical home is [Alex Merced's Lakehouse Blog](https://iceberglakehouse.com/posts/iceberg-rest-remote-scan-planning/).
 
 I want to walk through this carefully, because the details matter. Remote scan planning changes who holds metadata, who evaluates policy, how much intelligence an engine needs to carry, and what a "thin" Iceberg client can be. It changes what a catalog vendor sells. It changes what a compromised engine can learn about your storage layout. And it introduces new operational questions that client-side planning never had to answer, like what happens to your entire query fleet when the planning service has a bad day.
 

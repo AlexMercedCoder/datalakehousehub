@@ -19,7 +19,7 @@ canonical: "https://iceberglakehouse.com/posts/2026-03-connector-ibm-db2/"
 
 IBM Db2 is the relational database that powers critical applications across banking, insurance, government, healthcare, and manufacturing. For organizations running Db2 : particularly on IBM Z (mainframes) or IBM i, the database holds decades of transactional data: account balances, policy records, claim histories, manufacturing workflows, and government records. This data is enormously valuable for analytics but notoriously difficult to access outside the Db2/IBM ecosystem.
 
-> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-03-connector-ibm-db2/).
+> **Cross-posted.** This article's canonical home is [Alex Merced's Lakehouse Blog](https://iceberglakehouse.com/posts/2026-03-connector-ibm-db2/).
 
 Traditional approaches to Db2 analytics involve CDC tools (IBM InfoSphere DataStage, Attunity), batch exports, or data replication to a separate analytics warehouse. These approaches are expensive, complex, and create stale copies of data that diverge from the source of truth.
 

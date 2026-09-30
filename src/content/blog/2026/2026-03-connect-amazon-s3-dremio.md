@@ -19,7 +19,7 @@ canonical: "https://iceberglakehouse.com/posts/2026-03-connector-amazon-s3/"
 
 Amazon S3 is the default landing zone for data in the cloud. Log files, Parquet datasets, CSV exports, JSON events, IoT telemetry, and raw data dumps : it all ends up in S3 buckets. But S3 is storage, not an analytics engine. You can't run SQL against S3 natively. To query it, you need Amazon Athena (per-TB pricing), AWS Glue ETL jobs (cluster management), or a data warehouse that imports the data. All add cost, complexity, and latency.
 
-> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-03-connector-amazon-s3/).
+> **Cross-posted.** This article's canonical home is [Alex Merced's Lakehouse Blog](https://iceberglakehouse.com/posts/2026-03-connector-amazon-s3/).
 
 Dremio Cloud connects directly to S3 and lets you query files in place using standard SQL. Dremio reads Parquet, CSV, JSON, Delta Lake, and Apache Iceberg table formats. It pushes projection and filter operations into its vectorized query engine and caches frequently accessed data on local NVMe drives (Columnar Cloud Cache, or C3) for near-instantaneous repeat queries.
 

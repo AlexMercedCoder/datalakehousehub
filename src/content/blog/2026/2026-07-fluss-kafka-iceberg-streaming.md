@@ -19,7 +19,7 @@ canonical: "https://iceberglakehouse.com/posts/fluss-kafka-iceberg-streaming/"
 
 A streaming team is asked to cut dashboard latency from six minutes to under thirty seconds. The pipeline is Kafka into Flink into Apache Iceberg, and the six minutes is almost entirely the Flink sink's commit interval.
 
-> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/fluss-kafka-iceberg-streaming/).
+> **Cross-posted.** This article's canonical home is [Alex Merced's Lakehouse Blog](https://iceberglakehouse.com/posts/fluss-kafka-iceberg-streaming/).
 
 They shorten it. Latency drops and the table starts producing a file per bucket per commit, so the file count grows by a factor of twelve. Query planning slows, compaction cannot keep up, and within two weeks the dashboard is slower than it was at six-minute commits.
 

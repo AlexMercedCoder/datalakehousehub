@@ -23,7 +23,7 @@ canonical: "https://iceberglakehouse.com/posts/2026-05-24-policy-as-code-governa
 
 The traditional approach to data access governance relies on role-based access control: you define roles, assign users to roles, and grant roles access to specific tables or schemas. For a team of ten analysts and a handful of sensitive tables, this is manageable. For an organization with hundreds of analysts, dozens of data domains, and fine-grained sensitivity classifications across thousands of tables, RBAC becomes a maintenance burden that governance teams can't keep current.
 
-> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-05-24-policy-as-code-governance/).
+> **Cross-posted.** This article's canonical home is [Alex Merced's Lakehouse Blog](https://iceberglakehouse.com/posts/2026-05-24-policy-as-code-governance/).
 
 The role explosion problem is real. When access is controlled purely by roles, every new combination of "user group + sensitivity level + regional constraint" requires a new role. Governance teams spend more time managing role assignments than thinking about policy intent. Access reviews become a bureaucratic exercise because nobody can actually read the policy from the role hierarchy.
 

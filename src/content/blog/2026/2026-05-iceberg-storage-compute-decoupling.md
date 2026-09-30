@@ -16,7 +16,7 @@ canonical: "https://iceberglakehouse.com/posts/iceberg-storage-compute-decouplin
 
 Most proprietary data warehouses bundle their storage and compute into a single product. You buy the system, and you get both : at a price the vendor sets. Apache Iceberg breaks that model by treating storage and compute as separate, independently scalable concerns. That separation is the technical foundation for most of the cost advantages people attribute to data lakehouses.
 
-> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/iceberg-storage-compute-decoupling/).
+> **Cross-posted.** This article's canonical home is [Alex Merced's Lakehouse Blog](https://iceberglakehouse.com/posts/iceberg-storage-compute-decoupling/).
 
 This post explains exactly how Iceberg achieves that decoupling, what it costs to maintain (because there are real operational requirements), and how to route workloads across engines to get the best cost-to-performance ratio.
 

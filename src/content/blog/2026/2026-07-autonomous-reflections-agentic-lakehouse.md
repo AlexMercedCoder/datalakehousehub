@@ -19,7 +19,7 @@ canonical: "https://iceberglakehouse.com/posts/autonomous-reflections-agentic-la
 
 A data engineer maintains 60 materialized views. Twelve of them accelerate queries nobody runs anymore, because the dashboard they served got retired in March and nobody told her. Eight of the slowest queries in the system have no acceleration at all, because the analysts who run them never filed a ticket. She finds out about both problems during a quarterly review, six months late.
 
-> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/autonomous-reflections-agentic-lakehouse/).
+> **Cross-posted.** This article's canonical home is [Alex Merced's Lakehouse Blog](https://iceberglakehouse.com/posts/autonomous-reflections-agentic-lakehouse/).
 
 This is the normal state of materialized view management, and it is not a competence problem. It is an information problem. The person deciding what to materialize does not see the query log, and the system that sees the query log does not decide what to materialize.
 

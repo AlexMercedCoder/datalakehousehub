@@ -1,7 +1,7 @@
 ---
 title: "The Open Lakehouse Explained, Then Built on Your Laptop with Dremio and MinIO"
 date: 2026-09-10T12:00:00Z
-canonical: https://iceberglakehouse.com/posts/open-lakehouse-on-your-laptop/
+canonical: "https://iceberglakehouse.com/posts/open-lakehouse-on-your-laptop/"
 description: "The five layers of the open lakehouse explained, then a lab: Parquet, Iceberg, Polaris, Arrow, and Ossie running in two containers on your own machine."
 author: "Alex Merced"
 category: "Lakehouse Architecture"
@@ -17,7 +17,7 @@ image: "/images/blog.png"
 bannerImage: "/images/blog.png"
 ---
 
-> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/open-lakehouse-on-your-laptop/).
+> **Cross-posted.** This article's canonical home is [Alex Merced's Lakehouse Blog](https://iceberglakehouse.com/posts/open-lakehouse-on-your-laptop/).
 
 Most people learn the open lakehouse backwards. They read five vendor pages, collect a stack of Apache project names, and still cannot answer a basic question: when I run a query, what does each piece actually do?
 

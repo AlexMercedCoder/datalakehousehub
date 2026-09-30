@@ -10,7 +10,7 @@ tags:
 slug: "trustworthy-concurrency-agentic-lakehouse-production-writes"
 draft: false
 image: "/images/blog.png"
-canonical: https://iceberglakehouse.com/posts/trustworthy-concurrency-agentic-lakehouse-production-writes/
+canonical: "https://iceberglakehouse.com/posts/trustworthy-concurrency-agentic-lakehouse-production-writes/"
 description: "Agentic lakehouses change the concurrency conversation. Traditional data pipelines already deal with overlapping jobs, retries, compaction, merges."
 ---
 
@@ -18,7 +18,7 @@ description: "Agentic lakehouses change the concurrency conversation. Traditiona
 
 Agentic lakehouses change the concurrency conversation. Traditional data pipelines already deal with overlapping jobs, retries, compaction, merges, and streaming writes. Add AI agents that can inspect tables, recommend repairs, trigger maintenance, or write derived results, and the number of automated actors grows quickly.
 
-> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/trustworthy-concurrency-agentic-lakehouse-production-writes/).
+> **Cross-posted.** This article's canonical home is [Alex Merced's Lakehouse Blog](https://iceberglakehouse.com/posts/trustworthy-concurrency-agentic-lakehouse-production-writes/).
 
 Apache Iceberg gives lakehouse tables a strong transactional foundation. Its snapshot model and commit behavior help multiple writers coordinate changes to table metadata. But table-level guarantees do not remove the need for workflow discipline. Optimistic concurrency control can detect conflicts. It cannot decide whether an agent should retry, back off, merge intent, cancel, or ask for human review.
 

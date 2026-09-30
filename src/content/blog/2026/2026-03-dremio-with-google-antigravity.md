@@ -19,7 +19,7 @@ canonical: "https://iceberglakehouse.com/posts/2026-03-aitool-google-antigravity
 
 Google Antigravity is an agent-first IDE built by Google DeepMind. Its autonomous agents plan multi-step tasks, write code, browse documentation, and iterate without constant hand-holding. Dremio is a unified lakehouse platform that provides the business context, universal data access, and interactive query speed that AI agents need to produce accurate analytics.
 
-> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-03-aitool-google-antigravity/).
+> **Cross-posted.** This article's canonical home is [Alex Merced's Lakehouse Blog](https://iceberglakehouse.com/posts/2026-03-aitool-google-antigravity/).
 
 Connecting the two gives your Antigravity agents something most coding agents lack: direct access to your data catalog, table schemas, business logic encoded in views, and the correct SQL dialect for Dremio's query engine. Without it, the agent guesses at table names and hallucinates SQL functions. With it, the agent writes queries that actually run.
 

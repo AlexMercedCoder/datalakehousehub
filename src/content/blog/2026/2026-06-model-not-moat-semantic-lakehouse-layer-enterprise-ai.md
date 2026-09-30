@@ -12,7 +12,11 @@ tags:
 slug: model-not-moat-semantic-lakehouse-layer-enterprise-ai
 draft: false
 image: "/images/blog.png"
+canonical: "https://iceberglakehouse.com/posts/model-not-moat-semantic-lakehouse-layer-enterprise-ai/"
 ---
+
+> **Cross-posted.** This article's canonical home is [Alex Merced's Lakehouse Blog](https://iceberglakehouse.com/posts/model-not-moat-semantic-lakehouse-layer-enterprise-ai/).
+
 # The Model Is Not the Moat
 
 

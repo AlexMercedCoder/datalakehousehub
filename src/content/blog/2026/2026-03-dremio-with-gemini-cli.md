@@ -19,7 +19,7 @@ canonical: "https://iceberglakehouse.com/posts/2026-03-aitool-gemini-cli/"
 
 Gemini CLI is Google's open-source terminal-based AI agent. It runs directly in your terminal, powered by Gemini models with a 1-million token context window. Dremio is a unified lakehouse platform that provides business context through its semantic layer, universal data access through query federation, and interactive speed through Reflections and Apache Arrow.
 
-> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-03-aitool-gemini-cli/).
+> **Cross-posted.** This article's canonical home is [Alex Merced's Lakehouse Blog](https://iceberglakehouse.com/posts/2026-03-aitool-gemini-cli/).
 
 Connecting them gives Gemini CLI the data context it needs to write accurate Dremio SQL, generate pipeline scripts, and build applications against your lakehouse. The 1-million token context window is a significant advantage: Gemini CLI can hold your entire project, documentation, and Dremio schema context simultaneously without the context limitations that constrain other agents.
 

@@ -19,7 +19,7 @@ canonical: "https://iceberglakehouse.com/posts/agent-guardrails-human-in-the-loo
 
 An agent monitoring inventory levels notices a stockout risk, drafts a purchase order, and submits it. The logic was sound. The signal it read came from a table that had been double-loaded that morning, so the quantity on hand looked half what it was. The order goes out for 40, 000 units of something the warehouse already has.
 
-> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/agent-guardrails-human-in-the-loop/).
+> **Cross-posted.** This article's canonical home is [Alex Merced's Lakehouse Blog](https://iceberglakehouse.com/posts/agent-guardrails-human-in-the-loop/).
 
 Nobody wrote a bug. The pipeline had a duplicate load, which happens, and the normal recovery is that someone notices the weird number and asks about it. That step is gone, because the thing reading the number acts on it in 200 milliseconds and does not find numbers weird.
 

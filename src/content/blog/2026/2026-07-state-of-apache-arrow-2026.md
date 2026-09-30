@@ -1,7 +1,7 @@
 ---
 title: "The State of Apache Arrow in 2026: Ten Years In, the Invisible Standard Is Everywhere"
 date: 2026-07-06T12:00:00Z
-canonical: https://iceberglakehouse.com/posts/state-of-apache-arrow-2026/
+canonical: "https://iceberglakehouse.com/posts/state-of-apache-arrow-2026/"
 description: "Apache Arrow at 10, ADBC, Flight SQL, nanoarrow, the AI reinterpretation, and how an in-memory standard eliminated the copy tax across the data stack."
 author: "Alex Merced"
 category: "Apache Arrow"
@@ -22,7 +22,7 @@ bannerImage: "/images/blog.png"
 
 *By Alex Merced, Head of Developer Relations at Dremio*
 
-> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/state-of-apache-arrow-2026/).
+> **Cross-posted.** This article's canonical home is [Alex Merced's Lakehouse Blog](https://iceberglakehouse.com/posts/state-of-apache-arrow-2026/).
 
 In February 2026, Apache Arrow turned ten years old. The first commit landed on February 5th, 2016, and the anniversary passed the way Arrow itself operates: quietly, while running inside nearly every data tool you touched that day.
 

@@ -10,7 +10,7 @@ tags:
 slug: "closed-loop-decision-agents-passive-bi-active-workflows"
 draft: false
 image: "/images/blog.png"
-canonical: https://iceberglakehouse.com/posts/closed-loop-decision-agents-passive-bi-active-workflows/
+canonical: "https://iceberglakehouse.com/posts/closed-loop-decision-agents-passive-bi-active-workflows/"
 description: "Dashboards are excellent at showing people what happened. They are less good at deciding what should happen next."
 ---
 
@@ -18,7 +18,7 @@ description: "Dashboards are excellent at showing people what happened. They are
 
 Dashboards are excellent at showing people what happened. They are less good at deciding what should happen next.
 
-> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/closed-loop-decision-agents-passive-bi-active-workflows/).
+> **Cross-posted.** This article's canonical home is [Alex Merced's Lakehouse Blog](https://iceberglakehouse.com/posts/closed-loop-decision-agents-passive-bi-active-workflows/).
 
 That gap is where closed-loop decision agents enter the conversation. A closed-loop agent can observe a signal, reason about what it means, validate the evidence, and request or perform an approved action. The loop might monitor demand changes, detect pipeline failures, recommend inventory adjustments, flag account risk, or trigger a workflow when a metric crosses a boundary.
 

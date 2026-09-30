@@ -18,7 +18,7 @@ canonical: "https://iceberglakehouse.com/posts/2026-02-dm-data-modeling-lakehous
 
 ![Traditional data warehouse model vs. open lakehouse model with flexible schema and views](/images/blog/data-modeling/lakehouse-data-modeling.png)
 
-> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-02-dm-data-modeling-lakehouse/).
+> **Cross-posted.** This article's canonical home is [Alex Merced's Lakehouse Blog](https://iceberglakehouse.com/posts/2026-02-dm-data-modeling-lakehouse/).
 
 Traditional data modeling assumed you controlled the database. You defined schemas up front, enforced foreign keys at write time, and optimized with indexes. The lakehouse changes every one of those assumptions.
 

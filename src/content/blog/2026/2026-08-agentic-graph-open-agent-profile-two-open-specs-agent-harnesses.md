@@ -14,12 +14,12 @@ tags:
 slug: "agentic-graph-open-agent-profile-two-open-specs-agent-harnesses"
 draft: false
 image: "/images/blog.png"
-canonical: https://iceberglakehouse.com/posts/agentic-graph-open-agent-profile-two-open-specs-agent-harnesses/
+canonical: "https://iceberglakehouse.com/posts/agentic-graph-open-agent-profile-two-open-specs-agent-harnesses/"
 ---
 
 Every agent harness solves the same two problems, and almost every one of them solves both privately.
 
-> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/agentic-graph-open-agent-profile-two-open-specs-agent-harnesses/).
+> **Cross-posted.** This article's canonical home is [Alex Merced's Lakehouse Blog](https://iceberglakehouse.com/posts/agentic-graph-open-agent-profile-two-open-specs-agent-harnesses/).
 
 The first problem is decomposition. A task arrives, the harness breaks it into steps, and those steps live in the harness's own memory in the harness's own shape. You see the plan after the tokens are spent, if you see it at all. When the session ends, the plan is gone.
 

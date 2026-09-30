@@ -1,7 +1,7 @@
 ---
 title: "Context Engineering for Data Agents"
 date: 2026-09-10T12:00:00Z
-canonical: https://iceberglakehouse.com/posts/context-engineering-for-data-agents/
+canonical: "https://iceberglakehouse.com/posts/context-engineering-for-data-agents/"
 description: "Why text-to-SQL accuracy collapses on enterprise schemas, the five kinds of context an agent needs, where each one hides, and how to make the semantics legible."
 author: "Alex Merced"
 category: "AI & Agents"
@@ -17,7 +17,7 @@ image: "/images/blog.png"
 bannerImage: "/images/blog.png"
 ---
 
-> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/context-engineering-for-data-agents/).
+> **Cross-posted.** This article's canonical home is [Alex Merced's Lakehouse Blog](https://iceberglakehouse.com/posts/context-engineering-for-data-agents/).
 
 An executive asks an internal agent what revenue was last quarter. It returns a number, formatted nicely, with the SQL it ran. The number is wrong by eleven percent, because the agent summed a column called `amount` that includes cancelled orders, and the company's definition of revenue excludes them. Nobody catches it, because the query is syntactically perfect and the answer is plausible.
 

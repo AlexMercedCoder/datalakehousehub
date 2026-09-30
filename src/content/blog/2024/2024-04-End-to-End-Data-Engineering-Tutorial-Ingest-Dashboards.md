@@ -16,7 +16,7 @@ canonical: "https://iceberglakehouse.com/posts/2024-4-end-to-end-data-engineerin
 
 Data engineering aims to make data accessible and usable for data analytics and data science purposes. This involves several key aspects:
 
-> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2024-4-end-to-end-data-engineering-tutorial-spark-dremio-superset/).
+> **Cross-posted.** This article's canonical home is [Alex Merced's Lakehouse Blog](https://iceberglakehouse.com/posts/2024-4-end-to-end-data-engineering-tutorial-spark-dremio-superset/).
 
 - Transferring data from operational systems like databases to systems optimized for analytical access.
  

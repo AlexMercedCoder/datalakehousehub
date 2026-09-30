@@ -18,7 +18,7 @@ canonical: "https://iceberglakehouse.com/posts/2026-02-debp-schema-evolution/"
 
 ![Schema as a contract between producers and consumers with version tracking](/images/blog/debp/schema-contract.png)
 
-> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2026-02-debp-schema-evolution/).
+> **Cross-posted.** This article's canonical home is [Alex Merced's Lakehouse Blog](https://iceberglakehouse.com/posts/2026-02-debp-schema-evolution/).
 
 A source team renames a column from `user_id` to `customer_id`. Twelve hours later, five dashboards show blank values, two ML pipelines fail, and the data engineering team spends the morning tracing a problem that could have been prevented with one rule: treat your schema like an API.
 

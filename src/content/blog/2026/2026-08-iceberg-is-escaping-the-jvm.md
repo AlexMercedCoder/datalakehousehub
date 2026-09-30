@@ -17,7 +17,7 @@ draft: false
 
 The Apache Iceberg release notes I find most interesting in 2026 are not the ones for the main project. They are the ones for the subprojects: iceberg-rust shipping its 0.10 line in July after another release cycle measured in hundreds of merged pull requests from dozens of contributors, iceberg-go putting out 0.6.0 in late spring with nearly 200 PRs from 40 contributors, 26 of them first-timers, iceberg-cpp reaching 0.3.0 in June, and PyIceberg's 0.11 landing feature work, like server-side scan planning, that the Java line only recently gained itself. Four native implementations, none of them ports, all of them Apache-governed, all of them accelerating.
 
-> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/iceberg-is-escaping-the-jvm/).
+> **Cross-posted.** This article's canonical home is [Alex Merced's Lakehouse Blog](https://iceberglakehouse.com/posts/iceberg-is-escaping-the-jvm/).
 
 The easy read is "Iceberg now works in more languages, " which is true and undersells it badly. Table formats live or die by where they can be embedded, and for its first eight years, embedding Iceberg meant embedding a JVM, which confined the format to the big cluster engines and left everything else, services, CLIs, notebooks, edge processes, browsers, agents, reading Parquet around it. The native implementations end that confinement, and the consequences reach further than convenience: they change what kind of software can participate in a lakehouse, they change how the specification itself evolves, and they change what "the reference implementation" means for a format that intends to outlive any single runtime.
 

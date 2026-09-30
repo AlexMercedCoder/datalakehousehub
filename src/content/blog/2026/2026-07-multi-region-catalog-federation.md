@@ -19,7 +19,7 @@ canonical: "https://iceberglakehouse.com/posts/multi-region-catalog-federation/"
 
 An engineer needs to join sales data in eu-west-1 with product data in us-east-1. The sales tables live in a Polaris instance the European team runs. The product tables sit in AWS Glue in a US account. A third team has tables in a separate REST catalog nobody remembers standing up.
 
-> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/multi-region-catalog-federation/).
+> **Cross-posted.** This article's canonical home is [Alex Merced's Lakehouse Blog](https://iceberglakehouse.com/posts/multi-region-catalog-federation/).
 
 The join is a twenty-line query. Getting permission to run it takes three weeks, because it requires an access request in each system, three different approvers, and three different mental models of what a grant means. Two of the three approvers do not know what the third system is.
 

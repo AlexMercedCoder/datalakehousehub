@@ -11,7 +11,7 @@ tags:
 slug: 2025-06-AWS-Instance-Types
 draft: false
 image: "/images/blog.png"
-canonical: "https://iceberglakehouse.com/posts/2025-06-AWS-Instance-Types/"
+canonical: "https://iceberglakehouse.com/posts/2025-06-aws-instance-types/"
 ---
 
 ## Free Resources  
@@ -23,7 +23,7 @@ canonical: "https://iceberglakehouse.com/posts/2025-06-AWS-Instance-Types/"
 - **[Iceberg Lakehouse Engineering Video Playlist](https://youtube.com/playlist?list=PLsLAVBjQJO0p0Yq1fLkoHvt2lEJj5pcYe&si=WTSnqjXZv6Glkc3y)** 
 - **[Ultimate Apache Iceberg Resource Guide](https://medium.com/data-engineering-with-dremio/ultimate-directory-of-apache-iceberg-resources-e3e02efac62e)**
 
-> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2025-06-AWS-Instance-Types/).
+> **Cross-posted.** This article's canonical home is [Alex Merced's Lakehouse Blog](https://iceberglakehouse.com/posts/2025-06-aws-instance-types/).
 
 
 ## Introduction

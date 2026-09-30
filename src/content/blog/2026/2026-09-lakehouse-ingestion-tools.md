@@ -14,12 +14,12 @@ tags:
 slug: "lakehouse-ingestion-tools"
 draft: false
 image: "/images/blog.png"
-canonical: https://iceberglakehouse.com/posts/lakehouse-ingestion-tools/
+canonical: "https://iceberglakehouse.com/posts/lakehouse-ingestion-tools/"
 ---
 
 Ingestion used to end at a warehouse. A connector pulled from Salesforce or Postgres, wrote to a staging schema in Snowflake or BigQuery, and the warehouse handled the rest. The lakehouse changes the destination. The connector now writes Apache Iceberg tables to object storage, registers them through a REST catalog, and hands them to whichever engines are reading. What the connector does with schema evolution, how often it commits, how it represents a deleted row, and who compacts the files afterward all become the ingestion tool's responsibility, because there is no warehouse to absorb the mistakes.
 
-> **Cross-posted.** This article's canonical home is [iceberglakehouse.com](https://iceberglakehouse.com/posts/lakehouse-ingestion-tools/).
+> **Cross-posted.** This article's canonical home is [Alex Merced's Lakehouse Blog](https://iceberglakehouse.com/posts/lakehouse-ingestion-tools/).
 
 The tools have changed too. Fivetran completed its merger with dbt Labs on June 1, 2026, after acquiring Census and Tobiko Data in 2025, and now sells ingestion, transformation, and a managed lake as one product. Airbyte remains the open-source connector platform and has made Iceberg a first-class destination. dlt has become the code-first option for teams that write ingestion in Python and increasingly for AI agents that generate it. And a separate tier of change-data-capture (CDC) and streaming tools, from Debezium and the Kafka Connect Iceberg sink to managed services, handles the workloads where a batch connector is the wrong shape.
 

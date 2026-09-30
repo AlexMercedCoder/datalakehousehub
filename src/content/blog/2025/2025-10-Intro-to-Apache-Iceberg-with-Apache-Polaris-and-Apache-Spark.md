@@ -22,7 +22,7 @@ canonical: "https://iceberglakehouse.com/posts/2025-10-intro-to-apache-iceberg-w
 - [Architecting an Apache Iceberg Lakehouse](https://hubs.la/Q03GfY4f0)
 - [The Apache Iceberg Digest: Vol. 1](https://www.puppygraph.com/ebooks/apache-iceberg-digest-vol-1)
 
-> **Cross-posted.** This article's canonical home is [Iceberg Lakehouse](https://iceberglakehouse.com/posts/2025-10-intro-to-apache-iceberg-with-apache-polaris-and-apache-spark/).
+> **Cross-posted.** This article's canonical home is [Alex Merced's Lakehouse Blog](https://iceberglakehouse.com/posts/2025-10-intro-to-apache-iceberg-with-apache-polaris-and-apache-spark/).
 
 **Lakehouse Community:**
 - [Join the Data Lakehouse Community](https://www.datalakehousehub.com)
