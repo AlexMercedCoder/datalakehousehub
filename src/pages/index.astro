@@ -34,28 +34,28 @@ const destinations = [
     title: "Knowledge Base",
     description:
       "A searchable glossary of lakehouse, Iceberg, and catalog terminology.",
-    href: "/knowledgebase",
+    href: "/knowledgebase/",
     icon: "book",
   },
   {
     title: "The Blog",
     description:
       "Tutorials, architecture deep dives, and ecosystem news, published weekly.",
-    href: "/blog",
+    href: "/blog/",
     icon: "pen",
   },
   {
     title: "Video Explainers",
     description:
       "Short, focused walkthroughs of the concepts that are hard to read about.",
-    href: "/videos",
+    href: "/videos/",
     icon: "play",
   },
   {
     title: "Events Calendar",
     description:
       "Meetups, webinars, and Lakehouse Linkups happening across the community.",
-    href: "/events",
+    href: "/events/",
     icon: "calendar",
   },
 ];
@@ -67,28 +67,28 @@ const mustReads = [
     title: "What is Apache Iceberg? The Table Format Revolution",
     description:
       "Learn how Apache Iceberg turned raw Parquet files in S3 into a fully ACID-compliant, time-traveling analytical database without moving your data out of object storage.",
-    href: "/blog/2026-04-apache-iceberg",
+    href: "/blog/2026-04-apache-iceberg/",
   },
   {
     category: "Agentic AI",
     title: "Agentic Analytics on the Apache Lakehouse",
     description:
       "How autonomous AI agents replace manual dashboard querying by reading governed semantic layers directly on your data lakehouse.",
-    href: "/blog/2026-04-agentic-analytics",
+    href: "/blog/2026-04-agentic-analytics/",
   },
   {
     category: "Ecosystem",
     title: "The 2025 State of the Apache Iceberg Ecosystem",
     description:
       "Survey data from data professionals on adoption rates, popular tooling, and where the ecosystem is heading through 2026.",
-    href: "/blog/2026-02-state-of-the-apache-iceberg-ecosystem",
+    href: "/blog/2026-02-state-of-the-apache-iceberg-ecosystem/",
   },
   {
     category: "Data Lakehouse",
     title: "What Are Table Formats and Why Were They Needed?",
     description:
       "Table formats solved the ACID, schema evolution, and query performance problems that turned data lakes into unmanageable swamps.",
-    href: "/blog/2026-04-29-apache-iceberg-masterclass-01-table-formats",
+    href: "/blog/2026-04-29-apache-iceberg-masterclass-01-table-formats/",
   },
   {
     category: "Apache Iceberg",
@@ -102,7 +102,7 @@ const mustReads = [
     title: "Why AI Fails Without a Semantic Layer",
     description:
       "The business context and governed metrics AI agents need to generate accurate, trustworthy analytical answers at scale.",
-    href: "/blog/2026-02-semantic-layer-05-why-ai-fails-without",
+    href: "/blog/2026-02-semantic-layer-05-why-ai-fails-without/",
   },
 ];
 
@@ -218,7 +218,7 @@ const [featuredRead, ...secondaryReads] = mustReads;
                 </a>
               )
             }
-            <a class="btn btn-outline-primary" href="/knowledgebase">
+            <a class="btn btn-outline-primary" href="/knowledgebase/">
               Explore Knowledge Base
             </a>
             <a class="btn btn-outline-primary" href="https://luma.com/DataLakehouseHub">
@@ -397,7 +397,7 @@ const [featuredRead, ...secondaryReads] = mustReads;
           <h2 class="mt-3 text-3xl lg:text-4xl">Latest Posts</h2>
         </div>
         <a
-          href="/blog"
+          href="/blog/"
           class="group inline-flex items-center gap-1.5 font-semibold text-primary dark:text-darkmode-primary"
         >
           View all posts
@@ -560,7 +560,7 @@ const [featuredRead, ...secondaryReads] = mustReads;
             class="mt-5 text-lg leading-relaxed text-text dark:text-darkmode-text"
             set:html={workflow?.description}
           />
-          <a href="/author/alex-merced" class="btn btn-outline-primary btn-sm mt-8">
+          <a href="/author/alex-merced/" class="btn btn-outline-primary btn-sm mt-8">
             Meet the author
           </a>
         </div>

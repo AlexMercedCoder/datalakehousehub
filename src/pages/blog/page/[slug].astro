@@ -39,7 +39,10 @@ const indexOfFirstPost = indexOfLastPost - config.settings.pagination;
 const currentPosts = sortedPosts.slice(indexOfFirstPost, indexOfLastPost);
 ---
 
-<Base title={postIndex?.data.title}>
+<Base
+  title={`${postIndex?.data.title} | Page ${currentPage}`}
+  description={`Articles on Data Lakehouse Hub, newest first: page ${currentPage} of ${totalPages}. Lakehouse news, Apache Iceberg, agentic AI, and coding agent guides.`}
+>
   <section class="section">
     <div class="container">
       <h1

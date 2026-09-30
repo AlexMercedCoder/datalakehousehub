@@ -1,4 +1,5 @@
 ---
+import { withSlash } from "@/lib/utils/withSlash";
 import { render } from "astro:content";
 import { markdownify } from "@/lib/utils/textConverter";
 
@@ -22,7 +23,7 @@ const { Content } = await render(data);
         </li>
         <li aria-hidden="true">/</li>
         <li>
-          <a href="/knowledgebase" class="hover:text-primary transition-colors">Knowledge Base</a>
+          <a href="/knowledgebase/" class="hover:text-primary transition-colors">Knowledge Base</a>
         </li>
         <li aria-hidden="true">/</li>
         <li class="font-medium text-dark dark:text-darkmode-dark" aria-current="page">
@@ -59,7 +60,7 @@ const { Content } = await render(data);
           <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {relatedTerms.map((term: any) => (
               <a
-                href={`/knowledgebase/${term.id}`}
+                href={withSlash(`/knowledgebase/${term.id}`)}
                 class="group block rounded-xl border border-border bg-white p-5 transition hover:border-primary hover:shadow-md dark:border-darkmode-border dark:bg-theme-dark"
               >
                 <h3 class="font-bold text-dark group-hover:text-primary dark:text-darkmode-dark text-base mb-2">
@@ -80,7 +81,7 @@ const { Content } = await render(data);
     <!-- Navigation Back -->
     <div class="mt-12 text-center">
       <a
-        href="/knowledgebase"
+        href="/knowledgebase/"
         class="btn btn-outline-primary text-sm font-semibold inline-flex items-center gap-2"
       >
         <span>&larr;</span> Back to All Terms

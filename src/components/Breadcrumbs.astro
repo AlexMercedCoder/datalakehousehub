@@ -1,4 +1,5 @@
 ---
+import { withSlash } from "@/lib/utils/withSlash";
 import { humanize } from "@/lib/utils/textConverter";
 
 const { className } = Astro.props;
@@ -36,7 +37,7 @@ paths.forEach((name, i) => {
             </span>
           ) : (
             <a
-              href={href}
+              href={withSlash(href)}
               aria-label={ariaLabel}
               class="text-primary hover:text-primary/80 dark:text-darkmode-primary dark:hover:text-darkmode-primary/80 transition-colors"
             >

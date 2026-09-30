@@ -1,4 +1,5 @@
 ---
+import { withSlash } from "@/lib/utils/withSlash";
 import { Image } from "astro:assets";
 import { getCollection } from "astro:content";
 import config from "@/config/config.json";
@@ -30,7 +31,7 @@ if (post.data.relatedPosts && post.data.relatedPosts.length > 0) {
           <div class="col-12 mb-8 sm:col-6 lg:col-4">
              <div class="bg-white dark:bg-darkmode-theme-light rounded-lg shadow p-4 h-full">
                 <a
-                    href={`/blog/${post.id}`}
+                    href={withSlash(`/blog/${post.id}`)}
                     class="block hover:text-primary transition duration-300"
                 >
                     <img
@@ -44,7 +45,7 @@ if (post.data.relatedPosts && post.data.relatedPosts.length > 0) {
                 <div class="mt-4">
                     <h3 class="h4 mb-2">
                         <a
-                        href={`/blog/${post.id}`}
+                        href={withSlash(`/blog/${post.id}`)}
                         class="block hover:text-primary transition duration-300"
                         >
                         {post.data.title}

@@ -94,7 +94,7 @@ export default function SearchBar({ searchList }: Props) {
           <div key={item.slug} className={"col-12 mb-8"}>
             <div className="bg-body dark:bg-theme-dark rounded-lg shadow-md p-6 h-full border border-border dark:border-darkmode-border hover:shadow-lg transition-shadow duration-300">
               <h3 className="mb-3">
-                <a href={`/${item.slug}`} className="block hover:text-primary transition-colors duration-200 break-words">
+                <a href={`/${item.slug}/`} className="block hover:text-primary transition-colors duration-200 break-words">
                   {item.data.title}
                 </a>
               </h3>

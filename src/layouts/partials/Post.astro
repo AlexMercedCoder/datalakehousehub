@@ -1,4 +1,5 @@
 ---
+import { withSlash } from "@/lib/utils/withSlash";
 import config from "@/config/config.json";
 import dateFormat from "@/lib/utils/dateFormat";
 
@@ -7,7 +8,7 @@ const { blog_folder } = config.settings;
 ---
 
 <a
-  href={`/${blog_folder}/${post.id}`}
+  href={withSlash(`/${blog_folder}/${post.id}`)}
   class="surface surface-hover group flex h-full flex-col overflow-hidden"
 >
   <div class="relative overflow-hidden">

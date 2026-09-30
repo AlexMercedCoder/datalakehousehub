@@ -1,4 +1,5 @@
 ---
+import { withSlash } from "@/lib/utils/withSlash";
 import Base from "@/layouts/Base.astro";
 import { markdownify } from "@/lib/utils/textConverter";
 import { getEntry, render } from "astro:content";
@@ -39,7 +40,7 @@ const recentPosts = sortByDate(
                  <div class="bg-white dark:bg-darkmode-theme-light rounded-lg shadow p-4 h-full">
                     {post.data.image && (
                     <a
-                        href={`/blog/${post.id}`}
+                        href={withSlash(`/blog/${post.id}`)}
                         class="block hover:text-primary transition duration-300"
                     >
                         <Image
@@ -57,7 +58,7 @@ const recentPosts = sortByDate(
                         </div>
                         <h3 class="h4 mb-2">
                             <a
-                            href={`/blog/${post.id}`}
+                            href={withSlash(`/blog/${post.id}`)}
                             class="block hover:text-primary transition duration-300"
                             >
                             {post.data.title}

@@ -1,4 +1,5 @@
 ---
+import { withSlash } from "@/lib/utils/withSlash";
 import { Image } from "astro:assets";
 const { posts } = Astro.props;
 import config from "@/config/config.json";
@@ -20,7 +21,7 @@ const { blog_folder } = config.settings;
         )}
         <h3 class="h4">
           <a
-            href={`/${blog_folder}/${post.id}`}
+            href={withSlash(`/${blog_folder}/${post.id}`)}
             class="block hover:text-primary"
           >
             {post.data.title}

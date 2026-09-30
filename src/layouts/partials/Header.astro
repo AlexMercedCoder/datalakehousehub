@@ -1,4 +1,5 @@
 ---
+import { withSlash } from "@/lib/utils/withSlash";
 import Logo from "@/components/Logo.astro";
 import { nav_button } from "@/config/config.json";
 import menu from "@/config/menu.json";
@@ -101,9 +102,9 @@ const { main }: { main: NavigationLink[] } = menu;
                   {menu.children?.map((child) => (
                     <li class="nav-dropdown-item">
                       <a
-                        href={child.url}
+                        href={withSlash(child.url)}
                         class={`nav-dropdown-link block ${
-                          pathname === child.url && "nav-link-active"
+                          pathname === withSlash(child.url) && "nav-link-active"
                         }`}
                       >
                         {child.name}
@@ -115,9 +116,9 @@ const { main }: { main: NavigationLink[] } = menu;
             ) : (
               <li class="nav-item">
                 <a
-                  href={menu.url}
+                  href={withSlash(menu.url)}
                   class={`nav-link block ${
-                    pathname === menu.url && "nav-link-active"
+                    pathname === withSlash(menu.url) && "nav-link-active"
                   }`}
                 >
                   {menu.name}

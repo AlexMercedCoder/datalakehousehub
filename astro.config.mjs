@@ -6,9 +6,15 @@ import AutoImport from "astro-auto-import";
 import { defineConfig } from "astro/config";
 import remarkCollapse from "remark-collapse";
 import remarkToc from "remark-toc";
+import trailingSlashLinks from "./src/lib/rehype/trailingSlashLinks.mjs";
+import demoteH1 from "./src/lib/rehype/demoteH1.mjs";
 import config from "./src/config/config.json";
 import fs from "node:fs";
 import path from "node:path";
+
+// Posts whose canonical lives on another site (syndicated copies) stay out of
+// the sitemap: a sitemap should list only URLs this site is canonical for.
+const nonCanonicalPaths = new Set();
 
 function getHubDates() {
   const dates = {};
@@ -30,6 +36,12 @@ function getHubDates() {
           if (modMatch) dVal = modMatch[1].trim().replace(/["']/g, "");
         }
         const dObj = dVal ? new Date(dVal) : fs.statSync(full).mtime;
+        if (m && prefix === "/blog/" && /^canonical:\s*["']?https:\/\/(?!datalakehousehub\.com)/m.test(m[1])) {
+          const slugMatch = m[1].match(/^slug:\s*["']?([^"'\n]+?)["']?\s*$/m);
+          const rel = path.relative("./src/content/blog", full).replace(/\.mdx?$/, "");
+          const id = slugMatch ? slugMatch[1] : rel.toLowerCase().replace(/[^a-z0-9/ _-]/g, "").replace(/ /g, "-");
+          nonCanonicalPaths.add(`/blog/${id}/`.toLowerCase());
+        }
         const slug = f.replace(/\.mdx?$/, "");
         dates[`${prefix}${slug}/`] = dObj;
         dates[`${prefix}${slug}`] = dObj;
@@ -53,11 +65,14 @@ export default defineConfig({
     react(),
     sitemap({
       filter: (page) =>
+        !nonCanonicalPaths.has(new URL(page).pathname.toLowerCase()) &&
         !page.endsWith("/search") &&
         !page.endsWith("/search/") &&
         !page.endsWith("/elements") &&
         !page.endsWith("/elements/"),
       serialize(item) {
+        // Netlify serves lowercase paths; list the URL that answers 200.
+        item.url = item.url.replace(/^(https?:\/\/[^/]+)(.*)$/, (_, o, p) => o + p.toLowerCase());
         const urlObj = new URL(item.url);
         const p = urlObj.pathname;
         const d =
@@ -86,6 +101,7 @@ export default defineConfig({
     mdx(),
   ],
   markdown: {
+    rehypePlugins: [trailingSlashLinks, demoteH1],
     remarkPlugins: [
       remarkToc,
       [

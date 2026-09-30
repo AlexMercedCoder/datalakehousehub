@@ -22,7 +22,10 @@ const totalPages = Math.ceil(posts.length / config.settings.pagination);
 const currentPosts = sortedPosts.slice(0, config.settings.pagination);
 ---
 
-<Base title={postIndex?.data.title}>
+<Base
+  title={postIndex?.data.title}
+  description="Every article on Data Lakehouse Hub, newest first: lakehouse news and roundups, Apache Iceberg, agentic AI, and guides to AI coding agents."
+>
   <section class="section pt-16">
     <div class="container">
       <h1
