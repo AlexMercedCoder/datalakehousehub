@@ -17,7 +17,7 @@ const organization = {
   "name": "The Data Lakehouse Hub",
   "url": siteUrl,
   "description": "An independent, practitioner-run community and reference for data lakehouse architecture, Apache Iceberg, and agentic analytics.",
-  "founder": { "@type": "Person", "name": "Alex Merced" },
+  "founder": { "@id": "https://alexmerced.com/#alexmerced" },
   "sameAs": [
     "https://www.linkedin.com/company/data-lakehouse-hub/",
     "https://www.reddit.com/r/datalakehouseandai/",
@@ -76,7 +76,9 @@ const isArticle = pathname.includes('/blog/') || pathname.includes('/knowledgeba
                   pathname.includes('/apache-iceberg') || pathname.includes('/data-lakehouse') || 
                   pathname.includes('/agentic-lakehouse') || pathname.includes('/open-table-formats');
 
-if (isArticle && !pathname.endsWith('/') && pathSegments.length > 0 && title) {
+// trailingSlash is "always", so detect index pages by depth, not by the slash.
+const isIndexPage = ['blog', 'knowledgebase'].includes(pathSegments[0]) && (pathSegments.length < 2 || pathSegments[1] === 'page');
+if (isArticle && !isIndexPage && pathSegments.length > 0 && title) {
   const isPillar = pathname.includes('/apache-iceberg') || pathname.includes('/data-lakehouse') || pathname.includes('/agentic-lakehouse');
   
   schemas.push({
@@ -89,11 +91,7 @@ if (isArticle && !pathname.endsWith('/') && pathSegments.length > 0 && title) {
     "headline": title,
     "description": description || config.metadata.meta_description,
     "image": image ? new URL(image, siteUrl).href : new URL(`/open-graph/${pathSegments[pathSegments.length - 1]}.png`, siteUrl).href,
-    "author": {
-      "@type": "Person",
-      "name": author || config.metadata.meta_author,
-      "url": new URL("/author/alex-merced", siteUrl).href
-    },
+    "author": { "@id": "https://alexmerced.com/#alexmerced" },
     "publisher": {
       "@type": "Organization",
       "name": config.site.title,
@@ -111,22 +109,7 @@ if (pathname.includes('/author/alex-merced')) {
   schemas.push({
     "@context": "https://schema.org",
     "@type": "ProfilePage",
-    "mainEntity": {
-      "@type": "Person",
-      "name": "Alex Merced",
-      "alternateName": "Alexander Merced",
-      "description": "Author and developer advocate focused on the open data lakehouse, Apache Iceberg, and agentic analytics; co-author of 'Apache Iceberg: The Definitive Guide.'",
-      "url": new URL("/author/alex-merced", siteUrl).href,
-      "sameAs": [
-        "https://alexmerced.com",
-        "https://whoisalexmerced.com",
-        "https://twitter.com/alexmercedcoder",
-        "https://www.linkedin.com/in/alexmerced",
-        "https://books.alexmerced.com",
-        "https://www.youtube.com/@AlexMercedCoder",
-        "https://www.youtube.com/@alexmerceddata"
-      ]
-    }
+    "mainEntity": { "@id": "https://alexmerced.com/#alexmerced" }
   });
 }
 

@@ -9,6 +9,9 @@ import Header from "@/partials/Header.astro";
 import "@/styles/main.css";
 import { AstroFont } from "astro-font";
 import { ClientRouter } from "astro:transitions";
+import NetworkCta from "@/components/NetworkCta.astro";
+import networkHead from "../../network/network-head.html?raw";
+import network from "../../network/network.json";
 
 // font families
 const pf = theme.fonts.font_family.primary;
@@ -43,20 +46,17 @@ export interface Props {
 // distructure frontmatters
 const { title, meta_title, description, image, noindex, canonical, author, pubDate, type, slug } =
   Astro.props;
+
+// Netlify serves every path in lowercase and 301s mixed-case requests, so the
+// self-canonical must use the lowercase path to resolve 200 without a redirect.
+const selfUrl = `${config.site.base_url}${Astro.url.pathname.toLowerCase()}`;
 ---
 
 <!doctype html>
 <html lang="en">
   <head>
-    <!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-VCHC62F9H2"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-
-  gtag('config', 'G-VCHC62F9H2');
-</script>
+    <!-- network head: GA4, click events, canonical Person (network/network-head.html) -->
+    <Fragment set:html={networkHead} />
     <!-- satellite schema back-reference -->
 <script type="application/ld+json">
 {
@@ -65,7 +65,7 @@ const { title, meta_title, description, image, noindex, canonical, author, pubDa
   "@id": "https://datalakehousehub.com#website",
   "name": "Data Lakehouse Hub",
   "url": "https://datalakehousehub.com",
-  "author": { "@type": "Person", "@id": "https://alexmerced.com/#alexmerced", "name": "Alex Merced", "url": "https://alexmerced.com" },
+  "author": { "@id": "https://alexmerced.com/#alexmerced" },
   "publisher": { "@id": "https://datalakehousehub.com#organization" }
 }
 </script>
@@ -139,7 +139,7 @@ const { title, meta_title, description, image, noindex, canonical, author, pubDa
     </title>
 
     <!-- canonical url -->
-    {canonical ? <link rel="canonical" href={canonical} item-prop="url" /> : <link rel="canonical" href={`${config.site.base_url}${Astro.url.pathname}`} item-prop="url" />}
+    <link rel="canonical" href={canonical ? canonical : selfUrl} item-prop="url" />
 
     <!-- noindex robots -->
     {noindex && <meta name="robots" content="noindex,nofollow" />}
@@ -175,7 +175,7 @@ const { title, meta_title, description, image, noindex, canonical, author, pubDa
     <meta property="og:type" content={type ? type : "website"} />
     <meta
       property="og:url"
-      content={canonical ? canonical : `${config.site.base_url}${Astro.url.pathname}`}
+      content={canonical ? canonical : selfUrl}
     />
 
     <!-- twitter-title -->
@@ -211,6 +211,7 @@ const { title, meta_title, description, image, noindex, canonical, author, pubDa
     />
 
     <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:site" content={network.twitterSite} />
     <Schema
       title={meta_title ? meta_title : title ? title : config.site.title}
       description={description ? description : config.metadata.meta_description}
@@ -225,6 +226,7 @@ const { title, meta_title, description, image, noindex, canonical, author, pubDa
     <main id="main-content">
       <slot />
     </main>
+    <NetworkCta />
     <Footer />
   </body>
 </html>

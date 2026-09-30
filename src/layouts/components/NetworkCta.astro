@@ -1,0 +1,34 @@
+---
+// The site's one primary next step, rendered above the footer on every page.
+// Heading, links, and GA event names come from network/network.json.
+import network from "../../../network/network.json";
+const cta = network.cta;
+---
+
+{
+  cta && (
+    <section
+      class="network-cta border-t border-border bg-body py-10 dark:border-darkmode-border dark:bg-darkmode-body"
+      aria-label={cta.heading}
+    >
+      <div class="container flex flex-col items-center gap-5 text-center md:flex-row md:justify-between md:text-left">
+        <h2 class="font-secondary text-xl font-bold text-dark dark:text-darkmode-dark">
+          {cta.heading}
+        </h2>
+        <ul class="flex flex-wrap justify-center gap-3">
+          {cta.links.map((link, i) => (
+            <li>
+              <a
+                href={link.url}
+                data-network-event={link.event}
+                class={`btn btn-sm ${i === 0 ? "btn-primary" : "btn-outline-primary"}`}
+              >
+                {link.label}
+              </a>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </section>
+  )
+}

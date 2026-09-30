@@ -1,10 +1,12 @@
 ---
+import { withSlash } from "@/lib/utils/withSlash";
 import { Image } from "astro:assets";
 import Social from "@/components/Social.astro";
 import config from "@/config/config.json";
 import menu from "@/config/menu.json";
 import social from "@/config/social.json";
 import { markdownify } from "@/lib/utils/textConverter";
+import network from "../../../network/network.json";
 
 const { footer_content, copyright } = config.params;
 ---
@@ -46,7 +48,7 @@ const { footer_content, copyright } = config.params;
                 {col?.menu.map((item) => (
                   <li>
                     <a
-                      href={item.url}
+                      href={withSlash(item.url)}
                       class="text-sm text-text transition-colors hover:text-primary dark:text-darkmode-text dark:hover:text-darkmode-primary"
                     >
                       {item.text}
@@ -60,34 +62,43 @@ const { footer_content, copyright } = config.params;
       }
     </div>
 
-    {/* Cross-network and community links. Rendered as inline runs rather than
-        stacked column grids: same links, a fraction of the vertical space, and
-        it drops six redundant sub-headings out of the footer outline. */}
+    {/* Network links come from network/network.json, generated from the
+        entity layer by alexmercedcom/scripts/build-network-shared.mjs. */}
     <nav
       class="border-t border-border pt-8 dark:border-darkmode-border"
       aria-label="The Alex Merced Network"
     >
-      <h2
-        class="font-secondary text-xs font-bold uppercase tracking-[0.14em] text-primary dark:text-darkmode-primary"
-      >
-        The Alex Merced Network
-      </h2>
-      <ul class="footer-run-list mt-3 flex flex-wrap items-center gap-x-3 gap-y-2">
+      <div class="row">
         {
-          menu.network.flatMap((col) => col.menu).map((item) => (
-            <li class="footer-inline-item">
-              <a
-                href={item.url}
-                target="_blank"
-                rel="noopener"
-                class="text-sm text-text transition-colors hover:text-primary dark:text-darkmode-text dark:hover:text-darkmode-primary"
-              >
-                {item.text}
-              </a>
-            </li>
+          network.footer.groups.map((group) => (
+            <div class="mb-6 sm:col-6 lg:col-4">
+              <h2 class="font-secondary text-xs font-bold uppercase tracking-[0.14em] text-primary dark:text-darkmode-primary">
+                {group.title}
+              </h2>
+              <ul class="footer-run-list mt-3 flex flex-wrap items-center gap-x-3 gap-y-2">
+                {group.links.map((item) => (
+                  <li class="footer-inline-item">
+                    <a
+                      href={withSlash(item.url)}
+                      class="text-sm text-text transition-colors hover:text-primary dark:text-darkmode-text dark:hover:text-darkmode-primary"
+                    >
+                      {item.title}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </div>
           ))
         }
-      </ul>
+      </div>
+      <p class="mt-2 text-sm">
+        <a
+          href={network.footer.allSitesUrl}
+          class="font-semibold text-primary hover:underline dark:text-darkmode-primary"
+        >
+          {network.footer.allSitesLabel}
+        </a>
+      </p>
     </nav>
 
     <nav
@@ -104,7 +115,7 @@ const { footer_content, copyright } = config.params;
           menu.community.flatMap((col) => col.menu).map((item) => (
             <li class="footer-inline-item">
               <a
-                href={item.url}
+                href={withSlash(item.url)}
                 target="_blank"
                 rel="noopener"
                 class="text-sm text-text transition-colors hover:text-primary dark:text-darkmode-text dark:hover:text-darkmode-primary"

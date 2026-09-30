@@ -6,19 +6,19 @@
     },
     {
       "name": "Blog",
-      "url": "/blog"
+      "url": "/blog/"
     },
     {
       "name": "Knowledge Base",
-      "url": "/knowledgebase"
+      "url": "/knowledgebase/"
     },
     {
       "name": "Books",
-      "url": "/books"
+      "url": "/books/"
     },
     {
       "name": "Videos",
-      "url": "/videos"
+      "url": "/videos/"
     },
     {
       "name": "Hubs",
@@ -27,33 +27,33 @@
       "children": [
         {
           "name": "Data Lakehouse Hub",
-          "url": "/data-lakehouse"
+          "url": "/data-lakehouse/"
         },
         {
           "name": "Lakehouse vs Data Lake vs Warehouse",
-          "url": "/data-lakehouse-vs-data-lake-vs-data-warehouse"
+          "url": "/data-lakehouse-vs-data-lake-vs-data-warehouse/"
         },
         {
           "name": "Apache Iceberg Hub",
-          "url": "/apache-iceberg"
+          "url": "/apache-iceberg/"
         },
         {
           "name": "Apache Iceberg Architecture",
-          "url": "/apache-iceberg-architecture"
+          "url": "/apache-iceberg-architecture/"
         },
         {
           "name": "Iceberg vs Delta Lake vs Hudi",
-          "url": "/apache-iceberg-vs-delta-lake-vs-hudi"
+          "url": "/apache-iceberg-vs-delta-lake-vs-hudi/"
         },
         {
           "name": "Agentic Lakehouse Hub",
-          "url": "/agentic-lakehouse"
+          "url": "/agentic-lakehouse/"
         }
       ]
     },
     {
       "name": "Author",
-      "url": "/author/alex-merced"
+      "url": "/author/alex-merced/"
     },
     {
       "name": "Resources",
@@ -85,7 +85,7 @@
       "menu": [
         {
           "text": "Events",
-          "url": "/events"
+          "url": "/events/"
         },
         {
           "text": "OSS Blog Role",
@@ -102,11 +102,11 @@
       "menu": [
         {
           "text": "Knowledge Base Glossary",
-          "url": "/knowledgebase"
+          "url": "/knowledgebase/"
         },
         {
           "text": "Video Explainers",
-          "url": "/videos"
+          "url": "/videos/"
         },
         {
           "text": "Data 101",
@@ -156,172 +156,6 @@
         {
           "text": "Apache Arrow",
           "url": "https://arrow.apache.org"
-        }
-      ]
-    },
-    {
-      "name": "Alex Merced Network",
-      "menu": [
-        {
-          "text": "AlexMerced.com",
-          "url": "https://alexmerced.com"
-        },
-        {
-          "text": "OpenAgenticPlatform.com",
-          "url": "https://openagenticplatform.com"
-        },
-        {
-          "text": "AlexMercedAI.com",
-          "url": "https://www.alexmercedai.com"
-        },
-        {
-          "text": "AgenticLakehouse.com",
-          "url": "https://agenticlakehouse.com"
-        },
-        {
-          "text": "AgenticAnalyticsNow.com",
-          "url": "https://agenticanalyticsnow.com"
-        },
-        {
-          "text": "OpenLakehouse.AlexMerced.com",
-          "url": "https://openlakehouse.alexmerced.com"
-        },
-        {
-          "text": "OpenDataLakehouse.com",
-          "url": "https://opendatalakehouse.com"
-        },
-        {
-          "text": "SemanticLakehouse.com",
-          "url": "https://semanticlakehouse.com"
-        },
-        {
-          "text": "Books by Alex Merced",
-          "url": "https://books.alexmerced.com"
-        }
-      ]
-    }
-  ],
-  "network": [
-    {
-      "name": "Alex Merced",
-      "menu": [
-        {
-          "text": "AlexMerced.com",
-          "url": "https://alexmerced.com"
-        },
-        {
-          "text": "WhoIsAlexMerced.com",
-          "url": "https://whoisalexmerced.com"
-        },
-        {
-          "text": "AlexMercedMedia.com",
-          "url": "https://alexmercedmedia.com"
-        },
-        {
-          "text": "Branding.AlexMerced.com",
-          "url": "https://branding.alexmerced.com"
-        },
-        {
-          "text": "Books",
-          "url": "https://books.alexmerced.com"
-        },
-        {
-          "text": "Resources.AlexMerced.com",
-          "url": "https://resources.alexmerced.com"
-        },
-        {
-          "text": "AlexMercedCoder.dev",
-          "url": "https://alexmercedcoder.dev"
-        },
-        {
-          "text": "AlexMercedData.com",
-          "url": "https://alexmerceddata.com"
-        }
-      ]
-    },
-    {
-      "name": "Lakehouse & Data",
-      "menu": [
-        {
-          "text": "IcebergLakehouse.com",
-          "url": "https://iceberglakehouse.com"
-        },
-        {
-          "text": "DataLakehouse.help",
-          "url": "https://datalakehouse.help"
-        },
-        {
-          "text": "OpenDataLakehouse.com",
-          "url": "https://opendatalakehouse.com"
-        },
-        {
-          "text": "AgenticLakehouse.com",
-          "url": "https://agenticlakehouse.com"
-        },
-        {
-          "text": "AgenticAnalyticsNow.com",
-          "url": "https://agenticanalyticsnow.com"
-        },
-        {
-          "text": "OpenAgenticPlatform.com",
-          "url": "https://openagenticplatform.com"
-        },
-        {
-          "text": "AlexMercedAI.com",
-          "url": "https://www.alexmercedai.com"
-        },
-        {
-          "text": "DataAIWiki.com",
-          "url": "https://dataaiwiki.com"
-        },
-        {
-          "text": "SemanticLakehouse.com",
-          "url": "https://semanticlakehouse.com"
-        },
-        {
-          "text": "OpenLakehouse.AlexMerced.com",
-          "url": "https://openlakehouse.alexmerced.com"
-        },
-        {
-          "text": "DataEngnr.com",
-          "url": "https://dataengnr.com"
-        },
-        {
-          "text": "WeekOfData.com",
-          "url": "https://weekofdata.com"
-        }
-      ]
-    },
-    {
-      "name": "Blogs",
-      "menu": [
-        {
-          "text": "AlexMerced.blog",
-          "url": "https://alexmerced.blog"
-        },
-        {
-          "text": "Tuts.AlexMercedCoder.dev",
-          "url": "https://tuts.alexmercedcoder.dev"
-        },
-        {
-          "text": "GrokOverflow.com",
-          "url": "https://grokoverflow.com"
-        },
-        {
-          "text": "IngestThis.com",
-          "url": "https://ingestthis.com"
-        },
-        {
-          "text": "AlexMercedMusic.com",
-          "url": "https://alexmercedmusic.com"
-        },
-        {
-          "text": "AlexMercedLibertarian.com",
-          "url": "https://alexmercedlibertarian.com"
-        },
-        {
-          "text": "D6Storyteller.AlexMerced.com",
-          "url": "https://d6storyteller.alexmerced.com"
         }
       ]
     }

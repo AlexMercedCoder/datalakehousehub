@@ -25,11 +25,7 @@ const publisher = {
   url: `${BASE}/`,
 };
 
-const creator = {
-  "@type": "Person",
-  name: config.metadata.meta_author,
-  url: `${BASE}/author/alex-merced`,
-};
+const creator = { "@id": "https://alexmerced.com/#alexmerced" };
 
 const videoSchemas = videos.map((v) => ({
   "@context": "https://schema.org",
