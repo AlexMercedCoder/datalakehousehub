@@ -1,4 +1,5 @@
 ---
+canonical: "https://opendatalakehouse.com/kb/data-lineage/"
 title: "What is Data Lineage?"
 meta_title: "What is Data Lineage? | Expert Data Lakehouse Architecture Guide"
 description: "A comprehensive guide to Data Lineage. Learn about tracking data flow, automated metadata extraction, impact analysis, and Root Cause debugging."

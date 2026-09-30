@@ -36,11 +36,12 @@ function getHubDates() {
           if (modMatch) dVal = modMatch[1].trim().replace(/["']/g, "");
         }
         const dObj = dVal ? new Date(dVal) : fs.statSync(full).mtime;
-        if (m && prefix === "/blog/" && /^canonical:\s*["']?https:\/\/(?!datalakehousehub\.com)/m.test(m[1])) {
+        if (m && (prefix === "/blog/" || prefix === "/knowledgebase/") && /^canonical:\s*["']?https:\/\/(?!datalakehousehub\.com)/m.test(m[1])) {
           const slugMatch = m[1].match(/^slug:\s*["']?([^"'\n]+?)["']?\s*$/m);
-          const rel = path.relative("./src/content/blog", full).replace(/\.mdx?$/, "");
+          const base = prefix === "/blog/" ? "./src/content/blog" : "./src/content/knowledgebase";
+          const rel = path.relative(base, full).replace(/\.mdx?$/, "");
           const id = slugMatch ? slugMatch[1] : rel.toLowerCase().replace(/[^a-z0-9/ _-]/g, "").replace(/ /g, "-");
-          nonCanonicalPaths.add(`/blog/${id}/`.toLowerCase());
+          nonCanonicalPaths.add(`${prefix}${id}/`.toLowerCase());
         }
         const slug = f.replace(/\.mdx?$/, "");
         dates[`${prefix}${slug}/`] = dObj;

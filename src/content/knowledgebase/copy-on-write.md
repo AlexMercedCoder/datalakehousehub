@@ -1,4 +1,5 @@
 ---
+canonical: "https://opendatalakehouse.com/kb/copy-on-write/"
 title: "What is Copy-On-Write?"
 meta_title: "What is Copy-On-Write? | Expert Data Lakehouse & AI Glossary"
 description: "A table design requiring entire files to be completely rewritten whenever modifications occur to optimize reading access limits."

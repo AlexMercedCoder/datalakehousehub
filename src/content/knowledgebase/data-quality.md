@@ -1,4 +1,5 @@
 ---
+canonical: "https://opendatalakehouse.com/kb/data-quality/"
 title: "What is Data Quality?"
 meta_title: "What is Data Quality? | Expert Data Lakehouse Architecture Guide"
 description: "A comprehensive guide to Data Quality. Learn how modern data teams enforce assertions, detect anomalies, and guarantee reliable analytics."

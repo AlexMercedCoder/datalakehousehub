@@ -1,4 +1,5 @@
 ---
+canonical: "https://opendatalakehouse.com/kb/bronze-layer/"
 title: "What is Bronze Layer?"
 meta_title: "What is Bronze Layer? | Expert Data Lakehouse & AI Glossary"
 description: "The foundational layer of a medallion architecture containing raw, unprocessed data exactly as it was ingested from source systems."

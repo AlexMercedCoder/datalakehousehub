@@ -1,4 +1,5 @@
 ---
+canonical: "https://opendatalakehouse.com/kb/trino/"
 title: "What is Trino?"
 meta_title: "What is Trino? | Expert Data Lakehouse Architecture Guide"
 description: "A comprehensive guide to Trino. Learn how this massive distributed SQL query engine executes petabyte-scale federated analytics."

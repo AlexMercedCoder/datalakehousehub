@@ -1,4 +1,5 @@
 ---
+canonical: "https://opendatalakehouse.com/kb/hive-metastore/"
 title: "What is the Hive Metastore (HMS)?"
 meta_title: "What is the Hive Metastore? | Expert Data Lakehouse Architecture Guide"
 description: "A comprehensive guide to the Hive Metastore. Learn how the legacy catalog provided the first relational structure to chaotic big data lakes."

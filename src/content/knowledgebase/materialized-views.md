@@ -1,4 +1,5 @@
 ---
+canonical: "https://opendatalakehouse.com/kb/materialized-views/"
 title: "What is Materialized Views?"
 meta_title: "What is Materialized Views? | Expert Data Lakehouse & AI Glossary"
 description: "Precomputed data tables containing the results of a query, vastly accelerating access times for complex aggregations."
