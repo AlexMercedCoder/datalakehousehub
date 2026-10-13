@@ -37,7 +37,8 @@ for (const file of walk(BLOG)) {
   const target = `/blog/${slug.toLowerCase()}/`;
   const id = relative(BLOG, file).replace(/\.mdx?$/, '');
   const name = basename(id);
-  const olds = new Set([`/blog/${name}`, `/blog/${id}`, `/posts/${name}`, `/posts/${id}`].map((p) => p.toLowerCase()));
+  // Netlify matches rules case-sensitively, so emit original-case and lowercase forms.
+  const olds = new Set([`/blog/${name}`, `/blog/${id}`, `/posts/${name}`, `/posts/${id}`].flatMap((p) => [p, p.toLowerCase()]));
   for (const old of olds) {
     if (old === target.slice(0, -1)) continue;
     rules.set(old, target);
