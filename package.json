@@ -6,7 +6,7 @@
   "license": "MIT",
   "scripts": {
     "dev": "astro dev",
-    "build": "astro build && pagefind --site dist",
+    "build": "node scripts/build-post-redirects.mjs && astro build && pagefind --site dist",
     "check:seo": "node scripts/check-seo.mjs",
     "format": "prettier -w .",
     "preview": "astro preview"
