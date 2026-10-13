@@ -33,9 +33,9 @@ const rules = new Map();
 for (const file of walk(BLOG)) {
   const fm = readFileSync(file, 'utf8').match(/^---\s*\n([\s\S]*?)\n---/)?.[1] ?? '';
   const slug = fm.match(/^slug:\s*["']?([^"'\n]+?)["']?\s*$/m)?.[1];
-  if (!slug) continue;
-  const target = `/blog/${slug.toLowerCase()}/`;
   const id = relative(BLOG, file).replace(/\.mdx?$/, '');
+  // Without a slug the post lives at its content id (/blog/<year>/<file-name>/).
+  const target = `/blog/${(slug ?? id).toLowerCase()}/`;
   const name = basename(id);
   // Netlify matches rules case-sensitively, so emit original-case and lowercase forms.
   const olds = new Set([`/blog/${name}`, `/blog/${id}`, `/posts/${name}`, `/posts/${id}`].flatMap((p) => [p, p.toLowerCase()]));
@@ -43,6 +43,12 @@ for (const file of walk(BLOG)) {
     if (old === target.slice(0, -1)) continue;
     rules.set(old, target);
   }
+}
+
+// Posts deleted in favor of a newer version; old file name -> current slug.
+const REPLACED = { '2026-05-agentic-coding-tools': 'agentic-coding-tools' };
+for (const [old, slug] of Object.entries(REPLACED)) {
+  for (const prefix of ['/blog/', '/posts/', '/blog/2026/']) rules.set(`${prefix}${old}`, `/blog/${slug}/`);
 }
 
 const block = [
