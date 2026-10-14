@@ -25,7 +25,7 @@ The first meaning is the technical catalog: the service that maps a table name t
 
 The second meaning is the metadata platform, also called a governance catalog or a data catalog: the system where people search for data, read descriptions, trace lineage across pipelines and dashboards, apply classifications and ownership, and manage glossaries and policies. DataHub, OpenMetadata, Atlan, Collibra, and Alation are metadata platforms. They are not in the write path. They observe the technical catalogs, the pipelines, the BI tools, and the databases, ingest what they find, and build a graph over it.
 
-For most of their history the two layers were cleanly separate: technical catalogs held the truth about tables and metadata platforms held the context around them. Two developments have blurred that line. Technical catalogs, Polaris and Unity Catalog in particular, are adding governance features such as policies, tags, and lineage that were the metadata platform's territory. And metadata platforms are adding technical catalog features: DataHub shipped an Iceberg REST catalog implementation in 2025, so a DataHub instance can be the service an engine commits through. Apache Gravitino sits between the two, federating technical catalogs behind one interface.
+For most of their history the two layers were cleanly separate: technical catalogs held the truth about tables and metadata platforms held the context around them. Two developments have blurred that line. Technical catalogs, Polaris and Unity Catalog in particular, are adding governance features such as policies, tags, and lineage that were the metadata platform's territory. And metadata platforms are adding technical catalog features: DataHub added an Iceberg REST catalog implementation with its 1.0 release in 2025, currently documented as an open beta, so a DataHub instance can be the service an engine commits through. Apache Gravitino sits between the two, federating technical catalogs behind one interface.
 
 This article covers what each layer does, where the four major metadata platforms stand as of mid-2026, what convergence means in practice, and how an Iceberg lakehouse should arrange the two layers so that the technical catalog stays the source of truth and the metadata platform stays the place people look. I work at Dremio, whose catalog is built on Polaris, and the analysis here applies to any technical catalog.
 
@@ -37,7 +37,7 @@ The Hive Metastore was both catalogs for a decade. It held table locations and s
 
 The metastore was also a poor technical catalog for a multi-engine, object-storage world, and Iceberg's REST catalog specification replaced it with an HTTP contract that any engine implements once. The new technical catalogs, Polaris, Unity, Glue's REST endpoint, Nessie, Gravitino, are built for that contract and for credential vending, and they are designed by people who watched the metastore fail at governance. So they ship with roles, grants, and policies from the start.
 
-Meanwhile the metadata platforms had a decade to mature discovery, lineage, and workflow, and to notice that their users kept asking for enforcement: if a steward classifies a column as sensitive, why does the platform not mask it? The answer was that the platform was not in the write path, and the fix was either to push decisions down to the systems that are, or to become one. DataHub chose to become one, for Iceberg. The others chose to push down.
+Meanwhile the metadata platforms had a decade to mature discovery, lineage, and workflow, and to notice that their users kept asking for enforcement: if a steward classifies a column as sensitive, why does the platform not mask it? The answer was that the platform was not in the write path, and the fix was either to push decisions down to the systems that are, or to become one. DataHub chose to start becoming one, for Iceberg. The others chose to push down.
 
 The result is two layers that were separated by the limitations of one old system and are reconverging because the new systems on both sides are better. Whether they fully merge depends on whether the technical catalogs are willing to take on discovery and workflow, which are large and not their focus, and whether the platforms are willing to take on write-path availability, which is a different kind of engineering. The likeliest outcome is that they stay two layers with much better integration between them, and that the "which catalog" question becomes "which pair."
 
@@ -68,11 +68,11 @@ The technical catalog's knowledge is narrow and authoritative. The metadata plat
 
 ### DataHub
 
-DataHub started at LinkedIn as the successor to WhereHows and became a top-level open-source project with a commercial company behind it, which rebranded from Acryl Data to DataHub. Its architecture is a metadata graph with a streaming ingestion backbone: metadata change events flow through Kafka into a graph store and a search index, and every entity, table, dashboard, pipeline, user, is a node with aspects that can be extended.
+DataHub started at LinkedIn as the successor to WhereHows, and LinkedIn released it as open source in 2020. It is Apache 2.0 licensed and is not part of a software foundation. The commercial company behind it, founded in 2021 as Acryl Data, rebranded as DataHub in 2025. Its architecture is a metadata graph with a streaming backbone: metadata changes are written to a primary metadata store and published as change events over Kafka, which update a search index and a graph index. Every entity, such as a table, dashboard, pipeline, or user, is a node with aspects that can be extended.
 
-**Strengths.** The most programmable of the platforms. A strong metadata model with well-defined entity types and aspects, a Python SDK and a GraphQL API that expose all of it, and a large connector library that covers warehouses, lakes, orchestrators, BI tools, and dbt with column-level lineage where the source provides it. Real-time ingestion through the event stream rather than batch crawls. The community is the largest of the open-source options.
+**Strengths.** A highly programmable platform. A strong metadata model with well-defined entity types and aspects, a Python SDK and a GraphQL API that expose all of it, and a large connector library that covers warehouses, lakes, orchestrators, BI tools, and dbt with column-level lineage where the source provides it. Push-based ingestion through the event stream in addition to scheduled crawls, and an active open-source community.
 
-**The Iceberg REST catalog.** In 2025 DataHub shipped an implementation of the Iceberg REST catalog specification inside the platform. A DataHub instance can serve as the technical catalog: engines create, load, and commit Iceberg tables through DataHub's REST endpoint, DataHub stores the metadata pointer and vends credentials, and the same entity that engines commit through is the one users search and annotate. This collapses the two layers into one system for Iceberg tables specifically. It is the most consequential feature any metadata platform has shipped for lakehouse teams, and it is also new enough that operational maturity is worth verifying before committing production tables to it.
+**The Iceberg REST catalog.** DataHub 1.0 (2025) added an implementation of the Iceberg REST catalog specification inside the platform, available in both open-source DataHub and DataHub Cloud. A DataHub instance can serve as the technical catalog: engines create, load, and write Iceberg tables through DataHub's REST endpoint, DataHub stores the metadata pointer and vends temporary storage credentials, and the same entity that engines commit through is the one users search and annotate. This collapses the two layers into one system for Iceberg tables specifically. DataHub's documentation describes the feature as an open beta, and lists limitations at the time of writing, including support for Amazon S3 storage only and no multi-table transactional commit endpoint. Verify its current status before committing production tables to it.
 
 **Commercial.** DataHub Cloud adds hosting, observability features, and enterprise governance on top of the open-source core.
 
@@ -80,23 +80,23 @@ DataHub started at LinkedIn as the successor to WhereHows and became a top-level
 
 ### OpenMetadata
 
-OpenMetadata came from the team behind Uber's Databook and was built around a schema-first design: every entity type has a JSON schema, the API is generated from those schemas, and the whole platform is defined by its standards document. It joined the Linux Foundation in March 2026, which put its governance under a neutral foundation, and released its standards specification v1.13 in April 2026.
+OpenMetadata was created by Suresh Srinivas and Sriharsha Chintalapani, whose earlier work includes Uber's Databook, and was first released as open source in 2021. It is built around a schema-first design: every entity type is defined by a JSON schema, and the APIs follow from those schemas. The project is Apache 2.0 licensed and led by Collate, the company its creators founded. Collate joined the Linux Foundation as a Silver Member in March 2026. That is a corporate membership, and the OpenMetadata project itself has not moved to foundation governance.
 
-**Strengths.** The broadest connector ecosystem of the open-source options and the simplest architecture: a server, a database, and a search index, with no streaming backbone required. Discovery, column-level lineage, a data quality module with profiling and test cases built in, classification, and glossaries in one deployment. The MCP server, which exposes the catalog's entities and lineage as tools an LLM agent can call, was an early and complete implementation of the pattern every platform now has.
+**Strengths.** A large connector library and a simpler architecture than DataHub: a server, a database, and a search index, with no streaming backbone required. Discovery, column-level lineage, a data quality module with profiling and test cases built in, classification, and glossaries in one deployment. A built-in MCP server, installed as an application in the platform, exposes search, lineage, glossary, and other metadata as tools an LLM agent can call, and it applies the platform's access policies to the agent.
 
-**Iceberg.** OpenMetadata ingests from Iceberg catalogs, including REST catalogs, Glue, Hive, and Nessie, as metadata sources. It reads schemas, partition specs, properties, and snapshot-level statistics and represents them in the graph. It does not serve as a technical catalog. Tables are committed through Polaris or another catalog and OpenMetadata observes them.
+**Iceberg.** OpenMetadata originally had a standalone Iceberg connector that read catalogs through PyIceberg. Its current documentation describes a different design: there is no standalone Iceberg connector, and Iceberg tables are ingested through the query engine connectors already in use, such as Trino, Presto, Snowflake, Athena, Glue, and Databricks. Going through the engine lets OpenMetadata run profiling and data quality tests against Iceberg tables, which the direct-catalog approach could not. It does not serve as a technical catalog. Tables are committed through Polaris or another catalog and OpenMetadata observes them through an engine.
 
 **Commercial.** Collate offers hosted OpenMetadata with AI agents for documentation, quality, and governance layered on top.
 
-**Fit.** Teams that want the stewardship workflow in one package, a lighter operational footprint than DataHub, and a foundation-governed open-source project. The quality module in particular reduces the need for a separate validation tool on tables that OpenMetadata already profiles.
+**Fit.** Teams that want the stewardship workflow in one package, a lighter operational footprint than DataHub, and an Apache-licensed open-source project. The quality module in particular reduces the need for a separate validation tool on tables that OpenMetadata already profiles.
 
 ### Atlan
 
 Atlan is a commercial metadata platform positioned as the collaboration layer over the stack, with a strong emphasis on the user experience for analysts and business users rather than only for engineers.
 
-**Strengths.** Search and personalization that are widely regarded as the best in the category. A large connector library. Active-metadata features where changes in one system trigger actions in another: a tag applied in Atlan propagates to the warehouse, a schema change in the warehouse triggers a notification to downstream owners. Deep integrations with the modern stack, dbt, the orchestrators, and the BI tools. Column-level lineage across all of it.
+**Strengths.** Search and personalization designed for a broad, non-engineering audience. A large connector library. Active-metadata features where changes in one system trigger actions in another: a tag applied in Atlan propagates to the warehouse, a schema change in the warehouse triggers a notification to downstream owners. Deep integrations with the modern stack, dbt, the orchestrators, and the BI tools. Column-level lineage across all of it.
 
-**Iceberg.** Atlan ingests Iceberg table metadata from Unity Catalog, Glue, Snowflake, and the REST catalogs, and represents lakehouse tables alongside everything else. It is an observer, not a technical catalog.
+**Iceberg.** Atlan ingests lakehouse table metadata through its connectors to warehouses, engines, and catalogs, and represents those tables alongside everything else. It is an observer, not a technical catalog.
 
 **Commercial only.** There is no open-source Atlan. Pricing is enterprise.
 
@@ -111,23 +111,23 @@ Both are enterprise governance platforms that predate the modern stack and have 
 | | DataHub | OpenMetadata | Atlan | Collibra / Alation | Polaris | Unity Catalog | Gravitino |
 |--|--|--|--|--|--|--|--|
 | Layer | Metadata platform, plus technical catalog for Iceberg | Metadata platform | Metadata platform | Governance platform | Technical catalog | Technical catalog growing up | Federation over technical catalogs |
-| Open source | Yes, plus DataHub Cloud | Yes, Linux Foundation, plus Collate | No | No | Yes, Apache | Yes, LF AI & Data, plus Databricks-hosted | Yes, Apache |
-| In the write path | For Iceberg tables, optionally | No | No | No | Yes | Yes | Yes, as a proxy |
-| Discovery and search | Strong | Strong | Best in category | Strong, analyst-focused | Minimal | Basic | Basic |
+| Open source | Yes, Apache 2.0, plus DataHub Cloud | Yes, Apache 2.0, plus Collate | No | No | Yes, Apache | Yes, LF AI & Data, plus Databricks-hosted | Yes, Apache |
+| In the write path | For Iceberg tables, optionally (beta) | No | No | No | Yes | Yes | Yes, as a proxy |
+| Discovery and search | Strong | Strong | Strong, business-user focused | Strong, analyst-focused | Minimal | Basic | Basic |
 | Cross-system lineage | Column-level, event-driven | Column-level | Column-level, active metadata | Column-level | None | Within Databricks | None |
 | Glossary and domains | Yes | Yes | Yes | Extensive | No | Tags only | No |
 | Quality module | Ingests results, assertions | Built-in profiling and tests | Ingests results | Ingests results | Policies | Monitoring in hosted version | No |
-| Access enforcement | No, except via Iceberg catalog mode | No | No, pushes to systems | Workflow, not enforcement | Yes, with credential vending | Yes | Delegates |
+| Access enforcement | No, except via Iceberg catalog mode | No | No, pushes to systems | Workflow, not enforcement | Yes, grants and credential vending | Yes | Delegates |
 | Agent API | MCP server, GraphQL | MCP server, SDK | MCP and API | API, AI features | REST for engines | REST, MCP in hosted | REST |
-| Operational footprint | Kafka, graph store, search, or Cloud | Server, DB, search, or Collate | SaaS | SaaS or enterprise deployment | Server and metastore | Server and metastore | Server and metastore |
+| Operational footprint | Kafka, metadata store, search, or Cloud | Server, DB, search, or Collate | SaaS | SaaS or enterprise deployment | Server and metastore | Server and metastore | Server and metastore |
 
-The table makes the division visible. The right three columns enforce. The left five describe. DataHub is the one that does both, for one table format.
+The table makes the division visible. The right three columns sit in or in front of the write path. The left four describe. DataHub is the one that does both, for one table format.
 
 ## The Technical Catalogs Reaching Up
 
 The convergence runs in both directions. The technical catalogs are adding what the metadata platforms had.
 
-**Apache Polaris** graduated as an Apache top-level project in February 2026. Beyond the core catalog functions, it has added a policy framework for attaching maintenance and governance policies to catalogs, namespaces, and tables, catalog federation for presenting external catalogs' tables, and role-based access control with grants at each level. It is Iceberg-only by design. It does not do discovery, business glossaries, or cross-system lineage, and it is not trying to.
+**Apache Polaris** graduated as an Apache top-level project in February 2026. Beyond the core catalog functions, it has added a policy framework for attaching policies to catalogs, namespaces, and tables (the predefined types today cover table maintenance: data and metadata compaction, snapshot expiry, and orphan file removal), catalog federation for presenting external catalogs' tables, and role-based access control with grants at each level. It is Iceberg-only by design. It does not do discovery, business glossaries, or cross-system lineage, and it is not trying to.
 
 **Unity Catalog.** Databricks open-sourced Unity Catalog in 2024, and the open-source version has grown to cover tables in Delta and Iceberg, volumes for unstructured data, functions, and models, with an Iceberg REST endpoint for external engines. The Databricks-hosted version adds lineage, tags, and governance features that overlap with the metadata platforms. Unity is the clearest case of a technical catalog growing toward being a full catalog, and the open-source and hosted versions differ substantially in how far along that path they are.
 
@@ -135,7 +135,7 @@ The convergence runs in both directions. The technical catalogs are adding what 
 
 **AWS Glue, Snowflake Horizon, Google's catalog, Microsoft Purview.** Each cloud's catalog has grown lakehouse and governance features. Glue serves an Iceberg REST endpoint and integrates with Lake Formation for permissions. Horizon is Snowflake's governance layer over its own and external Iceberg tables. Purview is Microsoft's governance platform that has absorbed Fabric's catalog. All are strongest inside their own platform.
 
-The pattern is that every technical catalog now has tags, ownership, some lineage, and access policies, and every metadata platform now ingests from every technical catalog. What none of the technical catalogs has is cross-system lineage into orchestrators and BI, glossaries and domains, or the stewardship workflow. What none of the metadata platforms has, except DataHub for Iceberg, is a place in the write path.
+The pattern is that the technical catalogs now have access policies, and several add tags, ownership, or some lineage, while the metadata platforms ingest from the technical catalogs directly or through the engines that use them. What none of the technical catalogs has is cross-system lineage into orchestrators and BI, glossaries and domains, or the stewardship workflow. What none of the metadata platforms has, except DataHub for Iceberg, is a place in the write path.
 
 ## What Convergence Means in Practice
 
@@ -169,19 +169,19 @@ Lineage at the table level says which tables were read to produce which. Column-
 
 On an Iceberg lakehouse, two more sources exist. The first is the snapshot summary, which can carry lineage properties set by the writer: the job that produced the snapshot, the source snapshots it read, the commit it corresponds to. Engines and pipelines that write `spark.app.id`, dbt invocation IDs, or custom lineage keys into the summary make every snapshot self-describing. The second is v3 row lineage, which gives each row a stable `_row_id` and a `_last_updated_sequence_number`, so that row-level provenance across merges is recoverable from the table itself.
 
-The metadata platforms are starting to read both. DataHub and OpenMetadata ingest snapshot summaries as properties on the table entity, and lineage properties in the summary become edges. OpenLineage events emitted by Spark, Flink, Airflow, and dbt carry the Iceberg snapshot ID in recent versions of the integrations, which links a pipeline run to the specific snapshot it produced. This is the mechanism that answers "which run produced the data the dashboard is showing" precisely rather than approximately.
+Using these sources mostly falls to the team today. A small ingestion step can read snapshot summaries from the catalog and turn lineage properties into edges in the platform. On the OpenLineage side, the Spark integration can attach an Iceberg scan report, including the snapshot ID read, to input datasets. Linking a pipeline run to the specific snapshot it read or produced is what answers "which run produced the data the dashboard is showing" precisely rather than approximately.
 
 The practical guidance is to emit lineage at the source. Set summary properties on every commit. Configure OpenLineage on every engine and orchestrator. The platform then has authoritative lineage rather than lineage inferred from parsing SQL, and the inference, which is fragile, becomes a fallback.
 
 ## Agents and the Metadata Platform
 
-Every platform shipped an MCP server or an equivalent agent API in the past year, and the reason is that a metadata platform is close to the ideal context source for an agent working with data.
+DataHub and OpenMetadata ship MCP servers, and the commercial platforms offer MCP or other agent APIs. The reason is that a metadata platform is close to the ideal context source for an agent working with data.
 
 An agent asked "what is our monthly recurring revenue by region" needs to know which table holds revenue, what the region column is called, whether the table is certified, who owns it, and what the glossary says "recurring" means in this organization. That is exactly what the metadata platform holds. Exposing it as tools the agent can call, search for a table, get its schema and description, get its lineage, get the glossary term, is what the MCP servers do.
 
 The metadata platforms are also where agent activity should be recorded. An agent that queries a table is a consumer of it, and its queries are usage signals and potential lineage. Platforms that ingest agent query logs the way they ingest BI tool logs give a complete picture of who reads what, including the non-human readers.
 
-For the technical catalog, the agent question is access. An agent that can call the metadata platform's MCP server to find a table still needs the technical catalog to grant it read access and vend it a credential. Polaris's principal and role model, Unity's grants, and Glue's Lake Formation permissions are where an agent's identity is enforced. The convergence question here is whether the metadata platform's classification (this column is PII) drives the technical catalog's policy (mask it for this role) automatically. Atlan's active metadata and OpenMetadata's policy features both push in this direction, and the catalog policy frameworks are the receiving end.
+For the technical catalog, the agent question is access. An agent that can call the metadata platform's MCP server to find a table still needs the technical catalog to grant it read access and vend it a credential. Polaris's principal and role model, Unity's grants, and Glue's Lake Formation permissions are where an agent's identity is enforced. The convergence question here is whether the metadata platform's classification (this column is PII) drives the technical catalog's policy (mask it for this role) automatically. Atlan's active metadata and OpenMetadata's policy features both push in this direction. On the receiving end, enforcement usually lives in catalog grants and in engine-level masking and row-filter policies.
 
 ## Evaluating a Platform for a Lakehouse
 
@@ -205,69 +205,85 @@ Two or three of these usually eliminate most candidates for a given organization
 
 ## Walkthrough: Wiring the Two Layers Together
 
-A concrete configuration for the two-layer design, with Polaris as the technical catalog and OpenMetadata as the platform, looks like this.
+A concrete configuration for the two-layer design, with Polaris as the technical catalog and OpenMetadata as the platform, looks like this. Because current OpenMetadata releases ingest Iceberg tables through query engine connectors, the example uses a Trino cluster whose Iceberg catalog points at Polaris's REST endpoint, and OpenMetadata ingests through its Trino connector.
 
-OpenMetadata ingests from Polaris through its Iceberg connector, configured against the REST endpoint:
+On the Trino side, the catalog file points at Polaris:
+
+```properties
+connector.name=iceberg
+iceberg.catalog.type=rest
+iceberg.rest-catalog.uri=https://polaris.internal/api/catalog
+iceberg.rest-catalog.warehouse=analytics
+iceberg.rest-catalog.security=OAUTH2
+iceberg.rest-catalog.oauth2.credential=${ENV:TRINO_POLARIS_CREDENTIAL}
+```
+
+On the OpenMetadata side, the Trino connector ingests the catalog:
 
 ```yaml
 source:
- type: iceberg
- serviceName: polaris_analytics
- serviceConnection:
- config:
- type: Iceberg
- catalog:
- name: analytics
- connection:
- uri: https://polaris.internal/api/catalog
- credential:
- clientId: ${OM_POLARIS_CLIENT_ID}
- clientSecret: ${OM_POLARIS_CLIENT_SECRET}
- warehouseLocation: analytics
- sourceConfig:
- config:
- type: DatabaseMetadata
- includeTables: true
- includeViews: true
- markDeletedTables: true
+  type: trino
+  serviceName: lakehouse_trino
+  serviceConnection:
+    config:
+      type: Trino
+      hostPort: trino.internal:443
+      username: openmetadata
+      authType:
+        jwt: ${OM_TRINO_JWT}
+      catalog: analytics
+  sourceConfig:
+    config:
+      type: DatabaseMetadata
+      markDeletedTables: true
+      includeTables: true
+      includeViews: true
 sink:
- type: metadata-rest
- config: {}
+  type: metadata-rest
+  config: {}
 workflowConfig:
- openMetadataServerConfig:
- hostPort: https://openmetadata.internal/api
- authProvider: openmetadata
+  openMetadataServerConfig:
+    hostPort: https://openmetadata.internal/api
+    authProvider: openmetadata
+    securityConfig:
+      jwtToken: ${OM_INGESTION_BOT_JWT}
 ```
 
-The ingestion principal in Polaris has a read-only role on the catalog, so OpenMetadata can list namespaces and load table metadata but never commit. On each run it reads every table's schema, partition spec, properties, and current snapshot summary, and updates the corresponding entities. `markDeletedTables` handles tables dropped from Polaris by marking them deleted in the platform rather than leaving stale entries.
+The principal Trino uses in Polaris, and the Trino user OpenMetadata connects as, have read-only access, so ingestion can list namespaces and read table metadata but never commit. Each run updates schemas and table details for the catalog, and `markDeletedTables` marks tables dropped from Polaris as deleted in the platform rather than leaving stale entries. Profiling and data quality tests run through Trino as well.
 
-Lineage arrives separately, from OpenLineage. Spark jobs are configured with the OpenLineage listener pointed at OpenMetadata's OpenLineage endpoint:
+Lineage arrives separately, from OpenLineage. OpenMetadata accepts OpenLineage run events at `/api/v1/openlineage/lineage`, authenticated with a bot token. Spark jobs are configured with the OpenLineage listener pointed at that endpoint:
 
 ```properties
 spark.extraListeners io.openlineage.spark.agent.OpenLineageSparkListener
 spark.openlineage.transport.type http
-spark.openlineage.transport.url https://openmetadata.internal/api/v1/openlineage
+spark.openlineage.transport.url https://openmetadata.internal
+spark.openlineage.transport.endpoint /api/v1/openlineage/lineage
+spark.openlineage.transport.auth.type api_key
+spark.openlineage.transport.auth.apiKey ${OM_LINEAGE_BOT_JWT}
 spark.openlineage.namespace lakehouse-prod
 ```
 
-Every Spark job that reads and writes Iceberg tables now emits run events with input and output datasets, and the Iceberg integration includes the snapshot ID in the output dataset's facets. dbt emits the same through its OpenLineage integration. Airflow's OpenLineage provider emits task-level events. The platform stitches them into a graph where a table's lineage node shows the job, the run, and the snapshot.
+Every Spark job that reads and writes Iceberg tables now emits run events with input and output datasets. Airflow's OpenLineage provider can send task-level events to the same endpoint. The platform stitches them into a graph that shows which job read and wrote which tables.
 
 The pipeline side sets summary properties on commit so that the snapshot carries its own provenance:
 
 ```python
 table.append(df, snapshot_properties={
- "pipeline": "orders_hourly", "run_id": run_id, "source_snapshots": "raw.orders:7168742983117921046", })
+    "pipeline": "orders_hourly",
+    "run_id": run_id,
+    "source_snapshots": "raw.orders:7168742983117921046",
+})
 ```
 
-OpenMetadata's Iceberg connector surfaces these as table properties per snapshot, and a small custom step in the ingestion workflow turns `source_snapshots` into lineage edges for cases where OpenLineage was not available, such as a PyIceberg script with no listener.
+These properties live in the Iceberg metadata, so any tool that reads snapshots can use them. A small custom step can read them from the catalog and add lineage edges through OpenMetadata's API for cases where OpenLineage was not available, such as a PyIceberg script with no listener.
 
-Classification flows the other way. A column tagged `PII.Sensitive` in OpenMetadata is picked up by an automation that applies the matching Polaris policy to the table, so that engines reading through Polaris see the masking rule. The automation is a small service subscribed to OpenMetadata's change events, and it is where the governance decision made by a steward becomes an enforcement decision in the write path.
+Classification flows the other way. A column tagged `PII.Sensitive` in OpenMetadata is picked up by an automation that applies the matching control where it is enforced: a masking or row-filter policy in the query engine, or a change to grants in Polaris. The automation is a small service that subscribes to OpenMetadata's change events, and it is where the governance decision made by a steward becomes an enforcement decision.
 
 ### Running the Platform
 
 The operational shape of each platform differs enough to affect the choice.
 
-DataHub self-hosted is a metadata service, a graph database, a search index, Kafka for the event stream, and the ingestion executors, plus a frontend. It is the heaviest of the open-source options and the one that scales furthest, and its cloud offering exists because most teams do not want to run Kafka for their catalog. As an Iceberg technical catalog it adds the requirement of catalog-grade uptime, which means the whole stack is tier one.
+DataHub self-hosted is a metadata service, a primary metadata store, a search index, a graph index, Kafka for the event stream, and the ingestion executors, plus a frontend. It is the heaviest of the open-source options and the one that scales furthest, and its cloud offering exists because most teams do not want to run Kafka for their catalog. As an Iceberg technical catalog it adds the requirement of catalog-grade uptime, which means the whole stack is tier one.
 
 OpenMetadata self-hosted is a server, a relational database, and a search index, with ingestion running as Airflow tasks or as standalone workflows. It is the lightest to operate and the easiest to stand up in a day. Collate is the hosted path.
 
@@ -313,15 +329,15 @@ For all of them, ingestion is the ongoing operational task. Each connector is a 
 
 ## Where the Ecosystem Is Heading
 
-**Iceberg REST as the integration surface.** Every metadata platform ingests from Iceberg REST catalogs, and DataHub serves one. Expect OpenMetadata and the commercial platforms to follow DataHub's lead on serving, and expect the REST specification to gain endpoints for the metadata the platforms need, such as change notifications and lineage hints.
+**Iceberg REST as the integration surface.** The metadata platforms reach Iceberg tables through REST catalogs or through the engines that use them, and DataHub serves one in beta. Other platforms may follow DataHub's lead on serving, and expect the REST specification to gain endpoints for the metadata the platforms need, such as change notifications and lineage hints.
 
 **Standards converging.** Open Semantic Interchange for business semantics, the Open Data Contract Standard for contracts, OpenLineage for lineage, and Iceberg REST for tables are the four vendor-neutral surfaces, and the platforms are converging on all of them. A team that emits in these formats is not locked to any platform.
 
-**Foundation governance.** OpenMetadata under the Linux Foundation, Polaris and Gravitino under Apache, Unity Catalog under the Linux Foundation's LF AI & Data. The open-source catalogs are now all foundation-governed, which reduces the vendor-capture risk that shaped the previous generation.
+**Foundation governance.** Polaris and Gravitino are Apache top-level projects, and Unity Catalog is hosted by the Linux Foundation's LF AI & Data. The technical catalogs are increasingly foundation-governed, which reduces vendor-capture risk. The open-source metadata platforms are not: DataHub and OpenMetadata are Apache-licensed projects led by their commercial companies.
 
 **The catalog as the agent's world model.** The platforms are repositioning from "where people find data" to "what agents know about data, " and the MCP servers are the first step. The next is the platform holding the semantic layer, the contracts, and the certification status that an agent needs to produce a trustworthy answer, which makes the metadata platform the governance boundary for AI as much as for people.
 
-**Consolidation.** The prediction most observers make is three commercial platforms and two open-source projects surviving, with the smaller and older tools fading. The pattern in ingestion, orchestration, and quality during 2025 and 2026 suggests the metadata platform category will not be exempt.
+**Consolidation.** The category has more platforms than the market is likely to sustain, and smaller or older tools may fade or be acquired. The pattern in ingestion, orchestration, and quality during 2025 and 2026 suggests the metadata platform category will not be exempt.
 
 ## Conclusion
 
