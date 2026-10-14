@@ -1,4 +1,5 @@
 ---
+canonical: "https://opendatalakehouse.com/kb/materialized-views/"
 title: "What is a Materialized View?"
 meta_title: "What is a Materialized View? | Expert Data Lakehouse Architecture Guide"
 description: "A materialized view is a database object that stores precomputed query results. Learn about incremental refresh and query rewriting with Dremio Reflections."
