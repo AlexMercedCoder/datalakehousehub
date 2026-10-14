@@ -30,7 +30,7 @@ In September 2026 the Iceberg and DataFusion communities voted to move that inte
 | Form | Rust library | Embedded C++ database | Distributed JVM engine | Distributed JVM SQL server |
 | Main use | Building engines and data services | Local and in-process analytics | Large batch ETL and streaming | Interactive SQL across sources |
 | Extensibility | Deep (planner, operators, sources) | Extensions | Data sources, UDFs, plugins | Connectors, UDFs |
-| Iceberg support | Via `datafusion-iceberg` crate | `iceberg` extension | Mature, read and write | Mature, read and write |
+| Iceberg support | Via the `iceberg-datafusion` crate | `iceberg` extension | Mature, read and write | Mature, read and write |
 
 Pick DataFusion when you are building a product or service that needs a query engine inside it. For a ready-to-use tool, [DuckDB](/knowledgebase/duckdb/), [Apache Spark](/knowledgebase/apache-spark/), [Trino](/knowledgebase/trino/), or Dremio are closer to what you want.
 

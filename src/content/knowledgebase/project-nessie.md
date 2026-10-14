@@ -53,8 +53,8 @@ Dremio's earlier managed catalog, Arctic, was built on Nessie. Dremio's current 
 | Governance | Open source project (Apache 2.0) | Apache Software Foundation project | AWS managed service |
 | Iceberg REST API | Yes | Yes | Yes |
 | Catalog-wide branches and tags | Yes | No; uses Iceberg table-level branches | No; uses Iceberg table-level branches |
-| Multi-table atomic commits | Yes, through branch merges | Through the REST multi-table commit endpoint where supported | Check current AWS docs |
-| Access control | Basic authorization rules | Role-based access control and credential vending | AWS IAM and Lake Formation |
+| Multi-table atomic commits | Yes, through branch merges | Through the REST multi-table commit endpoint where supported | Not documented |
+| Access control | Basic authorization rules; S3 assume-role credentials and request signing | Role-based access control and credential vending | AWS IAM and Lake Formation |
 
 For help choosing a catalog, read [Choosing the Right Iceberg Control Plane: Polaris vs. Unity Catalog vs. Cloud REST](/blog/2026-05-choosing-iceberg-control-plane/), and to try Nessie locally, see [Hands-on with Apache Iceberg on Your Laptop](/blog/2024-9-hands-on-iceberg-dremio-minio-nessie/).
 
