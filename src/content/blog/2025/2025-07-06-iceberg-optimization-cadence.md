@@ -111,3 +111,10 @@ An effective compaction and snapshot expiration cadence keeps your Iceberg table
 - Be flexible and monitorable
 
 In the next post, we’ll look at how to use **Iceberg’s metadata tables** to dynamically determine *when* optimization is needed - so you can make it event-driven instead of fixed-schedule.
+
+## Go further
+
+- [Iceberg table maintenance calculator](https://datalakehouse.help/tools/maintenance-calculator/): estimate compaction and snapshot expiration settings for your tables.
+- [Compact Apache Iceberg data files](https://datalakehouse.help/guides/optimization/03-compaction/): the step-by-step procedure on datalakehouse.help.
+- [Expire Apache Iceberg snapshots](https://datalakehouse.help/guides/optimization/05-expire-snapshots/): the step-by-step procedure on datalakehouse.help.
+- [Apache Iceberg: The Definitive Guide](https://books.alexmerced.com/books/apache-iceberg-the-definitive-guide/) by Alex Merced and co-authors covers table internals, maintenance, and engine integration in depth ([Buy on Amazon](https://www.amazon.com/dp/1098148622)).

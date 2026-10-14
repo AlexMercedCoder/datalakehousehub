@@ -124,3 +124,9 @@ Partition evolution is one of Iceberg’s superpowers - but like all powerful fe
 - Monitor partition usage and access patterns continuously
 
 In the next post, we’ll move from structural design to execution tuning - exploring how to scale compaction operations efficiently using parallelism, checkpointing, and fault tolerance.
+
+## Go further
+
+- [Iceberg table maintenance calculator](https://datalakehouse.help/tools/maintenance-calculator/): estimate compaction and snapshot expiration settings for your tables.
+- [Compact Apache Iceberg data files](https://datalakehouse.help/guides/optimization/03-compaction/): the step-by-step procedure on datalakehouse.help.
+- [Apache Iceberg: The Definitive Guide](https://books.alexmerced.com/books/apache-iceberg-the-definitive-guide/) by Alex Merced and co-authors covers table internals, maintenance, and engine integration in depth ([Buy on Amazon](https://www.amazon.com/dp/1098148622)).

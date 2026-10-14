@@ -96,3 +96,11 @@ After the pilot, standardize only the workflows that repeatedly save time. Many 
 - Choose **GitHub Copilot CLI** when GitHub-native administration is the deciding factor.
 
 Re-run the pilot periodically. The category changes too quickly for a permanent 2026 ranking, but a repeatable evaluation process will continue to produce a defensible choice.
+
+## Go further
+
+- [Harnesses and brokers](https://openagenticplatform.com/knowledge-base/harnesses-and-brokers): the layer these tools belong to, and what to check before you commit to one.
+- [OpenCode](https://openagenticplatform.com/knowledge-base/opencode): a neutral profile of OpenCode and how open it is to swap models and providers.
+- [Openness scorecard](https://openagenticplatform.com/openness-scorecard): score any agent stack on six openness tests in your browser.
+- [Agent Skills](https://openagenticplatform.com/knowledge-base/agent-skills): the open format for packaging reusable instructions that many coding agents load on demand.
+- [The 2026 Guide to AI-Assisted Development](https://books.alexmerced.com/books/the-2026-guide-to-ai-assisted-development/) by Alex Merced covers AGENTS.md, MCP, agent skills, and context management across coding agents ([Buy on Amazon](https://www.amazon.com/dp/B0GQW7CTML)).

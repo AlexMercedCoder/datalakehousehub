@@ -374,3 +374,9 @@ Measure the split before picking a lever. Track cost per session rather than tot
 ## Keep Going
 
 If this piece was useful, I have written a lot more on lakehouse architecture and query economics. *Architecting an Apache Iceberg Lakehouse* from Manning covers the data modeling and layout decisions that determine what a query costs to run. *Apache Iceberg: The Definitive Guide*, which I co-authored for O'Reilly, goes deeper on partitioning, statistics, and the metadata that lets an engine skip data instead of scanning it. You can find every book I have written, across lakehouse architecture, Apache Iceberg, Apache Polaris, and AI, at [books.alexmerced.com](https://books.alexmerced.com).
+
+## Go further
+
+- [90-day agentic analytics rollout playbook](https://agenticanalyticsnow.com/rollout-playbook/): a phased plan from pilot to production.
+- [Agentic analytics readiness assessment](https://agenticanalyticsnow.com/readiness/): a short self-assessment of whether your data and governance are ready for agents.
+- [Query guardrails for AI agents](https://agenticlakehouse.com/patterns/query-guardrails-for-agents/): allowlists, row limits, timeouts, and cost caps, with code.

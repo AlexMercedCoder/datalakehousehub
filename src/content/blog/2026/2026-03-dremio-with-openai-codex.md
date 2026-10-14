@@ -361,3 +361,9 @@ If your team uses multiple AI coding tools, invest in the AGENTS.md approach fir
 Dremio's Agentic Lakehouse delivers the three things Codex needs to write accurate analytics code: the semantic layer provides business context, query federation provides universal data access, and Reflections provide interactive speed. The MCP server bridges them, and `AGENTS.md` teaches the agent your team's conventions.
 
 For more on the Dremio MCP Server, see the [official documentation](https://docs.dremio.com/current/developer/mcp-server/) or take the free [Dremio MCP Server course](https://university.dremio.com/course/dremio-mcp) on Dremio University.
+
+## Go further
+
+- [Model Context Protocol](https://openagenticplatform.com/knowledge-base/model-context-protocol): why one MCP server works across every harness that supports the protocol.
+- [Build an MCP server over an Apache Iceberg catalog](https://agenticlakehouse.com/patterns/mcp-server-over-iceberg-catalog/): a step-by-step pattern with code on agenticlakehouse.com.
+- [Being Productive with OpenAI Codex](https://books.alexmerced.com/books/being-productive-with-openai-codex/) by Alex Merced a practical guide to working with OpenAI Codex ([Buy on Amazon](https://www.amazon.com/dp/B0H766477L)).

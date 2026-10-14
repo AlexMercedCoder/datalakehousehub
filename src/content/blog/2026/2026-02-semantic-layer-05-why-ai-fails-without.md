@@ -98,3 +98,9 @@ Without step 1, the AI is just a SQL autocomplete tool with no business understa
 If your AI analytics initiative is producing unreliable results, don't upgrade the model. Audit the context the model has access to. Can it read your metric definitions? Column descriptions? Security policies? If the answer is no, the fix isn't a better LLM. It's a semantic layer.
 
 [Try Dremio Cloud free for 30 days](https://www.dremio.com/get-started?utm_source=ev_buffer&utm_medium=influencer&utm_campaign=next-gen-dremio&utm_term=blog-021826-02-18-2026&utm_content=alexmerced)
+
+## Go further
+
+- [Agentic analytics readiness assessment](https://agenticanalyticsnow.com/readiness/): a short self-assessment of whether your data and governance are ready for agents.
+- [Expose a semantic layer to AI agents over MCP](https://agenticlakehouse.com/patterns/semantic-layer-over-mcp/): a step-by-step pattern with code on agenticlakehouse.com.
+- [Dremio and the Semantic Layer](https://books.alexmerced.com/books/dremio-and-the-semantic-layer/) by Alex Merced goes deeper on building a semantic layer that gives AI meaning and context ([Buy on Amazon](https://www.amazon.com/dp/B0GWF7PFDG)).

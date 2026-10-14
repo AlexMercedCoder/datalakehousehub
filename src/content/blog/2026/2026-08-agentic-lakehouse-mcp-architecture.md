@@ -347,3 +347,10 @@ The layer nobody demos is the one that decides whether this reaches the sales te
 ## Keep Going
 
 If this piece was useful, I have written a lot more on lakehouse architecture and the agentic layers on top of it. *Architecting an Apache Iceberg Lakehouse* covers the storage and table design underneath this stack, and *Apache Polaris: The Definitive Guide* covers the catalog and identity model the gateway depends on. You can find every book I have written, across lakehouse architecture, Apache Iceberg, Apache Polaris, and AI, at [books.alexmerced.com](https://books.alexmerced.com).
+
+## Go further
+
+- [Agentic lakehouse implementation patterns](https://agenticlakehouse.com/patterns/): step-by-step patterns with code for MCP servers, semantic layers, and guardrails.
+- [Build an MCP server over an Apache Iceberg catalog](https://agenticlakehouse.com/patterns/mcp-server-over-iceberg-catalog/): a step-by-step pattern with code on agenticlakehouse.com.
+- [Agentic analytics readiness assessment](https://agenticanalyticsnow.com/readiness/): a short self-assessment of whether your data and governance are ready for agents.
+- [The Book on Agentic Analytics](https://books.alexmerced.com/books/the-book-on-agentic-analytics/) by Alex Merced covers the semantic layer, MCP servers, and agent skills for analytics ([Buy on Amazon](https://www.amazon.com/dp/B0GQN4Q41Y)).

@@ -305,3 +305,9 @@ As agentic analytics matures, the winners will not be the systems that generate 
 That is why metric contracts belong at the center of the agentic lakehouse conversation.
 
 For more of my thinking on data lakehouse and AI architecture, explore my books at [books.alexmerced.com](https://books.alexmerced.com). To try a modern Agentic Lakehouse experience, visit [dremio.com/get-started](https://www.dremio.com/get-started).
+
+## Go further
+
+- [Expose a semantic layer to AI agents over MCP](https://agenticlakehouse.com/patterns/semantic-layer-over-mcp/): a step-by-step pattern with code on agenticlakehouse.com.
+- [Agentic analytics readiness assessment](https://agenticanalyticsnow.com/readiness/): a short self-assessment of whether your data and governance are ready for agents.
+- [Dremio and the Semantic Layer](https://books.alexmerced.com/books/dremio-and-the-semantic-layer/) by Alex Merced goes deeper on building a semantic layer that gives AI meaning and context ([Buy on Amazon](https://www.amazon.com/dp/B0GWF7PFDG)).

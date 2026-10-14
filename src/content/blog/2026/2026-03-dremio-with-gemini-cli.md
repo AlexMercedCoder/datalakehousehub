@@ -371,3 +371,9 @@ Start with the MCP server for immediate value. Add a `GEMINI.md` with your SQL c
 Dremio's Agentic Lakehouse gives Gemini CLI accurate data context: the semantic layer provides business meaning, query federation provides universal access, and Reflections provide interactive speed. Gemini CLI's massive context window holds it all, and Google Search grounding provides real-time verification as a safety net.
 
 For more on the Dremio MCP Server, check out the [official documentation](https://docs.dremio.com/current/developer/mcp-server/) or enroll in the free [Dremio MCP Server course](https://university.dremio.com/course/dremio-mcp) on Dremio University.
+
+## Go further
+
+- [Model Context Protocol](https://openagenticplatform.com/knowledge-base/model-context-protocol): why one MCP server works across every harness that supports the protocol.
+- [Build an MCP server over an Apache Iceberg catalog](https://agenticlakehouse.com/patterns/mcp-server-over-iceberg-catalog/): a step-by-step pattern with code on agenticlakehouse.com.
+- [The 2026 Guide to AI-Assisted Development](https://books.alexmerced.com/books/the-2026-guide-to-ai-assisted-development/) by Alex Merced covers AGENTS.md, MCP, agent skills, and context management across coding agents ([Buy on Amazon](https://www.amazon.com/dp/B0GQW7CTML)).

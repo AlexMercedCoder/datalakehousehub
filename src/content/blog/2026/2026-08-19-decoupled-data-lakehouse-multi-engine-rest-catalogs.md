@@ -228,3 +228,8 @@ It costs what it costs, integration ownership, governance as your own project, d
 ## Keep Going
 
 If this piece was useful, I go much deeper on every layer of this architecture in my books. *Apache Iceberg: The Definitive Guide* and *Apache Polaris: The Definitive Guide* from O'Reilly cover the table format and catalog layers in full, and *Architecting an Apache Iceberg Lakehouse* from Manning covers the platform decisions this article compresses. You can find every book I have written, across lakehouse architecture, Apache Iceberg, Apache Polaris, and AI, at [books.alexmerced.com](https://books.alexmerced.com).
+
+## Go further
+
+- [Apache Iceberg compatibility matrix](https://opendatalakehouse.com/compare/compatibility/): which engines and catalogs support which Iceberg features, on opendatalakehouse.com.
+- [Apache Polaris: The Definitive Guide](https://books.alexmerced.com/books/apache-polaris-the-definitive-guide/) by Alex Merced and co-authors covers Polaris catalog architecture, configuration, and governance ([Buy on Amazon](https://www.amazon.com/dp/B0FBRJ7J1Y)).

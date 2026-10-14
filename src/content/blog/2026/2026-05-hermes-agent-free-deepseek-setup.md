@@ -177,3 +177,10 @@ Start with the Nous Portal path. Run `hermes setup -portal`, pick DeepSeek V4 Fl
 Once the terminal workflow is solid, add the Slack gateway. Create the Slack App, set the env vars, and run `hermes gateway run` to confirm the WebSocket connects. Then install it as a service with `hermes gateway install`.
 
 The total setup time is under 30 minutes, and the ongoing cost is zero. You get an AI agent with persistent memory, reusable skills, multi-platform access, and full system-level tooling, all running on free inference.
+
+## Go further
+
+- [Hermes Agent](https://openagenticplatform.com/knowledge-base/hermes-agent): a neutral profile of Hermes Agent and where it fits among open harnesses.
+- [Open-weight models](https://openagenticplatform.com/knowledge-base/open-weight-models): what downloadable weights change about cost, privacy, and control.
+- [OpenRouter](https://openagenticplatform.com/knowledge-base/openrouter): many model providers behind one API, so switching models is a parameter change.
+- [Being Productive with Open Models](https://books.alexmerced.com/books/being-productive-with-open-models/) by Alex Merced a practical guide to open models with OpenCode, Pi, and Hermes ([Buy on Amazon](https://www.amazon.com/dp/B0H76JQ55R)).

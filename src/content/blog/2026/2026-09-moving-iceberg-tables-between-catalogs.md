@@ -367,3 +367,8 @@ Do that and a catalog migration is an afternoon of configuration and a few hours
 ## Keep Going
 
 If this piece was useful, I have written a lot more on Iceberg catalogs, the REST protocol, and how Apache Polaris fits into a multi-engine lakehouse. *Apache Polaris: The Definitive Guide* from O'Reilly covers catalog architecture, credential vending, storage configuration, and the migration paths into Polaris in depth. You can find every book I have written, across lakehouse architecture, Apache Iceberg, Apache Polaris, and AI, at [books.alexmerced.com](https://books.alexmerced.com).
+
+## Go further
+
+- [Apache Iceberg compatibility matrix](https://opendatalakehouse.com/compare/compatibility/): which engines and catalogs support which Iceberg features, on opendatalakehouse.com.
+- [Apache Polaris: The Definitive Guide](https://books.alexmerced.com/books/apache-polaris-the-definitive-guide/) by Alex Merced and co-authors covers Polaris catalog architecture, configuration, and governance ([Buy on Amazon](https://www.amazon.com/dp/B0FBRJ7J1Y)).

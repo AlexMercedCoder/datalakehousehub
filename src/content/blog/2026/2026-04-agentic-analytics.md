@@ -76,3 +76,10 @@ It starts with the strict vendor-neutral governance of the Apache Software Found
 Finally, you layer the semantic context and Autonomous Reflections over that stack to create the Agentic Lakehouse.
 
 You can build this stack yourself, or you can use a unified platform. Deploy agentic analytics directly on Apache Iceberg data with no pipelines and no added overhead. [Try Dremio Cloud free for 30 days](https://www.dremio.com/get-started).
+
+## Go further
+
+- [Agentic analytics use cases by function](https://agenticanalyticsnow.com/use-cases/): concrete use cases for finance, sales, operations, and other teams.
+- [Agentic analytics readiness assessment](https://agenticanalyticsnow.com/readiness/): a short self-assessment of whether your data and governance are ready for agents.
+- [Agentic lakehouse implementation patterns](https://agenticlakehouse.com/patterns/): step-by-step patterns with code for MCP servers, semantic layers, and guardrails.
+- [The Book on Agentic Analytics](https://books.alexmerced.com/books/the-book-on-agentic-analytics/) by Alex Merced covers the semantic layer, MCP servers, and agent skills for analytics ([Buy on Amazon](https://www.amazon.com/dp/B0GQN4Q41Y)).

@@ -108,3 +108,9 @@ A team-ready Cursor setup usually includes:
 - a review process for rule and tool changes.
 
 The goal is not to maximize how much Cursor sees. The goal is to make the authoritative context easy to retrieve and the result easy to verify.
+
+## Go further
+
+- [Model Context Protocol](https://openagenticplatform.com/knowledge-base/model-context-protocol): why one MCP server works across every harness that supports the protocol.
+- [Harnesses and brokers](https://openagenticplatform.com/knowledge-base/harnesses-and-brokers): the layer these tools belong to, and what to check before you commit to one.
+- [Being Productive with Grok and Cursor](https://books.alexmerced.com/books/being-productive-with-grok-and-cursor/) by Alex Merced covers Cursor rules, Agent Mode, background agents, and MCP servers ([Buy on Amazon](https://www.amazon.com/dp/B0H7Z6RS5Y)).

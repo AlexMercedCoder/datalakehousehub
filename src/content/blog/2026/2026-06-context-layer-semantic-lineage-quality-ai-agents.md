@@ -189,3 +189,9 @@ If the answer is yes, the pattern deserves a production pilot. If the answer is 
 Dremio enters this conversation through governed semantic access and fast query paths over open data. The broader lesson is that agents need context as infrastructure, not as prose around a dashboard. A platform that makes freshness, lineage, and ownership part of the query path will naturally produce more trustworthy agent answers.
 
 For a deeper foundation on lakehouse and AI architecture, explore Alex Merced's books on data lakehouses and AI at [books.alexmerced.com](https://books.alexmerced.com). To try a governed, open, agent-ready lakehouse in practice, start a free trial of Dremio's Agentic Lakehouse at [dremio.com/get-started](https://www.dremio.com/get-started).
+
+## Go further
+
+- [Expose a semantic layer to AI agents over MCP](https://agenticlakehouse.com/patterns/semantic-layer-over-mcp/): a step-by-step pattern with code on agenticlakehouse.com.
+- [Agent-safe governed views](https://agenticlakehouse.com/patterns/agent-safe-governed-views/): a pattern for giving agents curated views instead of raw tables.
+- [Constructing Context and Semantics for AI Agents](https://books.alexmerced.com/books/constructing-context-and-semantics-for-ai-agents/) by Alex Merced covers context engineering, semantic representations, and memory for agents ([Buy on Amazon](https://www.amazon.com/dp/B0GSHRZNZ5)).

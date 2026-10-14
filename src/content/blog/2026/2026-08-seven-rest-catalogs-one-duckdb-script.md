@@ -235,3 +235,8 @@ So, can seven different Iceberg REST catalogs really run the same DuckDB code? F
 ## Keep Going
 
 If this piece was useful, I have written a lot more on Apache Iceberg, catalogs, and lakehouse architecture. *Apache Polaris: The Definitive Guide*, which I co-authored for O'Reilly, covers the REST catalog model, credential vending, and governance in depth. You can find every book I have written, across lakehouse architecture, Apache Iceberg, Apache Polaris, and AI, at [books.alexmerced.com](https://books.alexmerced.com).
+
+## Go further
+
+- [Apache Iceberg compatibility matrix](https://opendatalakehouse.com/compare/compatibility/): which engines and catalogs support which Iceberg features, on opendatalakehouse.com.
+- [Apache Polaris: The Definitive Guide](https://books.alexmerced.com/books/apache-polaris-the-definitive-guide/) by Alex Merced and co-authors covers Polaris catalog architecture, configuration, and governance ([Buy on Amazon](https://www.amazon.com/dp/B0FBRJ7J1Y)).

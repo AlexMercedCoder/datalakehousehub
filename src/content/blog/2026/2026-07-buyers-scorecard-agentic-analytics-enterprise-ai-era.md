@@ -312,3 +312,8 @@ The winning platforms will not be the ones that only make analytics feel convers
 Use the scorecard to keep the conversation honest. The goal is not a better chatbot. The goal is a better path from intent to trusted insight to safe action.
 
 For more of my thinking on data lakehouse and AI architecture, explore my books at [books.alexmerced.com](https://books.alexmerced.com). To try a modern Agentic Lakehouse experience, visit [dremio.com/get-started](https://www.dremio.com/get-started).
+
+## Go further
+
+- [Agentic analytics evaluation checklist](https://agenticanalyticsnow.com/evaluation-checklist/): RFP questions to ask any vendor.
+- [90-day agentic analytics rollout playbook](https://agenticanalyticsnow.com/rollout-playbook/): a phased plan from pilot to production.

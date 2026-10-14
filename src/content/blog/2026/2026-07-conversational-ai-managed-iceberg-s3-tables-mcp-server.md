@@ -192,3 +192,9 @@ That is the Dremio-positive conclusion I keep coming back to: the lakehouse beco
 If you are exploring this space, the practical path is to start small. Pick a few trusted Iceberg tables. Wrap them in semantic definitions. Expose narrow MCP tools. Preserve identity and auditability. Measure answer quality. Then expand the surface area only after the governance model proves itself.
 
 For more of my thinking on data lakehouse and AI architecture, explore my books at [books.alexmerced.com](https://books.alexmerced.com). To see how an open Agentic Lakehouse experience can feel in practice, you can also explore Dremio at [dremio.com/get-started](https://www.dremio.com/get-started).
+
+## Go further
+
+- [Build an MCP server over an Apache Iceberg catalog](https://agenticlakehouse.com/patterns/mcp-server-over-iceberg-catalog/): a step-by-step pattern with code on agenticlakehouse.com.
+- [Query guardrails for AI agents](https://agenticlakehouse.com/patterns/query-guardrails-for-agents/): allowlists, row limits, timeouts, and cost caps, with code.
+- [The Book on Agentic Analytics](https://books.alexmerced.com/books/the-book-on-agentic-analytics/) by Alex Merced covers the semantic layer, MCP servers, and agent skills for analytics ([Buy on Amazon](https://www.amazon.com/dp/B0GQN4Q41Y)).

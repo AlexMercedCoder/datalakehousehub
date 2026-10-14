@@ -203,3 +203,8 @@ The Iceberg REST catalog made compatibility claimable in one sentence, and only 
 ## Keep Going
 
 If this piece was useful, I have written a lot more on Apache Iceberg and lakehouse architecture. *Apache Iceberg: The Definitive Guide* and *Apache Polaris: The Definitive Guide*, which I co-authored for O'Reilly, cover the catalog protocol, governance, and architecture this suite probes. You can find every book I have written, across lakehouse architecture, Apache Iceberg, Apache Polaris, and AI, at [books.alexmerced.com](https://books.alexmerced.com).
+
+## Go further
+
+- [Apache Iceberg compatibility matrix](https://opendatalakehouse.com/compare/compatibility/): which engines and catalogs support which Iceberg features, on opendatalakehouse.com.
+- [Apache Polaris: The Definitive Guide](https://books.alexmerced.com/books/apache-polaris-the-definitive-guide/) by Alex Merced and co-authors covers Polaris catalog architecture, configuration, and governance ([Buy on Amazon](https://www.amazon.com/dp/B0FBRJ7J1Y)).

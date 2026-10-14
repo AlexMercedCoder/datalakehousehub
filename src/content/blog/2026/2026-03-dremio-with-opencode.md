@@ -350,3 +350,10 @@ If you are coming from Claude Code or Codex and want an open-source alternative,
 Dremio's Agentic Lakehouse provides what OpenCode's agents need for accurate analytics: the semantic layer delivers business context, query federation delivers universal data access, and Reflections deliver interactive speed. Both platforms are built on open standards, and connecting them gives you an open-source analytics stack from agent to lakehouse.
 
 For more on the Dremio MCP Server, see the [official documentation](https://docs.dremio.com/current/developer/mcp-server/) or take the free [Dremio MCP Server course](https://university.dremio.com/course/dremio-mcp) on Dremio University.
+
+## Go further
+
+- [OpenCode](https://openagenticplatform.com/knowledge-base/opencode): a neutral profile of OpenCode and how open it is to swap models and providers.
+- [Model Context Protocol](https://openagenticplatform.com/knowledge-base/model-context-protocol): why one MCP server works across every harness that supports the protocol.
+- [Build an MCP server over an Apache Iceberg catalog](https://agenticlakehouse.com/patterns/mcp-server-over-iceberg-catalog/): a step-by-step pattern with code on agenticlakehouse.com.
+- [Being Productive with Open Models](https://books.alexmerced.com/books/being-productive-with-open-models/) by Alex Merced a practical guide to open models with OpenCode, Pi, and Hermes ([Buy on Amazon](https://www.amazon.com/dp/B0H76JQ55R)).

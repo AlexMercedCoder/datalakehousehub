@@ -370,3 +370,8 @@ Then go find the table with no filter on its compaction job, because on most pla
 ## Keep Going
 
 If this piece was useful, I have written a lot more on Iceberg operations and lakehouse architecture. *Apache Iceberg: The Definitive Guide* covers the table format and its maintenance operations in depth, and *Architecting an Apache Iceberg Lakehouse* covers how maintenance, catalogs, and query engines fit together in a working platform. You can find every book I have written, across lakehouse architecture, Apache Iceberg, Apache Polaris, and AI, at [books.alexmerced.com](https://books.alexmerced.com).
+
+## Go further
+
+- [Iceberg table maintenance calculator](https://datalakehouse.help/tools/maintenance-calculator/): estimate compaction and snapshot expiration settings for your tables.
+- [Apache Iceberg: The Definitive Guide](https://books.alexmerced.com/books/apache-iceberg-the-definitive-guide/) by Alex Merced and co-authors covers table internals, maintenance, and engine integration in depth ([Buy on Amazon](https://www.amazon.com/dp/1098148622)).

@@ -103,3 +103,9 @@ Regardless of which platform you choose, agentic analytics works better when you
 **Plan for misuse.** Users will eventually try to ask the agent questions it can't answer reliably : questions outside the defined data scope, questions requiring business context that isn't in the catalog, or questions where the data simply doesn't exist. Design the agent's failure response to be useful: "I don't have visibility into Q3 2022 data because it's outside the retention window" is more useful than an incorrect answer that looks plausible.
 
 [Try Dremio Cloud free for 30 days](https://www.dremio.com/get-started) and compare the agent's output quality against your current tool on the same analytical questions.
+
+## Go further
+
+- [Agentic analytics evaluation checklist](https://agenticanalyticsnow.com/evaluation-checklist/): RFP questions to ask any vendor.
+- [Agentic analytics readiness assessment](https://agenticanalyticsnow.com/readiness/): a short self-assessment of whether your data and governance are ready for agents.
+- [The Book on Agentic Analytics](https://books.alexmerced.com/books/the-book-on-agentic-analytics/) by Alex Merced covers the semantic layer, MCP servers, and agent skills for analytics ([Buy on Amazon](https://www.amazon.com/dp/B0GQN4Q41Y)).

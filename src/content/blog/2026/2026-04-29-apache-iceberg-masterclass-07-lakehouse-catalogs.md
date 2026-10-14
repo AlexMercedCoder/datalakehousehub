@@ -153,3 +153,8 @@ Some teams try to use Iceberg without a proper catalog, relying on Hadoop-style 
 - [FREE - Agentic AI for Dummies](https://hello.dremio.com/wp-resources-agentic-ai-for-dummies-reg.html?utm_source=link_page&utm_medium=influencer&utm_campaign=iceberg&utm_term=qr-link-list-04-07-2026&utm_content=alexmerced)
 - [FREE - Leverage Federation, The Semantic Layer and the Lakehouse for Agentic AI](https://hello.dremio.com/wp-resources-agentic-analytics-guide-reg.html?utm_source=link_page&utm_medium=influencer&utm_campaign=iceberg&utm_term=qr-link-list-04-07-2026&utm_content=alexmerced)
 - [FREE with Survey - Understanding and Getting Hands-on with Apache Iceberg in 100 Pages](https://forms.gle/xdsun6JiRvFY9rB36)
+
+## Go further
+
+- [Apache Iceberg compatibility matrix](https://opendatalakehouse.com/compare/compatibility/): which engines and catalogs support which Iceberg features, on opendatalakehouse.com.
+- [Apache Polaris: The Definitive Guide](https://books.alexmerced.com/books/apache-polaris-the-definitive-guide/) by Alex Merced and co-authors covers Polaris catalog architecture, configuration, and governance ([Buy on Amazon](https://www.amazon.com/dp/B0FBRJ7J1Y)).

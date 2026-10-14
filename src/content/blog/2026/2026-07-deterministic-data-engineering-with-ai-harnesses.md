@@ -173,3 +173,10 @@ The stochastic model and the deterministic pipeline are not enemies, and the dis
 If the way this article builds understanding works for you, that is what my books do at full depth. I co-authored Apache Iceberg: The Definitive Guide and Apache Polaris: The Definitive Guide for O'Reilly, with further titles on lakehouse architecture, data engineering, and agentic analytics.
 
 Browse the full collection of my books on data and AI at [books.alexmerced.com](https://books.alexmerced.com).
+
+## Go further
+
+- [Harnesses and brokers](https://openagenticplatform.com/knowledge-base/harnesses-and-brokers): the layer these tools belong to, and what to check before you commit to one.
+- [OpenCode](https://openagenticplatform.com/knowledge-base/opencode): a neutral profile of OpenCode and how open it is to swap models and providers.
+- [Agent Skills](https://openagenticplatform.com/knowledge-base/agent-skills): the open format for packaging reusable instructions that many coding agents load on demand.
+- [The 2026 Guide to AI-Assisted Development](https://books.alexmerced.com/books/the-2026-guide-to-ai-assisted-development/) by Alex Merced covers AGENTS.md, MCP, agent skills, and context management across coding agents ([Buy on Amazon](https://www.amazon.com/dp/B0GQW7CTML)).

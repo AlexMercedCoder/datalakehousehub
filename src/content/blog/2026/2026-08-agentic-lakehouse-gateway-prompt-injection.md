@@ -382,3 +382,8 @@ None of the four stages is sufficient alone. Together they turn the opening scen
 ## Keep Going
 
 If this piece was useful, I have written a lot more on securing agentic access to the lakehouse, semantic layers, and catalog governance. *Apache Polaris: The Definitive Guide* (O'Reilly) covers credential vending and the RBAC model that the gateway's scoping sits on, and my book on AI and labor economics covers the broader picture of what agents change. You can find every book I have written, across lakehouse architecture, Apache Iceberg, Apache Polaris, and AI, at [books.alexmerced.com](https://books.alexmerced.com).
+
+## Go further
+
+- [Query guardrails for AI agents](https://agenticlakehouse.com/patterns/query-guardrails-for-agents/): allowlists, row limits, timeouts, and cost caps, with code.
+- [Agent-safe governed views](https://agenticlakehouse.com/patterns/agent-safe-governed-views/): a pattern for giving agents curated views instead of raw tables.

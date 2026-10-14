@@ -398,3 +398,8 @@ Do that, and 1.12.0 becomes what a point release should be: a set of improvement
 ## Keep Going
 
 If this piece was useful, I have written a lot more on Apache Iceberg internals and operations. *Apache Iceberg: The Definitive Guide* covers the metadata structure, catalogs, and maintenance procedures that this upgrade touches, from snapshots and branches to compaction. You can find every book I have written, across lakehouse architecture, Apache Iceberg, Apache Polaris, and AI, at [books.alexmerced.com](https://books.alexmerced.com).
+
+## Go further
+
+- [Apache Iceberg compatibility matrix](https://opendatalakehouse.com/compare/compatibility/): which engines and catalogs support which Iceberg features, on opendatalakehouse.com.
+- [Apache Iceberg: The Definitive Guide](https://books.alexmerced.com/books/apache-iceberg-the-definitive-guide/) by Alex Merced and co-authors covers table internals, maintenance, and engine integration in depth ([Buy on Amazon](https://www.amazon.com/dp/1098148622)).

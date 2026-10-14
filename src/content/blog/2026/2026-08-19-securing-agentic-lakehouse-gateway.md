@@ -170,3 +170,8 @@ The deeper conclusion is the series' last refrain, and it is the most reassuring
 ## Keep Going
 
 If this piece was useful, the architecture it defends runs through this series and my books: the gateway build it secures, the semantic and catalog layers that contain, the telemetry that proves, and the platform foundations in *Architecting an Apache Iceberg Lakehouse* from Manning alongside *Apache Polaris: The Definitive Guide* and *Apache Iceberg: The Definitive Guide* from O'Reilly. You can find every book I have written, across lakehouse architecture, Apache Iceberg, Apache Polaris, and AI, at [books.alexmerced.com](https://books.alexmerced.com).
+
+## Go further
+
+- [Query guardrails for AI agents](https://agenticlakehouse.com/patterns/query-guardrails-for-agents/): allowlists, row limits, timeouts, and cost caps, with code.
+- [Row and column policies for AI agents](https://agenticlakehouse.com/patterns/row-and-column-policies-for-agents/): how to scope what an agent can see, with code.

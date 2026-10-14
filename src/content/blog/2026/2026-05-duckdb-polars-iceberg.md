@@ -311,3 +311,8 @@ For a comprehensive guide to lakehouse architecture and the Iceberg ecosystem, p
 Browse Alex's other data engineering and analytics books at [books.alexmerced.com](https://books.alexmerced.com).
 
 For multi-engine lakehouse access with query acceleration across your Iceberg tables, try Dremio Cloud free at [dremio.com/get-started](https://www.dremio.com/get-started).
+
+## Go further
+
+- [Apache Iceberg compatibility matrix](https://opendatalakehouse.com/compare/compatibility/): which engines and catalogs support which Iceberg features, on opendatalakehouse.com.
+- [Apache Iceberg: The Definitive Guide](https://books.alexmerced.com/books/apache-iceberg-the-definitive-guide/) by Alex Merced and co-authors covers table internals, maintenance, and engine integration in depth ([Buy on Amazon](https://www.amazon.com/dp/1098148622)).

@@ -442,3 +442,10 @@ If you are evaluating Dremio for the first time, start with the MCP server alone
 Dremio's Agentic Lakehouse gives Claude Code what it needs to write accurate SQL: the semantic layer provides business context, query federation provides universal data access, and Reflections provide interactive speed. The MCP server is the bridge that connects them.
 
 For more on the Dremio MCP Server, check out the [official documentation](https://docs.dremio.com/current/developer/mcp-server/) or enroll in the free [Dremio MCP Server course](https://university.dremio.com/course/dremio-mcp) on Dremio University.
+
+## Go further
+
+- [Model Context Protocol](https://openagenticplatform.com/knowledge-base/model-context-protocol): why one MCP server works across every harness that supports the protocol.
+- [Agent Skills](https://openagenticplatform.com/knowledge-base/agent-skills): the open format for packaging reusable instructions that many coding agents load on demand.
+- [Build an MCP server over an Apache Iceberg catalog](https://agenticlakehouse.com/patterns/mcp-server-over-iceberg-catalog/): a step-by-step pattern with code on agenticlakehouse.com.
+- [Being Productive with Claude](https://books.alexmerced.com/books/being-productive-with-claude/) by Alex Merced a practical guide to Claude.ai and Claude Code ([Buy on Amazon](https://www.amazon.com/dp/B0H76BTLMF)).

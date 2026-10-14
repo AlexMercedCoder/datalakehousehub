@@ -151,3 +151,9 @@ Schedule maintenance jobs during your low-traffic window : typically early morni
 Start with a 7-day retention policy, a count floor of 10, and weekly maintenance runs. Adjust the frequency based on how fast your `snapshot_count` and `manifest_count` metrics grow.
 
 [Try Dremio Cloud free for 30 days](https://www.dremio.com/get-started) to run Iceberg tables with automated maintenance built in.
+
+## Go further
+
+- [Iceberg table maintenance calculator](https://datalakehouse.help/tools/maintenance-calculator/): estimate compaction and snapshot expiration settings for your tables.
+- [Expire Apache Iceberg snapshots](https://datalakehouse.help/guides/optimization/05-expire-snapshots/): the step-by-step procedure on datalakehouse.help.
+- [Apache Iceberg: The Definitive Guide](https://books.alexmerced.com/books/apache-iceberg-the-definitive-guide/) by Alex Merced and co-authors covers table internals, maintenance, and engine integration in depth ([Buy on Amazon](https://www.amazon.com/dp/1098148622)).

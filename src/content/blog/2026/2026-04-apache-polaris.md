@@ -72,3 +72,8 @@ By donating Polaris to the Apache Software Foundation as an incubating project, 
 If Apache Parquet provides the high-performance storage disk, and Apache Iceberg acts as the relational file system, Apache Polaris serves as the brain resolving engine traffic and access control. Together, they form the foundation of a modern data architecture.
 
 Dremio’s built-in Open Catalog is built natively on Apache Polaris. When you sign up, you get a production-ready, vendor-neutral Polaris catalog deployed instantly. [Try Dremio Cloud free for 30 days](https://www.dremio.com/get-started) to query your data without creating proprietary metadata silos.
+
+## Go further
+
+- [Apache Iceberg compatibility matrix](https://opendatalakehouse.com/compare/compatibility/): which engines and catalogs support which Iceberg features, on opendatalakehouse.com.
+- [Apache Polaris: The Definitive Guide](https://books.alexmerced.com/books/apache-polaris-the-definitive-guide/) by Alex Merced and co-authors covers Polaris catalog architecture, configuration, and governance ([Buy on Amazon](https://www.amazon.com/dp/B0FBRJ7J1Y)).

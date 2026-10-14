@@ -284,3 +284,9 @@ For data platforms, the gateway is the last mile of the governed-agent architect
 ## Keep Going
 
 If this piece was useful, the surrounding architecture connects through my other writing on semantic layers, agent governance, and the lakehouse platform underneath. *Architecting an Apache Iceberg Lakehouse* from Manning covers the data foundation, and my recent AI and agentic analytics titles build the layer this gateway serves. You can find every book I have written, across lakehouse architecture, Apache Iceberg, Apache Polaris, and AI, at [books.alexmerced.com](https://books.alexmerced.com).
+
+## Go further
+
+- [Build an MCP server over an Apache Iceberg catalog](https://agenticlakehouse.com/patterns/mcp-server-over-iceberg-catalog/): a step-by-step pattern with code on agenticlakehouse.com.
+- [Query guardrails for AI agents](https://agenticlakehouse.com/patterns/query-guardrails-for-agents/): allowlists, row limits, timeouts, and cost caps, with code.
+- [Model Context Protocol](https://openagenticplatform.com/knowledge-base/model-context-protocol): why one MCP server works across every harness that supports the protocol.

@@ -356,3 +356,8 @@ Measure return against a baseline you collected before launch, report the parts 
 ## Keep Going
 
 If this piece was useful, I have written a lot more on agentic architecture and lakehouse economics. *Architecting an Apache Iceberg Lakehouse* covers the table design and maintenance practices that drive the query-side costs discussed here, and *Apache Polaris: The Definitive Guide* covers the identity and catalog layer that makes per-principal attribution possible. You can find every book I have written, across lakehouse architecture, Apache Iceberg, Apache Polaris, and AI, at [books.alexmerced.com](https://books.alexmerced.com).
+
+## Go further
+
+- [90-day agentic analytics rollout playbook](https://agenticanalyticsnow.com/rollout-playbook/): a phased plan from pilot to production.
+- [Query guardrails for AI agents](https://agenticlakehouse.com/patterns/query-guardrails-for-agents/): allowlists, row limits, timeouts, and cost caps, with code.

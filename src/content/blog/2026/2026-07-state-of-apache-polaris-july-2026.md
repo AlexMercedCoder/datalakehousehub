@@ -187,3 +187,8 @@ The catalog wars framing is fading, and what replaces it is quieter and better: 
 If you want to go deeper than an article can take you, that is what the book is for. I co-authored Apache Polaris: The Definitive Guide and Apache Iceberg: The Definitive Guide for O'Reilly, and I have written further titles on lakehouse architecture, data engineering, and agentic analytics, all built to turn these systems from vocabulary into working knowledge.
 
 Browse the full collection of my books on data and AI at [books.alexmerced.com](https://books.alexmerced.com).
+
+## Go further
+
+- [Apache Iceberg compatibility matrix](https://opendatalakehouse.com/compare/compatibility/): which engines and catalogs support which Iceberg features, on opendatalakehouse.com.
+- [Apache Polaris: The Definitive Guide](https://books.alexmerced.com/books/apache-polaris-the-definitive-guide/) by Alex Merced and co-authors covers Polaris catalog architecture, configuration, and governance ([Buy on Amazon](https://www.amazon.com/dp/B0FBRJ7J1Y)).

@@ -447,3 +447,8 @@ Run it yourself before you sign anything. Pin the specification revision, store 
 ## Keep Going
 
 If this piece was useful, I have written a lot more on Iceberg catalogs and lakehouse architecture. *Apache Polaris: The Definitive Guide* covers the catalog layer end to end, from the REST protocol and RBAC model through federation and production deployment, and *Apache Iceberg: The Definitive Guide* covers the table format the protocol serves. You can find every book I have written, across lakehouse architecture, Apache Iceberg, Apache Polaris, and AI, at [books.alexmerced.com](https://books.alexmerced.com).
+
+## Go further
+
+- [Apache Iceberg compatibility matrix](https://opendatalakehouse.com/compare/compatibility/): which engines and catalogs support which Iceberg features, on opendatalakehouse.com.
+- [Apache Polaris: The Definitive Guide](https://books.alexmerced.com/books/apache-polaris-the-definitive-guide/) by Alex Merced and co-authors covers Polaris catalog architecture, configuration, and governance ([Buy on Amazon](https://www.amazon.com/dp/B0FBRJ7J1Y)).

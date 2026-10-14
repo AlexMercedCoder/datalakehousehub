@@ -451,3 +451,7 @@ To deepen your understanding of modern data architectures, consider the followin
 * **Read Lakehouse Reference Materials:** Explore **"Architecting an Apache Iceberg Lakehouse"** and other technical publications that cover partition tuning, catalog design, and query optimization at [books.alexmerced.com](https://books.alexmerced.com).
 * **Build Your Own Local Pipeline:** Start by downloading `pysail` or `polars` and testing them against a local Parquet dataset. Compare the query planning time and CPU memory footprint against your existing frameworks.
 * **Evaluate Dremio Cloud:** If your local query engines are hitting limits or you need to federate data across multiple sources, deploy Dremio directly on your S3 data lake. Try Dremio Cloud free for 30 days at [dremio.com/get-started](https://www.dremio.com/get-started).
+
+## Go further
+
+- [Apache Iceberg compatibility matrix](https://opendatalakehouse.com/compare/compatibility/): which engines and catalogs support which Iceberg features, on opendatalakehouse.com.

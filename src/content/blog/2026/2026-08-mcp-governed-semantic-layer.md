@@ -307,3 +307,10 @@ The part that takes discipline is resisting the escape hatch. Every architecture
 ## Keep Going
 
 If this piece was useful, I have written a lot more on catalogs, semantic layers, and agentic data architecture. *Apache Polaris: The Definitive Guide* covers the catalog and governance layer this design depends on, and *Architecting an Apache Iceberg Lakehouse* covers the platform underneath. You can find every book I have written, across lakehouse architecture, Apache Iceberg, Apache Polaris, and AI, at [books.alexmerced.com](https://books.alexmerced.com).
+
+## Go further
+
+- [Expose a semantic layer to AI agents over MCP](https://agenticlakehouse.com/patterns/semantic-layer-over-mcp/): a step-by-step pattern with code on agenticlakehouse.com.
+- [Agent-safe governed views](https://agenticlakehouse.com/patterns/agent-safe-governed-views/): a pattern for giving agents curated views instead of raw tables.
+- [Agentic analytics readiness assessment](https://agenticanalyticsnow.com/readiness/): a short self-assessment of whether your data and governance are ready for agents.
+- [Dremio and the Semantic Layer](https://books.alexmerced.com/books/dremio-and-the-semantic-layer/) by Alex Merced goes deeper on building a semantic layer that gives AI meaning and context ([Buy on Amazon](https://www.amazon.com/dp/B0GWF7PFDG)).

@@ -136,3 +136,9 @@ Metadata is a powerful part of Iceberg’s architecture, but without routine mai
 - You ensure that your Iceberg tables remain agile, scalable, and ready for production workloads.
 
 In the next post, we’ll explore how to design the ideal cadence for compaction and snapshot expiration so your optimizations are timely and cost-effective.
+
+## Go further
+
+- [Iceberg table maintenance calculator](https://datalakehouse.help/tools/maintenance-calculator/): estimate compaction and snapshot expiration settings for your tables.
+- [Expire Apache Iceberg snapshots](https://datalakehouse.help/guides/optimization/05-expire-snapshots/): the step-by-step procedure on datalakehouse.help.
+- [Apache Iceberg: The Definitive Guide](https://books.alexmerced.com/books/apache-iceberg-the-definitive-guide/) by Alex Merced and co-authors covers table internals, maintenance, and engine integration in depth ([Buy on Amazon](https://www.amazon.com/dp/1098148622)).

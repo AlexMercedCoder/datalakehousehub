@@ -393,3 +393,9 @@ None of this is exotic and none of it is fast. It is the same data modeling disc
 ## Keep Going
 
 If this piece was useful, I have written a lot more on lakehouse architecture and the semantic layer. *Architecting an Apache Iceberg Lakehouse* from Manning covers data product design, the medallion layers, and semantic modeling as platform decisions rather than pipeline details. *Apache Polaris: The Definitive Guide*, which I co-authored for O'Reilly, covers governing those assets across engines. You can find every book I have written, across lakehouse architecture, Apache Iceberg, Apache Polaris, and AI, at [books.alexmerced.com](https://books.alexmerced.com).
+
+## Go further
+
+- [Agent-safe governed views](https://agenticlakehouse.com/patterns/agent-safe-governed-views/): a pattern for giving agents curated views instead of raw tables.
+- [Agentic analytics readiness assessment](https://agenticanalyticsnow.com/readiness/): a short self-assessment of whether your data and governance are ready for agents.
+- [Constructing Context and Semantics for AI Agents](https://books.alexmerced.com/books/constructing-context-and-semantics-for-ai-agents/) by Alex Merced covers context engineering, semantic representations, and memory for agents ([Buy on Amazon](https://www.amazon.com/dp/B0GSHRZNZ5)).

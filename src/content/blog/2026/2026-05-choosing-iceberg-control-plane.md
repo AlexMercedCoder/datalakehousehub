@@ -285,3 +285,8 @@ To build your expertise in modern data architectures, open table formats, and se
 * **Explore Other Technical Books:** Find listings of Alex Merced's other data engineering and analytics books at [books.alexmerced.com](https://books.alexmerced.com).
 * **Test Polaris Locally:** Run a local Apache Polaris instance using Docker and connect a local DuckDB or PySpark session to experiment with REST catalog commits and credential vending.
 * **Try Dremio Cloud:** To query your Iceberg tables with sub-second performance, automated reflection tuning, and unified catalog integration, try Dremio Cloud free for 30 days at [dremio.com/get-started](https://www.dremio.com/get-started).
+
+## Go further
+
+- [Apache Iceberg compatibility matrix](https://opendatalakehouse.com/compare/compatibility/): which engines and catalogs support which Iceberg features, on opendatalakehouse.com.
+- [Apache Polaris: The Definitive Guide](https://books.alexmerced.com/books/apache-polaris-the-definitive-guide/) by Alex Merced and co-authors covers Polaris catalog architecture, configuration, and governance ([Buy on Amazon](https://www.amazon.com/dp/B0FBRJ7J1Y)).

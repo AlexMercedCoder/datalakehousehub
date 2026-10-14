@@ -374,3 +374,9 @@ Build the eval set first, from real questions with verified answers. Model your 
 ## Keep Going
 
 If this piece was useful, I have written a lot more on data architecture and AI. I have a book on AI and labor economics covering how this shift changes the work itself, available at [https://a.co/d/06SeOKw8](https://a.co/d/06SeOKw8), and *Architecting an Apache Iceberg Lakehouse* covers the semantic and catalog layers these agents depend on. You can find every book I have written, across lakehouse architecture, Apache Iceberg, Apache Polaris, and AI, at [books.alexmerced.com](https://books.alexmerced.com).
+
+## Go further
+
+- [Expose a semantic layer to AI agents over MCP](https://agenticlakehouse.com/patterns/semantic-layer-over-mcp/): a step-by-step pattern with code on agenticlakehouse.com.
+- [Agentic analytics readiness assessment](https://agenticanalyticsnow.com/readiness/): a short self-assessment of whether your data and governance are ready for agents.
+- [Constructing Context and Semantics for AI Agents](https://books.alexmerced.com/books/constructing-context-and-semantics-for-ai-agents/) by Alex Merced covers context engineering, semantic representations, and memory for agents ([Buy on Amazon](https://www.amazon.com/dp/B0GSHRZNZ5)).

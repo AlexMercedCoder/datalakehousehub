@@ -95,3 +95,9 @@ Manual query writing, dashboard maintenance, and stakeholder interview cycles be
 Analysts who adapt will handle 10x the analytical throughput with the same team size. The shift requires learning to evaluate agent-generated analysis rather than generating it directly, and learning to define the context that makes agent outputs trustworthy.
 
 [Try Dremio Cloud free for 30 days](https://www.dremio.com/get-started) and run your first agentic analytics workflow against your existing data.
+
+## Go further
+
+- [Agentic analytics use cases by function](https://agenticanalyticsnow.com/use-cases/): concrete use cases for finance, sales, operations, and other teams.
+- [90-day agentic analytics rollout playbook](https://agenticanalyticsnow.com/rollout-playbook/): a phased plan from pilot to production.
+- [The Book on Agentic Analytics](https://books.alexmerced.com/books/the-book-on-agentic-analytics/) by Alex Merced covers the semantic layer, MCP servers, and agent skills for analytics ([Buy on Amazon](https://www.amazon.com/dp/B0GQN4Q41Y)).

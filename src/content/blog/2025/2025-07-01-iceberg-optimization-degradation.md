@@ -83,3 +83,10 @@ Most of these issues stem from a lack of:
 The good news is that Apache Iceberg provides powerful tools to fix these issues - with the right strategy. In the next posts, we’ll break down each optimization method, starting with standard compaction and how to implement it effectively.
 
 Stay tuned for Part 2: **The Basics of Compaction : Bin Packing Your Data for Efficiency**
+
+## Go further
+
+- [Iceberg table maintenance calculator](https://datalakehouse.help/tools/maintenance-calculator/): estimate compaction and snapshot expiration settings for your tables.
+- [Compact Apache Iceberg data files](https://datalakehouse.help/guides/optimization/03-compaction/): the step-by-step procedure on datalakehouse.help.
+- [Expire Apache Iceberg snapshots](https://datalakehouse.help/guides/optimization/05-expire-snapshots/): the step-by-step procedure on datalakehouse.help.
+- [Apache Iceberg: The Definitive Guide](https://books.alexmerced.com/books/apache-iceberg-the-definitive-guide/) by Alex Merced and co-authors covers table internals, maintenance, and engine integration in depth ([Buy on Amazon](https://www.amazon.com/dp/1098148622)).

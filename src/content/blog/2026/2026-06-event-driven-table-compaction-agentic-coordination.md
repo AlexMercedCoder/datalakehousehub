@@ -186,3 +186,8 @@ If the answer is yes, the pattern deserves a production pilot. If the answer is 
 Well-maintained tables help every query engine and make governed analytical loops less brittle. Platforms that combine open storage with workload-aware performance monitoring, like Dremio, benefit when the tables underneath them are clean and well-organized. The agent that keeps those tables healthy is doing infrastructure work that the analytical layer directly benefits from.
 
 For a deeper foundation on lakehouse and AI architecture, explore Alex Merced's books on data lakehouses and AI at [books.alexmerced.com](https://books.alexmerced.com). To try a governed, open, agent-ready lakehouse in practice, start a free trial of Dremio's Agentic Lakehouse at [dremio.com/get-started](https://www.dremio.com/get-started).
+
+## Go further
+
+- [Iceberg table maintenance calculator](https://datalakehouse.help/tools/maintenance-calculator/): estimate compaction and snapshot expiration settings for your tables.
+- [Compact Apache Iceberg data files](https://datalakehouse.help/guides/optimization/03-compaction/): the step-by-step procedure on datalakehouse.help.

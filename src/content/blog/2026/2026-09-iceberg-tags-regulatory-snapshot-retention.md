@@ -396,3 +396,9 @@ Build tag creation into your business workflows, keep a ledger that explains eve
 ## Keep Going
 
 If this piece was useful, I have written a lot more on Apache Iceberg table design and operations. *Apache Iceberg: The Definitive Guide* covers snapshots, branching, tagging, and table maintenance in depth, and *Architecting an Apache Iceberg Lakehouse* walks through the operational design of a production lakehouse. You can find every book I have written, across lakehouse architecture, Apache Iceberg, Apache Polaris, and AI, at [books.alexmerced.com](https://books.alexmerced.com).
+
+## Go further
+
+- [Expire Apache Iceberg snapshots](https://datalakehouse.help/guides/optimization/05-expire-snapshots/): the step-by-step procedure on datalakehouse.help.
+- [Iceberg table maintenance calculator](https://datalakehouse.help/tools/maintenance-calculator/): estimate compaction and snapshot expiration settings for your tables.
+- [Apache Iceberg: The Definitive Guide](https://books.alexmerced.com/books/apache-iceberg-the-definitive-guide/) by Alex Merced and co-authors covers table internals, maintenance, and engine integration in depth ([Buy on Amazon](https://www.amazon.com/dp/1098148622)).

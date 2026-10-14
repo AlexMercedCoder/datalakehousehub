@@ -305,3 +305,10 @@ AI is not magic and it is not sentient, as we covered in Part 1. It is a tool, l
 [Return to Part 3: ChatGPT and Claude Deep Dive](/blog/ai-for-all-levels-3-chatgpt-and-claude-deep-dive/)
 
 [Return to Part 4: Specialized AI Tools for Creation](/blog/ai-for-all-levels-4-specialized-ai-tools/)
+
+## Go further
+
+- [Hermes Agent](https://openagenticplatform.com/knowledge-base/hermes-agent): a neutral profile of Hermes Agent and where it fits among open harnesses.
+- [Open-weight models](https://openagenticplatform.com/knowledge-base/open-weight-models): what downloadable weights change about cost, privacy, and control.
+- [Local model endpoints](https://openagenticplatform.com/knowledge-base/local-model-endpoints): running inference on hardware you control.
+- [Being Productive with Open Models](https://books.alexmerced.com/books/being-productive-with-open-models/) by Alex Merced a practical guide to open models with OpenCode, Pi, and Hermes ([Buy on Amazon](https://www.amazon.com/dp/B0H76JQ55R)).

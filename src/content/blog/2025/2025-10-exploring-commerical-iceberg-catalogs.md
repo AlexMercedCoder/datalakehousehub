@@ -417,3 +417,8 @@ This model promotes **interoperability and performance without compromise**, ali
 The Iceberg REST Catalog isn’t just an API spec, it’s the foundation for a new kind of lakehouse: open, transactional, and cloud-agnostic. Your choice of catalog defines how far you can scale without friction.
 
 Choose wisely.
+
+## Go further
+
+- [Apache Iceberg compatibility matrix](https://opendatalakehouse.com/compare/compatibility/): which engines and catalogs support which Iceberg features, on opendatalakehouse.com.
+- [Apache Polaris: The Definitive Guide](https://books.alexmerced.com/books/apache-polaris-the-definitive-guide/) by Alex Merced and co-authors covers Polaris catalog architecture, configuration, and governance ([Buy on Amazon](https://www.amazon.com/dp/B0FBRJ7J1Y)).

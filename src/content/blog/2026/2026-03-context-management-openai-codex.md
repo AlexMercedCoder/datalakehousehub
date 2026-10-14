@@ -303,3 +303,10 @@ To learn more about working effectively with AI coding tools, context engineerin
 And for a fictional take on where AI is heading:
 
 - [The Emperors of A.I. Valley: A Novel of Power, Code, and the War for the Future](https://www.amazon.com/Emperors-I-Valley-Novel-Future/dp/B0GQHKF4ZT/) is a novel about the power struggles and ethical dilemmas behind the companies building the most powerful AI systems in the world.
+
+## Go further
+
+- [Harnesses and brokers](https://openagenticplatform.com/knowledge-base/harnesses-and-brokers): the layer these tools belong to, and what to check before you commit to one.
+- [Agent Skills](https://openagenticplatform.com/knowledge-base/agent-skills): the open format for packaging reusable instructions that many coding agents load on demand.
+- [Model Context Protocol](https://openagenticplatform.com/knowledge-base/model-context-protocol): why one MCP server works across every harness that supports the protocol.
+- [Being Productive with OpenAI Codex](https://books.alexmerced.com/books/being-productive-with-openai-codex/) by Alex Merced a practical guide to working with OpenAI Codex ([Buy on Amazon](https://www.amazon.com/dp/B0H766477L)).

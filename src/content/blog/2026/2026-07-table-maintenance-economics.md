@@ -365,3 +365,7 @@ If this piece was useful, I have written a lot more on Apache Iceberg internals 
 *Apache Iceberg: The Definitive Guide* (O'Reilly) covers the metadata layers, the maintenance procedures, and the file layout behavior described here in full detail, including the tuning decisions that determine how much maintenance a table needs in the first place.
 You can find every book I have written, across lakehouse architecture, Apache Iceberg, Apache Polaris, and AI, at
 [books.alexmerced.com](https://books.alexmerced.com).
+
+## Go further
+
+- [Iceberg table maintenance calculator](https://datalakehouse.help/tools/maintenance-calculator/): estimate compaction and snapshot expiration settings for your tables.

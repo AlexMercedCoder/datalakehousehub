@@ -389,3 +389,8 @@ The secure path is a governed lakehouse access model where agents act through sc
 That is how organizations can let agents move quickly without letting them outrun governance.
 
 For more of my thinking on data lakehouse and AI architecture, explore my books at [books.alexmerced.com](https://books.alexmerced.com). To try a modern Agentic Lakehouse experience, visit [dremio.com/get-started](https://www.dremio.com/get-started).
+
+## Go further
+
+- [Row and column policies for AI agents](https://agenticlakehouse.com/patterns/row-and-column-policies-for-agents/): how to scope what an agent can see, with code.
+- [Query guardrails for AI agents](https://agenticlakehouse.com/patterns/query-guardrails-for-agents/): allowlists, row limits, timeouts, and cost caps, with code.

@@ -257,3 +257,10 @@ The Dremio MCP server (open source, Apache 2.0, available at github.com/dremio/d
 For documentation and setup guides, visit [docs.dremio.com/dremio-cloud/ai-integration/mcp-server](https://docs.dremio.com/dremio-cloud/ai-integration/mcp-server) or start with the tutorial at [dremio.com/get-started](https://www.dremio.com/get-started).
 
 *Sources: MCP Specification (modelcontextprotocol.io), Dremio MCP Server Repository (github.com/dremio/dremio-mcp), Dremio Blog "Building a Basic MCP Server with Python" (dremio.com), Dremio Blog "Using Dremio's MCP Server with Agentic AI Frameworks" (dremio.com), Atlan MCP Server Implementation Guide (atlan.com).*
+
+## Go further
+
+- [Build an MCP server over an Apache Iceberg catalog](https://agenticlakehouse.com/patterns/mcp-server-over-iceberg-catalog/): a step-by-step pattern with code on agenticlakehouse.com.
+- [Expose a semantic layer to AI agents over MCP](https://agenticlakehouse.com/patterns/semantic-layer-over-mcp/): a step-by-step pattern with code on agenticlakehouse.com.
+- [Model Context Protocol](https://openagenticplatform.com/knowledge-base/model-context-protocol): why one MCP server works across every harness that supports the protocol.
+- [The Book on Agentic Analytics](https://books.alexmerced.com/books/the-book-on-agentic-analytics/) by Alex Merced covers the semantic layer, MCP servers, and agent skills for analytics ([Buy on Amazon](https://www.amazon.com/dp/B0GQN4Q41Y)).

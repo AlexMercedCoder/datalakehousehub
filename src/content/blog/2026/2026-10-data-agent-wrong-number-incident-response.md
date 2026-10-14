@@ -373,3 +373,9 @@ The open lakehouse is what makes this precise. Iceberg remembers every version o
 ## Keep Going
 
 If this piece was useful, I have written a lot more on building trustworthy AI on top of open lakehouse data. *Apache Iceberg: The Definitive Guide* covers the snapshot, time travel, and tagging features this article relies on for exact reproduction. You can find every book I have written, across lakehouse architecture, Apache Iceberg, Apache Polaris, and AI, at [books.alexmerced.com](https://books.alexmerced.com).
+
+## Go further
+
+- [90-day agentic analytics rollout playbook](https://agenticanalyticsnow.com/rollout-playbook/): a phased plan from pilot to production.
+- [Query guardrails for AI agents](https://agenticlakehouse.com/patterns/query-guardrails-for-agents/): allowlists, row limits, timeouts, and cost caps, with code.
+- [Expose a semantic layer to AI agents over MCP](https://agenticlakehouse.com/patterns/semantic-layer-over-mcp/): a step-by-step pattern with code on agenticlakehouse.com.

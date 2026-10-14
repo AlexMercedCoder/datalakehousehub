@@ -183,3 +183,8 @@ If the answer is yes, the pattern deserves a production pilot. If the answer is 
 Dremio is relevant when governed SQL, semantic views, and access controls become the surface agents use. If agents operate at machine speed, policy has to operate at machine speed too. A platform that enforces column masking, row filtering, and persona-level identity through a governed SQL surface is doing exactly what this architecture requires.
 
 For a deeper foundation on lakehouse and AI architecture, explore Alex Merced's books on data lakehouses and AI at [books.alexmerced.com](https://books.alexmerced.com). To try a governed, open, agent-ready lakehouse in practice, start a free trial of Dremio's Agentic Lakehouse at [dremio.com/get-started](https://www.dremio.com/get-started).
+
+## Go further
+
+- [Row and column policies for AI agents](https://agenticlakehouse.com/patterns/row-and-column-policies-for-agents/): how to scope what an agent can see, with code.
+- [Agent-safe governed views](https://agenticlakehouse.com/patterns/agent-safe-governed-views/): a pattern for giving agents curated views instead of raw tables.

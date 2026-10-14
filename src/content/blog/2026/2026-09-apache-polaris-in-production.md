@@ -484,3 +484,8 @@ None of that is exotic. It is the same discipline you apply to any system of rec
 ## Keep Going
 
 If this piece was useful, I have written a lot more on catalogs and lakehouse operations. *Apache Polaris: The Definitive Guide* covers the service end to end, from the object model and RBAC through federation, deployment, and day-two operations, and *Architecting an Apache Iceberg Lakehouse* covers where the catalog sits in the wider architecture. You can find every book I have written, across lakehouse architecture, Apache Iceberg, Apache Polaris, and AI, at [books.alexmerced.com](https://books.alexmerced.com).
+
+## Go further
+
+- [Apache Iceberg compatibility matrix](https://opendatalakehouse.com/compare/compatibility/): which engines and catalogs support which Iceberg features, on opendatalakehouse.com.
+- [Apache Polaris: The Definitive Guide](https://books.alexmerced.com/books/apache-polaris-the-definitive-guide/) by Alex Merced and co-authors covers Polaris catalog architecture, configuration, and governance ([Buy on Amazon](https://www.amazon.com/dp/B0FBRJ7J1Y)).
