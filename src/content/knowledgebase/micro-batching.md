@@ -40,4 +40,4 @@ For more depth, read [The State of Streaming to Apache Iceberg in July 2026](/bl
 Micro-batching processes streams as small, repeatable batch jobs, which gives near real-time freshness with simple replay-based recovery. On Iceberg, the commit interval is the key setting: it decides how fresh the data is and how much compaction work the table needs. Spark 4.1 also added a Real-Time Mode for lower-latency stateless queries, but micro-batching remains Spark's default.
 
 ## Learn More
-To learn more about the Data Lakehouse, read [The Lakehouse Built for Everyone](https://books.alexmerced.com/books/the-lakehouse-built-for-everyone/) by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).
+To learn more about the [Data Lakehouse](/data-lakehouse/), read [The Lakehouse Built for Everyone](https://books.alexmerced.com/books/the-lakehouse-built-for-everyone/) by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

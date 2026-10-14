@@ -6,37 +6,37 @@ description: "Version control is a system that records every change to code over
 
 # What is Version Control?
 
-Version Control (also known as Source Control) is a foundational, non-negotiable software engineering discipline and class of systems explicitly designed to track, manage, and historically record every single microscopic change made to a codebase over time. While originally invented strictly for software developers writing application code, Version Control is now the absolute bedrock of modern Data Engineering, serving as the required mechanism to manage complex ETL pipelines, dbt SQL models, and Infrastructure as Code (Terraform) deployments.
+Version Control (also known as Source Control) is a core software engineering practice and class of systems designed to track, manage, and record every change made to a codebase over time. While it began as a tool for application developers, Version Control is now standard in Data Engineering, used to manage ETL pipelines, dbt SQL models, and Infrastructure as Code (Terraform) deployments.
 
-Before the invention of advanced version control, teams managed code catastrophically. An engineer would write a script, name it `data_pipeline_final.py`, and email it to the team. A week later, someone would edit it and name it `data_pipeline_final_v2_USE_THIS_ONE.py`. If the new script broke the production database, figuring out exactly which line of code changed, who changed it, and how to revert it back to the original version was a massive, panic-inducing nightmare. Version Control completely eradicated this chaos.
+Without version control, teams managed code by hand. An engineer would write a script, name it `data_pipeline_final.py`, and email it to the team. A week later, someone would edit it and name it `data_pipeline_final_v2_USE_THIS_ONE.py`. If the new script broke the production database, figuring out exactly which line of code changed, who changed it, and how to revert it back to the original version was slow and stressful. Version Control replaced this with a reliable history.
 
 ## The Architecture of the Commit
 
-At its core, a Version Control System (VCS) like Git does not just save files; it takes highly efficient, cryptographic snapshots of the entire project hierarchy.
+At its core, a Version Control System (VCS) like Git does not just save files; it records snapshots of the entire project tree, identified by cryptographic hashes.
 
 ### The Commit and the Hash
-When a data engineer finishes writing a complex SQL query, they execute a "Commit." 
-The VCS takes an absolute snapshot of the exact state of the files. It calculates a massive cryptographic hash (like SHA-1) based strictly on the text content. It permanently logs the exact timestamp, the exact lines of code that were added or deleted, the author's name, and a human-readable message explaining *why* the change was made.
+When a data engineer finishes a change, such as a new SQL model, they make a "Commit." 
+The VCS records a snapshot of the state of the files. Git identifies each commit by a cryptographic hash (SHA-1 by default, with SHA-256 repositories also supported) computed over the snapshot, the parent commit, the author, the timestamp, and a human-readable message explaining *why* the change was made. Line-by-line differences are computed by comparing snapshots.
 
 ### Branching and Isolation
-The most powerful architectural feature of modern version control is Branching.
-If a data engineering team of 50 people is working on a massive Open [Data Lakehouse](/data-lakehouse/) simultaneously, they cannot all edit the live production code at the same time. 
-Version control allows an engineer to create a "Branch." This is an isolated, parallel universe. The engineer can completely rewrite the Apache Spark pipeline in their branch, test it, and accidentally break everything, with absolutely zero impact on the live production environment.
+One of the most useful features of modern version control is Branching.
+If a data engineering team of 50 people is working on an Open [Data Lakehouse](/data-lakehouse/) codebase at once, they cannot all edit the production code at the same time. 
+Version control allows an engineer to create a "Branch." This is an isolated line of development. The engineer can rewrite the Apache Spark pipeline in their branch, test it, and even break it, without affecting the production code.
 
 ## The Pull Request and Code Review
 
-Once the engineer's isolated branch is mathematically perfect, they do not simply shove it into production. They submit a "Pull Request" (PR) or "Merge Request."
+Once the engineer's branch is ready, they do not push it straight into production. They submit a "Pull Request" (PR) or "Merge Request."
 
-This alerts the senior data architects. The VCS generates an exact, color-coded visual "Diff" (Difference), explicitly highlighting the exact 12 lines of code the junior engineer altered out of the 10,000-line project. The senior architects review the specific mathematical logic, mandate corrections, and formally approve the code before the VCS physically merges the parallel branch back into the main, live production timeline.
+This notifies reviewers. The hosting platform (such as GitHub or GitLab) shows a "Diff" (Difference) that highlights exactly which lines changed, for example 12 lines out of a 10,000-line project. Reviewers check the logic, request corrections, and approve the change before the branch is merged into the main branch.
 
-## Revert: The Ultimate Safety Net
+## Revert: A Safety Net
 
-Because the VCS possesses an impenetrable, cryptographic history of every single commit, it provides absolute disaster recovery. 
-If a massive code change is approved, merged into production, and subsequently causes the Apache Airflow orchestration engine to crash globally, the team does not panic. The lead engineer simply issues a `revert` command against the catastrophic commit. The VCS instantly mathematically reverses the exact lines of code, perfectly restoring the entire global infrastructure to the exact state it was in three minutes prior.
+Because the VCS keeps a tamper-evident history of every commit, it makes recovery from bad changes straightforward. 
+If a large code change is merged and then causes Apache Airflow DAGs to fail, the team does not have to reconstruct the old code by hand. An engineer runs `git revert` on the faulty commit, which creates a new commit that undoes those changes. Once the reverted code is deployed, the pipelines run the previous logic again. Reverting code does not undo data that the bad version already wrote; that may need a separate fix.
 
 ## Summary of Technical Value
 
-Version Control is the central nervous system of engineering collaboration. By cryptographically tracking every historical code mutation, enabling safe, isolated parallel branching, and providing instantaneous disaster reversion, Version Control guarantees that massive data engineering teams can rapidly scale highly complex Data Lakehouse architectures without ever risking catastrophic, unrecoverable code corruption.
+Version Control is the foundation of engineering collaboration. By tracking every code change, enabling isolated branches, and making it easy to revert bad changes, Version Control lets large data engineering teams evolve complex Data Lakehouse codebases safely and recover quickly from mistakes.
 
 ## Learn More
-To learn more about the Data Lakehouse, read [The Lakehouse Built for Everyone](https://books.alexmerced.com/books/the-lakehouse-built-for-everyone/) by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).
+To learn more about the [Data Lakehouse](/data-lakehouse/), read [The Lakehouse Built for Everyone](https://books.alexmerced.com/books/the-lakehouse-built-for-everyone/) by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

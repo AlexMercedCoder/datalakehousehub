@@ -41,7 +41,7 @@ Most teams use both. Federation fits exploration and small or fast-changing data
 |---|---|---|
 | Ad hoc exploration and prototyping | Good fit | Overkill until the use case is proven |
 | Joining large lakehouse facts with a small live lookup table | Good fit | Optional |
-| Dashboards that run the same heavy join many times a day | Slow and loads sources | Good fit, often with reflections or [materialized views](/knowledgebase/materialized-views/) |
+| Dashboards that run the same heavy join many times a day | Slow and loads sources | Good fit, often with reflections or [materialized views](/knowledgebase/materialized-view/) |
 | Large cross-source joins | Network-bound | Good fit |
 | Data that must be current to the second | Good fit | Needs CDC to keep up |
 | Protecting production OLTP systems from analytical load | Risky | Good fit |
@@ -54,4 +54,4 @@ Data federation lets one SQL query reach across databases, warehouses, and lakeh
 
 
 ## Learn More
-To learn more about the Data Lakehouse, read [The Lakehouse Built for Everyone](https://books.alexmerced.com/books/the-lakehouse-built-for-everyone/) by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).
+To learn more about the [Data Lakehouse](/data-lakehouse/), read [The Lakehouse Built for Everyone](https://books.alexmerced.com/books/the-lakehouse-built-for-everyone/) by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

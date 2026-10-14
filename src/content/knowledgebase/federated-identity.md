@@ -4,44 +4,45 @@ meta_title: "What is Federated Identity? | Expert Data Lakehouse & AI Glossary"
 description: "Federated identity lets users sign in once through a trusted identity provider and reuse that identity across many systems and their data access policies."
 ---
 
-## What is Federated Identity?
+Federated identity is an arrangement in which one trusted identity provider (IdP) authenticates a user, and many separate applications accept that authentication instead of each keeping its own usernames and passwords. The user signs in once with the provider, such as Microsoft Entra ID, Okta, or Google, and receives a signed token or assertion that other systems verify. Single sign-on (SSO) is the user-facing result; federation is the trust relationship that makes it work across systems and organizations.
 
-A decentralized access framework allowing users to utilize the same identification data to securely traverse across multiple platforms. 
+## How It Works
 
-In the rapidly evolving landscape of data engineering and artificial intelligence, **Federated Identity** has emerged as a critical foundational component. As organizations transition from legacy, monolithic architectures to decoupled, scalable environments, understanding the role of Federated Identity is essential for building future-proof infrastructure. This capability serves as a critical enabler in modern data ecosystems, explicitly guiding architecture toward absolute efficiency and scale. When correctly implemented, Federated Identity dynamically drives analytical workloads and structurally limits administrative technical debt.
+A federated login has three parties: the user, the identity provider, and the application (called the service provider or relying party).
 
-## Core Architecture and Mechanics
+1. The user opens an application and is redirected to the identity provider.
+2. The identity provider authenticates the user, often with multi-factor authentication.
+3. The provider issues a signed token or assertion containing the user's identity and attributes, such as email and group memberships.
+4. The application verifies the signature against the provider's published keys, then maps the identity and groups to its own roles and permissions.
 
-To understand the practical application of Federated Identity, it is crucial to systematically examine its fundamental operational behaviors and structural design:
+The common protocols are:
 
-* **Centralizes metadata to construct a comprehensive map of all corporate data assets and their hierarchical relationships.** This principle ensures that systems can scale horizontally without facing artificial limitations or bottlenecks.
-* **Applies granular access controls dynamically, masking or restricting data based on user identity or geographical constraints.** By adopting this mechanic, engineers can bypass traditional processing constraints and deliver substantially faster time-to-insight.
-* **Implements automated profiling and assertions to block bad data before it impacts downstream dashboards.** This allows the overarching architecture to remain highly resilient while serving concurrent workloads natively.
+| Protocol | What it carries | Typical use |
+|---|---|---|
+| SAML 2.0 | XML assertions | Enterprise web SSO |
+| OAuth 2.0 | Access tokens for delegated authorization | API access on a user's or service's behalf |
+| OpenID Connect (OIDC) | ID tokens (JWTs) on top of OAuth 2.0 | Modern web, mobile, and API sign-in |
+| SCIM | User and group records | Provisioning and deprovisioning accounts |
 
-Operating through these principles enables seamless horizontal expansion across varying cloud environments. It integrates effortlessly with adjacent technologies like [Apache Iceberg](/apache-iceberg/), dbt, and advanced vector search algorithms.
+Federation handles who the user is. Each application still decides what that user may do, which is where [role-based access control](/knowledgebase/role-based-access-control/) comes in.
 
-## Why Federated Identity Matters in the Modern Data Stack
+## Why It Matters
 
-Robust governance protects the business from compliance violations and internal breaches while simultaneously increasing internal trust in the data.
+Federated identity puts account lifecycle in one place. When someone joins, changes teams, or leaves, the change is made once in the identity provider and every connected system follows. It reduces password sprawl, makes multi-factor authentication consistent, and produces one trail of sign-in events for auditing. It is also a building block of [zero trust architecture](/knowledgebase/zero-trust-architecture/), where every request carries verifiable identity.
 
-For modern enterprises managing decentralized teams, the implementation of Federated Identity eliminates significant architectural friction. Teams are explicitly empowered to operate autonomously against reliable technical foundations without dynamically disrupting other isolated workflows. It shifts manual engineering overhead into an autonomous, software-driven paradigm, keeping Total Cost of Ownership (TCO) extremely low.
+## Federated Identity in the Lakehouse
 
-### Key Benefits
-- **Unprecedented Scalability:** Automatically adapts to massive fluctuations in data volume and query concurrency.
-- **Vendor Neutrality:** Strongly aligns with open-source frameworks, preventing aggressive vendor lock-in.
-- **Enhanced Observability:** Exposes deep, structural metadata allowing engineers to monitor and trace pipelines comprehensively.
+A lakehouse has many components that need to agree on who a user is: the query engine, the catalog, BI tools, notebooks, and increasingly AI agents. Federation lets them all trust the same provider.
 
-## Frequently Asked Questions
+- **Query engines.** Dremio supports OpenID Connect providers, including Microsoft Entra ID, as well as LDAP, and documents SCIM provisioning with OpenID providers, so the groups defined in the IdP drive access to spaces, views, and tables.
+- **Catalogs.** Apache Polaris can be configured to accept tokens from an external OIDC identity provider, mapping claims in the JWT to a Polaris principal and mapping token roles to Polaris principal roles. Clients of the Iceberg REST catalog then present a bearer token from the corporate IdP rather than a catalog-specific secret.
+- **Storage.** With credential vending, the catalog checks the caller's identity and permissions and then hands the engine short-lived, scoped storage credentials, so end users do not need long-lived cloud keys.
 
-### What is Row-Level Security (RLS)?
-RLS is a database policy that automatically filters out rows (e.g., regional sales data) that the querying user is not authorized to see, without requiring separate views. This distinction is particularly important when evaluating total architecture costs and performance benchmarks.
+The result is one identity carried from sign-in through the engine and catalog to the data files. The Hub post on [REST catalog credential vending](/blog/rest-catalog-credential-vending-secure-lakehouse-storage/) explains the storage half of that chain, and the [Apache Polaris](/knowledgebase/apache-polaris/) entry covers the catalog.
 
-### What is active data governance?
-Active governance uses programmatic controls (like blocking a PR if data tests fail) rather than relying on manual, periodic audits. The open ecosystem continues to evolve rapidly, ensuring backward compatibility while introducing powerful new primitives.
+## Summary
 
-### How does Federated Identity impact data governance and security?
-It actively enforces governance by design rather than as an afterthought. Native logging, role-based access controls (RBAC), and structured access pathways provide immediate visibility into security boundaries and regulatory compliance.
+Federated identity lets one identity provider authenticate users for many systems through protocols such as SAML, OAuth 2.0, and OIDC. In a lakehouse it ties engines, catalogs, and storage access to the same corporate identities and groups, so access policies follow people instead of being rebuilt in every tool.
 
----
-
-### E-E-A-T & Further Reading
+## Learn More
+To learn more about the [Data Lakehouse](/data-lakehouse/), read [The Lakehouse Built for Everyone](https://books.alexmerced.com/books/the-lakehouse-built-for-everyone/) by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

@@ -6,42 +6,42 @@ description: "Query planning is how a SQL engine turns a query into an optimized
 
 ## What is Query Planning?
 
-The systematic process where execution engines evaluate complex SQL submissions preparing ideal logical sequential instruction trees. 
+Query planning is the process by which a query engine turns a SQL statement into an efficient execution plan: a tree of operations that it can run across its workers. 
 
-In the rapidly evolving landscape of data engineering and artificial intelligence, **Query Planning** has emerged as a critical foundational component. As organizations transition from legacy, monolithic architectures to decoupled, scalable environments, understanding the role of Query Planning is essential for building future-proof infrastructure. This capability serves as a critical enabler in modern data ecosystems, explicitly guiding architecture toward absolute efficiency and scale. When correctly implemented, Query Planning dynamically drives analytical workloads and structurally limits administrative technical debt.
+SQL says *what* result you want, not *how* to compute it. **Query Planning** fills that gap. The engine parses the SQL, checks it against the catalog, builds a logical plan, rewrites it with optimization rules, and then picks a physical plan based on cost estimates, such as which join algorithm to use and in what order to join tables. A good plan can be much faster than a poor one for the same query. For a step-by-step walkthrough, see [Query Planner](/knowledgebase/query-planner/).
 
 ## Core Architecture and Mechanics
 
-To understand the practical application of Query Planning, it is crucial to systematically examine its fundamental operational behaviors and structural design:
+In distributed lakehouse engines, the plan also decides how work is spread and executed:
 
-* **Distributes incoming query execution plans synchronously across extensive clusters of interconnected computing nodes.** This principle ensures that systems can scale horizontally without facing artificial limitations or bottlenecks.
-* **Utilizes vectorized execution to process entire columns of memory rather than iterating row-by-row.** By adopting this mechanic, engineers can bypass traditional processing constraints and deliver substantially faster time-to-insight.
-* **Pushes down filters and predicates directly to the storage layer to minimize unnecessary data transfer.** This allows the overarching architecture to remain highly resilient while serving concurrent workloads natively.
+* **Splits the physical plan into stages and distributes them across cluster nodes.** Each node processes a portion of the data in parallel, and data is exchanged between stages for joins and aggregations.
+* **Chooses operators that run with vectorized execution, processing batches of column values rather than one row at a time.** This makes better use of CPU caches and SIMD instructions.
+* **Pushes filters and predicates down to the storage layer to reduce data transfer.** With table formats like Iceberg, the planner prunes files using partition values and column statistics before any data is read.
 
-Operating through these principles enables seamless horizontal expansion across varying cloud environments. It integrates effortlessly with adjacent technologies like [Apache Iceberg](/apache-iceberg/), dbt, and advanced vector search algorithms.
+Metadata from [Apache Iceberg](/knowledgebase/apache-iceberg/) tables, such as row counts and column statistics, feeds the planner's cost estimates.
 
 ## Why Query Planning Matters in the Modern Data Stack
 
-These engines deliver massively parallel processing capabilities, drastically reducing the time it takes to aggregate and analyze petabytes of distributed data.
+In a lakehouse, the same data may be queried by several engines, and the quality of each engine's planner has a large effect on query speed and compute cost.
 
-For modern enterprises managing decentralized teams, the implementation of Query Planning eliminates significant architectural friction. Teams are explicitly empowered to operate autonomously against reliable technical foundations without dynamically disrupting other isolated workflows. It shifts manual engineering overhead into an autonomous, software-driven paradigm, keeping Total Cost of Ownership (TCO) extremely low.
+Good planning also means analysts can write straightforward SQL and rely on the engine to find an efficient strategy, instead of hand-tuning every query. Keeping table statistics current and files well organized helps the planner make good choices.
 
 ### Key Benefits
-- **Unprecedented Scalability:** Automatically adapts to massive fluctuations in data volume and query concurrency.
-- **Vendor Neutrality:** Strongly aligns with open-source frameworks, preventing aggressive vendor lock-in.
-- **Enhanced Observability:** Exposes deep, structural metadata allowing engineers to monitor and trace pipelines comprehensively.
+- **Faster Queries:** Better join orders and pruning reduce the work each query does.
+- **Lower Cost:** Reading and shuffling less data uses less compute.
+- **Transparency:** `EXPLAIN` output shows the chosen plan, which helps engineers diagnose slow queries.
 
 ## Frequently Asked Questions
 
 ### Do distributed engines store the data?
-Some do (like Snowflake), while others (like Trino or Presto) exclusively provide the compute layer, querying data directly from open lakehouse storage. This distinction is particularly important when evaluating total architecture costs and performance benchmarks.
+Some do (like Snowflake), while others (like Trino or Presto) exclusively provide the compute layer, querying data directly from open lakehouse storage. Engines that query open lakehouse storage rely on table format metadata for planning, because they do not manage the storage themselves.
 
 ### What is vectorized execution?
-It is an engineering optimization that groups data into CPU cache-friendly blocks, immensely speeding up analytical operations. The open ecosystem continues to evolve rapidly, ensuring backward compatibility while introducing powerful new primitives.
+It is an engineering optimization that processes data in CPU cache-friendly batches of column values, which speeds up analytical operations considerably.
 
 ### How does Query Planning impact data governance and security?
-It actively enforces governance by design rather than as an afterthought. Native logging, role-based access controls (RBAC), and structured access pathways provide immediate visibility into security boundaries and regulatory compliance.
+During planning, the engine checks the user's permissions and applies row-level filters and column masks defined by governance policies, so those rules are part of the plan itself.
 
----
+## Learn More
 
-### E-E-A-T & Further Reading
+To learn more about the [Data Lakehouse](/data-lakehouse/), read [The Lakehouse Built for Everyone](https://books.alexmerced.com/books/the-lakehouse-built-for-everyone/) by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

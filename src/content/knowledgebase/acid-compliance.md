@@ -8,47 +8,51 @@ description: "ACID compliance is the set of guarantees (atomicity, consistency, 
 
 ## Introduction to ACID Compliance
 
-If a database crashes because the server building lost power, what happens to the data? 
-Imagine you are transferring $500 from your Savings account to your Checking account. The database logic executes in two steps:
+If a database server loses power in the middle of a write, what happens to the data?
+Imagine you are transferring $500 from your Savings account to your Checking account. The database logic runs in two steps:
 1. Deduct $500 from Savings.
 2. Add $500 to Checking.
 
-If the power fails exactly after Step 1, but before Step 2, the $500 simply vanishes from reality. 
+If the power fails after Step 1 but before Step 2, the $500 would disappear from both accounts.
 
-To prevent catastrophic scenarios like this, computer scientists defined a set of absolute guarantees that a reliable database system must provide. These rules are known as **ACID** (Atomicity, Consistency, Isolation, Durability). 
+To prevent scenarios like this, computer scientists defined a set of guarantees that a reliable transactional system should provide. These properties are known as **ACID** (Atomicity, Consistency, Isolation, Durability).
 
-For decades, ACID compliance was the exclusive domain of Relational Databases (like PostgreSQL and Oracle). Today, bringing ACID compliance to the Data Lake is the defining technological breakthrough of the modern Lakehouse architecture.
+For decades, ACID compliance was mostly the domain of relational databases (like PostgreSQL and Oracle). Bringing ACID transactions to the data lake is one of the defining features of the modern Lakehouse architecture.
 
 ## The Four Pillars of ACID
 
-To be considered an enterprise-grade transactional system, a database must mathematically guarantee all four of these properties.
+A transactional system described as ACID compliant provides all four of these properties.
 
 ### 1. Atomicity ("All or Nothing")
-Atomicity guarantees that a transaction (which may consist of multiple SQL statements) is treated as a single, indivisible unit. 
-In the bank transfer example, the database wraps Step 1 (Deduct) and Step 2 (Add) into a single Atomic Transaction. If the power fails after Step 1, the database guarantees that upon reboot, it will automatically rollback the deduction. Either both steps succeed completely, or neither step happens at all. There is no partial state.
+Atomicity means a transaction (which may consist of multiple SQL statements) is treated as a single, indivisible unit.
+In the bank transfer example, the database wraps Step 1 (Deduct) and Step 2 (Add) into one transaction. If the power fails after Step 1, the database rolls back the uncommitted deduction during recovery. Either both steps take effect, or neither does. No partial state is visible.
 
 ### 2. Consistency (Rules Enforcement)
-*Note: This is different from the "Consistency" in the [CAP Theorem](https://datalakehousehub.com/knowledgebase/cap-theorem/).* 
-ACID Consistency guarantees that a transaction can only bring the database from one valid state to another valid state, strictly enforcing all pre-defined rules (constraints, triggers, cascades).
-If the database schema has a rule that `account_balance >= 0`, and a transaction attempts to withdraw $1,000 from an account with only $500, the database will instantly abort and rollback the transaction, refusing to let the database enter an illegal state (a negative balance).
+*Note: This is different from the "Consistency" in the [CAP Theorem](https://datalakehousehub.com/knowledgebase/cap-theorem/).*
+ACID Consistency means a transaction can only move the database from one valid state to another, enforcing all defined rules (constraints, triggers, cascades).
+If the schema has a rule that `account_balance >= 0`, and a transaction tries to withdraw $1,000 from an account holding $500, the database rejects the change and rolls back the transaction rather than allowing a negative balance.
 
 ### 3. Isolation (Concurrency Control)
-In a massive enterprise, thousands of transactions happen simultaneously. Isolation guarantees that concurrent transactions execute as if they were running sequentially, completely isolated from one another.
-If User A and User B both try to buy the absolute last ticket to a concert at the exact same millisecond, Isolation ensures the database processes one before the other. User A gets the ticket, and User B gets an "Out of Stock" error. Without Isolation, the database would sell the single ticket to both users simultaneously.
+In a large enterprise, many transactions run at the same time. Isolation controls how much concurrent transactions can see of each other's uncommitted work. At the strictest level (serializable), the result is as if transactions ran one after another; many databases default to weaker but still useful levels.
+If User A and User B both try to buy the last ticket to a concert at the same moment, proper isolation ensures the database processes one before the other. User A gets the ticket, and User B gets an "Out of Stock" error. Without it, the database could sell the single ticket to both users.
 
 ### 4. Durability
-Durability guarantees that once a transaction is successfully committed and the database tells the user "Success", that data is permanently saved, even in the event of an immediate catastrophic power failure or server crash. The data is written to non-volatile storage (the hard drive), not just held in volatile RAM.
+Durability means that once a transaction is committed and the database reports "Success," the change survives a subsequent power failure or server crash. The data is written to non-volatile storage, not just held in RAM.
 
 ## Bringing ACID to the Data Lakehouse
 
-The original Hadoop Data Lakes were emphatically NOT ACID compliant. 
-If an [Apache Spark](https://datalakehousehub.com/knowledgebase/apache-spark/) job was writing a massive 1-Terabyte dataset to the Data Lake and crashed halfway through, 500 Gigabytes of corrupted, partial data was left sitting in the folder. If a business analyst ran a [Tableau](https://datalakehousehub.com/knowledgebase/tableau/) dashboard at that exact moment, their charts would include the corrupted data. 
+The original Hadoop data lakes were not ACID compliant.
+If an [Apache Spark](https://datalakehousehub.com/knowledgebase/apache-spark/) job writing a large dataset to the data lake crashed halfway through, partial output could be left in the folder. If a business analyst refreshed a [Tableau](https://datalakehousehub.com/knowledgebase/tableau/) dashboard at that moment, the charts could include incomplete data.
 
-**[Apache Iceberg](https://iceberglakehouse.com/iceberg/iceberg-catalog/)**, **[Delta Lake](https://datalakehousehub.com/knowledgebase/delta-lake/)**, and **[Apache Hudi](https://datalakehousehub.com/knowledgebase/apache-hudi/)** were invented specifically to solve this. 
-By introducing a transactional metadata layer (a log of snapshots), these [Open Table Formats](https://opendatalakehouse.com/kb/open-table-formats/) brought full ACID compliance to cheap cloud object storage (S3). 
+**[Apache Iceberg](https://iceberglakehouse.com/iceberg/iceberg-catalog/)**, **[Delta Lake](https://datalakehousehub.com/knowledgebase/delta-lake/)**, and **[Apache Hudi](https://datalakehousehub.com/knowledgebase/apache-hudi/)** were created in large part to solve this.
+By introducing a transactional metadata layer (a log or tree of snapshots), these [Open Table Formats](https://opendatalakehouse.com/kb/open-table-formats/) brought ACID transactions to low-cost cloud object storage such as S3.
 
-Now, when Spark writes data to an Iceberg table, it writes the Parquet files invisibly. The data is hidden from business users. Only when the Spark job finishes 100% successfully does Iceberg execute an *Atomic* commit, updating the metadata pointer. The business analysts instantly see the new data. If Spark crashes at 99%, the partial files are ignored, and the analysts are protected from the corrupted state.
+When Spark writes to an Iceberg table, it writes new Parquet files that readers do not see yet. Only when the job finishes does Iceberg perform an *atomic* commit that updates the table's metadata pointer, and from then on new queries see the new data. If the job fails before commit, the partial files are never referenced, and analysts keep reading the last committed snapshot.
 
 ## Conclusion
 
-ACID Compliance is the non-negotiable bedrock of data integrity. While the NoSQL movement of the 2010s briefly convinced the industry to trade ACID guarantees for horizontal scalability, the resulting data chaos forced a rapid retreat. The modern data ecosystem demands both infinite scalability AND mathematical perfection, a reality finally achieved by superimposing ACID-compliant table formats over cloud object storage.
+ACID compliance is a foundation of data integrity. During the NoSQL wave of the 2010s, many systems relaxed transactional guarantees in exchange for horizontal scalability, and many later added stronger transactional support back. Modern data platforms aim for both scale and correctness, which the lakehouse delivers by layering ACID-compliant table formats over cloud object storage.
+
+## Learn More
+
+To learn more about the [Data Lakehouse](/data-lakehouse/), read [The Lakehouse Built for Everyone](https://books.alexmerced.com/books/the-lakehouse-built-for-everyone/) by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

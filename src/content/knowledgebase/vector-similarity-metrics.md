@@ -8,41 +8,45 @@ description: "Vector similarity metrics measure how close two embeddings are, co
 
 ## Introduction to Vector Similarity
 
-In modern AI architectures (specifically RAG systems), searching through text does not involve looking for matching keywords. It involves **[Semantic Search](https://datalakehousehub.com/knowledgebase/semantic-search/)**—searching for matching *meaning*.
+In modern AI architectures (specifically RAG systems), searching through text often goes beyond matching keywords. It uses **[Semantic Search](https://datalakehousehub.com/knowledgebase/semantic-search/)**, which looks for matching *meaning*.
 
-To do this, text is passed through an Embedding Model, which converts a sentence into a **Vector** (a massive array of numbers, often 1,536 dimensions long). 
+To do this, text is passed through an Embedding Model, which converts a sentence into a **Vector** (an array of numbers, often hundreds to a few thousand dimensions; OpenAI's `text-embedding-3-small` produces 1,536 by default). 
 
-If you want to find the most relevant document for a user's question, you convert the user's question into a Vector, and then you ask the Vector Database: *"Which document vectors are mathematically closest to the question vector?"*
+If you want to find the most relevant document for a user's question, you convert the user's question into a Vector, and then you ask the Vector Database: *"Which document vectors are closest to the question vector?"*
 
-To calculate "closeness" in a 1,536-dimensional space, the database uses **Vector Similarity Metrics**. The choice of metric fundamentally alters the speed and accuracy of the search engine.
+To calculate "closeness" in a high-dimensional space, the database uses **Vector Similarity Metrics**. The choice of metric affects both the results and the cost of the search.
 
 ## The Three Primary Metrics
 
-There are three dominant mathematical formulas used to calculate the similarity between two vectors.
+Three formulas are used most often to calculate the similarity between two vectors.
 
-### 1. Cosine Similarity (The Industry Standard)
-Cosine Similarity measures the **angle** between two vectors, completely ignoring their length (magnitude). 
-Imagine a 2D graph. Vector A points North-East. Vector B points North-East, but is twice as long. Cosine Similarity calculates the angle between them as 0 degrees, meaning they are 100% similar. 
+### 1. Cosine Similarity (The Common Default)
+Cosine Similarity measures the **angle** between two vectors, ignoring their length (magnitude). 
+Imagine a 2D graph. Vector A points North-East. Vector B points North-East, but is twice as long. The angle between them is 0 degrees, so their cosine similarity is 1, the maximum. 
 
-*   **Why it's used**: It is the default metric for Natural Language Processing (NLP). If you have a 5-word sentence and a 5,000-word essay that discuss the exact same topic, the essay vector will be much "longer" than the sentence vector. Cosine Similarity ignores the length difference and correctly identifies that the semantic *direction* (the topic) is identical.
+*   **Why it's used**: It is a common default for text embeddings. Vector magnitude can vary for reasons unrelated to meaning, and cosine similarity compares only the *direction*, which is where embedding models encode the topic.
 
 ### 2. Euclidean Distance (L2 Norm)
-Euclidean Distance measures the literal, straight-line physical distance between the endpoints of two vectors. (Think of taking a ruler and measuring the distance between Point A and Point B). 
+Euclidean Distance measures the straight-line distance between the endpoints of two vectors. (Think of taking a ruler and measuring the distance between Point A and Point B). 
 
-*   **Why it's used**: It is highly sensitive to the *magnitude* (length) of the vector. It is rarely used for standard text embeddings (because document length skews the results). However, it is heavily used in [Computer Vision](https://datalakehousehub.com/knowledgebase/computer-vision/) and anomaly detection, where the absolute magnitude of the data point is mathematically important.
+*   **Why it's used**: It is sensitive to the *magnitude* (length) of the vectors as well as their direction. For normalized vectors it produces the same ranking as cosine similarity. It is common in [Computer Vision](https://datalakehousehub.com/knowledgebase/computer-vision/), clustering, and anomaly detection, where magnitude carries information.
 
 ### 3. Dot Product (Inner Product)
-The Dot Product multiplies the two vectors together. It takes into account both the angle (like Cosine) AND the magnitude (like Euclidean). 
+The Dot Product multiplies the two vectors element by element and sums the results. It takes into account both the angle (like Cosine) AND the magnitude (like Euclidean). 
 
-*   **Why it's used**: It is computationally incredibly fast. It is much cheaper for a GPU to calculate a Dot Product than a Cosine angle. 
-*   **The Catch**: Dot Product only works accurately if the vectors have been **Normalized** (mathematically forced to all have an exact length of 1). Most modern embedding models (like OpenAI's `text-embedding-3-small`) automatically normalize their vectors. Therefore, performing a fast Dot Product calculation on normalized vectors will yield the exact same ranking results as a more expensive Cosine Similarity calculation. 
+*   **Why it's used**: It is cheap to compute. Cosine similarity is a dot product divided by both vectors' lengths, so skipping that division saves work. 
+*   **The Catch**: Dot Product gives the same result as cosine similarity only when the vectors are **Normalized** (scaled to a length of 1). Some embedding models, including OpenAI's embedding models, return normalized vectors. With normalized vectors, a Dot Product produces the same ranking as Cosine Similarity. Some models are trained specifically for dot product on unnormalized vectors, so follow the model's documentation. 
 
 ## The Impact on Database Performance
 
-When building a massive RAG system with millions of documents, the choice of similarity metric dictates the indexing strategy of the Vector Database (like Pinecone, Milvus, or pgvector).
+When building a RAG system with millions of documents, the similarity metric is set when you build the index in the Vector Database (like Pinecone, Milvus, or pgvector).
 
-If a developer uses raw embeddings that are not normalized, they are forced to use Cosine Similarity to get accurate semantic search results. Because Cosine is mathematically heavier to calculate, executing a K-Nearest Neighbors (KNN) search across 10 million vectors will consume more CPU and take longer to return the result to the user.
+If a model's embeddings are not normalized and the model is meant for cosine similarity, the developer should use cosine or normalize the vectors at insert time. Normalizing once at insert lets the database use the cheaper dot product for every query, which adds up in a K-Nearest Neighbors (KNN) search across millions of vectors. The metric must also match the one the index was built with.
 
 ## Conclusion
 
-Vector Similarity Metrics are the mathematical rulers used to navigate the latent space of Artificial Intelligence. While Cosine Similarity remains the conceptual gold standard for measuring semantic meaning, the industry's shift toward pre-normalized embeddings allows developers to leverage the blazing speed of Dot Product calculations, ensuring that modern RAG applications can retrieve relevant knowledge from petabyte-scale databases in single-digit milliseconds.
+Vector Similarity Metrics are the rulers used to measure distance between embeddings. Cosine Similarity is the usual choice for semantic meaning, and with normalized embeddings, developers can use the cheaper Dot Product and get the same ranking, which helps RAG applications retrieve relevant content quickly.
+
+## Learn More
+
+To learn more about the [Data Lakehouse](/data-lakehouse/), read [The Lakehouse Built for Everyone](https://books.alexmerced.com/books/the-lakehouse-built-for-everyone/) by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

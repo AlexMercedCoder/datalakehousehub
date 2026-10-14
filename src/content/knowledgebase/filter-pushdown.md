@@ -48,6 +48,6 @@ Only in a limited way. Those formats have no embedded statistics, so engines usu
 ### Does filter pushdown affect security?
 Indirectly. Row-level security policies are often implemented as filters, and engines can push those filters down like any other, so secured queries do not need to read data the user cannot see.
 
----
+## Learn More
 
-### E-E-A-T & Further Reading
+To learn more about the [Data Lakehouse](/data-lakehouse/), read [The Lakehouse Built for Everyone](https://books.alexmerced.com/books/the-lakehouse-built-for-everyone/) by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

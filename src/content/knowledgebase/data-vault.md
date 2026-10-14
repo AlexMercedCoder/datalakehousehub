@@ -6,49 +6,43 @@ description: "Data Vault is a warehouse modeling method built from hubs, links, 
 
 # What is Data Vault?
 
-Data Vault is an advanced, highly agile data modeling methodology designed explicitly for massive, enterprise-scale data warehouses. Invented by Dan Linstedt in the early 2000s, Data Vault provides a structural architecture that completely solves the rigidity and integration failures inherent in traditional dimensional modeling (Star Schemas) when applied at an enormous, global scale.
+Data Vault is a data modeling method for enterprise [data warehouses](/knowledgebase/data-warehouse/) that splits data into three kinds of tables: hubs for business keys, links for relationships, and satellites for descriptive attributes and their history. Dan Linstedt developed it in the 1990s and released it publicly in 2000; Data Vault 2.0, published in 2013, added a fuller methodology and architecture around the model.
 
-While a Star Schema is exceptional for building fast, intuitive business intelligence dashboards, it is incredibly brittle during the ingestion phase. If an enterprise acquires a new company, attempting to forcefully merge the new company’s disparate operational data into an existing, highly rigid Star Schema often requires months of rewriting core ETL pipelines, breaking downstream reports in the process. 
+A [star schema](/knowledgebase/star-schema/) is well suited to fast, readable BI queries, but it is harder to change at the integration stage. When a company adds a new source system or acquires another business, fitting the new data into existing fact and dimension tables can mean reworking ETL pipelines and the reports built on them. Data Vault is designed so that new sources are added as new tables rather than changes to existing ones, while every load is kept as history.
 
-Data Vault abandons this rigidity. It provides a highly decoupled, append-only architecture designed specifically to absorb massive structural changes, ingest data from hundreds of completely different source systems seamlessly, and maintain a perfect, auditable historical record of the enterprise.
+## Hubs, Links, and Satellites
 
-## The Architecture: Hubs, Links, and Satellites
+### Hubs: business keys
+A hub represents a core business concept such as Customer, Product, or Store. It holds no descriptive attributes, only:
+* a surrogate key (in Data Vault 2.0, usually a hash of the business key),
+* the business key from the source system, such as a customer ID from a CRM,
+* load metadata, such as the load timestamp and the record source.
 
-To achieve ultimate flexibility, Data Vault completely dismantles traditional database tables, breaking them down into their absolute most fundamental atomic components: Hubs, Links, and Satellites.
+### Links: relationships
+A link records a relationship between two or more hubs, for example a customer buying a product in a store. Links also carry no descriptive data, only the keys of the hubs they connect plus load metadata. Because links are separate tables, many-to-many relationships need no change to the hubs.
 
-### 1. Hubs (The Core Business Keys)
-A Hub table represents a core business entity, such as a Customer, a Product, or a Store. Crucially, a Hub contains absolutely no descriptive data (no names, no addresses). It contains strictly three things:
-* A mathematically generated Hash Key (the primary key for the Vault).
-* The original Business Key from the source system (e.g., the specific Customer ID from Salesforce).
-* Record metadata (the timestamp the key was first loaded, and the source system it came from).
+### Satellites: descriptive context and history
+Descriptive attributes such as names, prices, and addresses go in satellites, each attached to one hub or one link. Satellites are usually split by source. If customer data comes from both a CRM and a billing system, the model has one `customer_hub` with a `crm_customer_sat` and a separate `billing_customer_sat`, rather than forcing the two sources into one table.
 
-### 2. Links (The Relationships)
-A Link table represents the transactional relationships between Hubs. If a Customer purchases a Product in a specific Store, the Link table records that exact transaction. Like Hubs, Link tables contain no descriptive data. They consist entirely of the Hash Keys linking the specific Hubs together, establishing the mathematical skeleton of the enterprise architecture.
+## Adding Sources and Keeping History
 
-### 3. Satellites (The Descriptive Context)
-All the descriptive attributes (names, prices, addresses, demographic data) are stripped out and placed into Satellite tables. A Satellite table attaches directly to a single Hub or a single Link. 
+### Additive changes
+When a new system arrives, such as a support ticketing tool, the team adds a new satellite to the existing customer hub. Existing tables and the pipelines that load them stay as they are.
 
-This is where the true power of the Data Vault lies. If a company tracks customer data in Salesforce and billing data in SAP, they do not attempt to merge them. They create one `Customer_Hub`. They attach a `Salesforce_Customer_Satellite` (containing the CRM data) and a completely separate `SAP_Customer_Satellite` (containing the billing data) to that single Hub. 
+### Insert-only history
+Data Vault loads are insert-only. When a customer's address changes in the CRM, the pipeline does not run `UPDATE`; it inserts a new satellite row with the new address and its load timestamp. The vault therefore keeps a record of what each source said and when it was loaded, which helps with audits in regulated industries such as banking and healthcare.
 
-## Extreme Agility and Historical Auditing
+This is similar to a [Type 2 slowly changing dimension](/knowledgebase/slowly-changing-dimensions/), which also keeps old versions as rows. The difference is where history lives: an SCD tracks history inside a business-facing dimension, while Data Vault keeps raw history per source in satellites and leaves business-facing structures to later layers.
 
-The strict separation of Hubs, Links, and Satellites provides enterprises with unparalleled data engineering agility.
+## Data Vault in the Lakehouse
 
-### Additive Schema Evolution
-If the business suddenly deploys a new Zendesk support system, the data engineering team does not need to alter existing tables or rewrite massive ETL pipelines. They simply create a new `Zendesk_Customer_Satellite` and attach it to the existing `Customer_Hub`. The architecture is purely additive. The existing pipelines running the Salesforce and SAP data continue to operate perfectly without any interruption or refactoring.
+Analysts rarely query a raw vault directly, because answering a simple question can mean joining many hubs, links, and satellites. In practice the vault is an integration layer, often mapped to the silver layer of a [medallion architecture](/knowledgebase/medallion-architecture/). Tools such as [dbt](/knowledgebase/dbt/) then build query-friendly structures on top: point-in-time (PIT) and bridge tables to simplify joins, and star schemas in the gold layer for BI.
 
-### Append-Only Historical Auditing
-Data Vault operates on a strict append-only methodology. Data is never updated, and data is never deleted. When a customer changes their address in Salesforce, the ETL pipeline does not issue a SQL `UPDATE` command. It simply inserts a brand new row into the `Salesforce_Customer_Satellite` containing the new address and a new timestamp. This guarantees a perfect, 100% mathematically verifiable audit trail of exactly what the source systems looked like at any given microsecond in history, a critical requirement for heavily regulated industries like banking and healthcare.
+On [Apache Iceberg](/knowledgebase/apache-iceberg/) tables, insert-only satellite loads are cheap appends, and snapshots add table-level time travel on top of the row-level history the model already keeps. For a longer walkthrough, see [Data Vault Modeling: Hubs, Links, and Satellites](/blog/2026-02-data-modeling-09-data-vault-modeling/).
 
-## Data Vault in the Modern Data Stack
+## Summary
 
-While Data Vault is an exceptional ingestion architecture, business analysts fundamentally cannot write SQL queries against a chaotic web of hundreds of atomic Hubs and Satellites.
-
-In a modern architecture, Data Vault serves strictly as the foundational integration layer (often mapping to the Silver layer in a Medallion Architecture). Once the data is securely integrated into the Vault, data engineers use powerful transformation tools (like dbt) to dynamically compile the Hubs, Links, and Satellites back together, projecting them into clean, highly optimized Star Schemas (the Gold layer) for the BI dashboards to query.
-
-## Summary of Technical Value
-
-Data Vault is the definitive architectural methodology for enterprise scale. By dismantling rigid schemas into highly decoupled, append-only Hubs, Links, and Satellites, it allows massive organizations to ingest data from hundreds of disparate systems with absolute agility. It prevents schema changes from destroying ETL pipelines and guarantees a perfect historical audit trail, serving as the ultimate integration foundation before data is transformed into business-facing Star Schemas.
+Data Vault separates business keys, relationships, and descriptive attributes into hubs, links, and satellites. New sources are added as new tables, and insert-only loads keep a full history. It works best as an integration layer, with star schemas built on top for reporting.
 
 
 ## Learn More

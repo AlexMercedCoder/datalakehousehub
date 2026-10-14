@@ -47,6 +47,6 @@ Support varies. Trino uses NDV sketches in its cost-based optimizer, and v3 dele
 ### What happens if statistics are stale?
 Each blob records the snapshot it was computed from. Engines can still use older statistics as estimates, but after large changes you should recompute them so the optimizer works from current numbers.
 
----
+## Learn More
 
-### E-E-A-T & Further Reading
+To learn more about the [Data Lakehouse](/data-lakehouse/), read [The Lakehouse Built for Everyone](https://books.alexmerced.com/books/the-lakehouse-built-for-everyone/) by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

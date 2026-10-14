@@ -45,6 +45,6 @@ From ingestion connectors (for example dbt and Airflow), from SQL parsing, and f
 ### What does it take to run DataHub?
 The self-hosted stack includes the metadata service, Kafka, a relational database, and a search cluster. Teams that do not want to operate that stack use DataHub Cloud.
 
----
+## Learn More
 
-### E-E-A-T & Further Reading
+To learn more about the [Data Lakehouse](/data-lakehouse/), read [The Lakehouse Built for Everyone](https://books.alexmerced.com/books/the-lakehouse-built-for-everyone/) by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

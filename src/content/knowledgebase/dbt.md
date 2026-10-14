@@ -18,7 +18,11 @@ A dbt project is a directory of SQL files, one per model. Instead of hardcoding 
 
 ## Tests and documentation
 
-Data tests are declared in YAML next to models, for example `unique` and `not_null` on a `user_id` column or `accepted_values` on a status column. When a test fails during `dbt build`, downstream models that depend on it are skipped. dbt also generates a documentation site with the model graph, column descriptions, and tests.
+Data tests are declared in YAML next to models, for example `unique` and `not_null` on a `user_id` column or `accepted_values` on a status column. `dbt test` runs these checks as SQL queries against the built tables. When a test fails during `dbt build`, downstream models that depend on it are skipped, so bad data stops before it reaches marts and dashboards. dbt also generates a documentation site with the model graph, column descriptions, and tests.
+
+## Version control and CI
+
+Because a dbt project is plain SQL and YAML files, it lives in Git like application code. A change to a model, such as a new definition of gross margin, goes through a pull request. A CI job then builds the changed models and their downstream dependents in a temporary schema and runs their tests before anyone merges. dbt's state selection supports this: `dbt build --select state:modified+` compares the project to the manifest from a production run, builds only what changed plus everything downstream, and with `--defer` reads unchanged upstream models from production instead of rebuilding them.
 
 ## Semantic layer
 
@@ -36,4 +40,4 @@ On a [data lakehouse](/knowledgebase/data-lakehouse/), dbt models usually materi
 A typical layout maps dbt folders to the [medallion architecture](/knowledgebase/medallion-architecture/): staging models read bronze Iceberg tables, intermediate models build silver, and marts build gold tables that a [semantic layer](/knowledgebase/semantic-layer/) exposes to BI tools and agents.
 
 ## Learn More
-To learn more about the [Data Lakehouse](/knowledgebase/data-lakehouse/), read [The Lakehouse Built for Everyone](https://books.alexmerced.com/books/the-lakehouse-built-for-everyone/) by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).
+To learn more about the [Data Lakehouse](/data-lakehouse/), read [The Lakehouse Built for Everyone](https://books.alexmerced.com/books/the-lakehouse-built-for-everyone/) by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

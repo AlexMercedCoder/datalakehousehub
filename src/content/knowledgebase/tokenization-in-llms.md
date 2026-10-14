@@ -8,56 +8,60 @@ description: "Tokenization in LLMs is the step that splits text into tokens mapp
 
 ## Introduction to Tokenization
 
-When humans look at text, we see words and sentences. We inherently understand that "unbelievable" is a single concept. 
-However, Neural Networks and Large Language Models (LLMs) like GPT-4 or Llama 3 do not understand text. They are vast arrays of mathematical matrices; they can only process numbers. 
+When humans look at text, we see words and sentences. We naturally understand that "unbelievable" is a single concept. 
+However, Neural Networks and Large Language Models (LLMs) like GPT-4 or Llama 3 do not read text directly. They are large sets of numeric matrices, and they can only process numbers. 
 
-To bridge this gap, raw text must be converted into a mathematical format before it ever reaches the neural network. This foundational preprocessing step is called **Tokenization**.
+To bridge this gap, raw text must be converted into numbers before it reaches the neural network. This preprocessing step is called **Tokenization**.
 
-Tokenization is the process of chopping a sequence of human text into smaller, discrete chunks (Tokens), and assigning a unique integer ID to each chunk. It is the absolute prerequisite for Natural Language Processing (NLP), and the specific tokenization algorithm chosen dictates the efficiency, cost, and linguistic capabilities of the entire AI model.
+Tokenization is the process of splitting a sequence of human text into smaller, discrete chunks (Tokens), and assigning a unique integer ID to each chunk. It is a required first step for language models, and the tokenization algorithm chosen affects the efficiency, cost, and multilingual capabilities of the model.
 
 ## The Evolution of Tokenization Strategies
 
-Historically, there were two naive approaches to tokenization, both of which failed for massive models.
+Historically, there were two simple approaches to tokenization, and both have serious drawbacks for large models.
 
 ### 1. Word-Level Tokenization
-The simplest approach is chopping text by spaces. 
+The simplest approach is splitting text on spaces. 
 *   *Text*: "I love coding" -> *Tokens*: `["I", "love", "coding"]`
-*   **The Problem (Out of Vocabulary)**: The English language has millions of words, plus endless variations ("code", "coding", "coder"). If a word-level tokenizer encounters a new word it wasn't trained on (e.g., "Transformers"), it crashes or outputs an `<UNKNOWN>` error. The dictionary size becomes mathematically impossible for a neural network to manage.
+*   **The Problem (Out of Vocabulary)**: English has a very large vocabulary, plus many variations ("code", "coding", "coder"). If a word-level tokenizer encounters a new word it wasn't trained on (e.g., "Transformers"), it has to map it to a generic `<UNKNOWN>` token and loses its meaning. Covering every word would require a vocabulary too large for a model to handle efficiently.
 
 ### 2. Character-Level Tokenization
-To solve the vocabulary problem, engineers tried chopping text into single letters.
+To solve the vocabulary problem, engineers tried splitting text into single characters.
 *   *Text*: "I love" -> *Tokens*: `["I", " ", "l", "o", "v", "e"]`
-*   **The Problem**: The vocabulary is tiny (26 letters + punctuation), but the neural network loses all semantic meaning. A single letter "l" means nothing. Furthermore, processing a 1,000-word essay requires 5,000 individual tokens, instantly overflowing the model's Context Window and destroying computational efficiency.
+*   **The Problem**: The vocabulary is tiny (letters plus punctuation for English), but each token carries little meaning on its own: a single letter "l" means nothing. Sequences also become several times longer (a 1,000-word essay becomes several thousand tokens), which uses up the model's Context Window faster and increases compute cost.
 
 ## The Modern Standard: Subword Tokenization (BPE)
 
-Modern LLMs require a "Goldilocks" solution: a vocabulary small enough for the neural network to memorize, but meaningful enough to capture semantics. The industry standard is **Subword Tokenization**, primarily utilizing an algorithm called **Byte-Pair Encoding (BPE)**.
+Modern LLMs use a middle ground: a vocabulary small enough for the model to handle, with units meaningful enough to capture semantics. The standard approach is **Subword Tokenization**, most often using an algorithm called **Byte-Pair Encoding (BPE)**; other subword methods include WordPiece and Unigram (SentencePiece).
 
 BPE operates on a simple principle: *Keep common words whole, but break rare words into meaningful sub-components (syllables or prefixes).*
 
 ### How BPE Works
 1.  BPE starts with a base vocabulary of single characters.
-2.  It scans the entire internet training dataset and looks for the most frequent pairs of characters (e.g., "e" and "r" often appear together). It merges them into a new token: "er".
-3.  It repeats this process thousands of times, merging common chunks. It merges "t" + "he" into the single token "the". 
-4.  It stops when it reaches a predefined vocabulary limit (often around 50,000 to 100,000 unique tokens).
+2.  It scans the tokenizer's training corpus and looks for the most frequent adjacent pairs of characters (e.g., "e" and "r" often appear together). It merges them into a new token: "er".
+3.  It repeats this process many thousands of times, merging common chunks. It merges "t" + "he" into the single token "the". 
+4.  It stops when it reaches a predefined vocabulary limit (GPT-2 used about 50,000 tokens; many recent models use 100,000 to 200,000 or more).
 
 ### Subwords in Action
-If a BPE tokenizer sees a common word:
+Illustrative examples (exact splits vary by tokenizer). If a BPE tokenizer sees a common word:
 *   "Apple" -> `["Apple"]` (1 Token)
 If it sees a rare or complex word:
 *   "Unbelievably" -> `["Un", "believ", "ably"]` (3 Tokens)
 
-Because it can break *any* unknown word down into its base characters or syllables, BPE completely eliminates the `<UNKNOWN>` word problem. It can tokenize complex medical jargon, typos, or new slang by simply assembling them from subword building blocks.
+Because it can break unknown words down into smaller pieces, BPE largely avoids the `<UNKNOWN>` word problem; byte-level BPE, used by GPT-style models, can represent any input because its base vocabulary covers all 256 byte values. It can tokenize medical jargon, typos, or new slang by assembling them from subword building blocks.
 
 ## The Impact on AI Cost and Performance
 
-Tokenization is not just a preprocessing step; it is the currency of Generative AI. 
+Tokenization is not just a preprocessing step; tokens are also the unit of cost for Generative AI. 
 
-When you use a commercial API (like OpenAI's GPT-4 or Anthropic's Claude), you are billed strictly "Per Token." 
+When you use a commercial API (like OpenAI's GPT-4 or Anthropic's Claude), you are billed per token, usually with separate rates for input and output tokens. 
 If a company's tokenizer is inefficient and breaks a 100-word paragraph into 200 tokens, it costs the user twice as much money to process, and it consumes twice as much space in the model's limited Context Window. 
 
-Furthermore, tokenization inherently struggles with non-English languages. Because BPE algorithms are trained primarily on English text, they easily group English letters into efficient subwords. When faced with Japanese or Arabic text, the tokenizer often falls back to highly inefficient character-level chunking, drastically increasing the API costs for non-English users. 
+Tokenization can also be less efficient for languages other than English. Because many tokenizers are trained on corpora dominated by English, they group English text into efficient subwords. Text in languages that are less represented in the training data often splits into more, smaller tokens, sometimes down to characters or bytes, which increases API costs and context usage for those users. 
 
 ## Conclusion
 
-Tokenization is the critical translation layer between human language and machine mathematics. By utilizing intelligent subword algorithms like Byte-Pair Encoding, modern AI models can efficiently compress massive texts into dense numerical arrays, preserving semantic meaning while avoiding infinite vocabulary sizes. Understanding how tokens work is essential for AI engineers looking to optimize API costs, manage context windows, and deploy performant RAG applications.
+Tokenization is the translation layer between human language and the numbers a model computes on. By using subword algorithms like Byte-Pair Encoding, modern AI models represent text as compact sequences of token IDs, keeping meaningful units while avoiding unmanageable vocabulary sizes. Understanding how tokens work is essential for AI engineers looking to optimize API costs, manage context windows, and deploy performant RAG applications.
+
+## Learn More
+
+To learn more about the [Data Lakehouse](/data-lakehouse/), read [The Lakehouse Built for Everyone](https://books.alexmerced.com/books/the-lakehouse-built-for-everyone/) by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

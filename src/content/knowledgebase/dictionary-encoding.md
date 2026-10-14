@@ -48,6 +48,6 @@ A columnar file stores all values of one column together, so repeated values sit
 ### Does dictionary encoding affect security or governance?
 No. It is a physical storage detail. Access control, masking, and auditing happen in the catalog and engine layers, not in the file encoding.
 
----
+## Learn More
 
-### E-E-A-T & Further Reading
+To learn more about the [Data Lakehouse](/data-lakehouse/), read [The Lakehouse Built for Everyone](https://books.alexmerced.com/books/the-lakehouse-built-for-everyone/) by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

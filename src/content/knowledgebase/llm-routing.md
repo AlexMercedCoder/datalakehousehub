@@ -4,44 +4,39 @@ meta_title: "What is LLM Routing? | Expert Data Lakehouse & AI Glossary"
 description: "LLM routing is the practice of sending each request to the language model best suited for it, balancing answer quality, latency, and cost across several models."
 ---
 
-## What is LLM Routing?
+LLM routing is the practice of deciding, for each incoming request, which large language model should answer it. Instead of sending every prompt to one model, a router inspects the request and picks among several candidates, usually trading answer quality against cost and latency. A short lookup question might go to a small, cheap model, while a multi-step SQL generation task goes to a larger one. The router can be a set of rules, a classifier, or a learned model trained to predict which candidate will answer well enough.
 
-The dynamic capability of selecting the most appropriate large language model for a specific task to optimize performance and cost. 
+## How It Works
 
-In the rapidly evolving landscape of data engineering and artificial intelligence, **LLM Routing** has emerged as a critical foundational component. As organizations transition from legacy, monolithic architectures to decoupled, scalable environments, understanding the role of LLM Routing is essential for building future-proof infrastructure. This capability serves as a critical enabler in modern data ecosystems, explicitly guiding architecture toward absolute efficiency and scale. When correctly implemented, LLM Routing dynamically drives analytical workloads and structurally limits administrative technical debt.
+A routing layer sits between the application and the model providers, often inside an AI gateway. For each request it typically:
 
-## Core Architecture and Mechanics
+1. **Extracts signals** from the request: prompt length, task type, the tools requested, the user or tenant, or an embedding of the prompt.
+2. **Scores candidate models** using rules ("anything that calls tools goes to model A"), a trained classifier, or similarity to past requests whose best model is known.
+3. **Dispatches** the request to the chosen model, and may fall back to another model if the first one errors, times out, or returns a low-confidence answer.
+4. **Logs the decision** with cost, latency, and outcome so the routing policy can be tuned.
 
-To understand the practical application of LLM Routing, it is crucial to systematically examine its fundamental operational behaviors and structural design:
+Research has formalized the learned version. The RouteLLM paper (Ong et al., 2024) trains routers on human preference data to choose between a stronger, more expensive model and a weaker, cheaper one, and reports cost reductions of more than 2x in some cases without degrading response quality.
 
-* **Orchestrates complex cognitive loops where an AI determines steps, calls external tools, and evaluates results autonomously.** This principle ensures that systems can scale horizontally without facing artificial limitations or bottlenecks.
-* **Manages and compresses vast amounts of historical context to fit within the strict memory constraints of the model's context window.** By adopting this mechanic, engineers can bypass traditional processing constraints and deliver substantially faster time-to-insight.
-* **Abstracts the raw API interactions with LLM providers into modular, reusable chaining components.** This allows the overarching architecture to remain highly resilient while serving concurrent workloads natively.
+| Approach | How it decides | Strength | Weakness |
+|---|---|---|---|
+| Static rules | Task type, tenant, or tool use | Predictable, easy to audit | Misses nuance within a task type |
+| Classifier router | Model predicts difficulty or best candidate | Adapts per prompt | Needs labeled or preference data |
+| Cascade | Try cheap model first, escalate on low confidence | Pays for the large model only when needed | Adds latency on escalated requests |
+| Fallback only | Primary model, backup on failure | Improves availability | Does not reduce cost |
 
-Operating through these principles enables seamless horizontal expansion across varying cloud environments. It integrates effortlessly with adjacent technologies like [Apache Iceberg](/apache-iceberg/), dbt, and advanced vector search algorithms.
+LLM routing is related to but different from a [mixture of experts](/knowledgebase/mixture-of-experts-moe/), where routing happens inside one model's layers. LLM routing chooses between whole, separately deployed models.
 
-## Why LLM Routing Matters in the Modern Data Stack
+## LLM Routing in the Lakehouse
 
-These frameworks accelerate the transition from simple chatbots to autonomous agents capable of executing multi-step analytical workloads, reasoning through failures, and writing distinct output code.
+Analytics agents that answer questions over lakehouse data make many model calls per question: planning, schema lookup, SQL generation, result summarization. Not every step needs the same model. Routing lets a team send cheap steps to small models and reserve the largest model for SQL generation against a [semantic layer](/knowledgebase/semantic-layer/), where mistakes are costly.
 
-For modern enterprises managing decentralized teams, the implementation of LLM Routing eliminates significant architectural friction. Teams are explicitly empowered to operate autonomously against reliable technical foundations without dynamically disrupting other isolated workflows. It shifts manual engineering overhead into an autonomous, software-driven paradigm, keeping Total Cost of Ownership (TCO) extremely low.
+The routing logs themselves are useful data. Writing each decision, its token cost, and its outcome to an [Apache Iceberg](/knowledgebase/apache-iceberg/) table lets teams query routing performance with Dremio, Trino, Spark, or DuckDB, compare models over time, and feed the results back into the router. Pairing routing with [semantic caching](/knowledgebase/semantic-caching/) reduces cost further, since repeated questions never reach a model at all.
 
-### Key Benefits
-- **Unprecedented Scalability:** Automatically adapts to massive fluctuations in data volume and query concurrency.
-- **Vendor Neutrality:** Strongly aligns with open-source frameworks, preventing aggressive vendor lock-in.
-- **Enhanced Observability:** Exposes deep, structural metadata allowing engineers to monitor and trace pipelines comprehensively.
+The Hub covers the cost side in [Budgeting for Agentic Analytics When Every Question Costs Something Different](/blog/agentic-analytics-tco-token-budgets/) and the governance side in [Governing What Agents Cost You](/blog/agent-cost-governance/).
 
-## Frequently Asked Questions
+## Summary
 
-### What does 'Tool Calling' mean for an AI?
-It means the AI can recognize when it lacks information and autonomously execute a Python script, SQL query, or API call to fetch the necessary data before continuing. This distinction is particularly important when evaluating total architecture costs and performance benchmarks.
+LLM routing picks the right model for each request using rules, classifiers, or cascades, so applications pay for large models only where they matter. For agentic analytics on a lakehouse, it is one of the main levers for keeping per-question cost predictable.
 
-### What is the ReAct framework?
-ReAct stands for Reason and Act; it is a prompting paradigm that forces the model to articulate its thought process before taking an external action. The open ecosystem continues to evolve rapidly, ensuring backward compatibility while introducing powerful new primitives.
-
-### How does LLM Routing impact data governance and security?
-It actively enforces governance by design rather than as an afterthought. Native logging, role-based access controls (RBAC), and structured access pathways provide immediate visibility into security boundaries and regulatory compliance.
-
----
-
-### E-E-A-T & Further Reading
+## Learn More
+To learn more about the [Data Lakehouse](/data-lakehouse/), read [The Lakehouse Built for Everyone](https://books.alexmerced.com/books/the-lakehouse-built-for-everyone/) by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

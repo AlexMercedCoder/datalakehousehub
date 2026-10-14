@@ -49,6 +49,6 @@ No. Iceberg needs a file system or object store the engine can reach. Locally th
 ### Does MinIO understand Iceberg tables?
 No. MinIO stores the files. The Iceberg catalog and the engine handle snapshots, schema, and transactions.
 
----
+## Learn More
 
-### E-E-A-T & Further Reading
+To learn more about the [Data Lakehouse](/data-lakehouse/), read [The Lakehouse Built for Everyone](https://books.alexmerced.com/books/the-lakehouse-built-for-everyone/) by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

@@ -35,6 +35,6 @@ A practical zero-copy lakehouse looks like this: data lands once in object stora
 
 Trade-offs to plan for: federated queries can be slow or expensive when a source system is far away or charges for egress, and query-time access can load source systems that were not sized for analytics. Sometimes a governed copy is the right answer. [What Zero-Copy Actually Costs](/blog/zero-copy-actually-costs/) compares the patterns above in detail, and [What Zero-Copy Data Sharing Actually Does](/blog/zero-copy-data-sharing-iceberg/) covers sharing between Salesforce, Snowflake, and Databricks. See also [data virtualization](/knowledgebase/data-virtualization/) and [zero-ETL](/knowledgebase/zero-etl/).
 
----
+## Learn More
 
-### E-E-A-T & Further Reading
+To learn more about the [Data Lakehouse](/data-lakehouse/), read [The Lakehouse Built for Everyone](https://books.alexmerced.com/books/the-lakehouse-built-for-everyone/) by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

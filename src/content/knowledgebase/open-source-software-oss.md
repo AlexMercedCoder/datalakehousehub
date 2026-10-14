@@ -8,38 +8,42 @@ description: "Open-source software is code released under a license that lets an
 
 ## Introduction to Open Source
 
-In the 1980s and 1990s, the software industry was dominated by a strictly proprietary model. Companies like Microsoft and Oracle wrote software code (source code), compiled it into an unreadable binary format, and sold it. If a user encountered a catastrophic bug, they could not fix it; they had to wait and beg the corporation to release a patch. The source code was treated as a heavily guarded corporate secret.
+In the 1980s and 1990s, much of the commercial software industry followed a proprietary model. Companies like Microsoft and Oracle wrote software code (source code), compiled it into an unreadable binary format, and sold it. If a user hit a serious bug, they could not fix it themselves; they had to wait for the vendor to release a patch. The source code was treated as a trade secret.
 
-**Open-Source Software (OSS)** is a radically different approach to software development and intellectual property. It is software whose source code is made publicly available for anyone to inspect, modify, enhance, and distribute.
+**Open-Source Software (OSS)** is a different approach to software development and intellectual property. It is software whose source code is made publicly available for anyone to inspect, modify, enhance, and distribute.
 
-Today, the entire modern internet and the entire Big Data ecosystem (Linux, [Kubernetes](https://datalakehousehub.com/knowledgebase/kubernetes/), [Apache Spark](https://datalakehousehub.com/knowledgebase/apache-spark/), Python) run almost exclusively on open-source software.
+Today, much of the internet and most of the big data ecosystem (Linux, [Kubernetes](https://datalakehousehub.com/knowledgebase/kubernetes/), [Apache Spark](https://datalakehousehub.com/knowledgebase/apache-spark/), Python) are built on open-source software.
 
 ## The Power of the Open Source Model
 
-Open source is not a charity; it is a highly efficient engineering methodology that outcompetes proprietary software through several distinct advantages:
+Open source is not a charity; it is an engineering model with several practical advantages:
 
 ### 1. The Global Talent Pool
-If a company builds a proprietary database, only their 50 internal engineers can look at the code. If a company open-sources a database, 50,000 developers worldwide can look at the code. 
-When a security vulnerability is discovered, the global community often patches it within hours. This phenomenon is famously summarized by Linus's Law: *"Given enough eyeballs, all bugs are shallow."*
+If a company builds a proprietary database, only its internal engineers can read the code. If it open-sources the database, developers anywhere can read, test, and improve it. 
+When a security vulnerability is found in a widely used project, many people can help investigate and patch it. Eric S. Raymond summarized the idea as Linus's Law: *"Given enough eyeballs, all bugs are shallow."*
 
 ### 2. Faster Innovation and Standards
-In the proprietary era, companies deliberately built incompatible software to trap users ([Vendor Lock-in](https://datalakehousehub.com/knowledgebase/vendor-lock-in/)). Open source drives the creation of universal standards. Because developers hate writing the same code twice, they collaborate on open-source foundations. 
-For example, instead of Apple, Netflix, and Uber all spending millions of dollars building their own proprietary table formats, they all collaborated to build **[Apache Iceberg](https://iceberglakehouse.com/iceberg/iceberg-catalog/)**, creating a single, vastly superior open standard that benefited the entire industry.
+Proprietary products often use closed formats that make switching costly ([Vendor Lock-in](https://datalakehousehub.com/knowledgebase/vendor-lock-in/)). Open source encourages shared standards. Because developers would rather not write the same code twice, they collaborate on open-source foundations. 
+For example, **[Apache Iceberg](https://iceberglakehouse.com/iceberg/iceberg-catalog/)** was created at Netflix and donated to the Apache Software Foundation, where engineers from Apple, Netflix, and many vendors now develop it as a shared open table format instead of each building their own.
 
 ## Open Source Licensing
 
-"Open Source" does not mean "free of copyright." All open-source software is governed by specific legal licenses that dictate exactly what a user can and cannot do with the code.
+"Open Source" does not mean "free of copyright." All open-source software is governed by specific legal licenses that define what a user can and cannot do with the code.
 
-*   **Permissive Licenses (e.g., Apache 2.0, MIT)**: Extremely business-friendly. A company can take MIT-licensed code, modify it, put it into their proprietary software, and sell it without giving anything back.
-*   **Copyleft Licenses (e.g., GNU GPL)**: Highly restrictive. A company can use the code for free, but if they modify the code and distribute it, they are legally forced to open-source their modified version as well. This prevents corporations from "stealing" the community's work without contributing back.
+*   **Permissive Licenses (e.g., Apache 2.0, MIT)**: Business-friendly. A company can take MIT- or Apache-licensed code, modify it, include it in proprietary software, and sell it, as long as it keeps the required copyright and license notices.
+*   **Copyleft Licenses (e.g., GNU GPL)**: More restrictive. A company can use the code for free, but if it distributes a modified version, it must release that version's source under the same license. This keeps derived works open.
 
 ## The Business of Open Source
 
-If the code is free, how do open-source companies make billions of dollars?
+If the code is free, how do open-source companies make money?
 
-*   **Open Core Model**: The company gives away the core software for free (e.g., [Apache Kafka](https://datalakehousehub.com/knowledgebase/apache-kafka/)), but sells a proprietary "Enterprise Edition" that includes advanced security, GUI dashboards, and 24/7 technical support.
-*   **Managed Cloud Services**: The company gives the software away for free, but recognizes that installing and managing it on AWS is incredibly difficult. They charge companies a premium to run the open-source software as a fully managed, serverless cloud service (e.g., [Databricks](https://opendatalakehouse.com/kb/databricks/) managing [Apache Spark](https://datalakehousehub.com/knowledgebase/apache-spark/), or [Dremio](https://opendatalakehouse.com/kb/dremio/) managing Apache Iceberg).
+*   **Open Core Model**: The core software is free (e.g., [Apache Kafka](https://datalakehousehub.com/knowledgebase/apache-kafka/)), and a company such as Confluent sells proprietary add-ons or an enterprise edition with extra security features, management tools, and support.
+*   **Managed Cloud Services**: The company gives the software away for free, and charges for running it as a managed cloud service, because operating it yourself takes real effort (e.g., [Databricks](https://opendatalakehouse.com/kb/databricks/) offering managed [Apache Spark](https://datalakehousehub.com/knowledgebase/apache-spark/), or [Dremio](https://opendatalakehouse.com/kb/dremio/) offering a managed lakehouse built on Apache Iceberg).
 
 ## Conclusion
 
-Open-Source Software is the greatest collaborative achievement in human history. By prioritizing transparent cooperation over secretive competition, the OSS model fundamentally democratized access to world-class technology, allowing a student with a laptop to build applications using the exact same super-computing data infrastructure utilized by the most powerful corporations on Earth.
+Open-source software is one of the largest collaborative efforts in computing. By favoring transparent cooperation, the OSS model widened access to high-quality technology, so a student with a laptop can build applications with the same data infrastructure that large companies run in production.
+
+## Learn More
+
+To learn more about the [Data Lakehouse](/data-lakehouse/), read [The Lakehouse Built for Everyone](https://books.alexmerced.com/books/the-lakehouse-built-for-everyone/) by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

@@ -48,4 +48,4 @@ The common pattern is to keep the RDBMS as the system of record and copy its cha
 A relational database enforces declared schemas, keys, and ACID transactions, which makes it the right home for operational records. A lakehouse table format such as Iceberg borrows the transactional ideas but optimizes for shared, large-scale analytics across many engines. Most data platforms use both, connected by CDC.
 
 ## Learn More
-To learn more about the Data Lakehouse, read [The Lakehouse Built for Everyone](https://books.alexmerced.com/books/the-lakehouse-built-for-everyone/) by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).
+To learn more about the [Data Lakehouse](/data-lakehouse/), read [The Lakehouse Built for Everyone](https://books.alexmerced.com/books/the-lakehouse-built-for-everyone/) by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

@@ -42,4 +42,4 @@ From Kafka, the Iceberg Kafka Connect sink or a Flink job writes the changes int
 Microservices let teams scale, deploy, and fail independently at the cost of distributed systems complexity. Because each service keeps its own data, analytics needs a shared layer. CDC, outbox events, and streaming into Iceberg tables give the business one place to query across services without reaching into production databases.
 
 ## Learn More
-To learn more about the Data Lakehouse, read [The Lakehouse Built for Everyone](https://books.alexmerced.com/books/the-lakehouse-built-for-everyone/) by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).
+To learn more about the [Data Lakehouse](/data-lakehouse/), read [The Lakehouse Built for Everyone](https://books.alexmerced.com/books/the-lakehouse-built-for-everyone/) by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

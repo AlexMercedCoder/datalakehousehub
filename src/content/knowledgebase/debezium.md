@@ -4,7 +4,7 @@ meta_title: "Debezium CDC to Apache Iceberg Tables | Glossary"
 description: "Debezium is an open source change data capture platform that streams row changes from database logs. Learn how its events land in Iceberg tables and tradeoffs."
 ---
 
-Debezium is an open source platform for log-based [change data capture](/knowledgebase/change-data-capture/) (CDC). It reads a database's transaction log and emits an event for every row-level insert, update, and delete. It is most often deployed as a set of [Kafka Connect](/knowledgebase/kafka-connect/) source connectors, and it can also run as Debezium Server (no Kafka required) or as an embedded engine inside a Java application. Debezium is licensed under Apache 2.0 and is hosted by the Commonhaus Foundation.
+Debezium is an open source platform for log-based [change data capture](/knowledgebase/change-data-capture/) (CDC). It reads a database's transaction log and emits an event for every row-level insert, update, and delete. It is most often deployed as a set of [Kafka Connect](/knowledgebase/apache-kafka-connect/) source connectors, and it can also run as Debezium Server (no Kafka required) or as an embedded engine inside a Java application. Debezium is licensed under Apache 2.0 and is hosted by the Commonhaus Foundation.
 
 The older alternative is query-based extraction: a job runs `SELECT * FROM t WHERE updated_at > :last_run` on a schedule. That adds load to the source database, misses intermediate changes between runs, and cannot see hard deletes. Debezium reads the log the database already writes, so it captures every committed change, including deletes.
 

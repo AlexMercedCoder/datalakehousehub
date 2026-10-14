@@ -4,44 +4,47 @@ meta_title: "What is Data Compaction? | Expert Data Lakehouse & AI Glossary"
 description: "Data compaction is the maintenance job that rewrites many small files into fewer larger ones, keeping open table formats like Apache Iceberg efficient to query."
 ---
 
-## What is Data Compaction?
+Data compaction is a table maintenance operation that rewrites many small data files into fewer, larger ones without changing the table's contents. In lakehouse tables built on open table formats like [Apache Iceberg](/knowledgebase/apache-iceberg/), Delta Lake, and Apache Hudi, compaction can also merge accumulated delete files into the data files and reorder rows so queries skip more data. The result is a table that is cheaper and faster to read.
 
-The automated or scheduled maintenance routine required to optimize file sizes and keep open lakehouses operating efficiently. 
+## Why Small Files Appear
 
-In the rapidly evolving landscape of data engineering and artificial intelligence, **Data Compaction** has emerged as a critical foundational component. As organizations transition from legacy, monolithic architectures to decoupled, scalable environments, understanding the role of Data Compaction is essential for building future-proof infrastructure. This capability serves as a critical enabler in modern data ecosystems, explicitly guiding architecture toward absolute efficiency and scale. When correctly implemented, Data Compaction dynamically drives analytical workloads and structurally limits administrative technical debt.
+Every write to a table creates at least one new file. Streaming ingestion that commits every minute, frequent small batch loads, and row-level updates using [merge-on-read](/knowledgebase/merge-on-read/) all add files steadily. Over time a table can accumulate many small files and delete files, which hurts in several ways:
 
-## Core Architecture and Mechanics
+* Each file costs an object storage request and file open, so per-file overhead dominates scan time.
+* Table metadata grows, so query planning slows down.
+* Delete files must be applied at read time, adding work to every query.
+* Column statistics are spread across many files, so engines skip less data.
 
-To understand the practical application of Data Compaction, it is crucial to systematically examine its fundamental operational behaviors and structural design:
+## How Compaction Works
 
-* **Utilizes open table formats to provide complete ACID transactional compliance directly on top of massive, raw cloud object storage.** This principle ensures that systems can scale horizontally without facing artificial limitations or bottlenecks.
-* **Maintains an explicit hierarchical tree of metadata manifests to track exact file states and enable precise time-travel querying.** By adopting this mechanic, engineers can bypass traditional processing constraints and deliver substantially faster time-to-insight.
-* **Decouples the physical storage layout from the logical table structure using techniques like hidden partitioning.** This allows the overarching architecture to remain highly resilient while serving concurrent workloads natively.
+A compaction job selects candidate files, reads them, writes new files near a target size, and commits the swap atomically. In Iceberg, the commit creates a new snapshot that replaces the old files with the new ones, so readers see either the before or after state, never a mix. Old files stay available for [time travel](/knowledgebase/time-travel/) until snapshots are expired.
 
-Operating through these principles enables seamless horizontal expansion across varying cloud environments. It integrates effortlessly with adjacent technologies like [Apache Iceberg](/apache-iceberg/), dbt, and advanced vector search algorithms.
+Common strategies:
 
-## Why Data Compaction Matters in the Modern Data Stack
+| Strategy | What it does | When to use |
+|---|---|---|
+| Bin-pack | Combines small files toward a target size, no reordering | Default choice, streaming tables, quick runs |
+| Sort | Rewrites files sorted by chosen columns | Queries filter on a few known columns |
+| Z-order or Hilbert | Clusters rows on several columns together | Queries filter on varying combinations of columns |
+| Delete file rewrite | Applies or consolidates position deletes | Tables with frequent row-level updates |
 
-The open lakehouse structure eliminates vendor lock-in and drastically reduces storage costs by allowing any compatible distributed engine to query the exact same massive datasets without requiring duplication.
+## Compaction Across Engines
 
-For modern enterprises managing decentralized teams, the implementation of Data Compaction eliminates significant architectural friction. Teams are explicitly empowered to operate autonomously against reliable technical foundations without dynamically disrupting other isolated workflows. It shifts manual engineering overhead into an autonomous, software-driven paradigm, keeping Total Cost of Ownership (TCO) extremely low.
+* **Apache Spark:** Iceberg's `rewrite_data_files` procedure supports `binpack` (the default) and `sort` strategies, with `zorder(...)` or `hilbert(...)` sort orders. Its default target file size is 512 MB, taken from the table's `write.target-file-size-bytes` property. It accepts a `where` filter to limit the rewrite and a `partial-progress.enabled` option to commit file groups as they finish. Related procedures include `rewrite_position_delete_files` and `rewrite_manifests`.
+* **Trino:** `ALTER TABLE ... EXECUTE optimize` merges files smaller than `file_size_threshold` (100 MB by default), partition by partition.
+* **Dremio:** `OPTIMIZE TABLE` rewrites data files using bin-packing and can separately rewrite manifests. Dremio Cloud also offers automatic table maintenance for catalog tables, so compaction runs without hand-written schedules.
 
-### Key Benefits
-- **Unprecedented Scalability:** Automatically adapts to massive fluctuations in data volume and query concurrency.
-- **Vendor Neutrality:** Strongly aligns with open-source frameworks, preventing aggressive vendor lock-in.
-- **Enhanced Observability:** Exposes deep, structural metadata allowing engineers to monitor and trace pipelines comprehensively.
+Compaction is one part of a maintenance routine. Expiring old snapshots and removing orphan files reclaims the storage that compaction frees, since rewritten files remain referenced by older snapshots until those expire.
 
-## Frequently Asked Questions
+## Compaction in the Lakehouse
 
-### What makes a Lakehouse different from a Data Lake?
-A standard data lake is just a collection of files. A lakehouse adds a metadata layer that provides warehouse-like features (transactions, schema enforcement) directly to those files. This distinction is particularly important when evaluating total architecture costs and performance benchmarks.
+Compaction matters most at the Bronze and Silver layers of a [medallion architecture](/knowledgebase/medallion-architecture/), where streaming and CDC writes create files fastest. Teams usually schedule it per partition, compacting recent partitions after they stop receiving writes. Running compaction concurrently with streaming writes can cause commit conflicts under Iceberg's [optimistic concurrency](/knowledgebase/optimistic-concurrency-control/), so limiting compaction to partitions that are no longer active helps. Choosing a sort or Z-order strategy is a query-performance decision as much as a maintenance one, and pairs with [partitioning](/knowledgebase/partitioning/) and [Z-ordering](/knowledgebase/z-ordering/).
 
-### Why use an Open Table Format?
-Open formats like Apache Iceberg ensure that your data is not trapped inside a proprietary database ecosystem; it remains universally accessible. The open ecosystem continues to evolve rapidly, ensuring backward compatibility while introducing powerful new primitives.
+The Hub covers this in depth in [The Basics of Compaction: Bin Packing Your Data for Efficiency](/blog/iceberg-optimization-compaction-basics/), [Optimizing Compaction for Streaming Workloads in Apache Iceberg](/blog/iceberg-streaming-compaction/), and [Automating Table Maintenance Before Small Files Accumulate](/blog/2026-05-automating-table-maintenance/).
 
-### How does Data Compaction impact data governance and security?
-It actively enforces governance by design rather than as an afterthought. Native logging, role-based access controls (RBAC), and structured access pathways provide immediate visibility into security boundaries and regulatory compliance.
+## Summary
 
----
+Data compaction rewrites small files and accumulated deletes into well-sized, optionally sorted files through an atomic commit. Spark, Trino, and Dremio all provide it for Iceberg tables, and running it regularly, along with snapshot expiration, keeps lakehouse queries fast as tables grow.
 
-### E-E-A-T & Further Reading
+## Learn More
+To learn more about the [Data Lakehouse](/data-lakehouse/), read [The Lakehouse Built for Everyone](https://books.alexmerced.com/books/the-lakehouse-built-for-everyone/) by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

@@ -7,43 +7,43 @@ canonical: "https://iceberglakehouse.com/iceberg/iceberg-manifest-file/"
 
 # What is an Iceberg Manifest File?
 
-An Iceberg Manifest File is the absolute foundational building block of the [Apache Iceberg](/apache-iceberg/) metadata architecture. Operating at the lowest tier of the Iceberg metadata tree, the Manifest File is a highly specialized, binary Avro file explicitly designed to track the exact physical locations, statuses, and complex mathematical statistics of individual data files (typically Apache Parquet files) resting in the [Data Lakehouse](/data-lakehouse/).
+An Iceberg manifest file is a core building block of the [Apache Iceberg](/apache-iceberg/) metadata architecture. Sitting at the lowest tier of the Iceberg metadata tree, a manifest file is an Avro file that tracks the locations, statuses, and column statistics of individual data files (typically Apache Parquet files) in the [Data Lakehouse](/data-lakehouse/).
 
-In legacy Big Data architectures (like Apache Hive), the centralized Hive Metastore tracked partitions strictly by maintaining a massive directory tree of folders. The query engine was forced to physically execute an `ls` (list) command against Amazon S3 to discover which files actually existed inside those folders. Because S3 is an object store, not a true file system, executing `ls` against a folder containing 10,000 files is catastrophically slow, completely destroying query performance.
-Apache Iceberg completely abandoned folder-based tracking. Instead, it utilizes Manifest Files to track data at the absolute, granular *file* level, completely eliminating the need for slow S3 directory listings.
+In older big data architectures (like Apache Hive), the Hive Metastore tracked partitions as directories. The query engine had to list the files inside those directories in Amazon S3 to discover which files existed. Because S3 is an object store, not a true file system, listing large directories is slow and adds latency to query planning.
+Apache Iceberg moved away from directory-based tracking. It uses manifest files to track data at the *file* level, so engines can plan queries without listing storage directories.
 
 ## The Architecture of the Manifest File
 
-A Manifest File does not contain the actual user data (like names or credit card numbers). It contains highly structured, incredibly dense metadata *about* the data files.
+A manifest file does not contain user data (like names or credit card numbers). It contains structured metadata *about* the data files.
 
-When an engine reads a Manifest File, it receives three critical pieces of architectural intelligence:
+When an engine reads a manifest file, it gets three key pieces of information:
 
 ### 1. The Physical File Path
-The Manifest explicitly stores the absolute, exact URL of the Parquet file (e.g., `s3://lake/data/file_001.parquet`). This allows the query engine (like Trino or Dremio) to bypass the folder hierarchy entirely and jump directly to the exact file.
+The manifest stores the full path of each data file (e.g., `s3://lake/data/file_001.parquet`). This allows the query engine (like Trino or Dremio) to go straight to the file without walking a folder hierarchy.
 
 ### 2. The File Status (ACID Compliance)
-The Manifest File tracks exactly how a file relates to the current state of the table using three explicit statuses: `ADDED`, `EXISTING`, or `DELETED`.
-* If a data engineer executes an `UPDATE` statement, Iceberg does not physically alter the existing Parquet file. Instead, it writes a brand new Parquet file with the updated data.
-* It then writes a new Manifest File. Inside this Manifest, the old Parquet file is marked `DELETED`, and the new Parquet file is marked `ADDED`. 
-* When the query engine reads the Manifest, it sees the `DELETED` flag and explicitly ignores the old file, guaranteeing perfect ACID transactional consistency.
+The manifest tracks how each file relates to the snapshot that wrote it using three statuses: `ADDED`, `EXISTING`, or `DELETED`.
+* If a data engineer runs an `UPDATE` statement on a copy-on-write table, Iceberg does not modify the existing Parquet file. It writes a new Parquet file with the updated rows. (Merge-on-read tables instead write delete files that record which rows to skip.)
+* It then writes a new manifest. In this manifest, the old Parquet file is marked `DELETED`, and the new Parquet file is marked `ADDED`.
+* When a query engine reads the current snapshot, it ignores files marked `DELETED`. Combined with the catalog's atomic commit, this gives readers a consistent view of the table.
 
 ### 3. Column-Level Metrics (Min/Max Statistics)
-This is the absolute superpower of the Manifest File. 
-When the data is originally written, Iceberg calculates and saves the absolute Minimum and Maximum values for every single column inside the Parquet file. 
+This is one of the most useful features of the manifest file.
+When data is written, Iceberg records lower and upper bounds (along with value and null counts) for columns in each data file. By default, these metrics are collected for a limited number of columns, which is configurable.
 * *File A contains timestamps from 8:00 AM to 9:00 AM.*
 * *File B contains timestamps from 9:00 AM to 10:00 AM.*
 
-If an analyst writes the query: `SELECT * WHERE timestamp = '8:15 AM'`, the query engine reads the Manifest File. It looks at the Min/Max metrics for File B, mathematically realizes that 8:15 AM cannot possibly exist inside File B, and explicitly skips the entire file without ever downloading it (Predicate Pushdown). This mechanism saves massive amounts of cloud compute power and dramatically accelerates query execution.
+If an analyst writes the query `SELECT * WHERE timestamp = '8:15 AM'`, the query engine reads the manifest. It sees from the bounds that 8:15 AM cannot exist in File B and skips that file without reading it. This file pruning saves compute and speeds up queries.
 
 ## The Problem with Too Many Manifests
 
-While Manifest Files are incredibly powerful, they create a new structural challenge. If a massive streaming pipeline writes 100,000 tiny Parquet files every day, it will generate thousands of tiny Manifest Files. 
+Manifest files also create a maintenance task. If a streaming pipeline writes many small Parquet files every day, it can produce many small manifest files.
 
-If the query engine is forced to open and read 5,000 Manifest Files just to find the Min/Max metrics, the query will slow down. To solve this, Iceberg utilizes an automated maintenance procedure called "Manifest Compaction." Periodically, a background job will take 1,000 tiny Manifest Files and merge them into one single, highly optimized Manifest File, restoring absolute peak performance to the metadata tree.
+If the query engine has to open thousands of manifests to plan a query, planning slows down. Iceberg merges manifests during some commits, and teams also run the `rewrite_manifests` maintenance procedure periodically to combine small manifests into fewer, larger ones, which keeps query planning fast.
 
 ## Summary of Technical Value
 
-The Iceberg Manifest File fundamentally redefined Data Lakehouse architecture by moving tracking from the folder level to the explicit file level. By storing absolute physical paths, transactional status flags, and highly granular column-level statistics within a compact Avro format, the Manifest File completely eliminates catastrophic cloud storage directory listings. It provides the exact mathematical intelligence required for modern query engines to execute sub-second, highly optimized data skipping across multi-petabyte datasets.
+The Iceberg manifest file changed data lakehouse architecture by moving tracking from the folder level to the file level. By storing file paths, status flags, and column-level statistics in a compact Avro format, manifest files remove the need for storage directory listings during query planning. They give query engines the information needed to skip irrelevant files across very large datasets.
 
 ## Learn More
-To learn more about the Data Lakehouse, read [The Lakehouse Built for Everyone](https://books.alexmerced.com/books/the-lakehouse-built-for-everyone/) by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).
+To learn more about the [Data Lakehouse](/data-lakehouse/), read [The Lakehouse Built for Everyone](https://books.alexmerced.com/books/the-lakehouse-built-for-everyone/) by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

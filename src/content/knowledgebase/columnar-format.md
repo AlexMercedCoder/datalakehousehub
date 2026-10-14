@@ -4,44 +4,43 @@ meta_title: "What is Columnar Format? | Expert Data Lakehouse & AI Glossary"
 description: "A columnar format stores each column's values together instead of row by row, which speeds up analytical scans. See how it relates to Arrow and Iceberg."
 ---
 
-## What is Columnar Format?
+A columnar format is a way of laying out tabular data so that all values of one column are stored next to each other, instead of storing each row's fields together. A query that reads three columns from a table with a hundred columns only has to touch those three columns, and because similar values sit side by side, they compress and encode far better than mixed row data. Apache Parquet and Apache ORC are the common columnar file formats on disk, and Apache Arrow is the common columnar format in memory.
 
-A storage methodology orienting data blocks sequentially grouped according by characteristics vastly accelerating analytical aggregations. 
+## How It Works
 
-In the rapidly evolving landscape of data engineering and artificial intelligence, **Columnar Format** has emerged as a critical foundational component. As organizations transition from legacy, monolithic architectures to decoupled, scalable environments, understanding the role of Columnar Format is essential for building future-proof infrastructure. This capability serves as a critical enabler in modern data ecosystems, explicitly guiding architecture toward absolute efficiency and scale. When correctly implemented, Columnar Format dynamically drives analytical workloads and structurally limits administrative technical debt.
+Take a table with `order_id`, `customer`, `region`, and `amount`. A row format such as CSV or Avro writes one complete record after another. A columnar format writes every `order_id`, then every `customer`, and so on.
 
-## Core Architecture and Mechanics
+Parquet organizes a file into **row groups** (horizontal slices of the table). Inside each row group, each column is stored as a **column chunk**, which is split into **pages**. The file footer holds the schema and statistics such as min and max values per column chunk. Readers use that layout in three ways:
 
-To understand the practical application of Columnar Format, it is crucial to systematically examine its fundamental operational behaviors and structural design:
+- **Projection.** Only the column chunks a query needs are read from storage.
+- **Encoding and compression.** Runs of repeated or low-cardinality values suit [dictionary encoding](/knowledgebase/dictionary-encoding/) and [run-length encoding](/knowledgebase/run-length-encoding/), followed by a general codec such as Snappy or Zstandard. The Parquet project describes itself as a column-oriented format with "high performance compression and encoding schemes."
+- **Skipping.** Min and max statistics let a reader skip row groups and pages whose value ranges cannot match a filter.
 
-* **Pre-computes or intelligently caches data to avoid redundant processing on recurrent queries.** This principle ensures that systems can scale horizontally without facing artificial limitations or bottlenecks.
-* **Re-organizes data deeply at the memory level (e.g., Apache Arrow) to fit CPU caches perfectly.** By adopting this mechanic, engineers can bypass traditional processing constraints and deliver substantially faster time-to-insight.
-* **Maintains aggressive probabilistic structures (like Bloom Filters) to immediately skip reading irrelevant data partitions.** This allows the overarching architecture to remain highly resilient while serving concurrent workloads natively.
+Apache Arrow applies the same idea in memory. Its specification is a language-independent columnar layout, and the contiguous buffers let engines run [vectorized execution](/knowledgebase/vectorized-execution/) that processes batches of values with SIMD instructions instead of one row at a time.
 
-Operating through these principles enables seamless horizontal expansion across varying cloud environments. It integrates effortlessly with adjacent technologies like [Apache Iceberg](/apache-iceberg/), dbt, and advanced vector search algorithms.
+## Row vs Columnar
 
-## Why Columnar Format Matters in the Modern Data Stack
+| Aspect | Row format (CSV, JSON, Avro) | Columnar format (Parquet, ORC) |
+|---|---|---|
+| Physical layout | Full records stored together | Each column stored together |
+| Good at | Writing and reading whole records, streaming events | Scans, aggregations, filters over a few columns |
+| Compression | Lower, because adjacent values differ in type | Higher, because adjacent values share a type |
+| Reading one column | Must read every row | Reads only that column's chunks |
+| Typical home | OLTP systems, message payloads | Analytics, data lakes, lakehouses |
 
-These highly technical optimizations ensure that systems can handle multi-terabyte queries within seconds. Without them, even the most robust architectures would collapse under I/O bottlenecks.
+Columnar formats are slower for single-row lookups and frequent small updates, which is why transactional databases keep a row layout.
 
-For modern enterprises managing decentralized teams, the implementation of Columnar Format eliminates significant architectural friction. Teams are explicitly empowered to operate autonomously against reliable technical foundations without dynamically disrupting other isolated workflows. It shifts manual engineering overhead into an autonomous, software-driven paradigm, keeping Total Cost of Ownership (TCO) extremely low.
+## Columnar Formats in the Lakehouse
 
-### Key Benefits
-- **Unprecedented Scalability:** Automatically adapts to massive fluctuations in data volume and query concurrency.
-- **Vendor Neutrality:** Strongly aligns with open-source frameworks, preventing aggressive vendor lock-in.
-- **Enhanced Observability:** Exposes deep, structural metadata allowing engineers to monitor and trace pipelines comprehensively.
+Apache Iceberg, Delta Lake, and Apache Hudi are table formats, not file formats. They track collections of data files, and in practice those data files are usually Parquet. Iceberg adds its own column-level statistics to manifest files, so an engine can prune whole files before opening them and then use Parquet's footer statistics to prune row groups inside the files it does read.
 
-## Frequently Asked Questions
+Engines such as Dremio, Trino, Spark, and DuckDB all read Parquet directly. Dremio and DuckDB also process data in a columnar in-memory form (Dremio is built on Arrow), which keeps data in a column layout from storage to result. Arrow Flight and ADBC extend this to the network, moving result sets as Arrow batches instead of converting them row by row.
 
-### Why is Columnar Format superior for analytics?
-Unlike row-based formats (like CSV or JSON), columnar formats store all values of a single column contiguously. This allows queries calculating averages or sums to read *only* the specific column they need, rather than loading the entire table. This distinction is particularly important when evaluating total architecture costs and performance benchmarks.
+For the hands-on details, the Hub's guide to [row vs column storage](/blog/2026-04-29-query-engine-optimization-02-row-vs-column-storage/) walks through the query engine side, and the [Apache Parquet](/knowledgebase/apache-parquet/) and [Apache Arrow](/knowledgebase/apache-arrow/) entries cover each format in depth.
 
-### What is Late Materialization?
-It is an optimization where the engine delays fetching full record details from storage until *after* all heavy filters and joins are complete, drastically reducing memory overhead. The open ecosystem continues to evolve rapidly, ensuring backward compatibility while introducing powerful new primitives.
+## Summary
 
-### How does Columnar Format impact data governance and security?
-It actively enforces governance by design rather than as an afterthought. Native logging, role-based access controls (RBAC), and structured access pathways provide immediate visibility into security boundaries and regulatory compliance.
+A columnar format stores data by column so analytical queries read less, compress better, and skip more. Parquet on disk and Arrow in memory are the two formats most lakehouse engines share, and open table formats like Iceberg sit on top of them to add transactions and table-level metadata.
 
----
-
-### E-E-A-T & Further Reading
+## Learn More
+To learn more about the [Data Lakehouse](/data-lakehouse/), read [The Lakehouse Built for Everyone](https://books.alexmerced.com/books/the-lakehouse-built-for-everyone/) by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

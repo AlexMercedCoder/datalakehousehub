@@ -53,4 +53,4 @@ Spark SQL also reads Iceberg metadata tables (`orders.snapshots`, `orders.files`
 Many lakehouses use Spark SQL for heavy writes and maintenance and a separate engine such as [Trino](/knowledgebase/trino/), Dremio, or [DuckDB](/knowledgebase/duckdb/) for interactive reads, all sharing one Iceberg catalog.
 
 ## Learn More
-To learn more about the Data Lakehouse, read [The Lakehouse Built for Everyone](https://books.alexmerced.com/books/the-lakehouse-built-for-everyone/) by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).
+To learn more about the [Data Lakehouse](/data-lakehouse/), read [The Lakehouse Built for Everyone](https://books.alexmerced.com/books/the-lakehouse-built-for-everyone/) by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

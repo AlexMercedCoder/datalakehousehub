@@ -6,38 +6,38 @@ description: "An ontology is a formal, machine-readable model of the concepts, p
 
 # What is an Ontology?
 
-An Ontology is a highly rigorous, formal semantic framework used in advanced data architecture and computer science to explicitly define the absolute categories, properties, and complex relationships of all concepts within a specific domain. While a Business Glossary simply provides human-readable definitions of words (e.g., "A Customer is someone who buys things"), an Ontology is a machine-readable mathematical blueprint. It strictly teaches a computer not just what a thing *is*, but exactly how that thing *interacts* with every other thing in the universe.
+An ontology is a formal semantic framework used in data architecture and computer science to define the categories, properties, and relationships of the concepts within a specific domain. While a business glossary provides human-readable definitions of words (e.g., "A Customer is someone who buys things"), an ontology is a machine-readable model. It tells a computer not just what a thing *is*, but how that thing relates to other things in the domain.
 
-Ontologies are the absolute mandatory foundation for building functional Knowledge Graphs and advanced, reasoning-capable Artificial Intelligence. If an AI does not possess a strict underlying Ontology, it cannot logically infer new information; it is simply guessing.
+Ontologies are a common foundation for knowledge graphs and for AI systems that need to reason over structured facts. Without an agreed ontology, a system has no shared vocabulary for inferring new information from existing facts.
 
 ## The Architecture of Semantic Rules
 
-An Ontology operates by establishing a strict, hierarchical class structure combined with explicit rules of logical inference.
+An ontology works by establishing a class hierarchy combined with explicit rules of logical inference. Standards such as RDF Schema and OWL (Web Ontology Language) from the W3C are commonly used to express them.
 
 ### Classes and Properties
-An Ontology explicitly defines Classes (categories of things). 
+An ontology defines classes (categories of things).
 * Class: `Vehicle`.
 * Sub-Class: `Automobile`.
-It then assigns rigid Data Properties to those classes. An `Automobile` possesses the property `License_Plate_Number`. By ontological inheritance, any specific entity classified as an `Automobile` is mathematically required to possess a license plate.
+It then assigns data properties to those classes. An `Automobile` can have the property `License_Plate_Number`. Through inheritance, any entity classified as an `Automobile` is also a `Vehicle` and carries the properties defined for vehicles.
 
 ### Relational Logic and Inference
-The true power of an Ontology is its ability to define Object Properties (the complex rules of interaction).
-An Ontology defines the rule: `[Person] -> MANAGES -> [Person]`.
-It also defines a critical mathematical rule about that relationship: "The `MANAGES` relationship is strictly Asymmetrical." 
-Because the computer reads the Ontology, the computer mathematically understands that if John manages Sarah, Sarah absolutely cannot manage John. 
+A major strength of an ontology is its ability to define object properties (the rules of interaction between entities).
+An ontology defines the relationship: `[Person] -> MANAGES -> [Person]`.
+It can also declare that the `MANAGES` relationship is asymmetric.
+Because the system reads the ontology, it can flag a contradiction if the data says John manages Sarah and Sarah manages John.
 
-Furthermore, the Ontology defines Transitive relationships. It states: `[Facility] -> LOCATED_IN -> [City] -> LOCATED_IN -> [Country]`. 
-If a new data pipeline ingests a raw record stating "Warehouse A is located in Paris," the database does not need to be explicitly told where Paris is. The AI reads the Ontology, executes a logical inference, and instantly, autonomously deduces that "Warehouse A is located in France." The database magically generated new, accurate data entirely on its own.
+Ontologies can also define transitive relationships, such as `LOCATED_IN`: `[Facility] -> LOCATED_IN -> [City] -> LOCATED_IN -> [Country]`.
+If the graph already knows that Paris is located in France, and a new pipeline ingests a record stating "Warehouse A is located in Paris," a reasoner can infer that "Warehouse A is located in France" without that fact being stated explicitly. The new fact is derived from existing data and the rules in the ontology.
 
 ## Ontologies in the Data Lakehouse
 
-Historically, Ontologies were confined to academic research and massive government intelligence agencies. Today, they are actively deployed over the [Data Lakehouse](/data-lakehouse/) to power the Semantic Layer.
+Ontologies were long used mostly in academic research, life sciences, and government. Today, they are increasingly applied over the [Data Lakehouse](/data-lakehouse/) to support the semantic layer.
 
-When an organization builds a massive Knowledge Graph on top of their petabyte-scale [Apache Iceberg](/apache-iceberg/) tables, the Ontology serves as the strict architectural schema for that graph. It guarantees that as millions of chaotic, unstructured documents are processed by AI agents, the extracted entities are rigidly mapped to the official corporate ontology. This prevents the database from accidentally creating 50 different chaotic classifications for a single product, ensuring absolute structural integrity across the entire enterprise data network.
+When an organization builds a knowledge graph on top of its [Apache Iceberg](/apache-iceberg/) tables, the ontology serves as the schema for that graph. As AI agents process unstructured documents, the extracted entities are mapped to the organization's ontology. This helps prevent the graph from accumulating dozens of inconsistent classifications for a single product, and keeps the structure consistent across the enterprise data network.
 
 ## Summary of Technical Value
 
-An Ontology is the supreme semantic blueprint of enterprise knowledge. By providing a strict, machine-readable framework of classes, properties, and highly complex rules of logical inference, an Ontology allows databases and Artificial Intelligence agents to natively understand the deep structural reality of a business, unlocking the ability to autonomously deduce hidden insights from massive, fragmented data lakes.
+An ontology is a semantic blueprint of enterprise knowledge. By providing a machine-readable framework of classes, properties, and rules of logical inference, an ontology lets databases and AI agents work with a consistent model of the business and derive new facts from fragmented data.
 
 ## Learn More
-To learn more about the Data Lakehouse, read [The Lakehouse Built for Everyone](https://books.alexmerced.com/books/the-lakehouse-built-for-everyone/) by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).
+To learn more about the [Data Lakehouse](/data-lakehouse/), read [The Lakehouse Built for Everyone](https://books.alexmerced.com/books/the-lakehouse-built-for-everyone/) by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

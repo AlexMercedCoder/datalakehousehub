@@ -43,4 +43,4 @@ Druid does not use [Apache Iceberg](/knowledgebase/apache-iceberg/) as its stora
 If your dashboards can tolerate a short commit delay, an Iceberg table with an acceleration layer may remove the need for a separate serving database. [Real-Time BI on Apache Iceberg](/blog/real-time-bi-iceberg-lakehouse/) covers that approach. See also [Apache Pinot](/knowledgebase/apache-pinot/), [ClickHouse](/knowledgebase/clickhouse/), and [real-time analytics](/knowledgebase/real-time-analytics/).
 
 ## Learn More
-To learn more about the Data Lakehouse, read [The Lakehouse Built for Everyone](https://books.alexmerced.com/books/the-lakehouse-built-for-everyone/) by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).
+To learn more about the [Data Lakehouse](/data-lakehouse/), read [The Lakehouse Built for Everyone](https://books.alexmerced.com/books/the-lakehouse-built-for-everyone/) by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

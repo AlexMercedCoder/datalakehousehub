@@ -48,4 +48,4 @@ Iceberg adds useful audit features: snapshots and time travel show what the gold
 MDM produces trusted golden records by matching records across systems, applying survivorship rules, and distributing the result. A lakehouse provides the storage, compute, and history to run the consolidation side of MDM on open tables, so BI dashboards and AI models use the same resolved entities.
 
 ## Learn More
-To learn more about the Data Lakehouse, read [The Lakehouse Built for Everyone](https://books.alexmerced.com/books/the-lakehouse-built-for-everyone/) by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).
+To learn more about the [Data Lakehouse](/data-lakehouse/), read [The Lakehouse Built for Everyone](https://books.alexmerced.com/books/the-lakehouse-built-for-everyone/) by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

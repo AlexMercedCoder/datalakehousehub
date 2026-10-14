@@ -47,6 +47,6 @@ A continuously running Flink or Kafka Connect job does not need a scheduler, but
 ### Can the catalog replace the orchestrator?
 Partly. Some catalogs and platforms automate table maintenance and emit commit events that trigger downstream jobs. Multi-step business pipelines still benefit from an orchestrator's run history and retries.
 
----
+## Learn More
 
-### E-E-A-T & Further Reading
+To learn more about the [Data Lakehouse](/data-lakehouse/), read [The Lakehouse Built for Everyone](https://books.alexmerced.com/books/the-lakehouse-built-for-everyone/) by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

@@ -6,34 +6,34 @@ description: "Block storage splits data into fixed-size blocks on a volume attac
 
 # What is Block Storage?
 
-Block Storage is a high-performance, foundational data storage architecture engineered explicitly for ultra-low latency and incredibly fast, high-volume transactional workloads. It is the storage mechanism that physically mounts directly to a computing server (like a local hard drive or a Cloud SSD). While Object Storage (like Amazon S3) is designed to hold massive, petabyte-scale historical files for analytical data lakes, Block Storage (like Amazon EBS or Azure Managed Disks) is designed strictly to power the live, rapidly mutating operational databases (OLTP) and active operating systems of the enterprise.
+Block Storage is a data storage architecture designed for low latency and high-volume transactional workloads. It is storage that a server uses as a disk volume (like a local drive or a cloud SSD volume). Object Storage (like Amazon S3) is designed to hold large volumes of files for analytical data lakes, while Block Storage (like Amazon EBS or Azure Managed Disks) is designed to back live, frequently changing operational databases (OLTP) and operating systems.
 
-To understand Block Storage, one must understand how a computer writes data. If a massive, 10-Gigabyte database file is resting on a server, and a single user logs in to update their email address, the computer must physically rewrite that data to the disk. 
+To understand Block Storage, consider how a database writes data. Suppose a 10 GB database file sits on a server and a user updates their email address. The system must write that change to disk.
 
-If the database was stored on Object Storage, the system would have to download the entire 10-GB object over the network, change the single email address in memory, and re-upload the entire 10-GB object back to the cloud. This would take minutes.
+If the database file were stored as a single object in Object Storage, changing it would mean writing a new version of the whole object, since objects are generally replaced as a unit rather than edited in place. That is far too slow for a transactional database.
 
 ## The Architecture of the Block
 
-Block Storage solves this by physically shattering the 10-GB database file into millions of tiny, evenly sized mathematical chunks called "Blocks" (typically 4KB or 8KB in size). 
+Block Storage divides data into fixed-size chunks called "Blocks" (file systems commonly use 4 KB blocks, and many databases use 8 KB pages).
 
-These blocks are written directly to the bare-metal hard drive. The server’s operating system manages a highly complex internal map that tracks exactly which blocks belong to which file.
+The server's file system (or the database itself) keeps a map of which blocks belong to which file.
 
-When the user updates their email address, the operating system consults its map. It identifies the exact, specific 4KB block on the hard drive that contains the email string. It physically overwrites only that single, microscopic block, leaving the other 9.99 Gigabytes of data completely untouched. The update occurs in microseconds. 
+When the user updates their email address, the database finds the page that holds that row and writes only that page back to the volume, leaving the rest of the 10 GB file untouched. On SSD-backed volumes, such writes typically complete with sub-millisecond to low-millisecond latency.
 
 ## Use Cases and Limitations
 
-Because Block Storage allows for surgical, sub-millisecond updates, it is the absolute mandatory storage requirement for:
-* **Relational Databases (OLTP):** Live PostgreSQL, Oracle, and MySQL instances require block storage to ensure ACID compliance and handle millions of concurrent writes.
-* **Operating Systems:** The boot drives of virtual machines and Kubernetes worker nodes require the low latency of block storage to function.
+Because Block Storage supports small, low-latency, in-place updates, it is the standard storage choice for:
+* **Relational Databases (OLTP):** PostgreSQL, Oracle, and MySQL instances typically run on block storage, which supports their transaction logs and high rates of concurrent writes.
+* **Operating Systems:** The boot volumes of virtual machines and Kubernetes worker nodes use block storage.
 
 ### The Scaling Limitation
-The primary limitation of Block Storage is its severe physical coupling. A block storage volume must be physically "attached" to a specific server. It cannot be accessed over the internet via a REST API like Object Storage. 
+The primary limitation of Block Storage is its coupling to compute. A block storage volume is attached to a specific server (or, with some volume types, a small number of servers). It is not accessed over a REST API the way Object Storage is.
 
-If an operational database fills up its 1-Terabyte block storage drive, the system will crash. The engineering team must manually provision a larger drive, detach the old one, and attach the new one. This physical rigidity makes Block Storage fundamentally incompatible with the infinitely elastic, massive-scale requirements of a [Data Lakehouse](/data-lakehouse/), which is why Lakehouses rely exclusively on Object Storage.
+Capacity must also be provisioned in advance. If a database fills its volume, writes fail until the team grows it. Cloud providers let you increase volume size, often without detaching, but someone still has to plan and pay for provisioned capacity. This coupling and provisioning model is why a [Data Lakehouse](/data-lakehouse/), which needs elastic, shared storage for many engines, relies primarily on Object Storage.
 
 ## Summary of Technical Value
 
-Block Storage is the high-speed, bare-metal storage architecture of the operational enterprise. By shattering massive files into tiny, individually updatable chunks, it completely eliminates the massive I/O bottlenecks of file manipulation. While it lacks the infinite scalability of cloud Object Storage, its ability to execute surgical, sub-millisecond data mutations makes it the non-negotiable foundation for live transactional databases and mission-critical software systems.
+Block Storage is the high-speed storage layer of operational systems. By dividing data into small, individually updatable blocks, it avoids rewriting large files for small changes. While it lacks the elastic scalability and shared access of cloud Object Storage, its low-latency in-place writes make it the standard foundation for transactional databases and other critical software systems.
 
 ## Learn More
-To learn more about the Data Lakehouse, read [The Lakehouse Built for Everyone](https://books.alexmerced.com/books/the-lakehouse-built-for-everyone/) by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).
+To learn more about the [Data Lakehouse](/data-lakehouse/), read [The Lakehouse Built for Everyone](https://books.alexmerced.com/books/the-lakehouse-built-for-everyone/) by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

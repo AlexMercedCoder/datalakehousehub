@@ -35,4 +35,4 @@ In September 2026 the Iceberg and DataFusion communities voted to move that inte
 Pick DataFusion when you are building a product or service that needs a query engine inside it. For a ready-to-use tool, [DuckDB](/knowledgebase/duckdb/), [Apache Spark](/knowledgebase/apache-spark/), [Trino](/knowledgebase/trino/), or Dremio are closer to what you want.
 
 ## Learn More
-To learn more about the Data Lakehouse, read [The Lakehouse Built for Everyone](https://books.alexmerced.com/books/the-lakehouse-built-for-everyone/) by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).
+To learn more about the [Data Lakehouse](/data-lakehouse/), read [The Lakehouse Built for Everyone](https://books.alexmerced.com/books/the-lakehouse-built-for-everyone/) by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

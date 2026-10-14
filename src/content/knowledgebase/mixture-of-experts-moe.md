@@ -8,40 +8,34 @@ description: "Mixture of Experts (MoE) is a neural network design where a router
 
 ## Introduction to Mixture of Experts (MoE)
 
-When developing a Large Language Model (LLM), the general rule is: *More parameters equals more intelligence.* 
-A 70-Billion parameter model is generally smarter than a 7-Billion parameter model. 
+In a standard "dense" transformer, every parameter takes part in processing every token. A dense 70-billion-parameter model performs computation involving all 70 billion parameters for each token it reads or generates. Larger dense models tend to perform better, but compute cost per token grows with parameter count.
 
-However, there is a brutal physical limit to this. In a standard "Dense" model (like Llama 3 70B), every time you ask the AI a single question, electricity must physically flow through all 70 Billion parameters to calculate the answer. If you scale the model to 1 Trillion parameters, the electricity and GPU compute required to generate a single word becomes so astronomically expensive that the AI is economically unviable to operate.
-
-**Mixture of Experts (MoE)** is a revolutionary neural network architecture designed to break this limit. It allows developers to build massive, Trillion-parameter models that run as fast and as cheaply as tiny models.
+**Mixture of Experts (MoE)** is an architecture that separates total parameter count from the compute used per token. An MoE layer contains several parallel subnetworks, called experts, and a small router (or gating network) that sends each token to only a few of them. The model can hold many more parameters than it uses for any single token.
 
 ## How MoE Works: Sparse Activation
 
-The core concept of MoE is **Sparse Activation**. Instead of building one massive, monolithic brain, an MoE model is composed of many smaller sub-networks (the "Experts"), overseen by a "Router."
+In most MoE [large language models](/knowledgebase/large-language-models/), the experts replace the feed-forward block inside some or all transformer layers. Attention layers are usually shared.
 
-### The Router Network
-Imagine an MoE model with 8 "Experts." 
-When a user submits a prompt (e.g., *"Write a Python script to calculate the trajectory of a rocket"*), the text does not go to the whole brain. It hits the **Router Network**.
+### The Router
+For every token, at every MoE layer, the router scores the experts and selects the top-k (often one or two). The token's hidden state is processed by those experts, and their outputs are combined using the router's weights. The next layer has its own router, so the same token can go to different experts at different layers, and neighboring tokens in the same sentence can go to different experts.
 
-The Router is a tiny neural network trained to do one thing: read the word, and instantly decide which of the 8 Experts is best suited to handle it. 
-*   The Router looks at "Python" and routes it to Expert 2 (which happens to be really good at coding).
-*   The Router looks at "trajectory" and routes it to Expert 5 (which happens to be really good at physics).
+Experts are not assigned subjects such as "coding" or "physics." Their roles emerge during training, and routing analyses of models such as Mixtral found no clear specialization by topic or domain. Observed patterns tend to be more syntactic or token-level, such as particular experts receiving certain kinds of tokens or punctuation.
 
-### The Illusion of Size
-Crucially, the Router is configured to only activate a subset of the experts (usually 2 out of the 8). The other 6 experts remain completely dormant. They use zero compute power. 
+### Total vs. Active Parameters
+Mistral AI's **Mixtral 8x7B** is a well-documented example. Each layer has 8 experts and the router selects 2 per token. According to its paper, each token has access to about 47 billion parameters, but only about 13 billion are active for any token during inference. The total is less than 8 times 7 billion because the attention layers and embeddings are shared across experts.
 
-This creates a magical mathematical illusion. 
-If you use Mistral's **Mixtral 8x7B** model, the total file size on the hard drive is 47 Billion parameters (because it holds 8 different 7B experts). However, because the Router only wakes up 2 experts at a time, the GPU only uses **13 Billion parameters** of compute power during inference. 
-
-You get the vast, expansive knowledge base of a 47B model, but it runs with the blazing speed and cheap electricity cost of a 13B model. 
+The result is a model with the capacity of a larger network and the per-token compute closer to that of a smaller one.
 
 ## The Challenges of MoE
 
-While MoE is the architecture powering the world's frontier models (including OpenAI's GPT-4, which is widely reported to be a massive 8x220B MoE), it introduces severe engineering headaches.
-
-1.  **VRAM Constraints**: While MoE uses very little active *compute* (saving electricity), all 8 experts must still be loaded into the GPU's memory (VRAM) so they are ready the instant the Router calls them. You still need massive, expensive GPUs just to hold the model in memory.
-2.  **Training Instability**: Training the Router is notoriously difficult. If the Router decides that Expert 1 is the best at everything, it will send 100% of the traffic to Expert 1, and the other 7 experts will "die" (never receiving data or learning). Engineers must write complex "Load Balancing" loss functions to force the Router to use all experts equally during training.
+1. **Memory requirements**: Only some experts run for each token, but all of them must be loaded in accelerator memory (or offloaded with a speed penalty), because any token may be routed to any expert. Memory needs follow total parameters, not active ones.
+2. **Load balancing**: If the router sends most tokens to a few experts, the others are undertrained and hardware is used unevenly. MoE training typically adds an auxiliary load-balancing loss, or another balancing mechanism, to spread tokens across experts.
+3. **Distributed serving**: Large MoE models often spread experts across multiple accelerators (expert parallelism), which adds communication between devices as tokens are routed.
 
 ## Conclusion
 
-Mixture of Experts is the architectural trick that allowed the AI industry to push past the limits of Moore's Law. By decoupling the total knowledge capacity of a model (its parameter count) from its computational cost (its active parameters), MoE enables the creation of unfathomably large, trillion-parameter super-models that can still generate text in milliseconds.
+Mixture of Experts lets model builders increase total parameter count without a matching increase in compute per token, by having a router send each token, at each layer, to a small number of experts. The trade-offs are higher memory requirements, the need for load balancing during training, and more complex distributed serving. Several openly released models, including Mixtral and DeepSeek's V2 and V3 models, use MoE designs.
+
+## Learn More
+
+To learn more about the [Data Lakehouse](/data-lakehouse/), read [The Lakehouse Built for Everyone](https://books.alexmerced.com/books/the-lakehouse-built-for-everyone/) by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

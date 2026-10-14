@@ -50,4 +50,4 @@ The catalog deserves the most attention. Every Iceberg read and commit goes thro
 High availability comes from redundancy across failure domains plus automated detection and failover. In a lakehouse, apply that thinking layer by layer: storage is usually the most available part, and the catalog and engine coordinators are where single points of failure tend to hide.
 
 ## Learn More
-To learn more about the Data Lakehouse, read [The Lakehouse Built for Everyone](https://books.alexmerced.com/books/the-lakehouse-built-for-everyone/) by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).
+To learn more about the [Data Lakehouse](/data-lakehouse/), read [The Lakehouse Built for Everyone](https://books.alexmerced.com/books/the-lakehouse-built-for-everyone/) by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

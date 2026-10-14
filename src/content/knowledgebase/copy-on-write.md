@@ -5,44 +5,45 @@ meta_title: "What is Copy-On-Write? | Expert Data Lakehouse & AI Glossary"
 description: "Copy-on-write is a table update strategy that rewrites whole data files when rows change, trading slower writes for faster reads in formats like Apache Iceberg."
 ---
 
-## What is Copy-On-Write?
+Copy-on-write (COW) is a strategy for applying updates and deletes to tables built on immutable files. When a row changes, the engine does not edit the file in place. It reads every data file that contains an affected row, writes a new version of each file with the change applied, and commits a new table snapshot that points to the new files instead of the old ones. Readers always see plain data files with no pending changes to reconcile, at the cost of rewriting more data on every write.
 
-A table design requiring entire files to be completely rewritten whenever modifications occur to optimize reading access limits. 
+## How It Works
 
-In the rapidly evolving landscape of data engineering and artificial intelligence, **Copy-On-Write** has emerged as a critical foundational component. As organizations transition from legacy, monolithic architectures to decoupled, scalable environments, understanding the role of Copy-On-Write is essential for building future-proof infrastructure. This capability serves as a critical enabler in modern data ecosystems, explicitly guiding architecture toward absolute efficiency and scale. When correctly implemented, Copy-On-Write dynamically drives analytical workloads and structurally limits administrative technical debt.
+Suppose an Apache Iceberg table holds 500 MB Parquet files and a `DELETE` removes ten rows that happen to sit in two of them. Under copy-on-write:
 
-## Core Architecture and Mechanics
+1. The engine plans the operation and finds the two data files that contain matching rows.
+2. It reads both files, filters out the ten rows, and writes two new files with the remaining rows.
+3. It commits a snapshot that removes the two old files from the table and adds the two new ones.
 
-To understand the practical application of Copy-On-Write, it is crucial to systematically examine its fundamental operational behaviors and structural design:
+The old files stay on storage until snapshot expiration removes them, which is what makes [time travel](/knowledgebase/time-travel/) to earlier snapshots possible. Updates and `MERGE` statements work the same way, with changed rows written into the replacement files.
 
-* **Utilizes open table formats to provide complete ACID transactional compliance directly on top of massive, raw cloud object storage.** This principle ensures that systems can scale horizontally without facing artificial limitations or bottlenecks.
-* **Maintains an explicit hierarchical tree of metadata manifests to track exact file states and enable precise time-travel querying.** By adopting this mechanic, engineers can bypass traditional processing constraints and deliver substantially faster time-to-insight.
-* **Decouples the physical storage layout from the logical table structure using techniques like hidden partitioning.** This allows the overarching architecture to remain highly resilient while serving concurrent workloads natively.
+In Iceberg, the strategy is set per operation through table properties: `write.delete.mode`, `write.update.mode`, and `write.merge.mode`. Each accepts `copy-on-write` or `merge-on-read`, applies to format version 2 and above, and defaults to `copy-on-write` according to the Iceberg configuration docs.
 
-Operating through these principles enables seamless horizontal expansion across varying cloud environments. It integrates effortlessly with adjacent technologies like [Apache Iceberg](/apache-iceberg/), dbt, and advanced vector search algorithms.
+## Copy-on-Write vs Merge-on-Read
 
-## Why Copy-On-Write Matters in the Modern Data Stack
+The alternative is [merge-on-read](/knowledgebase/merge-on-read/) (MOR), which leaves data files untouched and writes small delete files or deletion vectors that readers apply at query time.
 
-The open lakehouse structure eliminates vendor lock-in and drastically reduces storage costs by allowing any compatible distributed engine to query the exact same massive datasets without requiring duplication.
+| Aspect | Copy-on-write | Merge-on-read |
+|---|---|---|
+| Write cost | High: whole files rewritten for small changes | Low: only delete markers and new rows written |
+| Read cost | Low: files are already final | Higher: readers must apply deletes |
+| Write amplification | Grows with file size and spread of changes | Small per operation |
+| Maintenance | Little extra beyond snapshot expiration | Regular compaction to fold deletes into data files |
+| Best fit | Read-heavy tables, infrequent or batch updates | Frequent small updates, streaming upserts, CDC |
 
-For modern enterprises managing decentralized teams, the implementation of Copy-On-Write eliminates significant architectural friction. Teams are explicitly empowered to operate autonomously against reliable technical foundations without dynamically disrupting other isolated workflows. It shifts manual engineering overhead into an autonomous, software-driven paradigm, keeping Total Cost of Ownership (TCO) extremely low.
+The choice is not permanent. Many teams use merge-on-read for frequent writes and then run compaction, which rewrites files with deletes applied, so readers get copy-on-write-like performance between maintenance runs.
 
-### Key Benefits
-- **Unprecedented Scalability:** Automatically adapts to massive fluctuations in data volume and query concurrency.
-- **Vendor Neutrality:** Strongly aligns with open-source frameworks, preventing aggressive vendor lock-in.
-- **Enhanced Observability:** Exposes deep, structural metadata allowing engineers to monitor and trace pipelines comprehensively.
+## Copy-on-Write in the Lakehouse
 
-## Frequently Asked Questions
+Copy-on-write is the conservative default because it keeps reads simple for every engine. A Dremio, Trino, Spark, or DuckDB reader can scan a COW table without needing to understand delete files, and file-level statistics stay accurate because each file reflects its true contents.
 
-### What makes a Lakehouse different from a Data Lake?
-A standard data lake is just a collection of files. A lakehouse adds a metadata layer that provides warehouse-like features (transactions, schema enforcement) directly to those files. This distinction is particularly important when evaluating total architecture costs and performance benchmarks.
+It becomes expensive when updates are scattered. A `MERGE` that touches one row in each of a thousand files rewrites all thousand files. Partitioning and sort order help by clustering the rows that tend to change together into fewer files. Tables fed by streaming change data capture, or tables that receive frequent GDPR deletion requests, are usually better served by merge-on-read plus [data compaction](/knowledgebase/data-compaction/).
 
-### Why use an Open Table Format?
-Open formats like Apache Iceberg ensure that your data is not trapped inside a proprietary database ecosystem; it remains universally accessible. The open ecosystem continues to evolve rapidly, ensuring backward compatibility while introducing powerful new primitives.
+The Hub's [guide to Iceberg delete files](/blog/2024-8-understanding-apache-iceberg-delete-files/) shows how the merge-on-read side works, and the [row-level deletes](/knowledgebase/row-level-deletes/) entry covers the delete formats Iceberg supports.
 
-### How does Copy-On-Write impact data governance and security?
-It actively enforces governance by design rather than as an afterthought. Native logging, role-based access controls (RBAC), and structured access pathways provide immediate visibility into security boundaries and regulatory compliance.
+## Summary
 
----
+Copy-on-write applies row-level changes by rewriting the affected data files and committing a new snapshot. It favors fast, simple reads over write efficiency, and it is Iceberg's default for deletes, updates, and merges.
 
-### E-E-A-T & Further Reading
+## Learn More
+To learn more about the [Data Lakehouse](/data-lakehouse/), read [The Lakehouse Built for Everyone](https://books.alexmerced.com/books/the-lakehouse-built-for-everyone/) by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

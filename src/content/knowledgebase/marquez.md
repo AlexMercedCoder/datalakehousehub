@@ -42,6 +42,6 @@ No. It records lineage and run history. Access policies live in your catalog or 
 ### Is Marquez still maintained?
 The repository still receives commits, but the most recent tagged release is 0.50.0 from October 2024. Check the GitHub releases page and weigh release cadence before choosing it for production.
 
----
+## Learn More
 
-### E-E-A-T & Further Reading
+To learn more about the [Data Lakehouse](/data-lakehouse/), read [The Lakehouse Built for Everyone](https://books.alexmerced.com/books/the-lakehouse-built-for-everyone/) by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

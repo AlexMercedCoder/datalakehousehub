@@ -58,4 +58,4 @@ Today every commit rewrites the manifest list, so commit cost grows with the num
 The manifest list is the per-snapshot index of manifests. Its partition summaries and file counts let engines such as Spark, Trino, Flink, and Dremio skip whole manifests during planning, and its one-per-snapshot design is what makes time travel cheap in a [data lakehouse](/knowledgebase/data-lakehouse/).
 
 ## Learn More
-To learn more about the Data Lakehouse, read [The Lakehouse Built for Everyone](https://books.alexmerced.com/books/the-lakehouse-built-for-everyone/) by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).
+To learn more about the [Data Lakehouse](/data-lakehouse/), read [The Lakehouse Built for Everyone](https://books.alexmerced.com/books/the-lakehouse-built-for-everyone/) by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

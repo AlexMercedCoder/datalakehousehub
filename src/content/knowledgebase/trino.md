@@ -40,4 +40,4 @@ Many lakehouses run more than one of these against the same Iceberg tables throu
 Trino is a distributed SQL engine that separates compute from storage and queries data where it already lives. On a lakehouse it is a strong choice for interactive and federated SQL over Iceberg, and it shares tables cleanly with Spark, Dremio, and other engines through an open catalog.
 
 ## Learn More
-To learn more about the Data Lakehouse, read [The Lakehouse Built for Everyone](https://books.alexmerced.com/books/the-lakehouse-built-for-everyone/) by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).
+To learn more about the [Data Lakehouse](/data-lakehouse/), read [The Lakehouse Built for Everyone](https://books.alexmerced.com/books/the-lakehouse-built-for-everyone/) by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

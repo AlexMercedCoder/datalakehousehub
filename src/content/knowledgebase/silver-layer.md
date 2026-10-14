@@ -51,6 +51,6 @@ Often, yes. Silver is the right place for exploratory work that needs row-level 
 ### Where do slowly changing dimensions belong?
 Either silver or gold. Keeping full history in silver lets several gold models reuse it; building SCDs in gold keeps silver simpler. Pick one and apply it consistently.
 
----
+## Learn More
 
-### E-E-A-T & Further Reading
+To learn more about the [Data Lakehouse](/data-lakehouse/), read [The Lakehouse Built for Everyone](https://books.alexmerced.com/books/the-lakehouse-built-for-everyone/) by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

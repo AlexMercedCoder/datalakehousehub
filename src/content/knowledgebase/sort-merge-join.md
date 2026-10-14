@@ -39,4 +39,4 @@ Sorting files by the join key, or [Z-ordering](/knowledgebase/z-ordering/), impr
 The sort-merge join lets Spark join two large tables without holding either in memory, at the cost of a full shuffle and sort. Knowing when your engine picks it, and laying out Iceberg tables with matching bucket transforms on common join keys, lets you remove that shuffle for your most frequent large joins.
 
 ## Learn More
-To learn more about the Data Lakehouse, read [The Lakehouse Built for Everyone](https://books.alexmerced.com/books/the-lakehouse-built-for-everyone/) by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).
+To learn more about the [Data Lakehouse](/data-lakehouse/), read [The Lakehouse Built for Everyone](https://books.alexmerced.com/books/the-lakehouse-built-for-everyone/) by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

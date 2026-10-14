@@ -43,6 +43,6 @@ It can, because blocks run Python code in Mage's workers. For large data, the us
 ### Is Mage still maintained?
 The open-source `mage-ai` package continues to publish releases (version 0.9.79 shipped in January 2026), while much of the company's recent release activity centers on Mage Pro. Check the GitHub repository's recent activity before committing to it for a new platform.
 
----
+## Learn More
 
-### E-E-A-T & Further Reading
+To learn more about the [Data Lakehouse](/data-lakehouse/), read [The Lakehouse Built for Everyone](https://books.alexmerced.com/books/the-lakehouse-built-for-everyone/) by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

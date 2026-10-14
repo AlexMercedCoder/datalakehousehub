@@ -26,9 +26,9 @@ Records are serialized by converters. With Avro, Protobuf, or JSON Schema conver
 
 ## Kafka Connect and Apache Iceberg
 
-The Apache Iceberg project includes an Iceberg sink connector for Kafka Connect, built as part of the Iceberg build. It writes Parquet data files and commits them to [Apache Iceberg](/knowledgebase/apache-iceberg/) tables through any supported catalog, including Iceberg REST catalogs such as [Apache Polaris](/knowledgebase/apache-polaris/).
+The Apache Iceberg project includes an Iceberg sink connector for Kafka Connect, built as part of the Iceberg build. It writes data files in the table's format (Parquet by default) and commits them to [Apache Iceberg](/knowledgebase/apache-iceberg/) tables through any supported catalog, including Iceberg REST catalogs such as [Apache Polaris](/knowledgebase/apache-polaris/).
 
-Because an Iceberg commit must be atomic, workers do not commit on their own. Each worker writes files and reports them on a control topic, and a coordinator makes one commit per cycle (every five minutes by default) with the Kafka offsets stored in the Iceberg snapshot. That design gives exactly-once delivery from Kafka into the table. It also supports writing to multiple tables, automatic table creation, and schema evolution.
+Because an Iceberg commit must be atomic, workers do not commit on their own. Each worker writes files and reports them on a control topic, and a coordinator makes one commit per cycle (every five minutes by default) with the Kafka offsets stored in the Iceberg snapshot. That design gives exactly-once delivery from Kafka into the table. It can also fan records out to multiple tables, and it can create tables and evolve their schemas when those options are turned on (both are off by default).
 
 | | Kafka Connect Iceberg sink | Apache Flink | Spark Structured Streaming |
 |---|---|---|---|
@@ -41,8 +41,8 @@ Frequent commits create many small files, so plan for regular compaction on tabl
 
 ## Summary
 
-Kafka Connect replaces custom integration code with configured source and sink connectors running on a fault-tolerant worker cluster. With the Iceberg sink, it is the simplest way to land Kafka topics as lakehouse tables, while Flink or Spark take over when the data needs real transformation in flight.
+Kafka Connect replaces custom integration code with configured source and sink connectors running on a fault-tolerant worker cluster. With the Iceberg sink, it is a straightforward way to land Kafka topics as lakehouse tables, while Flink or Spark take over when the data needs real transformation in flight.
 
 
 ## Learn More
-To learn more about the Data Lakehouse, read [The Lakehouse Built for Everyone](https://books.alexmerced.com/books/the-lakehouse-built-for-everyone/) by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).
+To learn more about the [Data Lakehouse](/data-lakehouse/), read [The Lakehouse Built for Everyone](https://books.alexmerced.com/books/the-lakehouse-built-for-everyone/) by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

@@ -8,18 +8,18 @@ description: "Semi-structured data like JSON and XML carries its own tags and ne
 
 ## Introduction to Semi-Structured Data
 
-In data architecture, data generally falls into two extremes. **Structured Data** is highly rigid, perfectly organized into relational rows and columns. **[Unstructured Data](https://datalakehousehub.com/knowledgebase/unstructured-data/)** is completely chaotic, like a raw text file or a JPEG image.
+In data architecture, data generally falls into two extremes. **Structured Data** is organized into relational rows and columns with a fixed schema. **[Unstructured Data](https://datalakehousehub.com/knowledgebase/unstructured-data/)** has no predefined data model, like free-form text or a JPEG image.
 
-**Semi-Structured Data** occupies the middle ground. It does not obey the strict rules of a relational database (there are no predefined tables or columns), but it is not chaotic. It utilizes internal tags or markers to separate semantic elements and enforce a hierarchy of records and fields. 
+**Semi-Structured Data** occupies the middle ground. It does not obey the strict rules of a relational database (there are no predefined tables or columns), but it is not formless either. It uses internal tags or markers to separate semantic elements and enforce a hierarchy of records and fields. 
 
-It is the language of the modern web. Every time an application talks to an API, every time a web browser renders a page, and every time a microservice logs an error, the data is transmitted in a semi-structured format.
+It is common across the web. API calls, web pages, configuration files, and application logs are usually written in semi-structured formats.
 
 ## The Dominant Formats: XML and JSON
 
 Historically, there have been two primary formats for semi-structured data.
 
 ### XML (eXtensible Markup Language)
-Popularized in the late 1990s and 2000s, XML relies on heavy, verbose tags to structure data (similar to HTML).
+Popularized in the late 1990s and 2000s, XML uses opening and closing tags to structure data (similar to HTML).
 ```xml
 <Customer>
     <ID>123</ID>
@@ -29,10 +29,10 @@ Popularized in the late 1990s and 2000s, XML relies on heavy, verbose tags to st
     </Address>
 </Customer>
 ```
-While XML is extremely rigid and excellent for strict enterprise data exchange (like banking protocols), its verbosity makes files massive and slow to transmit over the internet.
+XML supports strict validation through XML Schema, which suits formal enterprise data exchange (like many financial messaging standards), but its verbosity makes files larger than the equivalent JSON.
 
 ### JSON (JavaScript Object Notation)
-Created as a lightweight alternative to XML, JSON completely took over the internet. It uses simple key-value pairs and arrays, making it incredibly easy for both humans and computers to read.
+JSON was popularized in the 2000s as a lighter alternative to XML and became the most common format for web APIs. It uses simple key-value pairs and arrays, making it easy for both humans and computers to read.
 ```json
 {
   "customer_id": 123,
@@ -42,33 +42,37 @@ Created as a lightweight alternative to XML, JSON completely took over the inter
   }
 }
 ```
-JSON is the undisputed standard for REST APIs, web application configurations, and NoSQL databases.
+JSON is the usual format for REST APIs, many application configurations, and document databases.
 
-## The Superpower: Schema Evolution and Nesting
+## The Main Strength: Schema Evolution and Nesting
 
-The primary reason software engineers love Semi-Structured data is **flexibility**. 
+The main reason software engineers like semi-structured data is **flexibility**. 
 
-If you use a relational database, adding a `phone_number` field requires executing an `ALTER TABLE` command. This locks the database, risks downtime, and takes time.
+If you use a relational database, adding a `phone_number` field requires an `ALTER TABLE` command, which in some databases and for some changes can lock the table or require a migration.
 
-If you use a JSON document in a NoSQL database (like MongoDB), you simply add the `"phone_number": "555-1234"` key to the next document you save. The database doesn't care. It accepts it instantly. This schema-less nature allows rapid, agile software development.
+If you use a JSON document in a NoSQL database (like MongoDB), you simply add the `"phone_number": "555-1234"` key to the next document you save. The database accepts it without a schema change. This flexible schema supports fast iteration during development.
 
-Furthermore, Semi-Structured data allows for **Nesting**. A relational database cannot store a list of items inside a single cell; you must create a separate table and use a `JOIN`. In JSON, you simply create an array within the document: `"purchases": ["Laptop", "Mouse"]`. 
+Furthermore, Semi-Structured data allows for **Nesting**. In a traditional normalized relational design, a list of items goes in a separate table joined back to the parent (although many modern databases also support array columns). In JSON, you simply create an array within the document: `"purchases": ["Laptop", "Mouse"]`. 
 
 ## The Analytical Challenge: The "Shredding" Problem
 
-While JSON is a dream for software engineers building web apps, it is a nightmare for data analysts. 
+While JSON is convenient for software engineers building web apps, it is harder for data analysts to work with. 
 
-Data warehouses (like Snowflake or BigQuery) are designed to run fast aggregations over flat columns. If a data engineer dumps a massive JSON string containing deeply nested arrays into a single database column, the analyst cannot easily query it using standard SQL. 
+Data warehouses (like Snowflake or BigQuery) are designed to run fast aggregations over flat columns. If a data engineer loads a large JSON string containing deeply nested arrays into a single text column, the analyst cannot easily query it using standard SQL. 
 
-Historically, data engineers had to build brutal ETL pipelines to "shred" or "flatten" the JSON. They wrote Python code to extract the nested `city` field from the JSON and map it to a flat `city` column in a relational table. 
+Historically, data engineers built ETL pipelines to "shred" or "flatten" the JSON. They wrote Python code to extract the nested `city` field from the JSON and map it to a flat `city` column in a relational table. 
 
 ## Modern Solutions in the Lakehouse
 
-Modern [Data Lakehouse](https://iceberglakehouse.com/iceberg/data-lakehouse/) engines have largely solved the JSON problem.
+Modern [Data Lakehouse](https://iceberglakehouse.com/iceberg/data-lakehouse/) engines make JSON much easier to work with.
 
-1.  **Native JSON Support**: Engines like [Dremio](https://opendatalakehouse.com/kb/dremio/), Trino, and Snowflake now feature native functions to query JSON directly. An analyst can write SQL like `SELECT raw_data:address.city FROM logs` to instantly extract the deeply nested value without flattening it.
-2.  **Columnar JSON**: Because standard JSON text files are terrible for analytical scanning, tools often convert JSON into **[Apache Parquet](https://iceberglakehouse.com/iceberg/iceberg-parquet/)**. Parquet is capable of preserving the nested, semi-structured hierarchy of the JSON while applying columnar compression to it, providing the flexibility of JSON with the analytical speed of a relational database.
+1.  **Native JSON Support**: Engines like [Dremio](https://opendatalakehouse.com/kb/dremio/), Trino, and Snowflake provide functions and syntax to query nested and JSON data directly. In Snowflake, for example, an analyst can write `SELECT raw_data:address.city FROM logs` to extract a nested value without flattening it first.
+2.  **Columnar JSON**: Because JSON text files are slow to scan for analytics, tools often convert JSON into **[Apache Parquet](https://iceberglakehouse.com/iceberg/iceberg-parquet/)**. Parquet is capable of preserving the nested, semi-structured hierarchy of the JSON while applying columnar compression to it, keeping the nested structure while making analytical scans much faster.
 
 ## Conclusion
 
-Semi-Structured data represents the inevitable compromise between the rigidity required by analytical databases and the flexibility required by agile software development. While it introduces complexity into the data engineering pipeline, modern lakehouse architectures and advanced SQL dialects have made it possible to ingest, query, and analyze massive volumes of JSON seamlessly, bridging the gap between operational applications and enterprise analytics.
+Semi-Structured data represents a compromise between the rigidity required by analytical databases and the flexibility required by agile software development. While it introduces complexity into the data engineering pipeline, modern lakehouse architectures and advanced SQL dialects have made it practical to ingest, query, and analyze large volumes of JSON, narrowing the gap between operational applications and enterprise analytics.
+
+## Learn More
+
+To learn more about the [Data Lakehouse](/data-lakehouse/), read [The Lakehouse Built for Everyone](https://books.alexmerced.com/books/the-lakehouse-built-for-everyone/) by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

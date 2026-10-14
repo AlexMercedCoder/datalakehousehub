@@ -4,44 +4,43 @@ meta_title: "What is ReAct Framework? | Expert Data Lakehouse & AI Glossary"
 description: "ReAct (Reason and Act) is a prompting pattern where an AI agent alternates reasoning steps with tool calls. See how it lets agents run multi-step data analysis."
 ---
 
-## What is ReAct Framework?
+ReAct (short for Reasoning and Acting) is a prompting pattern for large language models in which the model alternates between writing out a reasoning step and taking an action, such as calling a search API or running a query, then reads the result before deciding what to do next. It was introduced in the paper "ReAct: Synergizing Reasoning and Acting in Language Models" (Yao et al., first posted October 2022 and published at ICLR 2023). ReAct is not a software library; it is a loop structure that many agent frameworks implement. It is unrelated to the React JavaScript UI library.
 
-An operational framework allowing autonomous agents to interleave reasoning processes directly with external programmatic tool actions. 
+## How It Works
 
-In the rapidly evolving landscape of data engineering and artificial intelligence, **ReAct Framework** has emerged as a critical foundational component. As organizations transition from legacy, monolithic architectures to decoupled, scalable environments, understanding the role of ReAct Framework is essential for building future-proof infrastructure. This capability serves as a critical enabler in modern data ecosystems, explicitly guiding architecture toward absolute efficiency and scale. When correctly implemented, ReAct Framework dynamically drives analytical workloads and structurally limits administrative technical debt.
+A ReAct agent runs a loop until it reaches an answer or a step limit:
 
-## Core Architecture and Mechanics
+1. **Thought:** the model writes a short reasoning step about what it knows and what it needs next.
+2. **Action:** the model emits a structured call to one of its available tools, for example `search("Apache Polaris graduation")` or `run_sql("SELECT ...")`.
+3. **Observation:** the application executes the tool and appends the result to the prompt.
+4. The model writes the next Thought based on the new observation, and the cycle repeats.
 
-To understand the practical application of ReAct Framework, it is crucial to systematically examine its fundamental operational behaviors and structural design:
+The paper tested this on question answering (HotpotQA), fact verification (FEVER), and interactive decision-making tasks (ALFWorld and WebShop). On the knowledge tasks, letting the model look facts up through a simple Wikipedia API reduced the hallucination and error propagation seen with pure [chain-of-thought](/knowledgebase/chain-of-thought/) reasoning, and the interleaved traces made the model's behavior easier for people to inspect.
 
-* **Orchestrates complex cognitive loops where an AI determines steps, calls external tools, and evaluates results autonomously.** This principle ensures that systems can scale horizontally without facing artificial limitations or bottlenecks.
-* **Manages and compresses vast amounts of historical context to fit within the strict memory constraints of the model's context window.** By adopting this mechanic, engineers can bypass traditional processing constraints and deliver substantially faster time-to-insight.
-* **Abstracts the raw API interactions with LLM providers into modular, reusable chaining components.** This allows the overarching architecture to remain highly resilient while serving concurrent workloads natively.
+| Approach | Reasons in text | Uses external tools | Main weakness |
+|---|---|---|---|
+| Chain-of-thought | Yes | No | Can reason confidently from wrong facts |
+| Action-only agent | No | Yes | Hard to follow or debug its choices |
+| ReAct | Yes, between actions | Yes | More model calls, longer prompts |
 
-Operating through these principles enables seamless horizontal expansion across varying cloud environments. It integrates effortlessly with adjacent technologies like [Apache Iceberg](/apache-iceberg/), dbt, and advanced vector search algorithms.
+Modern models expose native [tool calling](/knowledgebase/tool-calling/), so the Action step is usually a structured function call rather than parsed text, but the reason-act-observe loop is the same. Most [agentic frameworks](/knowledgebase/agentic-frameworks/), including [LangChain](/knowledgebase/langchain/) and [LlamaIndex](/knowledgebase/llamaindex/), ship a ReAct-style agent.
 
-## Why ReAct Framework Matters in the Modern Data Stack
+## ReAct in the Lakehouse
 
-These frameworks accelerate the transition from simple chatbots to autonomous agents capable of executing multi-step analytical workloads, reasoning through failures, and writing distinct output code.
+The pattern fits analytics well, because answering a business question is rarely one query. An agent connected to a lakehouse through tools (often exposed over MCP) might:
 
-For modern enterprises managing decentralized teams, the implementation of ReAct Framework eliminates significant architectural friction. Teams are explicitly empowered to operate autonomously against reliable technical foundations without dynamically disrupting other isolated workflows. It shifts manual engineering overhead into an autonomous, software-driven paradigm, keeping Total Cost of Ownership (TCO) extremely low.
+* Think that it needs to find where revenue data lives, then search the catalog.
+* Observe that a `gold.revenue_daily` view exists, then read its schema and the [semantic layer](/knowledgebase/semantic-layer/) definition of revenue.
+* Write SQL against that view, run it on an engine such as Dremio, Trino, or DuckDB over [Apache Iceberg](/knowledgebase/apache-iceberg/) tables, and observe the result.
+* Notice a gap in the data, run a follow-up query, and then answer.
 
-### Key Benefits
-- **Unprecedented Scalability:** Automatically adapts to massive fluctuations in data volume and query concurrency.
-- **Vendor Neutrality:** Strongly aligns with open-source frameworks, preventing aggressive vendor lock-in.
-- **Enhanced Observability:** Exposes deep, structural metadata allowing engineers to monitor and trace pipelines comprehensively.
+Each observation grounds the next step in real metadata and query results instead of the model's guesses. The reasoning trace also serves as an audit record of how an answer was produced, which matters for governed analytics. The tradeoffs are cost and latency, since every loop is another model call, and safety, since an agent that can act needs scoped permissions and step limits.
 
-## Frequently Asked Questions
+The Hub covers the agent side in [What Are AI Agents](/blog/2025-04-what-are-ai-agents/) and [AI Agent Frameworks: Benefits and Limitations](/blog/2025-04-ai-agent-frameworks/), and connecting agents to data in [Tools in MCP](/blog/2025-04-tools-in-mcp/).
 
-### What does 'Tool Calling' mean for an AI?
-It means the AI can recognize when it lacks information and autonomously execute a Python script, SQL query, or API call to fetch the necessary data before continuing. This distinction is particularly important when evaluating total architecture costs and performance benchmarks.
+## Summary
 
-### What is the ReAct framework?
-ReAct stands for Reason and Act; it is a prompting paradigm that forces the model to articulate its thought process before taking an external action. The open ecosystem continues to evolve rapidly, ensuring backward compatibility while introducing powerful new primitives.
+ReAct interleaves reasoning steps with tool actions and observations, so a model can gather facts as it goes rather than answering from memory alone. It is the basic loop behind most data agents that explore a catalog, run queries, and refine their answers.
 
-### How does ReAct Framework impact data governance and security?
-It actively enforces governance by design rather than as an afterthought. Native logging, role-based access controls (RBAC), and structured access pathways provide immediate visibility into security boundaries and regulatory compliance.
-
----
-
-### E-E-A-T & Further Reading
+## Learn More
+To learn more about the [Data Lakehouse](/data-lakehouse/), read [The Lakehouse Built for Everyone](https://books.alexmerced.com/books/the-lakehouse-built-for-everyone/) by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

@@ -52,4 +52,4 @@ For more, see [Introduction to Data Engineering Concepts: Scheduling and Workflo
 Cron is a dependable way to run a command at a fixed time, and it remains a good fit for isolated system tasks and simple maintenance jobs. Once a [data lakehouse](/knowledgebase/data-lakehouse/) pipeline has dependencies, quality gates, retries, or backfills, a dedicated [orchestration](/knowledgebase/orchestration/) tool is the better choice, usually still scheduled with a cron expression.
 
 ## Learn More
-To learn more about the Data Lakehouse, read [The Lakehouse Built for Everyone](https://books.alexmerced.com/books/the-lakehouse-built-for-everyone/) by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).
+To learn more about the [Data Lakehouse](/data-lakehouse/), read [The Lakehouse Built for Everyone](https://books.alexmerced.com/books/the-lakehouse-built-for-everyone/) by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

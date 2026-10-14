@@ -6,42 +6,42 @@ description: "A transactional layer adds ACID guarantees to files on a data lake
 
 ## What is Transactional Layer?
 
-A specialized layer built on top of data lakes that provides ACID transaction guarantees to data operations. 
+A transactional layer is the part of a lakehouse, usually an open table format such as Apache Iceberg, Delta Lake, or Apache Hudi, that adds ACID transactions to data stored as files in a data lake. 
 
-In the rapidly evolving landscape of data engineering and artificial intelligence, **Transactional Layer** has emerged as a critical foundational component. As organizations transition from legacy, monolithic architectures to decoupled, scalable environments, understanding the role of Transactional Layer is essential for building future-proof infrastructure. This capability serves as a critical enabler in modern data ecosystems, explicitly guiding architecture toward absolute efficiency and scale. When correctly implemented, Transactional Layer dynamically drives analytical workloads and structurally limits administrative technical debt.
+Object storage on its own has no notion of a table or a transaction. If a job writes half its files and then fails, readers can see partial results, and two writers can overwrite each other. A **Transactional Layer** solves this by tracking which files belong to each version of a table in metadata and changing versions with an atomic commit.
 
 ## Core Architecture and Mechanics
 
-To understand the practical application of Transactional Layer, it is crucial to systematically examine its fundamental operational behaviors and structural design:
+A transactional layer typically works through these mechanisms:
 
-* **Utilizes open table formats to provide complete ACID transactional compliance directly on top of massive, raw cloud object storage.** This principle ensures that systems can scale horizontally without facing artificial limitations or bottlenecks.
-* **Maintains an explicit hierarchical tree of metadata manifests to track exact file states and enable precise time-travel querying.** By adopting this mechanic, engineers can bypass traditional processing constraints and deliver substantially faster time-to-insight.
-* **Decouples the physical storage layout from the logical table structure using techniques like hidden partitioning.** This allows the overarching architecture to remain highly resilient while serving concurrent workloads natively.
+* **Uses open table formats to provide ACID transactions on top of cloud object storage.** Each write produces a new table version, and the switch to that version is a single atomic operation, so readers see either all of a commit or none of it.
+* **Maintains a tree of metadata files (in Iceberg, metadata files, manifest lists, and manifests) that records which data files make up each snapshot.** Because older snapshots are kept until they expire, engines can run time-travel queries against earlier versions.
+* **Coordinates concurrent writers with optimistic concurrency control.** Writers prepare their changes independently and commit only if no conflicting change happened in the meantime; otherwise they retry.
 
-Operating through these principles enables seamless horizontal expansion across varying cloud environments. It integrates effortlessly with adjacent technologies like [Apache Iceberg](/apache-iceberg/), dbt, and advanced vector search algorithms.
+Engines such as Spark, Flink, Trino, and Dremio implement these commit protocols, so they can safely read and write the same [Apache Iceberg](/knowledgebase/apache-iceberg/) tables.
 
 ## Why Transactional Layer Matters in the Modern Data Stack
 
-The open lakehouse structure eliminates vendor lock-in and drastically reduces storage costs by allowing any compatible distributed engine to query the exact same massive datasets without requiring duplication.
+Without a transactional layer, a data lake cannot safely support updates, deletes, or concurrent writes. With one, many engines can work on the same tables in object storage, which reduces the need to copy data into separate warehouses.
 
-For modern enterprises managing decentralized teams, the implementation of Transactional Layer eliminates significant architectural friction. Teams are explicitly empowered to operate autonomously against reliable technical foundations without dynamically disrupting other isolated workflows. It shifts manual engineering overhead into an autonomous, software-driven paradigm, keeping Total Cost of Ownership (TCO) extremely low.
+For teams sharing data, transactions mean one team's pipeline can write while another team queries, without readers seeing half-finished results. Operations like `MERGE`, `UPDATE`, and `DELETE` also become possible on lake data, which matters for change data capture and privacy deletion requests.
 
 ### Key Benefits
-- **Unprecedented Scalability:** Automatically adapts to massive fluctuations in data volume and query concurrency.
-- **Vendor Neutrality:** Strongly aligns with open-source frameworks, preventing aggressive vendor lock-in.
-- **Enhanced Observability:** Exposes deep, structural metadata allowing engineers to monitor and trace pipelines comprehensively.
+- **Consistent Reads:** Queries see a committed snapshot, not partial writes.
+- **Vendor Neutrality:** Open table formats let multiple engines share the same tables.
+- **Auditability:** Snapshot history shows what changed in each commit and supports time travel and rollback.
 
 ## Frequently Asked Questions
 
 ### What makes a Lakehouse different from a Data Lake?
-A standard data lake is just a collection of files. A lakehouse adds a metadata layer that provides warehouse-like features (transactions, schema enforcement) directly to those files. This distinction is particularly important when evaluating total architecture costs and performance benchmarks.
+A standard data lake is just a collection of files. A lakehouse adds a metadata layer that provides warehouse-like features (transactions, schema enforcement) directly to those files. The transactional layer is the main piece that turns a data lake into a lakehouse.
 
 ### Why use an Open Table Format?
-Open formats like Apache Iceberg ensure that your data is not trapped inside a proprietary database ecosystem; it remains universally accessible. The open ecosystem continues to evolve rapidly, ensuring backward compatibility while introducing powerful new primitives.
+Open formats like Apache Iceberg keep your data readable by many engines instead of one proprietary database. The format is defined by a public specification, so any engine that implements it can participate in the same transactions.
 
 ### How does Transactional Layer impact data governance and security?
-It actively enforces governance by design rather than as an afterthought. Native logging, role-based access controls (RBAC), and structured access pathways provide immediate visibility into security boundaries and regulatory compliance.
+The snapshot history gives an audit trail of changes, and row-level deletes support compliance requests such as removing a customer's data. Access control itself is usually handled by the catalog or query engine rather than the table format.
 
----
+## Learn More
 
-### E-E-A-T & Further Reading
+To learn more about the [Data Lakehouse](/data-lakehouse/), read [The Lakehouse Built for Everyone](https://books.alexmerced.com/books/the-lakehouse-built-for-everyone/) by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

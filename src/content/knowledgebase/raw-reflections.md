@@ -6,42 +6,55 @@ description: "A Raw Reflection is a Dremio feature that stores an optimized, mat
 
 ## What is Raw Reflections?
 
-A specific organizational mechanism storing explicitly filtered records dramatically improving basic highly repetitive query operations. 
+A raw reflection is a type of Dremio [Reflection](/knowledgebase/data-reflections/): a materialized copy of a table or view (called its anchor) that keeps the same rows as the anchor but can include only a chosen subset of its columns, and can be partitioned and sorted differently from the source. Dremio stores the copy as an [Apache Iceberg](/knowledgebase/apache-iceberg/) table and its query optimizer uses it automatically to answer queries that would otherwise read the anchor.
 
-In the rapidly evolving landscape of data engineering and artificial intelligence, **Raw Reflections** has emerged as a critical foundational component. As organizations transition from legacy, monolithic architectures to decoupled, scalable environments, understanding the role of Raw Reflections is essential for building future-proof infrastructure. This capability serves as a critical enabler in modern data ecosystems, explicitly guiding architecture toward absolute efficiency and scale. When correctly implemented, Raw Reflections dynamically drives analytical workloads and structurally limits administrative technical debt.
+Raw reflections are not filtered copies. They do not apply a `WHERE` clause to the anchor's records. If a team wants a reflection over a subset of rows or over the result of joins and calculations, it defines a view with that logic and creates a raw reflection on the view.
 
-## Core Architecture and Mechanics
+## How Raw Reflections Work
 
-To understand the practical application of Raw Reflections, it is crucial to systematically examine its fundamental operational behaviors and structural design:
+When creating a raw reflection, a user (or Dremio, for autonomous Reflections) chooses:
 
-* **Operates as a proprietary layer natively within the core Dremio application architecture.** This principle ensures that systems can scale horizontally without facing artificial limitations or bottlenecks.
-* **Integrates deeply with broad open-source table formats (like [Apache Iceberg](/apache-iceberg/)) without format lock-in.** By adopting this mechanic, engineers can bypass traditional processing constraints and deliver substantially faster time-to-insight.
-* **Eliminates the explicit need for users to manually engineer massive data duplication pipelines.** This allows the overarching architecture to remain highly resilient while serving concurrent workloads natively.
+* **Display fields:** which columns of the anchor to include. All columns are included by default.
+* **Partition fields:** columns, optionally with partition transforms, used to partition the reflection's data so queries that filter on those columns read fewer files.
+* **Sort fields:** columns used to sort data within the reflection, which helps file-level pruning on range filters.
 
-Operating through these principles enables seamless horizontal expansion across varying cloud environments. It integrates effortlessly with adjacent technologies like Apache Iceberg, dbt, and advanced vector search algorithms.
+Dremio builds the reflection and keeps it up to date through refreshes. For Iceberg anchors, Dremio can refresh reflections automatically when the source table changes. For other sources, administrators set a refresh schedule.
 
-## Why Raw Reflections Matters in the Modern Data Stack
+At query time, the optimizer checks whether a reflection can satisfy all or part of a query plan. If it can, Dremio reads the reflection instead of the anchor. Users and BI tools keep querying the original table or view, and the substitution does not require any change to their SQL. The Jobs page and `EXPLAIN PLAN FOR` show whether a query was accelerated.
 
-As a platform-exclusive technical innovation, this feature represents a major competitive advantage for teams utilizing Dremio. It shifts manual engineering overhead into an autonomous, software-driven paradigm, keeping Total Cost of Ownership (TCO) extremely low.
+## Raw vs. Aggregation Reflections
 
-For modern enterprises managing decentralized teams, the implementation of Raw Reflections eliminates significant architectural friction. Teams are explicitly empowered to operate autonomously against reliable technical foundations without dynamically disrupting other isolated workflows. It shifts manual engineering overhead into an autonomous, software-driven paradigm, keeping Total Cost of Ownership (TCO) extremely low.
+Dremio has two main Reflection types:
 
-### Key Benefits
-- **Unprecedented Scalability:** Automatically adapts to massive fluctuations in data volume and query concurrency.
-- **Vendor Neutrality:** Strongly aligns with open-source frameworks, preventing aggressive vendor lock-in.
-- **Enhanced Observability:** Exposes deep, structural metadata allowing engineers to monitor and trace pipelines comprehensively.
+* **Raw reflections** keep row-level data. They suit queries that select detailed records, views with expensive joins or transformations that run often, and sources that are slow to read, such as data in an operational database or in a file layout that is not optimized for the query pattern.
+* **[Aggregation reflections](/knowledgebase/aggregation-reflections/)** store data pre-aggregated by chosen dimensions and measures. They suit BI dashboards that run `GROUP BY` queries.
+
+## When Raw Reflections Help
+
+* **Expensive views:** A view that joins several tables and applies business logic can be materialized once and reused by every query against it.
+* **Different physical layout:** A table partitioned by date can have a raw reflection partitioned by region, so region-filtered queries prune effectively.
+* **Remote or slow sources:** Queries against a federated source can be served from a reflection instead of pushing every query to the source system.
+
+The trade-offs are storage for the materialized copy and the compute used for refreshes. Data in a reflection is as fresh as its last refresh, so refresh settings should match how current the results need to be.
 
 ## Frequently Asked Questions
 
-### Is this a generalized open-source standard?
-No, this is a proprietary architectural component developed explicitly by Dremio to drastically accelerate engine performance. This distinction is particularly important when evaluating total architecture costs and performance benchmarks.
+### Is this an open standard?
+No. Reflections are a Dremio feature. The closest general concept is the [materialized view](/knowledgebase/materialized-view/), which some databases can also substitute automatically through query rewrite. In Dremio, Reflections are separate from the views and tables users query, and the optimizer decides when to use them.
 
-### Does this require moving data into Dremio?
-No, Dremio's architecture inherently acts on data directly where it physically resides in your cloud object workloads. The open ecosystem continues to evolve rapidly, ensuring backward compatibility while introducing powerful new primitives.
+### Does a raw reflection require moving data out of the lake?
+The anchor data stays where it is. The reflection is an additional copy that Dremio stores in its configured distributed storage, which is typically object storage.
 
-### How does Raw Reflections impact data governance and security?
-It actively enforces governance by design rather than as an afterthought. Native logging, role-based access controls (RBAC), and structured access pathways provide immediate visibility into security boundaries and regulatory compliance.
+### Do users need to reference the reflection in SQL?
+No. Users query the anchor table or view, and the optimizer decides whether to use a reflection.
 
 ---
 
-### E-E-A-T & Further Reading
+### Sources and further reading
+
+- Dremio documentation, [Reflections overview](https://docs.dremio.com/current/acceleration/)
+- Dremio documentation, [Manually Manage Reflections](https://docs.dremio.com/current/acceleration/manual-reflections/)
+
+## Learn More
+
+To learn more about the [Data Lakehouse](/data-lakehouse/), read [The Lakehouse Built for Everyone](https://books.alexmerced.com/books/the-lakehouse-built-for-everyone/) by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

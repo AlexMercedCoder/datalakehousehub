@@ -6,15 +6,15 @@ description: "Soda is a data quality tool that runs checks written in the YAML-b
 
 # What is Soda?
 
-Soda is an open-source data quality and observability framework designed to detect data issues incredibly early in the pipeline lifecycle. Much like Great Expectations, Soda focuses entirely on ensuring data reliability. However, while Great Expectations relies heavily on programmatic Python configurations and Pandas/Spark execution, Soda differentiates itself by utilizing a highly declarative, YAML-based syntax known as SodaCL (Soda Checks Language) and aggressively optimizing for direct execution against massive cloud data warehouses.
+Soda is a data quality and observability platform, with an open-source core (Soda Core) and a commercial Soda Cloud service, designed to catch data issues early in the pipeline. Like Great Expectations, Soda focuses on data reliability. Where Great Expectations is centered on Python-defined expectations, Soda is known for its declarative, YAML-based syntax, SodaCL (Soda Checks Language), and for running checks as SQL directly in the data warehouse or lakehouse engine.
 
-As organizations scale their Data Lakehouses, the sheer volume of data makes it impossible for data engineers to manually monitor tables for silent corruption (like sudden spikes in NULL values, drifting schema distributions, or missing foreign key relationships). Soda automates this monitoring, allowing data engineers, analysts, and even business users to collaboratively write simple checks that execute continuously.
+As organizations scale their Data Lakehouses, there is too much data for engineers to monitor tables by hand for silent problems (like sudden spikes in NULL values, schema changes, or missing foreign key relationships). Soda automates this monitoring, letting data engineers, analysts, and business users write simple checks that run on a schedule or in pipelines.
 
 ## Soda Checks Language (SodaCL)
 
-The core architectural innovation of Soda is the Soda Checks Language. It is explicitly designed to be human-readable, entirely lowering the barrier to entry for defining data quality constraints.
+A central feature of Soda is the Soda Checks Language. It is designed to be human-readable, which lowers the barrier to defining data quality rules.
 
-Instead of writing complex Python unit tests, a user defines their assertions in a simple YAML configuration file. For example:
+Instead of writing Python tests, a user defines assertions in a YAML file. For example:
 ```yaml
 checks for sales_data:
   - row_count > 0
@@ -24,26 +24,26 @@ checks for sales_data:
       fail: when required column missing [transaction_date]
 ```
 
-When a pipeline orchestrator (like Apache Airflow) triggers a Soda scan, the Soda engine reads the YAML file. It automatically translates those simple human-readable rules into highly optimized, dialect-specific SQL (e.g., Snowflake SQL or Trino SQL). It pushes the heavy computational execution directly down into the database where the data resides, instantly retrieving the pass/fail results.
+When a pipeline orchestrator (like Apache Airflow) triggers a Soda scan, the Soda engine reads the YAML file. It translates those rules into dialect-specific SQL (e.g., Snowflake SQL or Trino SQL) and runs the queries in the database where the data resides, then reports pass, warn, or fail results.
 
 ## Anomaly Detection and Automated Baselines
 
-Defining static thresholds (e.g., `row_count > 1000`) is effective for simple tables, but fails completely on highly dynamic operational data. A table might ingest 50,000 rows on a Tuesday, but only 2,000 rows on a Sunday. If an engineer sets a static threshold of 10,000 rows, the pipeline will falsely alert every weekend.
+Static thresholds (e.g., `row_count > 1000`) work for simple tables, but they fit poorly on data whose volume varies a lot. A table might ingest 50,000 rows on a Tuesday, but only 2,000 rows on a Sunday. If an engineer sets a static threshold of 10,000 rows, the pipeline will falsely alert every weekend.
 
-Soda resolves this through built-in Anomaly Detection. Rather than requiring hardcoded limits, Soda continuously profiles the database tables and utilizes machine learning algorithms to establish historical baselines. An engineer can simply write `- anomaly score for row_count < 1`. Soda will evaluate the current row count against the specific day-of-the-week historical trend, generating alerts only when the data volume deviates statistically from its normal operational pattern.
+Soda addresses this with anomaly detection. Rather than requiring hardcoded limits, Soda records metric values over time and uses statistical models to learn each metric's normal range. In SodaCL this was written as a check such as `- anomaly detection for row_count`, and current Soda releases offer it as metric monitoring in Soda Cloud. Soda compares new values with the learned pattern and alerts when a value falls outside it.
 
 ## Data Contracts and CI/CD Integration
 
-In massive, decentralized architectures (like a Data Mesh), data pipelines frequently break because an upstream software engineer alters a database schema without notifying the downstream data engineering team.
+In decentralized architectures (like a Data Mesh), data pipelines often break because an upstream software engineer changes a database schema without telling the downstream data engineering team.
 
-Soda introduces the concept of strict Data Contracts. A Data Contract is a definitive agreement between the software engineering team (the data producers) and the analytical team (the data consumers) regarding exactly what the data schema and quality must look like.
+Soda supports Data Contracts. A Data Contract is an agreement between the software engineering team (the data producers) and the analytical team (the data consumers) about what the data schema and quality must look like.
 
-Soda natively integrates into the software deployment CI/CD pipeline (like GitHub Actions). If a software engineer submits a Pull Request altering a PostgreSQL schema, Soda automatically executes its checks. If the proposed change breaks the agreed-upon Data Contract (for instance, dropping a critical `revenue` column), Soda immediately blocks the software deployment. This architecture aggressively shifts data quality testing "to the left," preventing corrupting changes from ever reaching production environments.
+Soda scans can run inside CI/CD pipelines (like GitHub Actions). When a pull request changes a pipeline or schema, the CI job can run Soda checks against a test or staging dataset. If the change breaks the agreed Data Contract (for instance, dropping a required `revenue` column), the failed check fails the build. This shifts data quality testing "to the left," so many breaking changes are caught before they reach production.
 
 ## Summary of Technical Value
 
-Soda significantly streamlined the implementation of enterprise data quality. By introducing a highly accessible YAML syntax, powerful anomaly detection, and deep integration into software CI/CD pipelines, Soda empowers both technical and non-technical users to collaboratively guarantee data reliability. It is a fundamental framework for maintaining strict data contracts and ensuring absolute trust in the modern Open [Data Lakehouse](/data-lakehouse/).
+Soda makes enterprise data quality checks easier to adopt. With a readable YAML syntax, anomaly detection, and support for running in CI/CD pipelines, Soda lets technical and non-technical users work together on data reliability. It is a practical tool for enforcing data contracts and building trust in data in the open [Data Lakehouse](/knowledgebase/data-lakehouse/).
 
 
 ## Learn More
-To learn more about the Data Lakehouse, read [The Lakehouse Built for Everyone](https://books.alexmerced.com/books/the-lakehouse-built-for-everyone/) by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).
+To learn more about the [Data Lakehouse](/data-lakehouse/), read [The Lakehouse Built for Everyone](https://books.alexmerced.com/books/the-lakehouse-built-for-everyone/) by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

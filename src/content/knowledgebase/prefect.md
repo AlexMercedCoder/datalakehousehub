@@ -42,6 +42,6 @@ No. Prefect coordinates them. dbt, Spark, Dremio, or Flink do the data processin
 ### What does the Dagster acquisition change?
 As announced, Dagster keeps its name, license, and product line. Teams should watch release cadence and roadmap signals rather than assume either product will be merged soon.
 
----
+## Learn More
 
-### E-E-A-T & Further Reading
+To learn more about the [Data Lakehouse](/data-lakehouse/), read [The Lakehouse Built for Everyone](https://books.alexmerced.com/books/the-lakehouse-built-for-everyone/) by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

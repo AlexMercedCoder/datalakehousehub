@@ -6,42 +6,42 @@ description: "Dremio Cloud is Dremio's fully managed lakehouse service. It queri
 
 ## What is Dremio Cloud?
 
-The completely managed service platform executing analytics without generating challenging inherent physical maintenance requirements whatsoever. 
+Dremio Cloud is Dremio's managed lakehouse service: Dremio runs the platform, so teams query their data without operating query clusters themselves.
 
-In the rapidly evolving landscape of data engineering and artificial intelligence, **Dremio Cloud** has emerged as a critical foundational component. As organizations transition from legacy, monolithic architectures to decoupled, scalable environments, understanding the role of Dremio Cloud is essential for building future-proof infrastructure. This capability serves as a critical enabler in modern data ecosystems, explicitly guiding architecture toward absolute efficiency and scale. When correctly implemented, Dremio Cloud dynamically drives analytical workloads and structurally limits administrative technical debt.
+**Dremio Cloud** is the hosted version of Dremio, which describes itself as an agentic lakehouse platform. As organizations move from monolithic warehouses to architectures that separate storage and compute, Dremio Cloud provides a SQL query engine, a built-in catalog for Apache Iceberg tables, and a semantic layer in one service, which reduces the infrastructure a data team has to administer.
 
 ## Core Architecture and Mechanics
 
-To understand the practical application of Dremio Cloud, it is crucial to systematically examine its fundamental operational behaviors and structural design:
+Dremio Cloud's main components work as follows:
 
-* **Operates as a proprietary layer natively within the core Dremio application architecture.** This principle ensures that systems can scale horizontally without facing artificial limitations or bottlenecks.
-* **Integrates deeply with broad open-source table formats (like [Apache Iceberg](/apache-iceberg/)) without format lock-in.** By adopting this mechanic, engineers can bypass traditional processing constraints and deliver substantially faster time-to-insight.
-* **Eliminates the explicit need for users to manually engineer massive data duplication pipelines.** This allows the overarching architecture to remain highly resilient while serving concurrent workloads natively.
+* **Runs as a service operated by Dremio.** Dremio manages the control plane and query engines, and engines can scale with workload demand instead of being sized by hand.
+* **Stores tables in open formats (like [Apache Iceberg](/apache-iceberg/)).** Dremio's Open Catalog organizes Iceberg tables, and other tools can load data into it, so the data is not locked into a proprietary format.
+* **Queries data where it lives.** Dremio Cloud can connect to external catalogs, object storage, and databases and present them as one view, which reduces the need for pipelines that copy data into a separate warehouse. Reflections (precomputed, automatically maintained copies of query results) speed up common queries.
 
-Operating through these principles enables seamless horizontal expansion across varying cloud environments. It integrates effortlessly with adjacent technologies like Apache Iceberg, dbt, and advanced vector search algorithms.
+Dremio also works with adjacent tools such as dbt, BI tools, and Python clients through standard interfaces like JDBC, ODBC, and Arrow Flight.
 
 ## Why Dremio Cloud Matters in the Modern Data Stack
 
-As a platform-exclusive technical innovation, this feature represents a major competitive advantage for teams utilizing Dremio. It shifts manual engineering overhead into an autonomous, software-driven paradigm, keeping Total Cost of Ownership (TCO) extremely low.
+Dremio Cloud is a commercial service, not an open standard. Its value is that it moves cluster operations, upgrades, and much of query acceleration from the data team to the platform, which can lower Total Cost of Ownership (TCO).
 
-For modern enterprises managing decentralized teams, the implementation of Dremio Cloud eliminates significant architectural friction. Teams are explicitly empowered to operate autonomously against reliable technical foundations without dynamically disrupting other isolated workflows. It shifts manual engineering overhead into an autonomous, software-driven paradigm, keeping Total Cost of Ownership (TCO) extremely low.
+For enterprises with decentralized teams, Dremio Cloud lets each team work against shared, governed data without disrupting other teams' workloads. Its semantic layer (wikis, labels, and lineage) gives both people and Dremio's built-in AI agent the business context needed to answer questions in natural language.
 
 ### Key Benefits
-- **Unprecedented Scalability:** Automatically adapts to massive fluctuations in data volume and query concurrency.
-- **Vendor Neutrality:** Strongly aligns with open-source frameworks, preventing aggressive vendor lock-in.
-- **Enhanced Observability:** Exposes deep, structural metadata allowing engineers to monitor and trace pipelines comprehensively.
+- **Scalability:** Query engines can scale with changes in data volume and query concurrency.
+- **Open Formats:** Data stays in open formats like Apache Iceberg in your object storage, which reduces vendor lock-in.
+- **Observability:** Job history and lineage help engineers monitor queries and trace how datasets are built.
 
 ## Frequently Asked Questions
 
 ### Is this a generalized open-source standard?
-No, this is a proprietary architectural component developed explicitly by Dremio to drastically accelerate engine performance. This distinction is particularly important when evaluating total architecture costs and performance benchmarks.
+No. Dremio Cloud is a commercial managed service from Dremio. It is built on open standards, such as Apache Iceberg tables and Apache Arrow, but the service itself is proprietary. This distinction matters when evaluating total architecture costs.
 
 ### Does this require moving data into Dremio?
-No, Dremio's architecture inherently acts on data directly where it physically resides in your cloud object workloads. The open ecosystem continues to evolve rapidly, ensuring backward compatibility while introducing powerful new primitives.
+No. Dremio queries data where it resides, in your object storage, catalogs, and databases. You can also create Iceberg tables in Dremio's Open Catalog when you want Dremio to manage them.
 
 ### How does Dremio Cloud impact data governance and security?
-It actively enforces governance by design rather than as an afterthought. Native logging, role-based access controls (RBAC), and structured access pathways provide immediate visibility into security boundaries and regulatory compliance.
+Dremio Cloud enforces access through role-based access controls (RBAC) and privileges on catalogs, folders, tables, and views, and it keeps query history for auditing. Views in the semantic layer can expose only the rows and columns each group should see.
 
----
+## Learn More
 
-### E-E-A-T & Further Reading
+To learn more about the [Data Lakehouse](/data-lakehouse/), read [The Lakehouse Built for Everyone](https://books.alexmerced.com/books/the-lakehouse-built-for-everyone/) by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

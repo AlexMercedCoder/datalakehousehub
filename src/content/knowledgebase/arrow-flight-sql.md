@@ -44,4 +44,4 @@ For more depth, read [Arrow Flight SQL and ADBC: Why the Database Driver Is the 
 Arrow Flight SQL lets SQL engines return results as Arrow data over gRPC instead of converting them to rows for JDBC or ODBC. For lakehouse workloads that move large results into Arrow-native tools, it cuts serialization overhead and removes the need for a database-specific driver, especially when paired with ADBC on the client side.
 
 ## Learn More
-To learn more about the Data Lakehouse, read [The Lakehouse Built for Everyone](https://books.alexmerced.com/books/the-lakehouse-built-for-everyone/) by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).
+To learn more about the [Data Lakehouse](/data-lakehouse/), read [The Lakehouse Built for Everyone](https://books.alexmerced.com/books/the-lakehouse-built-for-everyone/) by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

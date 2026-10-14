@@ -37,11 +37,11 @@ S3 offers several storage classes, and two mechanisms move data between them:
 | Lifecycle rules | Object age or prefix, on a schedule you define | Objects moved to Glacier Flexible Retrieval or Deep Archive must be restored before reading, so an Iceberg query that touches them fails |
 | S3 Intelligent-Tiering | Observed access patterns, per object | Frequent, infrequent, and archive instant access tiers stay readable; optional archive tiers do not |
 
-For Iceberg tables, move cold data in ways the table metadata knows about, or keep it in classes that remain instantly readable, such as Standard-IA or Glacier Instant Retrieval. [Agent-Driven Storage Tiering for Apache Iceberg](/blog/agent-driven-iceberg-storage-tiering/) walks through a path-safe approach, and [Connect Amazon S3 to Dremio Cloud](/blog/2026-03-connect-amazon-s3-dremio/) shows how to query S3 data directly. See also [object storage](/knowledgebase/object-storage/).
+For Iceberg tables, move cold data in ways the table metadata knows about, or keep it in classes that stay readable without a restore step, such as Standard-IA or Glacier Instant Retrieval. [Agent-Driven Storage Tiering for Apache Iceberg](/blog/agent-driven-iceberg-storage-tiering/) walks through a path-safe approach, and [Connect Amazon S3 to Dremio Cloud](/blog/2026-03-connect-amazon-s3-dremio/) shows how to query S3 data directly. See also [object storage](/knowledgebase/object-storage/).
 
 ## Summary
 
 Amazon S3 provides durable, elastic object storage behind a widely copied API, and it is a common storage layer for lakehouses. Iceberg makes S3 behave like a reliable table store through manifests and catalog commits, S3 Tables offers a managed variant, and storage class choices need to account for how query engines read the files.
 
 ## Learn More
-To learn more about the Data Lakehouse, read [The Lakehouse Built for Everyone](https://books.alexmerced.com/books/the-lakehouse-built-for-everyone/) by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).
+To learn more about the [Data Lakehouse](/data-lakehouse/), read [The Lakehouse Built for Everyone](https://books.alexmerced.com/books/the-lakehouse-built-for-everyone/) by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

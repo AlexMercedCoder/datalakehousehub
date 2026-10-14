@@ -50,4 +50,4 @@ For deeper walkthroughs, see [Assembling the Apache Lakehouse: The Modular Archi
 System architecture defines a system's components and their interactions, balancing scalability, availability, security, cost, and operability. The open lakehouse applies these principles by separating storage, table format, catalog, compute, and semantic layers so each can scale, fail, and evolve on its own.
 
 ## Learn More
-To learn more about the Data Lakehouse, read [The Lakehouse Built for Everyone](https://books.alexmerced.com/books/the-lakehouse-built-for-everyone/) by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).
+To learn more about the [Data Lakehouse](/data-lakehouse/), read [The Lakehouse Built for Everyone](https://books.alexmerced.com/books/the-lakehouse-built-for-everyone/) by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

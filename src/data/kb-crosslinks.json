@@ -292,15 +292,6 @@
       "note": "a short definition linked into a wider data and AI glossary"
     }
   ],
-  "dbt-data-build-tool": [
-    {
-      "site": "dataaiwiki.com",
-      "url": "https://dataaiwiki.com/wiki/dbt-data-build-tool/",
-      "label": "DBT (Data Build Tool)",
-      "kind": "definition",
-      "note": "a short definition linked into a wider data and AI glossary"
-    }
-  ],
   "duckdb": [
     {
       "site": "dataaiwiki.com",
@@ -319,15 +310,6 @@
       "note": "a short definition linked into a wider data and AI glossary"
     }
   ],
-  "large-language-model": [
-    {
-      "site": "dataaiwiki.com",
-      "url": "https://dataaiwiki.com/wiki/large-language-model/",
-      "label": "Large Language Model",
-      "kind": "definition",
-      "note": "a short definition linked into a wider data and AI glossary"
-    }
-  ],
   "generative-ai": [
     {
       "site": "dataaiwiki.com",
@@ -342,6 +324,24 @@
       "site": "dataaiwiki.com",
       "url": "https://dataaiwiki.com/wiki/embedding/",
       "label": "Embedding",
+      "kind": "definition",
+      "note": "a short definition linked into a wider data and AI glossary"
+    }
+  ],
+  "dbt": [
+    {
+      "site": "dataaiwiki.com",
+      "url": "https://dataaiwiki.com/wiki/dbt-data-build-tool/",
+      "label": "DBT (Data Build Tool)",
+      "kind": "definition",
+      "note": "a short definition linked into a wider data and AI glossary"
+    }
+  ],
+  "large-language-models": [
+    {
+      "site": "dataaiwiki.com",
+      "url": "https://dataaiwiki.com/wiki/large-language-model/",
+      "label": "Large Language Model",
       "kind": "definition",
       "note": "a short definition linked into a wider data and AI glossary"
     }

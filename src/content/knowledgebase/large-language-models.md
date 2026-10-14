@@ -6,38 +6,36 @@ description: "Large language models are transformer networks trained on vast tex
 
 # What are Large Language Models (LLMs)?
 
-Large Language Models (LLMs) are incredibly massive, profoundly complex Deep Learning systems designed to understand, synthesize, and generate human language with unprecedented fluency. Built upon the revolutionary Transformer neural network architecture, LLMs (such as OpenAI's GPT-4, Meta's Llama 3, and Anthropic's Claude) represent the absolute cutting edge of Artificial Intelligence, fundamentally transforming how humans interact with massive datasets and computational systems.
+Large language models (LLMs) are neural networks, built on the Transformer architecture, that are trained on very large text corpora to predict the next token in a sequence. That single training objective, applied at scale, produces models that can answer questions, summarize documents, translate, and write code. Well-known families include OpenAI's GPT models, Meta's Llama models, and Anthropic's Claude models.
 
-While traditional Natural Language Processing (NLP) models were built to execute highly narrow, specific tasks (e.g., training a small model exclusively to execute Sentiment Analysis on movie reviews), LLMs are generalized reasoning engines. Because they are trained on vast portions of the entire public internet, they internalize a deep, generalized mathematical representation of human knowledge, logic, and linguistics, allowing them to answer complex questions, write executable Python code, and summarize dense legal documents right out of the box.
+Earlier natural language processing (NLP) systems were usually trained for one narrow task, such as sentiment analysis on product reviews. An LLM is a general-purpose model: the same weights handle many tasks, steered by the prompt rather than by retraining.
 
-## The Architecture of Scale
+## How LLMs Work
 
-The "Large" in Large Language Models is not an exaggeration; it refers to the massive computational scale required to build them.
+### Parameters
+What a model learns is stored in its parameters, the weights connecting its layers. Current LLMs range from a few billion parameters to hundreds of billions or more. Training at that size takes large clusters of GPUs or other accelerators, which is why most organizations use a hosted or open-weight model rather than training their own.
 
-### Massive Parameter Counts
-The intelligence of an LLM is stored in its "Parameters" (the microscopic mathematical weights and biases connecting the artificial neurons). Early models had a few million parameters. Modern enterprise LLMs possess hundreds of billions, or even trillions, of parameters. This massive depth allows the model to capture incredibly nuanced semantic relationships, but it strictly requires clusters containing tens of thousands of highly specialized GPUs (like Nvidia H100s) running continuously for months simply to train a single model.
+### Next-token prediction
+An LLM does not write a whole answer at once. It reads the prompt as a sequence of tokens (words or pieces of words), computes a probability distribution over the next token, picks one, appends it to the sequence, and repeats. Fluent paragraphs come out of this loop one token at a time.
 
-### Next-Token Prediction
-Despite their apparent ability to "think," the foundational mathematical architecture of an LLM is shockingly simple: it is an incredibly advanced autocomplete engine.
-
-LLMs do not generate full sentences instantly. They execute Next-Token Prediction. When a user asks an LLM a question, the LLM analyzes the mathematical vectors of the words provided. It runs billions of complex probability calculations through its neural network to determine the absolute most mathematically probable *single* next word (or piece of a word, known as a token). It outputs that token, appends it to the prompt, and runs the entire massive calculation again to predict the second token. This iterative, high-speed probability loop generates the fluent, highly logical responses.
-
-## Limitations and Enterprise Alignment
-
-While LLMs are immensely powerful, raw models have severe architectural limitations that must be heavily managed in enterprise environments.
+## Limitations in Production
 
 ### Hallucinations
-Because an LLM is fundamentally a probability engine trying to predict the next word, it does not actually "know" facts. If a user asks it a highly obscure question, the LLM will string together words that sound mathematically plausible, but are entirely, factually false. This is known as a Hallucination. 
+Because the model predicts likely text rather than looking facts up, it can produce statements that sound plausible and are false. This is called a [hallucination](/knowledgebase/hallucination/). The common mitigation is [retrieval-augmented generation (RAG)](/knowledgebase/retrieval-augmented-generation/): the application retrieves relevant, approved documents (often from a [vector database](/knowledgebase/vector-database/)) and places them in the prompt so the answer is grounded in that material. RAG reduces hallucinations; it does not remove them, so answers that matter still need citations and checks.
 
-To deploy LLMs safely in the enterprise, data engineers absolutely must wrap the LLMs in Retrieval-Augmented Generation (RAG) architectures. RAG forces the LLM to read specific, verified internal corporate documents (stored securely in a Vector Database) before generating its response, completely anchoring the model’s probability calculations in absolute corporate truth.
+### Context windows
+An LLM can only consider the text that fits in its context window during a single request. Context windows have grown, but a model still cannot read a multi-terabyte table. Analytical questions work best when a query engine on the [data lakehouse](/knowledgebase/data-lakehouse/) does the scanning and aggregation, and the LLM receives the result.
 
-### Context Windows
-LLMs cannot read an entire multi-terabyte database at once. They are strictly limited by their Context Window (the amount of text they can hold in short-term memory during a single interaction). While modern context windows have expanded dramatically, processing massive analytics still requires the underlying computational power of the [Data Lakehouse](/data-lakehouse/) to aggregate the data *before* feeding the summary to the LLM.
+## Tool Calling and Agents
 
-## Summary of Technical Value
+[Tool calling](/knowledgebase/tool-calling/) lets an LLM ask for an action it cannot perform itself. The application describes the available tools (for example, run a SQL query or call an API), the model responds with a structured request to use one, the application runs it, and the result is sent back to the model to continue its answer. The model never executes the tool directly; the application decides what runs.
 
-Large Language Models fundamentally redefined the boundary of human-computer interaction. By leveraging massive Transformer networks and trillion-parameter scale, they act as highly generalized reasoning engines capable of parsing immense complexity. When securely integrated with the proprietary data stored in modern Data Lakehouses, LLMs empower organizations to deploy highly autonomous, highly intelligent AI agents capable of radically accelerating enterprise workflows.
+Loops of reasoning and tool calls are the basis of [AI agents](/knowledgebase/ai-agents/). The ReAct pattern (Yao et al., 2022) describes this loop: the model writes a reasoning step, takes an action, reads the observation, and repeats until it can answer. For analytics, an agent that queries governed lakehouse tables through a [semantic layer](/knowledgebase/semantic-layer/) gets consistent metric definitions and the same access controls as human users.
+
+## Summary
+
+LLMs are Transformer models trained to predict the next token, which makes them useful general-purpose tools for language and code. They are limited by hallucinations and context size, so production systems pair them with retrieval, tool calling, and governed data from the lakehouse.
 
 
 ## Learn More
-To learn more about the Data Lakehouse, read [The Lakehouse Built for Everyone](https://books.alexmerced.com/books/the-lakehouse-built-for-everyone/) by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).
+To learn more about the [Data Lakehouse](/data-lakehouse/), read [The Lakehouse Built for Everyone](https://books.alexmerced.com/books/the-lakehouse-built-for-everyone/) by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

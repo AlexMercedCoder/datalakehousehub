@@ -12,7 +12,7 @@ For several years following the release of ChatGPT, the dominant paradigm for in
 
 **Agentic AI** represents the next evolutionary leap. An AI Agent is a system powered by an LLM that is capable of reasoning, planning, making decisions, and executing actions in the real world through the use of external tools. 
 
-Instead of merely acting as a chatbot, an Agentic AI acts as an autonomous worker. Given a high-level goal (e.g., "Analyze the Q3 sales data and email a summary to the VP of Marketing"), an agentic system breaks the goal down into steps, writes and executes code to pull the data, interprets the results, drafts the email, and sends it via an API—all without human intervention.
+Instead of merely acting as a chatbot, an Agentic AI acts as an autonomous worker. Given a high-level goal (e.g., "Analyze the Q3 sales data and email a summary to the VP of Marketing"), an agentic system breaks the goal down into steps, writes and executes code to pull the data, interprets the results, drafts the email, and sends it via an API, all without human intervention.
 
 ## The Architecture of an AI Agent
 
@@ -61,3 +61,7 @@ While powerful, deploying autonomous agents in enterprise production environment
 ## Conclusion
 
 Agentic AI marks the transition from AI as an *assistant* to AI as a *collaborator*. By wrapping powerful LLMs in architectures that support memory, planning, and tool execution, organizations can automate highly complex, multi-step workflows. As these systems mature, we are moving toward an "Agentic Enterprise" where networks of specialized AI agents work alongside human teams to radically accelerate software development, data analytics, and operational efficiency.
+
+## Learn More
+
+To learn more about the [Data Lakehouse](/data-lakehouse/), read [The Lakehouse Built for Everyone](https://books.alexmerced.com/books/the-lakehouse-built-for-everyone/) by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

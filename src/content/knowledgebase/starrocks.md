@@ -44,6 +44,6 @@ Yes, it can. StarRocks has native tables on local disk or object storage, and it
 ### Is StarRocks the same as Apache Doris?
 No. StarRocks forked from Doris in 2020, and the two have evolved separately since, with different governance, release cycles, and feature sets.
 
----
+## Learn More
 
-### E-E-A-T & Further Reading
+To learn more about the [Data Lakehouse](/data-lakehouse/), read [The Lakehouse Built for Everyone](https://books.alexmerced.com/books/the-lakehouse-built-for-everyone/) by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

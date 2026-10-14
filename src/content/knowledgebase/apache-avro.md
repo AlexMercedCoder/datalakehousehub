@@ -42,4 +42,4 @@ The metadata role is changing. As tables grow wider, reading whole Avro records 
 A common pattern: Avro for the stream, Parquet for the table. Teams that skip that conversion and leave analytical data in Avro pay for it at query time, because every scan reads every column. For a broader comparison, see [Apache ORC](/knowledgebase/apache-orc/) and [data serialization](/knowledgebase/data-serialization/).
 
 ## Learn More
-To learn more about the Data Lakehouse, read [The Lakehouse Built for Everyone](https://books.alexmerced.com/books/the-lakehouse-built-for-everyone/) by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).
+To learn more about the [Data Lakehouse](/data-lakehouse/), read [The Lakehouse Built for Everyone](https://books.alexmerced.com/books/the-lakehouse-built-for-everyone/) by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

@@ -47,6 +47,6 @@ No. Lance is a format. LanceDB is a vector database built on it, and other tools
 ### How is Lance governed?
 The format is open source under Apache 2.0. Governance features such as access control and credential vending come from the catalog layer, for example through Lance Namespace integrations with catalogs like Apache Polaris.
 
----
+## Learn More
 
-### E-E-A-T & Further Reading
+To learn more about the [Data Lakehouse](/data-lakehouse/), read [The Lakehouse Built for Everyone](https://books.alexmerced.com/books/the-lakehouse-built-for-everyone/) by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

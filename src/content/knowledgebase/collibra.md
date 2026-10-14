@@ -38,6 +38,6 @@ No. Engines still need an Iceberg catalog to create, commit, and read tables. Co
 ### When is Collibra the right choice?
 When governance workflow, audit evidence, and business glossary management across many systems are the main requirement, and the budget fits an enterprise license.
 
----
+## Learn More
 
-### E-E-A-T & Further Reading
+To learn more about the [Data Lakehouse](/data-lakehouse/), read [The Lakehouse Built for Everyone](https://books.alexmerced.com/books/the-lakehouse-built-for-everyone/) by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

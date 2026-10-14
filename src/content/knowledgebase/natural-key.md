@@ -43,4 +43,4 @@ In a [Type 2 slowly changing dimension](/knowledgebase/type-2-scd/), the natural
 Natural keys give data real-world meaning, but they change and are not always unique, so they make poor join keys in analytical models. Use them to match and deduplicate records during ingestion, keep them as dimension attributes, and join gold tables on surrogate keys. On Iceberg, remember that neither kind of key is enforced by the table format, so uniqueness checks belong in the pipeline.
 
 ## Learn More
-To learn more about the Data Lakehouse, read [The Lakehouse Built for Everyone](https://books.alexmerced.com/books/the-lakehouse-built-for-everyone/) by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).
+To learn more about the [Data Lakehouse](/data-lakehouse/), read [The Lakehouse Built for Everyone](https://books.alexmerced.com/books/the-lakehouse-built-for-everyone/) by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

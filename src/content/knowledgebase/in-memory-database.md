@@ -34,7 +34,7 @@ A [data lakehouse](/knowledgebase/data-lakehouse/) keeps its tables in object st
 | Source of truth | RAM, with optional persistence | Iceberg tables in object storage |
 | Typical query | Point lookups by key, simple ranges | Scans, joins, and aggregations over large tables |
 | Use of memory | Holds the dataset | Holds working data during execution, often in the [Apache Arrow](/knowledgebase/apache-arrow/) columnar format, and [spills to disk](/knowledgebase/spill-to-disk/) when it runs out |
-| Speed-up technique | Everything in RAM | File and metadata caches on local NVMe, plus precomputed results such as Dremio [reflections](/knowledgebase/data-reflections/) or [materialized views](/knowledgebase/materialized-views/) |
+| Speed-up technique | Everything in RAM | File and metadata caches on local NVMe, plus precomputed results such as Dremio [reflections](/knowledgebase/data-reflections/) or [materialized views](/knowledgebase/materialized-view/) |
 
 DuckDB blurs the line: it can run as an in-process database with an in-memory catalog and also read Iceberg tables from object storage. For dashboards that need sub-second answers, the usual lakehouse approach is to precompute aggregates and cache hot files near the engine, and to reserve a key-value store like Redis for application-facing lookups that need consistent sub-millisecond latency. For how engines manage buffer pools and caches, see [Buffer Pools, Caches, and the Memory Hierarchy](/blog/2026-04-29-query-engine-optimization-07-memory-and-caching/).
 
@@ -43,4 +43,4 @@ DuckDB blurs the line: it can run as an in-process database with an in-memory ca
 An in-memory database keeps working data in RAM to remove disk I/O from the request path, which suits small, hot datasets and caching in front of slower systems. It trades higher cost and careful durability configuration for that speed. Lakehouse engines use memory differently: the data lives in Iceberg tables on object storage, and RAM, local caches, and precomputed reflections speed up queries on top of it.
 
 ## Learn More
-To learn more about the Data Lakehouse, read [The Lakehouse Built for Everyone](https://books.alexmerced.com/books/the-lakehouse-built-for-everyone/) by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).
+To learn more about the [Data Lakehouse](/data-lakehouse/), read [The Lakehouse Built for Everyone](https://books.alexmerced.com/books/the-lakehouse-built-for-everyone/) by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

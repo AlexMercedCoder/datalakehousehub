@@ -10,7 +10,7 @@ Fivetran announced an agreement to acquire Census in May 2025. The product now r
 
 ## The Composable CDP
 
-Census helped popularize the composable customer data platform (CDP). A packaged CDP keeps its own copy of customer data and its own definitions. A composable CDP treats the warehouse as the customer data store: engineers model customers and events with tools like [dbt](/knowledgebase/dbt-data-build-tool/), and a reverse ETL tool syncs the results to destinations. One definition of "active customer" or "revenue" then serves both reporting and activation.
+Census helped popularize the composable customer data platform (CDP). A packaged CDP keeps its own copy of customer data and its own definitions. A composable CDP treats the warehouse as the customer data store: engineers model customers and events with tools like [dbt](/knowledgebase/dbt/), and a reverse ETL tool syncs the results to destinations. One definition of "active customer" or "revenue" then serves both reporting and activation.
 
 ## How Syncs Work
 

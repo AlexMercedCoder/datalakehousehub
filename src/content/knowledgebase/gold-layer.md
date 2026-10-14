@@ -58,6 +58,6 @@ Not always. Some gold tables are wide, denormalized fact tables at full grain. A
 ### Do I need a physical gold layer if I have a semantic layer?
 Often only partly. Views in a semantic layer can replace many gold tables; keep physical tables for heavy, frequently used rollups or for data you share outside the platform.
 
----
+## Learn More
 
-### E-E-A-T & Further Reading
+To learn more about the [Data Lakehouse](/data-lakehouse/), read [The Lakehouse Built for Everyone](https://books.alexmerced.com/books/the-lakehouse-built-for-everyone/) by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

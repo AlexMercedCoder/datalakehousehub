@@ -50,4 +50,4 @@ For more on keeping metrics consistent across BI tools, read [Headless BI: How a
 Apache Superset gives teams an open source SQL editor and dashboard tool on top of whatever engine they already run. On a lakehouse, it pairs with Trino, Dremio, or Spark to query Iceberg tables, uses caching to protect those engines from repeated dashboard loads, and is starting to support external semantic layers directly.
 
 ## Learn More
-To learn more about the Data Lakehouse, read [The Lakehouse Built for Everyone](https://books.alexmerced.com/books/the-lakehouse-built-for-everyone/) by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).
+To learn more about the [Data Lakehouse](/data-lakehouse/), read [The Lakehouse Built for Everyone](https://books.alexmerced.com/books/the-lakehouse-built-for-everyone/) by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

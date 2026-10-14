@@ -4,44 +4,51 @@ meta_title: "What is Type 3 SCD? | Expert Data Lakehouse & AI Glossary"
 description: "Type 3 SCD is a slowly changing dimension method that keeps limited history by adding a column for the previous value next to the current one in the same row."
 ---
 
-## What is Type 3 SCD?
+Type 3 SCD is a [slowly changing dimension](/knowledgebase/slowly-changing-dimensions/) technique that keeps limited history by adding a column for the prior value of an attribute. When the attribute changes, the old value moves into a "previous" column and the new value overwrites the "current" column, all in the same row. The Kimball Group describes it as adding a new attribute to preserve the old value, sometimes called an "alternate reality," and notes it is used relatively infrequently.
 
-A Slowly Changing Dimension methodology keeping partial history by adding a new column to track previous values alongside current values. 
+## How It Works
 
-In the rapidly evolving landscape of data engineering and artificial intelligence, **Type 3 SCD** has emerged as a critical foundational component. As organizations transition from legacy, monolithic architectures to decoupled, scalable environments, understanding the role of Type 3 SCD is essential for building future-proof infrastructure. This capability serves as a critical enabler in modern data ecosystems, explicitly guiding architecture toward absolute efficiency and scale. When correctly implemented, Type 3 SCD dynamically drives analytical workloads and structurally limits administrative technical debt.
+Consider a `dim_customer` table where a customer's sales region is reassigned from East to Central.
 
-## Core Architecture and Mechanics
+Before the change:
 
-To understand the practical application of Type 3 SCD, it is crucial to systematically examine its fundamental operational behaviors and structural design:
+| customer_key | name | current_region | previous_region | region_changed_on |
+|---|---|---|---|---|
+| 1001 | Acme Corp | East | NULL | NULL |
 
-* **Organizes data logically into distinct tiers of refinement, from raw ingestion to pristine business presentation.** This principle ensures that systems can scale horizontally without facing artificial limitations or bottlenecks.
-* **Applies structural methodologies (like Star Schemas or Data Vaults) to ensure tables are optimized for specific types of BI querying.** By adopting this mechanic, engineers can bypass traditional processing constraints and deliver substantially faster time-to-insight.
-* **Manages historical modifications gracefully using established paradigms like Slowly Changing Dimensions (SCD).** This allows the overarching architecture to remain highly resilient while serving concurrent workloads natively.
+After the change:
 
-Operating through these principles enables seamless horizontal expansion across varying cloud environments. It integrates effortlessly with adjacent technologies like [Apache Iceberg](/apache-iceberg/), dbt, and advanced vector search algorithms.
+| customer_key | name | current_region | previous_region | region_changed_on |
+|---|---|---|---|---|
+| 1001 | Acme Corp | Central | East | 2026-10-01 |
 
-## Why Type 3 SCD Matters in the Modern Data Stack
+The row count does not grow and the surrogate key does not change, so existing fact rows still join to the same dimension row. Reports can now group sales by either `current_region` or `previous_region`, which is the main reason to choose Type 3: comparing results under the new and old structure side by side, for example during a sales territory realignment.
 
-Establishing strict architectural patterns prevents the data lake from devolving into a 'data swamp', guaranteeing that users know exactly where to find reliable, validated information.
+The limit is depth. A second change overwrites `previous_region`, and the first value is lost unless you add more columns (`region_2_changes_ago`, and so on), which quickly becomes awkward.
 
-For modern enterprises managing decentralized teams, the implementation of Type 3 SCD eliminates significant architectural friction. Teams are explicitly empowered to operate autonomously against reliable technical foundations without dynamically disrupting other isolated workflows. It shifts manual engineering overhead into an autonomous, software-driven paradigm, keeping Total Cost of Ownership (TCO) extremely low.
+## Comparison With Other SCD Types
 
-### Key Benefits
-- **Unprecedented Scalability:** Automatically adapts to massive fluctuations in data volume and query concurrency.
-- **Vendor Neutrality:** Strongly aligns with open-source frameworks, preventing aggressive vendor lock-in.
-- **Enhanced Observability:** Exposes deep, structural metadata allowing engineers to monitor and trace pipelines comprehensively.
+| | [Type 1](/knowledgebase/type-1-scd/) | [Type 2](/knowledgebase/type-2-scd/) | Type 3 |
+|---|---|---|---|
+| On change | Overwrite in place | Insert a new row, expire the old one | Shift old value to a prior column, overwrite current |
+| History kept | None | Full | One prior value per tracked attribute |
+| Row count | Unchanged | Grows with each change | Unchanged |
+| Fact joins | Always current | Point-in-time via surrogate key | Current row, both values available |
+| Best for | Corrections, attributes nobody analyzes historically | Auditable history | Before-and-after comparison of a planned reorganization |
 
-## Frequently Asked Questions
+Teams that need both full history and easy current-versus-prior reporting sometimes combine techniques, for example a Type 2 table that also carries a current-value column.
 
-### What is the Medallion Architecture?
-It is a logical layout dividing the lakehouse into Bronze (raw), Silver (cleansed), and Gold (business-ready) tables. This distinction is particularly important when evaluating total architecture costs and performance benchmarks.
+## Type 3 SCD in the Lakehouse
 
-### What are Slowly Changing Dimensions?
-SCDs are structural techniques used to retain historical states of a record (like tracking an employee's previous job titles) rather than simply overwriting old data. The open ecosystem continues to evolve rapidly, ensuring backward compatibility while introducing powerful new primitives.
+On an [Apache Iceberg](/knowledgebase/apache-iceberg/) table, a Type 3 update is a single `MERGE INTO` (or `UPDATE`) that sets the previous column from the current one and writes the new value. Engines such as Spark, Dremio, and Trino support row-level updates on Iceberg tables, using either [copy-on-write](/knowledgebase/copy-on-write/) or [merge-on-read](/knowledgebase/merge-on-read/) depending on table settings.
 
-### How does Type 3 SCD impact data governance and security?
-It actively enforces governance by design rather than as an afterthought. Native logging, role-based access controls (RBAC), and structured access pathways provide immediate visibility into security boundaries and regulatory compliance.
+Iceberg adds a dimension Type 3 lacks on its own: [time travel](/knowledgebase/time-travel/). Every update creates a snapshot, so past states of the table can be queried until those snapshots are expired. That is useful for audits and debugging, but snapshots are a storage-level history with retention limits, not a modeled history users can join against, so it does not replace Type 2 when the business needs long-term attribute history. Type 3 dimensions usually live in the Silver or Gold layer of a [medallion architecture](/knowledgebase/medallion-architecture/) and are exposed to BI users through a [semantic layer](/knowledgebase/semantic-layer/) as two clearly named fields.
 
----
+For worked examples of all SCD types, see [Slowly Changing Dimensions: Types 1-3 with Examples](/blog/2026-02-data-modeling-06-slowly-changing-dimensions/) and [Dimensional Modeling: Facts, Dimensions, and Grains](/blog/2026-02-data-modeling-05-dimensional-modeling/) on the Hub.
 
-### E-E-A-T & Further Reading
+## Summary
+
+Type 3 SCD stores one prior value next to the current value in the same row. It is simple, keeps the table small, and supports side-by-side comparisons, but it cannot track a long sequence of changes. Use Type 2 when full history matters.
+
+## Learn More
+To learn more about the [Data Lakehouse](/data-lakehouse/), read [The Lakehouse Built for Everyone](https://books.alexmerced.com/books/the-lakehouse-built-for-everyone/) by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

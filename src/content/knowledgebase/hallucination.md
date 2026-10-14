@@ -6,40 +6,40 @@ description: "An AI hallucination is when a language model produces fluent outpu
 
 # What is an AI Hallucination?
 
-An AI Hallucination is a catastrophic failure mode specific to Large Language Models (LLMs) and Generative AI, wherein the algorithm confidently, fluently, and logically generates a response that is entirely factually false, mathematically incorrect, or entirely disconnected from reality. In the context of enterprise data architecture, hallucinations are the absolute greatest risk to AI adoption; a hallucinating chatbot providing incorrect financial advice or corrupted code can trigger massive legal liability and completely destroy executive trust in the data platform.
+An AI hallucination is a failure mode of large language models (LLMs) and generative AI in which the model fluently and confidently generates a response that is factually false, numerically wrong, or unsupported by its sources. In enterprise data architecture, hallucinations are one of the main risks to AI adoption; a chatbot giving incorrect financial guidance or broken code can create legal exposure and damage trust in the data platform.
 
-To understand why an AI hallucinates, one must understand that an LLM does not possess a "database of facts" in its architecture. It does not know what is true or false. An LLM is strictly a massively complex probability engine executing "Next-Token Prediction." It simply calculates which word is mathematically most likely to follow the previous word based on the billions of pages it read during training. If asked a highly obscure question, the LLM will string together a sequence of words that sound statistically plausible and highly authoritative, even if the resulting sentence is complete fiction.
+To understand why an AI hallucinates, it helps to know that an LLM does not contain a "database of facts." It has no built-in notion of what is true or false. An LLM is a probability model performing next-token prediction. It calculates which token is most likely to follow the previous ones based on patterns learned in training. If asked an obscure question, the LLM can produce a sequence of words that sounds plausible and authoritative even when the content is fiction.
 
 ## The Primary Causes of Hallucinations
 
-Hallucinations are not "bugs" in the code; they are inherent features of probabilistic architecture. They are typically triggered by three specific scenarios:
+Hallucinations are not ordinary bugs in the code; they follow from how probabilistic generation works. They are commonly triggered by three scenarios:
 
 ### 1. Training Data Deficits
-If a user asks an LLM about an internal, highly proprietary corporate policy that was written yesterday, the LLM physically cannot know the answer because that policy was never in its training data. Instead of admitting ignorance, the model's probability engine will attempt to guess the policy based on general corporate language, confidently generating a completely fabricated policy.
+If a user asks an LLM about an internal corporate policy that was written yesterday, the LLM cannot know the answer because that policy was never in its training data. Instead of admitting it does not know, the model may produce a plausible guess based on general corporate language, confidently describing a policy that does not exist.
 
 ### 2. Context Window Dilution
-If an LLM is fed 50 pages of complex financial data and asked to extract one specific number, the sheer volume of text can overwhelm the model's "Attention Mechanism." The model loses track of the specific mathematical context and hallucinates a number that looks financially plausible but is entirely incorrect.
+If an LLM is given 50 pages of financial data and asked to extract one specific number, the volume of text can make it harder for the model to attend to the right passage. The model may return a number that looks plausible but is incorrect.
 
 ### 3. Prompt Ambiguity
-If a human writes a poorly phrased, highly ambiguous prompt, the LLM is forced to guess the human's intent. The probability engine veers off into a highly unlikely mathematical vector, generating a response that is totally disconnected from the user's actual goal.
+If a prompt is vague or ambiguous, the LLM has to guess the user's intent. It may follow an unlikely interpretation and produce a response that does not match the user's actual goal.
 
 ## Architectural Mitigation: RAG
 
-Data engineers cannot fix the internal probability math of an LLM. Therefore, they must fix the architecture *around* the LLM. 
+Data engineers cannot change how an LLM predicts tokens. They can change the architecture *around* the LLM.
 
-The undisputed industry standard for eliminating hallucinations in the enterprise is the Retrieval-Augmented Generation (RAG) architecture. 
+The most common enterprise approach for reducing hallucinations is the Retrieval-Augmented Generation (RAG) architecture.
 
-RAG completely removes the LLM's reliance on its internal training memory. 
+RAG reduces the LLM's reliance on its training memory.
 1. When a user asks a question, the system intercepts the prompt.
-2. It executes a Semantic Search against the company's highly secure Vector Database (which contains the verified, proprietary corporate data).
-3. It retrieves the exact three paragraphs of absolute truth.
-4. It forces the LLM to read those specific paragraphs and explicitly instructs it: "Answer the user's question using ONLY the provided text. If the answer is not in the text, you must reply 'I do not know.'"
+2. It runs a semantic search against the company's vector database (which contains verified, proprietary corporate data).
+3. It retrieves the most relevant passages.
+4. It passes those passages to the LLM with an instruction such as: "Answer the user's question using ONLY the provided text. If the answer is not in the text, reply 'I do not know.'"
 
-This effectively transforms the LLM from a guessing engine into a highly constrained reading comprehension engine, mathematically anchoring its probability calculations in verified corporate truth.
+This turns the LLM from a general guessing engine into a constrained reading comprehension engine, grounding its answers in verified company data. Models can still misread or misquote the retrieved text, so citations and evaluation remain important.
 
 ## Summary of Technical Value
 
-AI Hallucinations represent the inherent danger of relying on probabilistic text generators for factual accuracy. By acknowledging that LLMs are next-token prediction engines rather than databases of truth, data engineers can deploy strict architectural guardrails—specifically Retrieval-Augmented Generation (RAG) and high-quality Vector Databases—to completely eliminate fabrications and safely deploy generative AI into mission-critical enterprise workflows.
+AI hallucinations show the risk of relying on probabilistic text generators for factual accuracy. By treating LLMs as next-token prediction engines rather than databases of truth, data engineers can add architectural guardrails (especially Retrieval-Augmented Generation and high-quality retrieval data) to reduce fabrications and deploy generative AI more safely in business-critical workflows.
 
 ## Learn More
 To learn more about the [Data Lakehouse](/data-lakehouse/), read [The Lakehouse Built for Everyone](https://books.alexmerced.com/books/the-lakehouse-built-for-everyone/) by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

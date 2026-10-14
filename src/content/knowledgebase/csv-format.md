@@ -39,4 +39,4 @@ Query engines such as Dremio, Trino, Spark, and DuckDB can also query CSV files 
 CSV is the common denominator for moving tabular data between systems and people. Its lack of types, row layout, and loose parsing rules make it slow and error-prone as an analytical storage format. In a lakehouse, treat CSV as an input: land it, parse it with an explicit schema, and write it into Iceberg tables backed by Parquet.
 
 ## Learn More
-To learn more about the Data Lakehouse, read [The Lakehouse Built for Everyone](https://books.alexmerced.com/books/the-lakehouse-built-for-everyone/) by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).
+To learn more about the [Data Lakehouse](/data-lakehouse/), read [The Lakehouse Built for Everyone](https://books.alexmerced.com/books/the-lakehouse-built-for-everyone/) by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

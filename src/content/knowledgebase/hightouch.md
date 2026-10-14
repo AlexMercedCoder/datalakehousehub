@@ -46,4 +46,4 @@ For related tools, see the [Reverse ETL](/knowledgebase/reverse-etl/), [Census](
 Hightouch turns warehouse and lakehouse tables into inputs for operational systems. It keeps the model logic in SQL next to the data, handles diffing and API rate limits, and gives marketers an audience builder on top of data-team models. On an open lakehouse, it works best when curated Iceberg tables are exposed through a supported SQL engine.
 
 ## Learn More
-To learn more about the Data Lakehouse, read [The Lakehouse Built for Everyone](https://books.alexmerced.com/books/the-lakehouse-built-for-everyone/) by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).
+To learn more about the [Data Lakehouse](/data-lakehouse/), read [The Lakehouse Built for Everyone](https://books.alexmerced.com/books/the-lakehouse-built-for-everyone/) by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

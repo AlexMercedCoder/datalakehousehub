@@ -2235,3 +2235,21 @@ https://winterlakehouse.com/*  https://datalakehousehub.com/:splat  301!
 /blog/2026/2026-03-context-management-opencode/  /blog/2026-03-context-management-opencode/   301!
 /blog/2026/2026-06-agentic-coding-tools   /blog/agentic-coding-tools/   301!
 /blog/2026/2026-06-agentic-coding-tools/  /blog/agentic-coding-tools/   301!
+
+# kb-duplicate-merges (2026-10-14): same concept under two slugs; content merged into the kept term
+/knowledgebase/spilling-to-disk  /knowledgebase/spill-to-disk/  301
+/knowledgebase/spilling-to-disk/  /knowledgebase/spill-to-disk/  301
+/knowledgebase/large-language-model  /knowledgebase/large-language-models/  301
+/knowledgebase/large-language-model/  /knowledgebase/large-language-models/  301
+/knowledgebase/kafka-connect  /knowledgebase/apache-kafka-connect/  301
+/knowledgebase/kafka-connect/  /knowledgebase/apache-kafka-connect/  301
+/knowledgebase/materialized-views  /knowledgebase/materialized-view/  301
+/knowledgebase/materialized-views/  /knowledgebase/materialized-view/  301
+/knowledgebase/dbt-data-build-tool  /knowledgebase/dbt/  301
+/knowledgebase/dbt-data-build-tool/  /knowledgebase/dbt/  301
+/knowledgebase/object-storage-s3-adls-gcs  /knowledgebase/object-storage/  301
+/knowledgebase/object-storage-s3-adls-gcs/  /knowledgebase/object-storage/  301
+/knowledgebase/data-vault-modeling  /knowledgebase/data-vault/  301
+/knowledgebase/data-vault-modeling/  /knowledgebase/data-vault/  301
+/knowledgebase/mlops-machine-learning-operations  /knowledgebase/mlops/  301
+/knowledgebase/mlops-machine-learning-operations/  /knowledgebase/mlops/  301

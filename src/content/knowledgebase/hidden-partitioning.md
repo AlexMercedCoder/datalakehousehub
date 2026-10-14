@@ -51,4 +51,4 @@ The bucket transform also enables storage-partitioned joins in Spark, where two 
 Hidden partitioning separates how users query a table from how its files are organized. Analysts filter on real columns and still get partition pruning, and engineers can change the partition spec through metadata instead of rewriting history. It is one of the main practical differences between an Iceberg table and a Hive table on the same object storage.
 
 ## Learn More
-To learn more about the Data Lakehouse, read [The Lakehouse Built for Everyone](https://books.alexmerced.com/books/the-lakehouse-built-for-everyone/) by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).
+To learn more about the [Data Lakehouse](/data-lakehouse/), read [The Lakehouse Built for Everyone](https://books.alexmerced.com/books/the-lakehouse-built-for-everyone/) by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

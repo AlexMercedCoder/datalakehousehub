@@ -38,6 +38,6 @@ For landing raw topics as tables, often yes. Cleaning, joining, and modeling sti
 ### What changed with the IBM acquisition?
 Confluent is now an IBM company. IBM has announced integrations with products such as watsonx.data; check Confluent's documentation for current product and pricing details.
 
----
+## Learn More
 
-### E-E-A-T & Further Reading
+To learn more about the [Data Lakehouse](/data-lakehouse/), read [The Lakehouse Built for Everyone](https://books.alexmerced.com/books/the-lakehouse-built-for-everyone/) by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

@@ -49,6 +49,6 @@ The Community Edition is source-available under the Business Source License, not
 ### Do I still need a stream processor?
 Often. Redpanda moves and stores events. Transformations, joins, and upserts into curated Iceberg tables are usually done in [Apache Flink](/knowledgebase/apache-flink/) or [Apache Spark](/knowledgebase/apache-spark/).
 
----
+## Learn More
 
-### E-E-A-T & Further Reading
+To learn more about the [Data Lakehouse](/data-lakehouse/), read [The Lakehouse Built for Everyone](https://books.alexmerced.com/books/the-lakehouse-built-for-everyone/) by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

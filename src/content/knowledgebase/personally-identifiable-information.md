@@ -62,4 +62,4 @@ A deletion is complete only after these steps run, so erasure requests need a de
 PII is data that can identify a person directly or through combinations of fields. Lakehouse teams protect it by discovering and tagging it automatically, masking or filtering it at query time, tokenizing the most sensitive values before they land, and running the snapshot expiration and cleanup that Iceberg needs before a deletion is truly complete.
 
 ## Learn More
-To learn more about the Data Lakehouse, read [The Lakehouse Built for Everyone](https://books.alexmerced.com/books/the-lakehouse-built-for-everyone/) by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).
+To learn more about the [Data Lakehouse](/data-lakehouse/), read [The Lakehouse Built for Everyone](https://books.alexmerced.com/books/the-lakehouse-built-for-everyone/) by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

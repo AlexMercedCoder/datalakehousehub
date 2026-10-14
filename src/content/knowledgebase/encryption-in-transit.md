@@ -42,4 +42,4 @@ Older network designs encrypted only traffic that crossed the internet and trust
 For how transit encryption fits with Parquet modular encryption and Iceberg table encryption, see [File Encryption for the Lakehouse](/blog/lakehouse-encryption-deep-dive/).
 
 ## Learn More
-To learn more about the Data Lakehouse, read [The Lakehouse Built for Everyone](https://books.alexmerced.com/books/the-lakehouse-built-for-everyone/) by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).
+To learn more about the [Data Lakehouse](/data-lakehouse/), read [The Lakehouse Built for Everyone](https://books.alexmerced.com/books/the-lakehouse-built-for-everyone/) by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

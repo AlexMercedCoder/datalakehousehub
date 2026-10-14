@@ -34,11 +34,11 @@ A union read combines a committed lake snapshot with the newer records still in 
 | Querying history plus fresh data | Union reads across lake snapshot and Fluss | Two systems queried separately |
 | Ecosystem maturity | Young; Flink and Spark integrations | Very broad client and connector ecosystem |
 
-Kafka remains the right choice for general event distribution between many services. Fluss fits when the goal is analytics: streams that must land in Iceberg tables, be queried with Flink or Spark, and stay readable by the rest of the lakehouse. Once tiered, the data is an ordinary Iceberg table, so engines like [Dremio](/knowledgebase/dremio-cloud/) or [Trino](/knowledgebase/trino/) can query it through your catalog without knowing Fluss exists. See also [Apache Flink](/knowledgebase/apache-flink/) and [Kafka Connect](/knowledgebase/kafka-connect/).
+Kafka remains the right choice for general event distribution between many services. Fluss fits when the goal is analytics: streams that must land in Iceberg tables, be queried with Flink or Spark, and stay readable by the rest of the lakehouse. Once tiered, the data is an ordinary Iceberg table, so engines like [Dremio](/knowledgebase/dremio-cloud/) or [Trino](/knowledgebase/trino/) can query it through your catalog without knowing Fluss exists. See also [Apache Flink](/knowledgebase/apache-flink/) and [Kafka Connect](/knowledgebase/apache-kafka-connect/).
 
 ## Summary
 
 Apache Fluss treats streams as columnar tables and keeps a committed copy in open lake formats such as Iceberg. For teams that currently run Kafka plus a separate ingestion job into the lakehouse, it offers one storage layer for both fresh and historical analytics.
 
 ## Learn More
-To learn more about the Data Lakehouse, read [The Lakehouse Built for Everyone](https://books.alexmerced.com/books/the-lakehouse-built-for-everyone/) by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).
+To learn more about the [Data Lakehouse](/data-lakehouse/), read [The Lakehouse Built for Everyone](https://books.alexmerced.com/books/the-lakehouse-built-for-everyone/) by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

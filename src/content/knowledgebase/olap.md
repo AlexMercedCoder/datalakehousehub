@@ -42,4 +42,4 @@ In a lakehouse, OLTP stays in operational databases and the OLAP side becomes op
 OLAP systems answer large analytical questions by storing data in columns, compressing it, modeling it for reads, and processing it in vectorized batches. On a lakehouse, OLTP databases remain the sources and Iceberg tables become the shared OLAP layer that any compatible engine can query.
 
 ## Learn More
-To learn more about the Data Lakehouse, read [The Lakehouse Built for Everyone](https://books.alexmerced.com/books/the-lakehouse-built-for-everyone/) by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).
+To learn more about the [Data Lakehouse](/data-lakehouse/), read [The Lakehouse Built for Everyone](https://books.alexmerced.com/books/the-lakehouse-built-for-everyone/) by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

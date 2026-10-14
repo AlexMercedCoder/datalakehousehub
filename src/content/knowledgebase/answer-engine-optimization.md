@@ -45,4 +45,4 @@ For how this plays out with lakehouse data, see [RAG Isn't a Modeling Problem. I
 Answer Engine Optimization shapes content so search features and AI assistants can lift a clear, accurate answer from it. It builds on SEO rather than replacing it, and the same answer-first, well-structured approach makes internal data documentation and semantic layers more useful to AI agents.
 
 ## Learn More
-To learn more about the Data Lakehouse, read [The Lakehouse Built for Everyone](https://books.alexmerced.com/books/the-lakehouse-built-for-everyone/) by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).
+To learn more about the [Data Lakehouse](/data-lakehouse/), read [The Lakehouse Built for Everyone](https://books.alexmerced.com/books/the-lakehouse-built-for-everyone/) by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

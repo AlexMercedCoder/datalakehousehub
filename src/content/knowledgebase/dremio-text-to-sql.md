@@ -6,42 +6,42 @@ description: "Dremio Text-to-SQL is a Dremio feature that turns natural language
 
 ## What is Dremio Text-to-SQL?
 
-A powerful Dremio capability enabling business users to query enormous datasets directly via natural language without coding. 
+Dremio Text-to-SQL is a Dremio feature that lets users ask questions in natural language and have the platform generate SQL against their data, so they can query datasets without writing code.
 
-In the rapidly evolving landscape of data engineering and artificial intelligence, **Dremio Text-to-SQL** has emerged as a critical foundational component. As organizations transition from legacy, monolithic architectures to decoupled, scalable environments, understanding the role of Dremio Text-to-SQL is essential for building future-proof infrastructure. This capability serves as a critical enabler in modern data ecosystems, explicitly guiding architecture toward absolute efficiency and scale. When correctly implemented, Dremio Text-to-SQL dynamically drives analytical workloads and structurally limits administrative technical debt.
+In data engineering and analytics, natural language interfaces like **Dremio Text-to-SQL** lower the barrier to querying a lakehouse. Dremio announced text-to-SQL in June 2023, and in current Dremio Cloud releases this capability is part of the built-in AI Agent, which writes and runs SQL based on the user's question and the information in Dremio's semantic layer.
 
 ## Core Architecture and Mechanics
 
-To understand the practical application of Dremio Text-to-SQL, it is crucial to systematically examine its fundamental operational behaviors and structural design:
+To understand the practical application of Dremio Text-to-SQL, it helps to look at how it works:
 
-* **Operates as a proprietary layer natively within the core Dremio application architecture.** This principle ensures that systems can scale horizontally without facing artificial limitations or bottlenecks.
-* **Integrates deeply with broad open-source table formats (like [Apache Iceberg](/apache-iceberg/)) without format lock-in.** By adopting this mechanic, engineers can bypass traditional processing constraints and deliver substantially faster time-to-insight.
-* **Eliminates the explicit need for users to manually engineer massive data duplication pipelines.** This allows the overarching architecture to remain highly resilient while serving concurrent workloads natively.
+* **Runs inside the Dremio console as part of the platform.** Users type a question into the chat, and the agent generates SQL, runs it through Dremio's query engine, and can return results as tables or charts.
+* **Uses the semantic layer for context.** Wikis (descriptions attached to datasets) and labels (tags such as PII or Finance) help the agent find relevant tables and views and interpret business terms. Better-documented views lead to better SQL.
+* **Queries data where it lives.** Dremio queries tables in formats like [Apache Iceberg](/apache-iceberg/) on object storage and federated sources, so users do not need to build copy pipelines before asking questions.
 
-Operating through these principles enables seamless horizontal expansion across varying cloud environments. It integrates effortlessly with adjacent technologies like Apache Iceberg, dbt, and advanced vector search algorithms.
+The generated SQL is visible, so users and engineers can review what the agent ran.
 
 ## Why Dremio Text-to-SQL Matters in the Modern Data Stack
 
-As a platform-exclusive technical innovation, this feature represents a major competitive advantage for teams utilizing Dremio. It shifts manual engineering overhead into an autonomous, software-driven paradigm, keeping Total Cost of Ownership (TCO) extremely low.
+Text-to-SQL lets business users answer routine questions themselves instead of waiting for an analyst to write a query, which frees data teams to work on modeling and data quality.
 
-For modern enterprises managing decentralized teams, the implementation of Dremio Text-to-SQL eliminates significant architectural friction. Teams are explicitly empowered to operate autonomously against reliable technical foundations without dynamically disrupting other isolated workflows. It shifts manual engineering overhead into an autonomous, software-driven paradigm, keeping Total Cost of Ownership (TCO) extremely low.
+For enterprises with decentralized teams, pairing natural language querying with a shared semantic layer helps different users get consistent answers, because the agent works from the same curated views and definitions. Results still depend on how well the semantic layer is documented, and generated SQL can be wrong, so review matters for important decisions.
 
 ### Key Benefits
-- **Unprecedented Scalability:** Automatically adapts to massive fluctuations in data volume and query concurrency.
-- **Vendor Neutrality:** Strongly aligns with open-source frameworks, preventing aggressive vendor lock-in.
-- **Enhanced Observability:** Exposes deep, structural metadata allowing engineers to monitor and trace pipelines comprehensively.
+- **Accessibility:** Non-technical users can explore data in plain language.
+- **Open data:** Works over open table formats like Iceberg rather than requiring data to be loaded into a proprietary store.
+- **Auditability:** Questions, generated SQL, and answers are logged, and the SQL can be inspected in the chat.
 
 ## Frequently Asked Questions
 
 ### Is this a generalized open-source standard?
-No, this is a proprietary architectural component developed explicitly by Dremio to drastically accelerate engine performance. This distinction is particularly important when evaluating total architecture costs and performance benchmarks.
+No. It is a Dremio product feature. Dremio also offers an open-source MCP server for teams that want to use their own AI client to explore Dremio data and generate SQL.
 
 ### Does this require moving data into Dremio?
-No, Dremio's architecture inherently acts on data directly where it physically resides in your cloud object workloads. The open ecosystem continues to evolve rapidly, ensuring backward compatibility while introducing powerful new primitives.
+No. Dremio queries data where it resides, such as Iceberg tables in cloud object storage and connected databases.
 
 ### How does Dremio Text-to-SQL impact data governance and security?
-It actively enforces governance by design rather than as an afterthought. Native logging, role-based access controls (RBAC), and structured access pathways provide immediate visibility into security boundaries and regulatory compliance.
+The agent only uses data and objects the logged-in user has privileges on, so existing role-based access controls (RBAC) still apply. Dremio's documentation notes that using it requires the CALL MODEL privilege on the configured model provider.
 
----
+## Learn More
 
-### E-E-A-T & Further Reading
+To learn more about the [Data Lakehouse](/data-lakehouse/), read [The Lakehouse Built for Everyone](https://books.alexmerced.com/books/the-lakehouse-built-for-everyone/) by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

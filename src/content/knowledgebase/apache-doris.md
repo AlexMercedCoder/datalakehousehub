@@ -48,4 +48,4 @@ Both engines work best as a serving layer: keep the governed tables in Iceberg b
 Apache Doris gives teams a simple-to-operate, MySQL-compatible engine for real-time, high-concurrency analytics. In a lakehouse it sits next to Iceberg rather than replacing it: reading and writing Iceberg tables through standard catalogs, and caching hot results in its own storage when latency matters most.
 
 ## Learn More
-To learn more about the Data Lakehouse, read [The Lakehouse Built for Everyone](https://books.alexmerced.com/books/the-lakehouse-built-for-everyone/) by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).
+To learn more about the [Data Lakehouse](/data-lakehouse/), read [The Lakehouse Built for Everyone](https://books.alexmerced.com/books/the-lakehouse-built-for-everyone/) by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

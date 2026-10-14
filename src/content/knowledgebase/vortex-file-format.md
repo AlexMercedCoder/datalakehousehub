@@ -38,6 +38,6 @@ The Vortex README claims 100x faster random access reads, 10 to 20x faster scans
 
 The [Apache Iceberg](/knowledgebase/apache-iceberg/) spec currently defines Parquet, ORC, and Avro as data file formats, so a standard Iceberg table cannot hold Vortex files today. The Vortex project lists Iceberg integration as coming soon, and Microsoft reported experiments running Spark workloads with Vortex inside Iceberg at the 2025 launch. Until that support lands in the Iceberg spec and in engines such as Dremio, Trino, and Spark, Parquet remains the format to use for shared Iceberg tables. Vortex is worth evaluating now for engine-local caches, AI training pipelines, and systems built on DataFusion or DuckDB. The [Lance file format](/knowledgebase/lance-file-format/) targets a similar AI-oriented niche.
 
----
+## Learn More
 
-### E-E-A-T & Further Reading
+To learn more about the [Data Lakehouse](/data-lakehouse/), read [The Lakehouse Built for Everyone](https://books.alexmerced.com/books/the-lakehouse-built-for-everyone/) by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

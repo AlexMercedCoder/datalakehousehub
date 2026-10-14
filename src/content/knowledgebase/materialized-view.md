@@ -6,39 +6,38 @@ description: "A materialized view is a database object that stores precomputed q
 
 # What is a Materialized View?
 
-A Materialized View is a highly optimized database object that stores the pre-computed physical results of a complex SQL query. It is designed exclusively to drastically reduce the latency of massive analytical queries and prevent expensive query engines from recalculating the exact same math repeatedly.
+A materialized view is a database object that stores the results of a query as physical data. Instead of rerunning an expensive join or aggregation every time someone asks for it, the engine reads the stored result, which is usually much smaller and faster to scan.
 
-In a traditional relational database, a standard View is simply a saved SQL script. When an analyst queries a standard View, the database must execute the entire underlying script from scratch, reading massive amounts of data from the hard drive, performing complex multi-table joins, and calculating aggregations at runtime. If the underlying data is massive, querying a standard View takes minutes.
+A standard view is only a saved query. Each time you select from it, the engine runs the full definition: it reads the source tables, performs the joins, and computes the aggregations at query time. A materialized view runs that work ahead of time. For example, it can summarize a billion-row `sales_fact` table into a few hundred rows of total sales by region, and dashboards then read those few hundred rows.
 
-A Materialized View completely alters this execution path. It executes the complex SQL script once in the background, calculates the final aggregated results (e.g., summarizing a billion-row table into a tiny 500-row table containing strictly "Total Sales by Region"), and writes those 500 rows physically to the hard drive as an actual, tangible table. When an analyst queries the Materialized View, the engine simply reads the tiny 500-row table instantly in milliseconds.
+## Keeping Materialized Views Fresh
 
-## The Architecture of Incremental Refresh
+Stored results go stale as soon as the source tables change, so every materialized view needs a refresh strategy.
 
-While a Materialized View solves the latency problem, it introduces a severe data freshness problem. Because the data is physically stored, it becomes stale the exact millisecond the underlying source tables are updated.
+### Full refresh
+The simplest approach recomputes the whole query and replaces the stored result. PostgreSQL works this way: `REFRESH MATERIALIZED VIEW` reruns the definition, and the `CONCURRENTLY` option lets readers keep querying the old data during the refresh. Full refresh is easy to reason about, but its cost grows with the size of the source tables.
 
-If a massive streaming pipeline adds 10,000 new transactions to the raw source tables every hour, the Materialized View must be updated to reflect the new data. Historically, databases managed this via a "Full Refresh." The engine would completely drop the old Materialized View, re-scan the entire billion-row source table, and recalculate everything from scratch. This was incredibly computationally expensive and often took hours.
+### Incremental refresh
+Incremental refresh processes only what changed in the sources since the last refresh and merges that change into the stored result. Snowflake, for example, runs a background service that updates a materialized view after changes to its base table. On the lakehouse, [Apache Iceberg](/knowledgebase/apache-iceberg/) snapshots record which files were added in each commit, which lets an engine find new data without rescanning the whole table. Dremio uses this for incremental refresh of Reflections on Iceberg tables. Not every query shape can be refreshed incrementally, so engines fall back to a full refresh when they cannot.
 
-### Micro-Batching and Incremental Updates
-Modern Cloud Data Warehouses (like Snowflake) and [Data Lakehouse](/data-lakehouse/) engines utilize Incremental Refreshes. 
+## Transparent Query Rewriting
 
-When a Materialized View is built incrementally, the engine strictly tracks the transaction logs (Change Data Capture) of the underlying source tables. If 10,000 new rows are appended to the source, the engine isolates those specific 10,000 rows. It applies the complex SQL aggregation strictly to the delta, and mathematically merges the resulting change into the existing Materialized View. This drastically reduces the computational overhead, ensuring the Materialized View remains accurate in near real-time without executing massive full table scans.
+If analysts have to query a materialized view by name, every dashboard must be rewritten to point at it, and the view can only help queries that know about it. Many engines avoid this with query rewriting: the optimizer checks whether a query against the base tables can be answered from a materialized view and, when it can, reads the view instead.
 
-## Transparent Query Substitution
+Snowflake's optimizer can do this for queries against a base table. Dremio's [Data Reflections](/knowledgebase/data-reflections/) are built around it: users never reference a Reflection in SQL. Dremio compares a plan that uses a Reflection against a plan on the raw tables and runs the cheaper one. [Raw reflections](/knowledgebase/raw-reflections/) store a copy of a table or view with chosen columns, partitioning, and sort order, while [aggregation reflections](/knowledgebase/aggregation-reflections/) precompute measures such as SUM and COUNT across chosen dimensions for BI-style `GROUP BY` queries.
 
-The absolute pinnacle of Materialized View architecture is Transparent Query Substitution.
+For more on how this works in practice, see [When the Query Optimizer Starts Managing Its Own Materializations](/blog/autonomous-reflections-agentic-lakehouse/).
 
-In legacy environments, if a data engineer built a Materialized View named `mv_regional_sales`, they had to explicitly tell the business analysts to stop querying the raw `sales_fact` table and rewrite their dashboards to query `mv_regional_sales` instead. This organizational coordination was a massive failure point.
+## Tradeoffs
 
-Modern engines, particularly Dremio (via its Data Reflections feature), automate this entirely. 
+* **Storage and refresh cost:** Each materialized view uses storage and compute to maintain, so it pays off for queries that run often.
+* **Freshness:** Between refreshes, a view may lag the source data unless the engine fills the gap from the base table, as Snowflake does when maintenance is behind.
+* **Definition limits:** Engines restrict what a materialized view can contain. Snowflake materialized views, for example, can query only a single table and cannot use joins or window functions.
 
-The data engineering team creates a highly optimized Reflection (a robust, transparent Materialized View) summarizing regional sales in the background. The business analyst connects Tableau to Dremio and fires a massively complex query directly against the massive, raw `sales_fact` table. 
+## Summary
 
-Before executing the query, the Dremio query optimizer intercepts the request. It mathematically proves that the analyst's query can be perfectly answered using the pre-computed Data Reflection. The engine autonomously rewrites the physical execution plan in the background, routing the query entirely away from the raw data and directly to the lightning-fast Reflection. The dashboard loads in milliseconds. The analyst has absolutely no idea the Reflection exists; they simply experience profound speed without changing a single line of their SQL code.
-
-## Summary of Technical Value
-
-The Materialized View is the ultimate architectural solution for mitigating redundant analytical compute costs and achieving sub-second dashboard performance. By physically persisting the results of highly complex aggregations and maintaining them efficiently via incremental refreshes, it fundamentally breaks the bottleneck of runtime query execution. When combined with intelligent, transparent query substitution, it provides a completely frictionless, high-performance experience across the entire enterprise data stack.
+A materialized view trades storage and refresh work for faster reads on repeated queries. Incremental refresh keeps that work proportional to what changed, and transparent query rewriting lets queries benefit without being rewritten to name the view.
 
 
 ## Learn More
-To learn more about the Data Lakehouse, read [The Lakehouse Built for Everyone](https://books.alexmerced.com/books/the-lakehouse-built-for-everyone/) by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).
+To learn more about the [Data Lakehouse](/data-lakehouse/), read [The Lakehouse Built for Everyone](https://books.alexmerced.com/books/the-lakehouse-built-for-everyone/) by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

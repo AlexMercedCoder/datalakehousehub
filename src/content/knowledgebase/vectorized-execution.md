@@ -6,41 +6,41 @@ description: "Vectorized execution is a query processing model that works on bat
 
 # What is Vectorized Execution?
 
-Vectorized Execution is an incredibly advanced database processing paradigm designed to execute massive mathematical aggregations at the absolute physical limits of modern hardware. Heavily utilized by high-performance analytical engines like Apache Arrow, Dremio, ClickHouse, and DuckDB, vectorized execution completely abandons traditional row-by-row data processing in favor of processing massive, contiguous arrays of data simultaneously.
+Vectorized Execution is a database processing model designed to use modern CPU hardware efficiently for analytical work. Used by analytical engines like Dremio, ClickHouse, and DuckDB, and by the compute libraries built on Apache Arrow, vectorized execution replaces row-by-row processing with operations on batches of contiguous column values.
 
-Historically, traditional operational databases (like PostgreSQL or MySQL) processed queries using a "Volcano" execution model. In this model, the database pulls a single row of data from the hard drive, passes that single row up through a complex chain of filters and aggregations, and then moves on to the next row. For a query analyzing ten million rows, the database makes ten million highly inefficient, distinct functional calls. The CPU spends the vast majority of its time simply moving data around in memory, rather than executing actual math. Vectorized execution destroys this bottleneck entirely.
+Historically, traditional operational databases (like PostgreSQL or MySQL) processed queries using a "Volcano" execution model. In this model, each operator pulls a single row from the operator below it, processes it, and passes it up through the chain of filters and aggregations before moving on to the next row. For a query analyzing ten million rows, the database makes tens of millions of function calls. Much of the CPU's time goes to call overhead and interpretation rather than the actual computation. Vectorized execution reduces this overhead.
 
 ## The Architecture of Columnar Batches
 
-Vectorized execution relies strictly on columnar data formats. An engine cannot vectorize row-based data effectively.
+Vectorized execution works best with columnar data layouts, so engines typically convert data to columnar batches in memory even when it is read from row-based sources.
 
-Instead of processing one row at a time, a vectorized engine grabs a massive "vector" (an array) of data—typically containing 1,024 or 4,096 values for a single specific column. 
-For example, if the query calculates `SUM(sales_amount)`, the engine loads an array containing exactly 4,096 `sales_amount` integers into active memory.
+Instead of processing one row at a time, a vectorized engine works on a "vector" (an array) of values for a single column, typically one to a few thousand values (DuckDB's default vector size is 2,048). 
+For example, if the query calculates `SUM(sales_amount)`, the engine processes an array of, say, 2,048 `sales_amount` integers at a time.
 
 ### CPU Cache Optimization
-This architecture is explicitly engineered to exploit the physical design of modern Central Processing Units (CPUs). CPUs possess incredibly fast, extremely small memory banks located directly on the processor chip, known as the L1 and L2 Caches. Reading data from standard RAM is extremely slow compared to reading data from the L1 Cache.
+This architecture is designed around the physical design of modern Central Processing Units (CPUs). CPUs have very fast, small memory caches on the processor chip, known as the L1 and L2 Caches. Reading data from main memory (RAM) is much slower than reading it from the L1 Cache.
 
-Because the vectorized batch contains 4,096 contiguous integers, the CPU can load the entire array perfectly into the L1 Cache in a single, highly efficient memory fetch. The CPU does not have to jump around random memory addresses searching for data. The data is aligned perfectly, maximizing the "Cache Hit Rate" and ensuring the processor is never idling while waiting for data to arrive from RAM.
+Because the vectorized batch is a small, contiguous array, it fits in the CPU caches, and the CPU's hardware prefetcher can load it efficiently with sequential reads. The CPU does not have to jump around random memory addresses searching for data. This raises the "Cache Hit Rate" and reduces the time the processor spends waiting for data to arrive from RAM.
 
 ## SIMD Instructions (Single Instruction, Multiple Data)
 
-Once the vector of data is loaded perfectly into the CPU Cache, the execution engine triggers SIMD instructions.
+Once the vector of data is in the CPU Cache, the execution engine can use SIMD instructions.
 
-SIMD (Single Instruction, Multiple Data) is a specialized class of hardware-level instructions built into modern Intel and AMD processors. In a legacy row-by-row model, adding two numbers requires one CPU instruction. If you need to add 4,096 numbers, it requires 4,096 distinct CPU instructions.
+SIMD (Single Instruction, Multiple Data) is a specialized class of hardware-level instructions built into modern x86 (Intel and AMD) and ARM processors. In a legacy row-by-row model, adding two numbers requires one CPU instruction. If you need to add 2,048 numbers, it requires about 2,048 separate add instructions.
 
-SIMD instructions allow the CPU to apply a single mathematical operation across an entire array of data simultaneously in a single clock cycle. The vectorized query engine feeds the massive array of 4,096 integers directly into the CPU's SIMD registers. The CPU executes the `SUM` calculation across multiple integers instantly. By leveraging the physical hardware architecture directly, vectorized engines routinely execute analytical queries 10x to 100x faster than legacy row-based engines.
+SIMD instructions apply one operation to several values at once. With 256-bit AVX2 registers, for example, a single instruction can add eight 32-bit integers. The vectorized engine runs tight loops over the array that compilers and hand-written kernels turn into SIMD instructions, processing the `SUM` several values per instruction. Combined with lower per-row overhead, this lets vectorized engines run analytical queries much faster than row-at-a-time engines.
 
 ## Integration in Modern Query Engines
 
-Vectorized execution is the defining characteristic of modern analytical speed.
+Vectorized execution is a defining feature of modern analytical engines.
 
-* **Apache Arrow:** Arrow is the foundational memory format that makes vectorized execution standard. Because Arrow defines a universal, strictly columnar in-memory layout, engines can pass Arrow vectors directly into SIMD registers without any translation overhead.
-* **DuckDB:** DuckDB is incredibly fast specifically because it is a deeply optimized vectorized engine running locally. It loads contiguous columnar batches from local Parquet files directly into the laptop's CPU Cache, allowing it to process millions of rows in milliseconds without needing a massive distributed cluster.
-* **Dremio and ClickHouse:** These massive distributed engines rely entirely on vectorized processing to serve sub-second BI dashboards. They aggressively push Arrow batches through their distributed worker nodes, maximizing hardware utilization across the entire cluster.
+* **Apache Arrow:** Arrow is a standard columnar in-memory format that suits vectorized execution. Because Arrow defines a common, columnar in-memory layout, engines and libraries can operate on Arrow buffers directly and exchange them without conversion.
+* **DuckDB:** DuckDB is an in-process, vectorized engine. It processes columnar batches read from Parquet files and other sources, which lets it analyze millions of rows quickly on a single machine without a distributed cluster.
+* **Dremio and ClickHouse:** These distributed engines rely on vectorized processing to serve interactive BI dashboards. Dremio processes data in Arrow format across its worker nodes, while ClickHouse uses its own columnar blocks; both aim to keep the hardware busy across the cluster.
 
 ## Summary of Technical Value
 
-Vectorized Execution represents the absolute alignment of database software with modern CPU hardware. By abandoning inefficient row-by-row processing and leveraging contiguous columnar memory batches, vectorized engines maximize CPU Cache efficiency and trigger incredibly fast SIMD hardware instructions. This paradigm is the fundamental architectural requirement for delivering instantaneous, highly concurrent analytical performance over petabytes of data.
+Vectorized Execution aligns database software with how modern CPUs work. By replacing row-by-row processing with contiguous columnar batches, vectorized engines use CPU caches efficiently and take advantage of SIMD instructions. It is a core technique for delivering fast, concurrent analytical performance over large datasets.
 
 
 ## Learn More

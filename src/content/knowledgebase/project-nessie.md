@@ -63,4 +63,4 @@ For help choosing a catalog, read [Choosing the Right Iceberg Control Plane: Pol
 Project Nessie brings commits, branches, tags, and multi-table merges to Iceberg catalogs. It makes zero-copy experimentation and Write-Audit-Publish across many tables practical. Teams that mostly need governance, access control, and broad engine support often choose Apache Polaris instead, while teams that need catalog-wide branching still have a clear reason to run Nessie.
 
 ## Learn More
-To learn more about the Data Lakehouse, read [The Lakehouse Built for Everyone](https://books.alexmerced.com/books/the-lakehouse-built-for-everyone/) by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).
+To learn more about the [Data Lakehouse](/data-lakehouse/), read [The Lakehouse Built for Everyone](https://books.alexmerced.com/books/the-lakehouse-built-for-everyone/) by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

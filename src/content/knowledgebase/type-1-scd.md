@@ -55,6 +55,6 @@ Yes. An incremental model with a `unique_key` and the merge strategy produces Ty
 ### Is Type 1 the same as an upsert?
 In practice, yes. A Type 1 load is an [upsert](/knowledgebase/upserts-update-and-insert/): update matched rows, insert new ones.
 
----
+## Learn More
 
-### E-E-A-T & Further Reading
+To learn more about the [Data Lakehouse](/data-lakehouse/), read [The Lakehouse Built for Everyone](https://books.alexmerced.com/books/the-lakehouse-built-for-everyone/) by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

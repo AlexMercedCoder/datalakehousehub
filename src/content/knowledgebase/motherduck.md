@@ -6,41 +6,41 @@ description: "MotherDuck is a serverless cloud analytics service built on DuckDB
 
 # What is MotherDuck?
 
-MotherDuck is a highly collaborative, serverless cloud analytics platform built explicitly around the incredibly fast DuckDB query engine. While DuckDB fundamentally revolutionized data science by providing a blazing fast, zero-configuration analytical database for local laptops, it inherently lacked the collaborative features required by enterprise teams. If an analyst processed a massive dataset locally using DuckDB, sharing those results or securely granting access to teammates remained a highly manual, brittle process.
+MotherDuck is a serverless cloud analytics platform built around the DuckDB query engine. DuckDB became popular as a fast, in-process analytical database that runs on a laptop with no server to set up, but on its own it has no shared storage or user management for teams. If an analyst processed a large dataset locally using DuckDB, sharing those results or granting access to teammates was a manual process.
 
-MotherDuck bridges this gap by marrying the sheer local execution speed of DuckDB with the collaborative persistence, massive scalability, and security of a managed cloud platform. It allows data teams to execute complex SQL instantly, share live databases via simple web links, and query massive datasets seamlessly without ever provisioning or managing complex database infrastructure.
+MotherDuck fills this gap by combining local DuckDB execution with the shared storage, scaling, and security of a managed cloud service. It lets data teams run SQL in the cloud or locally, share databases with teammates, and query large datasets without provisioning or managing database servers.
 
 ## The Hybrid Execution Architecture
 
-The most profound technological breakthrough introduced by MotherDuck is its Hybrid Execution model. Traditional cloud data warehouses (like Snowflake or BigQuery) force the user to upload all their data to the cloud. When a user executes a query from their laptop, the cloud servers do 100% of the computational work and send the massive resultset back across the network.
+A distinctive feature of MotherDuck is its Hybrid Execution model (MotherDuck now calls it dual execution). Traditional cloud data warehouses (like Snowflake or BigQuery) expect data to be loaded into the cloud, and the cloud servers do all of the work for a query before sending results back.
 
-MotherDuck flips this paradigm. Because DuckDB is so fast, modern laptops possess more computational power than many legacy servers. MotherDuck utilizes this via Hybrid Execution.
+MotherDuck takes a different approach. Because DuckDB runs efficiently on a laptop, MotherDuck can use local compute as part of a query.
 
-When a data scientist writes a SQL query that joins a tiny local CSV file on their MacBook with a 500-gigabyte historical table residing in the MotherDuck cloud, the MotherDuck engine dynamically analyzes the query structure. It intelligently pushes the massive aggregation calculations up to the highly scalable cloud compute nodes. The cloud nodes shrink the 500-gigabyte table down to a tiny summarized dataset, instantly stream that small result back to the analyst's laptop, and the local DuckDB instance executes the final join against the local CSV. This intelligent, split-execution architecture minimizes network latency entirely and utilizes the absolute best computational environment for every specific task automatically.
+When a data scientist writes a SQL query that joins a tiny local CSV file on their MacBook with a large historical table stored in MotherDuck, the planner decides which parts of the query run where. Work on the large cloud table, such as filtering and aggregation, runs in MotherDuck's cloud, the much smaller result is sent to the laptop, and the local DuckDB instance performs the final join against the local CSV. Splitting the work this way reduces how much data crosses the network.
 
 ## WebAssembly (Wasm) and the Browser Experience
 
-A key component of MotherDuck's extreme accessibility is its intense utilization of WebAssembly (Wasm). Wasm allows highly complex code (written in C++ or Rust) to execute natively inside standard web browsers (like Chrome or Safari) with near-native performance speeds.
+Part of MotherDuck's web experience relies on WebAssembly (Wasm). Wasm lets compiled code (written in languages like C++ or Rust) run inside standard web browsers (like Chrome or Safari) at speeds close to native code.
 
-MotherDuck compiled the entire DuckDB execution engine into Wasm. When a user logs into the MotherDuck web interface, a complete analytical database engine is instantly downloaded and runs directly inside their browser tab. 
+DuckDB is available as a Wasm build (DuckDB-Wasm), and the MotherDuck web interface runs it in the browser. When a user opens the MotherDuck web UI, a DuckDB engine loads and runs inside the browser tab. 
 
-If the user queries a highly optimized MotherDuck dataset, the browser-based DuckDB engine utilizes Hybrid Execution to pull only the strictly necessary compressed columnar chunks from the cloud. The browser mathematically renders the visualizations instantly without waiting for a remote server to generate the HTML. This architecture makes the MotherDuck web interface exceptionally responsive, completely bypassing the heavy lag associated with traditional cloud BI tools.
+When the user queries data in MotherDuck, the browser-based engine can use Hybrid Execution, so the cloud handles the heavy work and some follow-up operations, such as exploring a result, run locally in the browser. This makes interactive exploration in the web interface responsive, because not every click needs a round trip to a server.
 
 ## Serverless Data Sharing and Collaboration
 
 In a conventional data environment, granting a colleague access to a dataset involves requesting complex IAM permissions from DevOps, configuring VPN access, and setting up complicated database credentials.
 
-MotherDuck fundamentally simplified this through Shareable Databases. Because the cloud platform manages authentication and storage completely, a data engineer can build a massive analytical database and instantly generate a secure, read-only URL. They can paste that URL into a Slack channel. When a colleague clicks the link, their local DuckDB instance (or their browser) immediately connects to the database, allowing them to execute SQL natively against the exact same data without moving a single file or configuring complex credentials. 
+MotherDuck simplifies this with shares. Because the platform manages authentication and storage, a data engineer can create a read-only share of a database and get a share URL. A colleague with a MotherDuck account attaches that share from DuckDB or the web UI and queries the same data, without anyone copying files or setting up separate database credentials. 
 
 ## Integration with the Data Ecosystem
 
-MotherDuck intentionally integrates seamlessly into the modern data ecosystem. It does not attempt to lock users into proprietary formats. 
+MotherDuck is designed to fit into the wider data ecosystem. 
 
-Because it is fundamentally powered by DuckDB, it inherently possesses DuckDB’s vast connector ecosystem. MotherDuck can query massive Parquet files stored openly in Amazon S3, read complex nested JSON structures, and execute highly optimized SQL directly against SQLite databases. Furthermore, it integrates effortlessly with popular analytical engineering tools like dbt and modern orchestration platforms like Dagster, allowing organizations to build robust, version-controlled pipelines that execute natively on the MotherDuck serverless infrastructure.
+Because it is powered by DuckDB, it can use DuckDB's file readers and extensions. MotherDuck can query Parquet files stored in Amazon S3 and read nested JSON, and DuckDB itself can attach SQLite databases. It also works with analytics engineering tools like dbt and orchestration platforms like Dagster, so organizations can build version-controlled pipelines that run on MotherDuck.
 
 ## Summary of Technical Value
 
-MotherDuck successfully transitioned the extreme performance of local DuckDB execution into a robust, enterprise-grade cloud platform. By introducing highly intelligent Hybrid Execution and compiling complex analytical processing directly into WebAssembly, MotherDuck provides an incredibly fast, frictionless analytical experience. It completely abstracts the heavy burden of distributed infrastructure management, allowing data teams to focus entirely on collaborative, instantaneous SQL analysis.
+MotherDuck brings the performance of local DuckDB execution to a managed cloud platform. With Hybrid Execution and DuckDB running in the browser through WebAssembly, it offers a fast, low-friction analytical experience. It handles infrastructure management so data teams can focus on collaborative SQL analysis.
 
 
 ## Learn More

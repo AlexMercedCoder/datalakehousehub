@@ -6,30 +6,30 @@ description: "Active data governance enforces access rules, masking, and tagging
 
 # What is Active Data Governance?
 
-Active Data Governance is a highly aggressive, modern architectural paradigm that completely replaces traditional, static compliance policies with real-time, highly automated, and heavily integrated software controls explicitly embedded within the [Data Lakehouse](/data-lakehouse/) infrastructure. It is the philosophy that data governance cannot merely be a legal document sitting in an HR folder; it must be an active, living mechanism that mathematically intercepts, evaluates, and controls data access at the exact millisecond a user attempts to run a query.
+Active Data Governance is an approach that replaces static compliance policies with automated software controls built into the [Data Lakehouse](/data-lakehouse/) infrastructure. Its premise is that data governance cannot only be a policy document; it must be a working mechanism that evaluates and controls data access at the moment a user runs a query.
 
-Historically, "Passive Data Governance" relied on humans. A Data Steward would create a massive spreadsheet listing which employees were allowed to view the Payroll table. If an unauthorized analyst requested access, it triggered a manual IT ticketing process that took three weeks to resolve. Active Data Governance destroys this friction by treating governance as software code, enabling massive agility while guaranteeing absolute mathematical compliance.
+Historically, "Passive Data Governance" relied on people. A Data Steward kept a spreadsheet listing which employees could view the Payroll table. If an analyst needed access, a manual IT ticket process could take weeks to resolve. Active Data Governance reduces this friction by treating governance as code, which speeds up access decisions while keeping them consistent and auditable.
 
 ## The Architecture of Active Control
 
-Active Data Governance relies on three distinct technological pillars deeply integrated into the query engine (like Dremio or Trino).
+Active Data Governance relies on three technical pillars integrated with the query engine (such as Dremio or Trino).
 
 ### 1. Dynamic Access Control (Attribute-Based Access)
-Instead of statically assigning specific users to specific tables, Active Governance utilizes complex, real-time metadata logic. 
-A policy is written: "If a user possesses the attribute `Region: EU`, and the table possesses the attribute `Contains_GDPR_Data`, the query is allowed."
-When the user executes a `SELECT` statement, the query engine dynamically evaluates these attributes against the live Enterprise Data Catalog (like Alation or Collibra) in absolute real-time. If the user moves to the US office the next day, their HR attribute changes, and the database instantly, automatically blocks their access without any IT intervention.
+Instead of statically assigning specific users to specific tables, Active Governance evaluates policies against metadata.
+A policy might read: "If a user has the attribute `Region: EU`, and the table has the attribute `Contains_GDPR_Data`, the query is allowed."
+When the user runs a `SELECT` statement, the policy engine evaluates these attributes at query time, drawing on identity data and catalog metadata. If the user moves to the US office, their attribute changes, and the next query is evaluated under the new attribute without a manual permissions change.
 
 ### 2. Automated Data Masking
-Active Governance does not simply block queries; it dynamically mutates the results.
-If a data scientist queries a massive production table containing unencrypted credit card numbers, the query engine intercepts the request. The active policy states that Data Scientists can see the data, but cannot see the PII. The engine automatically executes a hashing algorithm on the fly, physically masking the credit card numbers before they are rendered on the scientist's screen, ensuring the data is usable for machine learning but mathematically useless for identity theft.
+Active Governance does not only block queries; it can also transform results.
+If a data scientist queries a production table containing credit card numbers, the policy might allow access to the table but not to the PII. The engine applies a masking or hashing function as the results are produced, so the data stays usable for analysis and machine learning while the sensitive values are hidden.
 
 ### 3. Continuous Discovery and Tagging
-The absolute foundation of Active Governance is knowing what data exists. 
-When a new massive dataset is dropped into an Amazon S3 bucket, active governance bots instantly crawl the data. They utilize Machine Learning to mathematically recognize Social Security Numbers. They automatically tag the new [Apache Iceberg](/apache-iceberg/) table with the `Highly_Confidential` metadata tag. This tag instantly triggers the dynamic access controls, locking down the new table before a human Data Steward even realizes the file was uploaded.
+Active Governance depends on knowing what data exists.
+When a new dataset lands in an Amazon S3 bucket, automated scanners can profile it, use pattern matching or machine learning classifiers to detect values such as Social Security Numbers, and tag the new [Apache Iceberg](/apache-iceberg/) table as `Highly_Confidential`. That tag can then trigger the dynamic access controls, restricting the table before a Data Steward reviews it manually.
 
 ## Summary of Technical Value
 
-Active Data Governance is the mandatory security architecture for the massive scale of the Open Data Lakehouse. By abandoning static spreadsheets and manual IT tickets in favor of real-time, dynamically computed access controls and automated machine learning metadata tagging, organizations can completely secure petabytes of highly sensitive corporate data without violently bottlenecking the agility of their data engineering and analytics teams.
+Active Data Governance suits the scale of the open Data Lakehouse. By replacing static spreadsheets and manual IT tickets with policy-driven access controls and automated metadata tagging, organizations can protect large volumes of sensitive data without slowing down their data engineering and analytics teams.
 
 ## Learn More
-To learn more about the Data Lakehouse, read [The Lakehouse Built for Everyone](https://books.alexmerced.com/books/the-lakehouse-built-for-everyone/) by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).
+To learn more about the [Data Lakehouse](/data-lakehouse/), read [The Lakehouse Built for Everyone](https://books.alexmerced.com/books/the-lakehouse-built-for-everyone/) by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

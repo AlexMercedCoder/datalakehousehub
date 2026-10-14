@@ -45,4 +45,4 @@ HMS has adapted: the Iceberg `HiveCatalog` uses it as a pointer store, and recen
 The Hive Metastore defined the idea of a catalog that sits apart from storage and is shared by many engines. Its directory-based model limits it at large partition counts and gives no multi-engine transactions for plain tables, which is why the [data lakehouse](/knowledgebase/data-lakehouse/) moved file tracking into Iceberg metadata and the catalog role toward REST catalogs.
 
 ## Learn More
-To learn more about the Data Lakehouse, read [The Lakehouse Built for Everyone](https://books.alexmerced.com/books/the-lakehouse-built-for-everyone/) by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).
+To learn more about the [Data Lakehouse](/data-lakehouse/), read [The Lakehouse Built for Everyone](https://books.alexmerced.com/books/the-lakehouse-built-for-everyone/) by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

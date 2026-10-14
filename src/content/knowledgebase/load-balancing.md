@@ -6,32 +6,32 @@ description: "Load balancing spreads incoming requests across a pool of servers 
 
 # What is Load Balancing?
 
-Load Balancing is a massive, foundational networking architecture explicitly designed to prevent the catastrophic failure of web applications, APIs, and massive database clusters. It is the highly intelligent, invisible "traffic cop" of the internet. By placing a specialized hardware appliance or advanced software server (the Load Balancer) directly in front of a massive cluster of servers, it intercepts all incoming network traffic and perfectly, mathematically distributes that traffic across the cluster, ensuring that no single physical server is ever overwhelmed.
+Load balancing is a networking technique for distributing incoming traffic across multiple servers so that web applications, APIs, and database clusters stay available and responsive. It acts as a traffic director. A load balancer (a hardware appliance, software proxy, or managed cloud service) sits in front of a group of servers, receives incoming requests, and spreads them across the group so that no single server is overwhelmed.
 
-If a popular e-commerce website runs on a single massive server, and one million customers attempt to buy a product at the exact same millisecond on Black Friday, the CPU of that single server will violently max out at 100%, and the server will crash. The website goes dark, and the business loses millions of dollars.
-To survive Black Friday, the company must deploy 50 identical servers (Horizontal Scaling). However, if the 1,000,000 customers all accidentally connect to Server #1, the website still crashes. The Load Balancer completely solves this. It intercepts the 1,000,000 requests and surgically routes exactly 20,000 requests to each of the 50 servers, ensuring perfect equilibrium and absolute architectural stability.
+If a popular e-commerce website runs on a single server and a large number of customers try to buy a product at the same time on Black Friday, that server's CPU can max out, and the site can slow down or go offline. Lost sales follow.
+To handle the peak, the company runs many identical servers (horizontal scaling). But if all customers connected to the same server, the extra servers would not help. The load balancer spreads the requests across all of the servers so that the load is shared.
 
 ## The Architecture of Distribution
 
-A modern Load Balancer (like AWS Elastic Load Balancer or NGINX) utilizes highly complex mathematical algorithms to determine exactly which server should receive the next piece of network traffic.
+A load balancer (like AWS Elastic Load Balancing or NGINX) uses a routing algorithm to decide which server receives the next request.
 
 ### Routing Algorithms
-1. **Round Robin:** The simplest algorithm. It blindly hands request #1 to Server A, request #2 to Server B, request #3 to Server C, and loops infinitely.
-2. **Least Connections:** A highly intelligent algorithm. It actively monitors the health and activity of the cluster. If Server A is currently processing 500 massive SQL queries, but Server B just finished its work and is doing nothing, the Load Balancer explicitly routes the next incoming query to Server B, ensuring maximum computational efficiency.
+1. **Round Robin:** The simplest algorithm. It sends request 1 to Server A, request 2 to Server B, request 3 to Server C, and then starts over.
+2. **Least Connections:** A load-aware algorithm. It tracks how many active connections each server has. If Server A is busy with many long-running requests and Server B is idle, the next request goes to Server B.
 
 ### Health Checks and Fault Tolerance
-The Load Balancer is the ultimate defender of cluster uptime. 
-Every 5 seconds, the Load Balancer aggressively pings every single server in the cluster (a "Health Check"). If Server #42 suffers a massive hard drive failure and stops responding to the ping, the Load Balancer instantly, mathematically excises Server #42 from the active routing pool. It immediately reroutes all incoming traffic to the surviving 49 servers. The human users never experience an error page; the catastrophic hardware failure is completely abstracted and mitigated in milliseconds.
+Load balancers also protect availability.
+At a configured interval, the load balancer sends a health check request to each server. If a server fails and stops responding, the load balancer marks it unhealthy after a set number of failed checks and stops routing new traffic to it. Requests go to the remaining healthy servers, so most users never see the failure, although requests in flight to the failed server may still error.
 
 ## Load Balancing the Data Lakehouse
 
-Load Balancing is an absolute architectural requirement for the modern Open [Data Lakehouse](/data-lakehouse/).
+Load balancing is a standard part of deploying services in the open [Data Lakehouse](/data-lakehouse/).
 
-When a massive enterprise deploys a distributed SQL query engine (like Trino or Dremio) via Kubernetes, they deploy a massive Load Balancer in front of the Coordinator nodes. When hundreds of business analysts open their Tableau dashboards simultaneously, the Load Balancer flawlessly distributes the barrage of incoming SQL queries across the multiple Coordinator nodes. This ensures that the analytical control plane never locks up, guaranteeing sub-second dashboard rendering for the entire executive suite regardless of concurrent traffic.
+When an organization deploys a distributed query engine (like Trino or Dremio) on Kubernetes, it typically places a load balancer or Kubernetes Service in front of the endpoints that clients connect to. Depending on the engine, this may front a single coordinator for high availability or several coordinators that share client traffic. When many analysts open dashboards at the same time, the load balancer spreads those connections, which helps keep the query service responsive under concurrent use.
 
 ## Summary of Technical Value
 
-Load Balancing is the absolute prerequisite for Horizontal Scaling. By intercepting massive surges of internet traffic and intelligently distributing the computational load across a wide cluster of independent servers, Load Balancers guarantee that mission-critical data applications remain highly performant, flawlessly fault-tolerant, and completely impervious to catastrophic traffic spikes.
+Load balancing is a prerequisite for horizontal scaling. By distributing traffic across a cluster of independent servers and routing around failed ones, load balancers help data applications stay responsive, fault-tolerant, and able to absorb traffic spikes.
 
 ## Learn More
-To learn more about the Data Lakehouse, read [The Lakehouse Built for Everyone](https://books.alexmerced.com/books/the-lakehouse-built-for-everyone/) by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).
+To learn more about the [Data Lakehouse](/data-lakehouse/), read [The Lakehouse Built for Everyone](https://books.alexmerced.com/books/the-lakehouse-built-for-everyone/) by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

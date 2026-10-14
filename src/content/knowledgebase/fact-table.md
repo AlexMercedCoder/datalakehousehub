@@ -62,4 +62,4 @@ For a fuller treatment, see [Dimensional Modeling: Facts, Dimensions, and Grains
 A fact table records business events at a declared grain, with numeric measures and keys to dimension tables. On a lakehouse it becomes a partitioned, sorted Iceberg table that columnar engines can scan and prune efficiently, with dimensions supplying the context for every number.
 
 ## Learn More
-To learn more about the Data Lakehouse, read [The Lakehouse Built for Everyone](https://books.alexmerced.com/books/the-lakehouse-built-for-everyone/) by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).
+To learn more about the [Data Lakehouse](/data-lakehouse/), read [The Lakehouse Built for Everyone](https://books.alexmerced.com/books/the-lakehouse-built-for-everyone/) by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

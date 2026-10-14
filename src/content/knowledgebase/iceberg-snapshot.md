@@ -7,42 +7,42 @@ canonical: "https://iceberglakehouse.com/iceberg/iceberg-snapshot/"
 
 ## What is Iceberg Snapshot?
 
-A complete recorded state of an [Apache Iceberg](/apache-iceberg/) table mapping exact data files available at a specific specific point in time. 
+An Iceberg snapshot is the recorded state of an [Apache Iceberg](/knowledgebase/apache-iceberg/) table at a point in time: the full set of data and delete files that made up the table after a given commit. 
 
-In the rapidly evolving landscape of data engineering and artificial intelligence, **Iceberg Snapshot** has emerged as a critical foundational component. As organizations transition from legacy, monolithic architectures to decoupled, scalable environments, understanding the role of Iceberg Snapshot is essential for building future-proof infrastructure. This capability serves as a critical enabler in modern data ecosystems, explicitly guiding architecture toward absolute efficiency and scale. When correctly implemented, Iceberg Snapshot dynamically drives analytical workloads and structurally limits administrative technical debt.
+Every successful write to an Iceberg table (an append, overwrite, delete, or compaction) creates a new **Iceberg Snapshot**. The table metadata keeps a list of snapshots and a pointer to the current one. Readers use the current snapshot by default, which is how Iceberg gives every query a consistent view of the table while writes continue.
 
 ## Core Architecture and Mechanics
 
-To understand the practical application of Iceberg Snapshot, it is crucial to systematically examine its fundamental operational behaviors and structural design:
+A snapshot works through a few pieces of metadata:
 
-* **Utilizes open table formats to provide complete ACID transactional compliance directly on top of massive, raw cloud object storage.** This principle ensures that systems can scale horizontally without facing artificial limitations or bottlenecks.
-* **Maintains an explicit hierarchical tree of metadata manifests to track exact file states and enable precise time-travel querying.** By adopting this mechanic, engineers can bypass traditional processing constraints and deliver substantially faster time-to-insight.
-* **Decouples the physical storage layout from the logical table structure using techniques like hidden partitioning.** This allows the overarching architecture to remain highly resilient while serving concurrent workloads natively.
+* **Each snapshot has an ID, a timestamp, a parent snapshot ID, and a summary of the operation.** The parent chain records the table's history of commits.
+* **Each snapshot points to a manifest list.** The manifest list references manifest files, which list the data files and delete files in that snapshot along with partition values and column statistics. Unchanged manifests are reused between snapshots, so a new commit writes only new metadata.
+* **Snapshots can be named.** Branches and tags are named references to snapshots, so a team can keep a tagged version for an audit or write to a branch before publishing changes to `main`.
 
-Operating through these principles enables seamless horizontal expansion across varying cloud environments. It integrates effortlessly with adjacent technologies like Apache Iceberg, dbt, and advanced vector search algorithms.
+Because older snapshots stay in metadata until they are expired, engines like Spark, Trino, Flink, and Dremio can query the table as of an earlier snapshot ID or timestamp.
 
 ## Why Iceberg Snapshot Matters in the Modern Data Stack
 
-The open lakehouse structure eliminates vendor lock-in and drastically reduces storage costs by allowing any compatible distributed engine to query the exact same massive datasets without requiring duplication.
+Snapshots are what make several core lakehouse features work: atomic commits, snapshot isolation for readers, time travel, rollback, and incremental reads that process only the changes between two snapshots.
 
-For modern enterprises managing decentralized teams, the implementation of Iceberg Snapshot eliminates significant architectural friction. Teams are explicitly empowered to operate autonomously against reliable technical foundations without dynamically disrupting other isolated workflows. It shifts manual engineering overhead into an autonomous, software-driven paradigm, keeping Total Cost of Ownership (TCO) extremely low.
+Snapshots also need maintenance. Each one keeps its files reachable, so storage grows until old snapshots are removed with the `expire_snapshots` procedure, which deletes files no longer referenced by any retained snapshot. Teams choose a retention period that balances time travel needs against storage cost.
 
 ### Key Benefits
-- **Unprecedented Scalability:** Automatically adapts to massive fluctuations in data volume and query concurrency.
-- **Vendor Neutrality:** Strongly aligns with open-source frameworks, preventing aggressive vendor lock-in.
-- **Enhanced Observability:** Exposes deep, structural metadata allowing engineers to monitor and trace pipelines comprehensively.
+- **Consistent Reads:** Each query reads one complete snapshot, never a partial write.
+- **Time Travel and Rollback:** Query or restore an earlier state of the table.
+- **Change History:** Snapshot summaries and metadata tables show what each commit added or removed.
 
 ## Frequently Asked Questions
 
 ### What makes a Lakehouse different from a Data Lake?
-A standard data lake is just a collection of files. A lakehouse adds a metadata layer that provides warehouse-like features (transactions, schema enforcement) directly to those files. This distinction is particularly important when evaluating total architecture costs and performance benchmarks.
+A standard data lake is just a collection of files. A lakehouse adds a metadata layer that provides warehouse-like features (transactions, schema enforcement) directly to those files. In Iceberg, snapshots are the core of that metadata layer.
 
 ### Why use an Open Table Format?
-Open formats like Apache Iceberg ensure that your data is not trapped inside a proprietary database ecosystem; it remains universally accessible. The open ecosystem continues to evolve rapidly, ensuring backward compatibility while introducing powerful new primitives.
+Open formats like Apache Iceberg keep your data readable by many engines instead of one proprietary database. Snapshot metadata follows the public Iceberg specification, so any compliant engine can read the same snapshot history.
 
 ### How does Iceberg Snapshot impact data governance and security?
-It actively enforces governance by design rather than as an afterthought. Native logging, role-based access controls (RBAC), and structured access pathways provide immediate visibility into security boundaries and regulatory compliance.
+Snapshots give an audit trail of when data changed and through which operation, and tags can preserve a specific version for compliance. Keep in mind that deleted records remain in older snapshots until those snapshots expire, which matters for privacy deletion requests. Access control is handled by the catalog or engine.
 
----
+## Learn More
 
-### E-E-A-T & Further Reading
+To learn more about the [Data Lakehouse](/data-lakehouse/), read [The Lakehouse Built for Everyone](https://books.alexmerced.com/books/the-lakehouse-built-for-everyone/) by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

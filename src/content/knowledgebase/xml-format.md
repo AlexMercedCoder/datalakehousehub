@@ -6,13 +6,13 @@ description: "XML is a text markup format that stores hierarchical data in tags 
 
 # What is XML (eXtensible Markup Language)?
 
-XML (eXtensible Markup Language) is a highly rigid, heavily structured, text-based data format explicitly designed to store and transport massive, deeply hierarchical information in a format that is both human-readable and machine-readable. Invented in the late 1990s as a flexible evolution of HTML, XML became the absolute foundational backbone of the early enterprise internet, serving as the core syntax for massive corporate integration protocols (like SOAP) and the internal structural language for massive file formats (like Microsoft Office `.docx` files).
+XML (eXtensible Markup Language) is a text-based markup language for storing and exchanging structured, hierarchical data in a form that both people and programs can read. The W3C published XML 1.0 as a Recommendation in February 1998. The specification describes XML as a subset of SGML (Standard Generalized Markup Language, ISO 8879), the same family that HTML came from. XML is not an extension of HTML: HTML has a fixed set of tags for documents, while XML lets authors define their own tags for any kind of data.
 
-In modern data engineering, XML is universally recognized as a heavy, highly verbose, and extremely slow legacy format. It has been almost entirely eradicated from modern web applications and fast-moving APIs, ruthlessly overthrown by the vastly superior, lightweight JSON format. However, because multi-billion dollar legacy banking, healthcare, and government systems were architected in the 2000s, modern Data Lakehouses are still forced to ingest, parse, and dismantle massive volumes of XML data every single day.
+XML became a common format for enterprise integration in the 2000s. It is the basis of SOAP web services, many industry message standards in finance, healthcare, and government, configuration files, RSS and Atom feeds, SVG graphics, and the Office Open XML formats inside `.docx` and `.xlsx` files. For web APIs, JSON has largely replaced it, but data teams still ingest a large amount of XML from established systems and standards.
 
-## The Architecture of Tags and Schemas
+## Tags and Schemas
 
-XML fundamentally operates using an aggressive, highly strict system of custom-defined hierarchical Tags (enclosed in angle brackets `< >`).
+XML represents data as nested elements enclosed in user-defined tags, with optional attributes.
 
 ```xml
 <Customer>
@@ -28,29 +28,26 @@ XML fundamentally operates using an aggressive, highly strict system of custom-d
 </Customer>
 ```
 
-### The XML Schema Definition (XSD)
-The single greatest architectural strength of XML—and the reason massive, hyper-regulated financial institutions loved it—is its capacity for absolute, cryptographic strictness via the XML Schema Definition (XSD).
-An XSD is a separate, highly complex file that explicitly dictates exactly what the XML is legally allowed to look like. It enforces that a `<Customer>` tag must contain exactly one `<Name>`, and that the `<CustomerID>` must absolutely be a 4-digit integer. If a massive banking mainframe receives an XML payload that violates the XSD rules even slightly, it violently rejects the payload before processing it, guaranteeing absolute data integrity.
+### XML Schema Definition (XSD)
+An XML Schema Definition (XSD) is a separate document that describes what valid XML for a given use looks like: which elements are allowed, in what order, how many times, and with what data types. A schema can require that a `<Customer>` contains exactly one `<Name>` and that `<CustomerID>` is an integer. Systems that validate incoming messages against an XSD can reject malformed payloads before processing them. That contract-first validation is one reason XML remains common in regulated industries. Other schema languages, such as DTD and RELAX NG, serve the same purpose.
 
-## The Downfall: Verbosity and Parsing Weight
+XML also has a broad set of related standards, including namespaces for combining vocabularies, XPath for selecting parts of a document, and XSLT for transforming one XML document into another.
 
-The exact rigidity that made XML powerful caused its eventual destruction in the era of mobile computing and Big Data.
+## Trade-Offs: Verbosity and Parsing Cost
 
-### 1. Catastrophic Data Bloat (Verbosity)
-XML is catastrophically inefficient. Every single piece of data must be explicitly wrapped in both an opening tag `<Name>` and a closing tag `</Name>`. 
-If a payload contains one million customer names, the exact text string `Name` is written to the hard drive and transmitted across the network two million times. This massive textual bloat completely destroys network bandwidth and massively inflates cloud storage costs. (JSON entirely eliminated the closing tags, cutting payload sizes in half).
+### 1. Verbosity
+Every element has an opening and a closing tag, so field names are repeated for every value. The same data is usually larger as XML than as JSON, and much larger than in a binary columnar format. Compression reduces the gap on disk and over the network, because repeated tag names compress well.
 
-### 2. The Parsing Penalty
-Extracting data from a massive XML file requires computationally heavy algorithms (like DOM or SAX parsing). The CPU must build a massive, complex mathematical tree in active RAM just to understand the relationship between the tags. If a Data Engineer attempts to execute a basic SQL query directly against a 5-Gigabyte XML log file in a Data Lake, the query engine will frequently crash the server just trying to parse the nested tags.
+### 2. Parsing Cost
+Reading XML requires a parser. DOM parsers build the full document tree in memory, which is convenient but can use a lot of memory for large files. Streaming parsers such as SAX or StAX read the document as a sequence of events and use far less memory, at the cost of more complex code. Deeply nested, repeating structures also do not map directly onto flat tables, so engines have to decide how to turn them into rows.
 
-## Modern Ingestion Strategies
+## Ingesting XML into a Lakehouse
 
-Modern [Data Lakehouse](/data-lakehouse/) query engines (like Apache Spark or Dremio) despise XML. 
-When data engineers are forced to ingest XML from legacy mainframe FTP servers, they never leave the data in XML format. They utilize powerful ETL pipelines to instantly shred the XML, rip out the underlying data values, flatten the hierarchical structure, and permanently convert the data into the highly compressed, binary Apache Parquet format.
+Analytical engines work best on columnar formats, so teams typically convert XML on ingestion rather than query it in place. A common pattern is to parse the XML with a library or a connector (for example the spark-xml data source or native XML support in newer Spark releases), flatten or explode repeating elements into rows, keep nested structures as struct or array columns where useful, and write the result as [Apache Parquet](/knowledgebase/apache-parquet/) files in an [Apache Iceberg](/knowledgebase/apache-iceberg/) table. Keeping the original XML files in a raw zone lets teams reprocess them if the parsing logic changes.
 
 ## Summary of Technical Value
 
-XML is a massive, highly rigid relic of early enterprise software architecture. While its strict, XSD-enforced structural validation made it the perfect protocol for early, hyper-secure financial integrations, its catastrophic textual bloat and massive CPU parsing penalties rendered it completely obsolete for modern, high-speed API data exchange and petabyte-scale Data Lakehouse analytics, relegating it primarily to legacy system integrations.
+XML is a mature, standards-based format with strong schema validation and a large surrounding toolset. Its verbosity and parsing cost make it a poor fit for analytical storage, so in a [data lakehouse](/knowledgebase/data-lakehouse/) it is usually an ingestion format that gets converted to columnar tables.
 
 ## Learn More
-To learn more about the Data Lakehouse, read [The Lakehouse Built for Everyone](https://books.alexmerced.com/books/the-lakehouse-built-for-everyone/) by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).
+To learn more about the [Data Lakehouse](/data-lakehouse/), read [The Lakehouse Built for Everyone](https://books.alexmerced.com/books/the-lakehouse-built-for-everyone/) by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

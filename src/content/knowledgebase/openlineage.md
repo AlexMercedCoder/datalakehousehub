@@ -4,44 +4,45 @@ meta_title: "What is OpenLineage? | Expert Data Lakehouse & AI Glossary"
 description: "OpenLineage is an open standard for collecting lineage metadata from data pipelines, whatever tool runs them. Learn its role in lakehouse data governance."
 ---
 
-## What is OpenLineage?
+OpenLineage is an open standard and framework for collecting [data lineage](/knowledgebase/data-lineage/) metadata from data pipelines as they run. It defines a common JSON event format that schedulers, query engines, and transformation tools emit when a job starts, finishes, or fails, describing which datasets the job read and which it wrote. Any backend that understands the format can collect those events and assemble a lineage graph across tools. OpenLineage is a graduated project of the LF AI & Data Foundation, and [Marquez](/knowledgebase/marquez/), another LF AI & Data project, is its reference implementation.
 
-An open standard for metadata and lineage collection designed to instrument data pipelines regardless of the specific tool. 
+## How It Works
 
-In the rapidly evolving landscape of data engineering and artificial intelligence, **OpenLineage** has emerged as a critical foundational component. As organizations transition from legacy, monolithic architectures to decoupled, scalable environments, understanding the role of OpenLineage is essential for building future-proof infrastructure. This capability serves as a critical enabler in modern data ecosystems, explicitly guiding architecture toward absolute efficiency and scale. When correctly implemented, OpenLineage dynamically drives analytical workloads and structurally limits administrative technical debt.
+The specification is built on three core entities:
 
-## Core Architecture and Mechanics
+* **Job:** a process that consumes or produces data, such as an Airflow task, a Spark application, a dbt model, or a SQL query. Jobs have a unique name within a namespace.
+* **Run:** one execution of a job, identified by a client-generated UUID.
+* **Dataset:** a table or file, identified by a namespace and a name derived from its physical location.
 
-To understand the practical application of OpenLineage, it is crucial to systematically examine its fundamental operational behaviors and structural design:
+Integrations send **RunEvents** to a lineage backend over HTTP or another transport. Each event carries an `eventType`: `START`, `RUNNING`, `COMPLETE`, `ABORT`, `FAIL`, or `OTHER`. `COMPLETE`, `ABORT`, and `FAIL` are terminal, so no further events follow for that run. Inputs and outputs can be reported at start, at completion, or both. The spec also defines design-time **JobEvents** and **DatasetEvents** for metadata that is not tied to a run.
 
-* **Centralizes metadata to construct a comprehensive map of all corporate data assets and their hierarchical relationships.** This principle ensures that systems can scale horizontally without facing artificial limitations or bottlenecks.
-* **Applies granular access controls dynamically, masking or restricting data based on user identity or geographical constraints.** By adopting this mechanic, engineers can bypass traditional processing constraints and deliver substantially faster time-to-insight.
-* **Implements automated profiling and assertions to block bad data before it impacts downstream dashboards.** This allows the overarching architecture to remain highly resilient while serving concurrent workloads natively.
+Details travel as **facets**, typed extensions attached to runs, jobs, or datasets. Examples in the spec include a dataset `schema` facet, `dataQualityMetrics` and `dataQualityAssertions` on inputs, `outputStatistics` on outputs, a `sql` facet on runs, and `sourceCodeLocation` on jobs. Custom facets let vendors add their own fields without breaking the core format.
 
-Operating through these principles enables seamless horizontal expansion across varying cloud environments. It integrates effortlessly with adjacent technologies like [Apache Iceberg](/apache-iceberg/), dbt, and advanced vector search algorithms.
+The project lists integrations for Apache Airflow, Apache Spark, Apache Flink, Apache Hive, dbt, Trino, Great Expectations, and others, so lineage is captured from the tools doing the work rather than reconstructed later from logs.
 
-## Why OpenLineage Matters in the Modern Data Stack
+| | OpenLineage | Catalog-native lineage | Manual documentation |
+|---|---|---|---|
+| Source of truth | Events emitted at run time | One platform's own query history | People |
+| Cross-tool coverage | Any tool with an integration | Usually limited to that platform | As complete as people keep it |
+| Freshness | Each run | Each query | Often stale |
+| Run status and timing | Yes, per run | Varies | No |
 
-Robust governance protects the business from compliance violations and internal breaches while simultaneously increasing internal trust in the data.
+## OpenLineage in the Lakehouse
 
-For modern enterprises managing decentralized teams, the implementation of OpenLineage eliminates significant architectural friction. Teams are explicitly empowered to operate autonomously against reliable technical foundations without dynamically disrupting other isolated workflows. It shifts manual engineering overhead into an autonomous, software-driven paradigm, keeping Total Cost of Ownership (TCO) extremely low.
+A lakehouse spreads work across many engines: Spark or Flink for ingestion, dbt for transformation, Dremio or Trino for queries, Airflow for scheduling, all reading and writing shared [Apache Iceberg](/knowledgebase/apache-iceberg/) tables through a catalog. No single engine sees the whole path from source to dashboard. OpenLineage gives each tool a shared way to report its piece, and the backend joins those pieces on dataset identifiers.
 
-### Key Benefits
-- **Unprecedented Scalability:** Automatically adapts to massive fluctuations in data volume and query concurrency.
-- **Vendor Neutrality:** Strongly aligns with open-source frameworks, preventing aggressive vendor lock-in.
-- **Enhanced Observability:** Exposes deep, structural metadata allowing engineers to monitor and trace pipelines comprehensively.
+That cross-engine view supports several jobs:
 
-## Frequently Asked Questions
+* **Impact analysis:** before changing a column in a Silver table, find every downstream job and Gold table that reads it.
+* **Root cause analysis:** when a dashboard number is wrong, trace back through failed or late runs.
+* **Governance and compliance:** show where regulated data flowed, which complements [data provenance](/knowledgebase/data-provenance/) and [data observability](/knowledgebase/data-observability/) tooling.
+* **AI context:** lineage tells an analytics agent which tables are derived from which sources and how fresh they are, which helps it pick trustworthy inputs.
 
-### What is Row-Level Security (RLS)?
-RLS is a database policy that automatically filters out rows (e.g., regional sales data) that the querying user is not authorized to see, without requiring separate views. This distinction is particularly important when evaluating total architecture costs and performance benchmarks.
+The Hub's [OpenLineage as the Spine of Data Observability](/blog/2026-05-openlineage-observability/) walks through a working setup, and [The Context Layer for AI Agents](/blog/context-layer-semantic-lineage-quality-ai-agents/) covers its role for agents.
 
-### What is active data governance?
-Active governance uses programmatic controls (like blocking a PR if data tests fail) rather than relying on manual, periodic audits. The open ecosystem continues to evolve rapidly, ensuring backward compatibility while introducing powerful new primitives.
+## Summary
 
-### How does OpenLineage impact data governance and security?
-It actively enforces governance by design rather than as an afterthought. Native logging, role-based access controls (RBAC), and structured access pathways provide immediate visibility into security boundaries and regulatory compliance.
+OpenLineage standardizes how pipelines report what they read, what they wrote, and how each run went. With integrations across the major lakehouse engines and schedulers, it is a practical route to end-to-end lineage in a multi-engine architecture.
 
----
-
-### E-E-A-T & Further Reading
+## Learn More
+To learn more about the [Data Lakehouse](/data-lakehouse/), read [The Lakehouse Built for Everyone](https://books.alexmerced.com/books/the-lakehouse-built-for-everyone/) by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

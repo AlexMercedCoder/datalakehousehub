@@ -8,13 +8,13 @@ description: "Data profiling is the process of examining a dataset's structure, 
 
 ## Introduction to Data Profiling
 
-Before a data engineer can build an ETL pipeline, or a data scientist can train a machine learning model, they must deeply understand the raw material they are working with. If an engineer assumes a `customer_age` column only contains integers between 18 and 100, but the data actually contains the string `"Unknown"` in 20% of the rows, the downstream pipeline will crash the moment it tries to perform mathematical calculations.
+Before a data engineer can build an ETL pipeline, or a data scientist can train a machine learning model, they need to understand the raw material they are working with. If an engineer assumes a `customer_age` column only contains integers between 18 and 100, but the data actually contains the string `"Unknown"` in many rows, the downstream pipeline will fail when it tries to perform calculations.
 
-**Data Profiling** is the foundational diagnostic process of examining, analyzing, and summarizing a dataset to understand its structure, content, and quality *before* it is used in production systems. It is the data engineering equivalent of a doctor taking a patient's vital signs before beginning surgery.
+**Data Profiling** is the diagnostic process of examining, analyzing, and summarizing a dataset to understand its structure, content, and quality *before* it is used in production systems. It is the data engineering equivalent of a doctor taking a patient's vital signs before beginning surgery.
 
 ## The Three Phases of Data Profiling
 
-Modern data profiling is generally broken down into three distinct types of analysis.
+Data profiling is generally broken down into three types of analysis.
 
 ### 1. Structure Discovery
 This is the most basic level of profiling. It examines the physical schema of the data to ensure it aligns with expectations.
@@ -24,22 +24,26 @@ This is the most basic level of profiling. It examines the physical schema of th
 
 ### 2. Content Discovery
 Content discovery digs into the actual values stored inside the rows, utilizing statistical analysis to map the shape of the data.
-*   **Null / Blank Ratios**: Exactly what percentage of the `middle_name` column is missing? 
-*   **Cardinality**: How many *unique* values exist in the `US_State` column? If the cardinality is 60, there is corrupted data (since there are only 50 states).
-*   **Statistical Distributions**: For numerical columns like `salary`, the profiler calculates the Mean, Median, Mode, Standard Deviation, and exact Min/Max bounds. It identifies massive outliers (e.g., a salary of $999,999,999) that indicate a data entry error.
+*   **Null / Blank Ratios**: What percentage of the `middle_name` column is missing? 
+*   **Cardinality**: How many *unique* values exist in the `US_State` column? If the cardinality is well above 50 (plus DC and the territories you expect), there is likely corrupted data.
+*   **Statistical Distributions**: For numerical columns like `salary`, the profiler calculates the Mean, Median, Mode, Standard Deviation, and Min/Max bounds. It identifies extreme outliers (e.g., a salary of $999,999,999) that indicate a data entry error.
 
 ### 3. Relationship Discovery
 This phase analyzes how different columns and tables relate to each other, which is critical for understanding legacy databases with undocumented schemas.
-*   **Primary/Foreign Keys**: The profiler might notice that 99.9% of the values in the `Order.customer_id` column exist in the `Customer.id` column, deducing a foreign key relationship.
+*   **Primary/Foreign Keys**: The profiler might notice that nearly all of the values in the `Order.customer_id` column exist in the `Customer.id` column, deducing a foreign key relationship.
 *   **Functional Dependencies**: The profiler might deduce that if `State = "Florida"`, then `Country` always equals `"USA"`. If it finds a single row where `State = "Florida"` and `Country = "Canada"`, it highlights the anomaly.
 
 ## How Profiling Drives Data Architecture
 
-Data profiling is not just an academic exercise; it dictates critical architectural decisions in the [Data Lakehouse](https://iceberglakehouse.com/iceberg/data-lakehouse/).
+Data profiling is not just an academic exercise; it informs architectural decisions in the [Data Lakehouse](https://iceberglakehouse.com/iceberg/data-lakehouse/).
 
-1.  **Storage Optimization ([Z-Ordering](https://datalakehousehub.com/knowledgebase/z-ordering/) and Partitioning)**: If a data engineer profiles a 10-Terabyte table and discovers that queries are almost exclusively filtered by `event_date` (low cardinality) and `customer_id` (high cardinality), they will physically partition the Iceberg table by `event_date` and apply [Z-Ordering](https://datalakehousehub.com/knowledgebase/z-ordering/) to the `customer_id`, drastically improving query speeds.
-2.  **Building [Data Contracts](https://datalakehousehub.com/knowledgebase/data-contracts/)**: Before deploying tools like **[Great Expectations](https://datalakehousehub.com/knowledgebase/great-expectations/)**, the data team runs an automated profiler. The profiler creates a baseline statistical model (e.g., "The mean transaction amount is $50"). The team uses this baseline to write automated [Data Quality](https://datalakehousehub.com/knowledgebase/data-quality/) tests, ensuring that future pipelines halt if the daily mean suddenly jumps to $5,000.
+1.  **Storage Optimization ([Z-Ordering](https://datalakehousehub.com/knowledgebase/z-ordering/) and Partitioning)**: If a data engineer profiles a large table and discovers that queries are mostly filtered by `event_date` (low cardinality) and `customer_id` (high cardinality), they can partition the Iceberg table by `event_date` and apply [Z-Ordering](https://datalakehousehub.com/knowledgebase/z-ordering/) to the `customer_id`, improving query speeds.
+2.  **Building [Data Contracts](https://datalakehousehub.com/knowledgebase/data-contracts/)**: Before deploying tools like **[Great Expectations](https://datalakehousehub.com/knowledgebase/great-expectations/)**, the data team runs an automated profiler. The profiler creates a baseline statistical model (e.g., "The mean transaction amount is $50"). The team uses this baseline to write automated [Data Quality](https://datalakehousehub.com/knowledgebase/data-quality/) tests, so that future pipelines halt if the daily mean suddenly jumps to $5,000.
 
 ## Conclusion
 
-Data Profiling shifts data teams from reactive debugging to proactive engineering. By systematically mapping the statistical boundaries, formatting inconsistencies, and relational structures of raw datasets, profiling eliminates the dangerous assumptions that cause data pipelines to fail. It provides the essential blueprint required to build robust transformations, enforce strict data quality rules, and ultimately deliver trustworthy analytics to the enterprise.
+Data Profiling shifts data teams from reactive debugging to proactive engineering. By systematically mapping the statistical boundaries, formatting inconsistencies, and relational structures of raw datasets, profiling replaces the untested assumptions that cause data pipelines to fail. It provides the blueprint needed to build reliable transformations, enforce data quality rules, and deliver trustworthy analytics to the enterprise.
+
+## Learn More
+
+To learn more about the [Data Lakehouse](/data-lakehouse/), read [The Lakehouse Built for Everyone](https://books.alexmerced.com/books/the-lakehouse-built-for-everyone/) by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

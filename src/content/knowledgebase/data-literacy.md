@@ -8,23 +8,23 @@ description: "Data literacy is the ability to read, question, and argue with dat
 
 ## Introduction to Data Literacy
 
-Imagine an organization where the finance department speaks French, the marketing department speaks German, and the executive board only speaks Spanish. The company would collapse because no one could communicate. 
+Imagine an organization where the finance department speaks French, the marketing department speaks German, and the executive board only speaks Spanish. The company would struggle because people could not communicate. 
 
-In the modern enterprise, **Data** is the universal corporate language. Yet, millions of business professionals are functionally illiterate in it. 
+In the modern enterprise, **Data** is a shared corporate language. Yet many business professionals are not fluent in it. 
 
-**Data Literacy** is the ability to read, work with, analyze, and argue with data. It is not about teaching a Marketing Manager how to write complex Python code or [Apache Spark](https://datalakehousehub.com/knowledgebase/apache-spark/) clusters. It is about teaching them how to look at a bar chart, understand what the data is actually saying, and confidently make a business decision based on that mathematical reality.
+**Data Literacy** is the ability to read, work with, analyze, and argue with data. It is not about teaching a Marketing Manager how to write Python code or run [Apache Spark](https://datalakehousehub.com/knowledgebase/apache-spark/) clusters. It is about teaching them how to look at a bar chart, understand what the data is actually saying, and make a confident business decision based on that evidence.
 
 ## The Data Literacy Crisis
 
-Companies spend millions of dollars building state-of-the-art [Data Lakehouses](https://iceberglakehouse.com/iceberg/data-lakehouse/) and deploying advanced AI models. Data Engineers work tirelessly to create pristine, real-time dashboards for the executive team. 
+Companies spend heavily building [Data Lakehouses](https://iceberglakehouse.com/iceberg/data-lakehouse/) and deploying advanced AI models. Data Engineers work hard to create clean, timely dashboards for the executive team. 
 
-However, if the VP of Sales looks at a dashboard showing a 10% drop in revenue, and their immediate reaction is, *"I don't trust this chart, my gut tells me we're doing fine,"* the entire multi-million dollar data infrastructure has failed. 
+However, if the VP of Sales looks at a dashboard showing a 10% drop in revenue, and their immediate reaction is, *"I don't trust this chart, my gut tells me we're doing fine,"* the data infrastructure has failed to deliver its value. 
 
-The primary bottleneck in enterprise analytics today is not technology; it is human comprehension. 
+In many organizations, the main bottleneck in analytics is not technology; it is human comprehension. 
 
 ## The Core Competencies of Data Literacy
 
-A data-literate employee—regardless of whether they work in HR, Sales, or Logistics—should possess three core skills:
+A data-literate employee, whether they work in HR, Sales, or Logistics, should have three core skills:
 
 ### 1. Reading and Interpreting Data
 A data-literate employee knows the difference between a Mean (Average) and a Median. They understand that if Bill Gates walks into a bar, the *Average* wealth of everyone in the bar jumps to $1 Billion, but the *Median* wealth remains $50,000. They know how to spot a misleading Y-axis on a graph designed to exaggerate a small trend.
@@ -36,15 +36,19 @@ When presented with a statistic like *"Our new ad campaign increased website tra
 *   *"Is this correlation or causation?"*
 
 ### 3. Arguing with Data
-In a data-driven culture, an employee does not win an argument because they have the highest salary or the loudest voice in the room (the HiPPO effect: Highest Paid Person's Opinion). They win the argument because they can present a statistically significant dataset that proves their hypothesis.
+In a data-driven culture, an employee does not win an argument because they have the highest salary or the loudest voice in the room (the HiPPO effect: Highest Paid Person's Opinion). They win the argument because they can present sound data and analysis that supports their hypothesis.
 
 ## Building a Data-Literate Culture
 
 Organizations cannot fix this problem by forcing every employee to take a weekend coding bootcamp. Data Literacy must be institutionalized.
 
 *   **Democratized Access**: Employees cannot become data literate if the data is locked away by the IT department. Companies must use self-service BI tools (like Superset or [Tableau](https://datalakehousehub.com/knowledgebase/tableau/)) to allow non-technical users to safely explore data themselves.
-*   **Data Glossaries**: The company must establish a unified vocabulary. If Sales defines "Active User" as someone who logged in this month, and Marketing defines "Active User" as someone who clicked an email, the two departments will constantly argue over the dashboard metrics. A central Data Catalog must explicitly define these terms for the entire company.
+*   **Data Glossaries**: The company must establish a unified vocabulary. If Sales defines "Active User" as someone who logged in this month, and Marketing defines "Active User" as someone who clicked an email, the two departments will constantly argue over the dashboard metrics. A central Data Catalog should define these terms for the entire company.
 
 ## Conclusion
 
-Data Literacy is the human operating system of the AI revolution. Building a massive [Data Lakehouse](https://iceberglakehouse.com/iceberg/data-lakehouse/) is only the first step. Unless an organization actively trains its workforce to comprehend, challenge, and trust the mathematical insights generated by that infrastructure, the company will remain trapped in the era of intuition-based decision-making.
+Data Literacy is the human side of the AI era. Building a [Data Lakehouse](https://iceberglakehouse.com/iceberg/data-lakehouse/) is only the first step. Unless an organization actively trains its workforce to comprehend, challenge, and trust the insights generated by that infrastructure, the company will remain trapped in the era of intuition-based decision-making.
+
+## Learn More
+
+To learn more about the [Data Lakehouse](/data-lakehouse/), read [The Lakehouse Built for Everyone](https://books.alexmerced.com/books/the-lakehouse-built-for-everyone/) by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

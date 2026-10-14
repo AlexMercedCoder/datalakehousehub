@@ -6,7 +6,7 @@ description: "Spill to disk is when a query engine writes intermediate data to l
 
 ## What is Spill to Disk?
 
-Spill to disk is what a query engine does when an operator's working data no longer fits in its memory budget: it writes part of that data to local disk, keeps going, and reads it back later. The query finishes instead of failing with an out-of-memory error, but it runs slower because disk is much slower than RAM.
+Spill to disk is what a query engine does when an operator's working data no longer fits in its memory budget: it writes part of that data to local disk, keeps going, and reads it back later. The query finishes instead of failing with an out-of-memory error, but it runs slower. Disk reads and writes are much slower than RAM, and the engine also spends CPU serializing in-memory data (JVM objects or Arrow buffers) into a disk format and deserializing it when it reads the spill back.
 
 Spilling happens in blocking operators, the ones that must see much or all of their input before they can produce output:
 
@@ -31,7 +31,8 @@ Filters and projections stream rows through and rarely need to spill.
 Some spill is normal for large joins and sorts. Heavy spill on queries that run often is a sign to fix the workload rather than add disk:
 
 * **Prune earlier.** Partition and sort [Apache Iceberg](/knowledgebase/apache-iceberg/) tables on common filter columns so less data reaches the join or aggregation; see [predicate pushdown](/knowledgebase/predicate-pushdown/).
-* **Pick the right join.** A [broadcast hash join](/knowledgebase/broadcast-hash-join/) of a small dimension avoids building a huge hash table; skewed keys can push one task into spill while the rest sit idle.
+* **Pick the right join.** A [broadcast hash join](/knowledgebase/broadcast-hash-join/) of a small dimension avoids building a huge hash table. The planner picks broadcast from size estimates, so stale or missing table statistics can lead the [cost-based optimizer](/knowledgebase/cost-based-optimizer/) to broadcast a table that is too large; run `ANALYZE` or refresh statistics after big loads.
+* **Handle skew.** Skewed join keys can push one task into spill while the rest sit idle. In Spark, Adaptive Query Execution (on by default since 3.2) splits skewed sort-merge join partitions when `spark.sql.adaptive.skewJoin.enabled` is true; in other engines, salting the hot key spreads its rows across tasks.
 * **Pre-aggregate.** Materialize frequent rollups as gold tables or materialized views so dashboards do not re-aggregate raw facts.
 * **Use fast local disk.** When spill is unavoidable, NVMe instance storage spills far faster than network-attached volumes.
 
@@ -48,6 +49,6 @@ No. Swapping is the operating system paging process memory to disk without the e
 ### Does spilling affect data security?
 Spill files hold intermediate query data on local disk. Some engines, such as Trino, can encrypt spill files; otherwise rely on encrypted local volumes.
 
----
+## Learn More
 
-### E-E-A-T & Further Reading
+To learn more about the [Data Lakehouse](/data-lakehouse/), read [The Lakehouse Built for Everyone](https://books.alexmerced.com/books/the-lakehouse-built-for-everyone/) by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

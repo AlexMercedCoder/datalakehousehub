@@ -6,40 +6,40 @@ description: "Unity Catalog is Databricks' governance catalog for lakehouse data
 
 # What is Unity Catalog?
 
-Unity Catalog is a unified, centralized governance solution explicitly designed for the modern [data lakehouse](/data-lakehouse/). Developed by Databricks, it provides a single, cohesive control plane to manage access permissions, audit logs, and data lineage across massive, multi-cloud architectures.
+Unity Catalog is a centralized governance and catalog service for the [data lakehouse](/knowledgebase/data-lakehouse/). Developed by Databricks, it provides one place to manage access permissions, audit logs, and data lineage for data and AI assets.
 
-Historically, organizations struggled with deeply fragmented security models. They managed data access policies inside their cloud data warehouse, completely separate policies for their cloud storage buckets (via AWS IAM or Azure Role-Based Access Control), and yet another set of rules for their dashboards. This disjointed approach led to massive security vulnerabilities and massive compliance violations. Unity Catalog solves this by applying a single, unified security model to all data assets—including files, tables, machine learning models, and dashboards—regardless of which cloud provider they reside on.
+Historically, organizations dealt with fragmented security models. They managed data access policies inside their data warehouse, separate policies for their cloud storage buckets (via AWS IAM or Azure role-based access control), and another set of rules for their dashboards. Keeping these in sync was error-prone and made audits harder. Unity Catalog addresses this by applying one security model to many asset types, including tables, volumes of files, machine learning models, and functions.
 
 ## Centralized Governance Architecture
 
-Unity Catalog dramatically simplifies governance by elevating the access controls above the specific execution engine and embedding them directly into the catalog layer.
+Unity Catalog simplifies governance by moving access controls out of individual compute clusters and into the catalog layer.
 
 ### Unified Role-Based Access Control (RBAC)
-In Unity Catalog, security is enforced using standard ANSI SQL. A security administrator can execute a simple command: `GRANT SELECT ON table sales_data TO group finance_team`. 
+In Unity Catalog, privileges are managed with SQL `GRANT` statements. A security administrator can run a command such as: ``GRANT SELECT ON TABLE sales_data TO `finance_team` ``. 
 
-This single command applies universally. If a member of the finance team queries that table using a massive Databricks SQL warehouse, or if they write a Python script in a Databricks Notebook using PySpark, Unity Catalog strictly enforces the exact same access rule. If an unauthorized user attempts to access the data, the catalog rejects the request completely, ensuring airtight security across all workspaces.
+That rule applies across Databricks compute. Whether a member of the finance team queries the table from a Databricks SQL warehouse or from a PySpark notebook, Unity Catalog enforces the same access rule, and requests from unauthorized users are rejected in every workspace attached to that metastore.
 
 ### Automated Data Lineage
-In complex enterprise environments, understanding how data flows is critical for debugging and regulatory compliance (like GDPR or CCPA). Unity Catalog natively tracks automated data lineage. As Spark jobs execute transformations, Unity Catalog quietly records the dependencies. It provides a visual graph showing exactly which raw S3 buckets populated which Silver tables, and exactly which Gold tables feed a specific executive dashboard. If a column contains corrupted data, data engineers can use the lineage graph to instantly trace the error back to the original source pipeline.
+In large enterprise environments, understanding how data flows matters for debugging and regulatory compliance (like GDPR or CCPA). Unity Catalog captures lineage automatically for queries run on Databricks, down to the column level. It provides a graph showing which source tables populated which Silver tables, and which Gold tables feed a specific dashboard. If a column contains bad data, data engineers can use the lineage graph to trace the problem back to its source.
 
 ## Multi-Cloud and Data Sharing
 
-Massive enterprises rarely operate on a single cloud. They often possess analytical workloads on AWS, machine learning clusters on Google Cloud, and legacy applications on Azure.
+Many large enterprises use more than one cloud, for example with analytics on AWS, machine learning on Google Cloud, and other applications on Azure.
 
-Unity Catalog operates across all major cloud providers seamlessly. It abstracts the underlying cloud-specific IAM roles and storage credentials, allowing administrators to manage global data access from a single pane of glass. 
+Unity Catalog is available on Databricks on AWS, Azure, and Google Cloud, with a metastore per region. It wraps cloud-specific IAM roles and storage credentials in catalog objects (storage credentials and external locations), so administrators manage data access through the catalog rather than through each cloud's console. 
 
-Furthermore, Unity Catalog incorporates Delta Sharing, an open protocol for secure cross-organizational data sharing. An enterprise can use Delta Sharing to securely expose a live dataset to an external vendor without requiring the vendor to use Databricks. The vendor can query the shared data natively using Apache Spark, Pandas, or PowerBI, entirely bypassing the need for expensive, brittle FTP transfers or data duplication.
+Unity Catalog also incorporates Delta Sharing, an open protocol for sharing data across organizations. An enterprise can use Delta Sharing to give an external partner access to a live dataset without requiring the partner to use Databricks. The partner can read the shared data with clients such as Apache Spark, pandas, or Power BI, instead of relying on FTP transfers or extra copies.
 
 ## Open Sourcing Unity Catalog
 
-In 2024, Databricks announced the open-sourcing of Unity Catalog, a massive shift in the data ecosystem designed to directly combat the perception of vendor lock-in and compete with Apache Polaris.
+In June 2024, Databricks open-sourced Unity Catalog and contributed it to the LF AI & Data Foundation, a move aimed at addressing concerns about vendor lock-in.
 
-By open-sourcing the core catalog functionality, Databricks established a universal, REST-based interoperability standard. This allows independent query engines (like Trino, Dremio, or DuckDB) to connect to an open-source Unity Catalog server, read the Delta Lake or [Apache Iceberg](/apache-iceberg/) tables natively, and respect the centralized access permissions without requiring the organization to pay for Databricks compute resources.
+Open-source Unity Catalog exposes a REST API, including an implementation of the Iceberg REST catalog interface for reading tables. This allows other engines (such as Apache Spark, DuckDB, or Daft) to connect to a Unity Catalog server and read Delta Lake or [Apache Iceberg](/knowledgebase/apache-iceberg/) tables, without running them on Databricks compute.
 
 ## Summary of Technical Value
 
-Unity Catalog fundamentally solved the severe governance crisis of the massive, decoupled data lakehouse. By centralizing Role-Based Access Controls, automated lineage tracking, and multi-cloud credential management into a single, highly auditable control plane, it allows enterprises to safely democratize data access. The move to open-source the platform guarantees that organizations can implement strict security boundaries without sacrificing architectural flexibility or interoperability.
+Unity Catalog addresses a hard governance problem in the decoupled data lakehouse. By centralizing access controls, lineage tracking, and cloud credential management in one auditable catalog, it helps enterprises widen data access safely. The open-source release gives organizations more options to use the same catalog model with engines beyond Databricks.
 
 
 ## Learn More
-To learn more about the Data Lakehouse, read [The Lakehouse Built for Everyone](https://books.alexmerced.com/books/the-lakehouse-built-for-everyone/) by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).
+To learn more about the [Data Lakehouse](/data-lakehouse/), read [The Lakehouse Built for Everyone](https://books.alexmerced.com/books/the-lakehouse-built-for-everyone/) by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

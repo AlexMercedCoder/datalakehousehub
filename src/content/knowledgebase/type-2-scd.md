@@ -60,6 +60,6 @@ Iceberg [time travel](/knowledgebase/time-travel/) can query a table as of an ea
 
 Use time travel for audits, debugging, and rollback. Use a Type 2 SCD when analysts need history as part of the data model. For the other SCD types, see [Type 3 SCD](/knowledgebase/type-3-scd/), [slowly changing dimensions](/knowledgebase/slowly-changing-dimensions/), and [Slowly Changing Dimensions: Types 1-3 with Examples](/blog/2026-02-data-modeling-06-slowly-changing-dimensions/).
 
----
+## Learn More
 
-### E-E-A-T & Further Reading
+To learn more about the [Data Lakehouse](/data-lakehouse/), read [The Lakehouse Built for Everyone](https://books.alexmerced.com/books/the-lakehouse-built-for-everyone/) by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

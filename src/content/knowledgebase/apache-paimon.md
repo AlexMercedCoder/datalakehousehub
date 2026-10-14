@@ -6,34 +6,34 @@ description: "Apache Paimon is an open table format built for streaming that use
 
 # What is Apache Paimon?
 
-Apache Paimon is a highly advanced, next-generation Open Table Format specifically architected to bridge the massive technological divide between continuous, high-speed data streaming and massive historical batch analytics within the Open [Data Lakehouse](/data-lakehouse/). While [Apache Iceberg](/apache-iceberg/) is the undisputed king of massive batch analytics and data warehousing, Apache Paimon was explicitly engineered from the ground up to be the absolute, native storage companion for Apache Flink, focusing entirely on the brutal, low-latency demands of real-time streaming pipelines.
+Apache Paimon is an open table format designed to bring real-time streaming updates and batch analytics together in the open [Data Lakehouse](/data-lakehouse/). It began as Flink Table Store inside the Apache Flink project and became an Apache Software Foundation top-level project. While [Apache Iceberg](/apache-iceberg/) is widely used for large-scale batch analytics and data warehousing, Paimon was designed from the start as a close storage companion for Apache Flink, with a focus on low-latency streaming ingestion and frequent updates.
 
-In traditional architectures, data engineers built completely isolated systems (the Lambda Architecture). They used Apache Kafka for real-time streaming, and Amazon S3 with Apache Parquet for historical analytics. Merging the two to create a cohesive dashboard required incredibly complex, highly fragile data synchronization pipelines. Apache Paimon entirely obliterates this complexity. It provides a single, unified architectural table format that physically supports continuous sub-second streaming ingestion while simultaneously providing highly compressed, columnar structures for deep historical SQL queries.
+In traditional architectures, data engineers often built separate systems (the Lambda Architecture). They used Apache Kafka for real-time streaming and Amazon S3 with Apache Parquet for historical analytics. Combining the two for a single dashboard required complex synchronization pipelines. Apache Paimon reduces this complexity by offering one table format that supports continuous streaming ingestion while storing data in columnar files that work well for historical SQL queries.
 
 ## The Architecture of the LSM-Tree
 
-The absolute foundational secret of Apache Paimon's blistering streaming performance is its reliance on the Log-Structured Merge-Tree (LSM-Tree) architecture, an advanced physical storage mechanism famously utilized by massive NoSQL databases like RocksDB and Cassandra.
+Paimon's streaming update performance comes from its use of the Log-Structured Merge-Tree (LSM-Tree), a storage structure also used by databases and storage engines such as RocksDB and Cassandra.
 
 ### The Problem with Real-Time Updates
-If a massive Apache Flink pipeline attempts to execute 100,000 row-level `UPDATE` commands per second directly against a massive Parquet file, the file will completely corrupt or the system will grind to a halt. Parquet files are immutable; they hate being changed.
+If a Flink pipeline tried to apply a high rate of row-level `UPDATE` commands by rewriting Parquet files directly, every update would mean rewriting large files, and the pipeline could not keep up. Parquet files are immutable, so changing a row means writing a new file.
 
 ### The Paimon Solution
-Paimon completely circumvents this physics problem. When Flink sends the 100,000 `UPDATE` commands, Paimon does not touch the massive historical Parquet files. 
-1. **The MemTable:** Paimon first catches the updates in active, blazing-fast RAM (the MemTable). 
-2. **The Flush (Level 0):** When the RAM fills up, Paimon quickly flushes the data to the hard drive as a tiny, raw, highly unoptimized file.
-3. **Background Compaction:** In the background, completely isolated from the live streaming traffic, Paimon continuously executes a complex Compaction algorithm. It takes the thousands of tiny files, merges them, resolves the `UPDATE` and `DELETE` commands mathematically, and permanently writes the final, perfectly pristine data into a massive, highly optimized columnar Parquet file at the deepest level of the LSM-Tree.
+Paimon avoids rewriting historical files on every update. When Flink sends updates for a primary key table:
+1. **The Write Buffer:** Paimon first collects incoming records in memory and sorts them by key.
+2. **The Flush (Level 0):** When the buffer fills or a checkpoint occurs, Paimon writes the records to storage as small sorted files.
+3. **Compaction:** Paimon periodically merges these small files, resolving `UPDATE` and `DELETE` records by key and writing larger, consolidated columnar files (ORC or Parquet) at deeper levels of the LSM-Tree. Compaction can run inline with the writer or as a separate dedicated job.
 
-This exact architecture allows Paimon to absorb absolutely massive spikes of continuous streaming `INSERT`, `UPDATE`, and `DELETE` events without ever locking the database or slowing down the real-time ingestion pipeline.
+This design lets Paimon absorb a continuous stream of `INSERT`, `UPDATE`, and `DELETE` events without rewriting whole tables for each change.
 
 ## Primary Key Enforcement and Changelogs
 
-Unlike traditional Data Lakehouse formats that occasionally struggle with deduplication, Paimon natively and aggressively enforces Primary Keys. 
+Paimon supports primary key tables natively.
 
-When a streaming pipeline ingests data, Paimon uses the Primary Key to guarantee absolute uniqueness. Furthermore, Paimon natively generates a continuous Changelog (a strict chronological ledger of every single mutation). This allows downstream Flink applications to consume Paimon exactly as if it were a Kafka topic, reacting instantaneously to the specific changes in the data rather than rescanning the entire massive table.
+When a streaming pipeline ingests data, Paimon uses the primary key and a configurable merge engine (such as deduplicate, partial-update, or aggregation) to decide how records with the same key combine. Paimon can also produce a changelog of row-level changes, which lets downstream Flink jobs consume a Paimon table as a stream, reacting to changes instead of rescanning the whole table.
 
 ## Summary of Technical Value
 
-Apache Paimon is the ultimate architectural fusion of the real-time message queue and the historical data warehouse. By leveraging advanced LSM-Tree mechanics to physically absorb massive, high-frequency streaming mutations while seamlessly compacting data into highly efficient columnar formats in the background, Paimon allows organizations to execute completely unified, low-latency streaming and historical batch analytics on a single, massive Open Data Lakehouse platform.
+Apache Paimon combines streaming-style updates with lakehouse-style storage. By using an LSM-Tree to absorb high-frequency changes and compacting data into columnar files in the background, Paimon lets organizations run low-latency streaming and historical batch analytics on the same tables in an open Data Lakehouse.
 
 ## Learn More
-To learn more about the Data Lakehouse, read [The Lakehouse Built for Everyone](https://books.alexmerced.com/books/the-lakehouse-built-for-everyone/) by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).
+To learn more about the [Data Lakehouse](/data-lakehouse/), read [The Lakehouse Built for Everyone](https://books.alexmerced.com/books/the-lakehouse-built-for-everyone/) by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

@@ -6,42 +6,46 @@ description: "Data Reflections, now called Reflections, are Dremio's optimized p
 
 ## What is Data Reflections?
 
-An intelligent acceleration strategy optimizing frequent analytical routines completely neutralizing requirements driving rigid physical copy duplication. 
+"Data Reflections" is an older name for a Dremio feature that Dremio's documentation now simply calls **Reflections**. A Reflection is a precomputed, optimized copy of the data in a table or view, or of a query result, that Dremio's query optimizer can use in place of the original to speed up queries. The table or view a Reflection is based on is called its anchor.
 
-In the rapidly evolving landscape of data engineering and artificial intelligence, **Data Reflections** has emerged as a critical foundational component. As organizations transition from legacy, monolithic architectures to decoupled, scalable environments, understanding the role of Data Reflections is essential for building future-proof infrastructure. This capability serves as a critical enabler in modern data ecosystems, explicitly guiding architecture toward absolute efficiency and scale. When correctly implemented, Data Reflections dynamically drives analytical workloads and structurally limits administrative technical debt.
+Users and BI tools keep querying the original tables and views. When the optimizer finds that a Reflection can answer all or part of a query, it rewrites the plan to read the Reflection instead. No change to the SQL is needed.
 
-## Core Architecture and Mechanics
+## Types of Reflections
 
-To understand the practical application of Data Reflections, it is crucial to systematically examine its fundamental operational behaviors and structural design:
+* **[Raw reflections](/knowledgebase/raw-reflections/)** keep the same rows as the anchor, can include only some of its columns, and can use their own partitioning and sorting. They suit row-level queries and expensive views.
+* **[Aggregation reflections](/knowledgebase/aggregation-reflections/)** store data aggregated by chosen dimensions and measures. They suit BI queries that group and summarize data.
+* **External reflections** let Dremio use a table that was materialized outside Dremio as a Reflection for a view.
 
-* **Operates as a proprietary layer natively within the core Dremio application architecture.** This principle ensures that systems can scale horizontally without facing artificial limitations or bottlenecks.
-* **Integrates deeply with broad open-source table formats (like [Apache Iceberg](/apache-iceberg/)) without format lock-in.** By adopting this mechanic, engineers can bypass traditional processing constraints and deliver substantially faster time-to-insight.
-* **Eliminates the explicit need for users to manually engineer massive data duplication pipelines.** This allows the overarching architecture to remain highly resilient while serving concurrent workloads natively.
+Reflections can also be **manual**, defined and managed by users, or **autonomous**, created and managed by Dremio based on query patterns.
 
-Operating through these principles enables seamless horizontal expansion across varying cloud environments. It integrates effortlessly with adjacent technologies like Apache Iceberg, dbt, and advanced vector search algorithms.
+## How Reflections Work
 
-## Why Data Reflections Matters in the Modern Data Stack
+Dremio stores Reflections as [Apache Iceberg](/knowledgebase/apache-iceberg/) tables in its configured storage. It keeps them current through refreshes: Reflections on Iceberg tables can refresh automatically when the source changes, and Reflections on other sources follow a refresh schedule. During query planning, the optimizer considers available Reflections and picks the one that gives the cheapest plan. The Jobs page and `EXPLAIN PLAN FOR` show whether a query used a Reflection.
 
-As a platform-exclusive technical innovation, this feature represents a major competitive advantage for teams utilizing Dremio. It shifts manual engineering overhead into an autonomous, software-driven paradigm, keeping Total Cost of Ownership (TCO) extremely low.
+## Why Reflections Matter
 
-For modern enterprises managing decentralized teams, the implementation of Data Reflections eliminates significant architectural friction. Teams are explicitly empowered to operate autonomously against reliable technical foundations without dynamically disrupting other isolated workflows. It shifts manual engineering overhead into an autonomous, software-driven paradigm, keeping Total Cost of Ownership (TCO) extremely low.
+Reflections address a common problem on a [data lakehouse](/knowledgebase/data-lakehouse/): dashboards and applications query the same views repeatedly, and those views may join several tables, read slow federated sources, or scan data laid out for a different access pattern. Without Reflections, teams often build and maintain separate summary tables and point each tool at the right one. With Reflections, the optimized copies are managed by the engine and used transparently.
 
-### Key Benefits
-- **Unprecedented Scalability:** Automatically adapts to massive fluctuations in data volume and query concurrency.
-- **Vendor Neutrality:** Strongly aligns with open-source frameworks, preventing aggressive vendor lock-in.
-- **Enhanced Observability:** Exposes deep, structural metadata allowing engineers to monitor and trace pipelines comprehensively.
+The trade-offs are the storage the copies use, the compute spent refreshing them, and freshness: results served from a Reflection are as current as its last refresh.
 
 ## Frequently Asked Questions
 
-### Is this a generalized open-source standard?
-No, this is a proprietary architectural component developed explicitly by Dremio to drastically accelerate engine performance. This distinction is particularly important when evaluating total architecture costs and performance benchmarks.
+### Is this an open standard?
+No. Reflections are a Dremio feature. The closest general concept is the [materialized view](/knowledgebase/materialized-view/), which some databases can also substitute automatically through query rewrite. In Dremio, Reflections are separate from the views and tables users query, and the optimizer decides when to use them.
 
 ### Does this require moving data into Dremio?
-No, Dremio's architecture inherently acts on data directly where it physically resides in your cloud object workloads. The open ecosystem continues to evolve rapidly, ensuring backward compatibility while introducing powerful new primitives.
+Source data stays where it lives. A Reflection is an additional copy that Dremio stores and manages, typically in object storage.
 
-### How does Data Reflections impact data governance and security?
-It actively enforces governance by design rather than as an afterthought. Native logging, role-based access controls (RBAC), and structured access pathways provide immediate visibility into security boundaries and regulatory compliance.
+### Do users need to reference a Reflection in SQL?
+No. Users query the anchor tables and views, and the optimizer decides whether to use a Reflection.
 
 ---
 
-### E-E-A-T & Further Reading
+### Sources and further reading
+
+- Dremio documentation, [Reflections overview](https://docs.dremio.com/current/acceleration/)
+- Dremio documentation, [Manually Manage Reflections](https://docs.dremio.com/current/acceleration/manual-reflections/)
+
+## Learn More
+
+To learn more about the [Data Lakehouse](/data-lakehouse/), read [The Lakehouse Built for Everyone](https://books.alexmerced.com/books/the-lakehouse-built-for-everyone/) by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

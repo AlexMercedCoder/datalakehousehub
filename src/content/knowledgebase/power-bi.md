@@ -8,38 +8,42 @@ description: "Power BI is Microsoft's business intelligence and visualization to
 
 ## Introduction to Power BI
 
-If [Tableau](https://datalakehousehub.com/knowledgebase/tableau/) pioneered the Self-Service BI revolution, Microsoft's **Power BI** conquered it through absolute corporate ubiquity.
+[Tableau](https://datalakehousehub.com/knowledgebase/tableau/) helped popularize self-service BI, and Microsoft's **Power BI** became one of the most widely used tools in the category.
 
-Launched in 2015, Power BI is an interactive data visualization and business intelligence tool designed to provide a unified, scalable platform for self-service and enterprise data analytics. Because Microsoft strategically bundled Power BI into existing Office 365 enterprise licenses, it rapidly became the default BI tool for the majority of the Fortune 500, offering an incredibly low barrier to entry for users already familiar with Microsoft Excel.
+Launched in 2015, Power BI is an interactive data visualization and business intelligence tool designed for both self-service and enterprise analytics. Because Microsoft includes Power BI Pro in some Microsoft 365 enterprise plans (such as E5) and Power BI Desktop is free, it spread quickly in companies already using Microsoft products, and it is approachable for users familiar with Excel.
 
 ## The Architecture: Power Query and DAX
 
-While tools like [Tableau](https://datalakehousehub.com/knowledgebase/tableau/) focus heavily on visual exploration, Power BI focuses heavily on deep, complex data modeling, borrowing heavily from Excel's advanced features.
+While tools like [Tableau](https://datalakehousehub.com/knowledgebase/tableau/) are known for visual exploration, Power BI puts a lot of weight on data modeling, with roots in Excel's Power Pivot and Power Query features.
 
-A Power BI implementation relies on two core proprietary languages:
+A Power BI implementation relies on two Microsoft languages:
 
 ### 1. Power Query (M Language)
 Before a user can visualize data in Power BI, they must shape it. Power Query (which uses the 'M' formula language) is an embedded ETL tool. If a user connects Power BI to a messy CSV file, they use Power Query to write rules (e.g., "Remove the first 3 rows, split the 'Name' column by the space character, and convert the 'Date' to a standard format"). Power Query cleans the data as it enters the Power BI engine.
 
 ### 2. DAX (Data Analysis Expressions)
-Once the data is loaded, analysts use **DAX** to create complex analytical calculations. 
-Unlike standard SQL, DAX is a functional language specifically designed to work with relational data models (Star Schemas). It allows analysts to calculate things like "Year-over-Year Revenue Growth" dynamically, adjusting the math instantly based on whatever filters the user has clicked on the dashboard. DAX is incredibly powerful, but notoriously difficult to master.
+Once the data is loaded, analysts use **DAX** to create analytical calculations. 
+Unlike standard SQL, DAX is a formula language designed to work with tabular data models (often star schemas). It lets analysts calculate things like "Year-over-Year Revenue Growth" that recalculate based on whatever filters the user has selected on the report. DAX is expressive, but its filter context rules take time to learn.
 
 ## Data Storage: Import vs. DirectQuery
 
 Similar to other enterprise BI tools, Power BI must manage how it interacts with underlying databases.
 
-1.  **Import Mode (The VertiPaq Engine)**: The analyst imports massive datasets directly into Power BI. Microsoft uses its proprietary **VertiPaq** in-memory columnar compression engine. The dashboard loads instantly, but the data is siloed and must be refreshed on a rigid schedule. Furthermore, massive datasets will crash the user's laptop.
+1.  **Import Mode (The VertiPaq Engine)**: The analyst imports data into Power BI, where Microsoft's **VertiPaq** in-memory columnar engine compresses and stores it. Reports respond quickly, but the data is a copy that must be refreshed on a schedule, and model size is limited by memory and by the capacity or license tier.
 2.  **DirectQuery Mode**: The analyst leaves the data in the underlying database (e.g., Snowflake or an Iceberg Lakehouse powered by [Dremio](https://opendatalakehouse.com/kb/dremio/)). When a user opens the dashboard, Power BI translates the DAX logic into SQL and pushes the query down to the database.
 
 ## The Semantic Model Architecture
 
-Power BI heavily encourages organizations to build a centralized **Semantic Model** (previously called a Power BI Dataset).
+Power BI encourages organizations to build a centralized **Semantic Model** (previously called a Power BI Dataset).
 
-Instead of every analyst connecting directly to the raw database and writing their own DAX logic, a senior data architect connects Power BI Desktop to the database, imports the tables, establishes the relationships (the [Star Schema](https://datalakehousehub.com/knowledgebase/star-schema/)), writes the master DAX formulas, and publishes this "Semantic Model" to the Power BI Cloud Service.
+Instead of every analyst connecting directly to the raw database and writing their own DAX logic, a data modeler connects Power BI Desktop to the database, imports the tables, establishes the relationships (the [Star Schema](https://datalakehousehub.com/knowledgebase/star-schema/)), writes the shared DAX measures, and publishes this "Semantic Model" to the Power BI service.
 
-Subsequently, hundreds of non-technical business users can connect Excel, PowerPoint, or Power BI to that centralized, certified Semantic Model to build their own visual dashboards, ensuring that everyone in the company is using the exact same underlying math.
+Business users can then connect Excel or Power BI to that shared, certified Semantic Model to build their own reports, so they use the same calculations.
 
 ## Conclusion
 
-Power BI dominates the enterprise analytics market by offering an unparalleled blend of familiar Microsoft UX, deep integration with the Azure ecosystem, and incredibly powerful data modeling capabilities via DAX. While its proprietary languages introduce a steep learning curve, its ability to scale from a single Excel user to a massive, centralized, globally governed enterprise deployment makes it the default standard for modern corporate reporting.
+Power BI is widely adopted in enterprise analytics because it combines a familiar Microsoft interface, integration with Azure and Microsoft Fabric, and strong data modeling through DAX. Its languages take time to learn, but it scales from a single Excel user to a centrally governed enterprise deployment.
+
+## Learn More
+
+To learn more about the [Data Lakehouse](/data-lakehouse/), read [The Lakehouse Built for Everyone](https://books.alexmerced.com/books/the-lakehouse-built-for-everyone/) by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

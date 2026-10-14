@@ -40,4 +40,4 @@ Many organizations run both: a warehouse for workloads that rely on its features
 Cloud data warehouses made elastic, managed analytics standard by separating storage from compute. Their main limitation was proprietary storage, and that line is softening as warehouses add Iceberg support. An open lakehouse takes the same separation one step further by keeping the data in an open format and an open catalog that any engine can use.
 
 ## Learn More
-To learn more about the Data Lakehouse, read [The Lakehouse Built for Everyone](https://books.alexmerced.com/books/the-lakehouse-built-for-everyone/) by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).
+To learn more about the [Data Lakehouse](/data-lakehouse/), read [The Lakehouse Built for Everyone](https://books.alexmerced.com/books/the-lakehouse-built-for-everyone/) by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

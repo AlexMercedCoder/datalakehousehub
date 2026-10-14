@@ -5,44 +5,46 @@ meta_title: "What is Run-Length Encoding? | Expert Data Lakehouse & AI Glossary"
 description: "Run-length encoding is a lossless compression method that stores a run of repeated values as one value and a count, which suits sorted columnar data."
 ---
 
-## What is Run-Length Encoding?
+Run-length encoding (RLE) is a lossless compression method that replaces a run of identical consecutive values with a single copy of the value plus a count of how many times it repeats. The sequence `A A A A B B C C C` becomes `(A,4) (B,2) (C,3)`. RLE does nothing useful for data that changes on every row, but it shrinks long runs of repeated values to a few bytes, which is why it shows up inside columnar formats used in a lakehouse, including Apache Parquet and Apache Arrow.
 
-A very simple form of lossless data compression where runs of data are stored as a single data value and count. 
+## How Run-Length Encoding Works
 
-In the rapidly evolving landscape of data engineering and artificial intelligence, **Run-Length Encoding** has emerged as a critical foundational component. As organizations transition from legacy, monolithic architectures to decoupled, scalable environments, understanding the role of Run-Length Encoding is essential for building future-proof infrastructure. This capability serves as a critical enabler in modern data ecosystems, explicitly guiding architecture toward absolute efficiency and scale. When correctly implemented, Run-Length Encoding dynamically drives analytical workloads and structurally limits administrative technical debt.
+An encoder walks the input in order. While the next value matches the current one it increments a counter; when the value changes it emits the pair and starts a new run. Decoding reverses the process by repeating each value by its count. Two properties matter in practice:
 
-## Core Architecture and Mechanics
+* **It depends on order.** RLE only sees adjacent repeats. A column with ten distinct values compresses well if rows are sorted on that column and poorly if the same values are scattered.
+* **It can be queried without full decoding.** An engine can count, filter, or aggregate a run as one unit. A filter such as `status = 'shipped'` can test one value and accept or reject the whole run.
 
-To understand the practical application of Run-Length Encoding, it is crucial to systematically examine its fundamental operational behaviors and structural design:
+Real formats rarely use pure RLE. Apache Parquet defines an RLE and bit-packing hybrid encoding (encoding id 3). It switches between RLE runs for repeated values and bit-packed groups for values that do not repeat, using a fixed bit width known in advance. The Parquet spec uses this hybrid for three things: repetition and definition levels (which record nesting and nulls), dictionary indices, and boolean values.
 
-* **Pre-computes or intelligently caches data to avoid redundant processing on recurrent queries.** This principle ensures that systems can scale horizontally without facing artificial limitations or bottlenecks.
-* **Re-organizes data deeply at the memory level (e.g., Apache Arrow) to fit CPU caches perfectly.** By adopting this mechanic, engineers can bypass traditional processing constraints and deliver substantially faster time-to-insight.
-* **Maintains aggressive probabilistic structures (like Bloom Filters) to immediately skip reading irrelevant data partitions.** This allows the overarching architecture to remain highly resilient while serving concurrent workloads natively.
+## RLE and Dictionary Encoding Together
 
-Operating through these principles enables seamless horizontal expansion across varying cloud environments. It integrates effortlessly with adjacent technologies like [Apache Iceberg](/apache-iceberg/), dbt, and advanced vector search algorithms.
+RLE is most often paired with [dictionary encoding](/knowledgebase/dictionary-encoding/). In Parquet's `RLE_DICTIONARY` encoding, the distinct values of a column chunk are stored once in a dictionary page, and each data page stores small integer IDs that point into that dictionary. Those IDs are then compressed with the RLE and bit-packing hybrid. A low-cardinality column such as `country` or `order_status` becomes a short list of distinct strings plus a compact stream of run-length encoded integers. The older `PLAIN_DICTIONARY` value is deprecated in the spec in favor of this approach.
 
-## Why Run-Length Encoding Matters in the Modern Data Stack
+Apache Arrow added a related in-memory layout, Run-End Encoded (REE), in columnar format version 1.3. Instead of storing run lengths, an REE array holds two child arrays: `run_ends`, a strictly ascending list of 16, 32, or 64 bit integers marking where each run stops, and `values`, holding one value per run. Storing end positions rather than lengths lets an engine find the run for a given row with a binary search.
 
-These highly technical optimizations ensure that systems can handle multi-terabyte queries within seconds. Without them, even the most robust architectures would collapse under I/O bottlenecks.
+| Encoding | Stores | Works best when |
+|---|---|---|
+| Run-length encoding | value plus repeat count | Long runs of the same value, usually after sorting |
+| Dictionary encoding | distinct values once, plus integer IDs | Few distinct values, in any order |
+| Delta encoding | differences between consecutive values | Increasing numbers such as timestamps or IDs |
+| Plain | each value as written | High-cardinality data with few repeats |
 
-For modern enterprises managing decentralized teams, the implementation of Run-Length Encoding eliminates significant architectural friction. Teams are explicitly empowered to operate autonomously against reliable technical foundations without dynamically disrupting other isolated workflows. It shifts manual engineering overhead into an autonomous, software-driven paradigm, keeping Total Cost of Ownership (TCO) extremely low.
+## Run-Length Encoding in the Lakehouse
 
-### Key Benefits
-- **Unprecedented Scalability:** Automatically adapts to massive fluctuations in data volume and query concurrency.
-- **Vendor Neutrality:** Strongly aligns with open-source frameworks, preventing aggressive vendor lock-in.
-- **Enhanced Observability:** Exposes deep, structural metadata allowing engineers to monitor and trace pipelines comprehensively.
+In a lakehouse, RLE lives inside the Parquet files that back [Apache Iceberg](/knowledgebase/apache-iceberg/) tables. Writers such as Spark, Flink, and Dremio choose encodings per column chunk automatically, so engineers rarely configure RLE directly. What they do control is data layout, and layout decides how well RLE performs:
 
-## Frequently Asked Questions
+* **Sort orders and clustering.** Iceberg tables can declare a sort order, and table maintenance jobs can rewrite files with sorting or [Z-ordering](/knowledgebase/z-ordering/). Sorting on low-cardinality columns that queries filter on produces longer runs and smaller files.
+* **Partitioning.** Within a partition, the partition column holds a single value, which RLE stores in a few bytes.
+* **Engine execution.** Query engines that read Parquet into Arrow, including DuckDB and Dremio, can keep encoded data compact through scans and apply filters before expanding values.
 
-### Why is Columnar Format superior for analytics?
-Unlike row-based formats (like CSV or JSON), columnar formats store all values of a single column contiguously. This allows queries calculating averages or sums to read *only* the specific column they need, rather than loading the entire table. This distinction is particularly important when evaluating total architecture costs and performance benchmarks.
+Because RLE output is still a structured byte stream, Parquet usually applies a general codec such as Snappy or ZSTD on top of it. The encodings reduce redundancy that the codec would miss, and the codec reduces what is left.
 
-### What is Late Materialization?
-It is an optimization where the engine delays fetching full record details from storage until *after* all heavy filters and joins are complete, drastically reducing memory overhead. The open ecosystem continues to evolve rapidly, ensuring backward compatibility while introducing powerful new primitives.
+## Related Reading
 
-### How does Run-Length Encoding impact data governance and security?
-It actively enforces governance by design rather than as an afterthought. Native logging, role-based access controls (RBAC), and structured access pathways provide immediate visibility into security boundaries and regulatory compliance.
+* [All About Parquet Part 06: Encoding in Parquet](/blog/2024-10-all-about-parquet-part-06/)
+* [FSST and ALP: The Two Encodings Fixing Parquet's Weakest Compression Cases](/blog/fsst-alp-parquet-encodings/)
+* [Columnar format](/knowledgebase/columnar-format/)
 
----
+## Learn More
 
-### E-E-A-T & Further Reading
+To learn more about the [Data Lakehouse](/data-lakehouse/), read [The Lakehouse Built for Everyone](https://books.alexmerced.com/books/the-lakehouse-built-for-everyone/) by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).
