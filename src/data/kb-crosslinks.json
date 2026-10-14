@@ -1,162 +1,349 @@
 {
-  "data-warehouse": [
-    {
-      "site": "dataengnr.com",
-      "url": "https://dataengnr.com/terms/data-warehouse/",
-      "note": "traces warehouse architecture from its origins through cloud warehouses and compares warehouse, lake, and lakehouse",
-      "label": "Data Warehouse"
-    }
-  ],
   "data-lakehouse": [
     {
       "site": "dataengnr.com",
       "url": "https://dataengnr.com/terms/data-lakehouse/",
-      "note": "walks through the core components, the open standards involved, and agentic workloads on a lakehouse",
-      "label": "Data Lakehouse"
-    }
-  ],
-  "apache-iceberg": [
+      "label": "Data Lakehouse",
+      "kind": "guide",
+      "note": "walks through the core components, the open standards involved, and agentic workloads on a lakehouse"
+    },
     {
-      "site": "dataengnr.com",
-      "url": "https://dataengnr.com/terms/apache-iceberg/",
-      "note": "goes deeper on the Hive bottleneck that led to Iceberg, its metadata architecture, and concurrency and time travel",
-      "label": "Apache Iceberg"
+      "site": "dataaiwiki.com",
+      "url": "https://dataaiwiki.com/wiki/data-lakehouse/",
+      "label": "Data Lakehouse",
+      "kind": "definition",
+      "note": "a short definition linked into a wider data and AI glossary"
     }
   ],
   "data-lake": [
     {
       "site": "dataengnr.com",
       "url": "https://dataengnr.com/terms/data-lake/",
-      "note": "covers storage paradigms, the data swamp problem, and the path from a lake to a lakehouse",
-      "label": "Data Lake"
+      "label": "Data Lake",
+      "kind": "guide",
+      "note": "covers storage paradigms, the data swamp problem, and the path from a lake to a lakehouse"
+    },
+    {
+      "site": "dataaiwiki.com",
+      "url": "https://dataaiwiki.com/wiki/data-lake/",
+      "label": "Data Lake",
+      "kind": "definition",
+      "note": "a short definition linked into a wider data and AI glossary"
     }
   ],
-  "agentic-analytics": [
+  "data-lakehouse-architecture": [
     {
       "site": "dataengnr.com",
-      "url": "https://dataengnr.com/terms/agentic-analytics/",
-      "note": "covers the RAG pattern, LLM orchestration, and the security and governance questions agents raise",
-      "label": "Agentic Analytics"
+      "url": "https://dataengnr.com/terms/data-lakehouse-architecture/",
+      "label": "Data Lakehouse Architecture",
+      "kind": "guide",
+      "note": "breaks the architecture into its four layers and compares it with a traditional warehouse"
     }
   ],
-  "data-modeling": [
+  "open-table-format": [
     {
       "site": "dataengnr.com",
-      "url": "https://dataengnr.com/terms/data-modeling/",
-      "note": "covers conceptual, logical, and physical models, star schemas, slowly changing dimensions, and Data Vault",
-      "label": "Data Modeling"
-    }
-  ],
-  "medallion-architecture": [
-    {
-      "site": "dataengnr.com",
-      "url": "https://dataengnr.com/terms/medallion-architecture/",
-      "note": "walks through the bronze and silver layers in more depth, with the pipeline problems the pattern solves",
-      "label": "Medallion Architecture"
-    }
-  ],
-  "data-mesh": [
-    {
-      "site": "dataengnr.com",
-      "url": "https://dataengnr.com/terms/data-mesh/",
-      "note": "goes deeper on domain ownership, self-serve infrastructure, and federated computational governance",
-      "label": "Data Mesh"
-    }
-  ],
-  "elt": [
-    {
-      "site": "dataengnr.com",
-      "url": "https://dataengnr.com/terms/elt/",
-      "note": "covers the ELT workflow, dbt as the transformation layer, and ELT on Iceberg tables",
-      "label": "Extract, Load, Transform (ELT)"
-    }
-  ],
-  "lambda-architecture": [
-    {
-      "site": "dataengnr.com",
-      "url": "https://dataengnr.com/terms/lambda-architecture/",
-      "note": "breaks down the batch, speed, and serving layers and why teams moved toward Kappa",
-      "label": "Lambda Architecture"
-    }
-  ],
-  "kappa-architecture": [
-    {
-      "site": "dataengnr.com",
-      "url": "https://dataengnr.com/terms/kappa-architecture/",
-      "note": "covers the single-pipeline principle, Kafka as the foundation, and the real limits of Kappa",
-      "label": "Kappa Architecture"
-    }
-  ],
-  "etl": [
-    {
-      "site": "dataengnr.com",
-      "url": "https://dataengnr.com/terms/etl/",
-      "note": "covers the three ETL phases, their structural limits, and how ELT inverted the pattern",
-      "label": "Extract, Transform, Load (ETL)"
-    }
-  ],
-  "data-fabric": [
-    {
-      "site": "dataengnr.com",
-      "url": "https://dataengnr.com/terms/data-fabric/",
-      "note": "covers knowledge graphs, active metadata, federated query, and automated policy enforcement",
-      "label": "Data Fabric"
-    }
-  ],
-  "change-data-capture": [
-    {
-      "site": "dataengnr.com",
-      "url": "https://dataengnr.com/terms/change-data-capture/",
-      "note": "explains transaction log mining, CDC event structure, and applying changes to Iceberg with MERGE INTO",
-      "label": "Change Data Capture (CDC)"
+      "url": "https://dataengnr.com/terms/open-table-formats/",
+      "label": "Open Table Formats: Iceberg, Delta Lake, and Hudi",
+      "kind": "guide",
+      "note": "compares Iceberg, Delta Lake, and Hudi side by side and explains when to choose each"
     }
   ],
   "apache-parquet": [
     {
       "site": "dataengnr.com",
       "url": "https://dataengnr.com/terms/apache-parquet/",
-      "note": "explains the Parquet file structure, how Iceberg uses it, and file size and compaction practices",
-      "label": "Apache Parquet"
+      "label": "Apache Parquet",
+      "kind": "guide",
+      "note": "explains the Parquet file structure, how Iceberg uses it, and file size and compaction practices"
     }
   ],
-  "dimensional-modeling": [
+  "apache-arrow": [
     {
       "site": "dataengnr.com",
-      "url": "https://dataengnr.com/terms/dimensional-modeling/",
-      "note": "goes deeper on star and snowflake schemas and dimensional models on Iceberg tables",
-      "label": "Dimensional Modeling (Star Schema & Snowflake Schema)"
-    }
-  ],
-  "data-vault-modeling": [
-    {
-      "site": "dataengnr.com",
-      "url": "https://dataengnr.com/terms/data-vault-modeling/",
-      "note": "explains hubs, links, and satellites, the business vault, and Data Vault on Iceberg",
-      "label": "Data Vault Modeling"
-    }
-  ],
-  "hidden-partitioning": [
-    {
-      "site": "dataengnr.com",
-      "url": "https://dataengnr.com/terms/hidden-partitioning/",
-      "note": "covers how partition transforms work, partition evolution, and multi-column and bucket partitioning",
-      "label": "Hidden Partitioning"
+      "url": "https://dataengnr.com/terms/apache-arrow/",
+      "label": "Apache Arrow",
+      "kind": "guide",
+      "note": "explains the Arrow columnar memory format, Arrow Flight, and how Arrow and Parquet work together"
     }
   ],
   "apache-polaris": [
     {
       "site": "dataengnr.com",
       "url": "https://dataengnr.com/terms/apache-polaris/",
-      "note": "covers the REST catalog specification, credential vending, and multi-catalog federation",
-      "label": "Apache Polaris"
+      "label": "Apache Polaris",
+      "kind": "guide",
+      "note": "covers the REST catalog specification, credential vending, and multi-catalog federation"
+    },
+    {
+      "site": "dataaiwiki.com",
+      "url": "https://dataaiwiki.com/wiki/apache-polaris/",
+      "label": "Apache Polaris",
+      "kind": "definition",
+      "note": "a short definition linked into a wider data and AI glossary"
     }
   ],
-  "arrow-flight": [
+  "apache-spark": [
     {
       "site": "dataengnr.com",
-      "url": "https://dataengnr.com/terms/arrow-flight/",
-      "note": "explains the Flight protocol, why it beats JDBC for bulk transfer, and Arrow Flight SQL",
-      "label": "Arrow Flight"
+      "url": "https://dataengnr.com/terms/apache-spark/",
+      "label": "Apache Spark",
+      "kind": "guide",
+      "note": "covers RDDs and DataFrames, Structured Streaming, and Spark on Iceberg tables"
+    },
+    {
+      "site": "dataaiwiki.com",
+      "url": "https://dataaiwiki.com/wiki/apache-spark/",
+      "label": "Apache Spark",
+      "kind": "definition",
+      "note": "a short definition linked into a wider data and AI glossary"
+    }
+  ],
+  "apache-airflow": [
+    {
+      "site": "dataengnr.com",
+      "url": "https://dataengnr.com/terms/apache-airflow/",
+      "label": "Apache Airflow",
+      "kind": "guide",
+      "note": "covers DAGs as code, where Airflow sits in a lakehouse pipeline, and managed Airflow services"
+    }
+  ],
+  "apache-kafka": [
+    {
+      "site": "dataengnr.com",
+      "url": "https://dataengnr.com/terms/apache-kafka/",
+      "label": "Apache Kafka",
+      "kind": "guide",
+      "note": "covers topics, partitions, and offsets, Kafka as a CDC hub, and Kafka Connect sinks"
+    },
+    {
+      "site": "dataaiwiki.com",
+      "url": "https://dataaiwiki.com/wiki/kafka-apache-kafka/",
+      "label": "Kafka (Apache Kafka)",
+      "kind": "definition",
+      "note": "a short definition linked into a wider data and AI glossary"
+    }
+  ],
+  "delta-lake": [
+    {
+      "site": "dataengnr.com",
+      "url": "https://dataengnr.com/terms/delta-lake/",
+      "label": "Delta Lake",
+      "kind": "guide",
+      "note": "explains the Delta log, MERGE INTO upserts, streaming tables, and how Delta compares with Iceberg"
+    },
+    {
+      "site": "dataaiwiki.com",
+      "url": "https://dataaiwiki.com/wiki/delta-lake/",
+      "label": "Delta Lake",
+      "kind": "definition",
+      "note": "a short definition linked into a wider data and AI glossary"
+    }
+  ],
+  "apache-hudi": [
+    {
+      "site": "dataengnr.com",
+      "url": "https://dataengnr.com/terms/apache-hudi/",
+      "label": "Apache Hudi",
+      "kind": "guide",
+      "note": "explains copy-on-write and merge-on-read tables and the Hudi timeline"
+    },
+    {
+      "site": "dataaiwiki.com",
+      "url": "https://dataaiwiki.com/wiki/apache-hudi/",
+      "label": "Apache Hudi",
+      "kind": "definition",
+      "note": "a short definition linked into a wider data and AI glossary"
+    }
+  ],
+  "semantic-layer": [
+    {
+      "site": "dataengnr.com",
+      "url": "https://dataengnr.com/terms/semantic-layer/",
+      "label": "Semantic Layer",
+      "kind": "guide",
+      "note": "covers the semantic layer as shared infrastructure and as the interface for AI agents"
+    }
+  ],
+  "etl": [
+    {
+      "site": "dataengnr.com",
+      "url": "https://dataengnr.com/terms/etl/",
+      "label": "Extract, Transform, Load (ETL)",
+      "kind": "guide",
+      "note": "covers the three ETL phases, their structural limits, and how ELT inverted the pattern"
+    },
+    {
+      "site": "dataaiwiki.com",
+      "url": "https://dataaiwiki.com/wiki/etl-extract-transform-load/",
+      "label": "'ETL (Extract, Transform, Load)'",
+      "kind": "definition",
+      "note": "a short definition linked into a wider data and AI glossary"
+    }
+  ],
+  "elt": [
+    {
+      "site": "dataengnr.com",
+      "url": "https://dataengnr.com/terms/elt/",
+      "label": "Extract, Load, Transform (ELT)",
+      "kind": "guide",
+      "note": "covers the ELT workflow, dbt as the transformation layer, and ELT on Iceberg tables"
+    },
+    {
+      "site": "dataaiwiki.com",
+      "url": "https://dataaiwiki.com/wiki/elt-extract-load-transform/",
+      "label": "'ELT (Extract, Load, Transform)'",
+      "kind": "definition",
+      "note": "a short definition linked into a wider data and AI glossary"
+    }
+  ],
+  "change-data-capture": [
+    {
+      "site": "dataengnr.com",
+      "url": "https://dataengnr.com/terms/change-data-capture/",
+      "label": "Change Data Capture (CDC)",
+      "kind": "guide",
+      "note": "explains transaction log mining, CDC event structure, and applying changes to Iceberg with MERGE INTO"
+    }
+  ],
+  "data-catalog": [
+    {
+      "site": "dataengnr.com",
+      "url": "https://dataengnr.com/terms/data-catalog/",
+      "label": "Data Catalog",
+      "kind": "guide",
+      "note": "covers what a catalog manages, discovery and search, and how catalogs relate to Iceberg"
+    },
+    {
+      "site": "dataaiwiki.com",
+      "url": "https://dataaiwiki.com/wiki/data-catalog/",
+      "label": "Data Catalog",
+      "kind": "definition",
+      "note": "a short definition linked into a wider data and AI glossary"
+    }
+  ],
+  "medallion-architecture": [
+    {
+      "site": "dataengnr.com",
+      "url": "https://dataengnr.com/terms/medallion-architecture/",
+      "label": "Medallion Architecture",
+      "kind": "guide",
+      "note": "walks through the bronze and silver layers in more depth, with the pipeline problems the pattern solves"
+    }
+  ],
+  "schema-evolution": [
+    {
+      "site": "dataengnr.com",
+      "url": "https://dataengnr.com/terms/schema-evolution/",
+      "label": "Schema Evolution",
+      "kind": "guide",
+      "note": "separates safe from unsafe schema changes and shows how Iceberg handles them"
+    }
+  ],
+  "data-governance": [
+    {
+      "site": "dataengnr.com",
+      "url": "https://dataengnr.com/terms/data-governance/",
+      "label": "Data Governance",
+      "kind": "guide",
+      "note": "covers the four pillars of governance and how they apply in an Iceberg lakehouse"
+    },
+    {
+      "site": "dataaiwiki.com",
+      "url": "https://dataaiwiki.com/wiki/data-governance/",
+      "label": "Data Governance",
+      "kind": "definition",
+      "note": "a short definition linked into a wider data and AI glossary"
+    }
+  ],
+  "apache-iceberg": [
+    {
+      "site": "dataengnr.com",
+      "url": "https://dataengnr.com/terms/apache-iceberg/",
+      "label": "Apache Iceberg",
+      "kind": "guide",
+      "note": "goes deeper on the Hive bottleneck that led to Iceberg, its metadata architecture, and concurrency and time travel"
+    }
+  ],
+  "acid-transactions": [
+    {
+      "site": "dataaiwiki.com",
+      "url": "https://dataaiwiki.com/wiki/acid/",
+      "label": "ACID",
+      "kind": "definition",
+      "note": "a short definition linked into a wider data and AI glossary"
+    }
+  ],
+  "data-pipeline": [
+    {
+      "site": "dataaiwiki.com",
+      "url": "https://dataaiwiki.com/wiki/data-pipeline/",
+      "label": "Data Pipeline",
+      "kind": "definition",
+      "note": "a short definition linked into a wider data and AI glossary"
+    }
+  ],
+  "data-modeling": [
+    {
+      "site": "dataaiwiki.com",
+      "url": "https://dataaiwiki.com/wiki/data-modeling/",
+      "label": "Data Modeling",
+      "kind": "definition",
+      "note": "a short definition linked into a wider data and AI glossary"
+    }
+  ],
+  "dbt-data-build-tool": [
+    {
+      "site": "dataaiwiki.com",
+      "url": "https://dataaiwiki.com/wiki/dbt-data-build-tool/",
+      "label": "DBT (Data Build Tool)",
+      "kind": "definition",
+      "note": "a short definition linked into a wider data and AI glossary"
+    }
+  ],
+  "duckdb": [
+    {
+      "site": "dataaiwiki.com",
+      "url": "https://dataaiwiki.com/wiki/duckdb/",
+      "label": "DuckDB",
+      "kind": "definition",
+      "note": "a short definition linked into a wider data and AI glossary"
+    }
+  ],
+  "agentic-ai": [
+    {
+      "site": "dataaiwiki.com",
+      "url": "https://dataaiwiki.com/wiki/agentic-ai/",
+      "label": "Agentic AI",
+      "kind": "definition",
+      "note": "a short definition linked into a wider data and AI glossary"
+    }
+  ],
+  "large-language-model": [
+    {
+      "site": "dataaiwiki.com",
+      "url": "https://dataaiwiki.com/wiki/large-language-model/",
+      "label": "Large Language Model",
+      "kind": "definition",
+      "note": "a short definition linked into a wider data and AI glossary"
+    }
+  ],
+  "generative-ai": [
+    {
+      "site": "dataaiwiki.com",
+      "url": "https://dataaiwiki.com/wiki/generative-ai/",
+      "label": "Generative AI",
+      "kind": "definition",
+      "note": "a short definition linked into a wider data and AI glossary"
+    }
+  ],
+  "embeddings": [
+    {
+      "site": "dataaiwiki.com",
+      "url": "https://dataaiwiki.com/wiki/embedding/",
+      "label": "Embedding",
+      "kind": "definition",
+      "note": "a short definition linked into a wider data and AI glossary"
     }
   ]
 }

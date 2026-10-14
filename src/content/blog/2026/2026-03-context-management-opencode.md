@@ -134,4 +134,4 @@ The strongest context strategy is not maximum input. It is a small set of author
 - [OpenCode](https://openagenticplatform.com/knowledge-base/opencode): a neutral profile of OpenCode and how open it is to swap models and providers.
 - [Agent Skills](https://openagenticplatform.com/knowledge-base/agent-skills): the open format for packaging reusable instructions that many coding agents load on demand.
 - [Model Context Protocol](https://openagenticplatform.com/knowledge-base/model-context-protocol): why one MCP server works across every harness that supports the protocol.
-- [Being Productive with Open Models](https://books.alexmerced.com/books/being-productive-with-open-models/) by Alex Merced a practical guide to open models with OpenCode, Pi, and Hermes ([Buy on Amazon](https://www.amazon.com/dp/B0H76JQ55R)).
+- [Being Productive with Open Models](https://books.alexmerced.com/books/being-productive-with-open-models/) by Alex Merced, a practical guide to open models with OpenCode, Pi, and Hermes ([Buy on Amazon](https://www.amazon.com/dp/B0H76JQ55R)).

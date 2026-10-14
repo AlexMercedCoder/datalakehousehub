@@ -329,6 +329,7 @@ And for a fictional take on where AI is heading:
 
 ## Go further
 
+- [Gemini CLI](https://openagenticplatform.com/knowledge-base/gemini-cli): a neutral profile of Gemini CLI on Open Agentic Platform, covering its tools, MCP support, and free tier.
 - [Model Context Protocol](https://openagenticplatform.com/knowledge-base/model-context-protocol): why one MCP server works across every harness that supports the protocol.
 - [Harnesses and brokers](https://openagenticplatform.com/knowledge-base/harnesses-and-brokers): the layer these tools belong to, and what to check before you commit to one.
 - [Agent Skills](https://openagenticplatform.com/knowledge-base/agent-skills): the open format for packaging reusable instructions that many coding agents load on demand.

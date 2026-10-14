@@ -99,8 +99,10 @@ Re-run the pilot periodically. The category changes too quickly for a permanent 
 
 ## Go further
 
-- [Harnesses and brokers](https://openagenticplatform.com/knowledge-base/harnesses-and-brokers): the layer these tools belong to, and what to check before you commit to one.
-- [OpenCode](https://openagenticplatform.com/knowledge-base/opencode): a neutral profile of OpenCode and how open it is to swap models and providers.
-- [Openness scorecard](https://openagenticplatform.com/openness-scorecard): score any agent stack on six openness tests in your browser.
-- [Agent Skills](https://openagenticplatform.com/knowledge-base/agent-skills): the open format for packaging reusable instructions that many coding agents load on demand.
+Neutral profiles of these tools on Open Agentic Platform, with how open each one is to other models and providers:
+
+- [Claude Code](https://openagenticplatform.com/knowledge-base/claude-code): Anthropic's terminal, IDE, and desktop coding agent.
+- [Codex CLI](https://openagenticplatform.com/knowledge-base/codex-cli): OpenAI's open source terminal agent, with its sandbox and approval settings.
+- [Gemini CLI](https://openagenticplatform.com/knowledge-base/gemini-cli): Google's open source terminal agent and its free tier.
+- [OpenCode](https://openagenticplatform.com/knowledge-base/opencode): the provider-flexible option for teams that need model portability.
 - [The 2026 Guide to AI-Assisted Development](https://books.alexmerced.com/books/the-2026-guide-to-ai-assisted-development/) by Alex Merced covers AGENTS.md, MCP, agent skills, and context management across coding agents ([Buy on Amazon](https://www.amazon.com/dp/B0GQW7CTML)).

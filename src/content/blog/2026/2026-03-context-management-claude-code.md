@@ -283,7 +283,8 @@ And for a fictional take on where AI is heading:
 
 ## Go further
 
+- [Claude Code](https://openagenticplatform.com/knowledge-base/claude-code): a neutral profile of Claude Code on Open Agentic Platform, including how open it is to other models and tools.
 - [Agent Skills](https://openagenticplatform.com/knowledge-base/agent-skills): the open format for packaging reusable instructions that many coding agents load on demand.
 - [Model Context Protocol](https://openagenticplatform.com/knowledge-base/model-context-protocol): why one MCP server works across every harness that supports the protocol.
 - [Harnesses and brokers](https://openagenticplatform.com/knowledge-base/harnesses-and-brokers): the layer these tools belong to, and what to check before you commit to one.
-- [Being Productive with Claude](https://books.alexmerced.com/books/being-productive-with-claude/) by Alex Merced a practical guide to Claude.ai and Claude Code ([Buy on Amazon](https://www.amazon.com/dp/B0H76BTLMF)).
+- [Being Productive with Claude](https://books.alexmerced.com/books/being-productive-with-claude/) by Alex Merced, a practical guide to Claude.ai and Claude Code ([Buy on Amazon](https://www.amazon.com/dp/B0H76BTLMF)).

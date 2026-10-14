@@ -14,7 +14,7 @@ const { title, description } = data.data;
 const { Content } = await render(data);
 // Deeper treatments of the same term elsewhere in the network, added only
 // where the other page goes further than this one (see kb-crosslinks.json).
-const alsoOn: { site: string; url: string; label: string; note: string }[] =
+const alsoOn: { site: string; url: string; label: string; kind?: string; note: string }[] =
   (crosslinks as Record<string, any[]>)[data.id] || [];
 ---
 
@@ -61,10 +61,9 @@ const alsoOn: { site: string; url: string; label: string; note: string }[] =
       alsoOn.length > 0 && (
         <aside class="mt-10 rounded-xl border border-border p-5 text-base dark:border-darkmode-border">
           {alsoOn.map((x) => (
-            <p class="m-0">
+            <p class="my-1">
               <strong>Also on {x.site}:</strong>{" "}
-              <a href={x.url} class="text-primary hover:underline dark:text-darkmode-primary">{x.label}</a>,
-              a longer engineer-focused guide that {x.note}.
+              <a href={x.url} class="text-primary hover:underline dark:text-darkmode-primary">{x.label}</a>{x.kind === "definition" ? `, ${x.note}.` : `, a longer engineer-focused guide that ${x.note}.`}
             </p>
           ))}
         </aside>

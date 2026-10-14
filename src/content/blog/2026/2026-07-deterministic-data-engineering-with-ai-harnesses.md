@@ -176,6 +176,7 @@ Browse the full collection of my books on data and AI at [books.alexmerced.com](
 
 ## Go further
 
+- [Openness scorecard](https://openagenticplatform.com/openness-scorecard): score any agent harness on six openness tests in your browser.
 - [Harnesses and brokers](https://openagenticplatform.com/knowledge-base/harnesses-and-brokers): the layer these tools belong to, and what to check before you commit to one.
 - [OpenCode](https://openagenticplatform.com/knowledge-base/opencode): a neutral profile of OpenCode and how open it is to swap models and providers.
 - [Agent Skills](https://openagenticplatform.com/knowledge-base/agent-skills): the open format for packaging reusable instructions that many coding agents load on demand.

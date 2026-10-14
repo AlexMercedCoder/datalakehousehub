@@ -374,6 +374,7 @@ For more on the Dremio MCP Server, check out the [official documentation](https:
 
 ## Go further
 
+- [Gemini CLI](https://openagenticplatform.com/knowledge-base/gemini-cli): a neutral profile of Gemini CLI on Open Agentic Platform, covering its tools, MCP support, and free tier.
 - [Model Context Protocol](https://openagenticplatform.com/knowledge-base/model-context-protocol): why one MCP server works across every harness that supports the protocol.
 - [Build an MCP server over an Apache Iceberg catalog](https://agenticlakehouse.com/patterns/mcp-server-over-iceberg-catalog/): a step-by-step pattern with code on agenticlakehouse.com.
 - [The 2026 Guide to AI-Assisted Development](https://books.alexmerced.com/books/the-2026-guide-to-ai-assisted-development/) by Alex Merced covers AGENTS.md, MCP, agent skills, and context management across coding agents ([Buy on Amazon](https://www.amazon.com/dp/B0GQW7CTML)).

@@ -306,7 +306,8 @@ And for a fictional take on where AI is heading:
 
 ## Go further
 
+- [Codex CLI](https://openagenticplatform.com/knowledge-base/codex-cli): a neutral profile of the Codex CLI on Open Agentic Platform, covering its sandbox, approvals, and model options.
 - [Harnesses and brokers](https://openagenticplatform.com/knowledge-base/harnesses-and-brokers): the layer these tools belong to, and what to check before you commit to one.
 - [Agent Skills](https://openagenticplatform.com/knowledge-base/agent-skills): the open format for packaging reusable instructions that many coding agents load on demand.
 - [Model Context Protocol](https://openagenticplatform.com/knowledge-base/model-context-protocol): why one MCP server works across every harness that supports the protocol.
-- [Being Productive with OpenAI Codex](https://books.alexmerced.com/books/being-productive-with-openai-codex/) by Alex Merced a practical guide to working with OpenAI Codex ([Buy on Amazon](https://www.amazon.com/dp/B0H766477L)).
+- [Being Productive with OpenAI Codex](https://books.alexmerced.com/books/being-productive-with-openai-codex/) by Alex Merced, a practical guide to working with OpenAI Codex ([Buy on Amazon](https://www.amazon.com/dp/B0H766477L)).

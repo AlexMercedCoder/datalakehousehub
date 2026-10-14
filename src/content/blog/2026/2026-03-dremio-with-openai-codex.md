@@ -364,6 +364,7 @@ For more on the Dremio MCP Server, see the [official documentation](https://docs
 
 ## Go further
 
+- [Codex CLI](https://openagenticplatform.com/knowledge-base/codex-cli): a neutral profile of the Codex CLI on Open Agentic Platform, covering its sandbox, approvals, and model options.
 - [Model Context Protocol](https://openagenticplatform.com/knowledge-base/model-context-protocol): why one MCP server works across every harness that supports the protocol.
 - [Build an MCP server over an Apache Iceberg catalog](https://agenticlakehouse.com/patterns/mcp-server-over-iceberg-catalog/): a step-by-step pattern with code on agenticlakehouse.com.
-- [Being Productive with OpenAI Codex](https://books.alexmerced.com/books/being-productive-with-openai-codex/) by Alex Merced a practical guide to working with OpenAI Codex ([Buy on Amazon](https://www.amazon.com/dp/B0H766477L)).
+- [Being Productive with OpenAI Codex](https://books.alexmerced.com/books/being-productive-with-openai-codex/) by Alex Merced, a practical guide to working with OpenAI Codex ([Buy on Amazon](https://www.amazon.com/dp/B0H766477L)).
