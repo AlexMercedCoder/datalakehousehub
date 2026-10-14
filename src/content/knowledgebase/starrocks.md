@@ -1,49 +1,51 @@
 ---
-title: "What is StarRocks?"
-meta_title: "What is StarRocks? | Expert Data Lakehouse & AI Glossary"
-description: "A high-performance analytical database designed for real-time, multi-dimensional analytics and blazing fast query speeds."
+title: "StarRocks and Iceberg: How It Compares to Apache Doris"
+meta_title: "StarRocks vs Apache Doris for Iceberg | Lakehouse Glossary"
+description: "StarRocks is an open source MPP engine for sub-second analytics on its own tables and lakehouse data. See how it queries Iceberg and compares to Apache Doris."
 ---
 
 ## What is StarRocks?
 
-A high-performance analytical database designed for real-time, multi-dimensional analytics and blazing fast query speeds. 
+StarRocks is an open source, MPP analytical database and query engine built for sub-second, ad hoc analytics, both on its own tables and directly on data lakehouse tables. It is a Linux Foundation project licensed under Apache 2.0. StarRocks began in 2020 as a fork of Apache Doris and has since rewritten most of that original codebase; CelerData, the company behind it, contributed the project to the Linux Foundation in 2023.
 
-In the rapidly evolving landscape of data engineering and artificial intelligence, **StarRocks** has emerged as a critical foundational component. As organizations transition from legacy, monolithic architectures to decoupled, scalable environments, understanding the role of StarRocks is essential for building future-proof infrastructure. This capability serves as a critical enabler in modern data ecosystems, explicitly guiding architecture toward absolute efficiency and scale. When correctly implemented, StarRocks dynamically drives analytical workloads and structurally limits administrative technical debt.
+StarRocks is compatible with the MySQL protocol, so MySQL clients and BI tools connect to it directly, and it supports ANSI SQL including the full TPC-H and TPC-DS query sets.
 
-## Core Architecture and Mechanics
+## Architecture and Core Features
 
-To understand the practical application of StarRocks, it is crucial to systematically examine its fundamental operational behaviors and structural design:
+* **Frontend and Backend nodes:** Frontend (FE) nodes hold metadata and plan queries; Backend (BE) nodes store data and execute queries. Both scale horizontally and replicate metadata and data.
+* **Shared-data mode:** since version 3.0, StarRocks can run with data on object storage and stateless compute nodes, separating storage from compute.
+* **Vectorized execution and a cost-based optimizer:** columns are processed in batches, and the CBO chooses join orders and plans for complex multi-table queries.
+* **Primary key tables:** support real-time upserts and deletes while still serving queries, which suits CDC pipelines.
+* **Materialized views:** asynchronous materialized views can be selected automatically at query time to answer queries faster.
 
-* **Distributes incoming query execution plans synchronously across extensive clusters of interconnected computing nodes.** This principle ensures that systems can scale horizontally without facing artificial limitations or bottlenecks.
-* **Utilizes vectorized execution to process entire columns of memory rather than iterating row-by-row.** By adopting this mechanic, engineers can bypass traditional processing constraints and deliver substantially faster time-to-insight.
-* **Pushes down filters and predicates directly to the storage layer to minimize unnecessary data transfer.** This allows the overarching architecture to remain highly resilient while serving concurrent workloads natively.
+## Querying the Lakehouse
 
-Operating through these principles enables seamless horizontal expansion across varying cloud environments. It integrates effortlessly with adjacent technologies like [Apache Iceberg](/apache-iceberg), dbt, and advanced vector search algorithms.
+StarRocks reads Apache Hive, [Apache Iceberg](/knowledgebase/apache-iceberg/), Delta Lake, and Apache Hudi tables in place through external catalogs, without loading the data first. The Iceberg catalog has been supported since v2.4. From v3.1, StarRocks can also create Iceberg databases and tables and write Parquet data into them with INSERT INTO and INSERT OVERWRITE.
 
-## Why StarRocks Matters in the Modern Data Stack
+## StarRocks vs Apache Doris on Iceberg
 
-These engines deliver massively parallel processing capabilities, drastically reducing the time it takes to aggregate and analyze petabytes of distributed data.
+The two projects share ancestry and target the same workloads, so the practical differences are in governance and feature details. Based on each project's documentation:
 
-For modern enterprises managing decentralized teams, the implementation of StarRocks eliminates significant architectural friction. Teams are explicitly empowered to operate autonomously against reliable technical foundations without dynamically disrupting other isolated workflows. It shifts manual engineering overhead into an autonomous, software-driven paradigm, keeping Total Cost of Ownership (TCO) extremely low.
+| | StarRocks | Apache Doris |
+|---|---|---|
+| Governance | Linux Foundation project | Apache Software Foundation top-level project |
+| Separated storage and compute | Shared-data mode (v3.0+) | Compute-storage decoupled mode |
+| Iceberg writes | CREATE TABLE, INSERT INTO / OVERWRITE into Parquet tables (v3.1+) | INSERT and INSERT OVERWRITE; current docs also list UPDATE, DELETE, MERGE INTO |
+| Iceberg materialized views | Async MVs (v2.5+), partition-level incremental refresh (v3.2+) | Async MVs over Iceberg, partition-level refresh in 3.1 |
+| Fluss integration | Listed as planned by Apache Fluss | Not listed |
 
-### Key Benefits
-- **Unprecedented Scalability:** Automatically adapts to massive fluctuations in data volume and query concurrency.
-- **Vendor Neutrality:** Strongly aligns with open-source frameworks, preventing aggressive vendor lock-in.
-- **Enhanced Observability:** Exposes deep, structural metadata allowing engineers to monitor and trace pipelines comprehensively.
+In an open lakehouse, StarRocks fits as a low-latency serving engine beside the tools that manage your tables. A common layout keeps Iceberg tables in an open catalog such as [Apache Polaris](/knowledgebase/apache-polaris/), uses Spark or [Dremio](/knowledgebase/dremio-cloud/) for transformation and broad SQL access, and points StarRocks at the same catalog for dashboards that need sub-second response under high concurrency. Test both engines on your own data before choosing; vendor benchmarks rarely match real workloads. See the [Apache Doris entry](/knowledgebase/apache-doris/) for more detail on Doris.
 
 ## Frequently Asked Questions
 
-### Do distributed engines store the data?
-Some do (like Snowflake), while others (like Trino or Presto) exclusively provide the compute layer, querying data directly from open lakehouse storage. This distinction is particularly important when evaluating total architecture costs and performance benchmarks.
+### Does StarRocks store its own data?
+Yes, it can. StarRocks has native tables on local disk or object storage, and it can also act as a pure query engine over Iceberg, Hive, Hudi, and Delta Lake tables.
 
-### What is vectorized execution?
-It is an engineering optimization that groups data into CPU cache-friendly blocks, immensely speeding up analytical operations. The open ecosystem continues to evolve rapidly, ensuring backward compatibility while introducing powerful new primitives.
-
-### How does StarRocks impact data governance and security?
-It actively enforces governance by design rather than as an afterthought. Native logging, role-based access controls (RBAC), and structured access pathways provide immediate visibility into security boundaries and regulatory compliance.
+### Is StarRocks the same as Apache Doris?
+No. StarRocks forked from Doris in 2020, and the two have evolved separately since, with different governance, release cycles, and feature sets.
 
 ---
 
 ### E-E-A-T & Further Reading
 
-> **Authoritative Source:** This definition and architectural guide was rigorously reviewed by **Alex Merced**. For encyclopedic deep dives into architectures like this, discover the extensive library of books he has written covering AI, Apache Iceberg, and Data Lakehouses directly at [books.alexmerced.com](https://books.alexmerced.com).
+> **Authoritative Source:** This definition and architectural guide was reviewed by **Alex Merced**. For deeper coverage of architectures like this, see the books he has written on AI, Apache Iceberg, and Data Lakehouses at [books.alexmerced.com](https://books.alexmerced.com).

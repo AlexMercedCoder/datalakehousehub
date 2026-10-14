@@ -1,55 +1,51 @@
 ---
-title: "What is Apache Doris?"
-meta_title: "What is Apache Doris? | Expert Data Lakehouse Architecture Guide"
-description: "A comprehensive guide to Apache Doris. Learn about real-time MPP architectures, materialized views, and sub-second analytical processing."
+title: "Apache Doris and Iceberg: How It Compares to StarRocks"
+meta_title: "Apache Doris vs StarRocks on Iceberg | Lakehouse Glossary"
+description: "Apache Doris is an open source MPP database for real-time, high-concurrency analytics. See how it reads and writes Iceberg tables and compares to StarRocks."
 ---
 
-# What is Apache Doris?
+Apache Doris is an open source, real-time analytical database built on a Massively Parallel Processing (MPP) architecture. It started at Baidu as an advertising reporting system and is now an Apache Software Foundation top-level project. Doris is designed to return sub-second results for both high-concurrency point queries and complex aggregations over large datasets.
 
-Apache Doris is a remarkably fast, open-source analytical database optimized for real-time reporting and highly concurrent Online Analytical Processing (OLAP) workloads. Originally developed at Baidu to handle massive advertising analytics, Doris utilizes a Massively Parallel Processing (MPP) architecture to deliver sub-second query responses over datasets ranging from gigabytes to petabytes.
+Distributed engines like Apache Spark or Trino are strong at large data lake transformations and federated queries, but customer-facing dashboards with thousands of concurrent users need lower latency than most lake engines deliver. That is the niche Doris targets, alongside databases such as StarRocks and ClickHouse. Doris speaks the MySQL protocol, so standard MySQL clients and BI tools connect to it without special drivers.
 
-While distributed engines like Apache Spark or Trino are exceptionally powerful for massive data lake transformations and federated querying, they often struggle to provide the extreme low latency required for interactive customer-facing applications. When an organization builds a dashboard embedded inside a live SaaS application (where thousands of concurrent users expect instant chart rendering), they rely on highly optimized databases like Apache Doris or ClickHouse. Doris distinguishes itself through its absolute architectural simplicity, seamless MySQL compatibility, and profound capability to handle real-time streaming data ingestion alongside complex analytical aggregations.
+## Architecture
 
-## The Streamlined MPP Architecture
+In its classic deployment Doris runs only two process types and does not depend on external services such as ZooKeeper or HDFS:
 
-Apache Doris was engineered to be exceptionally simple to deploy and operate. Unlike legacy Hadoop ecosystems that require maintaining complex dependencies like ZooKeeper or HDFS, Doris compiles down into a completely self-contained binary. 
+* **Frontend (FE):** manages metadata and cluster state, parses SQL, plans distributed queries, and routes work. Production clusters run several FEs for high availability.
+* **Backend (BE):** stores data with multiple replicas, runs vectorized query execution, and handles background compaction.
 
-The architecture strictly consists of only two distinct processes:
-* **Frontend (FE):** The FE nodes are responsible for managing metadata, storing the cluster state, parsing SQL queries, generating distributed execution plans, and routing tasks.
-* **Backend (BE):** The BE nodes are the computational workhorses. They are entirely responsible for physically storing the data, executing the vectorized calculations, and executing complex data compaction routines in the background.
+Newer releases also offer a compute-storage decoupled mode, where data lives on shared storage such as S3 or HDFS and independent compute groups scale separately.
 
-This incredibly streamlined design entirely eliminates the operational nightmares of managing complex external dependencies, making Doris exceptionally resilient and simple to scale horizontally on standard cloud virtual machines.
+## Storage, Indexing, and Execution
 
-## Vectorized Execution and Storage Mechanics
+Doris stores data in its own columnar format, sorted by key columns. It builds a sorted prefix index plus Min/Max statistics, and it supports BloomFilter, inverted, and vector indexes. These let a query skip blocks that cannot match a filter instead of scanning them. Once data is in memory, a vectorized engine processes columns in batches, which keeps CPU caches busy and allows SIMD instructions.
 
-To achieve blazing fast query performance, Doris tightly integrates its storage layer with its computational execution engine, utilizing profound structural optimizations.
+## Data Models for Real-Time Ingestion
 
-### Columnar Storage and Intelligent Indexing
-Doris stores data in a proprietary columnar format explicitly designed to minimize disk I/O. When data is ingested, Doris sorts it meticulously according to primary keys. It automatically generates incredibly rich metadata and sparse indexes (similar to the micro-partitions found in Snowflake). Additionally, Doris inherently supports ZoneMap indexes, Bloom Filters, and explicit Bitmap indexes. When a user queries a specific user ID, Doris utilizes these indexes to instantly bypass gigabytes of irrelevant data, reading only the absolute necessary blocks from physical storage.
+Data commonly arrives through Stream Load, Routine Load from Apache Kafka, or Apache Flink connectors. Doris offers three table models:
 
-### Vectorized Execution Engine
-Once the specific data blocks are pulled from storage into memory, Doris processes them using a completely Vectorized Execution engine. Instead of iterating through complex loops row-by-row, the engine passes massive contiguous chunks of columnar memory directly into the CPU. This allows the processor to utilize SIMD (Single Instruction, Multiple Data) instructions, mathematically executing complex aggregations (like SUM or AVG) across thousands of rows in a single clock cycle.
+* **Duplicate model:** keeps every row as written, suited to logs and event streams.
+* **Unique model:** keeps the latest row per key and supports row-level updates, which fits CDC replication from operational databases.
+* **Aggregate model:** pre-aggregates metrics (such as SUM or MAX) per key as data loads, so reports read fewer rows.
 
-## Real-Time Ingestion and Data Models
+## Apache Doris on Iceberg vs StarRocks
 
-A critical differentiator for Apache Doris is its capability to handle immense real-time streaming ingestion while instantly exposing that data to analytical queries. 
+Doris queries external data through its multi-catalog feature, including [Apache Iceberg](/knowledgebase/apache-iceberg/), Hive, Hudi, Paimon, and JDBC sources. StarRocks, which began in 2020 as a fork of Apache Doris and has since been largely rewritten, covers a similar lakehouse use case. Here is how the two compare for Iceberg work, based on each project's documentation:
 
-Organizations heavily utilize tools like Apache Kafka or Apache Flink to stream millions of events directly into Doris using its highly optimized Stream Load protocol. Doris provides distinct internal Data Models specifically designed to manage this data behavior at scale:
+| | Apache Doris | StarRocks |
+|---|---|---|
+| Governance | Apache Software Foundation top-level project | Linux Foundation project, Apache 2.0 license |
+| Iceberg catalogs | Hive Metastore, REST, Glue, Hadoop/filesystem, JDBC, DLF, S3 Tables | Hive Metastore, Glue, REST, and others (Iceberg catalog since v2.4) |
+| Reads | Parquet and ORC data files, position and equality deletes, time travel, branches and tags | Parquet and ORC data files, time travel |
+| Writes | INSERT and INSERT OVERWRITE; current docs also list UPDATE, DELETE, and MERGE INTO | CREATE TABLE plus INSERT INTO / INSERT OVERWRITE into Parquet Iceberg tables (v3.1+) |
+| Acceleration | Async materialized views over Iceberg, with query rewrite you enable per session | Async materialized views over Iceberg (v2.5+), partition-level refresh (v3.2+) |
 
-* **Duplicate Key Model:** Designed for raw log data where every single event is retained identically as it arrives (e.g., raw web clickstreams).
-* **Unique Key Model:** Designed for Change Data Capture (CDC) replication. If a record with an existing ID arrives, Doris automatically completely overwrites the older version, providing exact replica states of operational databases natively.
-* **Aggregate Key Model:** Designed explicitly for extreme speed. As data streams into the system, Doris automatically aggregates the metrics mathematically in the background (e.g., continuously keeping a running sum of total sales per region). When an analyst queries the total, Doris simply returns the pre-calculated integer instantly.
+Both engines work best as a serving layer: keep the governed tables in Iceberg behind an open catalog such as [Apache Polaris](/knowledgebase/apache-polaris/), let engines like [Dremio](/knowledgebase/dremio-cloud/), Spark, or [Trino](/knowledgebase/trino/) share them, and use Doris or StarRocks materialized views for the dashboards that need the lowest latency. The choice between them usually comes down to which write features you need on Iceberg, your existing operational familiarity, and benchmarks on your own data. See the [StarRocks entry](/knowledgebase/starrocks/) for the other side.
 
-## The Lakehouse Integration
+## Summary
 
-Recognizing the industry shift toward decoupled storage, modern versions of Apache Doris introduced the Multi-Catalog feature. Instead of strictly requiring organizations to ingest data into Doris’s internal storage nodes, Doris can now reach out externally.
-
-An engineer can configure Doris to connect seamlessly to an Open [Data Lakehouse](/data-lakehouse) (querying [Apache Iceberg](/apache-iceberg), Hudi, or Delta Lake tables directly) or to an external database (like Elasticsearch or MySQL). This capability allows Doris to serve as an exceptionally fast, unified query layer that accelerates critical dashboards using internal storage, while seamlessly federating slower, historical queries directly against the broader cloud data lake.
-
-## Summary of Technical Value
-
-Apache Doris provides organizations with the exact low-latency infrastructure required to power modern, customer-facing analytical applications. By combining an incredibly simple operational architecture with profound hardware-level vectorized execution and native real-time streaming aggregation models, Doris ensures that highly concurrent dashboards load in milliseconds. It bridges the critical gap between heavy data lake engineering and instant business intelligence visualization.
-
+Apache Doris gives teams a simple-to-operate, MySQL-compatible engine for real-time, high-concurrency analytics. In a lakehouse it sits next to Iceberg rather than replacing it: reading and writing Iceberg tables through standard catalogs, and caching hot results in its own storage when latency matters most.
 
 ## Learn More
 To learn more about the Data Lakehouse, read the book "Lakehouse for Everyone" by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

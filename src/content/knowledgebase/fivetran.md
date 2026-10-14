@@ -1,46 +1,43 @@
 ---
-title: "What is Fivetran?"
-meta_title: "What is Fivetran? | Expert Data Lakehouse Architecture Guide"
-description: "A comprehensive guide to Fivetran. Learn about automated data integration, the shift from ETL to ELT, and fully managed connector pipelines."
+title: "Fivetran for the lakehouse: loading Iceberg tables, and Fivetran vs Airbyte"
+meta_title: "Fivetran vs Airbyte for Loading Iceberg Tables"
+description: "Fivetran is a managed ELT service that copies data from SaaS apps and databases into warehouses and lakes. See how it loads Iceberg and compares to Airbyte."
 ---
 
-# What is Fivetran?
+Fivetran is a managed data integration service. It provides prebuilt connectors that extract data from SaaS applications (Salesforce, Zendesk, Stripe), databases (PostgreSQL, MySQL, SQL Server, Oracle), and files, then load it into a destination such as a cloud warehouse or a [data lakehouse](/knowledgebase/data-lakehouse/). Fivetran maintains the connectors, so API changes and source schema changes are its problem rather than yours. In June 2026 Fivetran completed its merger with dbt Labs, the company behind [dbt](/knowledgebase/dbt/).
 
-Fivetran is a fully managed, cloud-native automated data integration platform. It fundamentally simplifies the process of extracting data from hundreds of disparate operational systems (like Salesforce, Zendesk, PostgreSQL, or Stripe) and loading it reliably into a central cloud data warehouse or open [data lakehouse](/data-lakehouse).
+## Extract and load, then transform
 
-Historically, organizations employed massive teams of data engineers strictly to write custom API polling scripts. If an API endpoint changed, or if a database schema updated unexpectedly, the fragile custom scripts crashed, destroying the downstream analytical dashboards. Fivetran resolves this profound operational burden by providing pre-built, deeply maintained connectors that extract, normalize, and load data completely automatically, allowing data engineering teams to focus entirely on analytical transformations rather than pipeline maintenance.
+Fivetran follows the [ELT](/knowledgebase/elt/) pattern: it lands source data in the destination with a schema close to the source, and transformation happens afterward in the destination engine, typically with dbt. Fivetran's job is the E and the L.
 
-## Driving the ELT Paradigm
+## Schema drift
 
-Fivetran was one of the primary catalysts for the industry-wide shift from traditional ETL (Extract, Transform, Load) to modern ELT (Extract, Load, Transform).
+Source systems change. Columns get added, tables get dropped, types change. Fivetran detects these changes on sync and applies schema changes in the destination according to the connection's schema change settings, for example adding a new `customer_tier` column instead of failing the sync. You can also choose to block new tables or columns until someone approves them.
 
-In the legacy ETL model, data was pulled from a source, heavily transformed on an intermediate integration server, and then loaded into a highly rigid data warehouse. This was necessary because legacy databases lacked the computational power to handle raw, messy data. 
+## Change data capture and incremental syncs
 
-As incredibly powerful cloud data platforms (like Snowflake, BigQuery, and Dremio) emerged, this bottleneck became obsolete. Fivetran explicitly extracts the raw data and loads it directly into the destination storage identically to the source schema. Once the data lands securely in the cloud, tools like dbt (Data Build Tool) execute the complex SQL transformations entirely within the destination engine. Fivetran exclusively manages the "E" and the "L".
+After the initial historical sync, Fivetran syncs incrementally. For databases it uses log-based [change data capture](/knowledgebase/change-data-capture/) where available (for example PostgreSQL logical replication or the MySQL binlog), reading inserts, updates, and deletes from the log instead of rescanning tables. This keeps load on the production database low. Some sources fall back to cursor or full-table methods.
 
-## Automated Schema Drift Handling
+## Normalized output and safe retries
 
-The most complex challenge in data ingestion is managing schema drift. In an active organization, software engineers constantly alter operational databases. They add new columns, delete old tables, and change data types (e.g., converting an Integer column to a String to accommodate a new tracking format).
+For API sources, Fivetran publishes a documented schema per connector and unpacks nested objects into related tables where the connector's schema calls for it. Syncs track cursors so that a failed sync can be retried without creating duplicate rows.
 
-When a rigid, custom-built pipeline encounters an unexpected column, it typically crashes. Fivetran is engineered to handle schema drift automatically and seamlessly. 
-If an upstream application adds a new `customer_tier` column to a PostgreSQL table, Fivetran detects the modification during its next extraction cycle. It automatically issues the necessary DDL (Data Definition Language) command to add the corresponding `customer_tier` column to the destination Snowflake or Iceberg table, and populates the data without dropping a single record or requiring any manual engineering intervention.
+## Loading Iceberg with Fivetran
 
-## Change Data Capture (CDC) and Incremental Updates
+Fivetran's Managed Data Lake Service writes to your own object storage (Amazon S3, ADLS, or Google Cloud Storage). It always creates [Apache Iceberg](/knowledgebase/apache-iceberg/) metadata for the tables it maintains and can optionally create Delta Lake metadata too. Tables are registered in the Fivetran Catalog, which Fivetran describes as a managed implementation of [Apache Polaris](/knowledgebase/apache-polaris/) that works with any Iceberg REST catalog client, or in a cloud catalog such as AWS Glue, OneLake, or BigLake Metastore. From there, Dremio, [Trino](/knowledgebase/trino/), [Spark](/knowledgebase/apache-spark/), or Snowflake can query the same tables, and these become the bronze layer of a [medallion architecture](/knowledgebase/medallion-architecture/).
 
-Executing a massive "Full Refresh" (extracting every single record from a massive database every night) places extreme load on operational systems and consumes vast amounts of network bandwidth. 
+## Fivetran vs Airbyte for loading Iceberg
 
-To ensure minimal impact on source applications, Fivetran heavily utilizes log-based Change Data Capture (CDC). Instead of running massive `SELECT *` queries against a production PostgreSQL database, Fivetran connects directly to the database's internal Write-Ahead Log (WAL). It continuously reads the exact binary log of `INSERT`, `UPDATE`, and `DELETE` operations. It processes these precise, incremental modifications and applies them identically to the destination lakehouse. This ensures high-velocity data replication with near-zero performance degradation on the critical production database.
+| | Fivetran | [Airbyte](/knowledgebase/airbyte/) |
+|---|---|---|
+| Model | Fully managed SaaS | Open-source platform (ELv2) you self-host, plus Airbyte Cloud |
+| Iceberg destination | Managed Data Lake Service on S3, ADLS, or GCS | S3 Data Lake destination on S3 or S3-compatible storage |
+| Catalogs | Fivetran Catalog (Polaris based), Glue, OneLake, BigLake; Unity and Snowflake integrations | REST, Glue, Nessie, Polaris |
+| Table maintenance | Fivetran manages the lake tables | Writes data; you run compaction and snapshot expiry |
+| Custom connectors | Connector SDK | Connector Builder and CDK; large community catalog |
+| Pricing | Usage based on monthly active rows | Free to self-host (open-source edition); Airbyte Cloud is paid |
 
-## System Normalization and Idempotency
-
-When Fivetran extracts data from a highly complex, nested API (like the Jira API or the Stripe API), it does not simply dump a massive, unreadable JSON blob into the data warehouse.
-
-Fivetran natively normalizes the data. It dissects complex JSON arrays and flattens them into clean, highly structured relational tables linked by explicit foreign keys. Furthermore, Fivetran pipelines are strictly idempotent. If a network failure occurs during a massive sync, Fivetran simply restarts the exact same batch. Because it explicitly tracks extraction cursors and uses deterministic loading logic, it never accidentally duplicates data or corrupts the destination table upon a retry.
-
-## Summary of Technical Value
-
-Fivetran permanently eliminated the vast majority of custom data engineering pipeline work. By providing hundreds of fully managed, highly resilient connectors capable of handling automated schema drift and complex CDC logic natively, it allows organizations to centralize their data effortlessly. It is a critical foundational component of the modern data stack, ensuring that the open data lakehouse is constantly populated with high-fidelity, highly reliable operational data.
-
+Choose Fivetran when you want the least operational work and your sources are covered by its connectors. Choose Airbyte when you need to self-host, need a long-tail or custom connector, or want to control cost by running it yourself.
 
 ## Learn More
-To learn more about the Data Lakehouse, read the book "Lakehouse for Everyone" by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).
+To learn more about the [Data Lakehouse](/knowledgebase/data-lakehouse/), read the book "Lakehouse for Everyone" by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

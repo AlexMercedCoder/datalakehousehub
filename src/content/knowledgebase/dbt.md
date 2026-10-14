@@ -1,53 +1,39 @@
 ---
-title: "What is dbt?"
-meta_title: "What is dbt? | Expert Data Lakehouse Architecture Guide"
-description: "A comprehensive guide to dbt (Data Build Tool). Learn about analytics engineering, modular SQL transformations, and the modern ELT workflow."
+title: "dbt on Apache Iceberg: how SQL transformations work in a lakehouse"
+meta_title: "dbt on Iceberg Tables: Lakehouse Transformations"
+description: "dbt is an open-source framework that turns SQL SELECT statements into tested, versioned tables and views. Here is how dbt builds Iceberg tables in a lakehouse."
 ---
 
-# What is dbt?
+dbt (data build tool) is an open-source framework for the transform step of ELT. You write each model as a SQL `SELECT` statement, optionally with Jinja templating, and dbt compiles it, works out the dependency order, and runs it inside your warehouse or query engine as a table, view, or incremental model. dbt does not extract or load data; tools such as [Fivetran](/knowledgebase/fivetran/) or [Airbyte](/knowledgebase/airbyte/) do that.
 
-dbt (Data Build Tool) is an open-source command-line tool and deployment framework that revolutionizes how data teams execute the "Transform" step in the ELT (Extract, Load, Transform) pipeline. Rather than relying on fragile, monolithic Python scripts or complex drag-and-drop GUI tools, dbt allows data analysts and engineers to write modular, reusable data transformations using standard SQL combined with Jinja templating.
+By bringing version control, code review, tests, and CI to analytical SQL, dbt popularized the role now called analytics engineering. In June 2026 dbt Labs completed its merger with Fivetran, and the dbt Fusion engine runtime was open sourced as dbt Core v2.0 (alpha) under the Apache 2.0 license.
 
-By applying software engineering best practices—such as version control, automated testing, and CI/CD workflows—to analytical SQL, dbt effectively created the modern discipline known as Analytics Engineering. It empowers analysts who know SQL to build complex, production-grade data pipelines directly within the cloud data warehouse or [data lakehouse](/data-lakehouse), without requiring extensive knowledge of distributed systems programming.
+## ELT and where dbt fits
 
-## The Shift from ETL to ELT
+Older ETL tools transformed data on a separate integration server before loading it. Cloud warehouses and lakehouse query engines made it practical to load raw data first and transform it where it lands, which is [ELT](/knowledgebase/elt/). dbt is the transform layer in that pattern: it sends SQL to the engine and lets the engine do the work.
 
-Historically, data pipelines utilized an ETL (Extract, Transform, Load) methodology. Massive data integration servers would extract data from source systems, perform heavy transformations in-memory on proprietary hardware, and finally load the pristine data into a traditional data warehouse. 
+## Models, ref, and the DAG
 
-As cloud data warehouses (like Snowflake and BigQuery) and powerful query engines (like Dremio and Trino) emerged, they brought virtually unlimited computational power to the storage layer. It became exponentially more efficient to Extract the raw data and Load it directly into the cloud storage *first*, and then execute the Transformations directly within the powerful database engine. This is ELT. 
+A dbt project is a directory of SQL files, one per model. Instead of hardcoding table names, models reference each other with `{{ ref('model_name') }}`. dbt resolves each reference to the right schema for the current environment (dev, CI, prod) and uses those references to build a dependency graph. When you run the project, dbt executes models in dependency order and runs independent models in parallel up to your configured thread count.
 
-dbt is the definitive orchestration tool for this ELT workflow. It does not extract or load data; it exclusively orchestrates the execution of SQL transformations natively within the destination engine.
+## Tests and documentation
 
-## Modular SQL and Jinja Templating
+Data tests are declared in YAML next to models, for example `unique` and `not_null` on a `user_id` column or `accepted_values` on a status column. When a test fails during `dbt build`, downstream models that depend on it are skipped. dbt also generates a documentation site with the model graph, column descriptions, and tests.
 
-At its core, a dbt project is a directory of SQL files, where each file represents a single logical model (e.g., a table or a view). However, dbt enhances standard SQL by integrating the Jinja templating language.
+## Semantic layer
 
-### The Ref Function
-In a traditional database, if you create a view that relies on a specific table, you hardcode the table name. If that table changes environments (from `dev` to `prod`), the code breaks. 
+dbt's Semantic Layer, powered by MetricFlow, lets you define metrics such as monthly active users or gross margin in YAML alongside your models. Supported BI and AI tools query those definitions through dbt's APIs, so a metric is defined once instead of in every dashboard.
 
-dbt solves this with the `{{ ref('model_name') }}` function. Instead of explicitly typing the schema and table name, analysts reference the logical name of the upstream model. dbt dynamically compiles the SQL at runtime, injecting the correct physical database paths based on the execution environment. 
+## dbt on Iceberg tables
 
-### Automated Dependency Graphs
-Because dbt uses the `ref` function, it mathematically understands the exact relationships between every single model in the project. It automatically generates a Directed Acyclic Graph (DAG) of the entire pipeline. When an engineer commands dbt to run, it traverses the DAG, determining the optimal execution order, running independent models concurrently to maximize warehouse performance, and ensuring dependent models wait for upstream calculations to finish.
+On a [data lakehouse](/knowledgebase/data-lakehouse/), dbt models usually materialize as [Apache Iceberg](/knowledgebase/apache-iceberg/) tables. What changes is the adapter and the catalog.
 
-## Testing and Documentation
+- **Adapters:** dbt-spark, dbt-trino, dbt-athena, dbt-snowflake, dbt-databricks, dbt-bigquery, and dbt-duckdb can all create Iceberg tables in some configuration. The Dremio-maintained dbt-dremio adapter writes tables to a Dremio object storage source; Dremio creates Iceberg tables in Glue, S3, and Nessie sources, while its default `$scratch` location writes plain Parquet, so point `object_storage_source` at an Iceberg-capable source.
+- **Catalogs:** dbt's `catalogs.yml` lets an adapter register the tables it builds in a named Iceberg catalog. Because the catalog, not the engine, owns the table, a model built by Spark can be read by Dremio or [Trino](/knowledgebase/trino/) through the same [Iceberg catalog](/knowledgebase/iceberg-catalog/), such as an [Apache Polaris](/knowledgebase/apache-polaris/) REST catalog.
+- **Materializations:** dbt's docs note that most Iceberg catalogs support tables and incremental models but not views, and some lack atomic `CREATE TABLE AS`. Plan to keep views in the engine's own namespace.
+- **Incremental models:** `merge` and `delete+insert` strategies map to Iceberg row-level operations, but support varies by engine and connector, so check your adapter's docs.
 
-Data quality is a massive challenge in modern pipelines. dbt integrates testing directly into the transformation code. Engineers define simple YAML files alongside their SQL models to assert strict data constraints.
-
-With a few lines of configuration, an engineer can instruct dbt to test that a specific `user_id` column is absolutely unique, never contains null values, and only contains accepted values. If a test fails during the pipeline execution, dbt halts the deployment and alerts the team, preventing corrupted data from ever reaching the final business dashboards.
-
-Furthermore, dbt auto-generates a highly readable, interactive documentation website. This website exposes the entire DAG, column descriptions, and testing constraints, serving as an easily accessible business glossary for the entire organization.
-
-## Semantic Layer Integration
-
-As the data ecosystem evolved, dbt expanded beyond simple SQL transformations by introducing a comprehensive Semantic Layer. 
-
-Instead of defining complex metrics (like "Monthly Active Users" or "Gross Margin") inside individual BI dashboards (like Tableau or Looker), organizations use dbt to define these metrics as code directly alongside the transformation logic. Downstream tools can then query the dbt Semantic Layer API to retrieve the exact calculated metric, ensuring that every dashboard across the company displays the exact same, mathematically verified number.
-
-## Summary of Technical Value
-
-dbt transformed data transformation from a fragile, siloed IT operation into a collaborative, version-controlled software engineering discipline. By combining the accessibility of SQL with the power of Jinja templating, automated testing, and DAG orchestration, dbt empowers organizations to build incredibly complex, reliable, and scalable analytical models directly on top of modern data lakehouse platforms.
-
+A typical layout maps dbt folders to the [medallion architecture](/knowledgebase/medallion-architecture/): staging models read bronze Iceberg tables, intermediate models build silver, and marts build gold tables that a [semantic layer](/knowledgebase/semantic-layer/) exposes to BI tools and agents.
 
 ## Learn More
-To learn more about the Data Lakehouse, read the book "Lakehouse for Everyone" by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).
+To learn more about the [Data Lakehouse](/knowledgebase/data-lakehouse/), read the book "Lakehouse for Everyone" by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

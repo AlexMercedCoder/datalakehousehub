@@ -1,48 +1,46 @@
 ---
-title: "What is Apache ORC?"
-meta_title: "What is Apache ORC? | Expert Data Lakehouse Architecture Guide"
-description: "A comprehensive guide to Apache ORC. Learn about the Optimized Row Columnar format, its origins in Apache Hive, and its immense compression capabilities."
+title: "Apache ORC vs Parquet: Which to Use for Iceberg Tables"
+meta_title: "Apache ORC vs Parquet for Iceberg Tables | Glossary"
+description: "Apache ORC is an open source columnar file format created in 2013 to speed up Apache Hive. See how it differs from Parquet and when to use it in Iceberg."
 ---
 
-# What is Apache ORC?
+Apache ORC (Optimized Row Columnar) is an open source columnar file format for analytical workloads. It was created in January 2013 as part of an effort to speed up Apache Hive and store Hadoop data more efficiently. Apache Parquet, its closest peer, came out of work at Twitter and Cloudera at about the same time.
 
-Apache ORC (Optimized Row Columnar) is a highly efficient, open-source columnar storage format designed for massive analytical workloads in the Hadoop ecosystem. While Apache Parquet grew largely out of the Apache Spark and Impala communities, ORC was created explicitly to accelerate the original behemoth of big data analytics: Apache Hive.
+Before ORC, Hive tables were usually stored as text files or RCFile, which cost a lot of CPU and disk I/O at query time. ORC cut storage size through type-aware encoding and compression and made Hive queries much faster by letting readers skip data they did not need.
 
-Before the introduction of ORC in 2013, Hive queried data stored in inefficient text formats like CSV or RCFile. These formats caused immense CPU and disk I/O bottlenecks. The introduction of ORC dramatically reduced the size of Hadoop clusters by compressing data significantly better than older formats and accelerating Hive query speeds by orders of magnitude. 
+## The Layout of an ORC File
 
-## The Architectural Layout of ORC
-
-Like Parquet, ORC is a columnar format. It groups values of the same column together to optimize analytical queries that only require a subset of the total columns. However, ORC employs a highly specific internal structure engineered for maximum read efficiency.
+Like Parquet, ORC stores values of the same column together so a query that touches a few columns reads only those columns.
 
 ### Stripes and Streams
-An ORC file is physically divided into massive chunks called Stripes (typically 250MB in size). A Stripe is large enough to ensure highly efficient, contiguous disk reads from slow spinning hard drives (which were standard in legacy Hadoop environments).
+An ORC file is divided into stripes, which default to about 64 MB. Each stripe is an independent unit of work, so different tasks can read different stripes in parallel.
 
-Inside each Stripe, the data is further divided into Streams. A column in ORC is not stored as a single monolithic block. Instead, it is separated into distinct streams based on data types. For instance, an Integer column might be split into a Data Stream (containing the actual numbers) and a Present Stream (a highly compressed bitmask indicating exactly which rows contain NULL values). This intricate separation allows the query engine to completely avoid processing NULL values during complex aggregations.
-
-## Aggressive Compression and Indexing
-
-The primary architectural differentiator for ORC is its intense focus on minimizing file size. In many benchmarks, ORC provides slightly better raw compression ratios than Parquet, making it highly attractive for organizations storing immense historical archives.
+Inside a stripe, each column is split into streams. An integer column, for example, has a data stream holding the values and a present stream, a compact bitmap recording which rows are NULL. Readers use the present stream to avoid processing NULLs.
 
 ### Type-Specific Encoding
-ORC utilizes distinct encoding strategies tailored precisely to the data type. It does not treat all data as generic bytes. It uses Dictionary Encoding for repetitive strings, Delta Encoding for monotonically increasing integers (like timestamps or IDs), and highly optimized bit-packing. By applying the exact mathematical compression algorithm suited to the specific data structure, ORC minimizes the physical footprint aggressively.
+ORC chooses encodings by data type: dictionary encoding for repetitive strings, run-length and delta encoding for integers such as IDs and timestamps, and bit packing. A general compression codec (such as ZLIB, Snappy, LZ4, or ZSTD) is applied on top.
 
 ### Lightweight Indexes
-Every ORC file contains incredibly detailed, built-in metadata. At the end of the file, the File Footer stores the schema and aggregate statistics. 
+The file footer stores the schema and column statistics, and each stripe carries row indexes with minimum and maximum values for groups of 10,000 rows. When an engine like Trino runs `WHERE age > 65`, it checks these statistics and skips row groups that cannot match without decompressing them. Optional Bloom filters help with equality lookups.
 
-Crucially, ORC maintains a Stripe Footer and Row Group Indexes. By default, ORC generates statistics (MIN, MAX, SUM, and COUNT) for every 10,000 rows. When a query engine like Trino executes a SQL filter (e.g., `WHERE age > 65`), it evaluates these lightweight indexes to precisely skip thousands of irrelevant rows without ever decompressing the actual Data Streams. This Predicate Pushdown capability is fundamental to modern data lake performance.
+## ORC vs Parquet for Iceberg Tables
 
-## ORC vs Parquet in the Modern Lakehouse
+The [Apache Iceberg](/knowledgebase/apache-iceberg/) table spec allows three data file formats: Parquet, ORC, and Avro. Parquet is the default (`write.format.default=parquet`), and the format is recorded per data file, so a single table can contain both.
 
-Today, Apache ORC and Apache Parquet share nearly identical use cases. Both are highly optimized columnar formats supporting deep compression and predicate pushdown.
+| | Apache ORC | [Apache Parquet](/knowledgebase/apache-parquet/) |
+|---|---|---|
+| Origin | Apache Hive project, 2013 | Twitter and Cloudera, 2013 |
+| Default in Iceberg | No | Yes |
+| Delta Lake support | No (Parquet only) | Yes |
+| Engine coverage for Iceberg writes | Narrower; check each engine | Every major Iceberg engine |
+| Built-in indexes | Row-group min/max, optional Bloom filters | Row-group and page statistics, optional Bloom filters |
+| Typical reason to choose it | Existing Hive ORC data you want to adopt in place | New tables and broad engine compatibility |
 
-The choice between them historically depended entirely on the computation engine. Organizations deeply entrenched in the Apache Hive and Hortonworks ecosystem standardized on ORC, as Hive was heavily optimized to read it natively. Conversely, organizations standardizing on Apache Spark heavily favored Parquet, as Spark’s Catalyst Optimizer and Tungsten Engine were explicitly engineered around Parquet’s structure.
+The practical guidance: write new Iceberg tables as Parquet, because it is the format every Iceberg engine reads (Spark, Trino, Flink, [Dremio](/knowledgebase/dremio-cloud/), Doris, StarRocks, DuckDB, and others) and the one engines write by default. If you have large Hive tables already stored as ORC, Iceberg lets you register those files in place through migration procedures instead of rewriting them. New data can then land as Parquet, and older ORC files can be rewritten during routine compaction when it suits you.
 
-In the modern Open [Data Lakehouse](/data-lakehouse) era, the ecosystem has largely consolidated around Parquet, primarily because dominant open table formats like Delta Lake and [Apache Iceberg](/apache-iceberg) adopted Parquet as their default underlying storage standard. However, Iceberg fully supports ORC as a valid physical data file format, ensuring that legacy Hadoop organizations migrating to modern architectures can leverage their existing ORC datasets without forcing massive data rewrites.
+## Summary
 
-## Summary of Technical Value
-
-Apache ORC fundamentally solved the storage bottleneck of the original Hadoop era. By providing a highly intricate columnar structure featuring type-specific compression and lightweight indexing, it allowed legacy engines to perform fast analytics over massive historical datasets. It remains a powerful, deeply optimized storage format for organizations managing massive-scale data lakes.
-
+Apache ORC solved the storage bottleneck of the original Hadoop era with stripes, type-specific encoding, and lightweight indexes. It remains a valid Iceberg data format and a sensible choice for existing Hive data, while Parquet is the default for new lakehouse tables.
 
 ## Learn More
 To learn more about the Data Lakehouse, read the book "Lakehouse for Everyone" by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

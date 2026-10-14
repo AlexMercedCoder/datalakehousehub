@@ -1,35 +1,38 @@
 ---
-title: "What is Amundsen?"
-meta_title: "What is Amundsen? | Expert Data Architecture Guide"
-description: "A comprehensive guide to Amundsen. Learn how Lyft's open-source data discovery platform pioneered the modern architectural concept of the Data Catalog."
+title: "Amundsen data catalog: archived in 2026, and how it compares to DataHub and OpenMetadata"
+meta_title: "Amundsen Data Catalog vs DataHub and OpenMetadata"
+description: "Amundsen is Lyft's open-source data discovery catalog, archived in September 2026. See how it compares to DataHub and OpenMetadata and fits Iceberg catalogs."
 ---
 
-# What is Amundsen?
+Amundsen is an open-source data discovery and metadata engine created at Lyft, described publicly in April 2019 and open sourced later that year. It gives analysts a search interface over table metadata: descriptions, owners, columns, last-updated times, and popularity. The project was hosted by the LF AI & Data Foundation.
 
-Amundsen is a highly influential, open-source data discovery and metadata engine originally engineered by Lyft in 2019 to solve the massive, crippling internal chaos of navigating a hyper-growth data lake. At its core, Amundsen serves as a massive, centralized search engine for data. When an organization scales to thousands of tables and petabytes of data, data analysts spend 30% of their time simply trying to find the correct table or figure out who owns the data. Amundsen was explicitly designed to eradicate this inefficiency by providing a highly intuitive, Google-like search interface sitting directly on top of the complex data infrastructure.
+**Project status:** the [amundsen-io/amundsen](https://github.com/amundsen-io/amundsen) GitHub repository was archived in September 2026. Its README states that the project was archived due to inactivity and that the code remains available for historical purposes. The last tagged release was databuilder 7.5.1 in August 2024, and the old amundsen.io documentation domain no longer serves the project docs. Treat Amundsen as a reference design, not a platform to adopt for new work.
 
-While commercial Enterprise Data Catalogs (like Alation and Collibra) dominate massive Fortune 500 companies with heavy compliance requirements, Amundsen became the absolute de facto standard for the open-source engineering community. It pioneered the highly modular, microservice-based architecture for metadata, allowing data engineers to spin up a powerful, highly customized data catalog completely free of restrictive vendor licensing.
+## Architecture
 
-## The Microservice Architecture
+Amundsen is split into three services plus an ingestion library:
 
-Amundsen achieves its massive scalability by utilizing a highly decoupled, modern microservice architecture consisting of three primary, distinct components.
+- **Frontend service:** a Flask application with a React UI where users search and browse tables.
+- **Search service:** a REST proxy over Elasticsearch (or Apache Atlas's search API) that indexes table metadata.
+- **Metadata service:** serves table, column, user, and dashboard metadata, stored in Neo4j by default with Apache Atlas as an alternative backend. Metadata is modeled as a graph of tables, columns, users, and dashboards.
+- **Databuilder:** a Python ingestion library with extractors for sources such as Hive Metastore, AWS Glue, Snowflake, BigQuery, Postgres, Dremio, dbt, and OpenLineage. Lyft ran it as a daily Airflow DAG to refresh the catalog.
 
-### 1. The Frontend Service (The Search Interface)
-This is the physical web application utilized by the human data analysts. Built to mimic a standard web search engine, an analyst simply types "User Revenue," and the Frontend instantly returns a highly ranked list of tables. Crucially, the interface exposes critical contextual metadata: when the table was last updated, who the lead data engineer (the Owner) is, and exactly what columns exist within the table, allowing the analyst to verify the table's value without ever executing a SQL query.
+## Amundsen vs DataHub vs OpenMetadata
 
-### 2. The Search Service (Elasticsearch)
-To guarantee sub-second search performance across millions of metadata tags, Amundsen physically offloads the raw search execution to a highly optimized search engine, typically Elasticsearch. The Search Service maintains a massive, inverted index of all table names, column descriptions, and user-generated tags, ensuring that even the most complex, fuzzy search queries return instantaneous, highly relevant results.
+| | Amundsen | [DataHub](/knowledgebase/datahub/) | OpenMetadata |
+|---|---|---|---|
+| Origin | Lyft | LinkedIn | Created by the team behind Collate |
+| Status (Oct 2026) | Archived Sept 2026 | Actively developed | Actively developed |
+| Metadata storage | Neo4j or Atlas, plus Elasticsearch | Its own metadata service with a search index | Its own metadata server with a search index |
+| Ingestion | Batch Databuilder jobs | Push and pull ingestion framework | Pull-based connectors |
+| [Lineage](/knowledgebase/data-lineage/) | Limited; table and dashboard relationships | Table and column level | Table and column level |
+| Iceberg | No Iceberg extractor; reaches Iceberg tables only through Hive Metastore, Glue, or engine extractors | Iceberg source (beta) reads REST, Glue, and SQL catalogs | Iceberg tables surfaced through engine connectors such as Trino, Athena, or Snowflake |
 
-### 3. The Metadata Service (Neo4j / Apache Atlas)
-The absolute architectural brain of Amundsen. The Metadata Service physically stores the complex web of relationships between tables, dashboards, and human users. By default, Amundsen originally utilized Neo4j (a highly advanced Graph Database) to explicitly map these relationships as Nodes and Edges. This Graph Architecture is critical; it allows the system to instantly traverse complex Data Lineage, mathematically showing an analyst exactly which downstream Tableau dashboard will physically break if they alter a specific column in the raw [Data Lakehouse](/data-lakehouse) table.
+If you are running Amundsen today, DataHub and OpenMetadata are the usual migration targets, since both cover search, ownership, glossary, and lineage in one project.
 
-## Automated Extraction (The Databuilder)
+## Discovery catalogs vs Iceberg catalogs
 
-A data catalog is completely useless if it is empty. Amundsen populates its Graph Database using a massive, automated ingestion framework called the Databuilder. The Databuilder executes daily batch jobs, physically connecting to the Hive Metastore, Snowflake, Apache Airflow, and Tableau, extracting the latest metadata and pushing it into the Neo4j graph, ensuring the search engine is constantly synchronized with the absolute physical reality of the data architecture.
-
-## Summary of Technical Value
-
-Amundsen is a monumental achievement in open-source data engineering. By decoupling metadata management into a highly scalable microservice architecture and utilizing powerful Graph Databases and Elasticsearch for instant discoverability, Amundsen established the blueprint for the modern Data Catalog. It dramatically accelerates data democratization by empowering analysts to instantly discover, trust, and trace massive enterprise datasets without requiring manual IT intervention.
+These are two different things that share a name. An [Iceberg catalog](/knowledgebase/iceberg-catalog/) such as [Apache Polaris](/knowledgebase/apache-polaris/), AWS Glue, or [Project Nessie](/knowledgebase/project-nessie/) is a technical service: it tracks the current metadata file for each table so engines like Dremio, Trino, and Spark can read and commit to it, and it can enforce access control. A discovery catalog such as Amundsen or DataHub sits above that layer and adds the human context: descriptions, owners, glossary terms, and lineage across tools. In a lakehouse you typically need both, with the discovery tool ingesting from the Iceberg catalog or from the query engine that reads it.
 
 ## Learn More
-To learn more about the Data Lakehouse, read the book "Lakehouse for Everyone" by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).
+To learn more about the [Data Lakehouse](/knowledgebase/data-lakehouse/), read the book "Lakehouse for Everyone" by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

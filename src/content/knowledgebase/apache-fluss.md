@@ -1,39 +1,44 @@
 ---
-title: "What is Apache Fluss?"
-meta_title: "What is Apache Fluss? | Expert Data Lakehouse Architecture Guide"
-description: "A comprehensive guide to Apache Fluss. Learn how this innovative streaming storage system natively bridges the gap between Apache Flink and the Data Lakehouse."
+title: "Apache Fluss vs Kafka: Streaming Storage for Iceberg Lakehouses"
+meta_title: "Apache Fluss vs Kafka for Iceberg Streaming | Glossary"
+description: "Apache Fluss is open source streaming storage for real-time analytics that tiers data into lake tables. See how it compares to Kafka for Iceberg tables."
 ---
 
-# What is Apache Fluss?
+Apache Fluss is an open source, lakehouse-native streaming storage system built for real-time analytics and AI. It stores streams as tables with sub-second freshness, integrates with Apache Flink and Apache Spark, and continuously tiers its data into open lake formats including [Apache Iceberg](/knowledgebase/apache-iceberg/), Apache Paimon, Apache Hudi, and Lance. Fluss entered the Apache Incubator in 2025 and graduated to an Apache top-level project in July 2026.
 
-Apache Fluss is a highly advanced, modern open-source streaming storage architecture explicitly engineered to serve as the unified, high-performance storage foundation for Apache Flink. In the massive, chaotic ecosystem of real-time data streaming, the industry has historically relied on Apache Kafka or Apache Pulsar to hold the data, while using Flink strictly as the computational engine to process it. While this separation works, it introduces massive network latency, complex serialization overhead, and significant architectural friction when attempting to merge real-time streaming data directly with the massive historical batch data sitting in an Open [Data Lakehouse](/data-lakehouse).
+Most streaming architectures pair a message log such as [Apache Kafka](/knowledgebase/apache-kafka/) with a separate pipeline that copies events into lake tables. Fluss collapses those two layers: the same table serves fresh streaming reads and holds a committed copy in the lakehouse.
 
-Apache Fluss fundamentally disrupts this paradigm by providing a streaming storage engine that is architecturally native to Flink’s internal logic. It is specifically designed to eliminate the massive impedance mismatch between continuous event streaming and columnar batch storage, acting as the ultimate bridge that allows real-time operational streams to seamlessly merge into the analytical Data Lakehouse.
+## How Fluss Stores Data
 
-## The Architecture of Unified Storage
+### Columnar streaming
+Fluss stores its log in a columnar layout built on Apache Arrow. A Flink or Spark job that needs three columns out of fifty reads only those three, and filters can be pushed down to storage. Row-oriented message logs have to ship every field of every record.
 
-The core architectural brilliance of Apache Fluss lies in its dual-tier, highly hybrid storage mechanism, designed to provide absolute real-time latency while ensuring massive, cheap historical retention.
+### Log tables and primary key tables
+* **Log tables** are append-only, similar to a Kafka topic with a schema.
+* **Primary key tables** accept updates, serve key lookups, and emit a changelog. Merge engines handle deduplication, partial updates, and aggregation.
 
-### 1. The Real-Time Log Tier
-When high-velocity streaming data enters Fluss, it is immediately written to a highly optimized, append-only Distributed Log (similar in concept to Kafka's partition structure). This Log Tier is physically housed on ultra-fast SSDs or active memory, ensuring that downstream Flink applications can consume the live events with absolute, sub-millisecond latency to trigger real-time operational alerts or machine learning inference.
+### Lakehouse tiering
+The Fluss tiering service runs as an Apache Flink job. It writes data into the chosen lake format, commits it, and records how far the streaming log has been tiered. Recent data stays in Fluss for low-latency access, while older data lives as normal lake tables on object storage.
 
-### 2. The Lakehouse Tier (Columnar Archiving)
-This is where Fluss completely diverges from traditional message queues. 
-Kafka was never designed to store petabytes of data forever; retaining massive data in Kafka is catastrophically expensive. 
-Apache Fluss possesses a native, automated tiering mechanism. As the data in the Real-Time Log ages, Fluss autonomously and continuously transforms the raw stream into highly compressed, columnar Apache Parquet or [Apache Iceberg](/apache-iceberg) format. It physically flushes this columnar data directly down into the cheap, massive Amazon S3 Data Lakehouse.
+### Union reads
+A union read combines a committed lake snapshot with the newer records still in Fluss, so one query covers both history and the last few seconds. Support depends on the engine, table type, and lake format, so check the docs for your release.
 
-## The Unified Flink Experience
+## Fluss vs Kafka for Lakehouse Streaming
 
-Because Fluss handles the complex transition from row-based streaming to columnar batch storage entirely in the background, it provides a flawless, unified experience for the Data Engineer.
+| | Apache Fluss | Apache Kafka |
+|---|---|---|
+| Data model | Tables with schemas (log and primary key tables) | Topics of records; schema handled outside the broker |
+| Storage layout | Columnar (Arrow), supports projection pushdown | Row-oriented record batches |
+| Updates and lookups | Primary key tables with upserts and point lookups | Compacted topics keep the latest value per key; no query lookups |
+| Path to Iceberg | Built-in tiering service writes and commits Iceberg tables | Separate sink, such as Kafka Connect or a Flink job |
+| Querying history plus fresh data | Union reads across lake snapshot and Fluss | Two systems queried separately |
+| Ecosystem maturity | Young; Flink and Spark integrations | Very broad client and connector ecosystem |
 
-When an engineer writes a Flink SQL query against a Fluss table, they do not need to write two separate pipelines (one for Kafka, one for Iceberg). They simply query the single Fluss table. 
-* If the query demands the latest 5 seconds of data, Fluss serves it instantly from the Real-Time Log Tier.
-* If the query demands an aggregation of the last 5 years of data, Fluss seamlessly executes the scan against the heavily compressed columnar data sitting in S3.
-The storage medium is completely abstracted, allowing Flink to execute flawless unified batch and streaming analytics against a single, coherent architectural endpoint.
+Kafka remains the right choice for general event distribution between many services. Fluss fits when the goal is analytics: streams that must land in Iceberg tables, be queried with Flink or Spark, and stay readable by the rest of the lakehouse. Once tiered, the data is an ordinary Iceberg table, so engines like [Dremio](/knowledgebase/dremio-cloud/) or [Trino](/knowledgebase/trino/) can query it through your catalog without knowing Fluss exists. See also [Apache Flink](/knowledgebase/apache-flink/) and [Kafka Connect](/knowledgebase/kafka-connect/).
 
-## Summary of Technical Value
+## Summary
 
-Apache Fluss represents the massive architectural convergence of event streaming and the Open Data Lakehouse. By providing a highly intelligent, dual-tier storage engine that natively captures sub-millisecond events in a distributed log while autonomously archiving historical data into optimized columnar formats, Fluss empowers data engineering teams to execute completely unified, highly performant real-time and historical analytics without the catastrophic complexity of managing disparate storage systems.
+Apache Fluss treats streams as columnar tables and keeps a committed copy in open lake formats such as Iceberg. For teams that currently run Kafka plus a separate ingestion job into the lakehouse, it offers one storage layer for both fresh and historical analytics.
 
 ## Learn More
 To learn more about the Data Lakehouse, read the book "Lakehouse for Everyone" by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

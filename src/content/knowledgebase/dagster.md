@@ -1,49 +1,46 @@
 ---
-title: "What is Dagster?"
-meta_title: "What is Dagster? | Expert Data Lakehouse Architecture Guide"
-description: "A comprehensive guide to Dagster. Learn about software-defined assets, modern data orchestration, and overcoming the limitations of traditional task-based DAGs."
+title: "Dagster for lakehouse pipelines: how it compares to Airflow and Prefect"
+meta_title: "Dagster vs Airflow for Lakehouse Pipelines | Glossary"
+description: "Dagster is an open-source orchestrator that models pipelines as data assets instead of tasks. See how it compares to Airflow and Prefect on Iceberg lakehouses."
 ---
 
-# What is Dagster?
+Dagster is an open-source data orchestrator for analytics, ETL, and machine learning pipelines. Task-based orchestrators answer the question "did the job run?" Dagster's core abstraction, the asset, answers a different question: "is this table, file, or model current and correct?"
 
-Dagster is an open-source, modern data orchestration platform designed explicitly for machine learning, analytics, and ETL pipelines. While legacy orchestrators focus almost entirely on the execution of tasks (answering "Did the script run successfully?"), Dagster introduces a paradigm shift known as Software-Defined Assets. It focuses primarily on the actual data being produced (answering "Is the final data table accurate and up to date?").
+That difference matters most in a [data lakehouse](/knowledgebase/data-lakehouse/), where the things you care about are tables: bronze, silver, and gold [Apache Iceberg](/knowledgebase/apache-iceberg/) tables in a [medallion architecture](/knowledgebase/medallion-architecture/), plus the views and metrics built on top of them.
 
-In modern data engineering, pipelines have become increasingly complex, often stretching across dbt transformations, Snowflake queries, and Python machine learning models. Dagster unifies these disparate systems into a single control plane, allowing data teams to build, test, and deploy highly resilient pipelines using strict software engineering principles.
+## Assets instead of tasks
 
-## The Shift to Software-Defined Assets
+Classic orchestrators such as [Apache Airflow](/knowledgebase/apache-airflow/) define a DAG of tasks. A task might be "run SQL script A" followed by "run Python script B," and the scheduler does not need to know what either script writes.
 
-Traditional orchestrators like Apache Airflow structure workflows as Directed Acyclic Graphs (DAGs) of arbitrary tasks. A task might be "Run SQL Script A" followed by "Run Python Script B." The orchestrator has no awareness of what "Script A" actually does or what data it modifies. If the pipeline fails, the engineer must manually investigate which tables are corrupted.
+In Dagster you define assets: Python functions decorated as producing a specific piece of data, such as a table, a partition, or a trained model. Dependencies between assets come from their inputs, so the graph Dagster shows you is a graph of data, not of jobs. If you need to refresh `monthly_revenue`, you can materialize that asset and its upstream dependencies without rerunning unrelated work.
 
-Dagster fundamentally redesigns orchestration around Software-Defined Assets. An asset is a physical manifestation of data—such as a specific Snowflake table, an [Apache Iceberg](/apache-iceberg) partition, or a trained machine learning model. Instead of telling Dagster to "run a task," an engineer writes a Python function that explicitly returns an asset. 
+## Local development and I/O managers
 
-Because Dagster natively understands the assets, the dependency graph is entirely data-aware. If an engineer needs to update the `monthly_revenue` table, they simply ask Dagster to materialize that specific asset. Dagster automatically calculates the dependency chain, traverses upstream, and executes only the precise calculations required to produce that final table, drastically reducing unnecessary compute costs.
+Dagster separates transformation logic from storage through resources and I/O managers. The same asset code can write to a local file or DuckDB during development and to a warehouse or Iceberg table in production by swapping configuration. That makes unit testing pipelines on a laptop practical.
 
-## Local Development and Testability
+## dbt integration
 
-One of the most severe bottlenecks in legacy data engineering is the inability to test pipelines locally. Engineers often push unverified code into a staging environment simply to see if the orchestrator DAG executes without crashing.
+The `dagster-dbt` library reads your dbt project's manifest and represents each dbt model, seed, and snapshot as its own Dagster asset. dbt tests show up as asset checks on the models they test. You can run a single model, see per-model run history, and place Python assets (an API extract, a feature computation) upstream or downstream of specific dbt models.
 
-Dagster was built to ensure pipelines are completely testable on a local laptop before deployment. It utilizes a highly modular architecture that explicitly separates the business logic (the Python data transformations) from the environment specifics (the I/O Managers).
+## Automation and observability
 
-An engineer can write a complex transformation and configure Dagster to use an SQLite database when running on their local laptop. When the exact same code is pushed to production, the configuration simply switches to a Snowflake I/O Manager. The underlying transformation logic remains completely untouched and perfectly tested. This separation of concerns massively accelerates the development cycle.
+Dagster supports cron schedules, sensors, and Declarative Automation, where each asset carries an automation condition (for example, run on a cron, run eagerly when upstream data changes, or run when missing). Freshness policies are a separate feature: they flag assets that have not materialized recently and can trigger alerts. Each materialization can record metadata such as row counts, and asset checks let you encode data quality rules next to the asset they protect.
 
-## Deep Integration with dbt
+## Dagster vs Airflow vs Prefect
 
-The modern analytics workflow relies heavily on dbt (Data Build Tool) for SQL transformations. Integrating dbt into legacy orchestrators usually involves treating the entire dbt project as a single, opaque task. If one specific dbt model fails, the orchestrator only knows that the massive "dbt run" task failed, offering zero granular visibility.
+| | Dagster | Apache Airflow | Prefect |
+|---|---|---|---|
+| Core unit | Asset (with ops and jobs underneath) | DAG of tasks; asset-aware scheduling added later | Flows and tasks; assets added in Prefect 3 |
+| Data awareness | Lineage, checks, and freshness per asset | Assets (called datasets before Airflow 3) trigger downstream DAGs | `@materialize` records asset lineage and health |
+| dbt | Each model is an asset via `dagster-dbt` | Usually via operators or the community Cosmos project | Via `prefect-dbt` |
+| Local testing | I/O managers swap storage per environment | Possible, but DAG parsing and providers add setup | Flows are plain Python functions |
+| Governance | Open source, Dagster Labs | Apache Software Foundation project | Open source, Prefect Technologies |
 
-Dagster provides the most profound dbt integration in the industry. It parses the `manifest.json` generated by dbt and maps every single dbt model natively into Dagster as an individual Software-Defined Asset. When an engineer opens the Dagster UI, they see the entire dbt DAG fully expanded. They can trigger individual dbt models, monitor explicit execution times per table, and even seamlessly interleave non-SQL tasks (like a Python script that pings an external API) directly in the middle of a dbt execution chain.
+How to choose: if your team already runs Airflow at scale and mostly orchestrates jobs across many systems, its operator ecosystem and asset scheduling may be enough. If your pipeline is mainly "build these Iceberg tables in order and tell me which ones are stale," Dagster's asset model maps directly onto that job. Prefect fits teams that want to turn existing Python scripts into scheduled, observable workflows with minimal restructuring.
 
-## Declarative Scheduling and Observability
+## Dagster on an Iceberg lakehouse
 
-Data pipelines no longer run exclusively on strict chron schedules. Modern lakehouses require event-driven and declarative execution. 
-
-Dagster supports declarative scheduling. An engineer can configure an asset with a strict freshness policy (e.g., "This table must reflect data no older than 4 hours"). Dagster continuously monitors the entire cluster. If the data goes stale, Dagster automatically triggers the necessary upstream dependencies to fulfill the freshness policy.
-
-Furthermore, Dagster provides immense observability natively. Every execution automatically tracks rich metadata, including row counts, null constraints, and execution duration. If a pipeline runs successfully but produces anomalous data, the Dagster UI highlights the statistical deviation immediately, ensuring that data quality issues are caught long before they reach executive dashboards.
-
-## Summary of Technical Value
-
-Dagster represents the natural evolution of data orchestration. By transitioning from blind task execution to data-aware Software-Defined Assets, it provides data engineering teams with unprecedented visibility and control over their infrastructure. Its uncompromising focus on local testability, robust dbt integration, and declarative scheduling makes it the premier orchestration platform for organizations building resilient, high-velocity data lakehouses.
-
+The `dagster-iceberg` library (a community integration that the Dagster docs describe as in preview) provides I/O managers built on PyIceberg, with PyArrow, pandas, Polars, Daft, and Spark variants. An asset that returns a table can be written to an Iceberg namespace through any PyIceberg-supported catalog, such as a REST catalog like [Apache Polaris](/knowledgebase/apache-polaris/). A common split is to let Dagster own ingestion and Python steps, let dbt own SQL models executed by an engine such as Dremio, [Trino](/knowledgebase/trino/), or [Spark](/knowledgebase/apache-spark/), and let a [semantic layer](/knowledgebase/semantic-layer/) sit over the gold tables for BI and AI agents.
 
 ## Learn More
-To learn more about the [Data Lakehouse](/data-lakehouse), read the book "Lakehouse for Everyone" by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).
+To learn more about the [Data Lakehouse](/knowledgebase/data-lakehouse/), read the book "Lakehouse for Everyone" by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).
