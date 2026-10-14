@@ -32,4 +32,4 @@ All three engines hit the exact same physical Parquet files simultaneously witho
 The Data Lakehouse Architecture permanently unified the enterprise data stack. By applying the strict structural governance, ACID transactions, and high-performance indexing of a warehouse directly on top of the cheap, infinitely scalable storage of a data lake, it entirely eliminates the need to duplicate data across the enterprise. It empowers analysts, engineers, and scientists to operate simultaneously on a single, mathematically verifiable source of truth.
 
 ## Learn More
-To learn more about the Data Lakehouse, read the book "Lakehouse for Everyone" by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).
+To learn more about the Data Lakehouse, read [The Lakehouse Built for Everyone](https://books.alexmerced.com/books/the-lakehouse-built-for-everyone/) by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

@@ -37,4 +37,4 @@ In modern data architecture, there is a strict distinction between a Message Que
 The Message Queue is the ultimate stabilizing architecture for complex distributed systems. By physically decoupling the producers of data from the consumers of data, and providing a highly durable, asynchronous buffer, Message Queues completely prevent massive traffic spikes from crushing fragile downstream servers. They ensure that mission-critical operational events are never lost to network timeouts, providing absolute fault tolerance to the modern enterprise.
 
 ## Learn More
-To learn more about the Data Lakehouse, read the book "Lakehouse for Everyone" by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).
+To learn more about the Data Lakehouse, read [The Lakehouse Built for Everyone](https://books.alexmerced.com/books/the-lakehouse-built-for-everyone/) by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

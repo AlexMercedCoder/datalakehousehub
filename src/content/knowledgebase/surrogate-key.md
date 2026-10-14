@@ -45,4 +45,4 @@ Surrogate keys solve this. The historical "Analyst" row is assigned `Surrogate_K
 Surrogate Keys are the ultimate stabilizing mechanism in data warehouse architecture. By completely decoupling the internal mathematical linkages of the database from the fragile, constantly mutating Natural Keys of the outside world, they prevent catastrophic cascading data updates. They ensure absolute referential integrity, optimize join performance (by utilizing fast integers instead of slow strings), and serve as the foundational requirement for accurate historical tracking.
 
 ## Learn More
-To learn more about the Data Lakehouse, read the book "Lakehouse for Everyone" by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).
+To learn more about the Data Lakehouse, read [The Lakehouse Built for Everyone](https://books.alexmerced.com/books/the-lakehouse-built-for-everyone/) by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

@@ -32,4 +32,4 @@ Modern architects ruthlessly enforce Decoupling. They physically separate the St
 System Architecture is the supreme foundational blueprint of enterprise technology. By obsessively enforcing horizontal scalability, geographical fault tolerance, and ruthless architectural decoupling, System Architects mathematically guarantee that massive Data Lakehouse platforms and global software ecosystems remain highly performant, flawlessly stable, and absolutely secure under the most chaotic and destructive operational conditions.
 
 ## Learn More
-To learn more about the Data Lakehouse, read the book "Lakehouse for Everyone" by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).
+To learn more about the Data Lakehouse, read [The Lakehouse Built for Everyone](https://books.alexmerced.com/books/the-lakehouse-built-for-everyone/) by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

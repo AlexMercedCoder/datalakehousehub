@@ -42,4 +42,4 @@ In the 2010s, RAM became incredibly cheap. Apache Spark was invented to complete
 MapReduce is the architectural genesis of distributed Big Data processing. By enforcing a highly rigid, two-phase mathematical framework (Map, then Reduce), it proved that massive analytical workloads could be successfully and reliably distributed across thousands of fragile, independent servers. While its massive reliance on slow disk I/O rendered it obsolete in the era of in-memory computing (Spark), its foundational distributed logic remains the philosophical bedrock of all modern cloud data engines.
 
 ## Learn More
-To learn more about the Data Lakehouse, read the book "Lakehouse for Everyone" by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).
+To learn more about the Data Lakehouse, read [The Lakehouse Built for Everyone](https://books.alexmerced.com/books/the-lakehouse-built-for-everyone/) by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

@@ -35,4 +35,4 @@ Because dbt relies on explicit text files (SQL and YAML), the entire data archit
 dbt is the foundational framework of the modern Analytics Engineering discipline. By forcing data teams to abandon fragile, monolithic SQL scripts in favor of modular, version-controlled, and aggressively tested SQL models, dbt guarantees absolute mathematical rigor and architectural stability within the transformation layer of the Data Lakehouse.
 
 ## Learn More
-To learn more about the Data Lakehouse, read the book "Lakehouse for Everyone" by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).
+To learn more about the Data Lakehouse, read [The Lakehouse Built for Everyone](https://books.alexmerced.com/books/the-lakehouse-built-for-everyone/) by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

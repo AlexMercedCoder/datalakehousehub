@@ -31,4 +31,4 @@ A true Agentic Lakehouse does not rely on a separate, disconnected Vector Databa
 The Agentic Lakehouse represents the absolute necessity of aligning massive data infrastructure with the realities of artificial intelligence. By explicitly wrapping the Open Data Lakehouse in a strict Semantic Layer, utilizing ultra-high-speed Arrow Flight transfer protocols, and natively supporting vector operations, the Agentic Lakehouse ensures that autonomous AI Agents can execute flawless, mathematically verified, and highly secure analytical investigations across petabytes of corporate data.
 
 ## Learn More
-To learn more about the Data Lakehouse, read the book "Lakehouse for Everyone" by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).
+To learn more about the Data Lakehouse, read [The Lakehouse Built for Everyone](https://books.alexmerced.com/books/the-lakehouse-built-for-everyone/) by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

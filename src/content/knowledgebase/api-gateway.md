@@ -31,4 +31,4 @@ The API Gateway is intimately aware of the internal network topology. If the `Pa
 The API Gateway is the ultimate protective shield and traffic coordinator of the modern distributed enterprise. By providing a singular, highly secure entry point that completely abstracts internal architectural complexity, the Gateway centralizes critical cryptographic authentication, aggressively enforces rate limiting to prevent catastrophic server meltdowns, and highly optimizes network routing, allowing massive Microservice and Data Lakehouse architectures to operate securely at global scale.
 
 ## Learn More
-To learn more about the Data Lakehouse, read the book "Lakehouse for Everyone" by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).
+To learn more about the Data Lakehouse, read [The Lakehouse Built for Everyone](https://books.alexmerced.com/books/the-lakehouse-built-for-everyone/) by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

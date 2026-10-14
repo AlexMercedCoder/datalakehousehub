@@ -36,4 +36,4 @@ This guarantees that the AI has the exact factual data required to answer the qu
 The AI Context Window is the fundamental computational bottleneck of modern artificial intelligence. Because Transformer models suffer from massive quadratic scaling costs when processing large sequences of text, the hard limit of the Context Window necessitates the implementation of complex Data Lakehouse indexing architectures, specifically Vector Embeddings and RAG pipelines, to surgically inject relevant facts into the AI's active memory without crashing the underlying GPU infrastructure.
 
 ## Learn More
-To learn more about the Data Lakehouse, read the book "Lakehouse for Everyone" by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).
+To learn more about the Data Lakehouse, read [The Lakehouse Built for Everyone](https://books.alexmerced.com/books/the-lakehouse-built-for-everyone/) by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

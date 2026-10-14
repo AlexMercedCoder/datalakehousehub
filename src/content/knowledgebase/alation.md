@@ -34,4 +34,4 @@ A massive Data Lakehouse contains extreme volumes of highly regulated Personally
 Alation is the absolute foundational governance and discoverability layer of the modern data stack. By combining aggressive structural schema extraction with highly advanced behavioral machine learning to analyze human query patterns, Alation transforms chaotic, unmanageable Data Lakes into highly curated, easily searchable, and strictly governed data marketplaces, fundamentally accelerating the time-to-insight for the entire enterprise.
 
 ## Learn More
-To learn more about the Data Lakehouse, read the book "Lakehouse for Everyone" by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).
+To learn more about the Data Lakehouse, read [The Lakehouse Built for Everyone](https://books.alexmerced.com/books/the-lakehouse-built-for-everyone/) by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

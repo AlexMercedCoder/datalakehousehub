@@ -49,4 +49,4 @@ In the most advanced architectures, extreme PII (like Credit Card numbers) never
 PII is the legal kryptonite of the modern enterprise. Identifying, securing, and architecturally quarantining Personally Identifiable Information is the most critical function of Data Governance. By utilizing automated ML discovery, dynamic column-level masking, and strict tokenization, data engineers ensure that organizations can execute massive-scale business analytics without ever exposing sensitive human identities to unauthorized access or catastrophic cyber attacks.
 
 ## Learn More
-To learn more about the Data Lakehouse, read the book "Lakehouse for Everyone" by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).
+To learn more about the Data Lakehouse, read [The Lakehouse Built for Everyone](https://books.alexmerced.com/books/the-lakehouse-built-for-everyone/) by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

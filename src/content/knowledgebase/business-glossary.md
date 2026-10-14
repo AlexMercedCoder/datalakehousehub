@@ -38,4 +38,4 @@ By utilizing tools like dbt or Cube, data engineers take the exact mathematical 
 A Business Glossary is the supreme arbiter of semantic truth within an organization. By enforcing strict, globally agreed-upon definitions and mathematical formulas for core business concepts, it entirely eliminates internal reporting discrepancies, establishes absolute executive trust in the analytical dashboards, and bridges the massive communication gap between the technical data engineering team and the strategic business leaders.
 
 ## Learn More
-To learn more about the Data Lakehouse, read the book "Lakehouse for Everyone" by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).
+To learn more about the Data Lakehouse, read [The Lakehouse Built for Everyone](https://books.alexmerced.com/books/the-lakehouse-built-for-everyone/) by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

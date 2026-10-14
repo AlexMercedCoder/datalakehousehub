@@ -33,4 +33,4 @@ To solve this, advanced Data Lakehouse architectures implement Hybrid Search. Th
 Semantic Search fundamentally redefines enterprise data discovery. By utilizing Vector Embeddings to mathematically map the context and intent of human language, Semantic Search allows organizations to retrieve highly accurate information from massive, unstructured data repositories without relying on fragile exact-keyword matches. It is the absolute prerequisite for building highly intelligent, conversational AI agents over proprietary enterprise data.
 
 ## Learn More
-To learn more about the Data Lakehouse, read the book "Lakehouse for Everyone" by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).
+To learn more about the Data Lakehouse, read [The Lakehouse Built for Everyone](https://books.alexmerced.com/books/the-lakehouse-built-for-everyone/) by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

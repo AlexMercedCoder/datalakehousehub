@@ -36,4 +36,4 @@ On a [data lakehouse](/knowledgebase/data-lakehouse/), dbt models usually materi
 A typical layout maps dbt folders to the [medallion architecture](/knowledgebase/medallion-architecture/): staging models read bronze Iceberg tables, intermediate models build silver, and marts build gold tables that a [semantic layer](/knowledgebase/semantic-layer/) exposes to BI tools and agents.
 
 ## Learn More
-To learn more about the [Data Lakehouse](/knowledgebase/data-lakehouse/), read the book "Lakehouse for Everyone" by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).
+To learn more about the [Data Lakehouse](/knowledgebase/data-lakehouse/), read [The Lakehouse Built for Everyone](https://books.alexmerced.com/books/the-lakehouse-built-for-everyone/) by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

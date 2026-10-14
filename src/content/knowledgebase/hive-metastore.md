@@ -38,4 +38,4 @@ Apache Iceberg entirely solved this by moving the metadata out of the centralize
 The Hive Metastore is one of the most critical foundational milestones in data architecture. By overlaying strict relational schemas and physical directory mapping on top of chaotic, unstructured cloud storage, it provided the essential translation layer that allowed SQL query engines to execute massive analytics against the first generation of Data Lakes. While its monolithic architecture makes it inadequate for the modern ACID-compliant [Data Lakehouse](/data-lakehouse), it permanently defined the concept of the decoupled Data Catalog.
 
 ## Learn More
-To learn more about the Data Lakehouse, read the book "Lakehouse for Everyone" by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).
+To learn more about the Data Lakehouse, read [The Lakehouse Built for Everyone](https://books.alexmerced.com/books/the-lakehouse-built-for-everyone/) by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

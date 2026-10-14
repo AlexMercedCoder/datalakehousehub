@@ -38,4 +38,4 @@ Advanced Agentic architectures enforce strict "Human-in-the-Loop" (HITL) checkpo
 AI Agents represent the transition of artificial intelligence from an advisory tool into an autonomous digital workforce. By wrapping the immense logical reasoning capabilities of Large Language Models in robust programmatic loops and granting them secure API access to enterprise tools, Agentic AI completely automates highly complex, multi-step data engineering and operational workflows, drastically accelerating enterprise productivity.
 
 ## Learn More
-To learn more about the Data Lakehouse, read the book "Lakehouse for Everyone" by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).
+To learn more about the Data Lakehouse, read [The Lakehouse Built for Everyone](https://books.alexmerced.com/books/the-lakehouse-built-for-everyone/) by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

@@ -36,4 +36,4 @@ Consequently, modern DBAs have aggressively evolved into highly advanced Cloud D
 The Database Administrator is the foundational bedrock of enterprise data stability. By enforcing absolute disaster recovery protocols, aggressively tuning raw SQL performance, and mathematically securing access to mission-critical infrastructure, the DBA ensures that the massive operational and analytical engines of the enterprise never fail, regardless of the chaos executed by software developers or the scale of external internet traffic.
 
 ## Learn More
-To learn more about the Data Lakehouse, read the book "Lakehouse for Everyone" by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).
+To learn more about the Data Lakehouse, read [The Lakehouse Built for Everyone](https://books.alexmerced.com/books/the-lakehouse-built-for-everyone/) by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

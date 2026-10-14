@@ -35,4 +35,4 @@ If an enterprise has a highly proprietary, deeply secret compression algorithm, 
 Apache DataFusion represents the future of modular, embedded data architecture. By combining the absolute memory safety and blistering execution speed of the Rust programming language with the massive columnar efficiency of Apache Arrow, DataFusion provides developers with a highly extensible, deeply optimized SQL query framework, allowing them to instantly embed enterprise-grade analytical power directly into their proprietary applications.
 
 ## Learn More
-To learn more about the Data Lakehouse, read the book "Lakehouse for Everyone" by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).
+To learn more about the Data Lakehouse, read [The Lakehouse Built for Everyone](https://books.alexmerced.com/books/the-lakehouse-built-for-everyone/) by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

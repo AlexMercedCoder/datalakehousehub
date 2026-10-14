@@ -39,4 +39,4 @@ Storing data on cloud Object Storage (Amazon S3) costs approximately $0.02 per G
 The In-Memory Database is the ultimate architectural solution for extreme-velocity data processing. By completely abandoning physical hard drives and housing data entirely within active RAM, IMDBs completely eliminate disk I/O bottlenecks. When deployed as a high-speed caching layer in front of heavier, slower analytical databases, they provide the sub-millisecond, massive-concurrency performance required to keep modern global web applications stable under catastrophic traffic loads.
 
 ## Learn More
-To learn more about the Data Lakehouse, read the book "Lakehouse for Everyone" by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).
+To learn more about the Data Lakehouse, read [The Lakehouse Built for Everyone](https://books.alexmerced.com/books/the-lakehouse-built-for-everyone/) by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

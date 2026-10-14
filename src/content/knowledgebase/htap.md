@@ -36,4 +36,4 @@ HTAP is a good fit for analytics on one application's data that need to be curre
 The two often coexist. The HTAP database runs the application and answers questions about the last few minutes. Change data capture streams the same data into Iceberg tables, where it joins every other source and serves long-range BI and AI workloads. A lakehouse query engine such as Dremio can also federate a live query to the operational database when a report needs both the newest rows and the history.
 
 ## Learn More
-To learn more about the [Data Lakehouse](/knowledgebase/data-lakehouse/), read the book "Lakehouse for Everyone" by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).
+To learn more about the [Data Lakehouse](/knowledgebase/data-lakehouse/), read [The Lakehouse Built for Everyone](https://books.alexmerced.com/books/the-lakehouse-built-for-everyone/) by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

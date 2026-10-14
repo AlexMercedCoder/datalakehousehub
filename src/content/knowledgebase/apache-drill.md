@@ -36,4 +36,4 @@ This exact "Schema-Free, Decentralized Query" philosophy was taken, vastly expan
 Apache Drill fundamentally disrupted traditional database engineering by proving that rigid, upfront schemas are no longer a prerequisite for big data analytics. By pioneering the "Schema-on-Read" architecture, Drill empowered data analysts to execute lightning-fast, highly complex SQL queries directly against massive, chaotic, nested data files in the raw Data Lake, drastically accelerating data discovery and completely eliminating the latency of traditional ETL pipelines.
 
 ## Learn More
-To learn more about the Data Lakehouse, read the book "Lakehouse for Everyone" by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).
+To learn more about the Data Lakehouse, read [The Lakehouse Built for Everyone](https://books.alexmerced.com/books/the-lakehouse-built-for-everyone/) by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

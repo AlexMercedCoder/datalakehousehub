@@ -34,4 +34,4 @@ This strict proprietary lock-in is the exact reason massive enterprises are heav
 The Cloud Data Warehouse represented a massive evolutionary leap in data engineering. By physically decoupling storage from compute, it provided organizations with infinite scalability, zero-maintenance infrastructure, and the ability to provision massive computational power on demand. While its proprietary nature is driving the industry toward open lakehouses, the architectural principles established by the CDW permanently defined the expectations for modern analytical performance.
 
 ## Learn More
-To learn more about the Data Lakehouse, read the book "Lakehouse for Everyone" by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).
+To learn more about the Data Lakehouse, read [The Lakehouse Built for Everyone](https://books.alexmerced.com/books/the-lakehouse-built-for-everyone/) by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

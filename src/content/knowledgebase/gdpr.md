@@ -36,4 +36,4 @@ Data engineers must build pipelines that automatically execute Data Masking or T
 GDPR is the most profound external force to ever shape the data engineering discipline. By replacing the chaotic, unregulated hoarding of Big Data with strict legal requirements for data sovereignty, explicit user consent, and instant cryptographic deletion, GDPR forced the architectural evolution of the modern, highly governed, federated Open [Data Lakehouse](/data-lakehouse).
 
 ## Learn More
-To learn more about the Data Lakehouse, read the book "Lakehouse for Everyone" by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).
+To learn more about the Data Lakehouse, read [The Lakehouse Built for Everyone](https://books.alexmerced.com/books/the-lakehouse-built-for-everyone/) by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

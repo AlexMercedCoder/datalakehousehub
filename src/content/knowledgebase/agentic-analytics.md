@@ -39,4 +39,4 @@ Architects enforce strict isolation. The Agentic framework is physically bound t
 Agentic Analytics represents the final evolution of data democratization. By coupling the massive logical reasoning capabilities of Large Language Models with autonomous database execution loops and robust Semantic Layers, Agentic Analytics entirely bypasses the traditional BI dashboard bottleneck, allowing business leaders to execute highly complex, deeply investigative data analytics at the absolute speed of thought.
 
 ## Learn More
-To learn more about the Data Lakehouse, read the book "Lakehouse for Everyone" by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).
+To learn more about the Data Lakehouse, read [The Lakehouse Built for Everyone](https://books.alexmerced.com/books/the-lakehouse-built-for-everyone/) by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

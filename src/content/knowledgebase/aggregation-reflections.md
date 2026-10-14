@@ -37,4 +37,4 @@ This capability is the absolute linchpin of Dremio's ability to deliver sub-seco
 Aggregation Reflections represent a massive evolutionary leap beyond traditional database indexing and materialized views. By utilizing algorithmic query substitution to invisibly redirect ad-hoc SQL queries to highly optimized, pre-aggregated datasets, Aggregation Reflections allow organizations to deliver sub-second analytical performance on petabyte-scale data lakes without requiring analysts to alter their queries or manually manage cache routing.
 
 ## Learn More
-To learn more about the Data Lakehouse, read the book "Lakehouse for Everyone" by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).
+To learn more about the Data Lakehouse, read [The Lakehouse Built for Everyone](https://books.alexmerced.com/books/the-lakehouse-built-for-everyone/) by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

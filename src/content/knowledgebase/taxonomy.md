@@ -40,4 +40,4 @@ Because every single table, column, and file in the Data Lakehouse is strictly m
 A Taxonomy is the foundational organizational framework of the enterprise. By establishing a rigid, globally standardized, top-down hierarchical tree to classify all enterprise assets, a Taxonomy entirely eliminates categorization chaos. It provides the highly intuitive navigational structure required for humans to discover data, and serves as the strict architectural skeleton required to automate massive-scale data security and governance policies across the Open Data Lakehouse.
 
 ## Learn More
-To learn more about the Data Lakehouse, read the book "Lakehouse for Everyone" by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).
+To learn more about the Data Lakehouse, read [The Lakehouse Built for Everyone](https://books.alexmerced.com/books/the-lakehouse-built-for-everyone/) by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

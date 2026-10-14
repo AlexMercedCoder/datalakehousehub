@@ -38,4 +38,4 @@ This exact nightmare is why the modern [Data Lakehouse](/data-lakehouse) was inv
 Microservices represent the ultimate evolution of internet-scale software engineering. By shattering massive, fragile monolithic applications into highly isolated, independently scalable, and technologically agnostic containerized services, this architecture guarantees that global web platforms can survive catastrophic code failures and scale to handle millions of simultaneous users with absolute flawless efficiency.
 
 ## Learn More
-To learn more about the Data Lakehouse, read the book "Lakehouse for Everyone" by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).
+To learn more about the Data Lakehouse, read [The Lakehouse Built for Everyone](https://books.alexmerced.com/books/the-lakehouse-built-for-everyone/) by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

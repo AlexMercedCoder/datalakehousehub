@@ -39,4 +39,4 @@ Modern architectures highly prefer the Open Data Lakehouse model, where incredib
 Apache Kudu is a monumental hybrid storage engine that completely redefined the limits of real-time analytics. By seamlessly fusing the rapid, sub-millisecond row-level mutability of a NoSQL operational database with the massive, high-speed columnar scanning of an analytical data warehouse, Kudu allowed organizations to execute highly complex, deeply aggregative SQL queries directly against massive, continuously updating streams of real-time operational data.
 
 ## Learn More
-To learn more about the Data Lakehouse, read the book "Lakehouse for Everyone" by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).
+To learn more about the Data Lakehouse, read [The Lakehouse Built for Everyone](https://books.alexmerced.com/books/the-lakehouse-built-for-everyone/) by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

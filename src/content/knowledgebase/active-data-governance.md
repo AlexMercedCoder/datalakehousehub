@@ -32,4 +32,4 @@ When a new massive dataset is dropped into an Amazon S3 bucket, active governanc
 Active Data Governance is the mandatory security architecture for the massive scale of the Open Data Lakehouse. By abandoning static spreadsheets and manual IT tickets in favor of real-time, dynamically computed access controls and automated machine learning metadata tagging, organizations can completely secure petabytes of highly sensitive corporate data without violently bottlenecking the agility of their data engineering and analytics teams.
 
 ## Learn More
-To learn more about the Data Lakehouse, read the book "Lakehouse for Everyone" by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).
+To learn more about the Data Lakehouse, read [The Lakehouse Built for Everyone](https://books.alexmerced.com/books/the-lakehouse-built-for-everyone/) by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

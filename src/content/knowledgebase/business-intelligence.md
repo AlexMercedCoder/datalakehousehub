@@ -37,4 +37,4 @@ Modern BI tools have deeply integrated Machine Learning and LLM agents. An execu
 Business Intelligence is the ultimate translation layer of the enterprise data stack. By providing highly interactive, visually intuitive software platforms backed by massive, sub-second analytical databases, BI entirely democratizes data access. It empowers non-technical business leaders to intuitively explore petabytes of corporate data, ensuring that enterprise strategy is constantly driven by mathematically verified, real-time factual insights.
 
 ## Learn More
-To learn more about the Data Lakehouse, read the book "Lakehouse for Everyone" by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).
+To learn more about the Data Lakehouse, read [The Lakehouse Built for Everyone](https://books.alexmerced.com/books/the-lakehouse-built-for-everyone/) by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

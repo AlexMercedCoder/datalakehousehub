@@ -41,4 +41,4 @@ Furthermore, orchestrators manage massive historical backfills. If an engineer f
 Data Orchestration transitioned data engineering from fragile, disconnected scripts into highly robust, enterprise-grade software systems. By enforcing explicit dependency mapping via Directed Acyclic Graphs (DAGs), actively preventing downstream data corruption during upstream system failures, and automating complex retry and backfill operations, orchestration platforms serve as the absolute critical control plane for maintaining the health and reliability of the massive Open Data Lakehouse.
 
 ## Learn More
-To learn more about the Data Lakehouse, read the book "Lakehouse for Everyone" by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).
+To learn more about the Data Lakehouse, read [The Lakehouse Built for Everyone](https://books.alexmerced.com/books/the-lakehouse-built-for-everyone/) by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

@@ -37,4 +37,4 @@ Arrow Flight SQL is deeply aware of distributed clusters. When a data scientist 
 Arrow Flight SQL is the definitive networking protocol for the modern AI and Data Lakehouse ecosystem. By completely eradicating the massive serialization friction of legacy ODBC/JDBC connections in favor of streaming pre-formatted Apache Arrow columnar data over massively parallel gRPC network tunnels, Arrow Flight SQL allows organizations to transport petabyte-scale datasets directly into Data Science models and AI Agents at absolute bare-metal hardware speeds.
 
 ## Learn More
-To learn more about the Data Lakehouse, read the book "Lakehouse for Everyone" by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).
+To learn more about the Data Lakehouse, read [The Lakehouse Built for Everyone](https://books.alexmerced.com/books/the-lakehouse-built-for-everyone/) by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

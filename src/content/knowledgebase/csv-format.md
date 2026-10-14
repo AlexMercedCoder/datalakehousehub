@@ -40,4 +40,4 @@ When a data engineer exports massive datasets from a legacy 1990s mainframe, or 
 The CSV format is the universal, plain-text denominator of global data exchange. While its extreme simplicity, lack of schema, and row-oriented text architecture make it catastrophically slow and inefficient for petabyte-scale Data Lakehouse analytics, its absolute universal compatibility ensures it remains the mandatory foundational format for basic data extraction, human review, and legacy system integration.
 
 ## Learn More
-To learn more about the Data Lakehouse, read the book "Lakehouse for Everyone" by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).
+To learn more about the Data Lakehouse, read [The Lakehouse Built for Everyone](https://books.alexmerced.com/books/the-lakehouse-built-for-everyone/) by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

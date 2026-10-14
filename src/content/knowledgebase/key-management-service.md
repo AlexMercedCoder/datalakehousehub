@@ -42,4 +42,4 @@ A centralized KMS allows organizations to execute highly advanced security maneu
 The Key Management Service is the absolute anchor of enterprise cryptography. By physically locking Master Keys inside tamper-proof hardware, enforcing strict Envelope Encryption, and completely decoupling cryptographic access from physical data storage, a KMS ensures that the massive datasets resting inside the Open Data Lakehouse remain mathematically impenetrable to unauthorized access.
 
 ## Learn More
-To learn more about the Data Lakehouse, read the book "Lakehouse for Everyone" by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).
+To learn more about the Data Lakehouse, read [The Lakehouse Built for Everyone](https://books.alexmerced.com/books/the-lakehouse-built-for-everyone/) by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

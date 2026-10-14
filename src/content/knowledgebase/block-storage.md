@@ -36,4 +36,4 @@ If an operational database fills up its 1-Terabyte block storage drive, the syst
 Block Storage is the high-speed, bare-metal storage architecture of the operational enterprise. By shattering massive files into tiny, individually updatable chunks, it completely eliminates the massive I/O bottlenecks of file manipulation. While it lacks the infinite scalability of cloud Object Storage, its ability to execute surgical, sub-millisecond data mutations makes it the non-negotiable foundation for live transactional databases and mission-critical software systems.
 
 ## Learn More
-To learn more about the Data Lakehouse, read the book "Lakehouse for Everyone" by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).
+To learn more about the Data Lakehouse, read [The Lakehouse Built for Everyone](https://books.alexmerced.com/books/the-lakehouse-built-for-everyone/) by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

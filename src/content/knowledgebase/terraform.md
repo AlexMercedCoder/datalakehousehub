@@ -38,4 +38,4 @@ If a data engineering team uses the `snowflake` provider, they can use Terraform
 Terraform is the universal compiler for the modern cloud. By utilizing a highly strict, state-aware declarative language and an extensive multi-cloud provider ecosystem, Terraform empowers data engineers to design, deploy, and secure massively complex, federated Data Lakehouse infrastructures with absolute architectural precision, repeatability, and version-controlled safety.
 
 ## Learn More
-To learn more about the Data Lakehouse, read the book "Lakehouse for Everyone" by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).
+To learn more about the Data Lakehouse, read [The Lakehouse Built for Everyone](https://books.alexmerced.com/books/the-lakehouse-built-for-everyone/) by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

@@ -39,4 +39,4 @@ To prevent catastrophe, data architects enforce strict "Human-in-the-Loop" (HITL
 Autonomous Agents are the ultimate evolution of digital labor. By surrounding the immense logical reasoning power of Large Language Models with complex, iterative planning loops and highly secure API tool execution frameworks, Autonomous Agents completely eradicate the need for human micro-management, allowing organizations to automate massively complex, multi-step data engineering and operational workflows at superhuman speeds.
 
 ## Learn More
-To learn more about the Data Lakehouse, read the book "Lakehouse for Everyone" by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).
+To learn more about the Data Lakehouse, read [The Lakehouse Built for Everyone](https://books.alexmerced.com/books/the-lakehouse-built-for-everyone/) by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

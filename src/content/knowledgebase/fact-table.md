@@ -42,4 +42,4 @@ Data engineers utilize different specific types of Fact tables depending on the 
 The Fact table is the quantitative engine of business intelligence. By stripping away heavy descriptive text in favor of mathematical measures and efficient integer keys, Fact tables allow massive cloud data warehouses to compress petabytes of transactional data into highly optimized columnar formats. It guarantees that multi-billion row analytical aggregations can execute in absolute milliseconds.
 
 ## Learn More
-To learn more about the Data Lakehouse, read the book "Lakehouse for Everyone" by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).
+To learn more about the Data Lakehouse, read [The Lakehouse Built for Everyone](https://books.alexmerced.com/books/the-lakehouse-built-for-everyone/) by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

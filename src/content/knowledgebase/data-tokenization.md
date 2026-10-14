@@ -41,4 +41,4 @@ Furthermore, the Vault ensures absolute consistency. Every time John inputs his 
 Data Tokenization represents the ultimate physical decoupling of sensitive data from analytical infrastructure. By completely removing PII and financial data from the enterprise Data Lakehouse and replacing it with mathematically meaningless, format-preserving placeholders, Tokenization entirely neutralizes the threat of catastrophic data breaches while preserving the absolute ability to execute massive-scale predictive analytics.
 
 ## Learn More
-To learn more about the Data Lakehouse, read the book "Lakehouse for Everyone" by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).
+To learn more about the Data Lakehouse, read [The Lakehouse Built for Everyone](https://books.alexmerced.com/books/the-lakehouse-built-for-everyone/) by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

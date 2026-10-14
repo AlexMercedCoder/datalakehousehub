@@ -43,4 +43,4 @@ Keeping silver close to 3NF gives you one place to fix a customer's region or a 
 3NF removes duplicated facts so that writes cannot create contradictions. It remains the right design for operational databases and a good guide for silver-layer entities. Analytical gold tables usually trade it away for simpler, faster reads, and that trade is safe as long as they are rebuilt from a normalized source.
 
 ## Learn More
-To learn more about the [Data Lakehouse](/knowledgebase/data-lakehouse/), read the book "Lakehouse for Everyone" by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).
+To learn more about the [Data Lakehouse](/knowledgebase/data-lakehouse/), read [The Lakehouse Built for Everyone](https://books.alexmerced.com/books/the-lakehouse-built-for-everyone/) by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

@@ -37,4 +37,4 @@ The Architect establishes the strict global governance protocols, but empowers i
 The Data Architect is the definitive visionary of enterprise infrastructure. By possessing a masterful understanding of massive distributed cloud systems, complex structural data modeling, and rigorous legal privacy frameworks, the Data Architect provides the absolute, foundational blueprint required to build a highly scalable, perfectly secure, and incredibly performant modern Data Lakehouse.
 
 ## Learn More
-To learn more about the Data Lakehouse, read the book "Lakehouse for Everyone" by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).
+To learn more about the Data Lakehouse, read [The Lakehouse Built for Everyone](https://books.alexmerced.com/books/the-lakehouse-built-for-everyone/) by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

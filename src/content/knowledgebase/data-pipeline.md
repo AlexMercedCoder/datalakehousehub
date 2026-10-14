@@ -38,4 +38,4 @@ To survive this chaos, data engineering teams architect pipelines with strict Id
 Data Pipelines are the heavy-lifting industrial infrastructure of the modern enterprise. By completely automating the continuous, secure transportation and complex mathematical transformation of petabytes of chaotic information, they provide the absolute foundational mechanism for populating the Data Lakehouse, ensuring that data science models and executive dashboards are constantly fueled by accurate, highly verified data.
 
 ## Learn More
-To learn more about the Data Lakehouse, read the book "Lakehouse for Everyone" by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).
+To learn more about the Data Lakehouse, read [The Lakehouse Built for Everyone](https://books.alexmerced.com/books/the-lakehouse-built-for-everyone/) by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

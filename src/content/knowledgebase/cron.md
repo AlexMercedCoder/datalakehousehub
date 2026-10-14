@@ -38,4 +38,4 @@ Despite its severe limitations for complex data engineering, the core syntactic 
 Cron is a foundational piece of computing history. While its rigid, blind, time-based scheduling logic is fundamentally inadequate for managing the immense complexity, interdependencies, and failure states of the modern enterprise Data Lakehouse, it established the original paradigm for automated execution and remains highly effective for simple, isolated system administration tasks.
 
 ## Learn More
-To learn more about the Data Lakehouse, read the book "Lakehouse for Everyone" by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).
+To learn more about the Data Lakehouse, read [The Lakehouse Built for Everyone](https://books.alexmerced.com/books/the-lakehouse-built-for-everyone/) by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

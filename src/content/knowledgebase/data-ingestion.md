@@ -36,4 +36,4 @@ The physical act of pulling data out of a source system is highly dangerous.
 Data Ingestion is the heavy-lifting logistical layer of the modern data stack. By securely navigating API rate limits, managing massive network throughput, and utilizing a hybrid architecture of deep historical batch loads and lightning-fast real-time streams, robust data ingestion pipelines provide the absolute critical guarantee that the central Data Lakehouse is constantly fueled with the complete, accurate reality of the business.
 
 ## Learn More
-To learn more about the Data Lakehouse, read the book "Lakehouse for Everyone" by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).
+To learn more about the Data Lakehouse, read [The Lakehouse Built for Everyone](https://books.alexmerced.com/books/the-lakehouse-built-for-everyone/) by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

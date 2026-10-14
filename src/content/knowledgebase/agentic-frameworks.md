@@ -35,4 +35,4 @@ The framework manages the complex, conversational hand-offs between these distin
 Agentic Frameworks are the absolute mandatory infrastructure for deploying autonomous AI in the enterprise. By providing robust, highly standardized memory management, secure API tool binding, and complex multi-agent orchestration, these frameworks completely abstract the immense complexity of connecting probabilistic LLMs to deterministic corporate databases, enabling the safe and rapid development of AI-driven automation.
 
 ## Learn More
-To learn more about the Data Lakehouse, read the book "Lakehouse for Everyone" by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).
+To learn more about the Data Lakehouse, read [The Lakehouse Built for Everyone](https://books.alexmerced.com/books/the-lakehouse-built-for-everyone/) by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

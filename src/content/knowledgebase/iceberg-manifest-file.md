@@ -46,4 +46,4 @@ If the query engine is forced to open and read 5,000 Manifest Files just to find
 The Iceberg Manifest File fundamentally redefined Data Lakehouse architecture by moving tracking from the folder level to the explicit file level. By storing absolute physical paths, transactional status flags, and highly granular column-level statistics within a compact Avro format, the Manifest File completely eliminates catastrophic cloud storage directory listings. It provides the exact mathematical intelligence required for modern query engines to execute sub-second, highly optimized data skipping across multi-petabyte datasets.
 
 ## Learn More
-To learn more about the Data Lakehouse, read the book "Lakehouse for Everyone" by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).
+To learn more about the Data Lakehouse, read [The Lakehouse Built for Everyone](https://books.alexmerced.com/books/the-lakehouse-built-for-everyone/) by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

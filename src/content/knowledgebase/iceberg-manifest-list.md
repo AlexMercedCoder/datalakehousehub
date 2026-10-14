@@ -37,4 +37,4 @@ If an analyst wants to query the exact state of the table from last Tuesday, the
 The Iceberg Manifest List is the ultimate accelerant for [Data Lakehouse](/data-lakehouse) query planning. By acting as the definitive index for a specific Snapshot and storing highly aggregated partition boundaries for the underlying Manifest Files, the Manifest List allows massive distributed query engines to execute ruthless Metadata Pruning. It completely shields the compute engine from opening irrelevant metadata files, drastically reducing query planning latency and ensuring that petabyte-scale Data Lakehouses can be queried interactively in sub-seconds.
 
 ## Learn More
-To learn more about the Data Lakehouse, read the book "Lakehouse for Everyone" by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).
+To learn more about the Data Lakehouse, read [The Lakehouse Built for Everyone](https://books.alexmerced.com/books/the-lakehouse-built-for-everyone/) by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

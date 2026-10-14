@@ -37,4 +37,4 @@ If the CEO executes a query comparing ad clicks to final shipments, the database
 Dimensional Modeling completely revolutionized the accessibility of enterprise data. By strictly separating quantitative business events (Facts) from descriptive context (Dimensions) and physically deploying them in highly optimized Star Schemas, this methodology allows business analysts to write incredibly simple SQL queries. It empowers analytical query engines to execute massive aggregations at lightning speed, providing the definitive architectural foundation for all modern business intelligence.
 
 ## Learn More
-To learn more about the Data Lakehouse, read the book "Lakehouse for Everyone" by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).
+To learn more about the Data Lakehouse, read [The Lakehouse Built for Everyone](https://books.alexmerced.com/books/the-lakehouse-built-for-everyone/) by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

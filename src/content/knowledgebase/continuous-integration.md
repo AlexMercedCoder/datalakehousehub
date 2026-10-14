@@ -43,4 +43,4 @@ Without CI, data engineers are terrified of breaking production. They move incre
 Continuous Integration is the absolute defensive shield of modern data architecture. By intercepting all code modifications and forcing them through a gauntlet of highly automated, isolated structural and mathematical tests, CI ensures that human error is caught instantaneously, guaranteeing absolute architectural stability and data integrity within the mission-critical enterprise Data Lakehouse.
 
 ## Learn More
-To learn more about the Data Lakehouse, read the book "Lakehouse for Everyone" by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).
+To learn more about the Data Lakehouse, read [The Lakehouse Built for Everyone](https://books.alexmerced.com/books/the-lakehouse-built-for-everyone/) by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

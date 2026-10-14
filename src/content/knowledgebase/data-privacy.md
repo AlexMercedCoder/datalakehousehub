@@ -35,4 +35,4 @@ The invention of Open Table Formats (like [Apache Iceberg](/apache-iceberg)) sol
 Data Privacy is no longer merely a legal philosophy; it is a rigid architectural requirement. By deeply integrating automated consent management, strict purpose-driven access controls, and surgical row-level deletion capabilities directly into the Data Lakehouse infrastructure, organizations can execute massive-scale business analytics while mathematically guaranteeing the protection of consumer rights and entirely avoiding catastrophic regulatory penalties.
 
 ## Learn More
-To learn more about the Data Lakehouse, read the book "Lakehouse for Everyone" by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).
+To learn more about the Data Lakehouse, read [The Lakehouse Built for Everyone](https://books.alexmerced.com/books/the-lakehouse-built-for-everyone/) by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

@@ -45,4 +45,4 @@ If the automated CD pipeline pushes an update that technically passed the tests 
 Continuous Deployment is the ultimate automation of the software release lifecycle. By completely removing fragile, manual human execution from the deployment process, CD empowers massive data engineering teams to safely and seamlessly push hundreds of incremental updates, bug fixes, and analytical models directly into the live Data Lakehouse every single day, maximizing architectural agility and completely eliminating deployment downtime.
 
 ## Learn More
-To learn more about the Data Lakehouse, read the book "Lakehouse for Everyone" by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).
+To learn more about the Data Lakehouse, read [The Lakehouse Built for Everyone](https://books.alexmerced.com/books/the-lakehouse-built-for-everyone/) by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

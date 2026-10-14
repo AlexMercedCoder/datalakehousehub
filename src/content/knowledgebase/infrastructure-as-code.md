@@ -36,4 +36,4 @@ This provides two massive enterprise advantages:
 Infrastructure as Code is the bedrock of modern cloud scalability. By transitioning the deployment of massive physical servers, databases, and network firewalls from fragile, manual human clicking into strict, version-controlled, declarative programming, IaC guarantees that complex Data Lakehouse architectures can be deployed, audited, and perfectly replicated instantly and without error.
 
 ## Learn More
-To learn more about the Data Lakehouse, read the book "Lakehouse for Everyone" by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).
+To learn more about the Data Lakehouse, read [The Lakehouse Built for Everyone](https://books.alexmerced.com/books/the-lakehouse-built-for-everyone/) by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

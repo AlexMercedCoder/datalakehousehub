@@ -37,4 +37,4 @@ If the CDO reports directly to the CEO, the organization inherently recognizes d
 The Chief Data Officer is the supreme translator between bare-metal data architecture and high-level corporate strategy. By enforcing strict data governance, driving enterprise-wide data literacy, and spearheading the aggressive adoption of predictive artificial intelligence, the CDO ensures that a company’s massive investment in Data Lakehouse infrastructure directly and measurably increases the financial valuation of the enterprise.
 
 ## Learn More
-To learn more about the Data Lakehouse, read the book "Lakehouse for Everyone" by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).
+To learn more about the Data Lakehouse, read [The Lakehouse Built for Everyone](https://books.alexmerced.com/books/the-lakehouse-built-for-everyone/) by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

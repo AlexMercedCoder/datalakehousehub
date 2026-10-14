@@ -36,4 +36,4 @@ If an analyst queries `SELECT * WHERE user = 'John' AND status = 'Active'`, Drui
 Apache Druid is the definitive database architecture for real-time operational analytics. By seamlessly fusing sub-second in-memory ingestion with massive historical segment storage and aggressively executing bitwise mathematics against inverted indexes, Druid guarantees that organizations can deliver highly complex, interactive, and instantaneously responsive analytical dashboards directly on top of massive, continuous event streams.
 
 ## Learn More
-To learn more about the Data Lakehouse, read the book "Lakehouse for Everyone" by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).
+To learn more about the Data Lakehouse, read [The Lakehouse Built for Everyone](https://books.alexmerced.com/books/the-lakehouse-built-for-everyone/) by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

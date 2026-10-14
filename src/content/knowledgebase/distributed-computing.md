@@ -36,4 +36,4 @@ Transferring data over an ethernet cable is exponentially slower than reading da
 Distributed Computing is the fundamental mechanism that broke the physical limitations of hardware. By mathematically orchestrating thousands of cheap, independent, and highly fault-tolerant servers into a massive parallel execution engine, distributed architectures (like Apache Spark and Trino) provide the infinite computational scale required to train modern artificial intelligence and execute sub-second analytics across the multi-petabyte Data Lakehouse.
 
 ## Learn More
-To learn more about the Data Lakehouse, read the book "Lakehouse for Everyone" by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).
+To learn more about the Data Lakehouse, read [The Lakehouse Built for Everyone](https://books.alexmerced.com/books/the-lakehouse-built-for-everyone/) by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

@@ -53,4 +53,4 @@ When data engineers are forced to ingest XML from legacy mainframe FTP servers, 
 XML is a massive, highly rigid relic of early enterprise software architecture. While its strict, XSD-enforced structural validation made it the perfect protocol for early, hyper-secure financial integrations, its catastrophic textual bloat and massive CPU parsing penalties rendered it completely obsolete for modern, high-speed API data exchange and petabyte-scale Data Lakehouse analytics, relegating it primarily to legacy system integrations.
 
 ## Learn More
-To learn more about the Data Lakehouse, read the book "Lakehouse for Everyone" by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).
+To learn more about the Data Lakehouse, read [The Lakehouse Built for Everyone](https://books.alexmerced.com/books/the-lakehouse-built-for-everyone/) by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

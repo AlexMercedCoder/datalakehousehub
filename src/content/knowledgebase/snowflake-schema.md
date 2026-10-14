@@ -42,4 +42,4 @@ Despite its read-performance limitations, the Snowflake Schema is strategically 
 The Snowflake Schema is a hybrid architectural methodology that attempts to balance the analytical layout of Dimensional Modeling with the strict storage efficiency of operational Normalization. While the modern era of cheap cloud storage has largely crowned the highly denormalized Star Schema as the absolute standard for query performance, the Snowflake Schema remains a vital, highly structured pattern for managing complex, frequently mutating dimensional hierarchies.
 
 ## Learn More
-To learn more about the Data Lakehouse, read the book "Lakehouse for Everyone" by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).
+To learn more about the Data Lakehouse, read [The Lakehouse Built for Everyone](https://books.alexmerced.com/books/the-lakehouse-built-for-everyone/) by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

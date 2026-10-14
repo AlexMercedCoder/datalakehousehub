@@ -40,4 +40,4 @@ When an organization builds a massive Knowledge Graph on top of their petabyte-s
 An Ontology is the supreme semantic blueprint of enterprise knowledge. By providing a strict, machine-readable framework of classes, properties, and highly complex rules of logical inference, an Ontology allows databases and Artificial Intelligence agents to natively understand the deep structural reality of a business, unlocking the ability to autonomously deduce hidden insights from massive, fragmented data lakes.
 
 ## Learn More
-To learn more about the Data Lakehouse, read the book "Lakehouse for Everyone" by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).
+To learn more about the Data Lakehouse, read [The Lakehouse Built for Everyone](https://books.alexmerced.com/books/the-lakehouse-built-for-everyone/) by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

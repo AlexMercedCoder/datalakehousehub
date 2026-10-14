@@ -36,4 +36,4 @@ To comply, data engineers must build centralized Data Catalogs and highly indexe
 While slightly less restrictive than Europe's GDPR, CCPA forced American enterprises to fundamentally restructure their data operations. By requiring companies to instantly halt the external sale of data and provide exhaustive consumer data reports on demand, CCPA mandated the implementation of strict data lineage tracking, automated external API orchestration, and highly centralized Master Data Management within the modern data ecosystem.
 
 ## Learn More
-To learn more about the Data Lakehouse, read the book "Lakehouse for Everyone" by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).
+To learn more about the Data Lakehouse, read [The Lakehouse Built for Everyone](https://books.alexmerced.com/books/the-lakehouse-built-for-everyone/) by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

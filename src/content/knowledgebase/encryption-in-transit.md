@@ -37,4 +37,4 @@ Modern data architecture absolutely mandates a Zero Trust philosophy. In a Zero 
 Encryption in Transit is the absolute guardian of data mobility. By utilizing highly complex TLS cryptographic handshakes and high-speed symmetric tunnels, it mathematically prevents network eavesdropping, packet sniffing, and Man-in-the-Middle attacks. Enforcing absolute, ubiquitous Encryption in Transit across both external and internal networks is the foundational requirement for building a secure, Zero Trust Data Lakehouse.
 
 ## Learn More
-To learn more about the Data Lakehouse, read the book "Lakehouse for Everyone" by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).
+To learn more about the Data Lakehouse, read [The Lakehouse Built for Everyone](https://books.alexmerced.com/books/the-lakehouse-built-for-everyone/) by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

@@ -37,4 +37,4 @@ Modern data engineering utilizes Active Data Dictionaries. Integrated directly i
 A Data Dictionary is the absolute foundational documentation required to maintain architectural integrity in a massive data ecosystem. By rigorously defining the exact physical data types, null constraints, and relational mappings of the underlying infrastructure, it completely eliminates dangerous assumptions, drastically accelerates the onboarding of new technical staff, and provides the strict structural blueprint required to build reliable data pipelines.
 
 ## Learn More
-To learn more about the Data Lakehouse, read the book "Lakehouse for Everyone" by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).
+To learn more about the Data Lakehouse, read [The Lakehouse Built for Everyone](https://books.alexmerced.com/books/the-lakehouse-built-for-everyone/) by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

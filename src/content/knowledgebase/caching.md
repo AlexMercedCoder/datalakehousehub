@@ -43,4 +43,4 @@ Platforms like Dremio utilize a highly advanced caching paradigm called Data Ref
 Caching is the ultimate defense mechanism against catastrophic architectural load. By strategically intercepting redundant data requests and serving them instantly from volatile, high-speed RAM, Caching completely shields heavy, expensive backend databases from repetitive analytical queries, ensuring massive web applications and BI dashboards remain flawlessly responsive under extreme executive and consumer traffic.
 
 ## Learn More
-To learn more about the Data Lakehouse, read the book "Lakehouse for Everyone" by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).
+To learn more about the Data Lakehouse, read [The Lakehouse Built for Everyone](https://books.alexmerced.com/books/the-lakehouse-built-for-everyone/) by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

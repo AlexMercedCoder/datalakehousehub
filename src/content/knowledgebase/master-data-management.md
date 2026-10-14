@@ -42,4 +42,4 @@ By dumping all raw CRM, ERP, and Support data into the Bronze layer of the Lakeh
 Master Data Management is the ultimate organizational defense against chaotic data fragmentation. By utilizing advanced matching algorithms and strict survivorship rules to forge definitive Golden Records, MDM ensures absolute operational consistency across disparate global software systems, completely eliminating the extreme inefficiencies and customer friction caused by duplicate and contradictory data.
 
 ## Learn More
-To learn more about the Data Lakehouse, read the book "Lakehouse for Everyone" by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).
+To learn more about the Data Lakehouse, read [The Lakehouse Built for Everyone](https://books.alexmerced.com/books/the-lakehouse-built-for-everyone/) by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

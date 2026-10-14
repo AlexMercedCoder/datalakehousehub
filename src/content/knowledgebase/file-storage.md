@@ -32,4 +32,4 @@ Despite its inability to handle petabyte-scale analytics, File Storage is heavil
 File Storage is the hierarchical, deeply nested storage architecture built for human intuition and legacy compatibility. While its complex directory structure makes it computationally disastrous for the petabyte-scale analytics of a modern Data Lakehouse, its ability to allow hundreds of different servers and thousands of human employees to seamlessly access and share standard files over a network makes it an enduring, necessary component of enterprise IT infrastructure.
 
 ## Learn More
-To learn more about the Data Lakehouse, read the book "Lakehouse for Everyone" by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).
+To learn more about the Data Lakehouse, read [The Lakehouse Built for Everyone](https://books.alexmerced.com/books/the-lakehouse-built-for-everyone/) by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

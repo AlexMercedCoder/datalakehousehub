@@ -37,4 +37,4 @@ It is critical for data architects to utilize Avro and Parquet correctly.
 Apache Avro is the foundational serialization engine for modern data streaming. By compressing complex data into highly efficient binary payloads and enforcing absolute mathematical data integrity through embedded, safely evolvable JSON schemas, Avro guarantees that massive, petabyte-scale event pipelines (like Apache Kafka) can seamlessly stream billions of records per second without ever suffering from catastrophic schema mismatch or network saturation.
 
 ## Learn More
-To learn more about the Data Lakehouse, read the book "Lakehouse for Everyone" by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).
+To learn more about the Data Lakehouse, read [The Lakehouse Built for Everyone](https://books.alexmerced.com/books/the-lakehouse-built-for-everyone/) by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

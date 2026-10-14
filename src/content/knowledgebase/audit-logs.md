@@ -38,4 +38,4 @@ Modern enterprise architectures pipe the continuous stream of JSON Audit Logs di
 Audit Logs are the foundational bedrock of enterprise security, accountability, and regulatory compliance. By enforcing the continuous, real-time generation of highly structured, mathematically immutable ledgers tracking every single interaction within the Data Lakehouse, organizations can guarantee absolute forensic transparency, successfully pass highly rigorous federal audits, and actively neutralize catastrophic cyber threats using advanced AI anomaly detection.
 
 ## Learn More
-To learn more about the Data Lakehouse, read the book "Lakehouse for Everyone" by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).
+To learn more about the Data Lakehouse, read [The Lakehouse Built for Everyone](https://books.alexmerced.com/books/the-lakehouse-built-for-everyone/) by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

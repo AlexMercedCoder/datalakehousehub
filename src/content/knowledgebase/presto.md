@@ -38,4 +38,4 @@ Because Presto executes massively complex joins entirely in RAM, if an analyst w
 Apache Presto is a landmark achievement in distributed computing. By proving that petabyte-scale data lakes could be queried interactively in sub-seconds using purely in-memory, pipelined SQL execution, Presto destroyed the reliance on slow MapReduce architectures and fundamentally enabled the high-speed analytics that power the modern Open Data Lakehouse.
 
 ## Learn More
-To learn more about the Data Lakehouse, read the book "Lakehouse for Everyone" by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).
+To learn more about the Data Lakehouse, read [The Lakehouse Built for Everyone](https://books.alexmerced.com/books/the-lakehouse-built-for-everyone/) by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

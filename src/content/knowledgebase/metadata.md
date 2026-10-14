@@ -41,4 +41,4 @@ When an analyst executes a Time Travel query to see the database as it existed l
 Metadata is the supreme organizational layer of the modern data stack. By providing deep structural statistics for query optimization, strict logical schemas for data integrity, and rich semantic context for human discoverability, Metadata transitions chaotic raw storage into a highly structured, highly performant, and secure enterprise Data Lakehouse.
 
 ## Learn More
-To learn more about the Data Lakehouse, read the book "Lakehouse for Everyone" by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).
+To learn more about the Data Lakehouse, read [The Lakehouse Built for Everyone](https://books.alexmerced.com/books/the-lakehouse-built-for-everyone/) by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

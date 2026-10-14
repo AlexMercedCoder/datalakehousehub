@@ -55,4 +55,4 @@ Advanced Data Lakehouse architectures utilize the ELT (Extract, Load, Transform)
 JSON is the foundational connective tissue of the modern internet. By providing a lightweight, highly readable, self-describing text format capable of supporting deeply nested, complex object hierarchies, JSON perfectly optimized the transmission of data between disparate global software applications. While heavily unsuited for massive analytical storage, it remains the absolute mandatory format for data ingestion and API integration.
 
 ## Learn More
-To learn more about the Data Lakehouse, read the book "Lakehouse for Everyone" by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).
+To learn more about the Data Lakehouse, read [The Lakehouse Built for Everyone](https://books.alexmerced.com/books/the-lakehouse-built-for-everyone/) by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

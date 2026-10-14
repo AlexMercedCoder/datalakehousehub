@@ -40,4 +40,4 @@ Data Provenance architectures are being aggressively upgraded to automatically i
 Data Provenance is the ultimate architectural guarantee of enterprise truth. By cryptographically tracking the exact historical origin, authorship, and initial state of a dataset before it enters the complex web of data engineering pipelines, it provides the absolute auditability required for regulatory compliance, legal defense, and the safe training of massive artificial intelligence models.
 
 ## Learn More
-To learn more about the Data Lakehouse, read the book "Lakehouse for Everyone" by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).
+To learn more about the Data Lakehouse, read [The Lakehouse Built for Everyone](https://books.alexmerced.com/books/the-lakehouse-built-for-everyone/) by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

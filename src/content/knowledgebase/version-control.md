@@ -39,4 +39,4 @@ If a massive code change is approved, merged into production, and subsequently c
 Version Control is the central nervous system of engineering collaboration. By cryptographically tracking every historical code mutation, enabling safe, isolated parallel branching, and providing instantaneous disaster reversion, Version Control guarantees that massive data engineering teams can rapidly scale highly complex Data Lakehouse architectures without ever risking catastrophic, unrecoverable code corruption.
 
 ## Learn More
-To learn more about the Data Lakehouse, read the book "Lakehouse for Everyone" by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).
+To learn more about the Data Lakehouse, read [The Lakehouse Built for Everyone](https://books.alexmerced.com/books/the-lakehouse-built-for-everyone/) by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

@@ -36,4 +36,4 @@ When a streaming pipeline ingests data, Paimon uses the Primary Key to guarantee
 Apache Paimon is the ultimate architectural fusion of the real-time message queue and the historical data warehouse. By leveraging advanced LSM-Tree mechanics to physically absorb massive, high-frequency streaming mutations while seamlessly compacting data into highly efficient columnar formats in the background, Paimon allows organizations to execute completely unified, low-latency streaming and historical batch analytics on a single, massive Open Data Lakehouse platform.
 
 ## Learn More
-To learn more about the Data Lakehouse, read the book "Lakehouse for Everyone" by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).
+To learn more about the Data Lakehouse, read [The Lakehouse Built for Everyone](https://books.alexmerced.com/books/the-lakehouse-built-for-everyone/) by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

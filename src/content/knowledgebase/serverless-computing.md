@@ -35,4 +35,4 @@ Platforms like Amazon Athena, Google BigQuery, and Dremio Cloud operate as fully
 Serverless Computing represents the ultimate optimization of engineering resources. By completely abstracting the physical infrastructure layer, it allows data engineers to focus 100% of their time on writing business logic and optimizing data pipelines. It guarantees infinite, instant scalability to handle massive traffic spikes, and provides a ruthlessly efficient economic model that entirely eliminates the cost of idle servers.
 
 ## Learn More
-To learn more about the [Data Lakehouse](/data-lakehouse), read the book "Lakehouse for Everyone" by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).
+To learn more about the [Data Lakehouse](/data-lakehouse), read [The Lakehouse Built for Everyone](https://books.alexmerced.com/books/the-lakehouse-built-for-everyone/) by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

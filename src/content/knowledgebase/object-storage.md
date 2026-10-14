@@ -39,4 +39,4 @@ However, modern Object Storage systems have been radically upgraded to provide S
 Object Storage fundamentally solved the physical boundaries of data scale. By replacing fragile, nested file hierarchies with a flat, metadata-driven architecture accessed via standard web APIs, it provides the infinite, highly durable, and intensely cost-effective foundation required to store the massive datasets powering enterprise artificial intelligence and Data Lakehouse analytics.
 
 ## Learn More
-To learn more about the Data Lakehouse, read the book "Lakehouse for Everyone" by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).
+To learn more about the Data Lakehouse, read [The Lakehouse Built for Everyone](https://books.alexmerced.com/books/the-lakehouse-built-for-everyone/) by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

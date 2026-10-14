@@ -43,4 +43,4 @@ Because the RDBMS must lock tables to guarantee ACID perfection, it is incredibl
 The Relational Database is the ultimate architectural guarantee of enterprise truth. By enforcing highly rigid schemas, strict referential integrity, and uncompromising ACID transactions, the RDBMS sacrifices infinite horizontal scalability to provide the absolute, flawless operational stability required to run the mission-critical financial and logistical infrastructure of the global economy.
 
 ## Learn More
-To learn more about the Data Lakehouse, read the book "Lakehouse for Everyone" by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).
+To learn more about the Data Lakehouse, read [The Lakehouse Built for Everyone](https://books.alexmerced.com/books/the-lakehouse-built-for-everyone/) by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

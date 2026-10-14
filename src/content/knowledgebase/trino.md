@@ -36,4 +36,4 @@ An analyst can write a single, standard SQL statement that mathematically `JOIN`
 Trino is the definitive distributed SQL query engine for the open data ecosystem. By completely decoupling analytical compute from physical storage and executing massive parallel processing entirely in active memory, Trino empowers organizations to run highly complex, sub-second interactive analytics directly against the raw Data Lakehouse and across vastly disparate federated databases, without ever moving the underlying data.
 
 ## Learn More
-To learn more about the Data Lakehouse, read the book "Lakehouse for Everyone" by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).
+To learn more about the Data Lakehouse, read [The Lakehouse Built for Everyone](https://books.alexmerced.com/books/the-lakehouse-built-for-everyone/) by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

@@ -37,4 +37,4 @@ This involves building interactive dashboards (using platforms like Tableau or d
 Data Visualization is the cognitive interface of the Data Lakehouse. By strictly adhering to the psychological principles of human visual perception and utilizing highly accurate graphical encodings, professional data visualization translates incomprehensible, multi-terabyte SQL aggregations into immediate, intuitive, and highly actionable strategic insights, bridging the massive gap between raw mathematics and human executive strategy.
 
 ## Learn More
-To learn more about the Data Lakehouse, read the book "Lakehouse for Everyone" by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).
+To learn more about the Data Lakehouse, read [The Lakehouse Built for Everyone](https://books.alexmerced.com/books/the-lakehouse-built-for-everyone/) by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

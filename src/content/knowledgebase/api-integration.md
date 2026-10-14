@@ -32,4 +32,4 @@ A naive pipeline will simply crash. A robust, enterprise-grade API Integration u
 API Integration is the absolute foundational capability required to construct a modern, cloud-native enterprise data ecosystem. By mathematically negotiating complex authentication, strictly adhering to pagination logic, and resiliently navigating aggressive rate limits, robust API Integration pipelines break down massive third-party data silos, securely extracting the fragmented reality of the business and unifying it centrally within the Open Data Lakehouse.
 
 ## Learn More
-To learn more about the Data Lakehouse, read the book "Lakehouse for Everyone" by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).
+To learn more about the Data Lakehouse, read [The Lakehouse Built for Everyone](https://books.alexmerced.com/books/the-lakehouse-built-for-everyone/) by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

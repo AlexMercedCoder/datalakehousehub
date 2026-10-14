@@ -36,4 +36,4 @@ To achieve absolute High Availability, the architect programs the system to keep
 High Availability is the ultimate measure of architectural resilience. By systematically eliminating single points of failure through massive geographic redundancy, instantaneous automated failovers, and intelligent load balancing, HA guarantees that mission-critical data platforms can mathematically absorb catastrophic hardware destruction, network outages, and traffic spikes while maintaining absolute, continuous operational uptime for the enterprise.
 
 ## Learn More
-To learn more about the Data Lakehouse, read the book "Lakehouse for Everyone" by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).
+To learn more about the Data Lakehouse, read [The Lakehouse Built for Everyone](https://books.alexmerced.com/books/the-lakehouse-built-for-everyone/) by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

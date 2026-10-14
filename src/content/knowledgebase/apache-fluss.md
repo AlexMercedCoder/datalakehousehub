@@ -41,4 +41,4 @@ Kafka remains the right choice for general event distribution between many servi
 Apache Fluss treats streams as columnar tables and keeps a committed copy in open lake formats such as Iceberg. For teams that currently run Kafka plus a separate ingestion job into the lakehouse, it offers one storage layer for both fresh and historical analytics.
 
 ## Learn More
-To learn more about the Data Lakehouse, read the book "Lakehouse for Everyone" by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).
+To learn more about the Data Lakehouse, read [The Lakehouse Built for Everyone](https://books.alexmerced.com/books/the-lakehouse-built-for-everyone/) by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

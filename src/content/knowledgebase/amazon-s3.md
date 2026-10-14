@@ -37,4 +37,4 @@ S3 allows data engineers to set automated lifecycle rules. If a Parquet file has
 Amazon S3 is the infrastructural bedrock of Big Data. By providing infinitely scalable, flawlessly durable, and heavily cost-optimized object storage accessed via a universally adopted API, S3 fundamentally enabled the decoupling of storage from compute. It is the absolute prerequisite architecture that allowed the modern Open Data Lakehouse to exist.
 
 ## Learn More
-To learn more about the Data Lakehouse, read the book "Lakehouse for Everyone" by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).
+To learn more about the Data Lakehouse, read [The Lakehouse Built for Everyone](https://books.alexmerced.com/books/the-lakehouse-built-for-everyone/) by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

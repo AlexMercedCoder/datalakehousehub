@@ -34,4 +34,4 @@ When a massive enterprise deploys a distributed SQL query engine (like Trino or 
 Load Balancing is the absolute prerequisite for Horizontal Scaling. By intercepting massive surges of internet traffic and intelligently distributing the computational load across a wide cluster of independent servers, Load Balancers guarantee that mission-critical data applications remain highly performant, flawlessly fault-tolerant, and completely impervious to catastrophic traffic spikes.
 
 ## Learn More
-To learn more about the Data Lakehouse, read the book "Lakehouse for Everyone" by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).
+To learn more about the Data Lakehouse, read [The Lakehouse Built for Everyone](https://books.alexmerced.com/books/the-lakehouse-built-for-everyone/) by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

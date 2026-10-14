@@ -31,4 +31,4 @@ For external Answer Engines, AEO heavily utilizes massive, hidden metadata paylo
 Answer Engine Optimization is the mandatory structural evolution of data documentation in the era of artificial intelligence. By abandoning vague marketing language and chaotic formatting in favor of incredibly dense, rigidly hierarchical, and explicitly defined semantic structures, AEO mathematically guarantees that both internal corporate RAG pipelines and external global LLMs can extract, process, and generate factual answers from the data with absolute, hallucination-free precision.
 
 ## Learn More
-To learn more about the Data Lakehouse, read the book "Lakehouse for Everyone" by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).
+To learn more about the Data Lakehouse, read [The Lakehouse Built for Everyone](https://books.alexmerced.com/books/the-lakehouse-built-for-everyone/) by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

@@ -38,4 +38,4 @@ The exact structure of the Physical Data Model changes violently depending on th
 Data Modeling is the translation layer between business operations and technical infrastructure. By rigorously defining the structural entities, relationships, and constraints of enterprise data, it guarantees that massive databases remain highly organized, logically consistent, and optimally performant. It is the exact architectural discipline that prevents a massively scalable Data Lake from devolving into an unmanageable Data Swamp.
 
 ## Learn More
-To learn more about the Data Lakehouse, read the book "Lakehouse for Everyone" by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).
+To learn more about the Data Lakehouse, read [The Lakehouse Built for Everyone](https://books.alexmerced.com/books/the-lakehouse-built-for-everyone/) by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

@@ -43,4 +43,4 @@ Advanced data masking strictly preserves data formats. It replaces a 9-digit int
 Data Masking is the supreme mechanism for balancing enterprise analytics with strict legal compliance. By utilizing physically altered Static environments for software development, and highly intelligent Dynamic interception for live production analytics, Data Masking guarantees that organizations can extract massive value from their data architectures while mathematically minimizing the catastrophic exposure radius of sensitive consumer information.
 
 ## Learn More
-To learn more about the Data Lakehouse, read the book "Lakehouse for Everyone" by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).
+To learn more about the Data Lakehouse, read [The Lakehouse Built for Everyone](https://books.alexmerced.com/books/the-lakehouse-built-for-everyone/) by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).
