@@ -1,7 +1,7 @@
 ---
 title: "What is B-Tree Indexing?"
 meta_title: "What is B-Tree Indexing? | Data Lakehouse Hub Knowledge Base"
-description: "Imagine a physical dictionary with 10,000 pages. If you want to find the word 'Zebra,' you do not start at page 1 and read every single word until you reach the end."
+description: "B-tree indexing is a balanced tree structure databases use to find rows without a full table scan. Learn how searches work, B+ trees, and the write penalty."
 ---
 
 # What is B-Tree Indexing?

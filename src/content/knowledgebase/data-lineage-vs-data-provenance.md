@@ -1,7 +1,7 @@
 ---
 title: "What is Data Lineage vs Data Provenance?"
 meta_title: "What is Data Lineage vs Data Provenance? | Data Lakehouse Hub Knowledge Base"
-description: "Imagine an executive presenting a critical financial dashboard to the board of directors. The dashboard shows that profits dropped by 15%."
+description: "Data lineage traces how data moved and changed across pipelines, while data provenance records who created it, when, and under what authority; how they differ."
 ---
 
 # What is Data Lineage vs Data Provenance?

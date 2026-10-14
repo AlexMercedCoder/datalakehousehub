@@ -1,7 +1,7 @@
 ---
 title: "What is Zero-Shot Learning?"
 meta_title: "What is Zero-Shot Learning? | Expert Data Lakehouse & AI Glossary"
-description: "A profound advanced intelligence capability predicting explicitly correct highly targeted determinations absolutely without specific historical."
+description: "Zero-shot learning is a model's ability to handle tasks or classes it saw no labeled examples of, relying on general knowledge, as LLMs do with new prompts."
 ---
 
 ## What is Zero-Shot Learning?

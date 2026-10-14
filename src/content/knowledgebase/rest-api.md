@@ -1,7 +1,7 @@
 ---
 title: "What is a REST API?"
 meta_title: "What is a REST API? | Expert Data Lakehouse Architecture Guide"
-description: "A comprehensive guide to the REST API. Learn the architectural constraints that standardized how the entire internet exchanges massive datasets."
+description: "A REST API is a web interface built on constraints like statelessness and standard HTTP verbs. Learn how REST works and where it falls short for bulk data."
 ---
 
 # What is a REST API?

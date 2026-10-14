@@ -1,7 +1,7 @@
 ---
 title: "What is Continuous Deployment (CD)?"
 meta_title: "What is Continuous Deployment (CD)? | Expert Architecture Guide"
-description: "A comprehensive guide to Continuous Deployment. Learn how automated release pipelines seamlessly push validated code directly into production databases."
+description: "Continuous deployment is the practice of releasing every change that passes automated tests straight to production, and how it differs from continuous delivery."
 ---
 
 # What is Continuous Deployment (CD)?

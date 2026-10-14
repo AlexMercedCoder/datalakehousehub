@@ -1,7 +1,7 @@
 ---
 title: "What is Data Provenance?"
 meta_title: "What is Data Provenance? | Expert Data Lakehouse Architecture Guide"
-description: "A comprehensive guide to Data Provenance. Learn how tracking the absolute historical origin of data guarantees trustworthiness in machine learning models."
+description: "Data provenance is the documented origin and history of a dataset, used to judge if it can be trusted. See how immutable logs and signatures support it for AI."
 ---
 
 # What is Data Provenance?

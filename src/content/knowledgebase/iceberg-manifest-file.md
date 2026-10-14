@@ -1,7 +1,7 @@
 ---
 title: "What is an Iceberg Manifest File?"
 meta_title: "What is an Iceberg Manifest File? | Expert Architecture Guide"
-description: "A comprehensive guide to the Iceberg Manifest File. Learn how this foundational metadata file tracks physical Parquet files and enables sub-second query."
+description: "An Iceberg manifest file is an Avro metadata file listing data files with their status and column stats, so query engines can prune files without listing S3."
 canonical: "https://iceberglakehouse.com/iceberg/iceberg-manifest-file/"
 ---
 

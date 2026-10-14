@@ -1,7 +1,7 @@
 ---
 title: "What is Data Silos?"
 meta_title: "What is Data Silos? | Data Lakehouse Hub Knowledge Base"
-description: "Data Silos are considered the single greatest obstacle to enterprise Business Intelligence."
+description: "A data silo is data held in one team's system and isolated from the rest of the business. Learn their costs and how lakehouses and virtualization reduce them."
 ---
 
 # What is Data Silos?

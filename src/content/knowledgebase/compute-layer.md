@@ -1,7 +1,7 @@
 ---
 title: "What is Compute Layer?"
 meta_title: "What is Compute Layer? | Expert Data Lakehouse & AI Glossary"
-description: "The processing tier in a decoupled architecture responsible for executing queries and transforming data."
+description: "The compute layer is the tier of a decoupled architecture that runs queries and transforms data. See how engines like Trino query open lakehouse storage."
 ---
 
 ## What is Compute Layer?

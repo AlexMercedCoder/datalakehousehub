@@ -1,7 +1,7 @@
 ---
 title: "What is Vectorized Execution?"
 meta_title: "What is Vectorized Execution? | Expert Data Lakehouse Architecture Guide"
-description: "A comprehensive guide to Vectorized Execution. Learn how columnar processing, CPU Cache, and SIMD instructions accelerate query engines like Dremio and DuckDB."
+description: "Vectorized execution is a query processing model that works on batches of columnar values instead of rows, using CPU cache and SIMD in engines like DuckDB."
 ---
 
 # What is Vectorized Execution?

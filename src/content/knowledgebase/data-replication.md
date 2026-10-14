@@ -1,7 +1,7 @@
 ---
 title: "What is Data Replication?"
 meta_title: "What is Data Replication? | Expert Data Lakehouse Architecture Guide"
-description: "A comprehensive guide to Data Replication. Learn how massive databases synchronize petabytes of data globally to survive catastrophic hardware failure."
+description: "Data replication is the continuous copying of data across servers or regions for availability and read scale. Compare synchronous and asynchronous replication."
 ---
 
 # What is Data Replication?

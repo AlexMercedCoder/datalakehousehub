@@ -1,7 +1,7 @@
 ---
 title: "What is Virtual Data Warehouse?"
 meta_title: "What is Virtual Data Warehouse? | Data Lakehouse Hub Knowledge Base"
-description: "The Virtual Data Warehouse is the architectural embodiment of agility."
+description: "A virtual data warehouse queries data where it lives through federation instead of copying it into one database, with tradeoffs in freshness, cost, and speed."
 ---
 
 # What is Virtual Data Warehouse?

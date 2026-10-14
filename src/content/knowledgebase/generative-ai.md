@@ -1,7 +1,7 @@
 ---
 title: "What is Generative AI?"
 meta_title: "What is Generative AI? | Expert Data Lakehouse Architecture Guide"
-description: "A comprehensive guide to Generative AI. Learn how foundation models transition AI from pattern recognition to the creation of net-new text, code, and media."
+description: "Generative AI is a class of AI models that create new text, code, images, and audio from prompts. Learn about transformers, diffusion, and AI on lakehouse data."
 ---
 
 # What is Generative AI?

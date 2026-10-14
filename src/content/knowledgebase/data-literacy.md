@@ -1,7 +1,7 @@
 ---
 title: "What is Data Literacy?"
 meta_title: "What is Data Literacy? | Data Lakehouse Hub Knowledge Base"
-description: "Data Literacy is the ability to read, work with, analyze, and argue with data. It is not about teaching a Marketing Manager how to write complex Python code or Apache Spark clusters."
+description: "Data literacy is the ability to read, question, and argue with data. Learn its core skills and how organizations build a data-literate culture beyond tools."
 ---
 
 # What is Data Literacy?

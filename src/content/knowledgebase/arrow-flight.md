@@ -1,7 +1,7 @@
 ---
 title: "Arrow Flight"
 meta_title: "What is Arrow Flight? | Data Lakehouse & AI Glossary"
-description: "An incredibly fast communication protocol standard reducing serialization constraints ensuring extremely wide bandwidth data transport capabilities instantly."
+description: "Arrow Flight is an RPC framework for sending Apache Arrow columnar data over the network without row conversion, moving query results from engines to clients."
 ---
 
 ## What is Arrow Flight?

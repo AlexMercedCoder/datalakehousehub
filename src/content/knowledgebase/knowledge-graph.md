@@ -1,7 +1,7 @@
 ---
 title: "What is a Knowledge Graph?"
 meta_title: "What is a Knowledge Graph? | Expert Data Lakehouse Architecture Guide"
-description: "A comprehensive guide to Knowledge Graphs. Learn how modeling data as nodes and edges allows AI to instantly traverse highly complex enterprise relationships."
+description: "A knowledge graph models entities as nodes and relationships as edges so queries can follow connections directly. Learn how it supports GraphRAG for AI apps."
 ---
 
 # What is a Knowledge Graph?

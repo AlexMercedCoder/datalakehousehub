@@ -1,7 +1,7 @@
 ---
 title: "What is Block Storage?"
 meta_title: "What is Block Storage? | Expert Data Lakehouse Architecture Guide"
-description: "A comprehensive guide to Block Storage. Learn how bare-metal storage provides the ultra-low latency required for live transactional databases."
+description: "Block storage splits data into fixed-size blocks on a volume attached to one server. Learn why databases use it and why lakehouses use object storage instead."
 ---
 
 # What is Block Storage?

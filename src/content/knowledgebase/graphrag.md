@@ -1,7 +1,7 @@
 ---
 title: "What is GraphRAG?"
 meta_title: "What is GraphRAG? | Expert Data Lakehouse & AI Glossary"
-description: "An advanced paradigm combining established Knowledge Graphs with Retrieval-Augmented Generation to supply highly structured factual contexts."
+description: "GraphRAG is a retrieval-augmented generation approach that pulls facts from a knowledge graph, not only vector search, to give an LLM structured, linked facts."
 ---
 
 ## What is GraphRAG?

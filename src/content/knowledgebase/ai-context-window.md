@@ -1,7 +1,7 @@
 ---
 title: "What is an AI Context Window?"
 meta_title: "What is an AI Context Window? | Expert Architecture Guide"
-description: "A comprehensive guide to the AI Context Window. Learn why the active memory limit of Large Language Models dictates the architecture of RAG and Vector."
+description: "An AI context window is the maximum number of tokens an LLM can process at once, and why that limit led to retrieval-augmented generation and vector search."
 ---
 
 # What is an AI Context Window?

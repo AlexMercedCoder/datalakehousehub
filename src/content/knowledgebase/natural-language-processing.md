@@ -1,7 +1,7 @@
 ---
 title: "What is Natural Language Processing (NLP)?"
 meta_title: "What is NLP? | Expert Data Lakehouse Architecture Guide"
-description: "A comprehensive guide to Natural Language Processing. Learn how AI parses, understands, and generates human language from unstructured text."
+description: "Natural language processing (NLP) is the field of AI that lets computers parse, understand, and generate human language, from sentiment to transformers."
 ---
 
 # What is Natural Language Processing (NLP)?

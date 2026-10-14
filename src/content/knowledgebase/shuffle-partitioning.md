@@ -1,7 +1,7 @@
 ---
 title: "What is Shuffle Partitioning?"
 meta_title: "What is Shuffle Partitioning? | Expert Data Lakehouse Architecture Guide"
-description: "A comprehensive guide to Shuffle Partitioning. Learn why shuffling is the most expensive operation in distributed computing and how to optimize it."
+description: "Shuffle partitioning is how a distributed engine redistributes data across workers by key for joins and aggregations, and how salting and AQE address skew."
 ---
 
 # What is Shuffle Partitioning?

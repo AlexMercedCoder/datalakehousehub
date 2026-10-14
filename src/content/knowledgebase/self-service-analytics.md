@@ -1,7 +1,7 @@
 ---
 title: "What is Self-Service Analytics?"
 meta_title: "What is Self-Service Analytics? | Data Lakehouse Hub Knowledge Base"
-description: "Self-Service Analytics is the architectural and cultural solution to this bottleneck."
+description: "Self-service analytics lets business users explore data without writing code. See how BI tools, a semantic layer and a federated query engine support it safely."
 ---
 
 # What is Self-Service Analytics?

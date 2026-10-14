@@ -1,7 +1,7 @@
 ---
 title: "What is Weaviate?"
 meta_title: "What is Weaviate? | Expert Data Lakehouse & AI Glossary"
-description: "An open-source vector database that stores both objects and vectors, allowing for combining vector search with structured filtering."
+description: "Weaviate is an open source vector database that stores objects with their embeddings, combining HNSW vector search, keyword filters, and hybrid search for RAG."
 ---
 
 ## What is Weaviate?

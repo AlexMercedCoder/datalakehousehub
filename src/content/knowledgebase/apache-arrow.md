@@ -1,7 +1,7 @@
 ---
 title: "What is Apache Arrow?"
 meta_title: "What is Apache Arrow? | Expert Data Lakehouse Architecture Guide"
-description: "A comprehensive guide to Apache Arrow. Learn about in-memory columnar formats, zero-copy serialization, and Arrow Flight RPC."
+description: "Apache Arrow is an open, language-independent columnar in-memory format for analytics, covering zero-copy reads, SIMD efficiency, and Arrow Flight transport."
 ---
 
 # What is Apache Arrow?

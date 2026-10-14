@@ -1,7 +1,7 @@
 ---
 title: "What is Center of Excellence (CoE)?"
 meta_title: "What is Center of Excellence (CoE)? | Data Lakehouse Hub Knowledge Base"
-description: "To solve this chaos without crushing innovation, mature organizations establish a Data Center of Excellence (CoE)."
+description: "A data Center of Excellence is a central team that sets standards, training, and governance for data work. Learn its core functions and its role in a data mesh."
 ---
 
 # What is Center of Excellence (CoE)?

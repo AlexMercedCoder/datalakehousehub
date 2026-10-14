@@ -1,7 +1,7 @@
 ---
 title: "What is a Dimension Table?"
 meta_title: "What is a Dimension Table? | Expert Data Lakehouse Architecture Guide"
-description: "A comprehensive guide to Dimension Tables. Learn how descriptive context empowers analysts to filter and group massive transactional data effectively."
+description: "A dimension table holds the descriptive attributes, like customer, product, and date, that analysts use to filter and group facts in a star schema, plus SCDs."
 ---
 
 # What is a Dimension Table?

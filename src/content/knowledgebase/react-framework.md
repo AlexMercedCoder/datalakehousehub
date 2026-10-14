@@ -1,7 +1,7 @@
 ---
 title: "What is ReAct Framework?"
 meta_title: "What is ReAct Framework? | Expert Data Lakehouse & AI Glossary"
-description: "An operational framework allowing autonomous agents to interleave reasoning processes directly with external programmatic tool actions."
+description: "ReAct (Reason and Act) is a prompting pattern where an AI agent alternates reasoning steps with tool calls. See how it lets agents run multi-step data analysis."
 ---
 
 ## What is ReAct Framework?

@@ -1,7 +1,7 @@
 ---
 title: "What is Monolithic Architecture?"
 meta_title: "What is a Monolith? | Expert Data Lakehouse Architecture Guide"
-description: "A comprehensive guide to Monolithic Architecture. Learn the extreme benefits and catastrophic scaling limitations of massive, singular codebases."
+description: "Monolithic architecture is a software design where the whole application is built and deployed as one unit. Learn its strengths and its scaling limits."
 ---
 
 # What is Monolithic Architecture?

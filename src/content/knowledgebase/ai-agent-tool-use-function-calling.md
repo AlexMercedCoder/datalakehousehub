@@ -1,7 +1,7 @@
 ---
 title: "What is AI Agent Tool Use (Function Calling)?"
 meta_title: "What is AI Agent Tool Use (Function Calling)? | Data Lakehouse Hub Knowledge Base"
-description: "If you type a question into a standard Large Language Model interface (like ChatGPT in 2022), it is entirely confined to a text-in, text-out paradigm."
+description: "Tool use, or function calling, lets an LLM ask an application to run a defined function and return the result, which is how agents query data and take action."
 ---
 
 # What is AI Agent Tool Use (Function Calling)?

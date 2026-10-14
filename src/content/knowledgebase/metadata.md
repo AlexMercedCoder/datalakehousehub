@@ -1,7 +1,7 @@
 ---
 title: "What is Metadata?"
 meta_title: "What is Metadata? | Expert Data Lakehouse Architecture Guide"
-description: "A comprehensive guide to Metadata. Learn how data about data powers query optimization, data discovery, and open table formats like Apache Iceberg."
+description: "Metadata is data about data: schemas, file locations, statistics, and definitions. Learn how Apache Iceberg metadata drives file pruning and time travel."
 ---
 
 # What is Metadata?

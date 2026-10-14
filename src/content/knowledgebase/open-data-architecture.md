@@ -1,7 +1,7 @@
 ---
 title: "What is Open Data Architecture?"
 meta_title: "What is Open Data Architecture? | Expert Data Lakehouse & AI Glossary"
-description: "A philosophical and infrastructural pursuit ensuring technical tooling functions interchangeably upon un-siloed, accessible community file standards."
+description: "Open data architecture is an approach that keeps data in open file and table formats so different tools and engines can work on the same data without copies."
 ---
 
 ## What is Open Data Architecture?

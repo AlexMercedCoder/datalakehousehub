@@ -1,7 +1,7 @@
 ---
 title: "What is Data Tokenization?"
 meta_title: "What is Data Tokenization? | Expert Data Lakehouse Architecture Guide"
-description: "A comprehensive guide to Data Tokenization. Learn how removing sensitive data from the lakehouse entirely guarantees absolute architectural security."
+description: "Data tokenization replaces sensitive values like card numbers with random tokens, keeping originals in a separate vault, so lakehouse queries still work."
 ---
 
 # What is Data Tokenization?

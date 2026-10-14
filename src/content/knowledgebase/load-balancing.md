@@ -1,7 +1,7 @@
 ---
 title: "What is Load Balancing?"
 meta_title: "What is Load Balancing? | Expert Data Lakehouse Architecture Guide"
-description: "A comprehensive guide to Load Balancing. Learn how distributing network traffic prevents catastrophic server crashes in massive data applications."
+description: "Load balancing spreads incoming requests across a pool of servers so no one server is overloaded. Learn its algorithms, health checks, and use with SQL engines."
 ---
 
 # What is Load Balancing?

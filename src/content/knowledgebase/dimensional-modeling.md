@@ -2,7 +2,7 @@
 canonical: "https://opendatalakehouse.com/kb/dimensional-modeling/"
 title: "What is Dimensional Modeling?"
 meta_title: "What is Dimensional Modeling? | Expert Data Lakehouse Architecture Guide"
-description: "A comprehensive guide to Dimensional Modeling. Learn how Ralph Kimball's methodology revolutionized data warehousing through Fact and Dimension tables."
+description: "Dimensional modeling is Ralph Kimball's method of organizing analytics data into fact and dimension tables, the star schemas common in a lakehouse gold layer."
 ---
 
 # What is Dimensional Modeling?

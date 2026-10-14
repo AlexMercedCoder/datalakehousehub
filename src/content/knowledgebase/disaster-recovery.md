@@ -1,7 +1,7 @@
 ---
 title: "What is Disaster Recovery (DR)?"
 meta_title: "What is Disaster Recovery (DR)? | Expert Data Architecture Guide"
-description: "A comprehensive guide to Disaster Recovery. Learn how RTO and RPO dictate the resurrection of massive data architecture after catastrophic destruction."
+description: "Disaster recovery (DR) is the plan for restoring data systems after a major outage or loss. Learn how RPO, RTO, immutable backups, and air-gapping shape it."
 ---
 
 # What is Disaster Recovery (DR)?

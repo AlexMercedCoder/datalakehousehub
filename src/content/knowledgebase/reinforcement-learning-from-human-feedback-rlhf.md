@@ -1,7 +1,7 @@
 ---
 title: "What is Reinforcement Learning from Human Feedback (RLHF)?"
 meta_title: "What is Reinforcement Learning from Human Feedback (RLHF)? | Data Lakehouse Hub Knowledge Base"
-description: "Reinforcement Learning from Human Feedback (RLHF) is the secondary training phase that fixes this."
+description: "RLHF is a training method that aligns a language model with human preferences using a reward model and reinforcement learning. See its three phases and limits."
 ---
 
 # What is Reinforcement Learning from Human Feedback (RLHF)?

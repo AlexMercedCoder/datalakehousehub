@@ -2,7 +2,7 @@
 canonical: "https://opendatalakehouse.com/kb/mpp/"
 title: "What is MPP Architecture?"
 meta_title: "What is MPP Architecture? | Expert Data Lakehouse & AI Glossary"
-description: "Massively Parallel Processing distributes analytic operations across multiple servers communicating distinctly separated components simultaneously."
+description: "MPP architecture is a parallel database design where one query is split across many compute nodes that run at once, using vectorized execution and pushdown."
 ---
 
 ## What is MPP Architecture?

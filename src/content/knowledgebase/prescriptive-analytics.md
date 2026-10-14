@@ -1,7 +1,7 @@
 ---
 title: "What is Prescriptive Analytics?"
 meta_title: "What is Prescriptive Analytics? | Data Lakehouse Hub Knowledge Base"
-description: "Prescriptive Analytics is the most complex form of data science. It combines Machine Learning (for the prediction) with advanced Operations Research, Simulation, and Optimization Algorithms."
+description: "Prescriptive analytics recommends actions by combining predictions with optimization and simulation. Learn how it works and why it depends on data quality."
 ---
 
 # What is Prescriptive Analytics?

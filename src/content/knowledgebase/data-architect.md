@@ -1,7 +1,7 @@
 ---
 title: "What is a Data Architect?"
 meta_title: "What is a Data Architect? | Expert Data Lakehouse Architecture Guide"
-description: "A comprehensive guide to the Data Architect. Learn how this visionary engineering role designs the absolute physical blueprint of the modern enterprise."
+description: "A data architect is the role that designs an organization's overall data platform, models, and governance rules, including choices like an open data lakehouse."
 ---
 
 # What is a Data Architect?

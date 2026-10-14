@@ -1,7 +1,7 @@
 ---
 title: "What is Total Cost of Ownership (TCO) in Data?"
 meta_title: "What is Total Cost of Ownership (TCO) in Data? | Data Lakehouse Hub Knowledge Base"
-description: "When an engineering team evaluating a new cloud database looks at the pricing page and sees '$2.00 per hour of compute,' they often calculate their budget based solely on that number."
+description: "Total cost of ownership (TCO) is the full cost of buying, running, and retiring a data system, labor included, and how a decoupled lakehouse changes it."
 ---
 
 # What is Total Cost of Ownership (TCO) in Data?

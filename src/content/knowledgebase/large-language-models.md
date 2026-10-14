@@ -1,7 +1,7 @@
 ---
 title: "What are Large Language Models (LLMs)?"
 meta_title: "What are Large Language Models? | Expert Data Lakehouse Architecture Guide"
-description: "A comprehensive guide to Large Language Models (LLMs). Learn about Transformer architectures, massive parameter scale, and next-token prediction."
+description: "Large language models are transformer networks trained on vast text to predict the next token. Learn about parameters, context windows, hallucinations, and RAG."
 ---
 
 # What are Large Language Models (LLMs)?

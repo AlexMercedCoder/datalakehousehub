@@ -1,7 +1,7 @@
 ---
 title: "What is Paxos and Raft Consensus?"
 meta_title: "What is Paxos and Raft Consensus? | Data Lakehouse Hub Knowledge Base"
-description: "Imagine an army with 5 different generals, all camped on different hills surrounding an enemy city. They can only communicate by sending messengers running between the hills."
+description: "Paxos and Raft are consensus algorithms that let a server cluster agree on shared state despite failures. See how Raft's leader election powers etcd and Consul."
 ---
 
 # What is Paxos and Raft Consensus?

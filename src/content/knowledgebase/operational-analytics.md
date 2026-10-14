@@ -1,7 +1,7 @@
 ---
 title: "What is Operational Analytics?"
 meta_title: "What is Operational Analytics? | Expert Data Lakehouse Architecture Guide"
-description: "A comprehensive guide to Operational Analytics. Learn how data lakehouses sync predictive models into SaaS tools to drive active frontline business workflows."
+description: "Operational analytics pushes metrics computed in the lakehouse into the SaaS tools frontline teams use. Learn how Reverse ETL and composable CDPs make it work."
 ---
 
 # What is Operational Analytics?

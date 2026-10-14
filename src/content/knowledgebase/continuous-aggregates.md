@@ -1,7 +1,7 @@
 ---
 title: "What is Continuous Aggregates?"
 meta_title: "What is Continuous Aggregates? | Expert Data Lakehouse & AI Glossary"
-description: "Dynamic materialized views that automatically update their calculations in the background as new data streams into the system."
+description: "Continuous aggregates are materialized views that refresh incrementally as new data arrives, so rollups stay current. See how they relate to streaming and CDC."
 ---
 
 ## What is Continuous Aggregates?

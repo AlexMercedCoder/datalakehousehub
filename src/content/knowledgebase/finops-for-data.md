@@ -1,7 +1,7 @@
 ---
 title: "What is FinOps for Data?"
 meta_title: "What is FinOps for Data? | Data Lakehouse Hub Knowledge Base"
-description: "In the era of on-premise servers, IT spending was slow and highly controlled."
+description: "FinOps for data is the practice of making cloud data spend visible and accountable. Covers the inform, optimize, operate cycle and cost in an open lakehouse."
 ---
 
 # What is FinOps for Data?

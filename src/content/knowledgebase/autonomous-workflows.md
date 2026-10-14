@@ -1,7 +1,7 @@
 ---
 title: "What is Autonomous Workflows?"
 meta_title: "What is Autonomous Workflows? | Expert Data Lakehouse & AI Glossary"
-description: "A sequence of processes executing independently based on predefined goals without requiring manual continuous management."
+description: "Autonomous workflows are processes that run on their own toward set goals, scheduled and monitored by an orchestrator as DAGs with retries and alerts."
 ---
 
 ## What is Autonomous Workflows?

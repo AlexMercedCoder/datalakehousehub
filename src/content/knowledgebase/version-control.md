@@ -1,7 +1,7 @@
 ---
 title: "What is Version Control?"
 meta_title: "What is Version Control? | Expert Data Lakehouse Architecture Guide"
-description: "A comprehensive guide to Version Control. Learn how tracking historical code changes prevents catastrophic engineering failures and enables mass collaboration."
+description: "Version control is a system that records every change to code over time, covering commits, branches, pull requests, and reverts for pipelines and dbt models."
 ---
 
 # What is Version Control?

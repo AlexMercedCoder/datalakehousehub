@@ -1,7 +1,7 @@
 ---
 title: "What is Streaming Ingestion?"
 meta_title: "What is Streaming Ingestion? | Data Lakehouse Hub Knowledge Base"
-description: "Streaming ingestion is the continuous, real-time process of capturing, processing, and loading data into a storage system or analytical engine the instant it is generated."
+description: "Streaming ingestion loads data continuously as it is generated, via a broker like Kafka and a processor like Flink, into sinks such as Apache Iceberg tables."
 ---
 
 # What is Streaming Ingestion?

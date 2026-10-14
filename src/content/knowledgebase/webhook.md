@@ -1,7 +1,7 @@
 ---
 title: "What is a Webhook?"
 meta_title: "What is a Webhook? | Expert Data Lakehouse Architecture Guide"
-description: "A comprehensive guide to Webhooks. Learn how event-driven reverse APIs push real-time data directly into the lakehouse without constant polling."
+description: "A webhook is an HTTP callback that pushes an event payload to another app when something happens, and how it feeds real-time lakehouse ingestion with retries."
 ---
 
 # What is a Webhook?

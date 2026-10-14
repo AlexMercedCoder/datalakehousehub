@@ -1,7 +1,7 @@
 ---
 title: "What is Data Mining?"
 meta_title: "What is Data Mining? | Data Lakehouse Hub Knowledge Base"
-description: "Data Mining is essentially the precursor to modern Machine Learning. It relies on several core statistical techniques."
+description: "Data mining is the process of finding patterns, correlations, and anomalies in large datasets. Learn association rules, clustering, classification, and more."
 ---
 
 # What is Data Mining?

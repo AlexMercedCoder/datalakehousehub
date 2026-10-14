@@ -1,7 +1,7 @@
 ---
 title: "What is the Medallion Architecture?"
 meta_title: "What is the Medallion Architecture? | Expert Data Lakehouse Guide"
-description: "A comprehensive guide to the Medallion Architecture. Learn about organizing data lakehouses into Bronze, Silver, and Gold tiers for scalable analytics."
+description: "The medallion architecture is a design pattern that refines lakehouse data through Bronze, Silver, and Gold tiers, built on table formats like Apache Iceberg."
 ---
 
 # What is the Medallion Architecture?

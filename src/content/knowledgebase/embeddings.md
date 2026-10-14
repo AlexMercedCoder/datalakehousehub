@@ -1,7 +1,7 @@
 ---
 title: "What is Embeddings?"
 meta_title: "What is Embeddings? | Expert Data Lakehouse & AI Glossary"
-description: "A structural machine translation mapping specific characteristics ensuring algorithms explicitly process incredibly complex semantic text accurately."
+description: "Embeddings are numeric vectors that capture the meaning of text, images, or audio. Learn how vector search over embeddings supports RAG and hybrid search."
 ---
 
 ## What is Embeddings?

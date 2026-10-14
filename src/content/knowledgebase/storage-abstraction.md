@@ -1,7 +1,7 @@
 ---
 title: "What is Storage Abstraction?"
 meta_title: "What is Storage Abstraction? | Data Lakehouse Hub Knowledge Base"
-description: "Storage Abstraction is the architectural design pattern that solves this tight coupling."
+description: "Storage abstraction is a layer that hides where and how data is stored from compute engines. See how Apache Iceberg metadata decouples tables from storage."
 ---
 
 # What is Storage Abstraction?

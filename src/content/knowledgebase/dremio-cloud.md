@@ -1,7 +1,7 @@
 ---
 title: "What is Dremio Cloud?"
 meta_title: "What is Dremio Cloud? | Expert Data Lakehouse & AI Glossary"
-description: "The completely managed service platform executing analytics without generating challenging inherent physical maintenance requirements whatsoever."
+description: "Dremio Cloud is Dremio's fully managed lakehouse service. It queries data where it lives, including Apache Iceberg tables, with no clusters to run yourself."
 ---
 
 ## What is Dremio Cloud?

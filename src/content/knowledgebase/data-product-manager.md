@@ -1,7 +1,7 @@
 ---
 title: "What is Data Product Manager?"
 meta_title: "What is Data Product Manager? | Data Lakehouse Hub Knowledge Base"
-description: "To solve this, the industry created the Data Product Manager (DPM)."
+description: "A data product manager owns a data product the way a PM owns software: finding the real need, setting SLAs, and tracking adoption. Learn the role and skills."
 ---
 
 # What is Data Product Manager?

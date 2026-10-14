@@ -1,7 +1,7 @@
 ---
 title: "What is Generative Engine Optimization?"
 meta_title: "What is Generative Engine Optimization? | Expert Data Lakehouse & AI Glossary"
-description: "A comprehensive strategy aimed at ensuring digital content is surfaced accurately within conversational AI platforms."
+description: "Generative engine optimization is the practice of shaping content so AI assistants and answer engines can find, cite, and summarize it accurately in replies."
 ---
 
 ## What is Generative Engine Optimization?

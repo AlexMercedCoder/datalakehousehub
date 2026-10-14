@@ -1,7 +1,7 @@
 ---
 title: "What is Retrieval-Augmented Generation (RAG)?"
 meta_title: "What is RAG? | Expert Data Lakehouse Architecture Guide"
-description: "A comprehensive guide to Retrieval-Augmented Generation (RAG). Learn how to ground Large Language Models, eliminate hallucinations, and safely deploy."
+description: "Retrieval-augmented generation (RAG) grounds an LLM's answers in documents retrieved at query time. See how chunking, embeddings, and vector search fit in."
 ---
 
 # What is Retrieval-Augmented Generation (RAG)?

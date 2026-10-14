@@ -1,7 +1,7 @@
 ---
 title: "What is Data Anonymization?"
 meta_title: "What is Data Anonymization? | Data Lakehouse Hub Knowledge Base"
-description: "In 2006, Netflix released a massive dataset containing 100 million anonymous movie ratings to crowdsource a better recommendation algorithm."
+description: "Data anonymization alters data so individuals cannot be re-identified, using techniques like generalization, added noise, and k-anonymity rather than masking."
 ---
 
 # What is Data Anonymization?

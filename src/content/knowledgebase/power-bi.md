@@ -1,7 +1,7 @@
 ---
 title: "What is Power BI?"
 meta_title: "What is Power BI? | Data Lakehouse Hub Knowledge Base"
-description: "If Tableau pioneered the Self-Service BI revolution, Microsoft's Power BI conquered it through absolute corporate ubiquity."
+description: "Power BI is Microsoft's business intelligence and visualization tool. Learn how Power Query, DAX, DirectQuery, and semantic models connect it to a lakehouse."
 ---
 
 # What is Power BI?

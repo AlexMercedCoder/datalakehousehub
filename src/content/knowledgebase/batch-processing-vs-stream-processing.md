@@ -1,7 +1,7 @@
 ---
 title: "What is Batch Processing vs Stream Processing?"
 meta_title: "What is Batch Processing vs Stream Processing? | Data Lakehouse Hub Knowledge Base"
-description: "At its core, Data Engineering is the practice of moving data from Point A (a source database) to Point B (an analytical dashboard) and transforming it along the way."
+description: "Batch processing handles data in scheduled chunks; stream processing handles each event as it arrives. Compare Spark, Kafka, and Flink, plus Lambda and Kappa."
 ---
 
 # What is Batch Processing vs Stream Processing?

@@ -1,7 +1,7 @@
 ---
 title: "What is Unstructured Data?"
 meta_title: "What is Unstructured Data? | Data Lakehouse Hub Knowledge Base"
-description: "Unstructured data is the dark matter of the enterprise—it makes up the vast majority of the universe, but it has historically been invisible to traditional analytics."
+description: "Unstructured data is information with no predefined schema, like text, PDFs, audio, and images, and how lakehouses and AI make it easier to store and analyze."
 ---
 
 # What is Unstructured Data?

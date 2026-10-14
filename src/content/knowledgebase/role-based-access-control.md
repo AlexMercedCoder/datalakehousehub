@@ -2,7 +2,7 @@
 canonical: "https://opendatalakehouse.com/kb/role-based-access-control/"
 title: "What is Role-Based Access Control (RBAC)?"
 meta_title: "What is RBAC? | Expert Data Lakehouse Architecture Guide"
-description: "A comprehensive guide to Role-Based Access Control. Learn how enterprises secure data lakehouses, eliminate ad-hoc permissions, and enforce compliance."
+description: "Role-based access control (RBAC) grants permissions to roles, not individual users. See how a central catalog like Apache Polaris enforces RBAC across engines."
 ---
 
 # What is Role-Based Access Control (RBAC)?

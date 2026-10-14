@@ -1,7 +1,7 @@
 ---
 title: "What is Multi-Cloud Architecture?"
 meta_title: "What is Multi-Cloud Architecture? | Data Lakehouse Hub Knowledge Base"
-description: "In the early 2010s, migrating from on-premises servers to a single cloud provider (like Amazon Web Services) was a massive technological leap."
+description: "Multi-cloud architecture is the use of more than one cloud provider at once, and how Apache Iceberg tables and federated query engines support it."
 ---
 
 # What is Multi-Cloud Architecture?

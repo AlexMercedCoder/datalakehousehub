@@ -1,7 +1,7 @@
 ---
 title: "What is Real-time Analytics?"
 meta_title: "What is Real-time Analytics? | Data Lakehouse Hub Knowledge Base"
-description: "For decades, business intelligence was inherently retrospective."
+description: "Real-time analytics means ingesting, processing, and querying data as it is generated. See how Kafka, Flink, real-time OLAP stores, and Apache Iceberg fit in."
 ---
 
 # What is Real-time Analytics?

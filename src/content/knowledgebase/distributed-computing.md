@@ -1,7 +1,7 @@
 ---
 title: "What is Distributed Computing?"
 meta_title: "What is Distributed Computing? | Expert Data Lakehouse Architecture Guide"
-description: "A comprehensive guide to Distributed Computing. Learn the foundational philosophy of splitting massive data operations across thousands of parallel servers."
+description: "Distributed computing splits one workload across many networked machines. Covers master-worker clusters, fault tolerance, and the cost of data shuffling."
 ---
 
 # What is Distributed Computing?

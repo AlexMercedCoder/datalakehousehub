@@ -1,7 +1,7 @@
 ---
 title: "What is Transactional Layer?"
 meta_title: "What is Transactional Layer? | Expert Data Lakehouse & AI Glossary"
-description: "A specialized layer built on top of data lakes that provides ACID transaction guarantees to data operations."
+description: "A transactional layer adds ACID guarantees to files on a data lake, and this entry covers how open table formats like Apache Iceberg use metadata to provide it."
 ---
 
 ## What is Transactional Layer?

@@ -1,7 +1,7 @@
 ---
 title: "What is a Data Pipeline?"
 meta_title: "What is a Data Pipeline? | Expert Data Lakehouse Architecture Guide"
-description: "A comprehensive guide to Data Pipelines. Learn how automated software infrastructure securely extracts, cleans, and transports massive enterprise data."
+description: "A data pipeline is automated software that extracts, transforms, and loads data from sources into a warehouse or lakehouse. Learn each phase and idempotency."
 ---
 
 # What is a Data Pipeline?

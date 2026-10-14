@@ -1,7 +1,7 @@
 ---
 title: "What is Few-Shot Learning?"
 meta_title: "What is Few-Shot Learning? | Expert Data Lakehouse & AI Glossary"
-description: "An incredibly effective machine learning tactic requiring extremely sparse distinct organizational examples quickly calibrating correct responses."
+description: "Few-shot learning is getting a model to perform a task from only a handful of examples, often placed in an LLM prompt, instead of retraining on a large dataset."
 ---
 
 ## What is Few-Shot Learning?

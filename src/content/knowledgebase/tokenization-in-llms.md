@@ -1,7 +1,7 @@
 ---
 title: "What is Tokenization in LLMs?"
 meta_title: "What is Tokenization in LLMs? | Data Lakehouse Hub Knowledge Base"
-description: "When humans look at text, we see words and sentences. We inherently understand that 'unbelievable' is a single concept."
+description: "Tokenization in LLMs is the step that splits text into tokens mapped to integer IDs, covering word, character, and subword (BPE) methods and their cost impact."
 ---
 
 # What is Tokenization in LLMs?

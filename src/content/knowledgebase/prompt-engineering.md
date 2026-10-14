@@ -1,7 +1,7 @@
 ---
 title: "What is Prompt Engineering?"
 meta_title: "What is Prompt Engineering? | Expert Data Lakehouse Architecture Guide"
-description: "A comprehensive guide to Prompt Engineering. Learn how structuring natural language mathematically optimizes the output of Large Language Models."
+description: "Prompt engineering is the practice of designing LLM inputs to get accurate, well-formatted output. See how few-shot, chain-of-thought, and system prompts work."
 ---
 
 # What is Prompt Engineering?

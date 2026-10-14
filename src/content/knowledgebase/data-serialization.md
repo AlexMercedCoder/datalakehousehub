@@ -1,7 +1,7 @@
 ---
 title: "What is Data Serialization?"
 meta_title: "What is Data Serialization? | Data Lakehouse Hub Knowledge Base"
-description: "In distributed systems, data rarely stays in one place. A Python microservice might need to send user data to a Java-based processing engine."
+description: "Data serialization converts in-memory data into bytes for storage or transfer. Compare JSON, Protobuf, Avro, and Parquet, and see how Arrow avoids conversion."
 ---
 
 # What is Data Serialization?

@@ -1,7 +1,7 @@
 ---
 title: "What is Looker?"
 meta_title: "What is Looker? | Data Lakehouse Hub Knowledge Base"
-description: "Looker (acquired by Google Cloud in 2019) was designed specifically to solve Metrics Chaos."
+description: "Looker is a Google Cloud BI platform that defines metrics once in LookML code and runs queries in the database, an early model for the headless semantic layer."
 ---
 
 # What is Looker?

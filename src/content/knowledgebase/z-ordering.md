@@ -1,7 +1,7 @@
 ---
 title: "What is Z-Ordering?"
 meta_title: "What is Z-Ordering? | Expert Data Lakehouse Architecture Guide"
-description: "A comprehensive guide to Z-Ordering. Learn how advanced data clustering optimizes multi-dimensional queries and drastically reduces file scans."
+description: "Z-ordering is a clustering technique that sorts rows along a Z-curve across several columns, so Iceberg and Delta Lake queries can skip more files on filters."
 ---
 
 # What is Z-Ordering?

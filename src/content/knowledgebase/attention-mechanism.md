@@ -1,7 +1,7 @@
 ---
 title: "What is Attention Mechanism?"
 meta_title: "What is Attention Mechanism? | Data Lakehouse Hub Knowledge Base"
-description: "The Attention Mechanism is the defining algorithmic breakthrough of the 21st century."
+description: "The attention mechanism lets a neural network weigh how each token relates to every other token, covering self-attention, parallelism, and multi-head attention."
 ---
 
 # What is Attention Mechanism?

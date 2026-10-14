@@ -1,7 +1,7 @@
 ---
 title: "What is Feature Engineering?"
 meta_title: "What is Feature Engineering? | Expert Data Lakehouse Architecture Guide"
-description: "A comprehensive guide to Feature Engineering. Learn how data scientists transform raw data into powerful mathematical signals for machine learning models."
+description: "Feature engineering turns raw data into model inputs (features) for machine learning. Covers extraction, windowing, encoding, and avoiding data leakage."
 ---
 
 # What is Feature Engineering?

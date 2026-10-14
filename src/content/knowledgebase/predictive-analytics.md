@@ -1,7 +1,7 @@
 ---
 title: "What is Predictive Analytics?"
 meta_title: "What is Predictive Analytics? | Data Lakehouse Hub Knowledge Base"
-description: "Predictive Analytics asks: 'What is going to happen next?'"
+description: "Predictive analytics uses historical data, statistics, and machine learning to estimate future outcomes. See how models are trained, deployed, and hit by drift."
 ---
 
 # What is Predictive Analytics?

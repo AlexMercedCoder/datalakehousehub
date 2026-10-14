@@ -1,7 +1,7 @@
 ---
 title: "What is Raw Reflections?"
 meta_title: "What is Raw Reflections? | Expert Data Lakehouse & AI Glossary"
-description: "A specific organizational mechanism storing explicitly filtered records dramatically improving basic highly repetitive query operations."
+description: "A Raw Reflection is a Dremio feature that stores an optimized, materialized copy of a dataset's rows and columns to speed up queries on lakehouse tables."
 ---
 
 ## What is Raw Reflections?

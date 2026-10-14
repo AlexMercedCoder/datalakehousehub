@@ -1,7 +1,7 @@
 ---
 title: "What is Encryption at Rest?"
 meta_title: "What is Encryption at Rest? | Expert Data Lakehouse Architecture Guide"
-description: "A comprehensive guide to Encryption at Rest. Learn how cryptographic algorithms secure physical hard drives from theft and physical hardware compromise."
+description: "Encryption at rest protects stored data, such as S3 objects or disks, by keeping it as ciphertext. Covers AES-256, key management, and server vs client side."
 ---
 
 # What is Encryption at Rest?

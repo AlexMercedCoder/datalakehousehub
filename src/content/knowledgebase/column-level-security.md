@@ -1,7 +1,7 @@
 ---
 title: "What is Column-Level Security?"
 meta_title: "What is Column-Level Security? | Expert Data Lakehouse Architecture Guide"
-description: "A comprehensive guide to Column-Level Security. Learn about dynamic data masking, securing PII, and fine-grained access control in the data lakehouse."
+description: "Column-level security controls which columns a user can see inside a table, often by masking. Covers dynamic masking and central policy control in a lakehouse."
 ---
 
 # What is Column-Level Security?

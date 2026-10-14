@@ -1,7 +1,7 @@
 ---
 title: "What is a Message Queue?"
 meta_title: "What is a Message Queue? | Expert Data Lakehouse Architecture Guide"
-description: "A comprehensive guide to the Message Queue. Learn how asynchronous architecture prevents cascading failures in massive distributed systems."
+description: "A message queue is a buffer that lets producers and consumers trade messages asynchronously so services stay decoupled. See how it differs from event streams."
 ---
 
 # What is a Message Queue?

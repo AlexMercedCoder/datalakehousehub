@@ -1,7 +1,7 @@
 ---
 title: "What is Iceberg Catalog?"
 meta_title: "What is Iceberg Catalog? | Expert Data Lakehouse & AI Glossary"
-description: "A centralized repository tracking absolute current references maintaining atomic operational guarantees over table state pointers."
+description: "An Iceberg catalog is the service that maps each Apache Iceberg table name to its current metadata file and swaps that pointer atomically so commits stay safe."
 canonical: "https://iceberglakehouse.com/iceberg/iceberg-catalog/"
 ---
 

@@ -1,7 +1,7 @@
 ---
 title: "What is Headless BI?"
 meta_title: "What is Headless BI? | Expert Data Lakehouse & AI Glossary"
-description: "A business intelligence framework where metric definitions are decoupled from the visualization or reporting presentation layer."
+description: "Headless BI is an approach where metric definitions live in a shared semantic layer apart from dashboards, so every BI tool and AI agent uses the same logic."
 ---
 
 ## What is Headless BI?

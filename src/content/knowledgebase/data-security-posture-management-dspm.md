@@ -1,7 +1,7 @@
 ---
 title: "What is Data Security Posture Management (DSPM)?"
 meta_title: "What is Data Security Posture Management (DSPM)? | Data Lakehouse Hub Knowledge Base"
-description: "Data Security Posture Management (DSPM) is the rapidly emerging category of cybersecurity designed specifically to solve the data sprawl crisis in the multi-cloud era."
+description: "Data security posture management (DSPM) is a security category that finds, classifies, and scores risk for sensitive data across clouds, unlike CSPM."
 ---
 
 # What is Data Security Posture Management (DSPM)?

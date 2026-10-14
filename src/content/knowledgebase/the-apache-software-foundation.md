@@ -1,7 +1,7 @@
 ---
 title: "What is The Apache Software Foundation?"
 meta_title: "What is The Apache Software Foundation? | Data Lakehouse Hub Knowledge Base"
-description: "The Apache Software Foundation (ASF) is the world's largest open-source foundation."
+description: "The Apache Software Foundation is a nonprofit that hosts open source projects like Spark and Iceberg, with the Apache Way, Apache 2.0 license, and incubator."
 ---
 
 # What is The Apache Software Foundation?

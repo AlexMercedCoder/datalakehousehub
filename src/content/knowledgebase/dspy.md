@@ -1,7 +1,7 @@
 ---
 title: "What is DSPy?"
 meta_title: "What is DSPy? | Expert Data Lakehouse & AI Glossary"
-description: "A framework for algorithmically optimizing language model prompts and weights rather than relying on manual prompt engineering."
+description: "DSPy is a framework from Stanford that optimizes LLM prompts and weights algorithmically, so you program language model pipelines instead of prompts."
 ---
 
 ## What is DSPy?

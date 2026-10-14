@@ -1,7 +1,7 @@
 ---
 title: "What is Return on Investment (ROI) for AI?"
 meta_title: "What is Return on Investment (ROI) for AI? | Data Lakehouse Hub Knowledge Base"
-description: "During the height of the Generative AI hype cycle, corporate boards handed their Chief Data Officers (CDOs) blank checks."
+description: "ROI for AI measures whether a machine learning or generative AI project returns more business value than it costs, from data engineering and GPUs to revenue."
 ---
 
 # What is Return on Investment (ROI) for AI?

@@ -1,7 +1,7 @@
 ---
 title: "What is Row-Level Deletes?"
 meta_title: "What is Row-Level Deletes? | Expert Data Lakehouse & AI Glossary"
-description: "An advanced table capability allowing individual row removals without requiring entire data file rewrites."
+description: "Row-level deletes remove individual rows from a table without rewriting whole data files. Learn how open table formats like Apache Iceberg support them."
 ---
 
 ## What is Row-Level Deletes?

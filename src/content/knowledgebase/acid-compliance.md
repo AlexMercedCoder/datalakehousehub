@@ -1,7 +1,7 @@
 ---
 title: "What is ACID Compliance?"
 meta_title: "What is ACID Compliance? | Data Lakehouse Hub Knowledge Base"
-description: "ACID Compliance is the non-negotiable bedrock of data integrity."
+description: "ACID compliance is the set of guarantees (atomicity, consistency, isolation, durability) that keep transactions reliable, and how table formats add it to lakes."
 ---
 
 # What is ACID Compliance?

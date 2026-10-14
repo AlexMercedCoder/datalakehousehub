@@ -2,7 +2,7 @@
 canonical: "https://opendatalakehouse.com/kb/hadoop-catalog/"
 title: "What is Apache Hadoop?"
 meta_title: "What is Apache Hadoop? | Expert Data Lakehouse Architecture Guide"
-description: "A comprehensive guide to Apache Hadoop. Learn about HDFS, MapReduce, YARN, and the architectural foundation of the big data revolution."
+description: "Apache Hadoop is an open-source framework for storing and processing large datasets on clusters with HDFS, MapReduce, and YARN; a forerunner of the lakehouse."
 ---
 
 # What is Apache Hadoop?

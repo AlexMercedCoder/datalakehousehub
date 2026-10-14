@@ -1,7 +1,7 @@
 ---
 title: "What is Object Storage?"
 meta_title: "What is Object Storage? | Expert Data Lakehouse Architecture Guide"
-description: "A comprehensive guide to Object Storage. Learn how flat, metadata-driven architectures like Amazon S3 revolutionized petabyte-scale data scalability."
+description: "Object storage is an architecture that keeps files as objects in a flat namespace, like Amazon S3, and how strong consistency let Apache Iceberg run on it."
 ---
 
 # What is Object Storage?

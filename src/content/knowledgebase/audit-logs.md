@@ -1,7 +1,7 @@
 ---
 title: "What are Audit Logs?"
 meta_title: "What are Audit Logs? | Expert Data Lakehouse Architecture Guide"
-description: "A comprehensive guide to Audit Logs. Learn how immutable, cryptographic system logs guarantee corporate compliance and forensic security investigations."
+description: "Audit logs are chronological records of who did what, when, and from where in a system, covering WORM storage, structured event payloads, and anomaly alerts."
 ---
 
 # What are Audit Logs?

@@ -1,7 +1,7 @@
 ---
 title: "What is Kubernetes?"
 meta_title: "What is Kubernetes? | Expert Data Lakehouse Architecture Guide"
-description: "A comprehensive guide to Kubernetes (K8s). Learn how the container orchestration platform scales and secures modern data engineering infrastructure."
+description: "Kubernetes is an open-source platform that automates deploying, scaling, and managing containers. Learn how data teams use it to run Spark jobs and ML models."
 ---
 
 # What is Kubernetes (K8s)?

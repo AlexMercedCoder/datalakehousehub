@@ -1,7 +1,7 @@
 ---
 title: "What is GDPR?"
 meta_title: "What is GDPR? | Expert Data Lakehouse Architecture Guide"
-description: "A comprehensive guide to GDPR. Learn how the European privacy framework fundamentally altered global data engineering and data architecture."
+description: "GDPR is the EU law that governs how organizations collect, store, and process personal data. See how it shapes data residency and row-level deletes on the lake."
 ---
 
 # What is GDPR (General Data Protection Regulation)?

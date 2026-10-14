@@ -1,7 +1,7 @@
 ---
 title: "What is Context Window Management?"
 meta_title: "What is Context Window Management? | Expert Data Lakehouse & AI Glossary"
-description: "The engineering practice of chunking, filtering, and prioritizing information to fit within a language model's memory limits."
+description: "Context window management is choosing, chunking, and ranking what goes into a language model's limited input. Learn why it matters for agents that call tools."
 ---
 
 ## What is Context Window Management?

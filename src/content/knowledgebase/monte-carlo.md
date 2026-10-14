@@ -1,7 +1,7 @@
 ---
 title: "What is Monte Carlo?"
 meta_title: "What is Monte Carlo? | Expert Data Lakehouse Architecture Guide"
-description: "A comprehensive guide to Monte Carlo. Learn about data observability, automated anomaly detection, data downtime, and massive lineage tracking."
+description: "Monte Carlo is a data observability platform that monitors pipelines and tables for anomalies, tracks lineage, and alerts data teams to data downtime."
 ---
 
 # What is Monte Carlo?

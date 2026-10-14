@@ -1,7 +1,7 @@
 ---
 title: "What is Consistent Hashing?"
 meta_title: "What is Consistent Hashing? | Data Lakehouse Hub Knowledge Base"
-description: "Consistent Hashing is the brilliant algorithm designed to solve this exact problem."
+description: "Consistent hashing maps keys and servers onto a hash ring so adding or removing a node moves only a small share of keys. Virtual nodes balance the load."
 ---
 
 # What is Consistent Hashing?

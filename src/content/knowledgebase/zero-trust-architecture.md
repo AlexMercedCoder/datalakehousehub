@@ -1,7 +1,7 @@
 ---
 title: "What is Zero Trust Architecture?"
 meta_title: "What is Zero Trust Architecture? | Data Lakehouse Hub Knowledge Base"
-description: "Zero Trust Architecture (ZTA) is the modern security paradigm that destroyed the Castle and Moat. Its defining philosophy is brutally simple: Never Trust, Always Verify."
+description: "Zero trust architecture is a security model that verifies every request instead of trusting the network. See how least privilege applies to a data lakehouse."
 ---
 
 # What is Zero Trust Architecture?

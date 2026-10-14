@@ -1,7 +1,7 @@
 ---
 title: "What is Data-Driven Decision Making?"
 meta_title: "What is Data-Driven Decision Making? | Data Lakehouse Hub Knowledge Base"
-description: "Data-Driven Decision Making (DDDM) is the cultural and operational shift away from intuition-based management."
+description: "Data-driven decision making means basing business choices on measured evidence instead of intuition, using KPIs, A/B tests, and a single source of truth."
 ---
 
 # What is Data-Driven Decision Making?

@@ -1,7 +1,7 @@
 ---
 title: "What is Re-ranking Models?"
 meta_title: "What is Re-ranking Models? | Data Lakehouse Hub Knowledge Base"
-description: "Re-ranking models represent the necessary quality-control layer in modern information retrieval."
+description: "A re-ranking model reorders search results by scoring each document against the query, often with a cross-encoder. Learn how two-stage retrieval improves RAG."
 ---
 
 # What is Re-ranking Models?

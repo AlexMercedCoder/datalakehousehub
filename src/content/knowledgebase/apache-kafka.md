@@ -1,7 +1,7 @@
 ---
 title: "What is Apache Kafka?"
 meta_title: "What is Apache Kafka? | Expert Data Lakehouse Architecture Guide"
-description: "A comprehensive guide to Apache Kafka. Learn how the distributed event streaming platform handles trillions of events for massive enterprise architectures."
+description: "Apache Kafka is an open-source distributed event streaming platform built on producers, brokers, consumers, topics, and partitions, often feeding a lakehouse."
 ---
 
 # What is Apache Kafka?

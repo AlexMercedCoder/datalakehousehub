@@ -1,7 +1,7 @@
 ---
 title: "What is Containerization (Docker)?"
 meta_title: "What is Containerization (Docker)? | Data Lakehouse Hub Knowledge Base"
-description: "Containerization is the technology that solved the 'It works on my machine' crisis."
+description: "Containerization packages an app with its dependencies so it runs the same everywhere; Docker is the standard tool. Compare containers with virtual machines."
 ---
 
 # What is Containerization (Docker)?

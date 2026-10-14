@@ -1,7 +1,7 @@
 ---
 title: "What is Data Vault Modeling?"
 meta_title: "What is Data Vault Modeling? | Expert Data Lakehouse & AI Glossary"
-description: "A specialized database creation standard focusing completely driving absolutely reliable highly scalable temporal historical reporting structurally."
+description: "Data Vault modeling is a warehouse design method for auditable, append-only history. See how it relates to medallion layers and slowly changing dimensions."
 ---
 
 ## What is Data Vault Modeling?

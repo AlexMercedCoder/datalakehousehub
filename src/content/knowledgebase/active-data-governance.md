@@ -1,7 +1,7 @@
 ---
 title: "What is Active Data Governance?"
 meta_title: "What is Active Data Governance? | Expert Data Architecture Guide"
-description: "A comprehensive guide to Active Data Governance. Learn how real-time, automated metadata control replaces static corporate compliance policies."
+description: "Active data governance enforces access rules, masking, and tagging in software at query time instead of in static policy documents, applied in a data lakehouse."
 ---
 
 # What is Active Data Governance?

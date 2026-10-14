@@ -1,7 +1,7 @@
 ---
 title: "What is Data Virtualization?"
 meta_title: "What is Data Virtualization? | Expert Data Lakehouse Architecture Guide"
-description: "A comprehensive guide to Data Virtualization. Learn how modern analytical engines query global data seamlessly without moving a single physical file."
+description: "Data virtualization lets users query many sources as if they were one database, without copying data. Learn about pushdown and how it pairs with a lakehouse."
 ---
 
 # What is Data Virtualization?

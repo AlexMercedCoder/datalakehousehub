@@ -1,7 +1,7 @@
 ---
 title: "What is Reverse ETL?"
 meta_title: "What is Reverse ETL? | Expert Data Lakehouse Architecture Guide"
-description: "A comprehensive guide to Reverse ETL. Learn how data activation pipelines sync cloud data warehouse insights directly back into operational SaaS tools."
+description: "Reverse ETL copies modeled data from a warehouse or lakehouse back into operational tools like CRMs and ad platforms, so teams act on metrics analysts built."
 ---
 
 # What is Reverse ETL?

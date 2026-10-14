@@ -2,7 +2,7 @@
 canonical: "https://opendatalakehouse.com/kb/data-quality/"
 title: "What is Data Quality?"
 meta_title: "What is Data Quality? | Expert Data Lakehouse Architecture Guide"
-description: "A comprehensive guide to Data Quality. Learn how modern data teams enforce assertions, detect anomalies, and guarantee reliable analytics."
+description: "Data quality is how accurate, complete, consistent, and timely data is for its use. See how teams enforce it with data contracts, tests, and anomaly checks."
 ---
 
 # What is Data Quality?

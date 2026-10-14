@@ -1,7 +1,7 @@
 ---
 title: "What is Vendor Lock-in?"
 meta_title: "What is Vendor Lock-in? | Data Lakehouse Hub Knowledge Base"
-description: "Vendor Lock-in is the greatest financial threat to a long-term enterprise data strategy."
+description: "Vendor lock-in is dependence on one provider that makes switching costly, and how open storage plus open file and table formats keep data portable."
 ---
 
 # What is Vendor Lock-in?

@@ -1,7 +1,7 @@
 ---
 title: "What is Data Privacy?"
 meta_title: "What is Data Privacy? | Expert Data Lakehouse Architecture Guide"
-description: "A comprehensive guide to Data Privacy. Learn how organizations architect data pipelines to legally protect consumer information and avoid catastrophic fines."
+description: "Data privacy is handling personal data lawfully, with consent and limited purpose. See how Apache Iceberg row-level deletes help honor erasure requests."
 ---
 
 # What is Data Privacy?

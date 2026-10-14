@@ -1,7 +1,7 @@
 ---
 title: "What is Data Lakehouse Architecture?"
 meta_title: "What is Data Lakehouse Architecture? | Expert Guide"
-description: "A comprehensive guide to Data Lakehouse Architecture. Learn how this hybrid platform merges the scale of data lakes with the performance of data warehouses."
+description: "Data lakehouse architecture separates object storage, an open table format metadata layer, and multiple compute engines to give lake files warehouse features."
 ---
 
 # What is Data Lakehouse Architecture?

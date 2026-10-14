@@ -1,7 +1,7 @@
 ---
 title: "What is Delta Lake?"
 meta_title: "What is Delta Lake? | Expert Data Lakehouse Architecture Guide"
-description: "A comprehensive guide to Delta Lake. Learn about its transaction log, schema enforcement, structured streaming capabilities, and UniForm interoperability."
+description: "Delta Lake is an open table format that adds ACID transactions to Parquet data lakes. Covers the Delta log, schema enforcement, time travel, and UniForm."
 ---
 
 # What is Delta Lake?

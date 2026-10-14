@@ -1,7 +1,7 @@
 ---
 title: "What is a Data Lakehouse Platform?"
 meta_title: "What is a Data Lakehouse Platform? | Expert Architecture Guide"
-description: "A comprehensive guide to Data Lakehouse Platforms. Learn how open table formats combine data lake scalability with warehouse transactional reliability."
+description: "A data lakehouse platform runs warehouse-style SQL and ACID transactions on data lake storage, using open table formats and compute decoupled from storage."
 ---
 
 # What is a Data Lakehouse Platform?

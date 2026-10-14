@@ -1,7 +1,7 @@
 ---
 title: "What is Serverless Computing?"
 meta_title: "What is Serverless Computing? | Expert Data Lakehouse Architecture Guide"
-description: "A comprehensive guide to Serverless Computing. Learn how abstracting infrastructure allows data engineers to deploy highly scalable pipelines instantly."
+description: "Serverless computing runs code or queries without managing servers, scaling on demand and billing per use. See how serverless engines query Iceberg data."
 ---
 
 # What is Serverless Computing?

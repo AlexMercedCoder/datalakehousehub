@@ -1,7 +1,7 @@
 ---
 title: "What is Autonomous Resource Optimization?"
 meta_title: "What is Autonomous Resource Optimization? | Expert Data Lakehouse & AI Glossary"
-description: "An intelligent Dremio feature reducing total cost of ownership by dynamically managing caching, clustering, and data routing seamlessly."
+description: "Autonomous resource optimization is automatic tuning of caching, data layout, and compute by the platform, not by hand, as in Dremio's autonomous features."
 ---
 
 ## What is Autonomous Resource Optimization?

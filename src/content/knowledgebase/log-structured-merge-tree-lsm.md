@@ -1,7 +1,7 @@
 ---
 title: "What is Log-Structured Merge-Tree (LSM)?"
 meta_title: "What is Log-Structured Merge-Tree (LSM)? | Data Lakehouse Hub Knowledge Base"
-description: "The Log-Structured Merge-Tree is the architectural engine of the Big Data era."
+description: "A log-structured merge-tree is a write-optimized data structure that buffers writes in memory, flushes sorted files to disk, and merges them through compaction."
 ---
 
 # What is Log-Structured Merge-Tree (LSM)?

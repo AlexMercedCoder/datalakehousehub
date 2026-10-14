@@ -1,7 +1,7 @@
 ---
 title: "What is Analytics Engineering?"
 meta_title: "What is Analytics Engineering? | Expert Data Lakehouse Architecture Guide"
-description: "A comprehensive guide to Analytics Engineering. Learn how dbt bridged the gap between data engineering pipelines and business intelligence."
+description: "Analytics engineering is the work of turning raw data into tested, documented models for analysis, often with dbt, and curating the lakehouse semantic layer."
 ---
 
 # What is Analytics Engineering?

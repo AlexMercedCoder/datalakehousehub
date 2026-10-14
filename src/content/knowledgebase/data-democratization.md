@@ -1,7 +1,7 @@
 ---
 title: "What is Data Democratization?"
 meta_title: "What is Data Democratization? | Data Lakehouse Hub Knowledge Base"
-description: "Data Democratization is the cultural and technological movement designed to destroy this bottleneck."
+description: "Data democratization lets every employee access and analyze data without engineering help, through self-service tools, data literacy, and a semantic layer."
 ---
 
 # What is Data Democratization?

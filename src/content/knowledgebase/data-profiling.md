@@ -1,7 +1,7 @@
 ---
 title: "What is Data Profiling?"
 meta_title: "What is Data Profiling? | Data Lakehouse Hub Knowledge Base"
-description: "Data Profiling is the foundational diagnostic process of examining, analyzing, and summarizing a dataset to understand its structure, content, and quality before it is used in production systems."
+description: "Data profiling is the process of examining a dataset's structure, content, and quality before use. Learn its three phases and how it guides pipeline design."
 ---
 
 # What is Data Profiling?

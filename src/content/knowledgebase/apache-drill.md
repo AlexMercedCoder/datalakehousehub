@@ -1,7 +1,7 @@
 ---
 title: "What is Apache Drill?"
 meta_title: "What is Apache Drill? | Expert Data Lakehouse Architecture Guide"
-description: "A comprehensive guide to Apache Drill. Learn how this schema-free SQL engine pioneered the ability to query chaotic, unstructured JSON without ETL."
+description: "Apache Drill is an open-source distributed SQL engine that queries JSON, CSV, and Parquet files without a predefined schema, and its influence on the lakehouse."
 ---
 
 # What is Apache Drill?

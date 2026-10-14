@@ -1,7 +1,7 @@
 ---
 title: "What is Change Management in Data Initiatives?"
 meta_title: "What is Change Management in Data Initiatives? | Data Lakehouse Hub Knowledge Base"
-description: "A massive multinational corporation decides its legacy data infrastructure is too slow."
+description: "Change management in data initiatives is the work of getting people to adopt new data platforms. Covers sponsorship, data champions, training, and rollouts."
 ---
 
 # What is Change Management in Data Initiatives?

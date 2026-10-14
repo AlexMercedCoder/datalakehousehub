@@ -1,7 +1,7 @@
 ---
 title: "What is Mixture of Experts (MoE)?"
 meta_title: "What is Mixture of Experts (MoE)? | Data Lakehouse Hub Knowledge Base"
-description: "Mixture of Experts (MoE) is a revolutionary neural network architecture designed to break this limit."
+description: "Mixture of Experts (MoE) is a neural network design where a router sends each token to a few expert subnetworks, so the model uses only part of its weights."
 ---
 
 # What is Mixture of Experts (MoE)?

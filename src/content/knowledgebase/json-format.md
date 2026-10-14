@@ -1,7 +1,7 @@
 ---
 title: "What is JSON?"
 meta_title: "What is JSON (JavaScript Object Notation)? | Expert Architecture Guide"
-description: "A comprehensive guide to JSON. Learn how this lightweight, nested format became the undisputed standard for modern internet API communication."
+description: "JSON is a human-readable text format for nested key-value data used by most web APIs. Learn why it is slow for analytics and how lakehouses turn it to Parquet."
 ---
 
 # What is JSON (JavaScript Object Notation)?

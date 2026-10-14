@@ -1,7 +1,7 @@
 ---
 title: "What is Data Vault?"
 meta_title: "What is Data Vault? | Expert Data Lakehouse Architecture Guide"
-description: "A comprehensive guide to Data Vault modeling. Learn about Hubs, Links, and Satellites, and why massive enterprises use it for agile data integration."
+description: "Data Vault is a warehouse modeling method built from hubs, links, and satellites. See how its append-only, additive design absorbs change and keeps history."
 ---
 
 # What is Data Vault?

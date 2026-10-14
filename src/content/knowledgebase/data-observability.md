@@ -1,7 +1,7 @@
 ---
 title: "What is Data Observability?"
 meta_title: "What is Data Observability? | Expert Data Lakehouse Architecture Guide"
-description: "A comprehensive guide to Data Observability. Learn how platforms automatically detect data downtime, schema drift, and prevent silent pipeline failures."
+description: "Data observability is ongoing monitoring of data and pipeline health to catch silent failures. Its pillars: freshness, volume, distribution, schema, lineage."
 ---
 
 # What is Data Observability?

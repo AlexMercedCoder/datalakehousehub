@@ -1,7 +1,7 @@
 ---
 title: "What is a Directed Acyclic Graph (DAG)?"
 meta_title: "What is a DAG? | Expert Data Lakehouse Architecture Guide"
-description: "A comprehensive guide to Directed Acyclic Graphs (DAGs) in data engineering. Learn how Apache Airflow and dbt map complex pipeline dependencies."
+description: "A directed acyclic graph (DAG) is a graph of tasks with one-way dependencies and no cycles. See how Airflow and dbt use DAGs to order and parallelize pipelines."
 ---
 
 # What is a Directed Acyclic Graph (DAG)?

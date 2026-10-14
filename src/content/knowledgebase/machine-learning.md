@@ -1,7 +1,7 @@
 ---
 title: "What is Machine Learning?"
 meta_title: "What is Machine Learning? | Expert Data Lakehouse Architecture Guide"
-description: "A comprehensive guide to Machine Learning. Learn how algorithms autonomously learn patterns from historical data to generate highly accurate predictions."
+description: "Machine learning is a branch of AI where algorithms learn patterns from data instead of fixed rules. See its main types and how lakehouse tables feed training."
 ---
 
 # What is Machine Learning?

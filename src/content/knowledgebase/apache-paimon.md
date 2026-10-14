@@ -1,7 +1,7 @@
 ---
 title: "What is Apache Paimon?"
 meta_title: "What is Apache Paimon? | Expert Data Lakehouse Architecture Guide"
-description: "A comprehensive guide to Apache Paimon. Learn how this modern Open Table Format natively fuses high-speed streaming with the Data Lakehouse."
+description: "Apache Paimon is an open table format built for streaming that uses an LSM-tree to handle real-time updates with primary keys and changelogs, often with Flink."
 ---
 
 # What is Apache Paimon?

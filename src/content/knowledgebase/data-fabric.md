@@ -1,7 +1,7 @@
 ---
 title: "What is a Data Fabric?"
 meta_title: "What is a Data Fabric? | Expert Data Lakehouse Architecture Guide"
-description: "A comprehensive guide to Data Fabric architecture. Learn about AI-driven metadata mapping, automated integration, and unified semantic access."
+description: "A data fabric is an architecture that uses active metadata and automation to connect data across clouds and on-premises systems, often through virtualization."
 ---
 
 # What is a Data Fabric?

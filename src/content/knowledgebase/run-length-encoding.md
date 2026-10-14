@@ -2,7 +2,7 @@
 canonical: "https://opendatalakehouse.com/kb/run-length-encoding/"
 title: "What is Run-Length Encoding?"
 meta_title: "What is Run-Length Encoding? | Expert Data Lakehouse & AI Glossary"
-description: "A very simple form of lossless data compression where runs of data are stored as a single data value and count."
+description: "Run-length encoding is a lossless compression method that stores a run of repeated values as one value and a count, which suits sorted columnar data."
 ---
 
 ## What is Run-Length Encoding?

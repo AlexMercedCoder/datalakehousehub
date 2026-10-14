@@ -1,7 +1,7 @@
 ---
 title: "What is Tool Calling?"
 meta_title: "What is Tool Calling? | Expert Data Lakehouse & AI Glossary"
-description: "A specific AI capability where models autonomously interact with external programmatic functions or databases to execute deterministic tasks."
+description: "Tool calling is an LLM capability where the model requests external functions or APIs and uses the results, with notes on agent loops, ReAct, and governance."
 ---
 
 ## What is Tool Calling?

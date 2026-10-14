@@ -1,7 +1,7 @@
 ---
 title: "What is Storage Layer?"
 meta_title: "What is Storage Layer? | Expert Data Lakehouse & AI Glossary"
-description: "The foundational tier in a data architecture responsible for the physical retention of raw data files and objects."
+description: "The storage layer is the tier of a data architecture that holds the physical data files, such as Parquet in object storage, separate from the compute engines."
 ---
 
 ## What is Storage Layer?

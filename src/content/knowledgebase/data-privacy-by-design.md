@@ -1,7 +1,7 @@
 ---
 title: "What is Data Privacy by Design?"
 meta_title: "What is Data Privacy by Design? | Data Lakehouse Hub Knowledge Base"
-description: "Historically, privacy was treated as a 'bolt-on' feature. A software engineering team would spend a year building a new social media application."
+description: "Privacy by design is an engineering approach that builds data privacy into systems from the start instead of adding it later. Learn its seven core principles."
 ---
 
 # What is Data Privacy by Design?

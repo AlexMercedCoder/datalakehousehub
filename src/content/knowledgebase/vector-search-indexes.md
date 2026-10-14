@@ -1,7 +1,7 @@
 ---
 title: "What is Vector Search Indexes?"
 meta_title: "What is Vector Search Indexes? | Data Lakehouse Hub Knowledge Base"
-description: "To achieve sub-millisecond search speeds at billion-vector scale, the industry relies on Approximate Nearest Neighbor (ANN) algorithms, powered by highly specialized Vector Search Indexes."
+description: "Vector search indexes are structures that speed up approximate nearest neighbor search over embeddings, with a look at how IVF clustering and HNSW graphs work."
 ---
 
 # What is Vector Search Indexes?

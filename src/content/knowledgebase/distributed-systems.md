@@ -1,7 +1,7 @@
 ---
 title: "What is Distributed Systems?"
 meta_title: "What is Distributed Systems? | Data Lakehouse Hub Knowledge Base"
-description: "Distributed Systems are the architectural compromise that enabled the modern internet."
+description: "A distributed system is a set of networked computers that act as one. Covers horizontal scaling, fault tolerance, distributed computing fallacies, and state."
 ---
 
 # What is Distributed Systems?

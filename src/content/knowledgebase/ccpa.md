@@ -1,7 +1,7 @@
 ---
 title: "What is CCPA?"
 meta_title: "What is CCPA? | Expert Data Lakehouse Architecture Guide"
-description: "A comprehensive guide to CCPA. Learn how the California privacy act forces data pipelines to map and control the external sale of consumer data."
+description: "The CCPA is a California privacy law giving consumers the right to know, delete, and opt out of the sale of their data. See what it demands of a lakehouse."
 ---
 
 # What is CCPA (California Consumer Privacy Act)?

@@ -1,7 +1,7 @@
 ---
 title: "What is Open-Source LLMs (Llama, Mistral)?"
 meta_title: "What is Open-Source LLMs (Llama, Mistral)? | Data Lakehouse Hub Knowledge Base"
-description: "Open-Source LLMs represent the democratization of artificial intelligence."
+description: "Open-source LLMs are language models, such as Meta's Llama and Mistral's models, whose weights are public to run, and why companies host them privately."
 ---
 
 # What is Open-Source LLMs (Llama, Mistral)?

@@ -1,7 +1,7 @@
 ---
 title: "What is a Cost-Based Optimizer (CBO)?"
 meta_title: "What is a Cost-Based Optimizer? | Expert Data Lakehouse Architecture Guide"
-description: "A comprehensive guide to the Cost-Based Optimizer (CBO). Learn how engines evaluate metadata statistics to generate lightning-fast query execution plans."
+description: "A cost-based optimizer is the query planner that uses table statistics to estimate the cost of each execution plan and picks the cheapest, via catalog metadata."
 ---
 
 # What is a Cost-Based Optimizer (CBO)?

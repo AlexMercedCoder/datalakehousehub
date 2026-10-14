@@ -1,7 +1,7 @@
 ---
 title: "What is Metadata Catalog?"
 meta_title: "What is Metadata Catalog? | Expert Data Lakehouse & AI Glossary"
-description: "A centralized repository detailing structure, location, and history of data assets to enable efficient querying."
+description: "A metadata catalog is a central registry that tracks where tables live, their schemas, and their current state, so query engines can find lakehouse tables."
 ---
 
 ## What is Metadata Catalog?

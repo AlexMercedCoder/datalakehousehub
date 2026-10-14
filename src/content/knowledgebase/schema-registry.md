@@ -1,7 +1,7 @@
 ---
 title: "What is Schema Registry?"
 meta_title: "What is Schema Registry? | Data Lakehouse Hub Knowledge Base"
-description: "A Schema Registry (most notably the Confluent Schema Registry for Kafka) is an independent microservice that stores and retrieves schemas (usually written in Apache Avro, Protobuf, or JSON Schema)."
+description: "A schema registry is a service that stores versioned Avro, Protobuf or JSON schemas for Kafka messages and checks compatibility as streams feed Iceberg tables."
 ---
 
 # What is Schema Registry?

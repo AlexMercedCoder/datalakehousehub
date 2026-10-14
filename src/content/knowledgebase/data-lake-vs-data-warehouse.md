@@ -1,7 +1,7 @@
 ---
 title: "What is Data Lake vs Data Warehouse?"
 meta_title: "What is Data Lake vs Data Warehouse? | Data Lakehouse Hub Knowledge Base"
-description: "For the past twenty years, the architecture of enterprise data has been defined by a stark, binary choice: The Data Warehouse or the Data Lake."
+description: "A data lake stores raw data of any type at low cost, while a data warehouse holds curated data for fast SQL; compare the two and why the lakehouse merged them."
 ---
 
 # What is Data Lake vs Data Warehouse?

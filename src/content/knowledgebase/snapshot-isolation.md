@@ -2,7 +2,7 @@
 canonical: "https://opendatalakehouse.com/kb/snapshot-isolation/"
 title: "What is Snapshot Isolation?"
 meta_title: "What is Snapshot Isolation? | Expert Data Lakehouse & AI Glossary"
-description: "A database protocol guaranteeing transactions execute against a static perspective allowing reading and writing to happen simultaneously."
+description: "Snapshot isolation lets each transaction read a consistent snapshot of data, so reads and writes run at once. See how Apache Iceberg snapshots provide it."
 ---
 
 ## What is Snapshot Isolation?

@@ -1,7 +1,7 @@
 ---
 title: "What is Vector Similarity Metrics?"
 meta_title: "What is Vector Similarity Metrics? | Data Lakehouse Hub Knowledge Base"
-description: "Vector Similarity Metrics are the mathematical rulers used to navigate the latent space of Artificial Intelligence."
+description: "Vector similarity metrics measure how close two embeddings are, comparing cosine similarity, Euclidean distance, and dot product and their impact on RAG search."
 ---
 
 # What is Vector Similarity Metrics?

@@ -1,7 +1,7 @@
 ---
 title: "What is Metric Store?"
 meta_title: "What is Metric Store? | Expert Data Lakehouse & AI Glossary"
-description: "A centralized repository defining and storing key performance indicators logic independently from downstream BI tools."
+description: "A metric store is a central layer that defines business metrics and KPI logic once, so every BI tool and AI app reports the same numbers from one calculation."
 ---
 
 ## What is Metric Store?

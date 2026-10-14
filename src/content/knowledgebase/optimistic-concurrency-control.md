@@ -1,7 +1,7 @@
 ---
 title: "What is Optimistic Concurrency Control?"
 meta_title: "What is Optimistic Concurrency Control? | Expert Data Lakehouse & AI Glossary"
-description: "A transaction strategy assuming conflicts are exceptionally rare verifying integrity completely only during final commit operations."
+description: "Optimistic concurrency control lets writers proceed without locks and checks for conflicts at commit time. Learn how Apache Iceberg uses it for ACID writes."
 ---
 
 ## What is Optimistic Concurrency Control?

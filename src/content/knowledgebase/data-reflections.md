@@ -1,7 +1,7 @@
 ---
 title: "What is Data Reflections?"
 meta_title: "What is Data Reflections? | Expert Data Lakehouse & AI Glossary"
-description: "An intelligent acceleration strategy optimizing frequent analytical routines completely neutralizing requirements driving rigid physical copy duplication."
+description: "Data Reflections, now called Reflections, are Dremio's optimized precomputed copies of data that its planner uses to speed up queries without changes to SQL."
 ---
 
 ## What is Data Reflections?

@@ -1,7 +1,7 @@
 ---
 title: "What is Apache Pinot?"
 meta_title: "What is Apache Pinot? | Expert Data Lakehouse Architecture Guide"
-description: "A comprehensive guide to Apache Pinot. Learn how this massive real-time distributed OLAP datastore powers extreme-concurrency user-facing analytics."
+description: "Apache Pinot is an open-source real-time distributed OLAP datastore for high-concurrency, user-facing analytics, using star-tree indexes and real-time tables."
 ---
 
 # What is Apache Pinot?

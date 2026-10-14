@@ -1,7 +1,7 @@
 ---
 title: "What is Terraform?"
 meta_title: "What is Terraform? | Expert Data Lakehouse Architecture Guide"
-description: "A comprehensive guide to Terraform. Learn how HashiCorp's declarative language became the universal standard for deploying multi-cloud infrastructure."
+description: "Terraform is HashiCorp's infrastructure as code tool that defines cloud resources in declarative files, using state, plans, and providers to deploy lakehouses."
 ---
 
 # What is Terraform?

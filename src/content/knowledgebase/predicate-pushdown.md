@@ -1,7 +1,7 @@
 ---
 title: "What is Predicate Pushdown?"
 meta_title: "What is Predicate Pushdown? | Expert Data Lakehouse Architecture Guide"
-description: "A comprehensive guide to Predicate Pushdown. Learn how query engines optimize I/O by pushing filters directly into storage formats like Parquet and Iceberg."
+description: "Predicate pushdown is a query optimization that applies filters at storage so engines read less data. See how Parquet stats and Iceberg manifests make it work."
 ---
 
 # What is Predicate Pushdown?

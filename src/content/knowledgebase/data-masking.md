@@ -1,7 +1,7 @@
 ---
 title: "What is Data Masking?"
 meta_title: "What is Data Masking? | Expert Data Lakehouse Architecture Guide"
-description: "A comprehensive guide to Data Masking. Learn how Dynamic and Static masking protect PII while maintaining database utility for analytics."
+description: "Data masking hides or scrambles sensitive values like PII so people can query data without seeing the real values. Compare static and dynamic masking."
 ---
 
 # What is Data Masking?

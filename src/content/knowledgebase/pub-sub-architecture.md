@@ -1,7 +1,7 @@
 ---
 title: "What is Pub/Sub Architecture?"
 meta_title: "What is Pub/Sub Architecture? | Expert Data Lakehouse Architecture Guide"
-description: "A comprehensive guide to Publish/Subscribe architecture. Learn how decoupling producers and consumers prevents catastrophic cascading failures."
+description: "Pub/sub is a messaging pattern where publishers send events to topics and subscribers read them on their own. See how brokers like Apache Kafka decouple apps."
 ---
 
 # What is Pub/Sub (Publish/Subscribe) Architecture?

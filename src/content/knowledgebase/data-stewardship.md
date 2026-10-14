@@ -1,7 +1,7 @@
 ---
 title: "What is Data Stewardship?"
 meta_title: "What is Data Stewardship? | Expert Data Lakehouse Architecture Guide"
-description: "A comprehensive guide to Data Stewardship. Learn how assigning strict human accountability ensures massive enterprise data platforms remain accurate and secure."
+description: "Data stewardship assigns people accountability for the quality, meaning, and access rules of specific data domains. See the steward role and its data mesh fit."
 ---
 
 # What is Data Stewardship?

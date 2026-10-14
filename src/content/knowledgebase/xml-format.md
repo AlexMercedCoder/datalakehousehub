@@ -1,7 +1,7 @@
 ---
 title: "What is XML?"
 meta_title: "What is XML (eXtensible Markup Language)? | Expert Architecture Guide"
-description: "A comprehensive guide to XML. Learn why this highly rigid, heavy legacy data format was eventually overthrown by lightweight JSON in modern engineering."
+description: "XML is a text markup format that stores hierarchical data in tags validated by schemas like XSD, and why its verbosity makes ingestion slower than with JSON."
 ---
 
 # What is XML (eXtensible Markup Language)?

@@ -1,7 +1,7 @@
 ---
 title: "What is ELT?"
 meta_title: "What is ELT? | Expert Data Lakehouse Architecture Guide"
-description: "A comprehensive guide to ELT (Extract, Load, Transform). Learn how cloud data warehouses and dbt revolutionized data integration and transformation."
+description: "ELT (Extract, Load, Transform) loads raw data into a warehouse or lakehouse first and transforms it there with SQL tools like dbt, using elastic cloud compute."
 ---
 
 # What is ELT?

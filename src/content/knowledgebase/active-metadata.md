@@ -1,7 +1,7 @@
 ---
 title: "What is Active Metadata?"
 meta_title: "What is Active Metadata? | Data Lakehouse Hub Knowledge Base"
-description: "Active Metadata is the paradigm shift that transforms metadata from a static documentation burden into an autonomous, action-oriented intelligence layer that physically controls the data architecture."
+description: "Active metadata is metadata collected automatically and fed back into systems to trigger actions, unlike passive catalog entries, and its role in a data fabric."
 ---
 
 # What is Active Metadata?

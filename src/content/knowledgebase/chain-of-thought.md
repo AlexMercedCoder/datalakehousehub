@@ -1,7 +1,7 @@
 ---
 title: "What is Chain of Thought?"
 meta_title: "What is Chain of Thought? | Expert Data Lakehouse & AI Glossary"
-description: "An AI prompting methodology requiring models to explicitly generate step-by-step reasoning before providing a final answer."
+description: "Chain of thought is a prompting technique where a language model writes out step-by-step reasoning before answering. See how it relates to ReAct and tool use."
 ---
 
 ## What is Chain of Thought?

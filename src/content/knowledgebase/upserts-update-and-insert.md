@@ -1,7 +1,7 @@
 ---
 title: "What is Upserts (Update and Insert)?"
 meta_title: "What is Upserts (Update and Insert)? | Data Lakehouse Hub Knowledge Base"
-description: "Upserts are the absolute foundational mechanism for Change Data Capture (CDC) architectures. In a CDC pipeline, a tool like Debezium constantly watches an operational database for changes."
+description: "An upsert updates a row if it exists and inserts it if it does not. Learn how SQL MERGE INTO and change data capture handle upserts on lakehouse tables."
 ---
 
 # What is Upserts (Update and Insert)?

@@ -1,7 +1,7 @@
 ---
 title: "What is GraphQL?"
 meta_title: "What is GraphQL? | Expert Data Lakehouse Architecture Guide"
-description: "A comprehensive guide to GraphQL. Learn how this advanced query language solves the massive data transfer inefficiencies of legacy REST APIs."
+description: "GraphQL is an open-source query language for APIs that lets clients request only the fields they need from one endpoint. Learn its tradeoffs for data ingestion."
 ---
 
 # What is GraphQL?

@@ -1,7 +1,7 @@
 ---
 title: "What is Spilling to Disk?"
 meta_title: "What is Spilling to Disk? | Expert Data Lakehouse Architecture Guide"
-description: "A comprehensive guide to Spilling to Disk. Learn how query engines survive massive data aggregations by safely moving memory to local storage."
+description: "Spilling to disk is when a query engine writes intermediate data to local storage after running out of memory. Learn why it slows queries and how to fix it."
 ---
 
 # What is Spilling to Disk?

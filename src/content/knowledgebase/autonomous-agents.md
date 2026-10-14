@@ -1,7 +1,7 @@
 ---
 title: "What are Autonomous Agents?"
 meta_title: "What are Autonomous Agents? | Expert Data Architecture Guide"
-description: "A comprehensive guide to Autonomous Agents. Learn how goal-driven Artificial Intelligence systems independently reason, plan, and execute complex workflows."
+description: "Autonomous agents are AI systems that take a goal, break it into steps, act through tools, and self-correct from feedback, within security limits and oversight."
 ---
 
 # What are Autonomous Agents?

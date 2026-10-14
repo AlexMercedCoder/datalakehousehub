@@ -1,7 +1,7 @@
 ---
 title: "What is Federated Learning?"
 meta_title: "What is Federated Learning? | Data Lakehouse Hub Knowledge Base"
-description: "Federated Learning is the architectural solution to the AI privacy crisis."
+description: "Federated learning trains an ML model across many devices or sites without moving the raw data. Covers local training, gradient aggregation, and tradeoffs."
 ---
 
 # What is Federated Learning?

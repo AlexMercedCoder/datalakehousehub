@@ -1,7 +1,7 @@
 ---
 title: "What is Business Intelligence (BI)?"
 meta_title: "What is Business Intelligence? | Expert Data Lakehouse Architecture Guide"
-description: "A comprehensive guide to Business Intelligence. Learn how BI platforms translate massive analytical databases into strategic executive dashboards."
+description: "Business intelligence is the software and practice of turning data into dashboards and reports. See how BI tools sit on a semantic layer over a data lakehouse."
 ---
 
 # What is Business Intelligence (BI)?

@@ -1,7 +1,7 @@
 ---
 title: "What is a Semantic Layer?"
 meta_title: "What is a Semantic Layer? | Expert Data Lakehouse Architecture Guide"
-description: "A comprehensive guide to the Semantic Layer. Learn about headless BI, metric stores, resolving logical inconsistencies, and bridging data with AI agents."
+description: "A semantic layer maps raw tables to shared business metrics and definitions. Learn how headless BI and metric stores work and why AI agents query through it."
 ---
 
 # What is a Semantic Layer?

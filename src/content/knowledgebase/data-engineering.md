@@ -1,7 +1,7 @@
 ---
 title: "What is Data Engineering?"
 meta_title: "What is Data Engineering? | Expert Data Lakehouse Architecture Guide"
-description: "A comprehensive guide to Data Engineering. Learn the distinction between data engineering, software engineering, and data science."
+description: "Data engineering is the discipline of building the pipelines and infrastructure that ingest, transform, and store data, and how it differs from data science."
 ---
 
 # What is Data Engineering?

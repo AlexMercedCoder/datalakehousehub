@@ -1,7 +1,7 @@
 ---
 title: "What is Qdrant?"
 meta_title: "What is Qdrant? | Expert Data Lakehouse & AI Glossary"
-description: "A vector similarity search engine and database offering production-ready APIs for advanced AI search applications."
+description: "Qdrant is an open-source vector database and similarity search engine for embeddings. See how HNSW indexing and hybrid dense and sparse search support RAG apps."
 ---
 
 ## What is Qdrant?

@@ -1,7 +1,7 @@
 ---
 title: "What is Agentic AI?"
 meta_title: "What is Agentic AI? | Data Lakehouse Hub Knowledge Base"
-description: "Agentic AI represents the next evolutionary leap."
+description: "Agentic AI refers to LLM-powered systems that plan, reason, and act through tools, covering memory, function calling, multi-agent setups, and deployment issues."
 ---
 
 # What is Agentic AI?

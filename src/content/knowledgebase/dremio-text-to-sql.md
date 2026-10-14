@@ -1,7 +1,7 @@
 ---
 title: "What is Dremio Text-to-SQL?"
 meta_title: "What is Dremio Text-to-SQL? | Expert Data Lakehouse & AI Glossary"
-description: "A powerful Dremio capability enabling business users to query enormous datasets directly via natural language without coding."
+description: "Dremio Text-to-SQL is a Dremio feature that turns natural language questions into SQL, letting business users query lakehouse data without writing code."
 ---
 
 ## What is Dremio Text-to-SQL?

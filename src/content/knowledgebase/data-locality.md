@@ -1,7 +1,7 @@
 ---
 title: "What is Data Locality?"
 meta_title: "What is Data Locality? | Expert Data Lakehouse & AI Glossary"
-description: "The architectural principle of moving computation extremely close to where the data physically resides to minimize network latency."
+description: "Data locality is the practice of running computation close to where data is stored to cut network transfer. Learn how columnar formats and caching apply it."
 ---
 
 ## What is Data Locality?

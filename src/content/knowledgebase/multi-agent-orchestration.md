@@ -1,7 +1,7 @@
 ---
 title: "What is Multi-Agent Orchestration?"
 meta_title: "What is Multi-Agent Orchestration? | Expert Data Lakehouse & AI Glossary"
-description: "A structural paradigm where separate interconnected autonomous agents interact, pass data, and resolve logical goals collaboratively."
+description: "Multi-agent orchestration is the coordination of several AI agents that divide a task, pass data and results between them, and work toward a shared goal."
 ---
 
 ## What is Multi-Agent Orchestration?

@@ -1,7 +1,7 @@
 ---
 title: "What is CQRS?"
 meta_title: "What is CQRS? | Expert Data Lakehouse & AI Glossary"
-description: "Command Query Responsibility Segregation, a pattern separating the operations that read data from the operations that update data."
+description: "CQRS (Command Query Responsibility Segregation) is a design pattern that separates the operations that write data from those that read it, so each scales alone."
 ---
 
 ## What is CQRS?

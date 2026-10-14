@@ -1,7 +1,7 @@
 ---
 title: "What is ETL vs ELT?"
 meta_title: "What is ETL vs ELT? | Data Lakehouse Hub Knowledge Base"
-description: "Moving data from operational source systems (like CRM databases, ERP systems, and web APIs) into a centralized analytical environment (like a Data Warehouse or Lakehouse) is the core function of data engineering."
+description: "ETL transforms data before loading it; ELT loads raw data first and transforms it in the warehouse or lakehouse. Compare the tradeoffs and when to use each."
 ---
 
 # What is ETL vs ELT?

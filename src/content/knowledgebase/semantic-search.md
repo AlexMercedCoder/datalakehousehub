@@ -1,7 +1,7 @@
 ---
 title: "What is Semantic Search?"
 meta_title: "What is Semantic Search? | Expert Data Lakehouse Architecture Guide"
-description: "A comprehensive guide to Semantic Search. Learn how vector embeddings allow databases to search by intent and meaning rather than exact keyword matches."
+description: "Semantic search finds results by meaning instead of exact keywords, using vector embeddings and nearest neighbor similarity, and hybrid search mixes both."
 ---
 
 # What is Semantic Search?

@@ -1,7 +1,7 @@
 ---
 title: "What is Data Engineering Lifecycle?"
 meta_title: "What is Data Engineering Lifecycle? | Data Lakehouse Hub Knowledge Base"
-description: "The Data Engineering Lifecycle is the blueprint for the modern data stack."
+description: "The data engineering lifecycle is a framework of five stages data moves through: generation, ingestion, storage, transformation, and serving to BI and apps."
 ---
 
 # What is Data Engineering Lifecycle?

@@ -1,7 +1,7 @@
 ---
 title: "What is Compute Pushdown?"
 meta_title: "What is Compute Pushdown? | Data Lakehouse Hub Knowledge Base"
-description: "Compute Pushdown (often called Query Pushdown) is the fundamental optimization technique that prevents this disaster."
+description: "Compute pushdown sends filters, column selection, and aggregations to the data source instead of the engine. See how Iceberg metadata and Parquet stats use it."
 ---
 
 # What is Compute Pushdown?

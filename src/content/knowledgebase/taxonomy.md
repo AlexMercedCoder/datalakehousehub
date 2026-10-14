@@ -1,7 +1,7 @@
 ---
 title: "What is a Taxonomy?"
 meta_title: "What is a Taxonomy? | Expert Data Lakehouse Architecture Guide"
-description: "A comprehensive guide to Data Taxonomy. Learn how strict, hierarchical classification systems organize massive unstructured data lakes for human discovery."
+description: "A data taxonomy is a hierarchical classification scheme for organizing data assets. Learn how data stewards use it to tag catalog tables and drive access rules."
 ---
 
 # What is a Taxonomy?

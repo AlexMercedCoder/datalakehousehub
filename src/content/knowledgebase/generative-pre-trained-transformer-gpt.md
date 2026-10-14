@@ -1,7 +1,7 @@
 ---
 title: "What is Generative Pre-trained Transformer (GPT)?"
 meta_title: "What is Generative Pre-trained Transformer (GPT)? | Data Lakehouse Hub Knowledge Base"
-description: "The Generative Pre-trained Transformer represents the culmination of a decade of deep learning research."
+description: "GPT is a family of autoregressive language models that predict the next token. Learn what generative, pre-trained, and transformer each mean in how GPT works."
 ---
 
 # What is Generative Pre-trained Transformer (GPT)?

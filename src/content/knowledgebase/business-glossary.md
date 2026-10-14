@@ -1,7 +1,7 @@
 ---
 title: "What is a Business Glossary?"
 meta_title: "What is a Business Glossary? | Expert Data Lakehouse Architecture Guide"
-description: "A comprehensive guide to the Business Glossary. Learn how centralizing semantic definitions eliminates chaotic reporting discrepancies across the enterprise."
+description: "A business glossary is a shared set of agreed definitions for business terms like revenue. Learn how it links to lakehouse tables and to the semantic layer."
 ---
 
 # What is a Business Glossary?

@@ -1,7 +1,7 @@
 ---
 title: "What is Columnar Format?"
 meta_title: "What is Columnar Format? | Expert Data Lakehouse & AI Glossary"
-description: "A storage methodology orienting data blocks sequentially grouped according by characteristics vastly accelerating analytical aggregations."
+description: "A columnar format stores each column's values together instead of row by row, which speeds up analytical scans. See how it relates to Arrow and Iceberg."
 ---
 
 ## What is Columnar Format?

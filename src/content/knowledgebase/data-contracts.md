@@ -1,7 +1,7 @@
 ---
 title: "What is Data Contracts?"
 meta_title: "What is Data Contracts? | Expert Data Lakehouse & AI Glossary"
-description: "An organizational commitment clearly specifying structured data responsibilities fundamentally preventing downstream analytical application breakdown."
+description: "A data contract is an agreement between data producers and consumers on schema, quality, and ownership, meant to stop changes breaking downstream analytics."
 ---
 
 ## What is Data Contracts?

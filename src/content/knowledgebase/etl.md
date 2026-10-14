@@ -1,7 +1,7 @@
 ---
 title: "What is ETL?"
 meta_title: "What is ETL? | Expert Data Lakehouse Architecture Guide"
-description: "A comprehensive guide to ETL (Extract, Transform, Load). Learn about legacy data integration, transformation servers, and rigid Schema-on-Write pipelines."
+description: "ETL (Extract, Transform, Load) cleans data on a separate server before loading it into a warehouse. Learn its three phases, schema-on-write, and why ELT rose."
 ---
 
 # What is ETL?

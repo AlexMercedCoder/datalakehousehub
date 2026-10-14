@@ -1,7 +1,7 @@
 ---
 title: "What is Computer Vision?"
 meta_title: "What is Computer Vision? | Data Lakehouse Hub Knowledge Base"
-description: "Computer Vision (CV) is the field of Artificial Intelligence dedicated to training neural networks to derive high-level semantic meaning from digital images and videos."
+description: "Computer vision is the field of AI that trains models to interpret images and video. Learn how CNNs and vision transformers process pixel data."
 ---
 
 # What is Computer Vision?

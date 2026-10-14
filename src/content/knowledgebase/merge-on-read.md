@@ -1,7 +1,7 @@
 ---
 title: "What is Merge-On-Read?"
 meta_title: "What is Merge-On-Read? | Expert Data Lakehouse & AI Glossary"
-description: "A table design storing modifications separately alongside original files resolving differences during output query compilation."
+description: "Merge-on-read is a table write strategy that stores updates and deletes in separate files and merges them with data files at query time, as Apache Iceberg does."
 ---
 
 ## What is Merge-On-Read?

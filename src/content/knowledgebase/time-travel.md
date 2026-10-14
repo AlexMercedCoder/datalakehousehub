@@ -2,7 +2,7 @@
 canonical: "https://opendatalakehouse.com/kb/time-travel/"
 title: "What is Time Travel?"
 meta_title: "What is Time Travel in Data Lakes? | Expert Data Lakehouse Architecture Guide"
-description: "A comprehensive guide to Time Travel. Learn how Open Table Formats like Apache Iceberg and Delta Lake enable querying historical data instantly."
+description: "Time travel is a table format feature for querying data as it existed in the past, and how Apache Iceberg and Delta Lake use snapshots, timestamps, and cleanup."
 ---
 
 # What is Time Travel?

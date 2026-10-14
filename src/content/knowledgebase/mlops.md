@@ -1,7 +1,7 @@
 ---
 title: "What is MLOps?"
 meta_title: "What is MLOps? | Expert Data Lakehouse Architecture Guide"
-description: "A comprehensive guide to MLOps. Learn how Machine Learning Operations brings CI/CD rigor, version control, and automated monitoring to AI deployments."
+description: "MLOps is the practice of applying DevOps methods to machine learning: versioning code and data, automating training and deployment, and watching for drift."
 ---
 
 # What is MLOps (Machine Learning Operations)?

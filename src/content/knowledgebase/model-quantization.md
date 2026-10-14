@@ -1,7 +1,7 @@
 ---
 title: "What is Model Quantization?"
 meta_title: "What is Model Quantization? | Data Lakehouse Hub Knowledge Base"
-description: "Model Quantization is the mathematical compression technique that solved this hardware crisis."
+description: "Model quantization is a compression method that stores model weights at lower precision, such as 8-bit or 4-bit, so large language models need less memory."
 ---
 
 # What is Model Quantization?

@@ -2,7 +2,7 @@
 canonical: "https://opendatalakehouse.com/kb/data-warehouse/"
 title: "What is a Data Warehouse?"
 meta_title: "What is a Data Warehouse? | Expert Data Lakehouse Architecture Guide"
-description: "A comprehensive guide to Data Warehousing. Learn about OLAP architecture, structured schemas, and the transition to the modern cloud data warehouse."
+description: "A data warehouse is a central, structured store built for analytical SQL queries. See how OLAP, ETL, and cloud warehouses led to the open lakehouse."
 ---
 
 # What is a Data Warehouse?

@@ -1,7 +1,7 @@
 ---
 title: "What is Differential Privacy?"
 meta_title: "What is Differential Privacy? | Data Lakehouse Hub Knowledge Base"
-description: "Differential Privacy (DP) is not an algorithm; it is a mathematical definition of privacy."
+description: "Differential privacy is a mathematical privacy guarantee that adds calibrated noise to query results. Learn how epsilon and privacy budgets limit leakage."
 ---
 
 # What is Differential Privacy?

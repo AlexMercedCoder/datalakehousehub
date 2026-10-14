@@ -1,7 +1,7 @@
 ---
 title: "What are AI Agents?"
 meta_title: "What are AI Agents? | Expert Data Lakehouse Architecture Guide"
-description: "A comprehensive guide to AI Agents. Learn how Large Language Models transition from passive chatbots into autonomous software systems executing complex."
+description: "AI agents are software systems that use an LLM to reason and call external tools in a loop toward a goal, covering tool registries, ReAct, and human oversight."
 ---
 
 # What are AI Agents?

@@ -1,7 +1,7 @@
 ---
 title: "What is Event Streaming?"
 meta_title: "What is Event Streaming? | Expert Data Lakehouse Architecture Guide"
-description: "A comprehensive guide to Event Streaming. Learn the difference between passive batch data and the active, continuous flow of operational events."
+description: "Event streaming moves data as a continuous flow of immutable events through platforms like Kafka, letting many systems react to business events in real time."
 ---
 
 # What is Event Streaming?

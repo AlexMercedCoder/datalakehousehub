@@ -1,7 +1,7 @@
 ---
 title: "What is Data Compaction?"
 meta_title: "What is Data Compaction? | Expert Data Lakehouse & AI Glossary"
-description: "The automated or scheduled maintenance routine required to optimize file sizes and keep open lakehouses operating efficiently."
+description: "Data compaction is the maintenance job that rewrites many small files into fewer larger ones, keeping open table formats like Apache Iceberg efficient to query."
 ---
 
 ## What is Data Compaction?

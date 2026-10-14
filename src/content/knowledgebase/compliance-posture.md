@@ -1,7 +1,7 @@
 ---
 title: "What is Compliance Posture?"
 meta_title: "What is Compliance Posture? | Expert Data Lakehouse & AI Glossary"
-description: "The comprehensive state of an organization regarding its adherence to regulatory guidelines and internal security protocols."
+description: "Compliance posture is an organization's current state of adherence to regulations and security policies. See how access controls and quality checks support it."
 ---
 
 ## What is Compliance Posture?

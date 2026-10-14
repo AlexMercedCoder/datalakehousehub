@@ -1,7 +1,7 @@
 ---
 title: "What are Aggregation Reflections?"
 meta_title: "What are Aggregation Reflections? | Expert Data Lakehouse Guide"
-description: "A comprehensive guide to Aggregation Reflections. Learn how Dremio’s invisible caching mechanism completely eliminates repetitive SQL computation."
+description: "Aggregation Reflections are Dremio's precomputed, grouped aggregates stored as Iceberg or Parquet, which the optimizer substitutes into matching queries for BI."
 ---
 
 # What are Aggregation Reflections?

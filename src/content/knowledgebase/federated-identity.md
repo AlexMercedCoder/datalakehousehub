@@ -1,7 +1,7 @@
 ---
 title: "What is Federated Identity?"
 meta_title: "What is Federated Identity? | Expert Data Lakehouse & AI Glossary"
-description: "A decentralized access framework allowing users to utilize the same identification data to securely traverse across multiple platforms."
+description: "Federated identity lets users sign in once through a trusted identity provider and reuse that identity across many systems and their data access policies."
 ---
 
 ## What is Federated Identity?

@@ -1,7 +1,7 @@
 ---
 title: "What is a Star Schema?"
 meta_title: "What is a Star Schema? | Expert Data Lakehouse Architecture Guide"
-description: "A comprehensive guide to Star Schemas. Learn about Fact tables, Dimension tables, Kimball modeling, and optimizing analytical queries."
+description: "A star schema is a dimensional model with a central fact table joined to denormalized dimension tables. Learn Kimball basics and why it simplifies analytic SQL."
 ---
 
 # What is a Star Schema?

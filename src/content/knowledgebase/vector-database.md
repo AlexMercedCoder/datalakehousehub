@@ -1,7 +1,7 @@
 ---
 title: "What is a Vector Database?"
 meta_title: "What is a Vector Database? | Expert Data Lakehouse Architecture Guide"
-description: "A comprehensive guide to Vector Databases. Learn about high-dimensional embeddings, similarity searches, and their critical role in Generative AI."
+description: "A vector database stores embeddings and finds items by semantic similarity, covering HNSW and IVF indexes, metadata filtering, and hybrid search for AI apps."
 ---
 
 # What is a Vector Database?

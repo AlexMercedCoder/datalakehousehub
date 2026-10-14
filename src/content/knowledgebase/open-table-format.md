@@ -1,7 +1,7 @@
 ---
 title: "What is Open Table Format?"
 meta_title: "What is Open Table Format? | Expert Data Lakehouse & AI Glossary"
-description: "A specification for structuring metadata to allow multiple processing engines to read and write to the same table."
+description: "An open table format is a metadata spec that lets many engines read and write the same table safely. See how formats like Apache Iceberg add ACID to data lakes."
 ---
 
 ## What is Open Table Format?

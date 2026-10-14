@@ -1,7 +1,7 @@
 ---
 title: "What is Data Governance?"
 meta_title: "What is Data Governance? | Expert Data Lakehouse Architecture Guide"
-description: "A comprehensive guide to Data Governance. Learn about access controls, compliance, data stewardship, and managing risk in the data lakehouse."
+description: "Data governance is the set of policies, roles, and technical controls that keep data secure, accurate, and usable, from stewardship to row and column security."
 ---
 
 # What is Data Governance?

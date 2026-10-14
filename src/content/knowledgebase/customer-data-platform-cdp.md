@@ -1,7 +1,7 @@
 ---
 title: "What is Customer Data Platform (CDP)?"
 meta_title: "What is Customer Data Platform (CDP)? | Data Lakehouse Hub Knowledge Base"
-description: "A Customer Data Platform (CDP) is a specialized, packaged software solution designed to solve this exact problem."
+description: "A customer data platform (CDP) unifies customer records from many channels through identity resolution, and composable CDPs run directly on the data lakehouse."
 ---
 
 # What is Customer Data Platform (CDP)?

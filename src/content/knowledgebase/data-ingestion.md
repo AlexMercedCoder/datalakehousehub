@@ -1,7 +1,7 @@
 ---
 title: "What is Data Ingestion?"
 meta_title: "What is Data Ingestion? | Expert Data Lakehouse Architecture Guide"
-description: "A comprehensive guide to Data Ingestion. Learn how enterprises securely extract, transport, and load massive datasets into the analytical lakehouse."
+description: "Data ingestion is the process of extracting data from sources like databases, APIs, and logs and loading it into a lakehouse, by batch or real-time streaming."
 ---
 
 # What is Data Ingestion?

@@ -1,7 +1,7 @@
 ---
 title: "What is Reasoning Engine?"
 meta_title: "What is Reasoning Engine? | Expert Data Lakehouse & AI Glossary"
-description: "An explicit processing layer critically evaluating conversational contexts actively building logically appropriate distinct cognitive output."
+description: "A reasoning engine is the part of an AI agent that plans steps, picks tools to call, and checks results. See how it drives multi-step analytical workflows."
 ---
 
 ## What is Reasoning Engine?

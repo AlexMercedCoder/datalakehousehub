@@ -1,7 +1,7 @@
 ---
 title: "What is Soda?"
 meta_title: "What is Soda? | Expert Data Lakehouse Architecture Guide"
-description: "A comprehensive guide to Soda. Learn about data observability, declarative YAML testing, and continuous data quality monitoring."
+description: "Soda is a data quality tool that runs checks written in the YAML-based SodaCL language. Learn how it handles anomaly detection, data contracts and CI/CD checks."
 ---
 
 # What is Soda?

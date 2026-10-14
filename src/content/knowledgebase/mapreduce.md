@@ -1,7 +1,7 @@
 ---
 title: "What is MapReduce?"
 meta_title: "What is MapReduce? | Expert Data Lakehouse Architecture Guide"
-description: "A comprehensive guide to MapReduce. Learn how this foundational distributed algorithm enabled the first massive-scale analytics on commodity hardware."
+description: "MapReduce is a distributed processing model from Google that splits work into map, shuffle, and reduce phases across many servers, and why Spark replaced it."
 ---
 
 # What is MapReduce?

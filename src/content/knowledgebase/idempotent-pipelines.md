@@ -1,7 +1,7 @@
 ---
 title: "What is Idempotent Pipelines?"
 meta_title: "What is Idempotent Pipelines? | Expert Data Lakehouse & AI Glossary"
-description: "Data processing workflows producing the exact same result no matter how many times redundant executions take place."
+description: "An idempotent pipeline is a data workflow that gives the same result however many times it runs on the same input, so retries and reruns do not duplicate data."
 ---
 
 ## What is Idempotent Pipelines?

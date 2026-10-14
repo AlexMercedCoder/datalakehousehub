@@ -1,7 +1,7 @@
 ---
 title: "What is CI/CD for Data?"
 meta_title: "What is CI/CD for Data? | Data Lakehouse Hub Knowledge Base"
-description: "CI/CD for Data is the architectural shift from 'Hope-Driven Development' to mathematically guaranteed Data Quality."
+description: "CI/CD for data applies automated testing and deployment to data pipelines and SQL. See how dbt tests and Nessie branches validate changes before release."
 ---
 
 # What is CI/CD for Data?

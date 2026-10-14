@@ -1,7 +1,7 @@
 ---
 title: "What is Schema Evolution?"
 meta_title: "What is Schema Evolution? | Expert Data Lakehouse Architecture Guide"
-description: "A comprehensive guide to Schema Evolution. Learn how Apache Iceberg safely adds, drops, and renames columns without rewriting multi-terabyte data lakes."
+description: "Schema evolution is changing a table's columns without breaking existing data. See how Apache Iceberg column IDs allow adds, drops, renames and type promotion."
 ---
 
 # What is Schema Evolution?

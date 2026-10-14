@@ -1,7 +1,7 @@
 ---
 title: "What is LangChain?"
 meta_title: "What is LangChain? | Expert Data Lakehouse Architecture Guide"
-description: "A comprehensive guide to LangChain. Learn about agentic AI architectures, the LangChain Expression Language (LCEL), and external tool calling frameworks."
+description: "LangChain is an open-source framework for building LLM apps with prompts, memory, retrieval, and tool-calling agents. See how agents use it with lakehouse data."
 ---
 
 # What is LangChain?

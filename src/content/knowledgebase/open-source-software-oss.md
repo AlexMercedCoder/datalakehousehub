@@ -1,7 +1,7 @@
 ---
 title: "What is Open-Source Software (OSS)?"
 meta_title: "What is Open-Source Software (OSS)? | Data Lakehouse Hub Knowledge Base"
-description: "Open-Source Software (OSS) is a radically different approach to software development and intellectual property."
+description: "Open-source software is code released under a license that lets anyone inspect, modify, and share it. See how OSS licenses and business models shape data tools."
 ---
 
 # What is Open-Source Software (OSS)?

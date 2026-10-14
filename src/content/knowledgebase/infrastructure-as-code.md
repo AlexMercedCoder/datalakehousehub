@@ -1,7 +1,7 @@
 ---
 title: "What is Infrastructure as Code (IaC)?"
 meta_title: "What is Infrastructure as Code? | Expert Data Architecture Guide"
-description: "A comprehensive guide to Infrastructure as Code (IaC). Learn how declarative programming automates the deployment of massive cloud ecosystems."
+description: "Infrastructure as code is the practice of defining servers, networks, and cloud resources in versioned files. Learn how declarative tools like Terraform work."
 ---
 
 # What is Infrastructure as Code (IaC)?

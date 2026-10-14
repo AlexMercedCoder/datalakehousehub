@@ -1,7 +1,7 @@
 ---
 title: "What is Continuous Integration (CI)?"
 meta_title: "What is Continuous Integration (CI)? | Expert Architecture Guide"
-description: "A comprehensive guide to Continuous Integration. Learn how automated testing pipelines prevent catastrophic code failures in data engineering."
+description: "Continuous integration is the practice of merging code often and running automated builds and tests on every change, applied here to SQL and data pipeline code."
 ---
 
 # What is Continuous Integration (CI)?

@@ -2,7 +2,7 @@
 canonical: "https://opendatalakehouse.com/kb/data-mesh/"
 title: "What is a Data Mesh?"
 meta_title: "What is a Data Mesh? | Expert Data Lakehouse Architecture Guide"
-description: "A comprehensive guide to Data Mesh. Learn about decentralized data architectures, domain-oriented ownership, and federated computational governance."
+description: "Data mesh is a decentralized approach where business domains own and serve their data as products. Learn its four principles and how it maps onto a lakehouse."
 ---
 
 # What is a Data Mesh?

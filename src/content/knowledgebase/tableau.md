@@ -1,7 +1,7 @@
 ---
 title: "What is Tableau?"
 meta_title: "What is Tableau? | Data Lakehouse Hub Knowledge Base"
-description: "Tableau provides two distinct ways to interact with data."
+description: "Tableau is a business intelligence tool for building visual dashboards. Learn how its live connections and extracts work and how it pairs with a semantic layer."
 ---
 
 # What is Tableau?

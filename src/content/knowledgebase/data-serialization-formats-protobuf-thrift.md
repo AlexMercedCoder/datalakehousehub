@@ -1,7 +1,7 @@
 ---
 title: "What is Data Serialization Formats (Protobuf, Thrift)?"
 meta_title: "What is Data Serialization Formats (Protobuf, Thrift)? | Data Lakehouse Hub Knowledge Base"
-description: "What Data Serialization Formats (Protobuf, Thrift) is and how it fits into modern data and AI architecture."
+description: "Protobuf and Thrift are schema-based binary serialization formats that encode data more compactly than JSON. Learn how Protobuf works and evolves its schemas."
 ---
 
 # What is Data Serialization Formats (Protobuf, Thrift)?

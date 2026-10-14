@@ -1,7 +1,7 @@
 ---
 title: "What is Unity Catalog?"
 meta_title: "What is Unity Catalog? | Expert Data Lakehouse Architecture Guide"
-description: "A comprehensive guide to Databricks Unity Catalog. Learn about centralized lakehouse governance, multi-cloud security, and open-source catalogs."
+description: "Unity Catalog is Databricks' governance catalog for lakehouse data and AI assets, covering access control, lineage, data sharing, and its open source release."
 ---
 
 # What is Unity Catalog?

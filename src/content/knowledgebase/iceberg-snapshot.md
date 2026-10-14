@@ -1,7 +1,7 @@
 ---
 title: "What is Iceberg Snapshot?"
 meta_title: "What is Iceberg Snapshot? | Expert Data Lakehouse & AI Glossary"
-description: "A complete recorded state of an Apache Iceberg table mapping exact data files available at a specific specific point in time."
+description: "An Iceberg snapshot is the recorded state of an Apache Iceberg table at one point in time, listing its data files. Learn how snapshots make time travel work."
 canonical: "https://iceberglakehouse.com/iceberg/iceberg-snapshot/"
 ---
 

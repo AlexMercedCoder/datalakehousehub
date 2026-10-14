@@ -1,7 +1,7 @@
 ---
 title: "What is Partitioning?"
 meta_title: "What is Partitioning? | Expert Data Lakehouse & AI Glossary"
-description: "A database optimization and management strategy breaking extensive tables into smaller easily managed file components."
+description: "Partitioning splits a large table into groups of files by column values so queries can skip data. Learn how Apache Iceberg's hidden partitioning handles it."
 ---
 
 ## What is Partitioning?

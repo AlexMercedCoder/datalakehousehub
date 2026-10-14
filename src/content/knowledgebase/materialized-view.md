@@ -1,7 +1,7 @@
 ---
 title: "What is a Materialized View?"
 meta_title: "What is a Materialized View? | Expert Data Lakehouse Architecture Guide"
-description: "A comprehensive guide to Materialized Views. Learn about pre-computing massive analytical queries, incremental refreshes, and Dremio Data Reflections."
+description: "A materialized view is a database object that stores precomputed query results. Learn about incremental refresh and query rewriting with Dremio Reflections."
 ---
 
 # What is a Materialized View?

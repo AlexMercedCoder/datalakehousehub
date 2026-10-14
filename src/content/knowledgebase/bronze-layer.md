@@ -2,7 +2,7 @@
 canonical: "https://opendatalakehouse.com/kb/bronze-layer/"
 title: "What is Bronze Layer?"
 meta_title: "What is Bronze Layer? | Expert Data Lakehouse & AI Glossary"
-description: "The foundational layer of a medallion architecture containing raw, unprocessed data exactly as it was ingested from source systems."
+description: "The bronze layer is the raw landing zone of a medallion architecture, holding data as ingested from sources. See how it feeds silver and gold lakehouse tables."
 ---
 
 ## What is Bronze Layer?

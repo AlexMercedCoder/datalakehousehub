@@ -1,7 +1,7 @@
 ---
 title: "What is Semantic Caching?"
 meta_title: "What is Semantic Caching? | Expert Data Lakehouse & AI Glossary"
-description: "The practice of storing prior AI responses to semantically identical queries to minimize repetitive computational costs."
+description: "Semantic caching stores LLM responses and reuses one when a new prompt means the same as an earlier one, matched by embedding similarity, to cut model calls."
 ---
 
 ## What is Semantic Caching?

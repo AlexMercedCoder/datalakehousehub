@@ -1,7 +1,7 @@
 ---
 title: "What is an API Gateway?"
 meta_title: "What is an API Gateway? | Expert Data Lakehouse Architecture Guide"
-description: "A comprehensive guide to the API Gateway. Learn how this massive, singular entry point protects, routes, and secures complex microservice ecosystems."
+description: "An API gateway is a reverse proxy that acts as the single entry point to backend services, handling authentication, rate limiting, load balancing, and routing."
 ---
 
 # What is an API Gateway?

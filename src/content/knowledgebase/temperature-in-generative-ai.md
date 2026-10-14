@@ -1,7 +1,7 @@
 ---
 title: "What is Temperature in Generative AI?"
 meta_title: "What is Temperature in Generative AI? | Data Lakehouse Hub Knowledge Base"
-description: "When a user interacts with a Large Language Model (LLM) like GPT-4 or Claude, the AI appears to be 'thinking' and writing text fluently."
+description: "Temperature is an LLM sampling setting that controls how random the next-token choice is. Learn how low and high values change output and which tasks suit each."
 ---
 
 # What is Temperature in Generative AI?

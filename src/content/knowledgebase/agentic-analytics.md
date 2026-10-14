@@ -1,7 +1,7 @@
 ---
 title: "What is Agentic Analytics?"
 meta_title: "What is Agentic Analytics? | Expert Data Lakehouse Architecture Guide"
-description: "A comprehensive guide to Agentic Analytics. Learn how autonomous AI agents are replacing static BI dashboards by writing and executing SQL on the fly."
+description: "Agentic analytics uses AI agents that turn plain-language questions into SQL on a lakehouse, relying on a semantic layer, a ReAct loop, and read-only access."
 ---
 
 # What is Agentic Analytics?

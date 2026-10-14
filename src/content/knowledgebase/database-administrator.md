@@ -1,7 +1,7 @@
 ---
 title: "What is a Database Administrator (DBA)?"
 meta_title: "What is a Database Administrator (DBA)? | Expert Data Lakehouse Guide"
-description: "A comprehensive guide to the Database Administrator. Learn how this foundational engineering role ensures the absolute stability of mission-critical systems."
+description: "A database administrator (DBA) keeps databases available, fast, and secure. Covers HA and disaster recovery, query tuning, RBAC, and the cloud-era shift."
 ---
 
 # What is a Database Administrator (DBA)?

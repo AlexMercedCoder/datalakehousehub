@@ -1,7 +1,7 @@
 ---
 title: "What is Multi-Modal AI?"
 meta_title: "What is Multi-Modal AI? | Data Lakehouse Hub Knowledge Base"
-description: "Multi-Modal AI is the technological pursuit of that exact holistic understanding."
+description: "Multi-modal AI is a type of model that processes and generates more than one kind of data, such as text, images, and audio, within one shared network."
 ---
 
 # What is Multi-Modal AI?

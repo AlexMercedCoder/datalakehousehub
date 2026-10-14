@@ -1,7 +1,7 @@
 ---
 title: "What is a Snowflake Schema?"
 meta_title: "What is a Snowflake Schema? | Expert Data Lakehouse Architecture Guide"
-description: "A comprehensive guide to the Snowflake Schema. Learn how this architectural variant balances the speed of a Star Schema with the normalization of OLTP systems."
+description: "A snowflake schema is a dimensional model whose dimension tables are normalized into sub-tables. Compare it with a star schema and when the extra joins pay."
 ---
 
 # What is a Snowflake Schema?

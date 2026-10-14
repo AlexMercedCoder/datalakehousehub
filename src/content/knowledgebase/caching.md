@@ -1,7 +1,7 @@
 ---
 title: "What is Caching?"
 meta_title: "What is Data Caching? | Expert Data Lakehouse Architecture Guide"
-description: "A comprehensive guide to Caching. Learn how temporarily storing high-frequency data in massive RAM arrays protects databases from catastrophic traffic spikes."
+description: "Caching stores the result of an expensive operation in fast memory so repeat requests skip the work. Learn TTL, invalidation, and how Dremio Reflections use it."
 ---
 
 # What is Caching?

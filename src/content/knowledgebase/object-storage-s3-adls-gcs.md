@@ -1,7 +1,7 @@
 ---
 title: "What is Object Storage (S3, ADLS, GCS)?"
 meta_title: "What is Object Storage (S3, ADLS, GCS)? | Data Lakehouse Hub Knowledge Base"
-description: "Object Storage is the unsung hero of the modern internet and the modern data stack."
+description: "Object storage keeps data as objects with keys and metadata in a flat namespace, as in S3, ADLS, and GCS. See why Iceberg lakehouse tables are built on it."
 ---
 
 # What is Object Storage (S3, ADLS, GCS)?

@@ -1,7 +1,7 @@
 ---
 title: "What are Agentic Frameworks?"
 meta_title: "What are Agentic Frameworks? | Expert Architecture Guide"
-description: "A comprehensive guide to Agentic Frameworks. Learn the robust programmatic scaffolding required to build autonomous AI agents safely at scale."
+description: "Agentic frameworks are libraries such as LangChain, AutoGen, and CrewAI that give LLMs memory, tool binding, and multi-agent orchestration so they can act."
 ---
 
 # What are Agentic Frameworks?

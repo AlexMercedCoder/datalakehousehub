@@ -1,7 +1,7 @@
 ---
 title: "What is Pinecone?"
 meta_title: "What is Pinecone? | Expert Data Lakehouse Architecture Guide"
-description: "A comprehensive guide to Pinecone. Learn about serverless vector databases, exact nearest neighbor search, and modern Retrieval-Augmented Generation (RAG)."
+description: "Pinecone is a fully managed, serverless vector database for similarity search on embeddings. See how ANN indexing, metadata filters, and hybrid search aid RAG."
 ---
 
 # What is Pinecone?

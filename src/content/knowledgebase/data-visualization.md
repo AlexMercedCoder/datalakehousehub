@@ -1,7 +1,7 @@
 ---
 title: "What is Data Visualization?"
 meta_title: "What is Data Visualization? | Expert Data Lakehouse Architecture Guide"
-description: "A comprehensive guide to Data Visualization. Learn how graphical mapping transforms incomprehensible datasets into immediate cognitive insights."
+description: "Data visualization turns data into charts, graphs, and maps people can read quickly. Learn visual encodings, how charts distort, and data storytelling."
 ---
 
 # What is Data Visualization?

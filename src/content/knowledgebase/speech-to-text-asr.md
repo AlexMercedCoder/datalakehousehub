@@ -1,7 +1,7 @@
 ---
 title: "What is Speech-to-Text (ASR)?"
 meta_title: "What is Speech-to-Text (ASR)? | Data Lakehouse Hub Knowledge Base"
-description: "Speech-to-Text (ASR) is the critical technology that digitizes human conversation."
+description: "Speech-to-text, or automatic speech recognition (ASR), converts spoken audio into text. Learn how acoustic and language models and Whisper turn calls into data."
 ---
 
 # What is Speech-to-Text (ASR)?

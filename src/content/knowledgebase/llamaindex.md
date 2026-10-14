@@ -1,7 +1,7 @@
 ---
 title: "What is LlamaIndex?"
 meta_title: "What is LlamaIndex? | Expert Data Lakehouse & AI Glossary"
-description: "A flexible data framework connecting custom data sources to large language models for advanced retrieval and routing."
+description: "LlamaIndex is an open-source data framework that connects custom data sources to large language models for indexing, retrieval, and RAG and agent applications."
 ---
 
 ## What is LlamaIndex?

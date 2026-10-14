@@ -1,7 +1,7 @@
 ---
 title: "What is AI Ethics and Bias?"
 meta_title: "What is AI Ethics and Bias? | Data Lakehouse Hub Knowledge Base"
-description: "This incident perfectly illustrates the central challenge of the modern AI era: AI Ethics and Bias."
+description: "AI ethics and bias covers how models inherit unfair patterns from training data and the practices that address it: alignment, explainability, and red teaming."
 ---
 
 # What is AI Ethics and Bias?

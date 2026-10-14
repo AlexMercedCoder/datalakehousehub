@@ -1,7 +1,7 @@
 ---
 title: "What is Backfilling Data?"
 meta_title: "What is Backfilling Data? | Data Lakehouse Hub Knowledge Base"
-description: "Data engineering is fundamentally about moving data from the present into the future. A pipeline runs every night, processes yesterday's raw data, and appends it to a Data Warehouse."
+description: "Backfilling data means reprocessing historical periods so a new metric covers the past. See how orchestrators and Iceberg partitions handle it."
 ---
 
 # What is Backfilling Data?

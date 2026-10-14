@@ -1,7 +1,7 @@
 ---
 title: "What is an Ontology?"
 meta_title: "What is an Ontology? | Expert Data Lakehouse Architecture Guide"
-description: "A comprehensive guide to Data Ontology. Learn how rigorous semantic frameworks map the complex properties and relationships of enterprise knowledge."
+description: "An ontology is a formal, machine-readable model of the concepts, properties, and relationships in a domain, used to structure knowledge graphs over a lakehouse."
 ---
 
 # What is an Ontology?

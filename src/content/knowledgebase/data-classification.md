@@ -1,7 +1,7 @@
 ---
 title: "What is Data Classification?"
 meta_title: "What is Data Classification? | Data Lakehouse Hub Knowledge Base"
-description: "In a massive enterprise Data Lakehouse containing petabytes of data, not all rows and columns are created equal."
+description: "Data classification is the process of finding and labeling data by sensitivity, from public to restricted, so tag-based security can protect lakehouse tables."
 ---
 
 # What is Data Classification?

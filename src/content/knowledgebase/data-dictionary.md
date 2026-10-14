@@ -1,7 +1,7 @@
 ---
 title: "What is a Data Dictionary?"
 meta_title: "What is a Data Dictionary? | Expert Data Lakehouse Architecture Guide"
-description: "A comprehensive guide to the Data Dictionary. Learn how engineering teams explicitly document the absolute physical structure of enterprise databases."
+description: "A data dictionary is technical documentation of each table and column in a database, with data types, constraints, and relations, unlike a business glossary."
 ---
 
 # What is a Data Dictionary?

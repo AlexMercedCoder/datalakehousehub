@@ -1,7 +1,7 @@
 ---
 title: "What is a Chief Data Officer (CDO)?"
 meta_title: "What is a Chief Data Officer (CDO)? | Expert Data Lakehouse Guide"
-description: "A comprehensive guide to the Chief Data Officer. Learn how this executive bridges the gap between massive data engineering and strategic business revenue."
+description: "A chief data officer is the executive responsible for data strategy, governance, and compliance. Learn the role's three pillars and where it reports."
 ---
 
 # What is a Chief Data Officer (CDO)?

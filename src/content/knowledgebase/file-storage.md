@@ -1,7 +1,7 @@
 ---
 title: "What is File Storage?"
 meta_title: "What is File Storage? | Expert Data Lakehouse Architecture Guide"
-description: "A comprehensive guide to File Storage. Learn about hierarchical directories, NFS, and how legacy file systems operate in modern data networks."
+description: "File storage organizes data in a hierarchy of folders shared over NFS or SMB. See where it fits next to object storage and why it struggles at lakehouse scale."
 ---
 
 # What is File Storage?

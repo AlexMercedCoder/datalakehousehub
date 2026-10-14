@@ -1,7 +1,7 @@
 ---
 title: "What is Data Monetization?"
 meta_title: "What is Data Monetization? | Data Lakehouse Hub Knowledge Base"
-description: "Data Monetization is the strategic paradigm shift that flips data from a cost center into a profit center."
+description: "Data monetization is the process of turning an organization's data into measurable financial value. Compare internal and external strategies and their risks."
 ---
 
 # What is Data Monetization?

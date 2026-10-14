@@ -1,7 +1,7 @@
 ---
 title: "What is Deep Learning?"
 meta_title: "What is Deep Learning? | Expert Data Lakehouse Architecture Guide"
-description: "A comprehensive guide to Deep Learning. Learn about Artificial Neural Networks, GPU acceleration, and processing massive unstructured data."
+description: "Deep learning is machine learning built on multi-layer neural networks. Covers layers, backpropagation, GPUs, and the large datasets lakehouses often hold."
 ---
 
 # What is Deep Learning?

@@ -1,7 +1,7 @@
 ---
 title: "What is Type 3 SCD?"
 meta_title: "What is Type 3 SCD? | Expert Data Lakehouse & AI Glossary"
-description: "A Slowly Changing Dimension methodology keeping partial history by adding a new column to track previous values alongside current values."
+description: "Type 3 SCD is a slowly changing dimension method that keeps limited history by adding a column for the previous value next to the current one in the same row."
 ---
 
 ## What is Type 3 SCD?

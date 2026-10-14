@@ -1,7 +1,7 @@
 ---
 title: "What is REST Catalog Specification?"
 meta_title: "What is REST Catalog Specification? | Expert Data Lakehouse & AI Glossary"
-description: "An open standard API defining how compute engines communicate consistently with Apache Iceberg catalogs."
+description: "The Iceberg REST catalog spec is an open API that defines how engines talk to Apache Iceberg catalogs. See how it lets many engines share one lakehouse catalog."
 ---
 
 ## What is REST Catalog Specification?

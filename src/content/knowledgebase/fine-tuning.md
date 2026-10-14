@@ -1,7 +1,7 @@
 ---
 title: "What is Fine-Tuning?"
 meta_title: "What is Fine-Tuning in AI? | Expert Data Lakehouse Architecture Guide"
-description: "A comprehensive guide to Fine-Tuning. Learn how data scientists permanently alter the neural weights of an LLM to master highly specialized enterprise tasks."
+description: "Fine-tuning further trains a pre-trained model on task-specific examples to update its weights. Covers training data, LoRA and PEFT, and fine-tuning versus RAG."
 ---
 
 # What is Fine-Tuning?

@@ -1,7 +1,7 @@
 ---
 title: "What is ClickHouse?"
 meta_title: "What is ClickHouse? | Expert Data Lakehouse & AI Glossary"
-description: "An open-source, column-oriented database management system that allows generating analytical data reports in real time."
+description: "ClickHouse is an open-source, column-oriented database for real-time analytical queries. Learn how vectorized execution works and how it fits near a lakehouse."
 ---
 
 ## What is ClickHouse?

@@ -1,7 +1,7 @@
 ---
 title: "What is DuckDB?"
 meta_title: "What is DuckDB? | Expert Data Lakehouse Architecture Guide"
-description: "A comprehensive guide to DuckDB. Learn about the incredibly fast in-process analytical SQL database designed for local data analysis."
+description: "DuckDB is an in-process analytical SQL database that runs inside your app with no server. See its vectorized engine, Parquet and Arrow support, and MotherDuck."
 ---
 
 # What is DuckDB?

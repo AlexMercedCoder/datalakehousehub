@@ -1,7 +1,7 @@
 ---
 title: "What is Homomorphic Encryption?"
 meta_title: "What is Homomorphic Encryption? | Data Lakehouse Hub Knowledge Base"
-description: "Homomorphic Encryption (HE) is the 'Holy Grail' of cryptography. It is a mathematical breakthrough that allows a computer to perform calculations on encrypted data without ever decrypting it."
+description: "Homomorphic encryption is a form of encryption that lets a system compute on encrypted data without decrypting it. Learn partial vs. full schemes and the cost."
 ---
 
 # What is Homomorphic Encryption?

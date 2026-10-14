@@ -1,7 +1,7 @@
 ---
 title: "What is API Integration?"
 meta_title: "What is API Integration? | Expert Data Lakehouse Architecture Guide"
-description: "A comprehensive guide to API Integration. Learn how data pipelines securely communicate and extract massive datasets from external SaaS platforms."
+description: "API integration is how systems exchange data through APIs; for data teams it means pulling SaaS data into a lakehouse while handling auth, paging, and limits."
 ---
 
 # What is API Integration?

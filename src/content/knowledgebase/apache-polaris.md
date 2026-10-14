@@ -1,7 +1,7 @@
 ---
 title: "What is Apache Polaris?"
 meta_title: "What is Apache Polaris? | Expert Data Lakehouse Architecture Guide"
-description: "A comprehensive guide to Apache Polaris. Learn about the open-source Iceberg REST catalog, Role-Based Access Control (RBAC), and cross-engine interoperability."
+description: "Apache Polaris is an open-source implementation of the Apache Iceberg REST catalog spec, providing centralized role-based access control for many query engines."
 ---
 
 # What is Apache Polaris?

@@ -1,7 +1,7 @@
 ---
 title: "What is Azure Data Lake Storage (ADLS)?"
 meta_title: "What is Azure Data Lake Storage (ADLS)? | Data Lakehouse Hub Knowledge Base"
-description: "Azure Data Lake Storage Gen2 represents the evolution of cloud storage for the enterprise."
+description: "Azure Data Lake Storage (ADLS) Gen2 is Microsoft's analytics storage that adds a hierarchical namespace to Blob Storage for fast directory operations."
 ---
 
 # What is Azure Data Lake Storage (ADLS)?

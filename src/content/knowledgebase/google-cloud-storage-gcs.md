@@ -1,7 +1,7 @@
 ---
 title: "What is Google Cloud Storage (GCS)?"
 meta_title: "What is Google Cloud Storage (GCS)? | Data Lakehouse Hub Knowledge Base"
-description: "Google Cloud Storage is a phenomenally powerful, enterprise-grade object storage platform."
+description: "Google Cloud Storage is Google Cloud's object storage service. Learn about multi-region buckets, storage classes, lifecycle rules, and GCS as lakehouse storage."
 ---
 
 # What is Google Cloud Storage (GCS)?

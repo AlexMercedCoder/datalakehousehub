@@ -1,7 +1,7 @@
 ---
 title: "What is Multi-Agent System?"
 meta_title: "What is Multi-Agent System? | Expert Data Lakehouse & AI Glossary"
-description: "A fascinating operational design engaging several separated autonomous processes interacting collaboratively determining successfully intricate complex."
+description: "A multi-agent system is a design in which several autonomous software agents interact and collaborate to solve a task too broad for a single agent."
 ---
 
 ## What is Multi-Agent System?

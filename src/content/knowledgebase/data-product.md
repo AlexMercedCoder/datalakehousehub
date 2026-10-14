@@ -1,7 +1,7 @@
 ---
 title: "What is a Data Product?"
 meta_title: "What is a Data Product? | Expert Data Lakehouse Architecture Guide"
-description: "A comprehensive guide to Data Products. Learn about Data Mesh principles, domain ownership, and treating analytical data like commercial software."
+description: "A data product is a dataset built and maintained like software for its users, a core idea in data mesh. Learn the traits that make one discoverable and trusted."
 ---
 
 # What is a Data Product?

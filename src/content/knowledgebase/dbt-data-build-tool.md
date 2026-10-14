@@ -1,7 +1,7 @@
 ---
 title: "What is dbt (Data Build Tool)?"
 meta_title: "What is dbt? | Expert Data Lakehouse Architecture Guide"
-description: "A comprehensive guide to dbt (Data Build Tool). Learn how dbt brought modern software engineering practices to massive SQL data transformations."
+description: "dbt is an open-source tool that runs modular SQL transformations inside your warehouse or lakehouse engine, adding tests, a model DAG, and version control."
 ---
 
 # What is dbt (Data Build Tool)?

@@ -1,7 +1,7 @@
 ---
 title: "What is Chunking Strategies for RAG?"
 meta_title: "What is Chunking Strategies for RAG? | Data Lakehouse Hub Knowledge Base"
-description: "When building a Retrieval-Augmented Generation (RAG) system, the first step is to convert your company's documents into embeddings and store them in a Vector Database."
+description: "Chunking for RAG splits documents into smaller pieces before embedding them for retrieval. Compare fixed-size, sentence, structural, and parent-child chunking."
 ---
 
 # What is Chunking Strategies for RAG?

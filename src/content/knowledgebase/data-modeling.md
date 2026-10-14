@@ -1,7 +1,7 @@
 ---
 title: "What is Data Modeling?"
 meta_title: "What is Data Modeling? | Expert Data Lakehouse Architecture Guide"
-description: "A comprehensive guide to Data Modeling. Learn how conceptual, logical, and physical data models structure enterprise information for maximum analytical value."
+description: "Data modeling defines the entities, attributes, and relationships in a dataset. Learn the conceptual, logical, and physical phases and OLTP vs OLAP design."
 ---
 
 # What is Data Modeling?

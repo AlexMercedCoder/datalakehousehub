@@ -1,7 +1,7 @@
 ---
 title: "What is an AI Hallucination?"
 meta_title: "What is an AI Hallucination? | Expert Data Lakehouse Architecture Guide"
-description: "A comprehensive guide to AI Hallucinations. Learn why Large Language Models confidently generate false information and how data architectures prevent it."
+description: "An AI hallucination is when a language model produces fluent output that is false or unsupported. Learn why it happens and how RAG grounds answers in your data."
 ---
 
 # What is an AI Hallucination?

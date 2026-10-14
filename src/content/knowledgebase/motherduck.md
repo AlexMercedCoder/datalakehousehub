@@ -1,7 +1,7 @@
 ---
 title: "What is MotherDuck?"
 meta_title: "What is MotherDuck? | Expert Data Lakehouse Architecture Guide"
-description: "A comprehensive guide to MotherDuck. Learn about serverless DuckDB, hybrid execution, WebAssembly (Wasm), and collaborative analytical architectures."
+description: "MotherDuck is a serverless cloud analytics service built on DuckDB that runs queries across your laptop and the cloud and reads Parquet in object storage."
 ---
 
 # What is MotherDuck?

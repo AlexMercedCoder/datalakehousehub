@@ -1,7 +1,7 @@
 ---
 title: "What are Vector Embeddings?"
 meta_title: "What are Vector Embeddings? | Expert Data Lakehouse Architecture Guide"
-description: "A comprehensive guide to Vector Embeddings. Learn how AI transforms human language and images into dense numerical arrays for semantic processing."
+description: "Vector embeddings are numeric arrays that represent the meaning of text, images, or audio so AI models can compare them, and how they fit into a data lakehouse."
 ---
 
 # What are Vector Embeddings?

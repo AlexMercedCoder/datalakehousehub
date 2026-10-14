@@ -1,7 +1,7 @@
 ---
 title: "What is Micro-Batches?"
 meta_title: "What is Micro-Batches? | Data Lakehouse Hub Knowledge Base"
-description: "In the evolution of data engineering, the transition from slow, historical analytics (Batch Processing) to instantaneous, live analytics (Stream Processing) was not immediate."
+description: "Micro-batching is a method that splits a data stream into small time-based batches, and how Spark and Apache Iceberg commit and compact them in a lakehouse."
 ---
 
 # What is Micro-Batches?

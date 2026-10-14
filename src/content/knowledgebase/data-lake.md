@@ -1,7 +1,7 @@
 ---
 title: "What is a Data Lake?"
 meta_title: "What is a Data Lake? | Expert Data Lakehouse Architecture Guide"
-description: "A comprehensive guide to Data Lakes. Learn about unstructured storage, Hadoop HDFS vs Cloud Object Storage, and the evolution into Data Lakehouses."
+description: "A data lake is a central repository that stores raw structured and unstructured data in its native format, from Hadoop HDFS to cloud object storage today."
 ---
 
 # What is a Data Lake?

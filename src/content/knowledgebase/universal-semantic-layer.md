@@ -1,7 +1,7 @@
 ---
 title: "What is Universal Semantic Layer?"
 meta_title: "What is Universal Semantic Layer? | Expert Data Lakehouse & AI Glossary"
-description: "A carefully structured Dremio framework presenting business-oriented logical connections and metrics consistently across all visualization tools."
+description: "A universal semantic layer defines business metrics and logic once so every BI tool reads them the same way, and this entry covers how Dremio applies the idea."
 ---
 
 ## What is Universal Semantic Layer?

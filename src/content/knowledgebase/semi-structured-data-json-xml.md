@@ -1,7 +1,7 @@
 ---
 title: "What is Semi-Structured Data (JSON, XML)?"
 meta_title: "What is Semi-Structured Data (JSON, XML)? | Data Lakehouse Hub Knowledge Base"
-description: "Semi-Structured data represents the inevitable compromise between the rigidity required by analytical databases and the flexibility required by agile software development."
+description: "Semi-structured data like JSON and XML carries its own tags and nesting instead of a fixed schema. See how lakehouse engines query it and store it in Parquet."
 ---
 
 # What is Semi-Structured Data (JSON, XML)?

@@ -1,7 +1,7 @@
 ---
 title: "What is Apache Presto?"
 meta_title: "What is Apache Presto? | Expert Data Lakehouse Architecture Guide"
-description: "A comprehensive guide to Apache Presto. Learn how Facebook invented the distributed SQL engine that pioneered interactive data lake analytics."
+description: "Presto is an open-source distributed SQL engine built at Facebook for interactive data lake queries. Learn how it relates to Trino and how its pipelines run."
 ---
 
 # What is Apache Presto?

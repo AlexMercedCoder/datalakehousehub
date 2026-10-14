@@ -1,7 +1,7 @@
 ---
 title: "What is a Data Catalog?"
 meta_title: "What is a Data Catalog? | Expert Data Lakehouse Architecture Guide"
-description: "A comprehensive guide to Data Catalogs. Learn about metadata discovery, data lineage, and platforms like Collibra, Alation, and Amundsen."
+description: "A data catalog is a searchable inventory of metadata that helps people find, understand, and trust data assets, covering harvesting, glossaries, and lineage."
 ---
 
 # What is a Data Catalog?

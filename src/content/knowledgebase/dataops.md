@@ -1,7 +1,7 @@
 ---
 title: "What is DataOps?"
 meta_title: "What is DataOps? | Data Lakehouse Hub Knowledge Base"
-description: "DataOps (Data Operations) is the application of these DevOps principles to the entire data lifecycle."
+description: "DataOps applies DevOps practices to data pipelines: agile delivery, version control, automated testing, CI/CD, and observability for data teams."
 ---
 
 # What is DataOps?

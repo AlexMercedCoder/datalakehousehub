@@ -1,7 +1,7 @@
 ---
 title: "What is Hardware Acceleration (GPUs/TPUs) for AI?"
 meta_title: "What is Hardware Acceleration (GPUs/TPUs) for AI? | Data Lakehouse Hub Knowledge Base"
-description: "The fundamental mathematics underlying modern Deep Learning and Large Language Models (LLMs) were invented in the 1980s."
+description: "Hardware acceleration for AI means running neural network math on GPUs, TPUs, and other parallel chips. Learn how they speed up model training and inference."
 ---
 
 # What is Hardware Acceleration (GPUs/TPUs) for AI?

@@ -1,7 +1,7 @@
 ---
 title: "What is Data Orchestration?"
 meta_title: "What is Data Orchestration? | Expert Data Lakehouse Architecture Guide"
-description: "A comprehensive guide to Data Orchestration. Learn how tools like Apache Airflow manage massive, complex webs of interdependent data pipelines."
+description: "Data orchestration schedules and monitors interdependent pipelines in dependency order. Learn how tools like Apache Airflow use DAGs, retries, and backfills."
 ---
 
 # What is Data Orchestration?

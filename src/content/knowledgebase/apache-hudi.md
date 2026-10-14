@@ -1,7 +1,7 @@
 ---
 title: "What is Apache Hudi?"
 meta_title: "What is Apache Hudi? | Expert Data Lakehouse Architecture Guide"
-description: "A comprehensive guide to Apache Hudi. Learn about its incremental data processing, upset capabilities, merge-on-read architecture, and streaming data."
+description: "Apache Hudi is an open table format and data lake platform for upserts, deletes, and incremental processing, with copy-on-write and merge-on-read tables."
 ---
 
 # What is Apache Hudi?
