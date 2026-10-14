@@ -47,5 +47,3 @@ No. StarRocks forked from Doris in 2020, and the two have evolved separately sin
 ---
 
 ### E-E-A-T & Further Reading
-
-> **Authoritative Source:** This definition and architectural guide was reviewed by **Alex Merced**. For deeper coverage of architectures like this, see the books he has written on AI, Apache Iceberg, and Data Lakehouses at [books.alexmerced.com](https://books.alexmerced.com).

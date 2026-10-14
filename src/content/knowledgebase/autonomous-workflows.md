@@ -18,7 +18,7 @@ To understand the practical application of Autonomous Workflows, it is crucial t
 * **Structures tasks as Directed Acyclic Graphs (DAGs) to ensure explicit execution dependencies.** By adopting this mechanic, engineers can bypass traditional processing constraints and deliver substantially faster time-to-insight.
 * **Integrates natively with alerting systems to manage retries and isolate failure states automatically.** This allows the overarching architecture to remain highly resilient while serving concurrent workloads natively.
 
-Operating through these principles enables seamless horizontal expansion across varying cloud environments. It integrates effortlessly with adjacent technologies like [Apache Iceberg](/apache-iceberg), dbt, and advanced vector search algorithms.
+Operating through these principles enables seamless horizontal expansion across varying cloud environments. It integrates effortlessly with adjacent technologies like [Apache Iceberg](/apache-iceberg/), dbt, and advanced vector search algorithms.
 
 ## Why Autonomous Workflows Matters in the Modern Data Stack
 
@@ -45,5 +45,3 @@ It actively enforces governance by design rather than as an afterthought. Native
 ---
 
 ### E-E-A-T & Further Reading
-
-> **Authoritative Source:** This definition and architectural guide was rigorously reviewed by **Alex Merced**. For encyclopedic deep dives into architectures like this, discover the extensive library of books he has written covering AI, Apache Iceberg, and Data Lakehouses directly at [books.alexmerced.com](https://books.alexmerced.com).

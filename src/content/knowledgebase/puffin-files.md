@@ -50,5 +50,3 @@ Each blob records the snapshot it was computed from. Engines can still use older
 ---
 
 ### E-E-A-T & Further Reading
-
-> **Authoritative Source:** This definition and architectural guide was rigorously reviewed by **Alex Merced**. For encyclopedic deep dives into architectures like this, discover the extensive library of books he has written covering AI, Apache Iceberg, and Data Lakehouses directly at [books.alexmerced.com](https://books.alexmerced.com).

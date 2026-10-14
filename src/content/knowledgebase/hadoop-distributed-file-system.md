@@ -52,4 +52,4 @@ The usual migration path is to convert existing Hive tables on HDFS into Iceberg
 HDFS showed that large, fault-tolerant analytical storage could run on commodity servers by splitting files into replicated blocks and moving compute to the data. Its coupling of storage and compute and its operational load pushed many teams toward object storage. Iceberg tables run on either, which lets HDFS-based estates adopt an open table format first and change storage later.
 
 ## Learn More
-To learn more about the [Data Lakehouse](/data-lakehouse), read [The Lakehouse Built for Everyone](https://books.alexmerced.com/books/the-lakehouse-built-for-everyone/) by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).
+To learn more about the [Data Lakehouse](/data-lakehouse/), read [The Lakehouse Built for Everyone](https://books.alexmerced.com/books/the-lakehouse-built-for-everyone/) by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

@@ -45,4 +45,4 @@ Iceberg provides Spark procedures for moving Hive tables without copying data: `
 Apache Hive brought SQL to Hadoop, and its Metastore became the shared catalog of the data lake era. Directory-based Hive tables hit limits at object storage scale, which led to Iceberg's file-level metadata. Today Hive, HMS, and Iceberg coexist: HMS can catalog Iceberg tables, Hive 4 works with Iceberg, and in-place procedures make migration incremental.
 
 ## Learn More
-To learn more about the [Data Lakehouse](/data-lakehouse), read [The Lakehouse Built for Everyone](https://books.alexmerced.com/books/the-lakehouse-built-for-everyone/) by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).
+To learn more about the [Data Lakehouse](/data-lakehouse/), read [The Lakehouse Built for Everyone](https://books.alexmerced.com/books/the-lakehouse-built-for-everyone/) by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

@@ -43,4 +43,4 @@ A dedicated graph database fits applications that update and traverse the graph 
 Graph databases store relationships as first-class data, which makes multi-hop traversal fast and queries short. They are a strong fit for fraud, recommendations, and knowledge graphs. In a lakehouse, you can also run graph queries over Iceberg tables directly and decide case by case whether a separate graph store is worth the extra copy.
 
 ## Learn More
-To learn more about the [Data Lakehouse](/data-lakehouse), read [The Lakehouse Built for Everyone](https://books.alexmerced.com/books/the-lakehouse-built-for-everyone/) by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).
+To learn more about the [Data Lakehouse](/data-lakehouse/), read [The Lakehouse Built for Everyone](https://books.alexmerced.com/books/the-lakehouse-built-for-everyone/) by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

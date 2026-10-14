@@ -55,4 +55,4 @@ For related patterns, see [Kafka Connect to Iceberg: How the Commit Actually Wor
 A dead letter queue keeps one unprocessable message from blocking a pipeline by moving it aside after a set number of failures and preserving it for diagnosis and replay. In lakehouse pipelines it pairs with quarantine tables and write-audit-publish so bad data is isolated at every stage instead of silently dropped.
 
 ## Learn More
-To learn more about the [Data Lakehouse](/data-lakehouse), read [The Lakehouse Built for Everyone](https://books.alexmerced.com/books/the-lakehouse-built-for-everyone/) by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).
+To learn more about the [Data Lakehouse](/data-lakehouse/), read [The Lakehouse Built for Everyone](https://books.alexmerced.com/books/the-lakehouse-built-for-everyone/) by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

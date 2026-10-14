@@ -45,4 +45,4 @@ Nested documents raise a modeling question. You can flatten known fields into ty
 NoSQL databases trade the relational model for data models that fit specific access patterns and partition easily across servers. Their consistency behavior is a set of choices that vary by product and configuration. For analytics, NoSQL data is usually federated, streamed with CDC, or exported into Iceberg tables, where SQL engines can scan and join it without loading the operational database.
 
 ## Learn More
-To learn more about the [Data Lakehouse](/data-lakehouse), read [The Lakehouse Built for Everyone](https://books.alexmerced.com/books/the-lakehouse-built-for-everyone/) by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).
+To learn more about the [Data Lakehouse](/data-lakehouse/), read [The Lakehouse Built for Everyone](https://books.alexmerced.com/books/the-lakehouse-built-for-everyone/) by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

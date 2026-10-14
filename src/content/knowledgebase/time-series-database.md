@@ -42,4 +42,4 @@ A common split is hot and cold: keep the last days or weeks in the TSDB for aler
 A time-series database trades general-purpose features for fast appends, tight compression, retention policies, and time-window queries. It is the right tool for monitoring and recent operational data. When you need years of history, joins with the rest of the business, or access from several engines, Iceberg tables on object storage are often the better long-term home.
 
 ## Learn More
-To learn more about the [Data Lakehouse](/data-lakehouse), read [The Lakehouse Built for Everyone](https://books.alexmerced.com/books/the-lakehouse-built-for-everyone/) by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).
+To learn more about the [Data Lakehouse](/data-lakehouse/), read [The Lakehouse Built for Everyone](https://books.alexmerced.com/books/the-lakehouse-built-for-everyone/) by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

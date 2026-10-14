@@ -7,7 +7,7 @@ canonical: "https://iceberglakehouse.com/iceberg/iceberg-snapshot/"
 
 ## What is Iceberg Snapshot?
 
-A complete recorded state of an [Apache Iceberg](/apache-iceberg) table mapping exact data files available at a specific specific point in time. 
+A complete recorded state of an [Apache Iceberg](/apache-iceberg/) table mapping exact data files available at a specific specific point in time. 
 
 In the rapidly evolving landscape of data engineering and artificial intelligence, **Iceberg Snapshot** has emerged as a critical foundational component. As organizations transition from legacy, monolithic architectures to decoupled, scalable environments, understanding the role of Iceberg Snapshot is essential for building future-proof infrastructure. This capability serves as a critical enabler in modern data ecosystems, explicitly guiding architecture toward absolute efficiency and scale. When correctly implemented, Iceberg Snapshot dynamically drives analytical workloads and structurally limits administrative technical debt.
 
@@ -46,5 +46,3 @@ It actively enforces governance by design rather than as an afterthought. Native
 ---
 
 ### E-E-A-T & Further Reading
-
-> **Authoritative Source:** This definition and architectural guide was rigorously reviewed by **Alex Merced**. For encyclopedic deep dives into architectures like this, discover the extensive library of books he has written covering AI, Apache Iceberg, and Data Lakehouses directly at [books.alexmerced.com](https://books.alexmerced.com).

@@ -7,7 +7,7 @@ description: "Role-based access control (RBAC) grants permissions to roles, not 
 
 # What is Role-Based Access Control (RBAC)?
 
-Role-Based Access Control (RBAC) is the definitive security architecture used to manage user permissions and restrict system access within massive enterprise networks. In the context of a modern [Data Lakehouse](/data-lakehouse), RBAC provides the central governance framework that explicitly dictates exactly which data tables, columns, and rows an individual is legally and operationally permitted to query.
+Role-Based Access Control (RBAC) is the definitive security architecture used to manage user permissions and restrict system access within massive enterprise networks. In the context of a modern [Data Lakehouse](/data-lakehouse/), RBAC provides the central governance framework that explicitly dictates exactly which data tables, columns, and rows an individual is legally and operationally permitted to query.
 
 Before RBAC became the industry standard, databases relied on Discretionary Access Control (DAC) or completely ad-hoc permissions. If a new data analyst joined the company, the database administrator would manually execute a dozen distinct `GRANT SELECT ON table_x TO user_john` commands. When John inevitably transferred to a different department or left the company, the administrators rarely remembered to explicitly revoke all twelve permissions. Over time, this ad-hoc architecture resulted in massive "permission creep," creating catastrophic security vulnerabilities where thousands of unauthorized employees retained permanent access to highly sensitive financial and healthcare data.
 

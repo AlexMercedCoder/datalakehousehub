@@ -45,4 +45,4 @@ Many teams keep both: a raw change log for audit and replay, and a merged table 
 Debezium replaces scheduled extraction queries with log-based change capture, so every insert, update, and delete reaches the [data lakehouse](/knowledgebase/data-lakehouse/) with low latency and low source impact. Pair it with an idempotent Iceberg sink and a compaction plan, since delivery is at-least-once and upserts generate delete files.
 
 ## Learn More
-To learn more about the [Data Lakehouse](/data-lakehouse), read [The Lakehouse Built for Everyone](https://books.alexmerced.com/books/the-lakehouse-built-for-everyone/) by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).
+To learn more about the [Data Lakehouse](/data-lakehouse/), read [The Lakehouse Built for Everyone](https://books.alexmerced.com/books/the-lakehouse-built-for-everyone/) by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

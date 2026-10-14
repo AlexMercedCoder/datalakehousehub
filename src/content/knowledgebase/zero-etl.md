@@ -18,7 +18,7 @@ To understand the practical application of Zero-ETL, it is crucial to systematic
 * **Standardizes and normalizes extracted data before loading it into a centralized warehouse or lakehouse.** By adopting this mechanic, engineers can bypass traditional processing constraints and deliver substantially faster time-to-insight.
 * **Relies on idempotent operations so that repeated syncs do not result in duplicated records.** This allows the overarching architecture to remain highly resilient while serving concurrent workloads natively.
 
-Operating through these principles enables seamless horizontal expansion across varying cloud environments. It integrates effortlessly with adjacent technologies like [Apache Iceberg](/apache-iceberg), dbt, and advanced vector search algorithms.
+Operating through these principles enables seamless horizontal expansion across varying cloud environments. It integrates effortlessly with adjacent technologies like [Apache Iceberg](/apache-iceberg/), dbt, and advanced vector search algorithms.
 
 ## Why Zero-ETL Matters in the Modern Data Stack
 
@@ -45,5 +45,3 @@ It actively enforces governance by design rather than as an afterthought. Native
 ---
 
 ### E-E-A-T & Further Reading
-
-> **Authoritative Source:** This definition and architectural guide was rigorously reviewed by **Alex Merced**. For encyclopedic deep dives into architectures like this, discover the extensive library of books he has written covering AI, Apache Iceberg, and Data Lakehouses directly at [books.alexmerced.com](https://books.alexmerced.com).

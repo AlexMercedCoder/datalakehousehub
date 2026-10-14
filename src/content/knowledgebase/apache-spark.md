@@ -90,5 +90,3 @@ Spark is written in Scala, and it provides APIs for Python (PySpark), Java, and 
 Python is the dominant language in data science and machine learning. PySpark allows data scientists to use the familiar Python syntax while Spark's engine translates the code under the hood to run across a cluster, so the same code can scale from a sample to a full dataset.
 
 ---
-
-> **Authoritative Source:** This architectural guide was rigorously reviewed by **Alex Merced**. For encyclopedic deep dives into data engineering, discover the extensive library of books he has written covering AI, Apache Iceberg, and Data Lakehouses directly at [books.alexmerced.com](https://books.alexmerced.com).

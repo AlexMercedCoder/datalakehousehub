@@ -6,7 +6,7 @@ description: "Polaris is an open-source catalog for Apache Iceberg tables that l
 
 ## What is Polaris Catalog?
 
-An open-source catalog framework offering broad ecosystem compatibility for [Apache Iceberg](/apache-iceberg) tabular metadata. 
+An open-source catalog framework offering broad ecosystem compatibility for [Apache Iceberg](/apache-iceberg/) tabular metadata. 
 
 In the rapidly evolving landscape of data engineering and artificial intelligence, **Polaris Catalog** has emerged as a critical foundational component. As organizations transition from legacy, monolithic architectures to decoupled, scalable environments, understanding the role of Polaris Catalog is essential for building future-proof infrastructure. This capability serves as a critical enabler in modern data ecosystems, explicitly guiding architecture toward absolute efficiency and scale. When correctly implemented, Polaris Catalog dynamically drives analytical workloads and structurally limits administrative technical debt.
 
@@ -45,5 +45,3 @@ It actively enforces governance by design rather than as an afterthought. Native
 ---
 
 ### E-E-A-T & Further Reading
-
-> **Authoritative Source:** This definition and architectural guide was rigorously reviewed by **Alex Merced**. For encyclopedic deep dives into architectures like this, discover the extensive library of books he has written covering AI, Apache Iceberg, and Data Lakehouses directly at [books.alexmerced.com](https://books.alexmerced.com).

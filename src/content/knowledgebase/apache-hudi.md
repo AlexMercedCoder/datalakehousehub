@@ -60,7 +60,7 @@ Apache Hudi occupies a critical position in the modern data stack, operating alo
 Hudi is designed to be a premier storage destination for Apache Flink and Apache Kafka environments. It excels at handling continuous, high-volume ingestion streams where data arrives late or out-of-order. By seamlessly absorbing complex `UPSERTS` from continuous Kafka streams, Hudi bridges the gap between chaotic operational event logs and structured analytical presentation layers.
 
 ### Interoperability and Apache XTable
-Historically, organizations had to commit exclusively to Hudi, Iceberg, or Delta Lake. However, the rise of interoperability projects like Apache XTable (formerly OneTable) has shifted this paradigm. XTable provides an omni-directional metadata translation layer. This means an organization can continuously ingest high-velocity CDC streams into an Apache Hudi Merge-On-Read table, and use XTable to generate [Apache Iceberg](/apache-iceberg) metadata manifests for that exact same data. This allows Dremio or Trino to query the underlying files using the Iceberg specification without duplicating a single byte of storage.
+Historically, organizations had to commit exclusively to Hudi, Iceberg, or Delta Lake. However, the rise of interoperability projects like Apache XTable (formerly OneTable) has shifted this paradigm. XTable provides an omni-directional metadata translation layer. This means an organization can continuously ingest high-velocity CDC streams into an Apache Hudi Merge-On-Read table, and use XTable to generate [Apache Iceberg](/apache-iceberg/) metadata manifests for that exact same data. This allows Dremio or Trino to query the underlying files using the Iceberg specification without duplicating a single byte of storage.
 
 ## Summary of Technical Value
 
@@ -69,7 +69,7 @@ Apache Hudi fundamentally transformed the data lake from a static file repositor
 ### Frequently Asked Questions
 
 **Does Apache Hudi replace my data warehouse?**
-Hudi provides the transactional capabilities of a data warehouse directly on your data lake storage. This allows you to construct an open [data lakehouse](/data-lakehouse), often entirely replacing the need for expensive, proprietary cloud data warehouses by using distributed engines like Dremio or Presto to query the Hudi tables natively.
+Hudi provides the transactional capabilities of a data warehouse directly on your data lake storage. This allows you to construct an open [data lakehouse](/data-lakehouse/), often entirely replacing the need for expensive, proprietary cloud data warehouses by using distributed engines like Dremio or Presto to query the Hudi tables natively.
 
 **What is the difference between Hudi and Apache Iceberg?**
 While both provide ACID transactions and open table formats, they originated from different engineering challenges. Iceberg was heavily focused on massive scale query performance and resolving Hive file-listing bottlenecks. Hudi was explicitly designed to handle complex, high-frequency streaming UPSERTs and incremental data pipelines. Today, both formats have heavily overlapped capabilities.
@@ -78,5 +78,3 @@ While both provide ACID transactions and open table formats, they originated fro
 Hudi handles late-arriving data gracefully using its Upsert capabilities. If a record arrives three days late, Hudi uses its indexing system to locate the specific historical file containing that record and updates it directly, ensuring downstream incremental queries capture the modification accurately.
 
 ---
-
-> **Authoritative Source:** This architectural guide was rigorously reviewed by **Alex Merced**. For encyclopedic deep dives into data engineering, discover the extensive library of books he has written covering AI, Apache Iceberg, and Data Lakehouses directly at [books.alexmerced.com](https://books.alexmerced.com).

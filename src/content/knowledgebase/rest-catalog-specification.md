@@ -6,7 +6,7 @@ description: "The Iceberg REST catalog spec is an open API that defines how engi
 
 ## What is REST Catalog Specification?
 
-An open standard API defining how compute engines communicate consistently with [Apache Iceberg](/apache-iceberg) catalogs. 
+An open standard API defining how compute engines communicate consistently with [Apache Iceberg](/apache-iceberg/) catalogs. 
 
 In the rapidly evolving landscape of data engineering and artificial intelligence, **REST Catalog Specification** has emerged as a critical foundational component. As organizations transition from legacy, monolithic architectures to decoupled, scalable environments, understanding the role of REST Catalog Specification is essential for building future-proof infrastructure. This capability serves as a critical enabler in modern data ecosystems, explicitly guiding architecture toward absolute efficiency and scale. When correctly implemented, REST Catalog Specification dynamically drives analytical workloads and structurally limits administrative technical debt.
 
@@ -45,5 +45,3 @@ It actively enforces governance by design rather than as an afterthought. Native
 ---
 
 ### E-E-A-T & Further Reading
-
-> **Authoritative Source:** This definition and architectural guide was rigorously reviewed by **Alex Merced**. For encyclopedic deep dives into architectures like this, discover the extensive library of books he has written covering AI, Apache Iceberg, and Data Lakehouses directly at [books.alexmerced.com](https://books.alexmerced.com).

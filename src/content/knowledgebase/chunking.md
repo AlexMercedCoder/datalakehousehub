@@ -51,4 +51,4 @@ For the data engineering side of RAG, read [RAG Isn't a Modeling Problem. It's a
 Chunking turns long documents into segments small and focused enough to embed and retrieve precisely. Choosing boundaries that respect sentences and structure, adding modest overlap, and tracking chunk versions in governed tables make RAG retrieval more accurate and easier to maintain. Good chunking reduces, but does not eliminate, the risk of wrong or unsupported answers.
 
 ## Learn More
-To learn more about the [Data Lakehouse](/data-lakehouse), read [The Lakehouse Built for Everyone](https://books.alexmerced.com/books/the-lakehouse-built-for-everyone/) by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).
+To learn more about the [Data Lakehouse](/data-lakehouse/), read [The Lakehouse Built for Everyone](https://books.alexmerced.com/books/the-lakehouse-built-for-everyone/) by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).
