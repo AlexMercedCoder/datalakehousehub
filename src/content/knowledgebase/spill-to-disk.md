@@ -1,46 +1,52 @@
 ---
-title: "What is Spill to Disk?"
-meta_title: "What is Spill to Disk? | Expert Data Lakehouse & AI Glossary"
-description: "A memory management behavior where engines temporarily write excess data to storage drives when available RAM is completely exhausted."
+title: "Spill to Disk: How Spark, Trino, Dremio, and DuckDB Handle Memory Pressure"
+meta_title: "Spill to Disk in Spark, Trino, Dremio and DuckDB"
+description: "Spill to disk is when a query engine writes intermediate data to local disk once memory runs out. Compare how Spark, Trino, Dremio, and DuckDB handle it."
 ---
 
 ## What is Spill to Disk?
 
-A memory management behavior where engines temporarily write excess data to storage drives when available RAM is completely exhausted. 
+Spill to disk is what a query engine does when an operator's working data no longer fits in its memory budget: it writes part of that data to local disk, keeps going, and reads it back later. The query finishes instead of failing with an out-of-memory error, but it runs slower because disk is much slower than RAM.
 
-In the rapidly evolving landscape of data engineering and artificial intelligence, **Spill to Disk** has emerged as a critical foundational component. As organizations transition from legacy, monolithic architectures to decoupled, scalable environments, understanding the role of Spill to Disk is essential for building future-proof infrastructure. This capability serves as a critical enabler in modern data ecosystems, explicitly guiding architecture toward absolute efficiency and scale. When correctly implemented, Spill to Disk dynamically drives analytical workloads and structurally limits administrative technical debt.
+Spilling happens in blocking operators, the ones that must see much or all of their input before they can produce output:
 
-## Core Architecture and Mechanics
+* **Hash joins:** the build side's hash table is partitioned, and partitions that do not fit are written to disk with the matching probe rows, then joined one partition at a time.
+* **Aggregations:** partial group-by results are written out and merged later.
+* **Sorts:** sorted runs are written to disk and merged (an external merge sort).
+* **Window functions:** partitions of rows are buffered on disk.
 
-To understand the practical application of Spill to Disk, it is crucial to systematically examine its fundamental operational behaviors and structural design:
+Filters and projections stream rows through and rarely need to spill.
 
-* **Pre-computes or intelligently caches data to avoid redundant processing on recurrent queries.** This principle ensures that systems can scale horizontally without facing artificial limitations or bottlenecks.
-* **Re-organizes data deeply at the memory level (e.g., Apache Arrow) to fit CPU caches perfectly.** By adopting this mechanic, engineers can bypass traditional processing constraints and deliver substantially faster time-to-insight.
-* **Maintains aggressive probabilistic structures (like Bloom Filters) to immediately skip reading irrelevant data partitions.** This allows the overarching architecture to remain highly resilient while serving concurrent workloads natively.
+## How Lakehouse Engines Handle It
 
-Operating through these principles enables seamless horizontal expansion across varying cloud environments. It integrates effortlessly with adjacent technologies like [Apache Iceberg](/apache-iceberg), dbt, and advanced vector search algorithms.
+| Engine | Spilling behavior | Main settings |
+|---|---|---|
+| Apache Spark | Sorts, aggregations, and shuffles spill by default; the Spark UI shows "Spill (Memory)" and "Spill (Disk)" per stage | `spark.executor.memory`, `spark.memory.fraction`, `spark.local.dir` |
+| Trino | Joins, aggregations, ORDER BY, and window functions can spill; the docs call spilling legacy and recommend fault-tolerant execution instead | `spiller-spill-path`, `query_max_memory_per_node` |
+| Dremio | Hash aggregation spills by default; hash join spilling is on by default from version 25 | Spill paths in `dremio.conf`, query memory limits |
+| DuckDB | GROUP BY, joins, ORDER BY, and windows can exceed memory by spilling to a temp directory; `list()` and `string_agg()` cannot | `memory_limit`, `temp_directory` |
 
-## Why Spill to Disk Matters in the Modern Data Stack
+## Reading Spill as a Signal
 
-These highly technical optimizations ensure that systems can handle multi-terabyte queries within seconds. Without them, even the most robust architectures would collapse under I/O bottlenecks.
+Some spill is normal for large joins and sorts. Heavy spill on queries that run often is a sign to fix the workload rather than add disk:
 
-For modern enterprises managing decentralized teams, the implementation of Spill to Disk eliminates significant architectural friction. Teams are explicitly empowered to operate autonomously against reliable technical foundations without dynamically disrupting other isolated workflows. It shifts manual engineering overhead into an autonomous, software-driven paradigm, keeping Total Cost of Ownership (TCO) extremely low.
+* **Prune earlier.** Partition and sort [Apache Iceberg](/knowledgebase/apache-iceberg/) tables on common filter columns so less data reaches the join or aggregation; see [predicate pushdown](/knowledgebase/predicate-pushdown/).
+* **Pick the right join.** A [broadcast hash join](/knowledgebase/broadcast-hash-join/) of a small dimension avoids building a huge hash table; skewed keys can push one task into spill while the rest sit idle.
+* **Pre-aggregate.** Materialize frequent rollups as gold tables or materialized views so dashboards do not re-aggregate raw facts.
+* **Use fast local disk.** When spill is unavoidable, NVMe instance storage spills far faster than network-attached volumes.
 
-### Key Benefits
-- **Unprecedented Scalability:** Automatically adapts to massive fluctuations in data volume and query concurrency.
-- **Vendor Neutrality:** Strongly aligns with open-source frameworks, preventing aggressive vendor lock-in.
-- **Enhanced Observability:** Exposes deep, structural metadata allowing engineers to monitor and trace pipelines comprehensively.
+For the mechanics behind this, read [Buffer Pools, Caches, and the Memory Hierarchy](/blog/2026-04-29-query-engine-optimization-07-memory-and-caching/) and [Hash, Sort-Merge, Broadcast: How Distributed Joins Work](/blog/2026-04-29-query-engine-optimization-09-distributed-joins/).
 
 ## Frequently Asked Questions
 
-### Why is Columnar Format superior for analytics?
-Unlike row-based formats (like CSV or JSON), columnar formats store all values of a single column contiguously. This allows queries calculating averages or sums to read *only* the specific column they need, rather than loading the entire table. This distinction is particularly important when evaluating total architecture costs and performance benchmarks.
+### Is spilling to disk bad?
+It is a safety valve. It keeps large queries from failing, at the cost of speed. Occasional spill is fine; constant spill on routine queries means memory, data layout, or query design needs attention.
 
-### What is Late Materialization?
-It is an optimization where the engine delays fetching full record details from storage until *after* all heavy filters and joins are complete, drastically reducing memory overhead. The open ecosystem continues to evolve rapidly, ensuring backward compatibility while introducing powerful new primitives.
+### Is spilling the same as swapping?
+No. Swapping is the operating system paging process memory to disk without the engine knowing. Spilling is controlled by the engine, which chooses what to write and reads it back in an efficient order.
 
-### How does Spill to Disk impact data governance and security?
-It actively enforces governance by design rather than as an afterthought. Native logging, role-based access controls (RBAC), and structured access pathways provide immediate visibility into security boundaries and regulatory compliance.
+### Does spilling affect data security?
+Spill files hold intermediate query data on local disk. Some engines, such as Trino, can encrypt spill files; otherwise rely on encrypted local volumes.
 
 ---
 

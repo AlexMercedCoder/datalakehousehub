@@ -1,40 +1,54 @@
 ---
-title: "What is Chunking?"
-meta_title: "What is Chunking in AI? | Expert Data Lakehouse Architecture Guide"
-description: "A comprehensive guide to Chunking. Learn how breaking massive unstructured documents into optimized segments dictates the success of RAG architectures."
+title: "Chunking for RAG: Strategies and How to Store Chunks in Lakehouse Tables"
+meta_title: "Chunking for RAG: Strategies and Lakehouse Pipelines"
+description: "Chunking splits long documents into smaller segments before embedding them for RAG. Compare chunking strategies and see how to manage chunks in Iceberg tables."
 ---
 
-# What is Chunking?
+Chunking is the step in a Retrieval-Augmented Generation (RAG) pipeline that splits long unstructured documents into smaller segments ("chunks") before each segment is converted into a vector embedding. A 500-page contract becomes hundreds of chunks, each embedded and indexed separately, so a search can return the passage that answers a question instead of the whole document.
 
-Chunking is a critical, highly strategic data engineering process utilized almost exclusively in the preparation of unstructured data for Artificial Intelligence and Retrieval-Augmented Generation (RAG) architectures. It is the physical act of taking a massive, continuous block of unstructured text (such as a 500-page corporate legal contract) and programmatically shattering it into hundreds of smaller, highly optimized segments ("chunks") before converting those segments into Vector Embeddings.
+Chunking looks like a minor preprocessing step, but it has a large effect on retrieval quality. Poorly chunked data leads to retrieved passages that are missing the relevant context or diluted by unrelated text, and the language model then answers from weak evidence.
 
-While Chunking seems like a trivial preprocessing step, it is universally recognized by AI engineers as the single most critical variable dictating the accuracy of an enterprise LLM. If a data engineer chunks the data poorly, the AI will hallucinate constantly, and the entire RAG architecture will fail catastrophically.
+## Why Chunking Is Necessary
 
-## The Mathematical Necessity of Chunking
+Embedding models accept a limited number of input tokens, commonly 512 for smaller open models and around 8,000 for some hosted models. Input beyond the limit is either rejected with an error or truncated, so most of a long document would never be embedded.
 
-Chunking is absolutely mandatory due to the strict architectural limitations of modern Embedding Models.
+Even if a model accepted a whole book, one embedding for 500 pages would average together hundreds of topics. A question about a clause on page 42 would not match that diluted vector well. Smaller chunks give each embedding a focused meaning that a query can match.
 
-An Embedding Model (which converts text to numbers) has a strict "Token Limit" (often 512 or 8,192 tokens). If you attempt to feed a 500-page PDF directly into the model, the model will simply crash or violently truncate the text, deleting 99% of the document.
+## Common Chunking Strategies
 
-Furthermore, even if the model could accept 500 pages at once, it would be mathematically disastrous. If a single Vector Embedding attempts to represent 500 pages of text simultaneously, the resulting mathematical coordinate becomes a useless, diluted average of 10,000 different topics. When a user asks a highly specific question about Page 42, the database will never find it because the semantic meaning of Page 42 was completely swallowed by the massive, diluted vector of the entire book.
+The right strategy depends on the documents. See [chunking strategies for RAG](/knowledgebase/chunking-strategies-for-rag/) for a longer treatment.
 
-## Advanced Chunking Strategies
+### 1. Fixed-Size Chunking
+The simplest method splits text every N characters or tokens. It is fast, but a split can cut a sentence in half (e.g., "The user must never..." [SPLIT] "...reboot the server."), leaving two chunks that each carry only part of the meaning.
 
-To ensure the Vector Database captures precise semantic meaning, data engineers must select the exact optimal chunking strategy for the specific dataset.
-
-### 1. Fixed-Size Chunking (The Naive Approach)
-The simplest method. The engineer writes a Python script to blindly shatter the document every 500 characters. 
-While computationally fast, this is highly dangerous. A 500-character split might slice a critical sentence perfectly in half (e.g., "The user must never..." [CHUNK SPLIT] "...reboot the server."). The resulting embeddings will have absolutely no semantic meaning, and the AI will fail to answer the question.
-
-### 2. Sentence and Paragraph Chunking
-A vastly superior approach. The script utilizes Natural Language Processing (NLP) libraries (like NLTK or SpaCy) to intelligently identify periods and line breaks. It chunks the data strictly by complete sentences or complete paragraphs. This ensures that a single chunk contains a complete, coherent human thought, generating a highly accurate, tightly clustered Vector Embedding.
+### 2. Sentence, Paragraph, and Structure-Aware Chunking
+These methods split on sentence boundaries, paragraphs, or document structure such as headings, list items, and table rows, using NLP libraries (like NLTK or spaCy) or format-aware parsers for Markdown, HTML, and PDF. Each chunk holds a complete thought, which usually produces better embeddings.
 
 ### 3. Chunk Overlap
-To prevent critical context from being lost between the borders of two chunks, engineers utilize Chunk Overlap. If Chunk A is 500 words, Chunk B starts by repeating the final 50 words of Chunk A. This "sliding window" mathematically guarantees that the semantic transition between paragraphs is perfectly preserved in the Vector Database.
+To keep context that spans a boundary, chunks can overlap: if Chunk A is 500 tokens, Chunk B starts with the last 50 tokens of Chunk A. Overlap reduces the chance that an answer is split across two chunks, at the cost of more storage and some duplicate results.
+
+### 4. Semantic Chunking
+Semantic chunking compares embeddings of consecutive sentences and starts a new chunk where the topic shifts. It costs more to compute but adapts to documents with uneven structure.
+
+## Managing Chunks in a Lakehouse
+
+Chunks are data, and they change: documents are updated, chunking rules are tuned, and embedding models are replaced. Storing chunks in an [Apache Iceberg](/knowledgebase/apache-iceberg/) table, with or without a separate [vector database](/knowledgebase/vector-database/), makes those changes manageable:
+
+| Column | Purpose |
+|---|---|
+| `doc_id`, `chunk_id` | Link each chunk to its source document |
+| `chunk_text` | The text that gets embedded and shown to the model |
+| `chunker_version` | Which strategy and settings produced the chunk |
+| `embedding_model`, `embedding` | Which model produced the vector, and the vector itself |
+| `source_updated_at`, `access_tags` | Freshness and permissions inherited from the source |
+
+With this layout, re-chunking one updated document is a `MERGE` on its `doc_id`, testing a new chunker can happen on an Iceberg branch, and a snapshot ID records exactly which chunks an index was built from. Vector indexes in Milvus, pgvector, or another store can be rebuilt from the table at any time.
+
+For the data engineering side of RAG, read [RAG Isn't a Modeling Problem. It's a Data Engineering Problem.](/blog/2026-01-rag-isnt-the-problem/) and [Vector Search Directly Over Iceberg Tables](/blog/vector-search-over-iceberg-tables/).
 
 ## Summary of Technical Value
 
-Chunking is the foundational data engineering step required to make unstructured data mathematically searchable. By intelligently shattering massive documents into coherent, contextually rich segments before embedding them, data teams ensure that Vector Databases can retrieve highly granular, perfectly accurate information to fuel enterprise Large Language Models, entirely preventing AI hallucinations caused by diluted semantic context.
+Chunking turns long documents into segments small and focused enough to embed and retrieve precisely. Choosing boundaries that respect sentences and structure, adding modest overlap, and tracking chunk versions in governed tables make RAG retrieval more accurate and easier to maintain. Good chunking reduces, but does not eliminate, the risk of wrong or unsupported answers.
 
 ## Learn More
 To learn more about the [Data Lakehouse](/data-lakehouse), read [The Lakehouse Built for Everyone](https://books.alexmerced.com/books/the-lakehouse-built-for-everyone/) by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

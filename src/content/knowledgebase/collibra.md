@@ -1,46 +1,42 @@
 ---
-title: "What is Collibra?"
-meta_title: "What is Collibra? | Expert Data Lakehouse & AI Glossary"
-description: "An enterprise data governance platform offering deep capabilities for data stewardship, privacy, and cataloging."
+title: "Collibra and the Open Lakehouse: How It Compares to DataHub and Polaris"
+meta_title: "Collibra vs DataHub for Lakehouse Governance | Glossary"
+description: "Collibra is a commercial data governance and catalog platform for glossaries, stewardship, and policy. See how it fits an Iceberg lakehouse next to DataHub."
 ---
 
 ## What is Collibra?
 
-An enterprise data governance platform offering deep capabilities for data stewardship, privacy, and cataloging. 
+Collibra is a commercial data and AI governance platform. Founded in 2008 in Brussels, it sells a data catalog, business glossary, stewardship workflows, lineage, data quality and observability, privacy tooling, and AI governance features. In June 2025 Collibra acquired Raito, a data access governance startup, to extend its platform toward managing who can access data.
 
-In the rapidly evolving landscape of data engineering and artificial intelligence, **Collibra** has emerged as a critical foundational component. As organizations transition from legacy, monolithic architectures to decoupled, scalable environments, understanding the role of Collibra is essential for building future-proof infrastructure. This capability serves as a critical enabler in modern data ecosystems, explicitly guiding architecture toward absolute efficiency and scale. When correctly implemented, Collibra dynamically drives analytical workloads and structurally limits administrative technical debt.
+Collibra's core strength is process: defining business terms, assigning owners and stewards, routing approvals, and keeping audit evidence for regulators. It is typically bought by large, regulated organizations where governance workflow spans many systems, of which the lakehouse is one.
 
-## Core Architecture and Mechanics
+## Where Collibra Fits in an Iceberg Lakehouse
 
-To understand the practical application of Collibra, it is crucial to systematically examine its fundamental operational behaviors and structural design:
+An [Apache Iceberg](/knowledgebase/apache-iceberg/) lakehouse has a technical catalog, such as [Apache Polaris](/knowledgebase/apache-polaris/), AWS Glue, or Unity Catalog, that engines commit through and that enforces table permissions. Collibra is not that catalog. It ingests metadata from the technical catalog and the engines through connectors, adds business context, and runs workflows on top.
 
-* **Centralizes metadata to construct a comprehensive map of all corporate data assets and their hierarchical relationships.** This principle ensures that systems can scale horizontally without facing artificial limitations or bottlenecks.
-* **Applies granular access controls dynamically, masking or restricting data based on user identity or geographical constraints.** By adopting this mechanic, engineers can bypass traditional processing constraints and deliver substantially faster time-to-insight.
-* **Implements automated profiling and assertions to block bad data before it impacts downstream dashboards.** This allows the overarching architecture to remain highly resilient while serving concurrent workloads natively.
+| | Collibra | DataHub | OpenMetadata | Apache Polaris |
+|---|---|---|---|---|
+| Type | Commercial governance platform | Open-source metadata platform | Open-source metadata platform | Open-source Iceberg REST catalog |
+| Business glossary and stewardship workflow | Core strength | Yes | Yes | No |
+| Cross-system lineage | Yes | Yes | Yes | No |
+| In the Iceberg write path | No | Optional (beta Iceberg catalog) | No | Yes |
+| Access enforcement | Policy workflow, pushed to platforms through integrations | Limited | No | RBAC and credential vending |
+| Cost model | Enterprise license | Free, or DataHub Cloud | Free, or Collate | Free, or a managed service |
 
-Operating through these principles enables seamless horizontal expansion across varying cloud environments. It integrates effortlessly with adjacent technologies like [Apache Iceberg](/apache-iceberg), dbt, and advanced vector search algorithms.
+The practical split: the technical catalog and the query engine enforce access (roles, [row-level security](/knowledgebase/row-level-security/), [column masking](/knowledgebase/column-level-security/)); Collibra records why a policy exists, who approved it, and which business terms and regulations it relates to. When a steward classifies a column as sensitive in Collibra, that decision should be pushed down to the catalog or engine that actually enforces it, either through an integration or through automation.
 
-## Why Collibra Matters in the Modern Data Stack
-
-Robust governance protects the business from compliance violations and internal breaches while simultaneously increasing internal trust in the data.
-
-For modern enterprises managing decentralized teams, the implementation of Collibra eliminates significant architectural friction. Teams are explicitly empowered to operate autonomously against reliable technical foundations without dynamically disrupting other isolated workflows. It shifts manual engineering overhead into an autonomous, software-driven paradigm, keeping Total Cost of Ownership (TCO) extremely low.
-
-### Key Benefits
-- **Unprecedented Scalability:** Automatically adapts to massive fluctuations in data volume and query concurrency.
-- **Vendor Neutrality:** Strongly aligns with open-source frameworks, preventing aggressive vendor lock-in.
-- **Enhanced Observability:** Exposes deep, structural metadata allowing engineers to monitor and trace pipelines comprehensively.
+For a broader comparison, read [Metadata Platforms in 2026](/blog/metadata-platforms-in-2026/) and [The Death of the Data Swamp: Establishing Governance in Your 2026 Data Lakehouse](/blog/data-governance-lakehouse-2026/).
 
 ## Frequently Asked Questions
 
-### What is Row-Level Security (RLS)?
-RLS is a database policy that automatically filters out rows (e.g., regional sales data) that the querying user is not authorized to see, without requiring separate views. This distinction is particularly important when evaluating total architecture costs and performance benchmarks.
+### Is Collibra open source?
+No. Open-source alternatives in the metadata platform category include [DataHub](/knowledgebase/datahub/) and OpenMetadata.
 
-### What is active data governance?
-Active governance uses programmatic controls (like blocking a PR if data tests fail) rather than relying on manual, periodic audits. The open ecosystem continues to evolve rapidly, ensuring backward compatibility while introducing powerful new primitives.
+### Does Collibra replace an Iceberg catalog?
+No. Engines still need an Iceberg catalog to create, commit, and read tables. Collibra describes and governs those tables from the side.
 
-### How does Collibra impact data governance and security?
-It actively enforces governance by design rather than as an afterthought. Native logging, role-based access controls (RBAC), and structured access pathways provide immediate visibility into security boundaries and regulatory compliance.
+### When is Collibra the right choice?
+When governance workflow, audit evidence, and business glossary management across many systems are the main requirement, and the budget fits an enterprise license.
 
 ---
 

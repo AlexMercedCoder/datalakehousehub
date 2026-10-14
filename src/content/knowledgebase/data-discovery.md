@@ -1,42 +1,48 @@
 ---
-title: "What is Data Discovery?"
-meta_title: "What is Data Discovery? | Expert Data Lakehouse Architecture Guide"
-description: "A comprehensive guide to Data Discovery. Learn how organizations find, understand, and trust data using metadata catalogs and profiling tools."
+title: "Data Discovery in the Lakehouse: Catalogs, Profiling, and Trust"
+meta_title: "Data Discovery for Iceberg Lakehouses | Glossary"
+description: "Data discovery is how teams find, understand, and trust data before using it. See how discovery tools sit on top of Iceberg catalogs in a lakehouse."
 ---
 
-# What is Data Discovery?
+Data discovery is the process of finding, understanding, and evaluating the data an organization holds before using it for analysis, machine learning, or dashboards. It answers three questions: where is the data, what does it mean, and can I trust it?
 
-Data Discovery is the strategic and technological process of locating, identifying, understanding, and evaluating data scattered across a massive enterprise architecture. It is the critical foundational step that must occur before any data analysis, machine learning model training, or business intelligence dashboarding can successfully take place.
+In a [data lakehouse](/knowledgebase/data-lakehouse/), an organization can easily accumulate thousands of tables across object storage buckets, operational databases, and SaaS sources. A data scientist building a churn model often spends more time locating the right activity table, working out what a column like `c_stat_act_v2` means, and checking whether the table is still maintained than writing the model code. Discovery tools reduce that time by indexing and documenting the data landscape.
 
-In the era of the modern Open [Data Lakehouse](/data-lakehouse), organizations routinely store tens of thousands of highly complex tables across disjointed cloud storage buckets, operational databases, and software applications. When a data scientist is tasked with building a machine learning model to predict customer churn, their primary bottleneck is not writing the Python code; their primary bottleneck is simply finding the data. They must determine which database holds the customer activity logs, decipher what the obscurely named columns (like `c_stat_act_v2`) actually mean, and verify whether the data is actively maintained or dangerously obsolete. Data Discovery platforms completely resolve this chaos by automating the mapping of the corporate data landscape.
+## Discovery Platforms
 
-## The Architecture of Discovery Platforms
+Discovery is usually delivered by a [data catalog](/knowledgebase/data-catalog/) product. Commercial examples include [Alation](/knowledgebase/alation/) and [Collibra](/knowledgebase/collibra/); open-source options include [DataHub](/knowledgebase/datahub/), OpenMetadata, and [Amundsen](/knowledgebase/amundsen/). These tools act as a search index over the whole data estate.
 
-The capability to seamlessly discover data is driven by Enterprise Data Catalogs (such as Alation, Collibra, or open-source solutions like DataHub). These platforms function effectively as the central "Google Search" for the entire data ecosystem.
+### Metadata Harvesting
+A discovery platform does not store the data itself. Connectors or crawlers pull technical [metadata](/knowledgebase/metadata/) from engines, catalogs, and tools such as Snowflake, Dremio, PostgreSQL, and dbt: table schemas, data types, and key relationships. The platform indexes that metadata so a search for "customer churn" returns related tables, views, and dashboards across systems.
 
-### Automated Metadata Harvesting
-A discovery platform does not store the physical petabytes of data. Instead, it deploys automated crawlers that continuously connect to the various storage and compute engines (Snowflake, Dremio, PostgreSQL, dbt). These crawlers harvest technical metadata—extracting the exact table schemas, data types, and primary key relationships. They index this metadata into a highly optimized, centralized search engine. When the data scientist searches for "Customer Churn", the platform instantly returns every table, view, and dashboard related to that specific topic across the entire company.
+## Profiling and Classification
 
-## Automated Profiling and Semantic Enrichment
+Finding a table is the first step. Understanding its contents is the second.
 
-Finding the table is only the first step; understanding the contents is the critical second step. If a user finds a `User_Activity` table but the columns are completely undocumented, the data remains functionally useless.
+* **[Data profiling](/knowledgebase/data-profiling/):** The platform runs lightweight statistical queries and reports min and max values, null percentages, and distinct counts per column, so a user can judge quality without writing SQL.
+* **[Classification](/knowledgebase/data-classification/):** Many platforms tag columns using pattern matching or ML. A column named `ct_ssn` whose values match `XXX-XX-XXXX` can be tagged as sensitive PII and flagged for the governance team. These tags still need human review, because pattern-based classifiers produce false positives and misses.
 
-Modern Data Discovery platforms solve this through Automated Profiling and Semantic Enrichment.
+## Business Context and Trust
 
-* **Data Profiling:** When a table is cataloged, the discovery engine executes lightweight statistical queries against the raw data. It profiles the columns, determining the absolute Min/Max values, the percentage of `NULL` values, and the distinct cardinality (the number of unique values). By presenting this profile visually, the data scientist can instantly evaluate the quality of the dataset without ever writing a SQL query.
-* **Semantic Tagging:** Highly advanced discovery engines utilize machine learning to semantically tag columns. If a crawler discovers a column named `ct_ssn` containing a specific regex pattern (`XXX-XX-XXXX`), the discovery engine automatically tags the column as "Highly Sensitive PII (Social Security Number)" and alerts the data governance team, ensuring compliance protocols are immediately enforced.
+Technical metadata does not explain business meaning. Discovery platforms add wiki-style descriptions, ownership, certifications, and comments so [data stewards](/knowledgebase/data-stewardship/) can mark a table as deprecated or certify it for financial reporting.
 
-## Crowdsourcing and Organizational Trust
+They also show [data lineage](/knowledgebase/data-lineage/): how data flowed from ingestion through transformations into the final table. Lineage lets a user check where numbers came from before relying on them, and lets engineers see which dashboards break if a source changes.
 
-The final, and most critical, component of Data Discovery is establishing human trust. 
+## Discovery on an Iceberg Lakehouse
 
-Technical metadata cannot explain business context. Data Discovery platforms provide collaborative, wiki-like interfaces that allow Data Stewards and subject matter experts to augment the tables with human intelligence. A data engineer can explicitly document that a specific table is "Deprecated and should no longer be used for financial reporting." Analysts can leave comments, ask questions, or officially endorse a dataset as the highly verified "Single Source of Truth." 
+In a lakehouse, two kinds of catalog are easy to confuse:
 
-Furthermore, the discovery platform integrates Automated Data Lineage. It visually maps exactly how the data flowed from the raw ingestion API into the final table. This absolute transparency allows the data scientist to verify the mathematical integrity of the pipeline, completely establishing trust in the data before they integrate it into their machine learning models.
+| Layer | Examples | What it does |
+|---|---|---|
+| Technical (table) catalog | [Apache Polaris](/knowledgebase/apache-polaris/), [Project Nessie](/knowledgebase/project-nessie/), [Unity Catalog](/knowledgebase/unity-catalog/) OSS, [AWS Glue](/knowledgebase/aws-glue/) Data Catalog | Tracks the current metadata file for each [Apache Iceberg](/knowledgebase/apache-iceberg/) table so engines can commit and read consistently, and enforces access |
+| Discovery and governance catalog | DataHub, OpenMetadata, Alation, Collibra | Search, documentation, ownership, glossary terms, lineage across many systems |
+| [Semantic layer](/knowledgebase/semantic-layer/) | Dremio views and wikis, dbt semantic models | Business-friendly views and metric definitions on top of the tables |
 
-## Summary of Technical Value
+An Iceberg REST catalog knows that `sales.orders` exists and where its snapshots live, but it does not tell an analyst what "net revenue" means or who owns the table. Discovery tools fill that gap by harvesting from the table catalog and the engines that query it. Some lakehouse platforms combine both roles; Dremio, for example, offers catalog search, wikis, and tags next to its Iceberg catalog. For how the Iceberg REST catalog fits in, see [What Apache Iceberg REST Catalog is and isn't](/blog/2024-8-what-apache-iceberg-rest-catalog-is-and-isnt/), and for the boundary between documentation and business definitions see [Semantic Layer vs. Data Catalog](/blog/2026-02-semantic-layer-04-vs-data-catalog/).
 
-Data Discovery transformed the massive, unmanageable data lake into a highly searchable, intuitively structured enterprise asset. By combining automated metadata harvesting, statistical profiling, and collaborative human intelligence, Data Discovery platforms entirely eliminate the massive engineering bottlenecks associated with finding and verifying data. It ensures that data teams spend their time executing high-value analytical work rather than endlessly searching for obscure tables.
+## Summary
+
+Data discovery turns a large collection of tables into something people can search and evaluate. By combining harvested metadata, profiling, classification, human documentation, and lineage, discovery platforms cut the time teams spend hunting for and verifying data. On a lakehouse they sit on top of the Iceberg table catalog rather than replacing it.
 
 
 ## Learn More

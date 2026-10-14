@@ -1,37 +1,43 @@
 ---
-title: "What is a Cloud Data Warehouse?"
-meta_title: "What is a Cloud Data Warehouse? | Expert Data Lakehouse Architecture Guide"
-description: "A comprehensive guide to Cloud Data Warehouses. Learn how decoupled compute and storage revolutionized analytical database performance and scalability."
+title: "Cloud Data Warehouse vs Open Lakehouse: Storage, Formats, and Lock-In"
+meta_title: "Cloud Data Warehouse vs Open Lakehouse | Glossary"
+description: "A cloud data warehouse is a managed analytical database such as Snowflake or BigQuery. Compare its storage, formats, and lock-in with an open Iceberg lakehouse."
 ---
 
-# What is a Cloud Data Warehouse?
+A Cloud Data Warehouse (CDW) is a managed analytical database delivered as a service on cloud infrastructure. Snowflake, Google BigQuery, Amazon Redshift, Azure Synapse, and Databricks SQL are common examples. The vendor runs the servers, storage, upgrades, and scaling, and you load data and query it with SQL.
 
-A Cloud Data Warehouse (CDW) is a highly specialized, centrally managed analytical database delivered as a managed service on cloud infrastructure (like AWS, Azure, or GCP). Represented by platforms like Snowflake, Google BigQuery, and Amazon Redshift, the Cloud Data Warehouse completely revolutionized business intelligence by shattering the physical hardware limitations that plagued legacy, on-premises data appliances.
+Earlier [data warehouses](/knowledgebase/data-warehouse/) were on-premises appliances (Teradata, Netezza, Oracle Exadata) where compute and storage came in the same box. Running out of disk meant buying more of both, even if CPU was idle. Cloud warehouses changed that by separating the two.
 
-In the 1990s and 2000s, data warehouses were massive physical server racks (like Teradata or Oracle Exadata) sitting in corporate basements. In these legacy appliances, Compute (the CPU processing power) and Storage (the hard drives) were physically locked together. If an organization accumulated too much historical data and ran out of hard drive space, they were physically forced to buy an entirely new, million-dollar server rack, even if they absolutely did not need any additional CPU power. The Cloud Data Warehouse solved this catastrophic inefficiency by completely decoupling storage from compute at the architectural layer.
+## Separating Storage and Compute
 
-## The Architecture of Decoupling
+### Storage
+Data loaded into a cloud warehouse is stored on the provider's object or distributed storage, apart from the query servers. Storage is billed by volume, so keeping years of history is a cost question rather than a capacity question.
 
-The primary innovation of platforms like Snowflake was treating cloud storage and cloud compute as two completely independent, elastic resources.
+### Compute
+Queries run on compute clusters that can be resized, paused, or run in parallel against the same data. Snowflake virtual warehouses can auto-suspend when idle and resume in seconds, billed per second after a one-minute minimum. BigQuery's on-demand model bills by data scanned, with capacity-based pricing as an alternative. Redshift added RA3 nodes with managed storage in 2019 and later a serverless option. The details differ, but the shared idea is that compute can scale independently of stored data.
 
-### Infinite Storage
-When data is loaded into a Cloud Data Warehouse, it is physically written to the cloud provider's underlying object storage (like Amazon S3), completely separate from the active servers. This allows organizations to store petabytes of data for pennies per gigabyte. They can hold ten years of historical data effortlessly without ever worrying about "running out of disk space."
+## The Lock-In Question
 
-### Elastic, On-Demand Compute
-The query processing is handled by completely separate clusters of Virtual Machines (VMs). 
-If a financial analyst runs a massive End-of-Year aggregation query, the CDW spins up a massive 128-node compute cluster instantly. It pulls the specific required data from the storage layer, executes the heavy math, returns the result, and immediately spins the massive cluster back down to zero. The organization pays for the massive compute *only* for the 45 seconds the query was actually running.
+Historically, data loaded into a cloud warehouse was stored in the vendor's internal format, readable only through that vendor's engine. Using the same data in Spark, a Python ML pipeline, or another engine meant exporting it and paying for the compute (and sometimes egress) to do so. That is the [vendor lock-in](/knowledgebase/vendor-lock-in/) concern behind the open lakehouse movement.
 
-## The Limitation: Proprietary Lock-In
+The picture has shifted. Snowflake made Apache Iceberg tables generally available in June 2024, BigQuery supports Iceberg through BigLake, and Redshift can query Iceberg tables. The remaining questions are about which features work on open tables, which catalog is the system of record, and whether other engines can write, not only read.
 
-While Cloud Data Warehouses achieved incredible performance and usability, they introduced a severe strategic vulnerability: Vendor Lock-In.
+## Cloud Data Warehouse vs Open Lakehouse
 
-When an organization loads data into a CDW like Snowflake, the data is heavily transformed into Snowflake's proprietary, closed storage format. The organization cannot simply point Apache Spark or a custom Python script at the underlying storage to train a machine learning model; they must pull the data back *out* of Snowflake, paying massive computational and egress fees. 
+| | Cloud data warehouse (native tables) | Open lakehouse ([Apache Iceberg](/knowledgebase/apache-iceberg/)) |
+|---|---|---|
+| Storage format | Vendor-internal | Parquet files plus Iceberg metadata in your object storage |
+| Who can read and write | The vendor's engine | Any Iceberg-compatible engine: Dremio, Spark, Trino, Flink, DuckDB, and warehouses that support Iceberg |
+| Catalog | Built into the warehouse | Open catalogs such as Apache Polaris, Nessie, Unity Catalog OSS, or AWS Glue |
+| Operations | Fully managed: maintenance, tuning, security | You or a managed service handle compaction, snapshot expiry, and catalog operations |
+| Cost model | Vendor storage plus compute credits or scan pricing | Object storage pricing plus whichever engines you run |
+| Switching engines | Requires export or migration | Point another engine at the same tables |
 
-This strict proprietary lock-in is the exact reason massive enterprises are heavily migrating away from the closed Cloud Data Warehouse model and moving aggressively toward the Open [Data Lakehouse](/data-lakehouse) model (utilizing [Apache Iceberg](/apache-iceberg)), which provides the exact same elastic cloud performance but guarantees permanent, open ownership of the underlying data files.
+Many organizations run both: a warehouse for workloads that rely on its features, and Iceberg tables as the shared layer that several engines use. For the cost side, read [Building an Honest TCO Model for Open Lakehouses and Proprietary Warehouses](/blog/lakehouse-vs-warehouse-tco/). For moving tables over, see [A Migration Playbook for Moving Legacy Warehouses onto Apache Iceberg](/blog/warehouse-to-iceberg-migration-playbook/).
 
-## Summary of Technical Value
+## Summary
 
-The Cloud Data Warehouse represented a massive evolutionary leap in data engineering. By physically decoupling storage from compute, it provided organizations with infinite scalability, zero-maintenance infrastructure, and the ability to provision massive computational power on demand. While its proprietary nature is driving the industry toward open lakehouses, the architectural principles established by the CDW permanently defined the expectations for modern analytical performance.
+Cloud data warehouses made elastic, managed analytics standard by separating storage from compute. Their main limitation was proprietary storage, and that line is softening as warehouses add Iceberg support. An open lakehouse takes the same separation one step further by keeping the data in an open format and an open catalog that any engine can use.
 
 ## Learn More
 To learn more about the Data Lakehouse, read [The Lakehouse Built for Everyone](https://books.alexmerced.com/books/the-lakehouse-built-for-everyone/) by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

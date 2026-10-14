@@ -1,44 +1,48 @@
 ---
-title: "What is dlt?"
-meta_title: "What is dlt? | Expert Data Lakehouse Architecture Guide"
-description: "A comprehensive guide to dlt (Data Load Tool). Learn about Pythonic data extraction, implicit schema inference, and micro-batch ingestion."
+title: "dlt (Data Load Tool): Python Ingestion Into Iceberg, DuckDB, and Warehouses"
+meta_title: "dlt (Data Load Tool) for Iceberg and DuckDB | Glossary"
+description: "dlt is an open-source Python library that loads API and database data into warehouses and lakes. See how it writes Iceberg tables and compares to Airbyte."
 ---
 
-# What is dlt?
+dlt (data load tool) is an open-source Python library, maintained by dltHub, that extracts data from APIs, databases, and files and loads it into warehouses, DuckDB, and data lake storage. It is not a hosted service or an orchestrator. You `pip install dlt` and call it from an ordinary Python script, a notebook, or a task inside [Apache Airflow](/knowledgebase/apache-airflow/) or [Dagster](/knowledgebase/dagster/).
 
-dlt (Data Load Tool) is a highly lightweight, open-source Python library designed to simplify the extraction and loading of data directly from messy APIs into structured databases and open data lakehouses. Unlike massive orchestration platforms (like Apache Airflow) or heavyweight integration engines (like Airbyte), dlt operates exclusively as an incredibly lean Python library that data engineers can seamlessly `pip install` directly into their existing scripts.
+Writing a script that pages through a REST API is easy. The hard part is everything after: flattening nested JSON, creating and altering destination tables, typing columns, and remembering where the last run stopped. dlt handles those steps so a pipeline stays a few dozen lines of Python.
 
-Historically, writing a Python script to extract data from a paginated REST API was easy. However, taking that raw JSON data, normalizing the nested arrays, explicitly defining the DDL schema in Snowflake or PostgreSQL, and managing incremental state loading required hundreds of lines of complex, brittle code. dlt completely abstracts these exact engineering burdens away, allowing developers to build robust ingestion pipelines using just a few lines of standard Python.
+## Schema Inference and Evolution
 
-## The Architecture of Implicit Schema Inference
-
-The most profound technological capability of dlt is its engine for implicit schema inference and evolution. 
-
-When a developer uses the `requests` library to pull a complex, deeply nested JSON payload from an external API, they simply pass that raw JSON object directly to the dlt pipeline. dlt intercepts the data and analyzes it mathematically in memory. 
+You hand dlt Python objects (dicts, lists, generators, or Arrow tables). During its normalize step it infers a schema from the data it sees.
 
 ### Flattening and Typing
-dlt automatically unpacks deeply nested JSON arrays and flattens them into a relational structure. It assigns explicit mathematical data types to the columns based on the values it observes (e.g., recognizing that a string containing "2026-05-14" should be explicitly typed as a `TIMESTAMP` in the destination database). 
+Nested dictionaries are flattened into columns, and nested lists become child tables linked to their parent by generated keys. Column types are inferred from values, and dlt's detectors can type ISO 8601 strings as timestamps.
 
-### Automated DDL Generation
-Once dlt understands the shape of the data, it automatically connects to the destination database (such as BigQuery, DuckDB, or an [Apache Iceberg](/apache-iceberg) catalog). It generates the precise `CREATE TABLE` and `ALTER TABLE` SQL commands natively required by that specific database dialect. If the external API introduces a completely new field tomorrow, dlt detects the schema drift instantly and dynamically issues the `ALTER TABLE ADD COLUMN` command before loading the new data, entirely preventing the pipeline from crashing.
+### Automated DDL
+dlt generates the `CREATE TABLE` and `ALTER TABLE` statements the destination needs. When a source adds a field, dlt adds the column on the next load instead of failing. You can tighten this with schema contracts that freeze tables or columns, which is useful once a pipeline feeds production models.
 
-## Incremental Loading and State Management
+## Incremental Loading and State
 
-Extracting an entire massive dataset from an API every night is highly inefficient and often violates strict API rate limits. High-performance pipelines must extract only the records that have changed since the previous execution.
+Re-extracting a full dataset every night wastes API quota. dlt's `dlt.sources.incremental` helper tracks a cursor field such as `updated_at`, and the pipeline stores its state alongside the loaded data in the destination. On the next run, the resource reads the last cursor value and requests only newer records. Combined with the `merge` write disposition and a primary key, reruns update existing rows instead of appending duplicates. See [idempotency](/knowledgebase/idempotency/) for why that matters.
 
-Managing this incremental state in a custom Python script requires the engineer to build a complex database specifically to store timestamps and offset cursors. dlt handles this natively through its integrated State mechanism. 
+## dlt in a Data Lakehouse
 
-A developer simply instructs dlt to track a specific field (like `updated_at`). When the pipeline runs, dlt automatically queries its internal state file, retrieves the highest timestamp from the last successful run, and injects that timestamp directly into the new API request. This micro-batching architecture guarantees that the pipeline remains highly efficient and completely idempotent without requiring any external state-management infrastructure.
+For lakehouse work, the filesystem destination can write [Apache Iceberg](/knowledgebase/apache-iceberg/) tables by setting `table_format="iceberg"`. dlt writes Parquet and commits it through PyIceberg, so it works with the catalogs PyIceberg can load, such as an Iceberg REST catalog (for example [Apache Polaris](/knowledgebase/apache-polaris/)) or a SQL catalog. Current limits include no partition evolution after table creation and some restrictions on upserts, so check the dlt Iceberg docs before relying on it for high-volume merges.
 
-## Integration with Modern Data Workflows
+A common pattern is to use dlt for the [bronze layer](/knowledgebase/bronze-layer/) of a [medallion architecture](/knowledgebase/medallion-architecture/): land raw API data as Iceberg tables, then let Spark, Dremio, Trino, or dbt build silver and gold tables on top. For local work, the [DuckDB](/knowledgebase/duckdb/) destination lets an analyst pull an API into a database file and query it right away.
 
-Because dlt is simply a standard Python library, it integrates instantly into the broader modern data ecosystem. 
+### dlt vs Airbyte vs Fivetran
 
-It does not compete with orchestrators; it enhances them. An engineer can easily embed a dlt ingestion script directly inside a Dagster Software-Defined Asset or an Apache Airflow `PythonOperator`. Furthermore, dlt integrates perfectly with DuckDB. A data scientist can use dlt to extract a massive dataset from the Hubspot API, use dlt to load it directly into a local DuckDB instance in milliseconds, and immediately begin running complex SQL aggregations on their laptop.
+| | dlt | [Airbyte](/knowledgebase/airbyte/) | [Fivetran](/knowledgebase/fivetran/) |
+|---|---|---|---|
+| Form factor | Python library | Platform with UI and connector catalog | Managed SaaS |
+| Where it runs | Your process, notebook, or orchestrator task | Self-hosted or Airbyte Cloud | Vendor infrastructure |
+| Custom sources | Write Python generators | Connector builder or CDK | Limited, mostly vendor-built |
+| Iceberg output | Filesystem destination via PyIceberg | Iceberg destinations available | Managed data lake destinations |
+| Best fit | Engineers who want code-first pipelines | Teams that want many prebuilt connectors | Teams that want no pipeline operations |
 
-## Summary of Technical Value
+For a longer comparison, read [The Lakehouse Ingestion Tool Landscape: Fivetran, Airbyte, dlt, and CDC vs Batch](/blog/lakehouse-ingestion-tools/).
 
-dlt represents a massive shift toward "Data Engineering as Code." By condensing the immensely complex logic of schema inference, DDL generation, JSON flattening, and state management into a lightweight, easily importable Python library, dlt empowers developers to build highly resilient, production-grade ingestion pipelines instantly. It strips away the heavy infrastructure requirements of traditional ELT tools, providing pure, highly optimized programmatic ingestion for the modern data stack.
+## Summary
+
+dlt packs schema inference, DDL generation, JSON flattening, and incremental state into a Python library. It suits engineers who want ingestion as code without running a separate ingestion platform, and its Iceberg support lets those pipelines land data directly in an open lakehouse.
 
 
 ## Learn More

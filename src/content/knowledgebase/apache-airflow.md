@@ -1,56 +1,59 @@
 ---
-title: "What is Apache Airflow?"
-meta_title: "What is Apache Airflow? | Expert Data Lakehouse Architecture Guide"
-description: "A comprehensive guide to Apache Airflow. Learn about workflow orchestration, Directed Acyclic Graphs (DAGs), and modern data engineering pipelines."
+title: "Apache Airflow for Lakehouse Pipelines: DAGs, Airflow 3, and Iceberg"
+meta_title: "Apache Airflow for Lakehouse Pipelines | Glossary"
+description: "Apache Airflow is an open-source platform for authoring, scheduling, and monitoring workflows in Python. See how Airflow 3 orchestrates Iceberg pipelines."
 ---
 
-# What is Apache Airflow?
+Apache Airflow is an open-source platform for authoring, scheduling, and monitoring workflows as Python code. Maxime Beauchemin started it at Airbnb in 2014, it entered the Apache Incubator in 2016, and it became an Apache Software Foundation top-level project in January 2019. Airflow 3.0 shipped in April 2025, and it is one of the most widely deployed orchestrators in data engineering.
 
-Apache Airflow is a highly scalable, open-source platform used to programmatically author, schedule, and monitor complex computational workflows. Originally created by Airbnb in 2014 to manage their increasingly chaotic data engineering pipelines, Airflow quickly became the industry standard for workflow orchestration.
+In a [data lakehouse](/knowledgebase/data-lakehouse/), data is extracted from source systems, transformed by engines such as Apache Spark, dbt, or Dremio, tested, and written to [Apache Iceberg](/knowledgebase/apache-iceberg/) tables. Airflow coordinates those steps. It does not process the data itself; it triggers, sequences, and monitors the systems that do.
 
-In modern data architecture, data rarely sits still. It must be extracted from operational databases via APIs, transformed by massive computation engines like Apache Spark, and tested for quality before being loaded into a [Data Lakehouse](/data-lakehouse). Airflow acts as the central control plane for this entire process. It does not process the data itself; rather, it triggers, monitors, and manages the execution sequence of the systems that do process the data.
+## Workflows as Directed Acyclic Graphs
 
-## The Architecture of Directed Acyclic Graphs (DAGs)
+Airflow workflows are defined in Python rather than in a drag-and-drop tool or a set of cron entries. Each workflow is a [Directed Acyclic Graph](/knowledgebase/directed-acyclic-graph/) (DAG):
 
-The fundamental concept behind Airflow is "Configuration as Code." Instead of using fragile drag-and-drop interfaces or chaotic chron jobs, data engineers define their workflows entirely using standard Python code.
+* **Directed:** tasks have an order (Task A must finish before Task B starts).
+* **Acyclic:** the workflow cannot loop back on itself.
+* **Graph:** tasks and their dependencies form a graph that the UI can display.
 
-Airflow structures these workflows as Directed Acyclic Graphs (DAGs). 
-* **Directed** means the tasks have a strict execution order (Task A must finish before Task B begins). 
-* **Acyclic** means the workflow cannot loop back on itself (creating an infinite loop).
-* **Graph** represents the visual structure of the tasks and their dependencies.
+Because DAGs are code, teams can keep them in Git, review changes in pull requests, and test task logic before deploying.
 
-By expressing pipelines as Python code, engineering teams can apply rigorous software development practices. They can version control their pipelines using Git, execute automated testing on their task logic, and collaboratively review workflow changes before deploying them to production.
+## Core Components (Airflow 3)
 
-## Core Components of the Airflow Architecture
+* **Scheduler:** evaluates schedules and dependencies and decides which tasks are ready. The executor runs inside the scheduler process and hands tasks off for execution.
+* **DAG processor:** parses DAG files from DAG bundles (by default a local folder) and stores serialized DAGs in the metadata database. In Airflow 3 it runs as its own component.
+* **API server:** serves the web UI and REST API, and is the interface tasks use to report state.
+* **Executor and workers:** the LocalExecutor runs tasks on the scheduler host; the CeleryExecutor and KubernetesExecutor distribute them to workers or pods.
+* **Triggerer:** runs deferred tasks, so a task waiting on an external event does not occupy a worker slot.
+* **Metadata database:** usually PostgreSQL or MySQL, storing DAG runs, task states, and connection definitions. In Airflow 3, task code does not connect to this database directly; it talks to the API server.
 
-To execute thousands of concurrent tasks reliably across distributed environments, Airflow utilizes a robust, multi-component architecture.
+If a task fails, the scheduler can retry it according to its retry settings, using the state recorded in the metadata database.
 
-### The Scheduler
-The Scheduler is the heartbeat of Airflow. It continuously monitors all defined DAGs and evaluates their dependencies and temporal schedules. When a DAG is triggered, the Scheduler determines exactly which individual tasks are ready to run and pushes them into an execution queue.
+## Operators and Providers
 
-### The Executor and Workers
-Once a task is queued, the Executor handles the allocation of resources. While simple local setups might use a LocalExecutor, production enterprise environments rely on distributed systems like the CeleryExecutor or the KubernetesExecutor. The Executor dispatches the tasks to Worker nodes. The Workers are the physical processes that execute the actual Python code—such as making an API call to start a Snowflake query or triggering an Apache Spark cluster to begin a transformation.
+Tasks are usually built from operators, which are reusable templates for a type of work. `BashOperator` runs a shell command, `PythonOperator` (or the `@task` decorator) runs a Python function, and `SQLExecuteQueryOperator` runs SQL against any database with a supported connection. Sensors wait for a condition, such as `S3KeySensor` waiting for a file to land in S3.
 
-### The Metadata Database
-Airflow heavily relies on a central relational database (typically PostgreSQL or MySQL). This database maintains the absolute state of the entire system. It stores DAG definitions, historical execution logs, task statuses, and connection credentials. If a worker node crashes, the Scheduler uses the Metadata Database to recognize the failure and orchestrate a task retry automatically.
+Provider packages add operators for specific tools. A DAG can wait for a file with `S3KeySensor`, start a Databricks job with `DatabricksSubmitRunOperator`, and post to Slack with a Slack provider operator when the run finishes.
 
-## Operators and Integrations
+## Failure Handling and Idempotency
 
-Airflow is explicitly designed to be infinitely extensible. Engineers do not write raw API requests for every task; instead, they use Operators.
+Networks time out, APIs return errors, and databases lock. Airflow lets each task define retries and delays, and the UI shows which task failed and why. Retries are only safe if tasks are [idempotent](/knowledgebase/idempotency/): running the same task twice for the same interval must give the same result. For Iceberg tables, that usually means writing with `MERGE INTO` or overwriting a specific partition for the run's date instead of blindly appending.
 
-An Operator is a pre-built template for a specific type of task. For instance, the `BashOperator` executes a terminal command, the `PythonOperator` runs a custom Python function, and the `PostgresOperator` executes a SQL script. 
+## Airflow in an Iceberg Lakehouse
 
-The true power of Airflow lies in its immense ecosystem of Community Providers. There are native Operators for virtually every tool in the modern data stack. An engineer can easily define a DAG that uses the `HttpSensor` to wait for a file to drop in an S3 bucket, uses the `DatabricksSubmitRunOperator` to trigger a massive Spark job to process the file, and finally uses the `SlackAPIPostOperator` to notify the engineering team that the pipeline completed successfully.
+A typical lakehouse DAG looks like this:
 
-## Managing Failure and Idempotency
+1. Wait for new source files or a finished ingestion job.
+2. Load raw data into a [bronze layer](/knowledgebase/bronze-layer/) Iceberg table.
+3. Run dbt or Spark SQL to build [silver](/knowledgebase/silver-layer/) and [gold](/knowledgebase/gold-layer/) tables.
+4. Run data quality checks, and only publish if they pass (a [write-audit-publish](/knowledgebase/write-audit-publish/) pattern, often with Iceberg branches).
+5. Run table maintenance on a separate schedule: compaction with `rewrite_data_files`, snapshot cleanup with `expire_snapshots`, and orphan file removal.
 
-In distributed data systems, failure is inevitable. Networks timeout, APIs crash, and databases lock. Traditional chron jobs fail silently or require massive manual intervention to restart.
+Since Airflow 2.4, DAGs can also be scheduled by data rather than time; Airflow 3 calls these Assets, so a downstream DAG can run when an upstream DAG updates a table. Alternatives such as [Dagster](/knowledgebase/dagster/) and [Prefect](/knowledgebase/prefect/) take a more asset-centric or Python-native approach. For a current comparison, see [Orchestration in 2026: Airflow 3 vs Dagster vs Prefect vs Event-Driven](/blog/orchestration-in-2026/), and for a worked multi-engine example, see [Orchestrating Airflow DAGs with GitHub Actions](/blog/2024-10-github-actions-dbt-airflow-data/).
 
-Airflow handles failure natively. Engineers can configure tasks with specific retry logic, instructing Airflow to wait five minutes and try the API call again if a timeout occurs. Furthermore, Airflow heavily promotes the concept of Idempotency. An idempotent pipeline guarantees that no matter how many times a task is executed, the final result remains exactly the same. By combining Airflow's robust retry mechanics with idempotent SQL transformations, data engineering teams ensure that pipeline failures resolve themselves automatically without duplicating or corrupting the underlying data lakehouse.
+## Summary
 
-## Summary of Technical Value
-
-Apache Airflow brought strict software engineering discipline to the chaotic world of data pipelines. By representing complex execution dependencies as programmatic Python DAGs, Airflow provides data teams with complete observability over their infrastructure. Its highly distributed execution architecture, vast ecosystem of operators, and robust failure management make it the undisputed orchestration layer for the modern enterprise data stack.
+Apache Airflow brought software engineering practices to data pipelines by expressing workflows as Python DAGs. Its scheduler, DAG processor, API server, executors, and large provider ecosystem let it coordinate everything from ingestion to dbt runs to Iceberg table maintenance. It remains a common orchestration choice for lakehouse teams, alongside newer tools such as Dagster and Prefect.
 
 
 ## Learn More

@@ -1,55 +1,67 @@
 ---
-title: "What are Slowly Changing Dimensions (SCD)?"
-meta_title: "What are Slowly Changing Dimensions? | Expert Data Lakehouse Guide"
-description: "A comprehensive guide to Slowly Changing Dimensions (SCD). Learn how data warehouses track historical changes using Type 1, Type 2, and Type 3 SCD patterns."
+title: "Slowly Changing Dimensions (SCD) on Apache Iceberg: Types 1, 2, and 3"
+meta_title: "Slowly Changing Dimensions: Types 1-3 on Apache Iceberg"
+description: "Slowly changing dimensions are patterns for tracking changes to dimension attributes. See Types 1, 2, and 3 on Iceberg and why time travel is no substitute."
 ---
 
-# What are Slowly Changing Dimensions (SCD)?
+Slowly Changing Dimensions (SCD) are a set of dimensional modeling patterns for handling changes to dimension attributes over time in a data warehouse or [data lakehouse](/knowledgebase/data-lakehouse/).
 
-Slowly Changing Dimensions (SCD) are a foundational concept in dimensional data modeling used to manage how a Data Warehouse or [Data Lakehouse](/data-lakehouse) handles updates to historical records over time.
+In operational databases, if a customer changes their last name, or an employee is promoted from "Analyst" to "Manager", the application issues an `UPDATE` and overwrites the old value. The operational database cares about the current state.
 
-In operational databases, if a customer gets married and changes their last name, or if an employee gets promoted from "Analyst" to "Manager", the application simply issues a SQL `UPDATE` statement, overwriting the old value. The operational database only cares about the absolute present state.
-
-However, a Data Warehouse is fundamentally designed for historical analysis. If you simply overwrite the employee's title to "Manager", a business analyst running a report for last year’s payroll will incorrectly assume the employee was a Manager back then, severely skewing the historical financial metrics. Slowly Changing Dimensions provide the strict architectural methodologies required to track these changes accurately without corrupting historical truth.
+An analytical system often needs history. If you overwrite the employee's title with "Manager", a report on last year's sales by job title will attribute last year's sales to a Manager, which was not true at the time. Slowly Changing Dimensions define how to track these changes so historical reports stay accurate.
 
 ## The Primary SCD Types
 
-Data architects manage historical changes using different specific patterns, depending entirely on the business requirements for that specific attribute.
+Data architects choose a pattern per attribute, based on what the business needs to report.
 
 ### SCD Type 1: Overwrite
-Type 1 is the simplest approach: it completely ignores history. If a customer corrects a typo in their shipping address, the data warehouse issues a standard `UPDATE` command, completely destroying the old record and replacing it with the new one. 
+Type 1 ignores history. If a customer corrects a typo in their shipping address, the pipeline issues an `UPDATE` and replaces the old value with the new one.
 
-**Use Case:** Type 1 is used exclusively for data where historical tracking provides absolutely zero business value. If an application fixes a misspelled username, tracking that the username used to be spelled wrong is a waste of analytical storage.
+**Use Case:** Type 1 fits attributes where the old value has no analytical meaning, such as a corrected misspelling. See [Type 1 SCD](/knowledgebase/type-1-scd/).
 
 ### SCD Type 2: Add New Row (Historical Preservation)
-Type 2 is the absolute gold standard for historical tracking in enterprise data warehousing. When a dimension changes, the old record is NOT overwritten. Instead, the database explicitly closes out the old record and inserts a completely new row for the updated state.
+Type 2 is the most common pattern when full history is needed. When a dimension attribute changes, the old row is not overwritten. The pipeline closes out the old row and inserts a new row for the updated state.
 
-To achieve this, the table architecture must include specialized metadata columns:
-* **Surrogate Key:** A unique, auto-incrementing integer (e.g., `1045`) that serves as the actual primary key, completely decoupled from the operational ID.
-* **Effective Start Date:** The exact timestamp the specific record became active.
-* **Effective End Date:** The exact timestamp the record ceased being active (often set to `9999-12-31` for the currently active row).
-* **Is_Current Flag:** A simple boolean (`TRUE`/`FALSE`) to allow analysts to filter quickly for the active state.
+To do this, the table needs extra columns:
+* **Surrogate Key:** A unique key (e.g., `1045`) that identifies each version of the record, separate from the operational ID. See [surrogate key](/knowledgebase/surrogate-key/).
+* **Effective Start Date:** When this version became active.
+* **Effective End Date:** When this version stopped being active (often `9999-12-31` for the current row).
+* **Is_Current Flag:** A boolean to filter quickly for the current version.
 
-If employee John Doe (Operational ID `E-100`) is promoted to Manager on May 1st, 2026, the database updates his original row (setting `End Date` to May 1st and `Is_Current` to `FALSE`). It instantly inserts a brand new row for `E-100` with the title "Manager", setting the `Start Date` to May 1st and `Is_Current` to `TRUE`. 
+If employee John Doe (operational ID `E-100`) is promoted to Manager on May 1, 2026, the pipeline updates his existing row (setting the end date to May 1 and `is_current` to `FALSE`) and inserts a new row for `E-100` with the title "Manager", a start date of May 1, and `is_current` set to `TRUE`.
 
-**Use Case:** This allows an analyst to run a massive sales report and correctly attribute the sales John made in April to an "Analyst", and the sales he made in June to a "Manager".
+**Use Case:** An analyst can attribute the sales John made in April to an "Analyst" and the sales he made in June to a "Manager". See [Type 2 SCD](/knowledgebase/type-2-scd/).
 
 ### SCD Type 3: Add New Column (Partial History)
-Type 3 tracks history, but only the absolute most recent change. Instead of adding an entirely new row, the table architecture is modified to include an `old_value` and a `current_value` column explicitly.
+Type 3 keeps only the most recent prior value. Instead of adding rows, the table has a column for the current value and a column for the previous value.
 
-If a customer changes their state of residence from "New York" to "California", the pipeline updates the row: it moves "New York" into the `previous_state` column, and writes "California" into the `current_state` column. 
+If a customer moves from "New York" to "California", the pipeline moves "New York" into `previous_state` and writes "California" into `current_state`.
 
-**Use Case:** Type 3 is used when the business explicitly only cares about comparing the current state to the immediately preceding state, without needing the full, exhaustive history of every single move the customer ever made. It is highly space-efficient but structurally limited.
+**Use Case:** Type 3 fits when the business only compares the current value with the one immediately before it. It keeps the table small but cannot answer questions about older changes. See [Type 3 SCD](/knowledgebase/type-3-scd/).
 
 ## SCD Implementation in the Lakehouse
 
-Historically, implementing SCD Type 2 in a raw Apache Hadoop data lake was virtually impossible because raw HDFS files did not support `UPDATE` statements to close out the old records. Engineers had to execute massive, complex directory rewrites to track history.
+On older Hadoop data lakes built from plain Hive tables and files, closing out a Type 2 row meant rewriting whole partitions, because the files did not support row-level `UPDATE` (Hive ACID tables helped later, mostly within Hive).
 
-The modern Open Data Lakehouse entirely solved this. Open table formats like [Apache Iceberg](/apache-iceberg) and Apache Hudi provide strict ACID transactions and native `MERGE INTO` SQL commands directly on cloud object storage. Data engineers now utilize tools like dbt to automatically execute massive, complex SCD Type 2 merge logic natively against Iceberg tables, preserving perfect historical lineage without moving data into a proprietary warehouse.
+Open table formats changed this. [Apache Iceberg](/knowledgebase/apache-iceberg/), Delta Lake, and Apache Hudi provide ACID transactions and `MERGE INTO` on object storage. A Type 2 load on Iceberg is typically one `MERGE` that expires changed rows plus an insert of their new versions, run by Spark, Dremio, or Trino, or generated by dbt snapshots. Frequent merges on large dimensions benefit from [merge-on-read](/knowledgebase/merge-on-read/) and periodic compaction.
+
+## Is Iceberg Time Travel a Substitute for SCD Type 2?
+
+It is tempting to skip Type 2 because Iceberg already keeps old snapshots. It is usually the wrong call:
+
+| | SCD Type 2 | Iceberg time travel |
+|---|---|---|
+| Time axis | Business effective time (when the change was true) | System time (when the commit happened) |
+| Retention | Permanent, part of the data | Until snapshots are expired |
+| Query pattern | Join facts to the version valid at the fact's date | Read the whole table as of one point in time |
+| Late or corrected changes | Effective dates can be backdated | Commit time cannot be changed |
+| Cost | Extra rows in the dimension | Old data files kept in storage |
+
+Time travel is excellent for audits, debugging, and reproducing a report. Type 2 answers the business question "what was true when this sale happened". Most lakehouses use both. For more examples, read [Slowly Changing Dimensions: Types 1-3 with Examples](/blog/2026-02-data-modeling-06-slowly-changing-dimensions/).
 
 ## Summary of Technical Value
 
-Slowly Changing Dimensions are the architectural mechanism that guarantees the analytical integrity of a data warehouse. By explicitly defining exactly how historical modifications are tracked—whether discarding them via Type 1, preserving an exhaustive timeline via Type 2, or tracking immediate transitions via Type 3—SCDs ensure that business intelligence dashboards always reflect the precise historical reality of the organization, regardless of how often the operational data changes.
+Slowly Changing Dimensions keep historical reports accurate as dimension attributes change. Type 1 discards old values, Type 2 keeps a full timeline, and Type 3 keeps the immediately prior value. On a lakehouse, `MERGE INTO` on Iceberg tables makes all three practical on object storage, and snapshot time travel complements Type 2 rather than replacing it.
 
 
 ## Learn More

@@ -1,46 +1,46 @@
 ---
-title: "What is Marquez?"
-meta_title: "What is Marquez? | Expert Data Lakehouse & AI Glossary"
-description: "An open-source metadata service for the collection, aggregation, and visualization of a data ecosystem's lineage."
+title: "Marquez: The OpenLineage Reference Server for Lakehouse Lineage"
+meta_title: "Marquez: OpenLineage Lineage Server for Lakehouses"
+description: "Marquez is an open source metadata server that collects OpenLineage events and shows data lineage. See how it compares to DataHub and catalog lineage."
 ---
 
 ## What is Marquez?
 
-An open-source metadata service for the collection, aggregation, and visualization of a data ecosystem's lineage. 
+Marquez is an open source metadata service that collects, stores, and visualizes [data lineage](/knowledgebase/data-lineage/): which jobs ran, which datasets they read and wrote, and how each run went. It was created at WeWork, is licensed under Apache 2.0, and is a graduated project of the LF AI & Data Foundation. It is the reference implementation of the [OpenLineage](/knowledgebase/openlineage/) standard.
 
-In the rapidly evolving landscape of data engineering and artificial intelligence, **Marquez** has emerged as a critical foundational component. As organizations transition from legacy, monolithic architectures to decoupled, scalable environments, understanding the role of Marquez is essential for building future-proof infrastructure. This capability serves as a critical enabler in modern data ecosystems, explicitly guiding architecture toward absolute efficiency and scale. When correctly implemented, Marquez dynamically drives analytical workloads and structurally limits administrative technical debt.
+Marquez is not an access control or data quality tool. It records what happened in your pipelines so you can trace where data came from and what a change will affect downstream.
 
-## Core Architecture and Mechanics
+## How Marquez Works
 
-To understand the practical application of Marquez, it is crucial to systematically examine its fundamental operational behaviors and structural design:
+* **OpenLineage events in:** integrations for Spark, Airflow, Flink, dbt, and other tools emit OpenLineage run events (start, complete, fail) describing a job, its run, and its input and output datasets. Marquez accepts these through its HTTP API.
+* **Metadata model:** Marquez stores namespaces, jobs, runs, and datasets in PostgreSQL, with versions of each, so you can see how a dataset's schema or a job's inputs changed over time.
+* **Web UI and API:** a lineage graph shows upstream and downstream dependencies; the API lets other tools query lineage programmatically.
 
-* **Centralizes metadata to construct a comprehensive map of all corporate data assets and their hierarchical relationships.** This principle ensures that systems can scale horizontally without facing artificial limitations or bottlenecks.
-* **Applies granular access controls dynamically, masking or restricting data based on user identity or geographical constraints.** By adopting this mechanic, engineers can bypass traditional processing constraints and deliver substantially faster time-to-insight.
-* **Implements automated profiling and assertions to block bad data before it impacts downstream dashboards.** This allows the overarching architecture to remain highly resilient while serving concurrent workloads natively.
+Because the events follow an open spec, you can start with Marquez and later send the same events to another backend without changing your pipelines.
 
-Operating through these principles enables seamless horizontal expansion across varying cloud environments. It integrates effortlessly with adjacent technologies like [Apache Iceberg](/apache-iceberg), dbt, and advanced vector search algorithms.
+## Marquez in an Iceberg Lakehouse
 
-## Why Marquez Matters in the Modern Data Stack
+When Spark or Flink jobs write [Apache Iceberg](/knowledgebase/apache-iceberg/) tables, the OpenLineage integrations report the tables as datasets, so Marquez can show a path such as Kafka topic to bronze table to silver table to gold table. That helps answer impact questions ("which dashboards break if I change this column?") and audit questions ("which jobs wrote to this table last night?").
 
-Robust governance protects the business from compliance violations and internal breaches while simultaneously increasing internal trust in the data.
+| | Marquez | DataHub / OpenMetadata | Catalog lineage (Unity Catalog, Dremio, cloud catalogs) |
+|---|---|---|---|
+| Focus | Run-level lineage from OpenLineage events | Broad metadata platform: search, ownership, glossary, lineage | Lineage of objects the platform itself manages |
+| Lineage source | OpenLineage events | Connectors plus OpenLineage ingestion | Engine and catalog internals |
+| Footprint | API server, UI, PostgreSQL | Larger, several services | Built in |
+| Best fit | Teams standardizing on OpenLineage that want a light backend | Enterprise-wide discovery and governance | Teams mostly inside one platform |
 
-For modern enterprises managing decentralized teams, the implementation of Marquez eliminates significant architectural friction. Teams are explicitly empowered to operate autonomously against reliable technical foundations without dynamically disrupting other isolated workflows. It shifts manual engineering overhead into an autonomous, software-driven paradigm, keeping Total Cost of Ownership (TCO) extremely low.
-
-### Key Benefits
-- **Unprecedented Scalability:** Automatically adapts to massive fluctuations in data volume and query concurrency.
-- **Vendor Neutrality:** Strongly aligns with open-source frameworks, preventing aggressive vendor lock-in.
-- **Enhanced Observability:** Exposes deep, structural metadata allowing engineers to monitor and trace pipelines comprehensively.
+For more on the standard and the wider tool landscape, read [OpenLineage as the Spine of Data Observability](/blog/2026-05-openlineage-observability/), [Metadata Platforms in 2026](/blog/metadata-platforms-in-2026/), and [Introduction to Data Engineering Concepts: Metadata, Lineage, and Governance](/blog/2025-05-intro-to-data-engineering-concepts-11/).
 
 ## Frequently Asked Questions
 
-### What is Row-Level Security (RLS)?
-RLS is a database policy that automatically filters out rows (e.g., regional sales data) that the querying user is not authorized to see, without requiring separate views. This distinction is particularly important when evaluating total architecture costs and performance benchmarks.
+### What is the difference between Marquez and OpenLineage?
+OpenLineage is the specification and the integrations that emit events. Marquez is a server that stores those events and serves lineage from them.
 
-### What is active data governance?
-Active governance uses programmatic controls (like blocking a PR if data tests fail) rather than relying on manual, periodic audits. The open ecosystem continues to evolve rapidly, ensuring backward compatibility while introducing powerful new primitives.
+### Does Marquez enforce governance policies?
+No. It records lineage and run history. Access policies live in your catalog or query engine; Marquez helps you see the impact of changes.
 
-### How does Marquez impact data governance and security?
-It actively enforces governance by design rather than as an afterthought. Native logging, role-based access controls (RBAC), and structured access pathways provide immediate visibility into security boundaries and regulatory compliance.
+### Is Marquez still maintained?
+The repository still receives commits, but the most recent tagged release is 0.50.0 from October 2024. Check the GitHub releases page and weigh release cadence before choosing it for production.
 
 ---
 

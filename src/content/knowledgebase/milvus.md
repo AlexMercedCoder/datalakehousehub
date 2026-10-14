@@ -1,57 +1,66 @@
 ---
-title: "What is Milvus?"
-meta_title: "What is Milvus? | Expert Data Lakehouse Architecture Guide"
-description: "A comprehensive guide to Milvus. Learn about open-source vector databases, high-dimensional embeddings, HNSW indexing, and massive AI search scalability."
+title: "Milvus and the Lakehouse: When to Use a Vector Database vs Vector Search on Iceberg"
+meta_title: "Milvus Vector Database vs Lakehouse Vector Search"
+description: "Milvus is an open-source distributed vector database for similarity search on embeddings. See how it works and when a lakehouse needs it over vectors in tables."
 ---
 
-# What is Milvus?
+Milvus is an open-source, distributed vector database built for similarity search over embeddings in AI applications such as semantic search, recommendations, and Retrieval-Augmented Generation (RAG). It was created by Zilliz, which also sells a managed version (Zilliz Cloud), and it is a graduated project of the LF AI & Data Foundation, part of the Linux Foundation. Milvus is designed to scale to billions of vectors.
 
-Milvus is a highly scalable, open-source Vector Database purpose-built to power enormous embedding similarity searches and artificial intelligence applications. Originally created by Zilliz and now a top-level project under the Linux Foundation, Milvus is engineered to manage trillion-scale vector datasets with millisecond retrieval latencies.
-
-As organizations rapidly adopt generative AI and Large Language Models (LLMs), traditional relational databases fail to provide the necessary infrastructure. Relational databases execute exact-match queries based on strings and integers. AI models require similarity searches across high-dimensional numerical arrays (embeddings) representing the semantic meaning of text, images, or audio. Milvus provides the specialized storage layer and indexing algorithms absolutely required to make retrieval over massive embedding datasets possible.
+Relational databases are built for exact matches and range queries on strings and numbers. AI applications need nearest-neighbor search over high-dimensional vectors (embeddings) that represent the meaning of text, images, or audio. Milvus provides the storage layout and approximate nearest neighbor (ANN) indexes that make that search fast at large scale.
 
 ## The Cloud-Native Architecture
 
-Milvus is not a simple library operating within a Python script; it is a massive distributed database built upon a highly resilient, cloud-native architecture. It completely decouples storage from compute, allowing both layers to scale horizontally and entirely independently.
+Milvus can run as a library-like embedded instance (Milvus Lite), a single-node standalone server, or a distributed cluster on Kubernetes. The distributed version separates storage from compute so each scales independently.
 
 ### The Storage Layer
-Milvus relies on cloud object storage (such as Amazon S3 or MinIO) as its ultimate source of truth. It stores both the high-dimensional vector data and the associated scalar metadata. By utilizing object storage, Milvus ensures infinite scalability and immense durability without exorbitant infrastructure costs.
+* **Object storage** (S3, MinIO-compatible stores, Azure Blob, GCS) holds log snapshots, sealed data segments, and index files.
+* **A meta store** (etcd) holds cluster metadata and service registration.
+* **A write-ahead log** records incoming writes. Older releases relied on Kafka or Pulsar; Milvus 2.6 introduced Woodpecker, a WAL that writes directly to object storage, as an option.
 
 ### The Compute Layer
-The compute layer is composed of highly specialized nodes managed natively by Kubernetes. 
-* **Query Nodes:** Handle the actual vector similarity search execution.
-* **Data Nodes:** Manage data ingestion, continuously compacting raw data logs into optimized indexing structures.
-* **Index Nodes:** Execute the heavy mathematical operations required to build the complex vector indexes.
+In current releases (2.6 and later), the worker roles are:
+* **Coordinator:** a single active coordinator manages cluster topology, data placement, and scheduling.
+* **Streaming Nodes:** handle incoming writes and recent ("growing") data and convert it into sealed segments.
+* **Query Nodes:** load sealed segments and indexes and execute searches.
+* **Data Nodes:** do offline work such as compaction and index building.
 
-Because these nodes are stateless and independent, an organization facing a massive spike in query traffic can instantly scale up the Query Nodes without touching the Data or Index Nodes, ensuring maximum resource efficiency.
+Because query capacity is separate from ingestion and index building, a spike in search traffic can be handled by adding Query Nodes alone.
 
 ## High-Dimensional Indexing Algorithms
 
-Searching for the closest vector mathematically in a dataset of one billion embeddings requires calculating the distance (usually Cosine Similarity or Euclidean Distance) between the query vector and every single stored vector. Doing this sequentially (a brute-force scan) would take hours. 
-
-Milvus solves this latency challenge by supporting highly advanced Approximate Nearest Neighbor (ANN) indexing algorithms.
+Exact nearest-neighbor search compares the query vector with every stored vector, which becomes slow at hundreds of millions of vectors. Milvus supports several ANN index types that trade a small amount of recall for large speedups.
 
 ### HNSW (Hierarchical Navigable Small World)
-HNSW is the industry standard algorithm utilized by Milvus for maximum performance. It organizes vectors into a multi-layered graphical structure. When a query is submitted, Milvus enters the top layer of the graph (which has very few connections) and rapidly traverses downward, zooming in on the dense cluster of vectors that mathematically resemble the query. This graphical traversal allows Milvus to bypass 99% of the dataset, returning incredibly accurate similarity matches in single-digit milliseconds.
+HNSW is a widely used graph index. It organizes vectors into layers of a navigable graph: a search starts in a sparse top layer and moves down toward denser layers near the query, visiting only a small fraction of the vectors. It offers high recall and low latency at the cost of memory.
 
 ### IVF (Inverted File Index)
-For environments where memory constraints are tighter, Milvus supports IVF indexing. IVF uses k-means clustering to divide the massive vector space into thousands of specific clusters (Voronoi cells). When a query executes, Milvus determines which single cluster the query vector belongs to and only compares it against the vectors inside that specific cell, drastically reducing computational overhead.
+IVF uses k-means clustering to divide the vector space into clusters. A query is compared with cluster centroids first, then only with vectors in the closest few clusters (the `nprobe` setting). Variants with product quantization (IVF_PQ) compress vectors to cut memory.
 
-## Hybrid Search Capabilities
+Milvus also supports disk-based (DiskANN) and GPU indexes for datasets that do not fit in memory or need higher throughput.
 
-Real-world AI applications rarely rely on vector similarity alone. A user might search an e-commerce platform for an image mathematically similar to a "red jacket" (Vector Search), but explicitly constrain the search to items strictly under $100 and available in size Large (Scalar Filtering).
+## Filtering and Hybrid Search
 
-Milvus natively supports Hybrid Search. It stores traditional scalar data (like integers, booleans, and strings) directly alongside the massive vectors. During execution, Milvus applies the exact-match scalar filters first, drastically narrowing the vector space, before applying the complex HNSW similarity search on the remaining subset. This unified approach eliminates the need to maintain a separate relational database alongside the vector store, drastically simplifying the engineering architecture.
+Real applications combine similarity with constraints: find jackets visually similar to this one, priced under $100, in size Large. Milvus stores scalar fields (numbers, strings, booleans, JSON) alongside vectors and applies filter expressions during the search, so results satisfy both. Milvus also supports hybrid search in the sense of combining multiple vector fields, such as dense embeddings and sparse keyword vectors, and reranking the merged results.
 
-## Integration with the Data Lakehouse and RAG
+## Milvus vs Vector Search in the Lakehouse
 
-Milvus is the primary retrieval engine powering massive Retrieval-Augmented Generation (RAG) pipelines. When integrated with an Open [Data Lakehouse](/data-lakehouse), organizations use engines like Apache Spark to process petabytes of raw text or imagery, pass the data through embedding models (like OpenAI or HuggingFace), and bulk-load the resulting vectors directly into Milvus.
+Embeddings do not have to live only in a vector database. Many teams keep the source of truth in [Apache Iceberg](/knowledgebase/apache-iceberg/) or [Lance](/knowledgebase/lance-file-format/) tables and decide separately where to serve search.
 
-During inference, AI agents built with LangChain or LlamaIndex query Milvus instantly to retrieve the exact semantic context required to ground the LLM, entirely eliminating hallucinations.
+| | Milvus | Vectors in lakehouse tables |
+|---|---|---|
+| Query latency | Milliseconds at high concurrency | Seconds to sub-seconds, engine dependent |
+| Scale of online search | Built for billions of vectors | Better for batch, analytical, or moderate-volume search |
+| Governance | Its own users and roles | Same catalog, RBAC, and lineage as other tables |
+| Freshness | Streaming inserts | Snapshot commits |
+| Operations | A separate cluster to run (or Zilliz Cloud) | No extra system |
+
+A common pattern: Spark or Dremio builds a governed chunk-and-embedding table in Iceberg (see [chunking](/knowledgebase/chunking/)), and a job loads that table into Milvus for low-latency serving. If Milvus is lost or the embedding model changes, the index is rebuilt from the table. For deeper discussion, read [Vector Search Directly Over Iceberg Tables, and When You Still Need a Vector Database](/blog/vector-search-over-iceberg-tables/) and [Choosing Vector Stores for Retrieval Workloads](/blog/2026-05-vector-stores-retrieval/).
+
+At inference time, agent and RAG frameworks such as LangChain or LlamaIndex query Milvus to retrieve passages that ground the model's answer. Good retrieval reduces hallucinations; it does not eliminate them.
 
 ## Summary of Technical Value
 
-Milvus provides the critical infrastructure required to deploy artificial intelligence at a global scale. By combining a distributed, decoupled cloud-native architecture with incredibly advanced HNSW graphical indexing, it allows organizations to execute similarity searches across billions of embeddings in milliseconds. It serves as the indispensable long-term memory layer for the modern enterprise AI stack.
+Milvus is a distributed vector database that separates storage from compute and offers HNSW, IVF, disk-based, and GPU indexes for fast similarity search with filtering. In a lakehouse architecture it works best as a serving layer for embeddings whose source of truth lives in governed tables.
 
 
 ## Learn More

@@ -1,45 +1,42 @@
 ---
-title: "What is a Sort-Merge Join?"
-meta_title: "What is a Sort-Merge Join? | Expert Data Lakehouse Architecture Guide"
-description: "A comprehensive guide to the Sort-Merge Join. Learn how distributed engines join two massive datasets by shuffling and sorting data across a cluster."
+title: "Sort-Merge Join vs Hash Join in Spark, Trino, and Iceberg"
+meta_title: "Sort-Merge Join vs Hash Join in Spark and Trino | Glossary"
+description: "A sort-merge join shuffles and sorts both inputs on the join key, then merges. Learn when Spark picks it over hash joins and how Iceberg can skip the shuffle."
 ---
 
-# What is a Sort-Merge Join?
+A sort-merge join is a join algorithm that sorts both inputs on the join key and then walks through them together, matching rows in a single pass. In distributed engines it is preceded by a shuffle that sends rows with the same key to the same worker. Apache Spark uses it as its default strategy for equi-joins between two large tables, where a [broadcast hash join](/knowledgebase/broadcast-hash-join/) is not possible because neither side fits in each executor's memory.
 
-A Sort-Merge Join is an extremely robust, highly scalable join execution strategy utilized by distributed query engines (like Apache Spark and Trino). While a Broadcast Hash Join is perfectly optimized for joining a massive table to a tiny table, it fails catastrophically if an analyst attempts to join two massive, multi-terabyte tables together. If both tables are 500 gigabytes, the engine physically cannot broadcast them into local memory.
+Not every engine uses it. Trino's documentation states that it uses a hash-based join algorithm, choosing between partitioned and broadcast distribution. Spark exposes sort-merge, shuffled hash, and broadcast hash joins, and its optimizer picks among them based on table size estimates, hints, and settings like `spark.sql.join.preferSortMergeJoin`.
 
-When an engine must execute a massive `JOIN` between two gigantic datasets (e.g., joining a billion-row `Global_Sales` table to a billion-row `Historical_Refunds` table), the Cost-Based Optimizer defaults to the Sort-Merge Join. It is the safest, most reliable method for joining unbounded datasets in a distributed computing environment.
+## The Three Phases
 
-## The Three Phases of Execution
+### Phase 1: Shuffle
+Each worker reads its portion of both tables and hashes the join key (for example `transaction_id`) to decide which partition each row belongs to. Rows are sent across the network so that all rows with the same key, from both tables, land in the same partition. This [shuffle](/knowledgebase/shuffle-partitioning/) is usually the most expensive step because it moves both tables over the network.
 
-Because neither table can fit into memory, the engine must force the matching rows from both tables to physically reside on the exact same worker node before it can mathematically join them.
+### Phase 2: Sort
+Each partition is sorted by the join key. The sort runs in memory when it can and [spills to disk](/knowledgebase/spill-to-disk/) when the partition is larger than available memory, which is why sort-merge joins degrade gracefully instead of failing with out-of-memory errors.
 
-### Phase 1: The Shuffle
-The engine initiates a massive distributed Shuffle. It reads the `Sales` table and the `Refunds` table simultaneously across all worker nodes. It applies a mathematical hashing algorithm to the specific Join Key (e.g., `transaction_id`). 
+### Phase 3: Merge
+With both sides sorted, the worker keeps a pointer into each. If the keys match, it emits joined rows. If one side's key is lower, it advances that pointer. Each side is read sequentially once, apart from re-reading runs of duplicate keys, so the merge itself needs little memory.
 
-The cluster uses this hash to aggressively redistribute the data across the network. If the hash algorithm dictates that `transaction_id = 123` belongs on Worker Node 5, the cluster physically transmits that record from both the `Sales` table and the `Refunds` table directly to Worker Node 5. This network transfer is incredibly expensive, but it perfectly guarantees that matching keys from both massive tables end up physically colocated.
+## Sort-Merge Join vs Hash Joins
 
-### Phase 2: The Sort
-Once Worker Node 5 receives its massive chunk of data from both tables, it cannot simply hold it all in active memory (RAM). To prevent crashing, the worker node writes the data to its local disk and executes a highly optimized external Sort. It physically sorts the `Sales` records sequentially by `transaction_id` (1, 2, 3...) and does the exact same for the `Refunds` records.
+| | Sort-merge join | Shuffled hash join | Broadcast hash join |
+|---|---|---|---|
+| Shuffle needed | Both sides | Both sides | None; small side copied to every worker |
+| Memory need | Low; sorts spill to disk | Hash table of one side per partition | Whole small table on every worker |
+| Best for | Two large tables | Large tables where one side's partitions fit in memory | One large and one small table |
+| Used by | Spark (default for large equi-joins) | Spark, Trino, Dremio | Spark, Trino, Dremio |
 
-### Phase 3: The Merge
-With both datasets perfectly sorted locally, the actual join is mathematically trivial. The worker node utilizes a simple pointer mechanism. It reads the first record from the sorted `Sales` file and the first record from the sorted `Refunds` file. 
+## Avoiding the Shuffle on a Lakehouse
 
-If the IDs match, it outputs the joined row. If the `Sales` ID is lower than the `Refunds` ID, it simply advances the `Sales` pointer to the next row. Because both datasets are perfectly sorted, the engine only has to read through the massive files exactly once. It streams the data sequentially from the local disk, requiring virtually no active RAM to execute the final join.
+The shuffle and sort can be skipped when the data is already laid out by the join key. In Spark, bucketed Hive tables have long allowed this. With [Apache Iceberg](/knowledgebase/apache-iceberg/), Spark 3.3 and later can perform storage-partitioned joins: if both tables are partitioned with the same `bucket(N, key)` transform and the right settings are enabled (including `spark.sql.sources.v2.bucketing.enabled`), Spark joins matching buckets directly with no exchange step. You can confirm it with `EXPLAIN` by checking that no Exchange node appears on either side.
 
-## Performance Bottlenecks and Optimization
-
-The Sort-Merge Join is reliable, but it is exceptionally slow due to the massive initial network Shuffle and the physical sorting process on local hard drives.
-
-Advanced data engineering teams optimize this by eliminating the need to Sort and Shuffle at runtime. 
-If the `Sales` and `Refunds` tables are permanently stored in the Open [Data Lakehouse](/data-lakehouse), engineers configure the ingestion pipeline to physically pre-sort the Apache Parquet files by `transaction_id` and utilize Z-Ordering or specific Partitioning algorithms. 
-
-If the data is pre-sorted and heavily clustered on disk, the query engine can skip Phase 1 and Phase 2 entirely, launching directly into Phase 3 (the Merge). This transforms a grueling hour-long distributed join into a query that executes in seconds.
+Sorting files by the join key, or [Z-ordering](/knowledgebase/z-ordering/), improves file skipping for filters but does not by itself remove the shuffle. Matching bucket layouts on both tables is what does that. For a full walkthrough, read [Storage-Partitioned Joins and the Bucket Transform](/blog/storage-partitioned-joins-and-the-bucket-transform/) and [Hash, Sort-Merge, Broadcast: How Distributed Joins Work](/blog/2026-04-29-query-engine-optimization-09-distributed-joins/).
 
 ## Summary of Technical Value
 
-The Sort-Merge Join is the heavy-lifting workhorse of distributed query execution. By strategically shuffling data across the network based on join keys, and physically sorting massive datasets on local disks before merging them sequentially, it guarantees that engines like Apache Spark can successfully join multi-terabyte tables without ever exhausting active memory. It ensures absolute stability and scalability for the most massive analytical workloads in the Data Lakehouse.
-
+The sort-merge join lets Spark join two large tables without holding either in memory, at the cost of a full shuffle and sort. Knowing when your engine picks it, and laying out Iceberg tables with matching bucket transforms on common join keys, lets you remove that shuffle for your most frequent large joins.
 
 ## Learn More
 To learn more about the Data Lakehouse, read [The Lakehouse Built for Everyone](https://books.alexmerced.com/books/the-lakehouse-built-for-everyone/) by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

@@ -1,39 +1,45 @@
 ---
-title: "What is a Time-Series Database (TSDB)?"
-meta_title: "What is a Time-Series Database? | Expert Data Lakehouse Architecture Guide"
-description: "A comprehensive guide to the Time-Series Database. Learn how specialized storage engines process massive, high-frequency timestamped events."
+title: "Time-Series Database vs Apache Iceberg for Time-Series Data"
+meta_title: "Time-Series Database vs Iceberg for Time-Series Data"
+description: "A time-series database stores and queries timestamped data such as metrics and sensor readings. Learn when a TSDB fits and when Iceberg tables are better."
 ---
 
-# What is a Time-Series Database (TSDB)?
+A Time-Series Database (TSDB) is a database built to ingest, compress, and query data indexed by time: server metrics, IoT sensor readings, market ticks, and application telemetry. Relational databases track the current state of entities, and warehouses track business facts. A TSDB is tuned for a steady stream of small, timestamped measurements and for queries over time windows.
 
-A Time-Series Database (TSDB) is a highly specialized, intensely optimized data storage and query architecture built explicitly for one absolute, singular purpose: the massive-scale ingestion, compression, and analysis of data that is strictly indexed by time. Unlike traditional relational databases (which track the current state of an entity) or data warehouses (which track historical business transactions), a TSDB is engineered to handle massive, continuous, high-frequency streams of metrics generated in absolute real-time by IoT (Internet of Things) sensors, financial stock tickers, or complex server monitoring infrastructure.
+Examples include InfluxDB, Prometheus (a monitoring system with its own time-series storage), TimescaleDB (a PostgreSQL extension from the company now called Tiger Data, formerly Timescale), QuestDB, and VictoriaMetrics. A wind farm with hundreds of sensors per turbine reporting every second is a typical use case.
 
-If an enterprise manages a massive wind farm, each individual wind turbine might possess 500 physical sensors (tracking RPM, temperature, voltage) firing an exact mathematical reading every single millisecond, 24 hours a day. Attempting to ingest this astronomical volume of data into a traditional PostgreSQL database will violently crash the server within minutes. A TSDB (like InfluxDB or TimescaleDB) is specifically architected to swallow this massive firehose of chronological data effortlessly.
+## How TSDBs Are Optimized
 
-## The Architecture of Chronological Data
+### 1. Append-Heavy Ingestion
+Most time-series data is written once and rarely changed. TSDBs organize storage around appends in time order, which keeps writes cheap and lets them sustain very high ingest rates. Most still support deletes and late-arriving data, but those paths are slower than plain appends.
 
-A TSDB achieves its massive performance by entirely abandoning the generalized features of traditional databases to hyper-optimize for the unique characteristics of Time-Series data.
+### 2. Specialized Compression
+Consecutive readings tend to be close to each other. Facebook's Gorilla paper (2015) encodes timestamps with delta-of-delta encoding and floating point values by XOR against the previous value, and reported an average of about 1.37 bytes per data point instead of 16 bytes uncompressed. Many TSDBs use Gorilla-style or similar encodings, and columnar engines get comparable gains with run-length and dictionary encoding.
 
-### 1. Append-Only Ingestion (The Firehose)
-Time-Series data is fundamentally immutable. You cannot go back in time and change the temperature of the server from yesterday. 
-Because the data never requires complex SQL `UPDATE` or `DELETE` operations, the TSDB engine utilizes a highly aggressive, append-only architecture. It completely bypasses the heavy transactional locks required in traditional databases, allowing the system to ingest millions of discrete sensor readings per second with virtually zero CPU overhead.
+### 3. Retention and Downsampling
+Raw high-frequency data is expensive to keep forever. TSDBs let you define retention policies and rollups: for example, keep raw readings for 30 days and one-minute averages for five years. TimescaleDB calls these [continuous aggregates](/knowledgebase/continuous-aggregates/). Dashboards that span years read the rollups instead of raw points.
 
-### 2. Massive Algorithmic Compression
-Storing billions of sensor readings every day consumes catastrophic amounts of hard drive space. 
-TSDBs solve this by assuming that physical reality rarely changes violently. If a server temperature sensor reports `72.1` degrees, and one millisecond later reports `72.1` degrees, and one millisecond later reports `72.1` degrees, the database does not write the number 72.1 to the hard drive three times. It utilizes highly advanced Delta-of-Delta encoding (like Gorilla compression). It only records the *mathematical difference* between the timestamps. This allows a TSDB to compress a massive petabyte of raw IoT telemetry down into a few terabytes of physical storage.
+### 4. Time-Oriented Query Functions
+Standard SQL already has window functions, but TSDBs add helpers that make time queries shorter: bucketing by interval (`time_bucket` in TimescaleDB), gap filling, interpolation, last-value-per-series, and rate calculations over counters.
 
-### 3. Continuous Aggregation and Downsampling
-Querying a year of millisecond-level data requires scanning billions of rows. TSDBs solve this via automated Downsampling. 
-The database engine automatically runs continuous background processes. It takes the raw, millisecond-level data from Monday, calculates the minute-by-minute average, and saves that aggregated data. After 30 days, the database automatically deletes the heavy, raw millisecond data, permanently retaining only the lightweight, aggregated minute-level data. This guarantees that historical dashboards querying five years of data remain lightning fast.
+## TSDB vs Iceberg Tables for Time-Series Data
 
-## Time-Series Queries
+The line between a TSDB and a lakehouse is getting thinner. InfluxDB 3 is built on Apache Arrow, Apache DataFusion, and Apache Parquet, and persists data as Parquet on object storage, which is the same file format lakehouse tables use.
 
-TSDBs possess highly specialized SQL extensions to execute complex chronological math.
-An engineer does not write a standard SQL query. They write specific time-window functions. They can command the database to "Calculate the rolling 15-minute moving average of the server CPU, but explicitly drop the specific 2-minute window where the network temporarily failed." Doing this in standard PostgreSQL requires a catastrophically complex, 50-line SQL statement; in a TSDB, it is a single, highly optimized native command.
+| | Time-series database | [Apache Iceberg](/knowledgebase/apache-iceberg/) tables |
+|---|---|---|
+| Best at | Recent data, low-latency dashboards and alerts | Long retention, joins with business data, many engines |
+| Ingest | Native line protocols and agents | Batch or streaming via Spark, Flink, Kafka Connect |
+| Time layout | Built in | [Partitioning](/knowledgebase/partitioning/) by day or hour, plus sort order; [hidden partitioning](/knowledgebase/hidden-partitioning/) handles timestamp transforms |
+| Retention | Retention policies and rollups | Snapshot expiry, deletes, and rollup tables you schedule |
+| Query language | SQL, InfluxQL, PromQL, depending on product | SQL in Dremio, Trino, Spark, DuckDB |
+| Cost of long history | Grows with the TSDB's storage | Object storage pricing |
 
-## Summary of Technical Value
+A common split is hot and cold: keep the last days or weeks in the TSDB for alerting and live dashboards, and land the full history in Iceberg for analysis alongside customer, asset, and financial tables. For a worked design, read [Logs, Traces, and Metrics as Tables: Building an OpenTelemetry Data Lake on Iceberg](/blog/opentelemetry-data-lake-on-iceberg/) and [The Real-Time Lakehouse with Streaming and Iceberg](/blog/real-time-lakehouse-streaming-sql-cold-iceberg-storage/).
 
-The Time-Series Database is the absolute foundational engine of the IoT and observability ecosystem. By aggressively abandoning traditional database constraints in favor of hyper-optimized append-only ingestion, massive algorithmic data compression, and automated historical downsampling, a TSDB provides the extreme high-frequency performance required to monitor, analyze, and predict the physical reality of massive, real-time digital and industrial infrastructures.
+## Summary
+
+A time-series database trades general-purpose features for fast appends, tight compression, retention policies, and time-window queries. It is the right tool for monitoring and recent operational data. When you need years of history, joins with the rest of the business, or access from several engines, Iceberg tables on object storage are often the better long-term home.
 
 ## Learn More
 To learn more about the [Data Lakehouse](/data-lakehouse), read [The Lakehouse Built for Everyone](https://books.alexmerced.com/books/the-lakehouse-built-for-everyone/) by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

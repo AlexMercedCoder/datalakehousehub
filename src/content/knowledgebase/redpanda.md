@@ -1,46 +1,53 @@
 ---
-title: "What is Redpanda?"
-meta_title: "What is Redpanda? | Expert Data Lakehouse & AI Glossary"
-description: "A Kafka-compatible streaming data platform engineered in C++ to provide extremely low latency and high throughput."
+title: "Redpanda: Kafka-Compatible Streaming and Iceberg Topics for the Lakehouse"
+meta_title: "Redpanda vs Kafka for Iceberg Lakehouses | Glossary"
+description: "Redpanda is a Kafka API compatible streaming platform written in C++. See how it compares to Apache Kafka and how Iceberg Topics write streams to tables."
 ---
 
-## What is Redpanda?
+Redpanda is a streaming data platform that implements the [Apache Kafka](/knowledgebase/apache-kafka/) protocol, so existing Kafka producers, consumers, and many Kafka tools work against it without code changes. It is built by Redpanda Data, written in C++ on a thread-per-core design, and ships as a single binary with no JVM and no separate coordination service.
 
-A Kafka-compatible streaming data platform engineered in C++ to provide extremely low latency and high throughput. 
+In a [data lakehouse](/knowledgebase/data-lakehouse/), Redpanda plays the same role Kafka does: it is the durable log that carries events and [change data capture](/knowledgebase/change-data-capture/) streams (for example from [Debezium](/knowledgebase/debezium/)) before they land in [Apache Iceberg](/knowledgebase/apache-iceberg/) tables.
 
-In the rapidly evolving landscape of data engineering and artificial intelligence, **Redpanda** has emerged as a critical foundational component. As organizations transition from legacy, monolithic architectures to decoupled, scalable environments, understanding the role of Redpanda is essential for building future-proof infrastructure. This capability serves as a critical enabler in modern data ecosystems, explicitly guiding architecture toward absolute efficiency and scale. When correctly implemented, Redpanda dynamically drives analytical workloads and structurally limits administrative technical debt.
+## How Redpanda Works
 
-## Core Architecture and Mechanics
+- **Kafka API compatibility.** Topics, partitions, consumer groups, and offsets behave as Kafka clients expect.
+- **Raft replication.** Each partition is replicated with the Raft consensus protocol, and cluster metadata is managed inside Redpanda itself rather than by ZooKeeper.
+- **Built-in extras.** A [schema registry](/knowledgebase/schema-registry/) and HTTP proxy run inside the broker. Redpanda Connect (formerly Benthos, acquired in 2024) handles connector-style pipelines.
+- **Delivery guarantees.** Like Kafka, it supports idempotent producers and transactions for exactly-once processing within the streaming system.
 
-To understand the practical application of Redpanda, it is crucial to systematically examine its fundamental operational behaviors and structural design:
+## Iceberg Topics: Streams as Lakehouse Tables
 
-* **Ingests and processes data continuously in an unbounded stream rather than waiting for discrete batch intervals.** This principle ensures that systems can scale horizontally without facing artificial limitations or bottlenecks.
-* **Maintains exactly-once or at-least-once processing guarantees through distributed commit logs and offset tracking.** By adopting this mechanic, engineers can bypass traditional processing constraints and deliver substantially faster time-to-insight.
-* **Captures row-level modifications instantaneously from source databases using Change Data Capture (CDC).** This allows the overarching architecture to remain highly resilient while serving concurrent workloads natively.
+Redpanda's Iceberg Topics feature writes topic data to Iceberg tables directly from the broker, so you do not need a separate sink connector. You turn it on per topic with `redpanda.iceberg.mode`:
 
-Operating through these principles enables seamless horizontal expansion across varying cloud environments. It integrates effortlessly with adjacent technologies like [Apache Iceberg](/apache-iceberg), dbt, and advanced vector search algorithms.
+- `key_value` writes a table with record metadata (including the key) and the raw value as binary.
+- `value_schema_id_prefix` and `value_schema_latest` use a schema from Schema Registry to create typed columns.
 
-## Why Redpanda Matters in the Modern Data Stack
+Redpanda can track tables with its own object storage catalog or register them in an external Iceberg REST catalog such as [Apache Polaris](/knowledgebase/apache-polaris/). Once registered, engines such as Spark, Trino, Dremio, Snowflake, and ClickHouse can query the tables. Iceberg Topics require a Redpanda Enterprise license.
 
-Streaming architecture enables near real-time operational analytics and responsive event-driven applications, allowing organizations to act on data the moment it is generated.
+## Redpanda vs Apache Kafka for Lakehouse Ingestion
 
-For modern enterprises managing decentralized teams, the implementation of Redpanda eliminates significant architectural friction. Teams are explicitly empowered to operate autonomously against reliable technical foundations without dynamically disrupting other isolated workflows. It shifts manual engineering overhead into an autonomous, software-driven paradigm, keeping Total Cost of Ownership (TCO) extremely low.
+| | Redpanda | Apache Kafka |
+|---|---|---|
+| Implementation | C++, single binary | Java/Scala on the JVM |
+| Coordination | Built-in Raft | KRaft (ZooKeeper removed in Kafka 4.0) |
+| License | Community Edition under the Business Source License; enterprise features under a commercial license | Apache License 2.0, governed by the ASF |
+| Path to Iceberg | Iceberg Topics in the broker (Enterprise) or a sink such as Kafka Connect | Iceberg Kafka Connect sink, Flink, or Spark |
+| Ecosystem | Kafka-compatible clients, plus Redpanda Connect | Largest ecosystem and widest vendor support |
 
-### Key Benefits
-- **Unprecedented Scalability:** Automatically adapts to massive fluctuations in data volume and query concurrency.
-- **Vendor Neutrality:** Strongly aligns with open-source frameworks, preventing aggressive vendor lock-in.
-- **Enhanced Observability:** Exposes deep, structural metadata allowing engineers to monitor and trace pipelines comprehensively.
+The license difference matters for some teams: the Business Source License forbids offering Redpanda as a commercial streaming service to others and converts each code change to Apache 2.0 four years after it is merged. Teams that require an ASF-governed project tend to choose Kafka or [Apache Pulsar](/knowledgebase/apache-pulsar/).
+
+Broker-side Iceberg writes trade flexibility for simplicity. A Flink or Spark job can clean, join, and [merge](/knowledgebase/upserts-update-and-insert/) CDC data before committing, while Iceberg Topics mostly land raw events as a [bronze layer](/knowledgebase/bronze-layer/). Frequent small commits also mean you still need compaction and snapshot expiration. For the tradeoffs across every path, read [The State of Streaming to Apache Iceberg in July 2026](/blog/streaming-to-iceberg-july-2026/) and [Kafka Connect to Iceberg: How the Commit Actually Works](/blog/kafka-connect-iceberg-commits/).
 
 ## Frequently Asked Questions
 
-### What is the difference between batch and stream processing?
-Batch processing runs on historical, bounded datasets on a schedule, whereas stream processing acts on infinite, continuous data as it arrives. This distinction is particularly important when evaluating total architecture costs and performance benchmarks.
+### Is Redpanda a drop-in replacement for Kafka?
+For most client applications, yes, because it speaks the Kafka protocol. Test any tooling that depends on Kafka internals or specific broker configurations before migrating.
 
-### Does streaming replace batch analytics entirely?
-Not usually. Many architectures use streaming for immediate operational insights while relying on batch processes for massive historical aggregations. The open ecosystem continues to evolve rapidly, ensuring backward compatibility while introducing powerful new primitives.
+### Is Redpanda open source?
+The Community Edition is source-available under the Business Source License, not an OSI-approved open source license. Enterprise features, including Iceberg Topics and tiered storage, need a commercial license.
 
-### How does Redpanda impact data governance and security?
-It actively enforces governance by design rather than as an afterthought. Native logging, role-based access controls (RBAC), and structured access pathways provide immediate visibility into security boundaries and regulatory compliance.
+### Do I still need a stream processor?
+Often. Redpanda moves and stores events. Transformations, joins, and upserts into curated Iceberg tables are usually done in [Apache Flink](/knowledgebase/apache-flink/) or [Apache Spark](/knowledgebase/apache-spark/).
 
 ---
 

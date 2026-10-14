@@ -1,41 +1,43 @@
 ---
-title: "What is Micro-Batching?"
-meta_title: "What is Micro-Batching? | Expert Data Lakehouse Architecture Guide"
-description: "A comprehensive guide to Micro-Batching. Learn how engines like Spark Streaming process high-velocity data streams in tiny, discrete intervals."
+title: "Micro-Batching vs Continuous Streaming for Iceberg Ingestion"
+meta_title: "Micro-Batching vs Streaming for Iceberg Tables | Glossary"
+description: "Micro-batching processes a data stream as a series of small batch jobs. Learn how Spark, Flink, and Kafka Connect use it to write Iceberg tables and tradeoffs."
 ---
 
-# What is Micro-Batching?
+Micro-batching is a stream processing approach that treats a continuous stream as a series of small batch jobs. Instead of processing each event as it arrives, the engine collects the events from a short interval, processes them together, and commits the result. Spark Streaming (DStreams) made the approach widely known, and Spark Structured Streaming uses it as its default execution mode.
 
-Micro-Batching is a hybrid data processing architecture designed to handle high-velocity streaming data by treating the continuous stream as a sequence of tiny, discrete batch jobs. Popularized heavily by Apache Spark Structured Streaming, micro-batching fundamentally bridges the massive architectural gap between highly latent overnight batch processing and true, event-by-event continuous streaming.
+Traditional batch jobs, such as a nightly ETL run, give high throughput but data that is hours old. Record-at-a-time streaming engines like [Apache Flink](/knowledgebase/apache-flink/) process each event as it arrives and can reach very low latency. Micro-batching sits between them: latency is usually in the range of a second to a few minutes, depending on the trigger interval, while the engine keeps the throughput and simpler recovery model of batch processing.
 
-In traditional data engineering, batch processing handled massive datasets (e.g., executing a daily ETL job at midnight to process the entire day's logs). This provided immense throughput but resulted in data being 24 hours out of date. Conversely, true continuous streaming processed every single event the exact microsecond it arrived. While incredibly fast, true streaming was exceptionally difficult to engineer, struggled with massive aggregations, and offered extremely poor overall system throughput. Micro-batching strikes a pragmatic balance, achieving near real-time latency (typically ranging from a few milliseconds to a few seconds) while maintaining the massive computational throughput and fault tolerance of a traditional batch engine.
+## How It Works
 
-## The Execution Mechanics
+The engine runs on a trigger. In Spark Structured Streaming, the default trigger starts a new micro-batch as soon as the previous one finishes, and a fixed interval (for example `processingTime='1 minute'`) can be set instead.
 
-In a micro-batching architecture, the query engine does not process events individually. Instead, it aggressively collects incoming events over a highly specific, predefined time interval (e.g., every 500 milliseconds or every 2 seconds).
+At each trigger, the engine determines the range of new input (for example Kafka offsets 1,000 to 1,500), reads it as a DataFrame, runs the same transformations a batch job would, and writes the output to the sink, such as a [data lakehouse](/knowledgebase/data-lakehouse/) table. Then it starts the next batch.
 
-When the interval triggers, the engine takes all the events accumulated during that specific window and bundles them into a discrete, immutable batch (in Spark, this is an RDD or a DataFrame). The engine then dispatches this tiny batch to the distributed cluster, executes the SQL transformations or mathematical aggregations exactly as it would for a massive batch job, and writes the output directly to the destination [Data Lakehouse](/data-lakehouse) or dashboard. Once complete, the engine immediately begins processing the next accumulated batch.
+## Fault Tolerance
 
-## Exactly-Once Fault Tolerance
+Before processing a batch, Spark records the offset range it plans to read in a checkpoint location, along with any streaming state. If a task or node fails, Spark re-reads the same offset range from the source and processes it again.
 
-One of the most profound advantages of micro-batching is its inherent resilience and fault tolerance. 
+This gives exactly-once results only when the source is replayable (like Kafka) and the sink is idempotent or transactional. Iceberg sinks qualify because each batch is committed as an atomic table commit, and Spark records which batch IDs were committed. With a non-idempotent sink, such as an external API, replays can produce duplicates.
 
-In a distributed cluster, network failures and hardware crashes are inevitable. If a worker node crashes while processing a true, event-by-event stream, tracking exactly which single events were successfully processed and which were lost is incredibly complex, often leading to duplicated data (at-least-once delivery).
+## Micro-Batching on Apache Iceberg
 
-Micro-batching solves this cleanly through strict state management and checkpointing. Before processing a batch, the engine securely logs the exact offset range of the data it intends to consume (e.g., Kafka offsets 1,000 to 1,500). If the worker node crashes halfway through processing the batch, the data is entirely discarded. When the node recovers, the engine simply looks at the checkpoint, retrieves the exact same batch of data (offsets 1,000 to 1,500) from the source, and re-processes it entirely. This guarantees exactly-once processing semantics without massive architectural overhead.
+Every write to an [Apache Iceberg](/knowledgebase/apache-iceberg/) table creates new data files and a new snapshot. Committing once per event would create huge numbers of tiny files and snapshots, slowing down both reads and metadata operations. So nearly every Iceberg streaming path batches commits in some way, even when the engine itself processes events one at a time:
 
-## Micro-Batching in the Open Data Lakehouse
+| Ingestion path | How commits are batched | Typical commit interval |
+|---|---|---|
+| Spark Structured Streaming | One commit per micro-batch | Set by the trigger, often 1 to 5 minutes |
+| Apache Flink | One commit per checkpoint | Set by the checkpoint interval |
+| Kafka Connect Iceberg sink | Coordinated commit across tasks | Set by the commit interval setting |
+| PyIceberg or DuckDB jobs | One commit per scheduled run | Set by the scheduler |
 
-Micro-batching is the absolute standard ingestion pattern for the modern Data Lakehouse. 
+Shorter intervals give fresher data but more small files and snapshots. Longer intervals give larger files but staler data. Either way, plan for [compaction](/knowledgebase/data-compaction/) and snapshot expiration. For upserts, each batch typically runs one `MERGE INTO`, which on merge-on-read tables also creates delete files that compaction must clean up.
 
-Because Open Table Formats like [Apache Iceberg](/apache-iceberg) and Delta Lake rely on writing physical Apache Parquet files and generating new metadata manifests (commits), attempting to write a new Parquet file for every single streaming event would instantly collapse the lakehouse under millions of tiny files.
-
-Instead, organizations configure micro-batch pipelines to trigger every few minutes. The pipeline consumes millions of events from Kafka, bundles them in memory, and executes a single, highly optimized, atomic `MERGE INTO` or `APPEND` operation against the Iceberg table. This architecture guarantees the data lakehouse receives fresh data continuously without compromising query performance or destroying the underlying file structure.
+For more depth, read [The State of Streaming to Apache Iceberg in July 2026](/blog/streaming-to-iceberg-july-2026/), [Optimizing Compaction for Streaming Workloads in Apache Iceberg](/blog/iceberg-streaming-compaction/), and [Serverless Iceberg Ingestion with PyIceberg and DuckDB](/blog/serverless-iceberg-microbatch-pyiceberg-duckdb/). See also the [micro-batches](/knowledgebase/micro-batches/) and [continuous streaming](/knowledgebase/continuous-streaming/) glossary entries.
 
 ## Summary of Technical Value
 
-Micro-Batching provides a highly pragmatic, immensely powerful architecture for real-time analytics. By carving continuous data streams into rapid, discrete intervals, it allows organizations to leverage robust batch-processing engines and strict fault-tolerance mechanisms to process streaming data. It serves as the foundational integration pattern for feeding high-velocity operational data safely and efficiently into the modern Open Data Lakehouse.
-
+Micro-batching processes streams as small, repeatable batch jobs, which gives near real-time freshness with simple replay-based recovery. On Iceberg, the commit interval is the key setting: it decides how fresh the data is and how much compaction work the table needs. Spark 4.1 also added a Real-Time Mode for lower-latency stateless queries, but micro-batching remains Spark's default.
 
 ## Learn More
 To learn more about the Data Lakehouse, read [The Lakehouse Built for Everyone](https://books.alexmerced.com/books/the-lakehouse-built-for-everyone/) by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

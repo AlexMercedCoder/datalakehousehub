@@ -1,39 +1,51 @@
 ---
-title: "What is Apache Pulsar?"
-meta_title: "What is Apache Pulsar? | Expert Data Lakehouse Architecture Guide"
-description: "A comprehensive guide to Apache Pulsar. Learn how this cloud-native streaming platform completely decouples compute from storage to outperform legacy."
+title: "Apache Pulsar: Architecture, Kafka Comparison, and Iceberg Pipelines"
+meta_title: "Apache Pulsar vs Kafka for Iceberg Pipelines | Glossary"
+description: "Apache Pulsar is a messaging and streaming platform that separates brokers from BookKeeper storage. See how it compares to Kafka for feeding Iceberg tables."
 ---
 
-# What is Apache Pulsar?
-
-Apache Pulsar is an advanced, highly scalable, cloud-native distributed messaging and event streaming platform. Originally developed by Yahoo to overcome the severe architectural limitations they encountered while managing millions of topics across a massive global infrastructure, Pulsar serves as the primary modern alternative to Apache Kafka. 
-
-While Kafka revolutionized event streaming, its architecture tightly coupled storage and compute. In a Kafka cluster, the Brokers act as both the computational nodes handling the network traffic *and* the physical hard drives storing the data. This coupling creates massive operational nightmares at extreme scale. Apache Pulsar completely solved this bottleneck by implementing a profoundly sophisticated, multi-tier architecture that entirely decouples the serving layer (compute) from the persistent storage layer.
+Apache Pulsar is an open source distributed messaging and event streaming platform. It was created at Yahoo and became an Apache Software Foundation top-level project in 2018. Pulsar supports both streaming (like [Apache Kafka](/knowledgebase/apache-kafka/)) and queue-style messaging with shared subscriptions, and teams often choose it over Kafka when they want separated compute and storage, built-in multi-tenancy, or geo-replication.
 
 ## The Decoupled Architecture
 
-Pulsar is physically separated into two completely distinct distributed systems operating in tandem.
+Pulsar splits serving and storage into separate tiers.
 
-### 1. The Serving Layer (Pulsar Brokers)
-The Pulsar Brokers are completely stateless. They have absolutely no persistent data resting on their local hard drives. Their only job is to handle the massive network traffic of incoming and outgoing events (the compute layer), evaluate routing rules, and push data down to the storage layer. 
+### 1. Brokers
+Pulsar brokers do not keep durable message data on local disk. They handle producers and consumers, own topics, and cache recent messages. Because they hold no durable state, adding or replacing a broker means reassigning topic ownership, not copying data.
 
-Because they hold no data, scaling the compute layer is completely frictionless. If a massive traffic spike occurs on Black Friday, the data engineering team can instantly spin up 50 new Broker nodes. They are fully operational in seconds because they do not have to wait to sync massive amounts of data from the existing cluster.
+### 2. Apache BookKeeper
+Messages are stored in Apache BookKeeper, a distributed log store. Each topic is written as a series of segments called ledgers, replicated across storage nodes called bookies. When you add bookies, new ledgers start using them right away; existing data does not have to move.
 
-### 2. The Storage Layer (Apache BookKeeper)
-The actual physical data is passed from the Brokers down to a completely separate cluster utilizing Apache BookKeeper (a highly specialized, incredibly fast distributed log storage system). BookKeeper stores the events in small, highly manageable segments called "ledgers." 
+### 3. Metadata store
+Pulsar keeps cluster metadata in a separate store. ZooKeeper is still supported, and the Pulsar docs recommend Oxia for new production clusters.
 
-If the cluster runs out of hard drive space, the engineering team simply adds new BookKeeper storage nodes. The system instantly begins writing new ledgers to the empty nodes. In a legacy Kafka cluster, adding a new storage node triggers a catastrophic "partition rebalance," forcing the cluster to aggressively copy terabytes of data across the network to balance the hard drives, heavily degrading cluster performance for hours. Pulsar completely avoids this; adding storage is mathematically instant and incurs zero network shuffling.
+### Tiered storage
+Older ledgers can be offloaded to object storage such as S3, so topics can retain long histories without growing the bookie fleet.
 
 ## Multi-Tenancy and Geo-Replication
 
-Pulsar was explicitly built from the ground up to support massive global enterprises.
+* **Multi-tenancy:** topics live under tenants and namespaces, with quotas, retention, and authorization set per namespace. Several teams can share one cluster with isolation.
+* **Geo-replication:** replication between clusters is configured per namespace and built into the broker, without a separate mirroring tool.
 
-* **Native Multi-Tenancy:** In massive organizations, the HR team, the Logistics team, and the Marketing team all need streaming capabilities. In Kafka, teams often spin up completely separate physical clusters to ensure isolation, wasting massive amounts of money. Pulsar is natively multi-tenant. It logically separates the teams into strict Namespaces within a single, unified massive cluster. It enforces strict physical quotas, ensuring the Marketing team cannot accidentally consume all the network bandwidth and crash the Logistics pipeline.
-* **Native Geo-Replication:** If an enterprise needs data in London to be available in New York for disaster recovery, Pulsar handles this natively at the architectural layer. An engineer simply configures a replication policy, and Pulsar automatically and asynchronously replicates the massive data streams across the global network without requiring fragile third-party mirroring tools.
+## Pulsar vs Kafka
 
-## Summary of Technical Value
+Kafka has closed some of the gaps that once set Pulsar apart. Kafka 3.9 made tiered storage production-ready, and Kafka 4.0 removed ZooKeeper in favor of KRaft. Kafka brokers still store partition data locally, so adding brokers requires reassigning partitions and copying data.
 
-Apache Pulsar represents the cloud-native evolution of event streaming. By completely decoupling stateless broker compute from the underlying BookKeeper storage ledgers, Pulsar eliminates the catastrophic operational bottlenecks of partition rebalancing and slow scaling. With its native multi-tenancy and automatic geo-replication, it provides massive, global enterprises with a highly resilient, infinitely scalable nervous system capable of managing millions of distinct topics effortlessly.
+| | Apache Pulsar | Apache Kafka |
+|---|---|---|
+| Storage | BookKeeper, separate from brokers | Broker local disks, optional tiered storage |
+| Scaling storage | Add bookies; new ledgers use them | Add brokers and reassign partitions |
+| Messaging models | Streaming and queue semantics | Streaming; share groups (queues) are newer |
+| Multi-tenancy | Tenants and namespaces built in | Usually separate clusters or ACL conventions |
+| Ecosystem | Smaller | Larger: Kafka Connect, Flink, most vendors |
+
+## Pulsar in an Iceberg Lakehouse
+
+Pulsar usually feeds the lakehouse through a processing engine or connector. [Apache Flink](/knowledgebase/apache-flink/) has a Pulsar source and an Iceberg sink, so a Flink job can read topics, clean events, and commit to [Apache Iceberg](/knowledgebase/apache-iceberg/) tables on each checkpoint. StreamNative also publishes an Iceberg sink connector for Pulsar IO. Whatever the path, data appears in Iceberg on the commit interval, not per message, so plan for compaction of small files. For the trade-offs between streaming paths, read [The State of Streaming to Apache Iceberg in July 2026](/blog/streaming-to-iceberg-july-2026/), [Apache Fluss and Kafka Solve Different Problems in an Iceberg Pipeline](/blog/fluss-kafka-iceberg-streaming/), and [Kafka 4.0 Changes Streaming Platform Operations](/blog/2026-05-kafka-streaming-operations/).
+
+## Summary
+
+Pulsar separates stateless brokers from BookKeeper storage, which makes scaling and rebalancing simpler, and it builds in multi-tenancy and geo-replication. Kafka's larger ecosystem and its own tiered storage keep it the default for many teams, so choose Pulsar when its tenancy, queueing, or storage model solves a real problem for your [data lakehouse](/knowledgebase/data-lakehouse/) ingestion.
 
 
 ## Learn More

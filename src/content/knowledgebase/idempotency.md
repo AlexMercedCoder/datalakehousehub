@@ -1,51 +1,50 @@
 ---
-title: "What is Idempotency?"
-meta_title: "What is Idempotency? | Expert Data Lakehouse Architecture Guide"
-description: "A comprehensive guide to Idempotency in data engineering. Learn how to build resilient, restartable data pipelines that prevent data duplication."
+title: "Idempotency in Data Pipelines: Safe Retries on Apache Iceberg Tables"
+meta_title: "Idempotency in Data Pipelines and Iceberg Tables | Glossary"
+description: "Idempotency means running a pipeline twice gives the same result as running it once. See how MERGE, overwrites, and Iceberg snapshots make retries safe."
 ---
 
-# What is Idempotency?
+An operation is idempotent if running it several times produces the same result as running it once. In data engineering, an idempotent pipeline can be retried or rerun for the same input window without creating duplicates or drifting totals.
 
-Idempotency is a foundational software engineering principle applied aggressively to modern data architecture. A data pipeline or a SQL transformation is considered "idempotent" if running it multiple times produces the exact same final result as running it exactly once. 
+Failures are routine: APIs time out, clusters lose nodes, and commits conflict. Orchestrators such as [Apache Airflow](/knowledgebase/apache-airflow/) and [Dagster](/knowledgebase/dagster/) respond by retrying tasks. If the task is not idempotent, every retry can add another copy of the data.
 
-In the chaotic reality of enterprise data infrastructure, failures are absolutely guaranteed. APIs will timeout, cloud clusters will unexpectedly terminate, and database locks will reject transactions. When a pipeline fails halfway through its execution, the orchestrator (like Apache Airflow) will inevitably attempt to retry the job. If the data pipeline is not explicitly engineered to be idempotent, retrying the job will cause massive, catastrophic data duplication, permanently corrupting the downstream business intelligence dashboards.
+## What a Non-Idempotent Pipeline Looks Like
 
-## The Danger of Non-Idempotent Pipelines
+A job computes daily sales and appends the result:
 
-To understand idempotency, one must examine a fundamentally flawed pipeline.
+`INSERT INTO daily_sales (sale_date, total) VALUES ('2026-05-14', 50000);`
 
-Imagine a simple Python script designed to calculate daily sales and push the result into a reporting table using a standard SQL `INSERT` statement:
-`INSERT INTO daily_sales (date, total) VALUES ('2026-05-14', 50000);`
+The insert succeeds at 2:00 AM, but a network timeout hides the success from the orchestrator. It retries at 2:15 AM and the same row is inserted again. The next morning the dashboard sums two rows and reports $100,000 instead of $50,000.
 
-If the pipeline executes at 2:00 AM, it inserts the correct $50,000 value. However, assume a network timeout occurs right after the insert, and the orchestrator falsely believes the script failed. The orchestrator triggers a retry at 2:15 AM. The script blindly runs again, executing the exact same `INSERT` statement. 
+## Patterns for Idempotent Writes
 
-The database now contains two distinct rows for May 14th. When the CEO opens their dashboard the next morning, it aggregates the rows and reports $100,000 in sales, a massive, critical failure caused entirely by a lack of idempotency.
+### MERGE INTO (Upsert)
+Instead of appending, the pipeline matches incoming rows to existing rows on a business key, such as `transaction_id`, and updates matches while inserting new rows. Running it again with the same input rewrites the same rows instead of adding new ones. Iceberg, Delta Lake, and Hudi all support `MERGE INTO`. Note that table formats do not enforce primary keys, so the key lives in your `ON` clause, and the source must not contain duplicate keys or the merge fails or produces ambiguous results. Deduplicate the batch first.
 
-## Architecting for Idempotency
+### Overwrite by Partition or Window
+For batch jobs that recompute a whole day or month, replacing that slice is cheaper than row-by-row merges. In Spark with Iceberg, `INSERT OVERWRITE` in dynamic mode replaces only the partitions present in the new data, and the DataFrame API offers `overwritePartitions()`. You can also use `overwrite` with an explicit filter such as `sale_date = '2026-05-14'`. The delete and the insert land in one atomic snapshot, so a retry replaces the slice again and readers never see a half-written state. Avoid the older pattern of dropping a directory and then writing files in two separate steps, because a crash between them leaves a gap.
 
-Data engineers build idempotent pipelines by replacing naive `INSERT` operations with highly deterministic state-management techniques.
+### Deterministic Inputs from the Orchestrator
+An idempotent task reads a fixed window instead of "yesterday" from the server clock. Airflow passes each run its `logical_date` and data interval (`data_interval_start`, `data_interval_end`); the older `execution_date` name was deprecated and removed in Airflow 3. Bound queries by those values and a backfill of three years of history is just three years of reruns with no code changes. See [backfilling data](/knowledgebase/backfilling-data/).
 
-### MERGE INTO (Upserts)
-The most common implementation of idempotency in the Open [Data Lakehouse](/data-lakehouse) is the `MERGE INTO` statement (often referred to as an Upsert). 
+## Comparing the Techniques
 
-Instead of blindly appending rows, the data engineer explicitly defines a Primary Key (e.g., the `transaction_id`). The pipeline executes logic stating: "If this transaction ID already exists in the table, strictly update it. If it does not exist, insert it." 
+| Technique | Retry safe? | Cost | Best for |
+|---|---|---|---|
+| Plain `INSERT` / append | No | Lowest | Immutable event logs with downstream dedupe |
+| `MERGE INTO` on a business key | Yes, if the source batch is deduplicated | Higher, reads and rewrites matched files | CDC, late-arriving updates |
+| Partition or window overwrite | Yes | Rewrites the whole slice | Daily or monthly recomputes |
+| Write-audit-publish on a branch | Yes, publish is one atomic step | Extra branch management | Pipelines with quality gates |
 
-If the pipeline runs a hundred times, the `MERGE` statement simply overwrites the exact same row a hundred times, guaranteeing the table only ever contains one accurate instance of that specific transaction.
+## How Iceberg Snapshots Help
 
-### Overwrite by Partition
-For massive batch processing, engineers achieve idempotency through Partition Overwriting. If a pipeline is processing an entire month's worth of data, doing row-by-row `MERGE` statements can be computationally expensive. 
+Every [Apache Iceberg](/knowledgebase/apache-iceberg/) commit creates a new [snapshot](/knowledgebase/iceberg-snapshot/), and a commit either lands fully or not at all. That gives you two extra safety nets. You can store a batch or run ID in snapshot summary properties and skip a commit whose ID already exists, and if a bad run does get through, you can roll the table back to the prior snapshot. The [write-audit-publish](/knowledgebase/write-audit-publish/) pattern adds a branch so data is validated before it becomes visible.
 
-Instead, the pipeline uses dynamic partition overwrite logic. Before writing the data, the pipeline executes a command to completely obliterate the existing partition (e.g., `DROP PARTITION month = '05'`). It then writes the newly calculated dataset entirely into that empty directory. If the pipeline crashes and retries, it simply drops the corrupted directory and starts over, guaranteeing a perfectly clean, duplicate-free dataset every single run.
+For worked examples, read [Idempotent Pipelines: Build Once, Run Safely Forever](/blog/2026-02-de-best-practices-04-idempotent-pipelines/) and [Designing Idempotent Pipelines in the Agentic Lakehouse](/blog/idempotent-pipelines-agentic-lakehouse-double-write-anomalies/). The [idempotent pipelines](/knowledgebase/idempotent-pipelines/) glossary entry covers the pipeline design side.
 
-## Idempotency in Orchestrators
+## Summary
 
-Modern orchestrators (like Apache Airflow and Dagster) heavily encourage idempotent design by utilizing specific Execution Dates. 
-
-When a pipeline runs, Airflow injects a specific temporal context (the `execution_date`) directly into the pipeline’s variables. A pipeline designed for idempotency does not query "yesterday's data" based on the current server clock (which would change if the pipeline was delayed for 48 hours). It explicitly queries data bounding the injected `execution_date`. If a data engineer needs to backfill three years of historical data, they simply instruct Airflow to run the pipeline for every single day in the past. Because the pipeline is idempotent and relies on explicit date boundaries, it perfectly reconstructs history without requiring any code changes.
-
-## Summary of Technical Value
-
-Idempotency is the ultimate safeguard against data corruption in distributed systems. By engineering pipelines to guarantee identical outcomes regardless of how many times they are executed, organizations eliminate the severe risk of data duplication caused by network timeouts and automated retries. It is the absolute foundational requirement for building highly resilient, scalable, and trustworthy data lakehouses.
+Idempotency turns retries from a risk into a routine. Use merges on business keys, atomic overwrites of fixed windows, and orchestrator-provided time bounds, and let the table format's atomic commits do the rest.
 
 
 ## Learn More

@@ -1,48 +1,51 @@
 ---
-title: "What is Change Data Capture (CDC)?"
-meta_title: "What is CDC? | Expert Data Lakehouse Architecture Guide"
-description: "A comprehensive guide to Change Data Capture (CDC). Learn about log-based replication, real-time analytics, and mitigating operational database strain."
+title: "Change Data Capture (CDC) into Apache Iceberg: Methods, Tools, and Trade-offs"
+meta_title: "Change Data Capture (CDC) into Apache Iceberg | Glossary"
+description: "Change data capture streams inserts, updates, and deletes from a source database to other systems. Compare query and log-based CDC and the paths into Iceberg."
 ---
 
-# What is Change Data Capture (CDC)?
+Change Data Capture (CDC) is a set of techniques for detecting and replicating row-level changes (INSERTs, UPDATEs, and DELETEs) from an operational database to a downstream system, such as a [data lakehouse](/knowledgebase/data-lakehouse/), a cloud data warehouse, or an event streaming platform like Apache Kafka.
 
-Change Data Capture (CDC) is a highly efficient architectural methodology used to instantly detect, extract, and replicate data modifications (INSERTs, UPDATEs, and DELETEs) from an operational database into a downstream system, such as a [Data Lakehouse](/data-lakehouse), a Cloud Data Warehouse, or an Event Streaming platform like Apache Kafka.
-
-In modern business environments, analytical dashboards require the absolute most current data. Historically, data engineers extracted data using slow, batch-oriented methods. They would execute a massive SQL query against the production database every night: `SELECT * FROM orders WHERE updated_at >= YESTERDAY`. This approach was catastrophic for two reasons: it placed an immense computational burden on the critical operational database (slowing down the live application for users), and it meant the analytical dashboards were always 24 hours out of date. CDC completely eradicates this polling architecture by providing near real-time, zero-impact extraction.
+Analytical dashboards often need fresh data. The older approach was a nightly batch extract against the production database, such as `SELECT * FROM orders WHERE updated_at >= :yesterday`. That approach has two problems: the large query adds load to the operational database, and the dashboards are up to a day behind. CDC replaces the nightly extract with a continuous, low-impact stream of changes.
 
 ## Query-Based vs Log-Based CDC
 
-There are two primary methodologies for implementing CDC, with wildly different architectural implications.
+There are two main ways to implement CDC.
 
-### 1. Query-Based CDC (The Legacy Approach)
-Query-based CDC is the simplest to implement but the most inefficient. A script continuously polls the database (e.g., every 5 minutes), querying specific tracking columns like `last_modified_timestamp` or an incrementing `version_id`. 
+### 1. Query-Based CDC
+Query-based CDC is the simplest to implement. A job polls the database on a schedule (e.g., every 5 minutes) and selects rows whose `last_modified` timestamp or version column changed since the last run.
 
-The fundamental flaw of this approach is that it cannot detect deletions. If a record is physically deleted from the database, the polling query simply cannot find it. The downstream data warehouse retains the "ghost record" forever, fundamentally corrupting the analytical accuracy. Furthermore, running massive `SELECT` statements every five minutes causes severe CPU spikes on the production server.
+Its main limitation is deletes. A row that is physically deleted no longer exists to be selected, so the downstream copy keeps it unless the application uses soft deletes or a separate audit table. It also misses intermediate changes between polls, and frequent polling queries add load to the source. For sources where log access is not possible, see [Change Data Capture (CDC) when there is no CDC](/blog/2024-10-cdc-when-there-is-no-cdc/).
 
-### 2. Log-Based CDC (The Modern Standard)
-Log-based CDC (utilizing powerful open-source tools like Debezium) is the absolute industry standard. It does not execute SQL queries against the database tables.
+### 2. Log-Based CDC
+Log-based CDC, implemented by open-source tools such as [Debezium](/knowledgebase/debezium/) and Flink CDC, does not query the tables. It reads the database's transaction log: the write-ahead log (WAL) in PostgreSQL, the binary log in MySQL, the redo log in Oracle. Databases write every committed change to that log for recovery and replication.
 
-Modern relational databases (like PostgreSQL, MySQL, and Oracle) write every single modification to a sequential binary log (the Write-Ahead Log or WAL) before they even write the data to the physical table on the hard drive. This log is used to guarantee ACID transactions and recover from sudden power failures.
+The CDC tool reads the log through the database's replication interface, converts each change into a structured event (often JSON or Avro, with before and after values), and publishes it to a stream such as Kafka.
 
-Log-based CDC tools attach directly to this replication log. As the database engine writes the modifications to the log, the CDC tool intercepts the exact binary byte-stream instantly. It converts the binary data into highly structured JSON or Avro events and streams them immediately into Apache Kafka.
+## Resolving Hard Deletions and Schema Changes
 
-## Resolving Hard Deletions and Schema Drift
+Because log-based CDC reads the transaction log, it captures `DELETE` operations as events carrying the deleted row's primary key. A downstream lakehouse table built on [Apache Iceberg](/knowledgebase/apache-iceberg/) or Delta Lake can apply those events as deletes, keeping the analytical copy in step with the source.
 
-Log-based CDC resolves the fatal flaws of query polling completely. 
-
-Because it reads the raw transaction log, it captures explicit `DELETE` operations natively. It generates a specific deletion event containing the exact Primary Key of the deleted row. When the downstream Data Lakehouse (utilizing [Apache Iceberg](/apache-iceberg) or Delta Lake) consumes this event, it natively executes a physical `DELETE` against the cloud storage files, ensuring the analytical environment remains a mathematically perfect, exact replica of the operational source.
-
-Furthermore, advanced log-based CDC tools capture explicit DDL (Data Definition Language) changes. If an upstream software engineer executes an `ALTER TABLE ADD COLUMN` command on the operational database, the CDC tool captures the structural change in the log and automatically propagates the schema evolution downstream, preventing the integration pipeline from crashing due to unexpected schema drift.
+Schema changes are handled with more variation. Debezium tracks schema history for MySQL and publishes schema changes, while PostgreSQL logical decoding does not emit DDL, so changes are detected when the shape of new rows changes. Pairing CDC with a [schema registry](/knowledgebase/schema-registry/) and a sink that supports [schema evolution](/knowledgebase/schema-evolution/) keeps pipelines from failing when a column is added upstream.
 
 ## Streaming Ingestion and Real-Time Architectures
 
-CDC is the foundational ingestion mechanism for the real-time enterprise.
+Publishing changes to Kafka decouples the source from consumers. The operational database is read once, and many downstream systems, from a Flink fraud detection job to a warehouse reporting table, can consume the same change stream at their own pace.
 
-By streaming exact transactional logs into Apache Kafka, organizations completely decouple their data architecture. The operational database is no longer burdened by analytical extraction. Once the data rests safely in Kafka, fifty different downstream systems—from massive Apache Flink real-time fraud detection engines to basic Snowflake analytical reporting tables—can consume the exact same stream of modifications simultaneously, each at their own computational pace.
+## Paths from CDC into Apache Iceberg
+
+| Path | How changes are applied | Notes |
+|---|---|---|
+| Debezium, Kafka, and the Iceberg Kafka Connect sink | Upserts and deletes per configured commit interval | Open source; you run Kafka Connect |
+| Flink CDC to Iceberg | Flink job writes upserts, typically as equality deletes, committed on checkpoint | Low latency; equality deletes need regular compaction |
+| Raw change log table, then periodic `MERGE INTO` | Land every event in a bronze table, merge into a current-state table in batches | Simple to reason about; keeps full change history |
+| Managed ingestion tools (Fivetran, Airbyte, others) | Vendor-managed CDC into Iceberg destinations | Less to operate; usage-based pricing |
+
+Iceberg's newer spec versions change the trade-offs: v3 adds deletion vectors, which make row-level deletes cheaper to read, and row lineage, which helps downstream jobs consume only changed rows. For details, read [The Lakehouse Ingestion Tool Landscape: Fivetran, Airbyte, dlt, and CDC vs Batch](/blog/lakehouse-ingestion-tools/) and [CDC Without Complexity Using Iceberg v3 Row Lineage](/blog/iceberg-v3-row-lineage-cdc/).
 
 ## Summary of Technical Value
 
-Change Data Capture revolutionized enterprise data integration. By entirely abandoning inefficient, resource-heavy database polling in favor of high-speed, log-based transaction replication, CDC guarantees that downstream analytical architectures receive mathematically perfect, low-latency data streams. It is the absolute critical infrastructure required to operate a real-time, highly resilient Open Data Lakehouse.
+Change Data Capture moves row-level changes from operational databases to analytical systems continuously instead of in nightly batches. Log-based CDC captures deletes and puts little load on the source, which makes it the usual choice for feeding Kafka and Iceberg tables. The design decisions that remain are how changes are applied to Iceberg (equality deletes, merges, or both) and how often tables are compacted.
 
 
 ## Learn More

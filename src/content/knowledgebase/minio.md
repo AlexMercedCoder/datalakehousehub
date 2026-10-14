@@ -1,46 +1,53 @@
 ---
-title: "What is MinIO?"
-meta_title: "What is MinIO? | Expert Data Lakehouse & AI Glossary"
-description: "A high-performance, S3-compatible object storage server designed for large-scale AI/ML and data lake applications."
+title: "MinIO and Apache Iceberg: S3-Compatible Storage After the Community Edition"
+meta_title: "MinIO for Iceberg Lakehouses: Status and Alternatives"
+description: "MinIO is an S3-compatible object storage server often used for local Iceberg lakehouses. Here is its 2026 status and what to run for dev and production."
 ---
 
 ## What is MinIO?
 
-A high-performance, S3-compatible object storage server designed for large-scale AI/ML and data lake applications. 
+MinIO is an object storage server that implements the Amazon S3 API. Because it speaks S3, any engine or library that reads and writes S3 (Apache Spark, Trino, Dremio, Flink, PyIceberg, DuckDB) can point at a MinIO endpoint instead of AWS and work unchanged. That made MinIO the default storage container in local and on-premises [Apache Iceberg](/knowledgebase/apache-iceberg/) stacks for years: a Docker Compose file with MinIO, a REST catalog, and an engine gave you a working [data lakehouse](/knowledgebase/data-lakehouse/) on a laptop.
 
-In the rapidly evolving landscape of data engineering and artificial intelligence, **MinIO** has emerged as a critical foundational component. As organizations transition from legacy, monolithic architectures to decoupled, scalable environments, understanding the role of MinIO is essential for building future-proof infrastructure. This capability serves as a critical enabler in modern data ecosystems, explicitly guiding architecture toward absolute efficiency and scale. When correctly implemented, MinIO dynamically drives analytical workloads and structurally limits administrative technical debt.
+MinIO stores objects, not tables. It has no idea what an Iceberg snapshot or manifest is. The table format and the catalog provide the table semantics; MinIO provides the bucket that the data files and metadata files live in. See [object storage](/knowledgebase/object-storage/) for how that layer fits the rest of the stack.
 
-## Core Architecture and Mechanics
+## Project Status in 2026
 
-To understand the practical application of MinIO, it is crucial to systematically examine its fundamental operational behaviors and structural design:
+The open-source MinIO server changed a lot between 2025 and 2026, and anyone reading older tutorials should know the timeline:
 
-* **Utilizes open table formats to provide complete ACID transactional compliance directly on top of massive, raw cloud object storage.** This principle ensures that systems can scale horizontally without facing artificial limitations or bottlenecks.
-* **Maintains an explicit hierarchical tree of metadata manifests to track exact file states and enable precise time-travel querying.** By adopting this mechanic, engineers can bypass traditional processing constraints and deliver substantially faster time-to-insight.
-* **Decouples the physical storage layout from the logical table structure using techniques like hidden partitioning.** This allows the overarching architecture to remain highly resilient while serving concurrent workloads natively.
+* **May 2025:** most administration features were removed from the community edition's web console and moved to the commercial product.
+* **October 2025:** MinIO stopped publishing community Docker images and prebuilt binaries.
+* **December 2025:** the community repository entered maintenance mode, with no new features or accepted pull requests.
+* **2026:** the `minio/minio` GitHub repository was marked "no longer maintained" and archived (read-only). The source remains under AGPLv3.
 
-Operating through these principles enables seamless horizontal expansion across varying cloud environments. It integrates effortlessly with adjacent technologies like [Apache Iceberg](/apache-iceberg), dbt, and advanced vector search algorithms.
+MinIO Inc. now develops **AIStor**, offered as a free standalone edition and a commercially supported enterprise edition. Existing community deployments keep running, but they no longer receive releases or security fixes from upstream.
 
-## Why MinIO Matters in the Modern Data Stack
+## MinIO in a Lakehouse Stack
 
-The open lakehouse structure eliminates vendor lock-in and drastically reduces storage costs by allowing any compatible distributed engine to query the exact same massive datasets without requiring duplication.
+| Use | Community MinIO (archived) | AIStor | Cloud object storage (S3, ADLS, GCS) |
+|---|---|---|---|
+| Local Iceberg development and CI | Still works with existing images; no updates | Free edition is an option | Not local |
+| On-premises production lakehouse | Not advisable without a support contract | Commercially supported | Not applicable |
+| Cloud production lakehouse | Not typical | Possible | The usual choice |
+| Credential vending from a REST catalog | Works through S3-compatible STS settings, with configuration | Same | Native in Polaris, Glue, Unity Catalog |
 
-For modern enterprises managing decentralized teams, the implementation of MinIO eliminates significant architectural friction. Teams are explicitly empowered to operate autonomously against reliable technical foundations without dynamically disrupting other isolated workflows. It shifts manual engineering overhead into an autonomous, software-driven paradigm, keeping Total Cost of Ownership (TCO) extremely low.
+For local work, the role MinIO plays is narrow: it exercises the S3 code path (path-style access, endpoints, multipart uploads, credentials) that a plain local filesystem skips. Other S3-compatible servers, such as Ceph Object Gateway, SeaweedFS, and Garage, can fill the same role. Whatever you choose, test that the engine settings that matter for Iceberg (`s3.endpoint`, `s3.path-style-access`, region) behave the same way they will in production.
 
-### Key Benefits
-- **Unprecedented Scalability:** Automatically adapts to massive fluctuations in data volume and query concurrency.
-- **Vendor Neutrality:** Strongly aligns with open-source frameworks, preventing aggressive vendor lock-in.
-- **Enhanced Observability:** Exposes deep, structural metadata allowing engineers to monitor and trace pipelines comprehensively.
+## A Concrete Example
+
+A typical local stack runs four containers: an S3-compatible store with a `warehouse` bucket, an Iceberg REST catalog (the `apache/iceberg-rest-fixture` image or [Apache Polaris](/knowledgebase/apache-polaris/)) configured with the store's endpoint, Spark or Dremio as the engine, and a one-shot client container that creates the bucket on startup. The engine creates a table through the catalog, the catalog records the metadata location, and the engine writes Parquet data files and Iceberg metadata files into the bucket. Swapping the store for AWS S3 later changes only the endpoint and credentials, not the table.
+
+For a full walkthrough, see [Local Iceberg Development Environments: Docker, MinIO, and In-Memory Catalogs for CI](/blog/local-iceberg-development-environments/) and [Block vs. Object Storage](/blog/block-vs-object-storage-deep-dive/).
 
 ## Frequently Asked Questions
 
-### What makes a Lakehouse different from a Data Lake?
-A standard data lake is just a collection of files. A lakehouse adds a metadata layer that provides warehouse-like features (transactions, schema enforcement) directly to those files. This distinction is particularly important when evaluating total architecture costs and performance benchmarks.
+### Is MinIO still open source?
+The archived community source code is still licensed under AGPLv3, but the project is no longer maintained upstream. MinIO's active product is AIStor.
 
-### Why use an Open Table Format?
-Open formats like Apache Iceberg ensure that your data is not trapped inside a proprietary database ecosystem; it remains universally accessible. The open ecosystem continues to evolve rapidly, ensuring backward compatibility while introducing powerful new primitives.
+### Do I need MinIO to run Apache Iceberg?
+No. Iceberg needs a file system or object store the engine can reach. Locally that can be the filesystem; in the cloud it is usually S3, ADLS, or GCS. MinIO is one S3-compatible option.
 
-### How does MinIO impact data governance and security?
-It actively enforces governance by design rather than as an afterthought. Native logging, role-based access controls (RBAC), and structured access pathways provide immediate visibility into security boundaries and regulatory compliance.
+### Does MinIO understand Iceberg tables?
+No. MinIO stores the files. The Iceberg catalog and the engine handle snapshots, schema, and transactions.
 
 ---
 

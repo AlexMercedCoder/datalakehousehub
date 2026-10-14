@@ -1,40 +1,45 @@
 ---
-title: "What is Encryption in Transit?"
-meta_title: "What is Encryption in Transit? | Expert Data Lakehouse Architecture"
-description: "A comprehensive guide to Encryption in Transit. Learn how TLS and cryptographic tunnels prevent massive data interception across the public internet."
+title: "Encryption in Transit for the Lakehouse: TLS for S3, Catalogs, and Engines"
+meta_title: "Encryption in Transit: TLS in a Data Lakehouse | Glossary"
+description: "Encryption in transit protects data moving over a network, usually with TLS. Learn where TLS applies in a lakehouse: storage, catalogs, engines, and clients."
 ---
 
-# What is Encryption in Transit?
+## What Is Encryption in Transit?
 
-Encryption in Transit (also known as Encryption in Motion) is a mandatory architectural security mechanism explicitly designed to protect data while it is actively moving across a network. Whether data is traveling from a user's mobile phone to a cloud server over the public internet, or moving between two massive Apache Spark worker nodes inside a private corporate data center, Encryption in Transit mathematically guarantees that the data cannot be intercepted, read, or secretly altered by malicious actors monitoring the network cables.
+Encryption in transit (also called encryption in motion) protects data while it moves across a network, so that anyone able to observe or tamper with the traffic cannot read or silently alter it. It complements [encryption at rest](/knowledgebase/encryption-at-rest/), which protects stored data. Systems that encrypt only at rest still send data in readable form whenever they serve it, unless the connection is encrypted.
 
-If a massive enterprise successfully deploys impenetrable Encryption at Rest (protecting the hard drives), but fails to deploy Encryption in Transit, their entire security posture is useless. When a data pipeline connects to the database to extract a table of passwords, the database must decrypt the data to send it. If it sends the data across the network in clear text, a hacker utilizing a simple "Packet Sniffer" (e.g., Wireshark) tapping into the local network router can silently read every single password as it flies across the wire. 
+Without it, anyone with access to a network path, such as a compromised host on the same segment or a misconfigured proxy, can capture credentials and query results with an ordinary packet capture tool.
 
-## The Architecture of the Secure Tunnel
+## How TLS Works
 
-Encryption in Transit completely neutralizes packet sniffing by establishing an impenetrable, cryptographically sealed tunnel between the sender and the receiver before any sensitive data is ever transmitted.
+The standard mechanism is Transport Layer Security (TLS), the successor to SSL. HTTPS is HTTP over TLS. A TLS connection does three things:
 
-### TLS (Transport Layer Security)
-The absolute global standard for Encryption in Transit is Transport Layer Security (TLS), which is the modern, upgraded version of the older SSL (Secure Sockets Layer) protocol. When you see `https://` in a web browser, or when a data pipeline connects to an API via port 443, they are utilizing TLS.
+1. **Authenticates the server.** The server presents an X.509 certificate signed by a certificate authority the client trusts. The client checks the certificate chain and that the name matches the host it meant to reach, which blocks man-in-the-middle impersonation. With mutual TLS (mTLS), the client presents a certificate too.
+2. **Agrees on keys.** In TLS 1.3, client and server run an ephemeral Diffie-Hellman exchange (usually elliptic curve) to derive shared session keys. Because the keys are ephemeral, recording traffic today and stealing the server's private key later does not decrypt it (forward secrecy). TLS 1.3 removed the older RSA key transport mode.
+3. **Encrypts the session.** Data is protected with an authenticated symmetric cipher such as AES-GCM or ChaCha20-Poly1305, which both hides the content and detects tampering. With hardware AES support on modern CPUs, the overhead is small.
 
-### The Cryptographic Handshake
-Establishing a TLS connection is a highly complex mathematical negotiation that occurs in milliseconds:
-1. **Verification:** When a data pipeline attempts to connect to the massive [Data Lakehouse](/data-lakehouse) server, the server presents a Digital Certificate (issued by a trusted global Certificate Authority). The pipeline mathematically verifies this certificate to guarantee the server is legitimate, entirely preventing "Man-in-the-Middle" attacks where a hacker pretends to be the database.
-2. **Asymmetric Encryption (The Key Exchange):** The pipeline and the server use complex, heavy Asymmetric Cryptography (like RSA) to securely generate and exchange a shared, temporary secret key over the open, unsecured network.
-3. **Symmetric Encryption (The Tunnel):** Once both sides possess the shared secret key, they abandon the heavy Asymmetric math. They use the shared key to spin up an ultra-fast Symmetric Encryption tunnel (typically AES-256). All the massive, multi-terabyte data streams are then pumped through this high-speed encrypted tunnel.
+Use TLS 1.2 or 1.3 only, and disable older protocol versions.
 
-If a hacker intercepts the network traffic, they do not see passwords or financial data; they only see massive streams of mathematically randomized static. 
+## Where TLS Applies in a Data Lakehouse
 
-## Internal Network Encryption (Zero Trust)
+A lakehouse has more network hops than a single database, and each one needs encryption:
 
-Historically, organizations only deployed TLS for external traffic crossing the public internet. They assumed the internal corporate network (behind the corporate firewall) was a safe, trusted zone, so they allowed internal microservices to communicate in clear text to save CPU power.
+| Connection | What to configure |
+|---|---|
+| Engines to object storage (S3, ADLS, GCS) | Use HTTPS endpoints; on S3, a bucket policy that denies requests where `aws:SecureTransport` is false |
+| Engines to the catalog | Serve the [Iceberg REST catalog](/knowledgebase/rest-catalog-specification/) (Apache Polaris, Unity Catalog, Glue) over HTTPS; vended credentials and tokens travel on this connection |
+| BI tools and apps to engines | Enable TLS on JDBC, ODBC, and [Arrow Flight](/knowledgebase/arrow-flight/) endpoints for Dremio, Trino, or Spark Thrift Server |
+| Inside an engine cluster | Turn on internode encryption, for example Spark RPC encryption, Trino internal TLS, or a service mesh with mTLS |
+| Streaming ingestion | Use TLS listeners on Kafka brokers and for Kafka Connect and Flink clients |
+| Key management calls | Calls to a [key management service](/knowledgebase/key-management-service/) for table or file encryption keys must use TLS |
 
-This "Castle-and-Moat" philosophy proved catastrophic. If a hacker breached the firewall via a single compromised employee laptop, the hacker had unrestricted, clear-text access to the entire internal network. 
-Modern data architecture absolutely mandates a Zero Trust philosophy. In a Zero Trust environment, absolutely no server trusts any other server, regardless of location. Every single internal connection—even two Docker containers talking to each other on the exact same physical server—must execute a full TLS cryptographic handshake, ensuring the blast radius of a network breach is reduced to absolute zero.
+The catalog link deserves special attention. With credential vending, the catalog hands out short-lived storage credentials, so an unencrypted catalog connection leaks keys to the data itself. [REST Catalog Credential Vending](/blog/rest-catalog-credential-vending-secure-lakehouse-storage/) explains that flow.
 
-## Summary of Technical Value
+## Encryption in Transit and Zero Trust
 
-Encryption in Transit is the absolute guardian of data mobility. By utilizing highly complex TLS cryptographic handshakes and high-speed symmetric tunnels, it mathematically prevents network eavesdropping, packet sniffing, and Man-in-the-Middle attacks. Enforcing absolute, ubiquitous Encryption in Transit across both external and internal networks is the foundational requirement for building a secure, Zero Trust Data Lakehouse.
+Older network designs encrypted only traffic that crossed the internet and trusted everything inside the firewall. A [zero trust architecture](/knowledgebase/zero-trust-architecture/) assumes the internal network can be compromised, so internal service-to-service traffic is also encrypted and authenticated, often with mTLS issued by an internal certificate authority. This limits what an attacker can read or impersonate after getting a foothold; it does not replace access control, auditing, or encryption at rest.
+
+For how transit encryption fits with Parquet modular encryption and Iceberg table encryption, see [File Encryption for the Lakehouse](/blog/lakehouse-encryption-deep-dive/).
 
 ## Learn More
 To learn more about the Data Lakehouse, read [The Lakehouse Built for Everyone](https://books.alexmerced.com/books/the-lakehouse-built-for-everyone/) by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

@@ -1,41 +1,48 @@
 ---
 canonical: "https://opendatalakehouse.com/kb/hive-metastore/"
-title: "What is the Hive Metastore (HMS)?"
-meta_title: "What is the Hive Metastore? | Expert Data Lakehouse Architecture Guide"
-description: "A comprehensive guide to the Hive Metastore. Learn how the legacy catalog provided the first relational structure to chaotic big data lakes."
+title: "Hive Metastore (HMS): How It Works and How It Compares to Iceberg Catalogs"
+meta_title: "Hive Metastore vs Iceberg REST Catalogs | Glossary"
+description: "The Hive Metastore (HMS) is the catalog service that maps Hive tables to files. See how it compares to Iceberg REST catalogs like Polaris, Glue, and Nessie."
 ---
 
-# What is the Hive Metastore (HMS)?
+The Hive Metastore (HMS) is a service that stores table and partition metadata for data lakes. It was built for Apache Hive in the Hadoop era and became the shared catalog that Spark, Presto, Trino, Impala, and many other engines used to find tables in HDFS and later in object storage. It is part of Apache Hive, which remains an active Apache top-level project, and since Hive 4.1 it ships as a standalone component with its own binary and Docker image.
 
-The Hive Metastore (HMS) is a massive, centralized, highly critical infrastructural service that acts as the absolute central brain and directory for legacy Big Data architectures. Originally invented in the early 2010s to support Apache Hive, it quickly became the undisputed, de facto catalog standard for the entire Apache Hadoop ecosystem, serving as the central nervous system for almost all first-generation Data Lakes.
-
-To understand the absolute necessity of the Hive Metastore, one must look at the raw chaos of early data lakes (HDFS or early Amazon S3). A data lake is fundamentally just a massive, dumb hard drive. If you dump ten million Apache Parquet files into S3, a query engine (like Apache Spark or Trino) has absolutely no idea what those files are. It does not know if a file contains "Customer Sales" or "Server Logs," and it does not know the data types of the columns inside. 
-
-The Hive Metastore solves this chaos. It provides a highly structured, relational map that sits directly on top of the chaotic data lake, telling the query engines exactly where the data lives and exactly what it looks like.
+A data lake on its own is a set of files. If you write a million Parquet files to S3, an engine has no way to know which files form a table, what the columns are, or how the data is partitioned. HMS provides that map.
 
 ## The Architecture of the Catalog
 
-The Hive Metastore is fundamentally a separate, dedicated relational database (typically a PostgreSQL or MySQL instance) running independently from the massive data lake storage.
+HMS is a Thrift service backed by a relational database, usually MySQL or PostgreSQL. You can run several HMS instances for availability, but they share that one backing database.
 
-It stores massive amounts of critical Logical and Structural Metadata:
-* **Table Definitions:** It maps a logical table name (e.g., `prod_sales_table`) to a physical, chaotic folder on the hard drive (e.g., `s3://data-lake/2026/sales/`).
-* **Schema Enforcement:** It explicitly dictates that the `sales_amount` column is a `Decimal(10,2)` and the `user_id` is a `VARCHAR`.
-* **Partition Tracking:** This is its most critical function. It tracks exactly which physical folders belong to which specific dates or regions, allowing the query engine to ignore irrelevant folders and drastically speed up analytics.
+It stores:
+* **Table definitions:** a logical name such as `prod.sales` mapped to a storage location such as `s3://data-lake/sales/`.
+* **Schemas:** column names and types, plus the file format and SerDe used to read them.
+* **Partitions:** one row per partition directory (for example `dt=2026-10-14`), which lets an engine skip directories that do not match a filter.
+* **Statistics and transactions:** column statistics for the optimizer and, for Hive ACID tables, the transaction and lock state.
 
-When an analyst opens an SQL editor and types `SELECT * FROM prod_sales_table`, the query engine does not search S3. It first pings the Hive Metastore. The Metastore replies: "That table exists. It is structured like this. The specific physical Parquet files you need are located exactly at this S3 URL." The query engine then bypasses the chaos and hits the exact files immediately.
+When a user runs `SELECT * FROM prod.sales WHERE dt = '2026-10-14'`, the engine asks HMS for the table and the matching partitions, then lists the files in those directories and reads them.
 
-## The Scaling Crisis and The Lakehouse
+## Where HMS Struggles
 
-While the Hive Metastore birthed the modern Big Data industry, it is fundamentally a massive bottleneck and is rapidly being replaced by modern Open Table Formats (like [Apache Iceberg](/apache-iceberg)) and modern catalogs (like Apache Polaris or Dremio Arctic).
+* **Partition counts:** every partition is a row in the backing database, and planning a query over a table with hundreds of thousands of partitions means large metastore calls plus directory listings in object storage.
+* **File tracking:** HMS tracks directories, not files. Engines must list storage to find files, which is slow on S3 and gives no snapshot of exactly which files make up a version of the table.
+* **Transactions:** ACID guarantees exist only for Hive's own transactional tables. Plain external tables written by Spark or other engines have no commit protocol, so concurrent writers can step on each other.
 
-Because the HMS relies on a centralized, single-node relational database (MySQL), it cannot scale to handle modern, hyperscale cloud data lakes.
-If an organization generates a massive data table with millions of distinct physical partitions, the Hive Metastore simply crashes. When a query engine asks for the location of the files, the massive MySQL database locks up trying to read millions of rows of partition data. Furthermore, the Hive Metastore provides absolutely zero ACID transactional guarantees. If two Spark clusters try to update a table simultaneously, the HMS frequently corrupts the data.
+## Hive Metastore vs Iceberg Catalogs
 
-Apache Iceberg entirely solved this by moving the metadata out of the centralized, fragile MySQL database and writing it directly to massive, distributed JSON manifests on the S3 hard drive alongside the data, completely eliminating the Hive Metastore bottleneck.
+[Apache Iceberg](/knowledgebase/apache-iceberg/) moves file-level tracking out of the catalog and into metadata files (JSON table metadata plus Avro manifest lists and manifests) stored next to the data. The catalog only has to hold a pointer to the current metadata file and swap it atomically on commit.
 
-## Summary of Technical Value
+| | Hive Metastore (Hive tables) | HMS as Iceberg catalog | Iceberg REST catalog (Polaris, Glue, Nessie, Unity Catalog OSS) |
+|---|---|---|---|
+| What the catalog tracks | Tables, partitions, directories | Pointer to current metadata file | Pointer to current metadata file, plus access control in most implementations |
+| File listing at query time | Yes | No, manifests list files | No, manifests list files |
+| Multi-engine commits | Not for external tables | Atomic pointer swap with locks | Atomic commit through the REST API |
+| Client protocol | Thrift | Thrift (Iceberg HiveCatalog) | HTTP REST spec, language neutral |
 
-The Hive Metastore is one of the most critical foundational milestones in data architecture. By overlaying strict relational schemas and physical directory mapping on top of chaotic, unstructured cloud storage, it provided the essential translation layer that allowed SQL query engines to execute massive analytics against the first generation of Data Lakes. While its monolithic architecture makes it inadequate for the modern ACID-compliant [Data Lakehouse](/data-lakehouse), it permanently defined the concept of the decoupled Data Catalog.
+HMS has adapted: the Iceberg `HiveCatalog` uses it as a pointer store, and recent Hive releases expose an Iceberg REST catalog endpoint backed by HMS. That makes it a reasonable bridge for teams with existing Hive tables. New lakehouse deployments usually choose a REST catalog such as [Apache Polaris](/knowledgebase/apache-polaris/), [AWS Glue](/knowledgebase/aws-glue/), or [Project Nessie](/knowledgebase/project-nessie/) for credential vending and engine neutrality. To move Hive tables into Iceberg without rewriting data, see [Migrating Into Iceberg Without Moving Data](/blog/iceberg-in-place-migration/) and [Migrating to Apache Iceberg: Strategies for Every Source System](/blog/2026-04-29-apache-iceberg-masterclass-15-migrating-to-iceberg/). For the catalog landscape, read [What Are Lakehouse Catalogs?](/blog/2026-04-29-apache-iceberg-masterclass-07-lakehouse-catalogs/).
+
+## Summary
+
+The Hive Metastore defined the idea of a catalog that sits apart from storage and is shared by many engines. Its directory-based model limits it at large partition counts and gives no multi-engine transactions for plain tables, which is why the [data lakehouse](/knowledgebase/data-lakehouse/) moved file tracking into Iceberg metadata and the catalog role toward REST catalogs.
 
 ## Learn More
 To learn more about the Data Lakehouse, read [The Lakehouse Built for Everyone](https://books.alexmerced.com/books/the-lakehouse-built-for-everyone/) by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

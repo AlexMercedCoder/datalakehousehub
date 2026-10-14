@@ -1,40 +1,47 @@
 ---
-title: "What is Amazon S3?"
-meta_title: "What is Amazon S3? | Expert Data Lakehouse Architecture Guide"
-description: "A comprehensive guide to Amazon S3. Learn how AWS Simple Storage Service became the absolute physical foundation of the modern Data Lakehouse."
+title: "Amazon S3 for Data Lakehouses: Iceberg, S3 Tables, and Storage Costs"
+meta_title: "Amazon S3 for Iceberg Lakehouses: S3 Tables and Costs"
+description: "Amazon S3 is AWS object storage that keeps files as objects in buckets behind an HTTP API. See how Iceberg runs on S3, what S3 Tables adds, and what it costs."
 ---
 
-# What is Amazon S3 (Simple Storage Service)?
+Amazon S3 (Simple Storage Service) is the object storage service of Amazon Web Services. It launched in March 2006 as one of the first generally available AWS services. S3 stores data as objects in buckets, addressed by key and accessed over an HTTP API, and AWS handles the hardware, replication, and capacity behind it.
 
-Amazon S3 (Simple Storage Service) is a massively scalable, highly durable cloud object storage platform provided by Amazon Web Services (AWS). Launched in 2006, it was one of the very first cloud services ever created. Today, it is universally recognized as the absolute physical foundation of the modern open data ecosystem. The vast majority of the world's Data Lakes and Open Data Lakehouses physically reside on Amazon S3 hard drives.
+For data teams, S3 is where a large share of data lakes and lakehouses keep their files. A bucket can hold a 10 KB JSON file or petabytes of Apache Parquet, and you pay for what you store and the requests you make, not for disks you provision.
 
-S3 revolutionized data engineering by completely eliminating the concept of "buying hard drives." It provided organizations with an infinitely elastic, flat namespace accessed entirely via secure HTTP REST APIs. An enterprise can store a single 10-kilobyte text file or ten petabytes of Apache Parquet data in an S3 bucket, and S3 seamlessly handles the physical hardware provisioning, load balancing, and data distribution entirely in the background.
+## Durability and Consistency
 
-## Architecture and Extreme Durability
+S3 is designed for 99.999999999% ("eleven nines") durability of objects over a year. Most storage classes store data redundantly across at least three Availability Zones in a region; the One Zone classes are the exception. Since December 2020, S3 provides strong read-after-write consistency for all PUT and DELETE operations, so a reader sees a new object or overwrite as soon as the write succeeds.
 
-S3 is engineered to provide "Eleven Nines" (99.999999999%) of data durability. 
+Durability and availability are different numbers. S3 Standard is designed for 99.99% availability, and its SLA credits apply below 99.9% monthly uptime.
 
-If a data engineer uploads a massive dataset to an S3 bucket, S3 does not simply save it to a single hard drive. Automatically and invisibly, S3 duplicates that specific object and physically scatters the copies across a minimum of three completely distinct physical data centers (Availability Zones) separated by miles of geography. 
-If a massive catastrophic event (like a flood or a fire) completely destroys an entire AWS data center, the data is entirely safe because identical copies exist in the other two facilities. The system automatically detects the loss and instantly generates new copies to restore the "Eleven Nines" mathematical guarantee.
+## The S3 API
 
-## The S3 API: The Lingua Franca of Data
+The S3 API (`PutObject`, `GetObject`, `ListObjectsV2`, `DeleteObject`, multipart uploads) has become a common interface for object storage. Spark, Trino, Dremio, DuckDB, Flink, and most data tools can read and write through it, and many other storage systems, including Cloudflare R2, Ceph, and on-premises appliances, offer S3-compatible endpoints. Compatibility varies in the details (conditional writes, listing behavior, checksums), so test the specific features your table format and engines rely on.
 
-The most profound impact of Amazon S3 is not the storage itself, but its API architecture.
+## Running Apache Iceberg on S3
 
-The S3 API defines the exact programmatic commands required to interact with cloud storage (e.g., `GET`, `PUT`, `DELETE`, `LIST`). Because S3 achieved such massive market dominance early on, the S3 API became the de facto, undisputed standard language for data storage globally.
+Object storage has no real directories and no atomic rename, which made older Hive-style tables slow and fragile on S3. [Apache Iceberg](/knowledgebase/apache-iceberg/) was designed around those limits:
 
-Today, almost every single massive data engine in the world (Apache Spark, Snowflake, Dremio, Trino) natively speaks the S3 API. Even competing storage platforms (like MinIO or on-premises object storage appliances) intentionally clone the exact S3 API architecture. This guarantees that a data engineer can write a complex pipeline to analyze data on AWS S3, and later migrate that exact same pipeline to an on-premises MinIO server without rewriting a single line of code, as long as the endpoint speaks "S3."
+* **No directory listing for planning.** Iceberg tracks every data file in manifests, so engines read metadata instead of listing prefixes.
+* **Atomic commits through the catalog.** A commit swaps the table's current metadata pointer in a catalog such as Apache Polaris, AWS Glue, or Nessie, instead of renaming files.
+* **Request rate limits.** S3 supports at least 3,500 write and 5,500 read requests per second per prefix. Iceberg's object storage location provider (`write.object-storage.enabled`) spreads files across hashed prefixes to avoid hot spots.
 
-## Tiered Storage and Cost Optimization
+**Amazon S3 Tables**, announced at re:Invent in December 2024, adds table buckets that store Iceberg tables natively, with built-in compaction, snapshot expiry, and unreferenced file cleanup, plus an Iceberg REST endpoint for engines. The tradeoff versus general purpose buckets plus your own catalog is convenience against control over maintenance and catalog choice.
 
-To manage petabyte-scale Data Lakehouses affordably, data teams rely heavily on S3's sophisticated Intelligent Tiering lifecycle policies.
+## Storage Classes and Lifecycle Costs
 
-Storing data that is accessed every single day (like recent sales data) requires high-performance, expensive flash storage (S3 Standard). However, storing ten-year-old financial data that auditors only query once a year on expensive flash storage is a massive waste of money.
-S3 allows data engineers to set automated lifecycle rules. If a Parquet file hasn't been queried by the [Data Lakehouse](/data-lakehouse) in 90 days, S3 automatically and invisibly moves that file down to "S3 Glacier" (cold, magnetic tape storage), drastically reducing the monthly storage cost by up to 90%, while keeping the metadata entirely intact for future retrieval.
+S3 offers several storage classes, and two mechanisms move data between them:
 
-## Summary of Technical Value
+| Mechanism | How it decides | Lakehouse caution |
+|---|---|---|
+| Lifecycle rules | Object age or prefix, on a schedule you define | Objects moved to Glacier Flexible Retrieval or Deep Archive must be restored before reading, so an Iceberg query that touches them fails |
+| S3 Intelligent-Tiering | Observed access patterns, per object | Frequent, infrequent, and archive instant access tiers stay readable; optional archive tiers do not |
 
-Amazon S3 is the infrastructural bedrock of Big Data. By providing infinitely scalable, flawlessly durable, and heavily cost-optimized object storage accessed via a universally adopted API, S3 fundamentally enabled the decoupling of storage from compute. It is the absolute prerequisite architecture that allowed the modern Open Data Lakehouse to exist.
+For Iceberg tables, move cold data in ways the table metadata knows about, or keep it in classes that remain instantly readable, such as Standard-IA or Glacier Instant Retrieval. [Agent-Driven Storage Tiering for Apache Iceberg](/blog/agent-driven-iceberg-storage-tiering/) walks through a path-safe approach, and [Connect Amazon S3 to Dremio Cloud](/blog/2026-03-connect-amazon-s3-dremio/) shows how to query S3 data directly. See also [object storage](/knowledgebase/object-storage/).
+
+## Summary
+
+Amazon S3 provides durable, elastic object storage behind a widely copied API, and it is a common storage layer for lakehouses. Iceberg makes S3 behave like a reliable table store through manifests and catalog commits, S3 Tables offers a managed variant, and storage class choices need to account for how query engines read the files.
 
 ## Learn More
 To learn more about the Data Lakehouse, read [The Lakehouse Built for Everyone](https://books.alexmerced.com/books/the-lakehouse-built-for-everyone/) by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

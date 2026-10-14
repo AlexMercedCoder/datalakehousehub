@@ -1,48 +1,44 @@
 ---
-title: "What is the Kappa Architecture?"
-meta_title: "What is the Kappa Architecture? | Expert Data Lakehouse Architecture Guide"
-description: "A comprehensive guide to the Kappa Architecture. Learn how treating everything as a continuous stream drastically simplifies real-time data engineering."
+title: "Kappa Architecture vs Lambda on an Apache Iceberg Lakehouse"
+meta_title: "Kappa Architecture vs Lambda on an Iceberg Lakehouse"
+description: "Kappa architecture processes all data, live and historical, through one streaming pipeline. Here is how it compares to Lambda and works with Iceberg tables."
 ---
 
-# What is the Kappa Architecture?
+## What the Kappa Architecture Is
 
-The Kappa Architecture is a highly streamlined, profoundly elegant data processing framework introduced by Jay Kreps (co-creator of Apache Kafka). It was explicitly designed to solve the immense engineering complexity, code duplication, and operational nightmares created by the earlier Lambda Architecture. 
+The Kappa architecture is a data processing design in which a single stream processing pipeline handles both real-time data and historical reprocessing. Jay Kreps, one of the creators of Apache Kafka, described it in his 2014 essay "Questioning the Lambda Architecture" as an alternative to running separate batch and streaming code paths.
 
-The core philosophy of the Kappa Architecture is radically simple: *All data is fundamentally a continuous stream.* 
+The idea: keep an ordered, replayable log of events, process it with one streaming job, and when the logic changes, replay the log through a new version of that job instead of running a separate batch system.
 
-In traditional environments, data engineers were forced to build and maintain two entirely separate pipelines. They built a heavy, slow pipeline to process historical batch data, and a highly complex, fast pipeline to process live streaming data. Maintaining two completely different codebases (often in two different programming languages) that attempted to execute the exact same mathematical logic was a catastrophic engineering burden. Kappa eliminates the batch pipeline entirely, utilizing a single, unified streaming engine to process everything.
+## How It Works
 
-## The Mechanics of the Unified Stream
+1. **A replayable log.** Events land in a log such as [Apache Kafka](/knowledgebase/apache-kafka/), [Apache Pulsar](/knowledgebase/apache-pulsar/), or [Redpanda](/knowledgebase/redpanda/). The log must keep data long enough to replay it. With Kafka that means long retention, log compaction for keyed data, or tiered storage, which became production ready in Kafka 3.9.
+2. **One streaming job.** A stream processor such as [Apache Flink](/knowledgebase/apache-flink/) or Spark Structured Streaming applies the business logic and writes results to a serving table.
+3. **Reprocessing by replay.** To fix a bug or change logic, you start a second instance of the updated job reading from the earliest retained offset, let it write to a new output table, and switch readers over once it catches up. Then you retire the old job and table.
 
-The Kappa Architecture relies entirely on the massive persistence capabilities of modern event brokers (specifically Apache Kafka or Apache Pulsar) to act as the absolute single source of truth for all enterprise data.
+The benefit is one codebase for live and historical results. The costs are real too: replaying years of events through a streaming engine can be slow and expensive, keeping that history in the broker costs storage, and some computations (large joins, full recomputes) are simpler to express as batch jobs.
 
-### 1. The Immutable Log
-In a Kappa system, all incoming data—whether it is a live clickstream event occurring this exact millisecond, or a massive dump of CSV financial records from ten years ago—is immediately published into the central Kafka cluster as a continuous, immutable log of events. Because Kafka stores data securely on its hard drives, it can act as the permanent system of record.
+## Kappa on an Iceberg Lakehouse
 
-### 2. The Single Computation Engine
-The organization deploys a single, highly robust continuous streaming engine (such as Apache Flink or Spark Structured Streaming). The data engineers write the complex SQL transformations and business logic exactly once.
+[Apache Iceberg](/knowledgebase/apache-iceberg/) changes where the history lives. Instead of keeping years of events in Kafka, a common pattern is:
 
-When the system operates normally, the streaming engine consumes the live events from Kafka, processes the math in milliseconds, and pushes the clean data into the serving layer (like an [Apache Iceberg](/apache-iceberg) table) for the business dashboards to query.
+- Flink or Kafka Connect writes the raw stream into a bronze Iceberg table, committing every few seconds to minutes.
+- Downstream Flink jobs read that table incrementally (Iceberg supports streaming reads of new snapshots) and write silver and gold tables.
+- Reprocessing reads from the bronze Iceberg table instead of from the broker, and the corrected output can be written to a new table or a branch and swapped in.
 
-## Managing Historical Backfills and Reprocessing
+The pipeline is still one streaming codebase, but the replayable log is now a governed table that batch engines like Dremio, Trino, and Spark can also query. Streaming-first formats such as [Apache Paimon](/knowledgebase/apache-paimon/) and [Apache Fluss](/knowledgebase/apache-fluss/) push the same idea further. See [Real-Time Lakehouse Patterns with Apache Flink and Iceberg](/blog/2026-05-real-time-lakehouse-flink/) and [Approaches to Streaming Data into Apache Iceberg Tables](/blog/2026-04-29-apache-iceberg-masterclass-13-streaming-to-iceberg/).
 
-The true genius of the Kappa Architecture is how it handles historical data reprocessing. 
+## Kappa vs Lambda
 
-If a data engineer discovers a subtle mathematical bug in the revenue calculation logic that has been running for the last two years, they must reprocess all historical data. In legacy systems, this required spinning up massive, complex batch jobs. 
+| | Kappa | [Lambda](/knowledgebase/lambda-architecture/) |
+|---|---|---|
+| Processing paths | One streaming path | Batch layer plus speed layer |
+| Codebases | One | Usually two |
+| Reprocessing | Replay the log or bronze table through the new job | Rerun the batch layer |
+| Source of history | Broker retention or an Iceberg table | Master dataset in batch storage |
+| Main risk | Slow, costly replays; retention limits | Logic drift between two codebases |
 
-In a Kappa Architecture, the process is incredibly simple and strictly relies on the exact same streaming code.
-1. The engineer fixes the math bug in the streaming code and deploys a completely new instance of the streaming application. 
-2. They point the new streaming application at the central Kafka topic, but instruct it to read from the absolute beginning of time (Offset 0).
-3. The new streaming engine blasts through the two years of historical data stored safely in Kafka, running the exact same streaming code, but executing it at maximum hardware speed. 
-4. It writes the corrected data to a brand new, hidden Iceberg table.
-5. Once the new engine catches up to the live, real-time events, the engineer simply deletes the old corrupted table and points the business dashboards to the newly corrected table. 
-
-There is zero code duplication. The streaming code handles both the live edge and the deep historical backfill perfectly.
-
-## Summary of Technical Value
-
-The Kappa Architecture is the ultimate rationalization of the real-time data stack. By entirely eliminating the redundant batch processing layer and treating all data inherently as an immutable stream, it drastically reduces the massive engineering burden of maintaining duplicated pipelines. It guarantees absolute mathematical consistency between historical analytics and real-time operations, allowing teams to build highly robust, easily updatable enterprise architectures.
-
+For help choosing between batch and streaming in the first place, see [Batch vs. Streaming: Choose the Right Processing Model](/blog/2026-02-de-best-practices-06-batch-vs-streaming/).
 
 ## Learn More
 To learn more about the [Data Lakehouse](/data-lakehouse), read [The Lakehouse Built for Everyone](https://books.alexmerced.com/books/the-lakehouse-built-for-everyone/) by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

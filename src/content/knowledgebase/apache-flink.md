@@ -1,40 +1,47 @@
 ---
-title: "What is Apache Flink?"
-meta_title: "What is Apache Flink? | Expert Data Lakehouse Architecture Guide"
-description: "A comprehensive guide to Apache Flink. Learn how the distributed continuous streaming engine executes real-time analytics with strict event-time processing."
+title: "Apache Flink and Apache Iceberg: Streaming into the Lakehouse"
+meta_title: "Apache Flink for Streaming into Iceberg | Glossary"
+description: "Apache Flink is an open-source stateful stream processing engine. See how it writes to Iceberg, why commits follow checkpoints, and how it compares to Spark."
 ---
 
-# What is Apache Flink?
-
-Apache Flink is a massively scalable, open-source distributed processing engine specifically engineered for stateful computations over unbounded and bounded data streams. While engines like Apache Spark (historically built for batch processing) adapted to streaming via micro-batches, Flink was built from the absolute ground up as a native, true continuous streaming engine. It processes every single event the precise millisecond it arrives, making it the industry standard for the most latency-sensitive, mission-critical applications, such as high-frequency algorithmic trading, instant credit card fraud detection, and live operational monitoring.
+Apache Flink is an open-source, distributed processing engine for stateful computations over unbounded and bounded data streams. It is a top-level project of the Apache Software Foundation. Apache Spark's Structured Streaming processes streams mainly as a series of micro-batches; Flink was designed around continuous, record-at-a-time processing, which gives it low latency for workloads such as fraud detection, real-time monitoring, and event-driven applications. Flink 2.0 was released in March 2025, and the 2.x line continues to add features such as streaming model inference and vector search functions.
 
 ## The Architecture of Continuous Streaming
 
-Flink achieves its immense power by treating all data as an inherent stream. In Flink's architecture, a massive, static historical CSV file resting in an S3 bucket is simply viewed as a "bounded stream" (a stream with a definitive beginning and end). A live Kafka topic is an "unbounded stream" (it has no end). Flink uses the exact same underlying execution engine to process both seamlessly.
+Flink treats all data as streams. A file of historical data in S3 is a "bounded stream" (it has an end). A live Kafka topic is an "unbounded stream" (it does not). The same runtime and APIs process both.
 
 ### Distributed State Management
-The most profound challenge in continuous streaming is State. If Flink is calculating the total revenue generated over the last 10 minutes, it must actively hold the current mathematical sum in memory. If the physical server node crashes, that mathematical state is destroyed.
+Streaming computations often need state. To report revenue over the last 10 minutes, Flink must keep a running total. If a worker fails, that state must not be lost.
 
-Flink solves this using a highly complex architectural mechanism called Checkpointing (based on the Chandy-Lamport algorithm). 
-Flink constantly injects tiny, invisible "barriers" directly into the live data stream. As these barriers flow through the distributed worker nodes, the nodes temporarily pause processing for a few milliseconds, take a perfect snapshot of their internal mathematical state, and asynchronously save it to highly durable storage (like an S3 bucket). If the node violently crashes, a new node spins up, instantly restores the exact state from the snapshot, and resumes processing the stream, guaranteeing exactly-once processing semantics without any data duplication.
+Flink handles this with checkpoints, using asynchronous barrier snapshotting, a variant of the Chandy-Lamport algorithm. Flink injects barriers into the data stream. When an operator receives a barrier, it snapshots its state and writes it asynchronously to durable storage such as S3. If a worker fails, Flink restarts the job from the last completed checkpoint and replays input from the source (for example, Kafka offsets). This gives exactly-once guarantees for Flink's internal state; end-to-end exactly-once also requires a replayable source and a transactional or idempotent sink.
 
 ## Event Time and Watermarking
 
-In real-world networks, data rarely arrives perfectly in order. A user might click a button on their mobile phone at 12:00 PM, but because they drove through a tunnel and lost cell service, the event does not arrive at the Flink server until 12:05 PM.
+Events often arrive out of order. A user taps a button at 12:00 PM, loses signal in a tunnel, and the event reaches Flink at 12:05 PM.
 
-If Flink processed that event based on the time it hit the server (Processing Time), the chronological integrity of the analytics would be completely destroyed. 
-
-Flink handles this chaos flawlessly through strict Event Time processing and Watermarks. Flink reads the timestamp generated locally by the user's mobile phone. It utilizes internal Watermarks—a highly specific mathematical threshold that tells the engine, "We are mathematically confident that we have received all events that occurred prior to 12:02 PM." Flink holds the analytical window open, waiting patiently for the delayed event to arrive from the tunnel, and slots it into the perfect chronological sequence before finalizing the calculation.
+If Flink grouped events by arrival time (processing time), that click would land in the wrong window. With event time processing, Flink uses the timestamp recorded when the event happened. Watermarks tell the engine how far event time has progressed, for example "events before 12:02 PM have most likely all arrived", so Flink knows when it can close a window. Late events that arrive after the watermark can be dropped, sent to a side output, or used to update results, depending on the configured allowed lateness.
 
 ## Flink and the Open Data Lakehouse
 
-Historically, managing Flink required writing incredibly complex Java or Scala code. Today, Flink heavily integrates standard SQL. 
+Flink offers SQL and the Table API alongside its Java and Python DataStream APIs, so a continuous job can be written as SQL: `SELECT user_id, COUNT(*) FROM kafka_clicks GROUP BY user_id`.
 
-A data engineer can write a simple standard SQL query: `SELECT user_id, count(*) FROM kafka_clicks GROUP BY user_id`. Flink compiles this SQL into a massive, continuously running distributed job. Furthermore, Flink is increasingly utilized as the real-time ingestion engine for the Open [Data Lakehouse](/data-lakehouse), capable of executing complex streaming transformations on Kafka data and writing the results instantly into [Apache Iceberg](/apache-iceberg) tables in massive, atomic commits.
+Flink is one of the most common ways to stream data into [Apache Iceberg](/knowledgebase/apache-iceberg/) tables. The Iceberg project maintains the Flink connector. Its key behavior: **the Iceberg sink commits a new snapshot when a Flink checkpoint completes.** Data written between checkpoints is not visible to readers until that commit. The checkpoint interval is therefore the main lever for lakehouse freshness: a 1-minute interval gives roughly minute-level freshness, and shorter intervals produce more snapshots and smaller files that need [compaction](/knowledgebase/data-compaction/).
+
+| | Apache Flink | Spark Structured Streaming | Iceberg Kafka Connect sink |
+|---|---|---|---|
+| Processing model | Continuous, record at a time | Micro-batch (continuous mode is limited) | Copy topics to tables |
+| Transformations | Full: joins, windows, aggregations, CDC | Full | Light, per-record |
+| Iceberg commit trigger | Checkpoint completion | Each micro-batch | Configured commit interval |
+| CDC upserts into Iceberg | Yes, via equality deletes in upsert mode | Usually via `MERGE` in `foreachBatch` | Yes, with configuration |
+| Operations | Flink cluster or managed service | Spark cluster | Kafka Connect workers |
+
+Related projects build on Flink for the lakehouse: [Apache Paimon](/knowledgebase/apache-paimon/) began as Flink Table Store, and [Apache Fluss](/knowledgebase/apache-fluss/) provides streaming storage for Flink that tiers data into lakehouse tables. Flink CDC reads database change logs directly into Flink pipelines (see [change data capture](/knowledgebase/change-data-capture/)).
+
+For patterns and trade-offs, read [Real-Time Lakehouse Patterns with Apache Flink and Iceberg](/blog/2026-05-real-time-lakehouse-flink/), [The State of Streaming to Apache Iceberg in July 2026](/blog/streaming-to-iceberg-july-2026/), and [Optimizing Compaction for Streaming Workloads in Apache Iceberg](/blog/iceberg-streaming-compaction/).
 
 ## Summary of Technical Value
 
-Apache Flink is the ultimate computational engine for real-time data architectures. By natively supporting unbounded continuous streams, guaranteeing exact state fault tolerance via distributed snapshots, and managing extreme network latency through Event Time watermarking, it allows massive enterprises to build highly resilient, sub-millisecond analytical applications that react to the physical reality of the business instantaneously.
+Apache Flink is a stream processing engine built for continuous, stateful computation. Checkpoint-based fault tolerance and event time watermarks let it produce correct results from out-of-order, unbounded data. In an Iceberg lakehouse, Flink is a common ingestion and transformation engine, with table freshness set by the checkpoint interval and small-file growth handled by compaction.
 
 
 ## Learn More

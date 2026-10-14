@@ -1,43 +1,49 @@
 ---
-title: "What is Hightouch?"
-meta_title: "What is Hightouch? | Expert Data Lakehouse Architecture Guide"
-description: "A comprehensive guide to Hightouch. Learn about data activation, Reverse ETL, and syncing analytical models into operational SaaS applications."
+title: "Hightouch and the Lakehouse: Reverse ETL vs a Traditional CDP"
+meta_title: "Hightouch Reverse ETL on a Data Lakehouse | Glossary"
+description: "Hightouch is a Reverse ETL and data activation platform that syncs warehouse data into SaaS tools. See how it reads lakehouse data and how it compares to CDPs."
 ---
 
-# What is Hightouch?
+Hightouch is a Reverse ETL and data activation platform. It lets data teams sync modeled, calculated data from a cloud data warehouse or [data lakehouse](/knowledgebase/data-lakehouse/) into downstream operational tools such as Salesforce, HubSpot, Marketo, and ad platforms like Google Ads and Meta.
 
-Hightouch is a premier, highly scalable Reverse ETL and Data Activation platform. It empowers data teams to sync refined, calculated analytical data directly from their central cloud data warehouse or [data lakehouse](/data-lakehouse) into hundreds of downstream operational systems, such as Salesforce, HubSpot, Marketo, and Facebook Ads.
+Many organizations centralized their data in platforms like Snowflake, BigQuery, Databricks, or Dremio and used tools like [dbt](/knowledgebase/dbt/) to calculate metrics such as Product Qualified Leads, churn risk, and lifetime value. Sales, support, and marketing teams do not log into the warehouse to do their jobs; they work in SaaS applications. Hightouch moves those calculated values into the tools where those teams work.
 
-As the industry consolidated around the modern data stack, organizations successfully centralized their data into platforms like Snowflake, BigQuery, or Dremio. They used tools like dbt to calculate highly valuable, complex metrics (such as Product Qualified Leads, Churn Risk, and Lifetime Value). However, operational teams (Sales, Support, Marketing) do not log into Snowflake to do their jobs; they live in their SaaS applications. Hightouch serves as the critical bridge, extracting these deep analytical insights and pushing them directly into the frontline tools where the business actually operates.
+## Warehouse-Native Syncing
 
-## The Architecture of No-Storage Syncing
+Hightouch does not ask you to copy your customer data into a separate proprietary database, which is how traditional Customer Data Platforms (CDPs) worked. The warehouse or lakehouse stays the source of truth.
 
-A critical architectural distinction of Hightouch is that it does not store the organization's data. 
+A user defines a model with a SQL query, a dbt model, or a visual builder. Hightouch runs the query against the source, maps the columns to fields in the destination (for example, a row to a Salesforce Contact), and calls the destination API.
 
-Legacy Customer Data Platforms (CDPs) attempted to solve data activation by forcing organizations to copy all their user data into the CDP's massive, proprietary, expensive database. This created a massive, isolated data silo that was constantly out of sync with the primary data warehouse.
+Hightouch does keep some data at rest. Per its storage documentation, the standard sync engine stores query results and diff files from each run to support change data capture, plus row-level logs for its sync debugger. On Hightouch-managed buckets that data expires after 30 days, and Business tier customers can point it at their own S3, GCS, or Azure Blob bucket. The Lightning engine computes and stores most diff state inside your own warehouse instead.
 
-Hightouch operates strictly as an integration execution engine. It connects directly to the existing data warehouse. A user defines a sync by writing a SQL query or using a visual builder. Hightouch executes the query, temporarily holds the data in memory just long enough to translate it into the required destination API format (e.g., translating a warehouse row into a Salesforce Contact object), pushes the data across the network, and immediately purges the payload from memory. The organization's data warehouse remains the absolute, unquestioned single source of truth.
+## Sync Logic and API Handling
 
-## Advanced Sync Logic and API Handling
+Writing a script to push a dozen records to the Salesforce API is easy. Pushing millions of records across many rate-limited SaaS APIs is not.
 
-Writing a custom Python script to push data to the Salesforce API is trivial for a dozen records, but becomes an engineering nightmare when pushing millions of records across hundreds of distinct, constantly rate-limited SaaS APIs.
+* **Diffing:** Hightouch compares the current query results to the previous run and sends only new, changed, and removed rows, which reduces API calls.
+* **Rate limits and retries:** Hightouch batches payloads per destination and retries failed requests, so teams do not have to write their own throttling and retry code for each API.
 
-Hightouch manages this intense complexity natively.
-* **Diffing and Deltas:** Hightouch heavily optimizes syncing by calculating exact state differences. It remembers what data it pushed to HubSpot yesterday. If a sync runs today, Hightouch compares the new query results against the previous state, isolates the exact rows that changed, and only pushes those specific modifications, drastically reducing API load.
-* **Intelligent Rate Limiting:** SaaS APIs aggressively throttle incoming traffic to protect their servers. Hightouch contains deeply engineered, destination-specific rate-limiting logic. It automatically batches payloads, handles `429 Too Many Requests` errors gracefully with exponential backoff retries, and guarantees exactly-once delivery without crashing the downstream marketing or sales platforms.
+## Visual Audiences
 
-## Democratizing Data with Visual Audiences
+Hightouch also offers Customer Studio, an audience builder for marketers. The data team configures a schema of models (for example `Users`, `Subscriptions`, `Events`) once, and marketers then build audiences such as "users who canceled in the last 30 days but logged in three times this week" without writing SQL. Hightouch generates the query, runs it against the warehouse, and syncs the audience to destinations like Google Ads.
 
-While Hightouch was originally built for data engineers writing complex SQL, it expanded significantly to empower non-technical marketing teams through its visual Audience Builder (Customer Studio).
+## Hightouch on a Data Lakehouse
 
-Using Customer Studio, a marketing manager does not need to know SQL. The data engineering team simply exposes the core Data Models (e.g., `Users`, `Subscriptions`, `Events`) from the warehouse into Hightouch. The marketing manager uses a highly intuitive, drag-and-drop interface to build a custom audience (e.g., "Show me all users who canceled their subscription in the last 30 days but have logged into the app three times this week"). 
+Hightouch reads from query engines, not directly from files. Its source list includes Databricks, Trino, Amazon Athena, Snowflake, and BigQuery, along with Snowflake- and BigQuery-managed [Apache Iceberg](/knowledgebase/apache-iceberg/) tables. On an open lakehouse, the usual pattern is to keep curated gold tables in Iceberg and expose them through an engine Hightouch can query, such as Trino, Athena, or Databricks. Dremio is not in Hightouch's published source list, so check current support before planning around it.
 
-Hightouch visually translates this request into complex SQL, executes it against the warehouse, and automatically syncs the resulting audience directly into a Google Ads retargeting campaign. This fundamentally removes the data engineering team as the bottleneck for marketing campaign execution.
+| | Hightouch (Reverse ETL) | Traditional CDP |
+|---|---|---|
+| Where customer data lives | Your warehouse or lakehouse | The CDP's own database |
+| Modeling | SQL, dbt, or visual models over warehouse tables | Vendor-defined profiles and events |
+| Data at rest in the tool | Sync state and logs (30-day expiry on managed buckets) | Full customer profiles |
+| Freshness | Scheduled or triggered syncs | Often real-time event collection |
+| Who owns identity logic | Data team, in SQL | CDP vendor features |
+
+For related tools, see the [Reverse ETL](/knowledgebase/reverse-etl/), [Census](/knowledgebase/census/), and [Customer Data Platform](/knowledgebase/customer-data-platform-cdp/) glossary entries. To see how activation fits a wider move from dashboards to action, read [Building Closed-Loop Decision Agents](/blog/closed-loop-decision-agents-passive-bi-active-workflows/), and for how modeled metrics stay consistent across tools, read [What Is a Semantic Layer?](/blog/2026-02-semantic-layer-01-what-is-a-semantic-layer/).
 
 ## Summary of Technical Value
 
-Hightouch fundamentally established the operational utility of the modern data warehouse. By providing a secure, no-storage architecture capable of intelligently routing complex analytical metrics through heavily rate-limited APIs into operational SaaS tools, it transformed passive reporting databases into active drivers of business revenue. It is the critical "last mile" infrastructure required to achieve true operational analytics.
-
+Hightouch turns warehouse and lakehouse tables into inputs for operational systems. It keeps the model logic in SQL next to the data, handles diffing and API rate limits, and gives marketers an audience builder on top of data-team models. On an open lakehouse, it works best when curated Iceberg tables are exposed through a supported SQL engine.
 
 ## Learn More
 To learn more about the Data Lakehouse, read [The Lakehouse Built for Everyone](https://books.alexmerced.com/books/the-lakehouse-built-for-everyone/) by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

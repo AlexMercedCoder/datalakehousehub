@@ -1,43 +1,48 @@
 ---
-title: "What is OLTP?"
-meta_title: "What is OLTP (Online Transaction Processing)? | Expert Data Lakehouse Guide"
-description: "A comprehensive guide to OLTP. Learn how row-oriented operational databases execute millions of instantaneous, highly complex business transactions safely."
+title: "OLTP Explained: How Transactional Data Reaches the Lakehouse"
+meta_title: "OLTP: Transactional Databases and the Lakehouse | Glossary"
+description: "OLTP is the class of row-oriented databases that run live business transactions. See how OLTP data reaches Iceberg tables through CDC and federation."
 ---
 
-# What is OLTP (Online Transaction Processing)?
+OLTP stands for Online Transaction Processing. It describes databases built to run large numbers of small, concurrent transactions for live applications. When a customer adds an item to a cart, an ATM records a withdrawal, or a clinic updates a patient record, an OLTP database such as PostgreSQL, MySQL, SQL Server, or Oracle is usually doing the work.
 
-OLTP stands for Online Transaction Processing. It defines the highly specialized class of operational database architectures explicitly engineered to rapidly execute, manage, and secure millions of tiny, instantaneous, highly concurrent transactions. If a software system powers a live business operation—like a customer adding an item to an online shopping cart, an ATM processing a cash withdrawal, or a hospital updating a live patient record—it is strictly powered by an OLTP database (such as PostgreSQL, MySQL, or Oracle).
+OLTP systems are tuned for short reads and writes (`INSERT`, `UPDATE`, `DELETE`) on a few rows at a time, with low latency and strong correctness guarantees. They are not tuned for large analytical scans. Running a heavy aggregation such as "average lifetime value across ten million customers" against a production OLTP database competes with live traffic for CPU, memory, and I/O, and can slow the application for real users. That is the main reason analytical workloads move to a separate system such as a warehouse or a [data lakehouse](/knowledgebase/data-lakehouse/).
 
-OLTP databases are the absolute frontline of the enterprise data stack. Their entire structural design is optimized for executing precise writes (`INSERT`, `UPDATE`, `DELETE`) with zero latency and absolute mathematical safety, rather than executing massive analytical queries. Attempting to run a massive data warehouse aggregation query (like "Calculate the average lifetime value of all ten million customers") directly against a live OLTP database will frequently overwhelm the CPU, instantly crashing the live application and preventing real customers from completing purchases.
+## Row-Oriented Storage
 
-## The Architecture of Row-Oriented Storage
+Most OLTP engines store data row by row. When a customer creates an account, the engine writes the name, address, email, and phone number for that record together in the same page on disk.
 
-The fundamental defining characteristic of an OLTP database is its physical storage layout: it is strictly Row-Oriented.
+This layout suits transactional software. When the customer logs in later, the application looks up one profile by primary key, the engine uses an index (typically a [B-tree](/knowledgebase/b-tree-indexing/)) to find the page, and it returns the whole row in a single read.
 
-When a customer creates an account on an e-commerce website, they input their Name, Address, Email, and Phone Number. The application sends this data to the OLTP database. Because the database is row-oriented, it takes that entire specific customer record and physically writes all the columns contiguously onto the hard drive in a single, contiguous block. 
+A [columnar format](/knowledgebase/columnar-format/) such as Apache Parquet does the opposite: it groups values for each column together. That makes scans of a few columns across billions of rows efficient, but fetching one complete record means touching many column chunks, which is why columnar files are a poor fit for point lookups and frequent single-row updates.
 
-This architecture is incredibly fast for transactional software. When the customer logs in five minutes later, the application needs to retrieve their specific profile. The OLTP engine jumps to the exact physical location on the hard drive, reads the single contiguous block, and returns the complete profile in milliseconds. 
+## ACID Transactions and Concurrency
 
-(Contrast this with the Columnar storage of an OLAP Data Warehouse, which would shatter that customer record and scatter the Name, Address, and Email across entirely different massive files, making single-record retrieval incredibly slow and inefficient).
+Because OLTP systems record business events such as payments and orders, they enforce [ACID](/knowledgebase/acid-transactions/) guarantees: Atomicity, Consistency, Isolation, Durability.
 
-## The Absolute Necessity of ACID Compliance
+Consider two users trying to buy the last concert ticket at the same moment. Without isolation, both purchases could succeed. An OLTP engine prevents this with locking and multiversion concurrency control (MVCC). In PostgreSQL, for example, a transaction can take a row lock with `SELECT ... FOR UPDATE`. User A's transaction locks the ticket row, User B's transaction waits, User A commits and inventory drops to zero, and User B then sees zero and the purchase is rejected.
 
-Because OLTP systems handle live business operations (particularly financial operations), they cannot tolerate a single mathematical error. They enforce absolute ACID compliance (Atomicity, Consistency, Isolation, Durability) using highly rigid locking mechanisms.
+## Normalization (Third Normal Form)
 
-Imagine two users attempting to purchase the absolute last concert ticket available on a website at the exact same millisecond. 
-If the OLTP database lacked strict Isolation, it might accidentally sell the single ticket to both users, creating a catastrophic business failure. The OLTP engine handles this by utilizing aggressive Row-Level Locking. The millisecond User A's transaction begins, the database physically locks that specific ticket row. User B's transaction hits a wall and must wait. Once User A's payment succeeds, the transaction Commits (Atomicity), the database updates the inventory to 0, and the lock is released. User B's transaction proceeds, sees the inventory is 0, and safely rejects the purchase.
+OLTP schemas are usually normalized, often to [Third Normal Form](/knowledgebase/third-normal-form/). Each fact is stored in one place. A customer's address lives in the `users` table, and the `orders` table only holds a `user_id` that points back to it.
 
-## High Normalization (Third Normal Form)
+When the customer moves, one `UPDATE` on one row fixes the address everywhere, and there is no risk of conflicting copies. The cost appears on the analytics side: reports need many joins across normalized tables, which is one reason analysts prefer denormalized [star schemas](/knowledgebase/star-schema/) built downstream.
 
-To maximize writing speed and ensure perfect data consistency, data engineers design OLTP databases using intense Normalization (typically Third Normal Form or 3NF). 
+## OLTP and the Lakehouse
 
-Normalization ensures that a specific piece of data exists in exactly one place in the entire database. If a customer's address is stored in the `Users` table, it is never duplicated in the `Orders` table. The `Orders` table simply holds an integer `user_id` pointing back to the `Users` table. 
+A lakehouse does not replace an OLTP database. Open table formats like [Apache Iceberg](/knowledgebase/apache-iceberg/) support ACID commits, but they are designed for analytical batches and streams, not thousands of single-row transactions per second. The usual pattern is to keep OLTP for the application and move or expose its data for analytics.
 
-If the customer moves to a new house, the database only has to execute a tiny `UPDATE` statement on a single row in a single table, ensuring the change happens instantaneously and eliminating the risk of conflicting data. (However, this normalization is exactly why business analysts hate querying OLTP databases, as generating a simple report requires executing massively complex SQL queries containing dozens of `JOIN` statements).
+| Approach | How it works | When it fits |
+|---|---|---|
+| Change data capture (CDC) | A tool such as [Debezium](/knowledgebase/debezium/) reads the database log and streams inserts, updates, and deletes into Iceberg tables (often via Kafka and Flink or Kafka Connect) | Near real-time copies without extra load from repeated full extracts |
+| Batch extract | Scheduled jobs export tables or incremental slices and write Parquet files into Iceberg | Simple pipelines where hourly or daily freshness is enough |
+| Federation | An engine such as Dremio or Trino queries the OLTP database in place and joins it with Iceberg tables | Small lookups and fresh operational data that does not justify a pipeline |
 
-## Summary of Technical Value
+A common medallion setup lands CDC events in a [bronze layer](/knowledgebase/bronze-layer/) table, merges them into a current-state [silver layer](/knowledgebase/silver-layer/) table with `MERGE INTO`, and builds aggregated gold tables for BI. For PostgreSQL specifically, extensions such as pg_lake and pg_duckdb now let Postgres read and write lakehouse formats directly; see [Postgres Meets the Lakehouse](/blog/postgres-meets-the-lakehouse/). For how Iceberg V3 changes CDC design, see [What Iceberg V3 Advances Mean for CDC Pipelines](/blog/2026-05-iceberg-cdc-pipelines/), and for the comparison with analytical systems see [OLAP](/knowledgebase/olap/).
 
-OLTP databases are the mission-critical engines that physically operate the modern digital economy. By utilizing heavily normalized, row-oriented architectures backed by absolute ACID transactional guarantees, they ensure that millions of highly concurrent business operations execute instantly, safely, and perfectly, providing the pristine raw data that downstream analytical lakehouses eventually consume.
+## Summary
+
+OLTP databases run the live side of a business: row-oriented storage, ACID transactions, and normalized schemas let them handle many small concurrent operations correctly. They produce the raw records that analytics depends on, and in a lakehouse architecture that data reaches Iceberg tables through CDC, batch extracts, or federated queries instead of analysts querying the production database directly.
 
 
 ## Learn More

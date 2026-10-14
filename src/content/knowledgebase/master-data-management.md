@@ -1,45 +1,51 @@
 ---
-title: "What is Master Data Management (MDM)?"
-meta_title: "What is Master Data Management? | Expert Data Lakehouse Architecture Guide"
-description: "A comprehensive guide to MDM. Learn how organizations create a Single Source of Truth to eliminate dangerous data fragmentation across massive systems."
+title: "Master Data Management (MDM) on a Data Lakehouse"
+meta_title: "Master Data Management (MDM) on a Data Lakehouse"
+description: "Master data management (MDM) builds one trusted golden record for entities like customers and products. See MDM styles and how to build them on Iceberg."
 ---
 
-# What is Master Data Management (MDM)?
+Master Data Management (MDM) is the combination of processes, governance, and tooling that produces one trusted "golden record" for a business's core entities, usually customers, products, suppliers, employees, and locations. It addresses the duplication and conflicting values that appear when many applications each keep their own copy of the same entity.
 
-Master Data Management (MDM) is an intensely rigorous, enterprise-wide technological and organizational discipline focused on creating, maintaining, and distributing a single, absolute, highly verified "Golden Record" for the most critical entities of a business (typically Customers, Products, and Employees). It is designed to completely eradicate the massive data fragmentation, duplication, and contradictory information that naturally plagues large organizations running dozens of disconnected software applications.
+Consider one customer, John Doe, across three systems:
+* In the **Salesforce** CRM he is "John Doe" (a lead).
+* In the **SAP** billing system he is "Jonathan Doe" (a payer).
+* In the **Zendesk** support system he is "J. Doe" (a ticket submitter).
 
-Consider the reality of a massive enterprise. A single human being (John Doe) interacts with the company through multiple distinct systems. 
-* He exists in the **Salesforce** CRM as "John Doe" (Lead).
-* He exists in the **SAP** Billing system as "Jonathan Doe" (Payer).
-* He exists in the **Zendesk** Support system as "J. Doe" (Ticket Submitter).
+Without MDM, marketing may email him three times, and billing may use an old address that he already corrected through a support ticket. MDM links these records and decides which values to trust.
 
-Without MDM, the business possesses a highly fragmented, completely chaotic view of John. The Marketing team might accidentally send him three identical promotional emails in one day. Worse, the Billing team might send his invoice to an old address because they didn't know he updated his address via a Zendesk support ticket. MDM is the architectural engine that solves this crisis.
+## How a Golden Record Is Built
 
-## The Architecture of the Golden Record
+### 1. Matching
+The MDM process collects records from each source and decides which ones refer to the same entity. Exact joins fail on "John" versus "Jonathan," so matching uses standardization (cleaning names, addresses, and phone numbers), deterministic rules, and probabilistic or ML-based fuzzy matching that produces a match score. Records above a threshold link automatically; borderline pairs go to a data steward for review.
 
-An MDM platform acts as the supreme, centralized clearinghouse for entity data. It does not replace the operational databases; it sits above them as a massive synchronization layer.
+### 2. Survivorship
+Once records are linked, survivorship rules pick each attribute's value. For example: trust SAP for billing address, Salesforce for job title, and the most recently updated source for phone number. The result is the golden record, with lineage showing which source supplied each field.
 
-### 1. Ingestion and Deduplication (Fuzzy Matching)
-The MDM system constantly ingests records from Salesforce, SAP, and Zendesk. Because "John", "Jonathan", and "J." do not match exactly, traditional SQL joins fail. MDM platforms employ highly sophisticated Machine Learning algorithms and "Fuzzy Logic." 
+### 3. Distribution
+The golden record is published to consumers. Depending on the MDM style, it may also be written back to source systems so they correct their own copies.
 
-The algorithm analyzes the slight variations in names, evaluates the phone numbers, and cross-references the geographic locations. It mathematically concludes with 99.8% probability that all three records represent the exact same physical human being. It instantly flags them for deduplication.
+## MDM Implementation Styles
 
-### 2. Resolution and the Golden Record
-Once matched, the MDM system executes complex Survivorship Rules to construct the definitive profile. 
-The business defines the rules: "Always trust SAP for the Billing Address, always trust Salesforce for the Job Title, and always trust Zendesk for the Phone Number." The MDM system surgically extracts the most trusted attributes from the three fragmented records and fuses them together to create a single, mathematically perfect "Golden Record."
+| Style | Where the golden record lives | Writes back to sources? | Fits when |
+|---|---|---|---|
+| Registry | Only a cross-reference of IDs; attributes stay in sources | No | You need linkage for analytics with minimal disruption |
+| Consolidation | A central hub, mainly for analytics and reporting | No | The goal is a trusted view for BI and AI |
+| Coexistence | Central hub, synchronized with sources | Yes | Sources keep authoring data, but should converge |
+| Centralized (transactional) | The hub is the system of record | Sources consume from the hub | You can change how data is created across the business |
 
-### 3. Synchronization (Bi-Directional Sync)
-The MDM system does not simply hoard this perfect record. It actively pushes the corrected data back out to the fragmented systems. It reaches into Salesforce and forces it to update John's phone number to match the Zendesk record. It ensures that every single software application in the entire global enterprise is operating on the exact same, highly accurate version of reality.
+## MDM on a Data Lakehouse
 
-## MDM in the Data Lakehouse Era
+Traditional MDM ran on dedicated hub products. A [data lakehouse](/knowledgebase/data-lakehouse/) is a natural home for the consolidation and registry styles, and it can feed the golden record to coexistence hubs as well. A typical layout in the [medallion architecture](/knowledgebase/medallion-architecture/):
 
-Historically, MDM was handled exclusively by massive, monolithic on-premises software. In the modern era, data engineers are increasingly shifting MDM logic directly into the [Data Lakehouse](/data-lakehouse).
+1. **Bronze:** raw CRM, ERP, and support extracts land in Apache Iceberg tables, often through CDC.
+2. **Silver:** standardized names, addresses, and phone numbers; a match table assigns a shared `master_customer_id` to linked records, computed with Spark, dbt, or a dedicated matching tool.
+3. **Gold:** a `dim_customer` table applies survivorship rules and keeps history as a [Type 2 slowly changing dimension](/knowledgebase/type-2-scd/).
 
-By dumping all raw CRM, ERP, and Support data into the Bronze layer of the Lakehouse, data teams can utilize the massive distributed compute of Apache Spark and modern dbt SQL modeling to execute complex fuzzy-matching algorithms in the cloud. They construct the massive Master Customer Table directly in the Gold layer, ensuring that all downstream business intelligence dashboards and AI predictive models are trained exclusively on perfectly resolved Golden Records.
+Iceberg adds useful audit features: snapshots and time travel show what the golden record looked like when a report ran, and catalog-level access controls govern who can see sensitive attributes. MDM still depends on people: [data stewards](/knowledgebase/data-stewardship/) own the match rules and resolve exceptions. For modeling background, read [Data Modeling: Entities and Events](/blog/2024-10-data-modeling-events-entities/) and [Slowly Changing Dimensions](/blog/2026-02-data-modeling-06-slowly-changing-dimensions/).
 
-## Summary of Technical Value
+## Summary
 
-Master Data Management is the ultimate organizational defense against chaotic data fragmentation. By utilizing advanced matching algorithms and strict survivorship rules to forge definitive Golden Records, MDM ensures absolute operational consistency across disparate global software systems, completely eliminating the extreme inefficiencies and customer friction caused by duplicate and contradictory data.
+MDM produces trusted golden records by matching records across systems, applying survivorship rules, and distributing the result. A lakehouse provides the storage, compute, and history to run the consolidation side of MDM on open tables, so BI dashboards and AI models use the same resolved entities.
 
 ## Learn More
 To learn more about the Data Lakehouse, read [The Lakehouse Built for Everyone](https://books.alexmerced.com/books/the-lakehouse-built-for-everyone/) by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

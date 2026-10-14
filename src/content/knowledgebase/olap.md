@@ -1,45 +1,45 @@
 ---
-title: "What is OLAP?"
-meta_title: "What is OLAP (Online Analytical Processing)? | Expert Data Lakehouse Guide"
-description: "A comprehensive guide to OLAP. Learn how columnar databases process massive aggregations and power enterprise business intelligence."
+title: "OLAP vs OLTP on a Data Lakehouse: Columnar Engines on Iceberg"
+meta_title: "OLAP vs OLTP on a Data Lakehouse | Glossary"
+description: "OLAP (Online Analytical Processing) covers systems built for large aggregation queries over historical data. See how OLAP and OLTP map onto a data lakehouse."
 ---
 
-# What is OLAP (Online Analytical Processing)?
+OLAP stands for Online Analytical Processing: systems designed to answer large analytical queries over historical data, such as totals, trends, and comparisons across many dimensions. Its counterpart, [OLTP](/knowledgebase/oltp/) (Online Transaction Processing), handles the many small reads and writes that run an application, like placing an order or updating an address.
 
-OLAP stands for Online Analytical Processing. It defines the highly specialized class of database architectures explicitly engineered to process massive, incredibly complex queries against vast volumes of historical data. While OLTP databases (like PostgreSQL) are built to execute millions of tiny, instantaneous transactions to run a live website, OLAP databases (like Snowflake, Amazon Redshift, and [Data Lakehouse](/data-lakehouse) engines like Dremio and Trino) are built to execute massive aggregations to power executive business intelligence dashboards and train machine learning models.
+OLAP workloads run on warehouses such as Snowflake, BigQuery, and Redshift, on real-time OLAP databases such as ClickHouse, Apache Druid, and Apache Pinot, and on [data lakehouse](/knowledgebase/data-lakehouse/) engines such as Dremio, Trino, and Spark SQL querying Apache Iceberg tables.
 
-If a CEO wants to know the "Total Revenue across all retail stores in Europe over the last five years, grouped by individual product categories," executing that query against the live OLTP database is catastrophic. The database would have to scan billions of deeply normalized rows, dragging the application's CPUs to a halt and crashing the live retail systems. The OLAP architecture was explicitly invented to solve this by physically separating the heavy analytical workloads from the fragile operational systems.
+Running a question like "total revenue by product category across all European stores for five years" against the production OLTP database scans huge numbers of rows and competes with live transactions for CPU and I/O. OLAP systems exist so that heavy analysis runs on a separate copy of the data, laid out for scanning.
 
-## The Architecture of Columnar Storage
+## Columnar Storage
 
-The fundamental defining characteristic of an OLAP engine is its physical storage layout: it is strictly Columnar.
+Most modern OLAP engines store data by column. In a row store, a 50-column `sales` table keeps each row's values together, so `SUM(revenue)` still reads all 50 columns from disk. A column store keeps all `revenue` values together, so the same query reads one column and skips the other 49. Column files such as Apache Parquet, which lakehouse tables use, also keep min and max statistics per row group so engines can skip blocks that cannot match a filter.
 
-In a traditional row-oriented operational database, data is written contiguously. If a `Sales` table contains 50 columns, writing a new transaction is very fast. However, if a business analyst only wants to calculate `SUM(revenue)`, the row-oriented database is forced to physically read the entire massive table off the hard drive—dragging all 50 columns into memory—just to isolate the single revenue number. It wastes 98% of the massive Disk I/O.
-
-OLAP databases (utilizing formats like Apache Parquet) physically shatter the row. They take the `revenue` column for all ten billion transactions and store those numbers physically contiguously on the hard drive. They take the `customer_id` column and store it in a completely separate contiguous file block.
-
-When the analyst queries `SUM(revenue)`, the OLAP engine completely ignores the other 49 columns. It surgically extracts only the highly compressed `revenue` block from the hard drive. This reduces the Disk I/O from 500 Gigabytes down to 5 Gigabytes, exponentially accelerating the speed of massive analytical aggregations.
+Columnar is the common approach today, not the only one. Classic MOLAP systems pre-computed multidimensional cubes, and that idea lives on in materialized aggregates and Dremio Reflections.
 
 ## Denormalization and Star Schemas
 
-Because OLAP systems are built explicitly for high-speed reads (not fast writes), data engineers intentionally break the strict Normalization rules used in operational databases.
+OLAP models favor fast reads over fast updates. Data is often organized as a [star schema](/knowledgebase/star-schema/): a central fact table of events or transactions surrounded by dimension tables such as customer, product, and date. Fewer joins and wider tables make queries simpler and faster, at the cost of duplicated attributes. Engines often use broadcast hash joins when a dimension table is small enough to copy to every worker.
 
-In an OLAP environment, data is heavily Denormalized into specialized architectures like the Star Schema. The complex web of dozens of operational tables is forcefully collapsed into a single, massive central Fact table surrounded by wide, highly descriptive Dimension tables. 
+## Compression and Vectorized Execution
 
-While this intentional data duplication makes updating a single record much slower, it drastically reduces the number of complex `JOIN` statements required to generate a report. Query engines (utilizing Broadcast Hash Joins) can scan these denormalized schemas at lightning speed, allowing business analysts to explore petabytes of data intuitively without requiring a PhD in database architecture.
+Values of one type stored together compress well with run-length and dictionary encoding. Engines then process data in batches of values rather than one row at a time, a technique called [vectorized execution](/knowledgebase/vectorized-execution/), often on [Apache Arrow](/knowledgebase/apache-arrow/) memory buffers. Tight loops over arrays make good use of CPU caches and SIMD instructions.
 
-## Vectorized Execution and Compression
+## OLAP vs OLTP on a Data Lakehouse
 
-OLAP architectures achieve extreme scale by deeply optimizing the physical hardware layer.
+| | OLTP | OLAP |
+|---|---|---|
+| Typical query | Read or change a few rows by key | Scan and aggregate millions or billions of rows |
+| Storage layout | Row-oriented | Column-oriented |
+| Schema style | Normalized (3NF) | Denormalized (star or wide tables) |
+| Concurrency | Thousands of small transactions | Fewer, heavier queries plus BI dashboards |
+| Lakehouse role | Source systems (PostgreSQL, MySQL, app databases) | Iceberg tables on object storage queried by Dremio, Trino, Spark, DuckDB |
+| How data moves | Changes captured with CDC or batch extracts | Lands in Bronze, refined into Silver and Gold tables |
 
-Because columnar data stores identical data types contiguously (e.g., a file block containing nothing but one million integer dates), it compresses incredibly well using advanced algorithms like Run-Length Encoding or Dictionary Encoding.
+In a lakehouse, OLTP stays in operational databases and the OLAP side becomes open tables shared by several engines, instead of a copy locked inside one warehouse. Acceleration features such as materialized views, caching, and Reflections close the gap for low-latency dashboards. For the storage side in depth, read [Row vs. Column: How Storage Layout Shapes Everything](/blog/2026-04-29-query-engine-optimization-02-row-vs-column-storage/). For dashboard latency on Iceberg, see [Real-Time BI on Apache Iceberg Data Lakehouses](/blog/real-time-bi-iceberg-lakehouse/), and for modeling, [Star Schema vs. Snowflake Schema](/blog/2026-02-data-modeling-03-star-schema-vs-snowflake/).
 
-Furthermore, modern OLAP engines utilize Vectorized Execution (often backed by Apache Arrow). Instead of the CPU processing one row at a time, the engine grabs a massive, contiguous array of 4,000 highly compressed integers and loads them perfectly into the ultra-fast L1 CPU Cache. It executes Single Instruction, Multiple Data (SIMD) hardware commands to calculate the aggregations across the entire array instantly, operating at the absolute physical limits of the silicon processor.
+## Summary
 
-## Summary of Technical Value
-
-OLAP architectures are the foundational computational engines of the modern data-driven enterprise. By entirely abandoning fragile, row-oriented structures in favor of highly compressed, mathematically optimized columnar storage formats and denormalized schemas, OLAP engines guarantee that organizations can execute highly complex, petabyte-scale business intelligence queries in sub-second response times without ever threatening the stability of live operational software.
-
+OLAP systems answer large analytical questions by storing data in columns, compressing it, modeling it for reads, and processing it in vectorized batches. On a lakehouse, OLTP databases remain the sources and Iceberg tables become the shared OLAP layer that any compatible engine can query.
 
 ## Learn More
 To learn more about the Data Lakehouse, read [The Lakehouse Built for Everyone](https://books.alexmerced.com/books/the-lakehouse-built-for-everyone/) by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

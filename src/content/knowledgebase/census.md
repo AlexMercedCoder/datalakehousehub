@@ -1,42 +1,38 @@
 ---
-title: "What is Census?"
-meta_title: "What is Census? | Expert Data Lakehouse Architecture Guide"
-description: "A comprehensive guide to Census. Learn about Reverse ETL, operational analytics, and syncing the data warehouse to business applications."
+title: "Census (Now Fivetran Activations): Reverse ETL From the Warehouse and Lakehouse"
+meta_title: "Census Reverse ETL (Fivetran Activations) | Glossary"
+description: "Census is a reverse ETL tool that syncs modeled warehouse data into apps like Salesforce, now sold as Fivetran Activations. See how it fits a lakehouse."
 ---
 
-# What is Census?
+Census is a [reverse ETL](/knowledgebase/reverse-etl/) and data activation platform. It reads modeled data from a warehouse or query engine and syncs it into operational tools such as Salesforce, HubSpot, Zendesk, and marketing platforms, so sales, marketing, and support teams see warehouse-computed fields like lead scores or account health inside the tools they already use.
 
-Census is an enterprise-grade Data Activation and Reverse ETL platform. It is engineered specifically to extract heavily refined, highly trustworthy analytical data from central cloud data warehouses (like Snowflake, BigQuery, or Redshift) and synchronize that data directly into frontline operational tools (like Salesforce, Zendesk, Intercom, and Marketo).
+Fivetran announced an agreement to acquire Census in May 2025. The product now runs inside Fivetran as **Fivetran Activations**, and existing Census syncs became activation syncs under the Activations tab. Fivetran now covers both directions: ingestion into the warehouse and activation back out.
 
-By functioning as the synchronization layer between the analytical database and the operational SaaS stack, Census allows data engineering teams to establish the data warehouse as the true operational hub of the company. It ensures that sales teams, marketing managers, and support representatives have instantaneous access to complex, data-science-driven insights—like Predictive Lead Scoring or Customer Health Metrics—directly within the interfaces they use every single day.
+## The Composable CDP
 
-## The Composable CDP Architecture
+Census helped popularize the composable customer data platform (CDP). A packaged CDP keeps its own copy of customer data and its own definitions. A composable CDP treats the warehouse as the customer data store: engineers model customers and events with tools like [dbt](/knowledgebase/dbt-data-build-tool/), and a reverse ETL tool syncs the results to destinations. One definition of "active customer" or "revenue" then serves both reporting and activation.
 
-Census was a primary driver of the "Composable Customer Data Platform (CDP)" architecture. 
+## How Syncs Work
 
-Historically, companies purchased monolithic, off-the-shelf CDPs (like Segment or mParticle) to handle marketing activation. These monolithic CDPs forced organizations to duplicate their data, storing one copy in the actual data warehouse for analytics, and a completely separate, extremely expensive copy inside the CDP specifically for marketing. This dual-storage model inevitably resulted in broken data logic; the finance team's definition of "Revenue" in the warehouse never matched the marketing team's definition of "Revenue" inside the CDP.
+* **Incremental diffs:** Census stores the previous result of each sync's query, compares it to the new result, and sends only added, changed, or removed records to the destination API.
+* **Destination object models:** syncs map columns to destination objects and fields, matching records on keys like email or an external ID, and can relate records (for example a Salesforce Contact to an Account).
+* **Rate limits and errors:** the platform handles destination API limits and retries, and reports rejected records so teams can fix bad data before it spreads.
 
-Census destroys this siloed architecture. It advocates that the data warehouse *is* the CDP. Data engineers use standard tools (like dbt) to clean and model the data perfectly inside the warehouse. Census simply attaches to the warehouse, reads the pristine, mathematically verified models, and syncs them directly to the marketing platforms. The CDP becomes entirely "composable," leveraging the massive compute power and single source of truth of the existing data stack.
+## Census in a Lakehouse
 
-## High-Performance Synchronization Mechanics
+Reverse ETL tools query a source with SQL, so the question for a lakehouse is which engines they can connect to. Fivetran Activations lists sources including Snowflake, BigQuery, Databricks, Redshift, Amazon Athena, Trino, ClickHouse, MotherDuck, Postgres, and S3.
 
-Pushing massive datasets into fragile, highly restrictive SaaS APIs requires intense operational resilience. Census handles this complex integration logic automatically.
+| Lakehouse setup | How to activate it |
+|---|---|
+| Iceberg tables queried with Trino or Athena | Connect Activations to Trino or Athena and sync from a gold table or view |
+| Iceberg tables managed by Snowflake, BigQuery, or Databricks | Connect to that platform directly |
+| Iceberg tables in another engine (for example Dremio) | Use an alternative such as [Hightouch](/knowledgebase/hightouch/) if it supports your engine, or expose a table through a supported engine |
 
-### Incremental Syncs and State Tracking
-Census optimizes API interactions by utilizing strict incremental syncing. When a sync is configured, Census takes a snapshot of the query result. On the next execution, it mathematically compares the new query result against the snapshot. It identifies precisely which records were added, updated, or removed, and generates specific API payloads strictly for the delta. This micro-batching drastically reduces network overhead and prevents the platform from overwhelming downstream APIs with unnecessary data.
+Whichever path you choose, sync from governed, business-ready tables or semantic layer views rather than raw data, so the numbers in Salesforce match the numbers on dashboards. See [What Is a Semantic Layer?](/blog/2026-02-semantic-layer-01-what-is-a-semantic-layer/) for how teams keep those definitions in one place.
 
-### Deep Destination Integrations
-Unlike basic integration tools that simply drop JSON payloads, Census understands the deeply specific object models of the destination systems. If a data team is syncing data to Salesforce, Census understands the complex, hierarchical relationships between Salesforce `Accounts`, `Contacts`, and `Opportunities`. An engineer can configure Census to look up an existing Salesforce Contact by their email address, update their specific `Churn_Risk_Score` custom field, and simultaneously relate that Contact to a specific `Account` object, executing complex relational updates natively over the API.
+## Summary
 
-## Observability and Alerting
-
-Because Reverse ETL pipelines feed data directly into live, customer-facing marketing and sales systems, data quality is paramount. If a pipeline pushes corrupted data to an email marketing platform, the company might accidentally email a massive discount code to the wrong customer segment.
-
-Census provides native pipeline observability. It tracks the exact status of every API call, automatically handling HTTP `429 Rate Limit Exceeded` errors with intelligent exponential backoff. If a destination API experiences a massive catastrophic outage, or if a sync suddenly rejects thousands of records due to a data type mismatch, Census halts the pipeline and instantly alerts the data engineering team via Slack or PagerDuty, preventing the corrupted data flow.
-
-## Summary of Technical Value
-
-Census provides the critical infrastructure required to turn a passive analytical data warehouse into an active operational engine. By driving the Composable CDP architecture, managing intense API rate-limiting complexities, and providing deep, native object integration with frontline SaaS applications, Census allows data engineering teams to deploy their most valuable analytical models directly into the hands of the business users who need them most.
+Census turned the warehouse into the source for operational tools and, as Fivetran Activations, is now the outbound half of Fivetran's platform. In a [data lakehouse](/knowledgebase/data-lakehouse/), it works when your Iceberg tables are reachable through one of its supported engines.
 
 
 ## Learn More

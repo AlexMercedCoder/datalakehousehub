@@ -1,44 +1,48 @@
 ---
-title: "What is Metabase?"
-meta_title: "What is Metabase? | Expert Data Lakehouse Architecture Guide"
-description: "A comprehensive guide to Metabase. Learn about accessible Business Intelligence, visual query builders, and embedding analytics at scale."
+title: "Metabase: Open-Source BI on an Apache Iceberg Lakehouse"
+meta_title: "Metabase BI on an Iceberg Lakehouse | Glossary"
+description: "Metabase is an open-source BI tool with a visual query builder, SQL editor, and dashboards. See how it queries Iceberg tables through Trino, Athena, or Dremio."
 ---
 
-# What is Metabase?
+Metabase is an open-source business intelligence (BI) tool for building questions, dashboards, and embedded analytics. Its open-source edition is licensed under the AGPL, and paid Pro and Enterprise plans add features such as SSO, advanced permissions, and more embedding options. Compared with [Tableau](/knowledgebase/tableau/) or [Apache Superset](/knowledgebase/apache-superset/), its focus is letting people who do not write SQL answer their own questions.
 
-Metabase is an incredibly popular, open-source Business Intelligence (BI) and analytics platform explicitly designed for absolute ease of use. While massive visualization platforms like Tableau or highly technical tools like Apache Superset require specialized training, Metabase was engineered from the ground up to allow non-technical business users—like marketing managers and sales associates—to query databases and generate insights entirely without knowing SQL.
+Metabase does not store or process data itself. It sends SQL to a connected database or query engine and charts what comes back. On a data lakehouse, that means Metabase sits on top of the engine that reads your [Apache Iceberg](/knowledgebase/apache-iceberg/) tables.
 
-By drastically lowering the barrier to entry, Metabase democratizes data access across the entire organization. It connects instantly to a massive variety of data sources—ranging from standard PostgreSQL databases to massive cloud data warehouses like Snowflake, BigQuery, and distributed lakehouse engines like Trino or Dremio—translating simple visual clicks into highly optimized SQL queries in the background.
-
-## The Architecture of Simplicity
-
-Metabase achieves its accessibility through a highly streamlined user interface and a powerful underlying translation engine.
+## The Query Builder and SQL Editor
 
 ### The Visual Query Builder
-The core of Metabase's accessibility is its Visual Query Builder. When a business user wants to analyze customer churn, they do not write code. They click through an intuitive, sentence-like interface. They select the `Customers` table, click to filter where `Status is Inactive`, and click to group the results by `Cancellation Date`. 
+A user picks a table, adds filters (for example, `Status is Inactive`), and groups or summarizes by a column such as `Cancellation Date`. Metabase turns those choices into SQL for the connected database, runs it there, and suggests a visualization based on the result shape.
 
-Metabase instantly translates this visual workflow into precise, dialect-specific SQL. It pushes the query to the underlying database (e.g., executing a highly optimized query on Snowflake), retrieves the data, and automatically selects the most appropriate visualization type (like a time-series line chart) to display the result.
+### SQL Editor and Snippets
+Analysts can write native SQL when the builder is not enough. SQL snippets let a team save reusable fragments, such as a standard revenue filter, and insert them into other queries so the logic stays consistent.
 
-### SQL Snippets and Power Users
-While optimized for non-technical users, Metabase explicitly accommodates data analysts. It includes a robust native SQL editor allowing power users to write complex, highly specific queries that the visual builder cannot handle.
+## Metadata and Models
 
-Crucially, Metabase supports SQL Snippets. A senior data engineer can write a complex, highly optimized block of SQL logic (such as a complex mathematical formula calculating Annual Recurring Revenue) and save it as a Snippet. A junior analyst can then seamlessly inject that Snippet into their own custom queries using template tags, ensuring organizational consistency and preventing repetitive coding errors.
-
-## Data Models and Semantic Abstraction
-
-To ensure that business users do not have to understand chaotic, raw database schemas, Metabase implements a lightweight internal semantic layer through Data Models.
-
-Data engineers can rename obscure database columns (changing `cust_fst_nm` to `First Name`), completely hide irrelevant operational metadata columns (like internal database sequence IDs), and explicitly define foreign key relationships. If an engineer links the `Orders` table to the `Customers` table inside the Metabase data model, a business user can seamlessly click through from a customer’s profile directly to their order history without ever understanding what a SQL `JOIN` is. This abstraction makes the data instantly intuitive to the end user.
+Admins can edit table metadata: rename columns for display, hide technical columns, set semantic types, and declare foreign key relationships. Declared relationships let users follow a customer to their orders without writing a join. Metabase Models go further by saving a curated query as a reusable dataset. This is a lightweight layer inside one BI tool. For metric definitions shared across several tools and AI agents, a separate [semantic layer](/knowledgebase/semantic-layer/) in the engine or catalog is the more durable place.
 
 ## Embedding Analytics
 
-Beyond internal dashboards, Metabase is heavily utilized for Embedded Analytics. Many modern SaaS applications need to show analytics directly to their end customers (e.g., a marketing tool showing a customer their campaign performance).
+SaaS teams use Metabase to show charts to their own customers. Guest embeds (the successor to static, signed embeds) use a signed JWT and work on every plan, including open source. SSO-based modular embedding, which exposes the query builder, SQL editor, and drill-through to end users, requires a Pro or Enterprise plan.
 
-Building custom charts and maintaining a complex analytics backend specifically for a web application is incredibly expensive. Metabase allows developers to build complex, interactive dashboards inside the Metabase UI, and then securely embed those exact dashboards directly into their proprietary web applications using an iframe and Single Sign-On (SSO) JWT tokens. This allows organizations to deliver highly professional, customer-facing analytics in days rather than months.
+## Connecting Metabase to an Iceberg Lakehouse
 
-## Summary of Technical Value
+Metabase never reads Parquet or Iceberg metadata directly, so the engine you choose determines performance, governance, and which [Iceberg catalog](/knowledgebase/iceberg-catalog/) you can use.
 
-Metabase completely eliminated the steep learning curve traditionally associated with Business Intelligence. By providing an incredibly intuitive visual query builder backed by a robust SQL translation engine and lightweight semantic modeling, it allows anyone in an organization to ask complex questions of massive datasets. Its simplicity, combined with its powerful embedding capabilities, makes it an indispensable tool for data democratization.
+| Engine | Metabase driver status | Typical Iceberg setup |
+|---|---|---|
+| Amazon Athena | Official | Iceberg tables in [AWS Glue](/knowledgebase/aws-glue/) |
+| Starburst ([Trino](/knowledgebase/trino/)) | Official (Starburst driver) | Iceberg connector with a REST, Glue, or Hive catalog |
+| Spark SQL / Databricks | Official | Iceberg via Spark catalogs, or Unity Catalog |
+| Dremio | Not an official driver; check Metabase's community drivers | Iceberg via Polaris, Nessie, Glue, or other catalogs, with Reflections for acceleration |
+| [DuckDB](/knowledgebase/duckdb/) / [ClickHouse](/knowledgebase/clickhouse/) | ClickHouse official; DuckDB community | Iceberg extensions or table functions for small to mid-size workloads |
+
+Two practical points. First, dashboards fire many concurrent queries, so put caching or acceleration (materialized views, Dremio Reflections, or Metabase's own result caching) in front of large fact tables. Second, keep access rules in the engine or catalog rather than only in Metabase, so the same rules apply when people query from notebooks or agents.
+
+For background on where BI tools fit in a governed lakehouse, read [What Is a Semantic Layer?](/blog/2026-02-semantic-layer-01-what-is-a-semantic-layer/) and [Headless BI: How a Universal Semantic Layer Replaces Tool-Specific Models](/blog/2026-02-semantic-layer-08-headless-bi/).
+
+## Summary
+
+Metabase gives non-technical users a point-and-click way to query data, with a SQL editor for analysts and embedding for product teams. On a lakehouse it is a presentation layer: pair it with an engine that reads Iceberg well and with governance that lives below the BI tool.
 
 
 ## Learn More

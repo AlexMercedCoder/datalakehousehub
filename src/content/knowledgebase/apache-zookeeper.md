@@ -1,42 +1,49 @@
 ---
-title: "What is Apache ZooKeeper?"
-meta_title: "What is Apache ZooKeeper? | Expert Data Lakehouse Architecture Guide"
-description: "A comprehensive guide to Apache ZooKeeper. Learn about distributed consensus, legacy cluster coordination, and its role in Hadoop and Kafka architectures."
+title: "Apache ZooKeeper: What It Does and Whether Your Lakehouse Needs It"
+meta_title: "Apache ZooKeeper vs KRaft: Do Lakehouses Need It? | Glossary"
+description: "Apache ZooKeeper is a coordination service for distributed systems. See what it does, why Kafka replaced it with KRaft, and which lakehouse tools still use it."
 ---
 
-# What is Apache ZooKeeper?
+Apache ZooKeeper is an open source coordination service for distributed systems. It stores small pieces of shared state, such as configuration, membership, and leader information, and gives every client a consistent view of that state. It was developed at Yahoo! Research and became a top-level Apache project in 2010, where it is still actively maintained.
 
-Apache ZooKeeper is a highly reliable, centralized service designed strictly for maintaining configuration information, naming, providing distributed synchronization, and organizing cluster services. It was created at Yahoo! specifically to solve the incredibly complex "consensus" problem inherent in operating massive, distributed big data systems.
+Distributed systems need agreement. When a primary server fails, the rest of the cluster must agree on a single replacement, or two servers may both act as leader (a "split brain") and write conflicting data. ZooKeeper gives applications building blocks for leader election, locks, and group membership so they do not have to implement consensus themselves.
 
-In a distributed cluster (like a legacy Apache Hadoop environment or an Apache Kafka messaging system), hundreds of individual servers must constantly communicate to agree on the current state of the architecture. If a primary server suddenly suffers a hardware failure, the remaining servers must instantly and unanimously agree on exactly which server will take over the primary leadership role. Without a central coordinator, a catastrophic "split-brain" scenario occurs, where two servers both believe they are the leader, instantly corrupting the entire database. ZooKeeper was the absolute standard solution for preventing this exact chaos.
+## The ZNode Data Model
 
-## The Hierarchical ZNode Architecture
+ZooKeeper organizes data in a hierarchical namespace that looks like a file system. Each node is called a znode and holds a small amount of data, limited to about 1 MB by default and usually far less. The full data tree is kept in memory for fast reads, while a transaction log and periodic snapshots on disk make it durable.
 
-ZooKeeper is incredibly simple by design. It does not store massive datasets. Instead, it operates entirely in memory, storing configuration metadata in a hierarchical namespace, conceptually identical to a standard computer file system.
+### Ephemeral Nodes and Watches
+An ephemeral znode exists only as long as the client session that created it. Clients keep sessions alive with heartbeats. If a server crashes and its session times out, ZooKeeper deletes its ephemeral znodes automatically. Other clients can set watches on znodes and are notified when they change, which is how a cluster learns that a member has gone away and reassigns its work.
 
-The data registers in ZooKeeper are called ZNodes. ZNodes are tiny, typically holding less than 1MB of metadata. Distributed applications connect to ZooKeeper and read or write configuration data directly to these ZNodes. 
+## The Zab Protocol
 
-### Ephemeral Nodes and Heartbeats
-A critical feature of ZooKeeper is the Ephemeral Node. When a worker server joins a Hadoop cluster, it connects to ZooKeeper and creates an Ephemeral Node representing itself. The worker server continuously sends "heartbeats" (network pings) to ZooKeeper to prove it is alive. If the worker server’s motherboard catches fire, the heartbeats stop. ZooKeeper immediately detects the silence, deletes the Ephemeral Node automatically, and explicitly broadcasts a notification to the rest of the cluster that the worker server is dead, allowing the cluster to reassign the workload instantly.
+ZooKeeper runs as an ensemble, typically of three or five servers. Writes go to the leader, which uses the Zab (ZooKeeper Atomic Broadcast) protocol to propose them to followers. A write commits once a majority (a quorum) acknowledges it. With five servers, the ensemble keeps working with two failed, and a minority partition cannot accept writes, so the cluster never splits into two conflicting histories.
 
-## The Zab Consensus Protocol
+## The Shift Away from ZooKeeper
 
-ZooKeeper guarantees high availability by running as an ensemble (a cluster) of typically 3, 5, or 7 servers. To ensure absolute data consistency across these servers, it utilizes its own atomic broadcast protocol known as Zab (ZooKeeper Atomic Broadcast).
+For years ZooKeeper was a required dependency of many big data systems: HDFS NameNode automatic failover, HBase, SolrCloud, and Apache Kafka. Kafka originally kept all cluster metadata in ZooKeeper (consumer offsets moved into an internal Kafka topic as early as version 0.9).
 
-When a distributed application (like Apache HBase) attempts to write a new configuration to ZooKeeper, the request is routed directly to the specific ZooKeeper Leader node. The Leader broadcasts the proposed modification to all the Follower nodes. The modification is only formally committed and written to the database if a strict majority (a quorum) of the ZooKeeper nodes acknowledge the broadcast. This strict quorum consensus guarantees that even if a network partition splits the cluster in half, the system will never return conflicting data.
+Running a separate ensemble added operational work: another cluster to secure, size, monitor, and upgrade. Kafka addressed this with KRaft, a Raft-based metadata quorum built into Kafka itself. KRaft became production ready in Kafka 3.3, and Kafka 4.0, released in March 2025, removed ZooKeeper support entirely. Existing ZooKeeper-based clusters must migrate to KRaft on 3.9 before upgrading to 4.x.
 
-## The Legacy of ZooKeeper
+## Does a Lakehouse Need ZooKeeper?
 
-For an entire decade, Apache ZooKeeper was an absolute, non-negotiable dependency for almost every massive open-source distributed system. Apache Kafka relied on it to track Topic Partitions and Consumer Offsets. Apache Hadoop used it to manage High Availability for the HDFS NameNode. Apache Solr used it to manage distributed search shards.
+Usually not. The core of an open lakehouse does not depend on it, though some surrounding systems still do.
 
-However, running a separate, highly complex ZooKeeper ensemble strictly to manage another cluster introduced massive operational overhead. Managing ZooKeeper security, scaling it, and debugging consensus timeouts became a notorious nightmare for DevOps engineers.
+| Component | ZooKeeper required? |
+|---|---|
+| [Apache Iceberg](/knowledgebase/apache-iceberg/) tables and REST catalogs such as [Apache Polaris](/knowledgebase/apache-polaris/) and Project Nessie | No; commits use the catalog's atomic swap, backed by a database |
+| Query engines: Trino, Dremio, Spark, DuckDB | No for normal operation (Spark standalone and Flink can optionally use it for high availability) |
+| [Apache Kafka](/knowledgebase/apache-kafka/) 4.0 and later | No; KRaft only |
+| Apache Kafka 3.x and earlier | Yes, unless running in KRaft mode |
+| [Apache Pinot](/knowledgebase/apache-pinot/) | Yes, through Apache Helix |
+| [Apache Druid](/knowledgebase/apache-druid/) | Yes by default; a Kubernetes-based alternative exists as an extension |
+| HDFS high availability, HBase, HiveServer2 high availability | Yes |
 
-### The Shift Away from ZooKeeper
-As the industry evolved, modern systems aggressively re-engineered their architectures specifically to eliminate ZooKeeper. Apache Kafka spent years developing KRaft (Kafka Raft metadata mode), explicitly replacing external ZooKeeper coordination with a highly optimized, internal consensus algorithm. Modern cloud [data lakehouse](/data-lakehouse) architectures (like Trino or Snowflake) rely entirely on massive cloud-native control planes, bypassing the need to manage distributed consensus daemons locally entirely.
+If you are building a new lakehouse on object storage, Iceberg, and a REST catalog, you can likely avoid running ZooKeeper at all. If you operate Hadoop-era systems or real-time OLAP databases, plan for it. For the Kafka side of this change, see [Kafka 4.0 Changes Streaming Platform Operations](/blog/2026-05-kafka-streaming-operations/), and for the consensus algorithms behind both ZooKeeper and KRaft, see [Paxos and Raft Consensus](/knowledgebase/paxos-and-raft-consensus/).
 
-## Summary of Technical Value
+## Summary
 
-Apache ZooKeeper provided the foundational distributed coordination required to launch the Big Data revolution. By solving the immensely complex mathematics of distributed consensus and leader election, it allowed massive systems like Hadoop and Kafka to operate flawlessly at unprecedented scale. While modern cloud architectures are successfully replacing it, ZooKeeper remains a critical historical component that defined an entire era of distributed software engineering.
+Apache ZooKeeper provides consistent shared state, ephemeral membership, and leader election for distributed systems through a quorum-replicated namespace. Kafka has moved to KRaft, and modern lakehouse catalogs and engines do not need it, but it remains part of HDFS, HBase, Pinot, Druid, and other systems many teams still run.
 
 
 ## Learn More

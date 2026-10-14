@@ -1,41 +1,45 @@
 ---
-title: "What are Microservices?"
-meta_title: "What are Microservices? | Expert Data Lakehouse Architecture Guide"
-description: "A comprehensive guide to Microservices. Learn how shattering monolithic applications into independent, containerized services enables infinite scaling."
+title: "Microservices Data in a Lakehouse: CDC, Outbox Events, and Iceberg"
+meta_title: "Microservices Data Into a Lakehouse: CDC and Iceberg"
+description: "Microservices split an application into small services that deploy and scale on their own. Learn how to move data from many service databases into Iceberg."
 ---
 
-# What are Microservices (Microservice Architecture)?
+Microservices (or microservice architecture) is a way of building an application as a set of small, independently deployable services, each responsible for one business capability such as payments, inventory, or notifications. It contrasts with a [monolith](/knowledgebase/monolithic-architecture/), where those capabilities ship together as one codebase and one deployment.
 
-Microservices (or Microservice Architecture) is a highly advanced, modern software development methodology that violently rejects the historical paradigm of building massive, singular software applications. Instead of building one gigantic, multi-million line codebase (a Monolith) that handles user login, credit card processing, inventory management, and email notifications all at once, engineers mathematically shatter the application into dozens (or hundreds) of tiny, highly independent, fiercely isolated miniature applications (Microservices). 
+Services communicate over the network, usually through HTTP or gRPC APIs, or asynchronously through message brokers and event streams such as Apache Kafka. A common guideline is that each service owns its data and other services reach that data only through the owning service's API or events, not by querying its database directly.
 
-Each Microservice is explicitly responsible for executing exactly one specific business function (e.g., the `Payment_Service`). They do not share databases, they do not share code, and they communicate with each other strictly through highly standardized, secure REST APIs or asynchronous Message Queues.
+## Why Teams Adopt Microservices
 
-## The Architectural Solution to Monolithic Chaos
+In a monolith, a bad change in one module can take down the whole application, and scaling one busy feature means scaling everything. Microservices address this with:
 
-To understand the absolute necessity of Microservices, one must understand the catastrophic failure state of the Monolith.
+* **Independent scaling:** if search traffic spikes, an orchestrator such as Kubernetes can add replicas of the search service without touching payments.
+* **Fault isolation:** if the email service fails, checkout can still succeed and the receipt is sent once the service recovers, provided the calls between services are designed for that (timeouts, retries, queues).
+* **Independent deployment and technology choice:** teams release on their own schedules and can use the language or database that fits their service.
 
-In a massive Monolith, if a junior developer makes a typo in the code for the `Email_Notification_Service`, that single typo crashes the entire application. The whole website goes down, and users cannot check out. 
-Furthermore, if the website experiences a massive surge of traffic strictly to the `Inventory_Search_Service`, the organization cannot scale just the search function. They are physically forced to duplicate the entire, massive Monolithic application across 50 servers, wasting massive amounts of CPU and RAM on the unused `Payment_Service`.
+## The Costs
 
-### Absolute Independence and Scalability
-Microservices completely solve this through strict, containerized isolation (usually via Docker and Kubernetes).
+Microservices move complexity from the codebase into the network. Teams take on service discovery, distributed tracing, versioned APIs, partial failures, and eventual consistency between services. Many organizations start with a well-structured monolith and split out services only where independent scaling or ownership pays for that overhead.
 
-* **Independent Scaling:** If search traffic spikes, Kubernetes automatically spins up 500 copies of the `Inventory_Search_Service` container, leaving the `Payment_Service` completely alone. This provides flawless, hyper-efficient cloud resource utilization.
-* **Fault Isolation:** If the `Email_Notification_Service` contains a fatal bug and violently crashes, it dies in complete isolation. The rest of the e-commerce website continues to function perfectly; the user successfully buys the product, they simply receive the receipt email an hour later when the email service is rebooted.
-* **Technology Agnosticism:** Because the services only communicate via standard APIs, they can be written in entirely different languages. The `Payment_Service` can be written in highly secure Java, while the `AI_Recommendation_Service` is written in Python, allowing teams to use the absolute best tool for the specific job.
+## The Analytics Problem
 
-## The Complexity of Distributed Data
+Database-per-service is good for team autonomy and bad for analytics. The user service may run PostgreSQL and the inventory service MongoDB. A question like "which users bought items that are now out of stock" spans both, and there is no single database to join them in. Querying service databases directly for analytics also couples reports to internal schemas and adds load to production systems.
 
-While Microservices solve massive scaling problems for software engineers, they create an absolute architectural nightmare for Data Engineers.
+The usual answer is to copy service data into a shared analytical store. A [data lakehouse](/knowledgebase/data-lakehouse/) built on [Apache Iceberg](/knowledgebase/apache-iceberg/) fits well because several engines and teams can use the same tables.
 
-The foundational rule of Microservices is that *every service must own its own isolated database*. The `User_Service` uses a PostgreSQL database, while the `Inventory_Service` uses a MongoDB database. 
-If the CEO asks for a single dashboard showing "Users who bought Inventory," the query engine cannot simply write a `JOIN` across the two databases, because they are physically isolated and completely incompatible.
+## Getting Microservice Data into Iceberg
 
-This exact nightmare is why the modern [Data Lakehouse](/data-lakehouse) was invented. Data engineers must build complex Event Streaming pipelines (like Apache Kafka) to constantly extract the chaotic, fragmented data from the hundreds of isolated Microservice databases, streaming it all into a single, centralized Amazon S3 Data Lake, and resolving it into unified [Apache Iceberg](/apache-iceberg) tables so the business can actually execute unified analytical queries.
+| Pattern | How it works | Tradeoffs |
+|---|---|---|
+| [Change data capture](/knowledgebase/change-data-capture/) | A tool such as [Debezium](/knowledgebase/debezium/) reads each service database's transaction log and streams row changes to Kafka | No application changes; exposes internal table structure, so schema changes can break consumers |
+| Transactional outbox | The service writes business events to an outbox table in the same transaction as its data change; CDC publishes the outbox | Events are a deliberate contract; requires work in each service |
+| Domain events | Services publish events to Kafka as part of their normal design, often with a [schema registry](/knowledgebase/schema-registry/) | Clean contracts; analytics depends on what services choose to emit |
+| Batch extracts | Scheduled exports or API pulls | Simple; higher latency and more load on sources |
 
-## Summary of Technical Value
+From Kafka, the Iceberg Kafka Connect sink or a Flink job writes the changes into Bronze Iceberg tables, and Silver and Gold tables join data across services. For how those commits work, read [Kafka Connect to Iceberg: How the Commit Actually Works](/blog/kafka-connect-iceberg-commits/). For CDC table design, see [What Iceberg V3 Advances Mean for CDC Pipelines](/blog/2026-05-iceberg-cdc-pipelines/).
 
-Microservices represent the ultimate evolution of internet-scale software engineering. By shattering massive, fragile monolithic applications into highly isolated, independently scalable, and technologically agnostic containerized services, this architecture guarantees that global web platforms can survive catastrophic code failures and scale to handle millions of simultaneous users with absolute flawless efficiency.
+## Summary
+
+Microservices let teams scale, deploy, and fail independently at the cost of distributed systems complexity. Because each service keeps its own data, analytics needs a shared layer. CDC, outbox events, and streaming into Iceberg tables give the business one place to query across services without reaching into production databases.
 
 ## Learn More
 To learn more about the Data Lakehouse, read [The Lakehouse Built for Everyone](https://books.alexmerced.com/books/the-lakehouse-built-for-everyone/) by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

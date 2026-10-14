@@ -1,46 +1,57 @@
 ---
-title: "What is Row-Level Security?"
-meta_title: "What is Row-Level Security? | Expert Data Lakehouse Architecture Guide"
-description: "A comprehensive guide to Row-Level Security. Learn about multi-tenant data isolation, dynamic filtering, and securing enterprise data lakehouses."
+title: "Row-Level Security on Iceberg Lakehouse Tables: Where It Is Enforced"
+meta_title: "Row-Level Security on Iceberg Lakehouse Tables | Glossary"
+description: "Row-level security filters which table rows each user can see. Learn where RLS is enforced on Iceberg tables and how vended credentials can bypass it."
 ---
 
-# What is Row-Level Security?
+Row-Level Security (RLS) is a fine-grained access control mechanism that limits which rows of a table a user can see. Column-level security and masking hide or obscure specific columns (like Social Security Numbers); row-level security hides specific records, so each user queries only the subset of data they are authorized for.
 
-Row-Level Security (RLS) is an advanced, fine-grained access control mechanism that strictly restricts the specific data rows a user is legally or operationally permitted to access within a database table. While Column-Level Security masks specific columns (like Social Security Numbers), Row-Level Security entirely hides specific records, ensuring that a user only queries the exact subset of data relevant to their authorization.
+Large organizations rarely build a separate physical table for every division. A global company keeps one `global_sales_fact` table with transactions from the United States, Germany, Japan, and Brazil.
 
-In massive, global enterprises, organizations rarely construct separate physical tables for every single division. An international corporation maintains exactly one massive `Global_Sales_Fact` table containing transactions from the United States, Germany, Japan, and Brazil. 
-
-If the Regional Sales Director for Germany queries the `Global_Sales_Fact` table, they should absolutely only see the sales records generated in Germany. If they accidentally (or maliciously) view the sales metrics for Japan, the company risks severe internal conflicts, insider trading violations, or regulatory breaches. Historically, data teams solved this by creating hundreds of physical, filtered database Views (e.g., `CREATE VIEW german_sales AS SELECT * FROM global_sales WHERE region = 'Germany'`). Managing thousands of these manual views was a catastrophic engineering burden. RLS completely automates this security perimeter.
+When the regional sales director for Germany queries that table, they should see only German sales. Historically, data teams handled this by creating many filtered views (e.g., `CREATE VIEW german_sales AS SELECT * FROM global_sales WHERE region = 'Germany'`), one per audience. Keeping hundreds of those views in sync with the base table and with the org chart is a heavy maintenance burden. RLS replaces them with a single policy evaluated at query time.
 
 ## Dynamic Filtering Architecture
 
-Row-Level Security is implemented natively by the query engine (such as Dremio, Snowflake, or Trino) at the exact moment a query is compiled, making it completely invisible to the end user.
+Row-Level Security is enforced by the query engine (such as Dremio, Snowflake, or Trino with an access control plugin) when a query is planned, and it is invisible to the end user.
 
-The security administrator explicitly defines a Row-Access Policy on the target table. This policy is essentially a highly optimized SQL function that evaluates the context of the user executing the query.
+A security administrator defines a row access policy on the target table. The policy is usually a SQL function that evaluates the identity or roles of the user running the query and returns whether a row is visible.
 
-When the Regional Sales Director for Germany connects their Tableau dashboard to the engine and issues the query `SELECT SUM(revenue) FROM Global_Sales_Fact`, the engine intercepts the request. The engine evaluates the Director's Active Directory profile, identifies their role as `Region_Germany`, and dynamically rewrites the physical execution plan in the background. The engine silently appends an explicit `WHERE region = 'Germany'` clause to the underlying SQL. 
+When the Germany director's Tableau dashboard issues `SELECT SUM(revenue) FROM global_sales_fact`, the engine looks up the director's identity and group membership (for example from the identity provider), sees the `region_germany` role, and adds the equivalent of `WHERE region = 'Germany'` to the plan.
 
-The Director receives their specific revenue number. They cannot see the global total, and they cannot bypass the filter. Because the engine handles the filtering dynamically at runtime, the organization only has to maintain a single, massive physical table and a single, universal Tableau dashboard.
+The director receives the German revenue number. They cannot see the global total and cannot remove the filter. Because the engine applies the filter at runtime, the organization maintains one physical table and one dashboard for every region.
 
 ## Multi-Tenant SaaS Architectures
 
-Row-Level Security is the absolute foundational requirement for building Multi-Tenant SaaS (Software as a Service) applications.
+RLS is a common way to isolate customers in a multi-tenant SaaS application.
 
-When an organization builds a B2B SaaS application (like a CRM or an email marketing platform), they do not spin up a brand new, physically isolated database for every single new customer. That would be exorbitantly expensive and impossible to maintain. They place every single customer’s data into one massive, shared database table. 
+Instead of a separate database per customer, many SaaS applications store every customer's data in shared tables with a `tenant_id` column. When Customer A logs in, the application passes Customer A's `tenant_id` to the database session, and the RLS policy forces every query in that session to filter by `tenant_id = 'A'`. PostgreSQL's built-in row security policies are a common example. This means a bug in application code that forgets a `WHERE` clause does not leak Customer B's data to Customer A. Teams with strict isolation requirements may still choose separate schemas or databases per tenant.
 
-To ensure absolute isolation, the architecture utilizes Row-Level Security based on a `tenant_id`. When Customer A logs into the application, the application backend passes Customer A's `tenant_id` to the database. The RLS policy aggressively forces every single query executed during that session to filter explicitly by `WHERE tenant_id = 'A'`. This strictly guarantees that a catastrophic bug in the application code can never accidentally leak Customer B's proprietary data to Customer A, achieving complete logical isolation within a shared physical infrastructure.
+## Where RLS Is Enforced in an Iceberg Lakehouse
+
+The [Apache Iceberg](/knowledgebase/apache-iceberg/) table format does not define row-level security. Iceberg tables are Parquet files plus metadata in object storage, and RLS is enforced by whichever layer evaluates the query:
+
+| Layer | How row filtering works |
+|---|---|
+| Dremio | Row access policies defined as SQL user-defined functions and attached to tables or views |
+| Trino | Access control plugins such as Open Policy Agent or Apache Ranger can return row filters |
+| Databricks Unity Catalog | Row filters and column masks attached to tables |
+| Snowflake | Row access policies, which can also be applied to Iceberg tables |
+| Iceberg REST catalogs (Polaris, Glue) | Table and namespace level grants; row filtering is left to the engine |
+| Direct file access | None. Anyone with storage credentials can read every row |
+
+The last row is the important caveat. RLS only holds if every path to the data goes through an engine that enforces it. If a REST catalog vends storage credentials to a client, or an analyst has direct S3 access, the client can read the Parquet files and bypass the policy. A sound lakehouse design keeps sensitive tables readable only through trusted engines, or splits restricted data into separate tables or namespaces with their own grants.
+
+For more detail, read [Securing Apache Iceberg Tables with Fine-Grained Row and Column Level Access Control](/blog/iceberg-row-column-access-control/) and [Governance-as-Code for the Lakehouse](/blog/governance-as-code-lakehouse-rest-catalog/). Related glossary entries: [column-level security](/knowledgebase/column-level-security/), [data masking](/knowledgebase/data-masking/), and [role-based access control](/knowledgebase/role-based-access-control/).
 
 ## Security and Query Performance
 
-While RLS provides incredible security and simplifies architectural management, it fundamentally changes how query engines execute workloads.
+Because RLS adds a filter to every query, its cost depends on how well the table is laid out for that filter. If the policy filters on `region` or `tenant_id`, partitioning or sorting the Iceberg table on that column lets the engine skip files that cannot match.
 
-Because RLS silently injects complex `WHERE` clauses into every single query, it can significantly impact performance if the underlying table is not structurally optimized. To mitigate this latency, data engineers must physically sort or partition the underlying Apache Parquet files based heavily on the specific columns used in the Row-Level Security policies (e.g., partitioning the Iceberg table explicitly by `region` or `tenant_id`). 
-
-When optimized correctly, the injected RLS filters trigger Predicate Pushdown. The query engine reads the injected `WHERE region = 'Germany'` filter, completely ignores the physical Parquet files containing data for Japan and the United States, and dramatically accelerates the query while simultaneously enforcing absolute security.
+When the layout matches the policy, the injected filter benefits from [predicate pushdown](/knowledgebase/predicate-pushdown/) and partition pruning: the engine reads `WHERE region = 'Germany'`, skips the files for Japan and the United States using partition values and column statistics, and the query often runs faster than an unfiltered one.
 
 ## Summary of Technical Value
 
-Row-Level Security fundamentally revolutionizes multi-tenant and global data architectures. By dynamically evaluating user context and automatically injecting rigorous filtering logic at runtime, RLS allows immense organizations to maintain a single, consolidated physical database. It eliminates the severe engineering burden of managing thousands of fragmented, localized tables while absolutely guaranteeing strict data isolation and regulatory compliance.
+Row-Level Security lets an organization keep one consolidated table and still give each user or tenant only the rows they are allowed to see. It replaces large collections of hand-maintained filtered views with a policy evaluated at query time. On a lakehouse, its guarantees depend on routing all access through engines that enforce the policy.
 
 
 ## Learn More

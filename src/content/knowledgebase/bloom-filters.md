@@ -1,46 +1,61 @@
 ---
-title: "What is a Bloom Filter?"
-meta_title: "What is a Bloom Filter? | Expert Data Lakehouse Architecture Guide"
-description: "A comprehensive guide to Bloom Filters. Learn how probabilistic data structures enable query engines to instantly skip massive files without reading data."
+title: "Bloom Filters in Parquet and Apache Iceberg Tables"
+meta_title: "Bloom Filters in Parquet and Iceberg Tables | Glossary"
+description: "A Bloom filter is a compact probabilistic structure that tells an engine a value is definitely absent. Learn how Parquet and Iceberg use them to skip data."
 ---
 
-# What is a Bloom Filter?
+A Bloom filter is a space-efficient probabilistic data structure that tests whether a value might be in a set. It can answer "definitely not present" or "possibly present," never "definitely present." In a [data lakehouse](/knowledgebase/data-lakehouse/), Bloom filters are written into [Apache Parquet](/knowledgebase/apache-parquet/) and [Apache ORC](/knowledgebase/apache-orc/) files so engines can skip row groups that cannot contain a value used in an equality filter.
 
-A Bloom Filter is a highly space-efficient, probabilistic data structure used explicitly to test whether a specific element is a member of a massive set. In the context of a modern [Data Lakehouse](/data-lakehouse) and Cloud Data Warehouses, Bloom Filters are embedded directly into file formats (like Apache Parquet and ORC) to drastically accelerate analytical queries by allowing the execution engine to completely skip reading massive data blocks without ever decompressing them.
+## Why Min/Max Statistics Are Not Enough
 
-While Predicate Pushdown utilizing Min/Max statistics is incredibly powerful for sequential data (like dates or sorted integers), it is completely useless for highly random, high-cardinality data. If a massive Parquet file contains one million unique, randomly generated UUIDs, the Min value might start with 'A' and the Max value might start with 'Z'. When a user searches for a specific UUID, the query engine evaluates the Min/Max range, realizes the target UUID falls within the massive 'A-Z' range, and is forced to physically read the entire gigabyte file, only to discover the UUID does not actually exist inside it. Bloom Filters entirely resolve this random-read bottleneck.
+Parquet already stores min and max values per row group, and Iceberg stores them per file in manifests. Those work well for sorted or clustered columns like dates. They fail for random, high-cardinality values such as UUIDs: a row group's min might start with `0` and its max with `f`, so every lookup value falls inside the range and nothing is skipped. A Bloom filter answers the question min/max cannot: is this exact value in here?
 
-## The Mathematical Architecture
+## How a Bloom Filter Works
 
-A Bloom Filter does not store the actual data (it does not store the one million UUIDs). It stores a highly compressed, tiny array of bits.
+A Bloom filter is an array of bits, all starting at 0. To add a value, the writer hashes it and sets a few bits chosen by the hash. To test a value, the reader hashes it the same way and checks those bits:
 
-When an engine (like Apache Spark) writes a block of data into a Parquet file, it creates a Bloom Filter for specific high-cardinality columns. It takes the first UUID string, runs it through multiple distinct cryptographic hashing functions (e.g., three separate hashes), and gets three specific numbers (e.g., 5, 42, and 108). It then flips the 5th, 42nd, and 108th bits in the tiny array from `0` to `1`. It repeats this exact mathematical process for every single UUID in the block. The resulting Bloom Filter is often only a few kilobytes in size.
+* **Any bit is 0:** the value was never added. The engine can skip the data.
+* **All bits are 1:** the value may be present, or the bits may have been set by other values (a false positive). The engine has to read the data.
 
-## The Rule of False Positives
+The false positive rate depends on the filter size and the number of distinct values. Bigger filters mean fewer false positives.
 
-When a query engine (like Trino or Dremio) executes a query searching for a specific UUID, it does not read the gigabyte Parquet data file. It reads the tiny, kilobyte Bloom Filter.
+Parquet uses a split block Bloom filter: values are hashed with xxHash (XXH64, a fast non-cryptographic hash), and each lookup touches a single 256-bit block, which keeps checks cache-friendly. Filters are stored per column chunk, and the file footer records where each one is.
 
-It takes the requested UUID, runs it through the exact same three hashing functions, and checks the array. 
+## Configuring Bloom Filters in Iceberg
 
-### Absolute Negatives
-If the hashing functions point to positions 12, 50, and 99, the engine looks at the array. If position 50 is a `0`, the engine mathematically proves with **100% absolute certainty** that the requested UUID does not exist in the massive data file. The engine completely skips reading the gigabyte file.
+[Apache Iceberg](/knowledgebase/apache-iceberg/) does not write Bloom filters by default. You enable them per column with table properties:
 
-### False Positives
-If positions 12, 50, and 99 are all `1`, the engine assumes the UUID *probably* exists in the file. However, because different strings can accidentally produce the same hash collisions, there is a tiny probability of a False Positive. The engine is forced to read the massive file. If the data is not there, it wasted a read, but it didn't break the query. 
+```sql
+ALTER TABLE db.events SET TBLPROPERTIES (
+  'write.parquet.bloom-filter-enabled.column.device_id' = 'true',
+  'write.parquet.bloom-filter-fpp.column.device_id' = '0.01'
+);
+```
 
-A Bloom Filter can definitively say "No, it is absolutely not here," but it can only say "Yes, it is *probably* here."
+| Property | Default | Meaning |
+|---|---|---|
+| `write.parquet.bloom-filter-enabled.column.<col>` | not set | Write a Bloom filter for this column |
+| `write.parquet.bloom-filter-fpp.column.<col>` | 0.01 | Target false positive probability |
+| `write.parquet.bloom-filter-ndv.column.<col>` | not set | Expected distinct values, used to size the filter |
+| `write.parquet.bloom-filter-max-bytes` | 1 MB | Maximum filter size |
+| `write.orc.bloom.filter.columns` | not set | Columns to index in ORC files |
 
-## Implementation in the Open Lakehouse
+Properties apply to files written after the change; rewrite data files with compaction to add filters to existing data.
 
-Data engineers explicitly configure Bloom Filters during the table design phase. Because Bloom Filters consume additional disk space and require extra compute to generate during ingestion, they are not applied to every column.
+## When to Use Them
 
-Engineers aggressively apply Bloom Filters to highly selective, high-cardinality columns that are frequently used in `WHERE` clauses but cannot be effectively sorted—such as `Customer_Email`, `Device_MAC_Address`, or `Transaction_UUID`. 
+| Technique | Helps with | Weak at |
+|---|---|---|
+| Partitioning | Filters on low-cardinality columns like date or region | High-cardinality keys |
+| Min/max statistics (Iceberg manifests, Parquet footers) | Range filters on sorted or clustered columns | Random values like UUIDs |
+| Bloom filters | Equality and `IN` lookups on high-cardinality columns | Range filters, low-cardinality columns |
+| Parquet page index | Skipping pages inside a row group on sorted data | Unsorted columns |
 
-By embedding these tiny mathematical structures directly into the Parquet file footers, the query engine can instantly eliminate 99% of the physical files when searching for a single specific user out of a multi-terabyte dataset, dropping query latency from several minutes down to milliseconds.
+Good candidates are columns used in point lookups that cannot be sorted for every query, such as `user_id`, `device_id`, `email`, or `transaction_id`. Each filter adds bytes to every file and some write cost, so add them only where queries filter by equality on those columns. Engine support for reading Parquet Bloom filters varies, so check that your engine uses them before relying on them. For more on file-level pruning, read [Parquet Page Indexes and the Last Mile of Pruning in Apache Iceberg](/blog/parquet-page-index-pruning-iceberg/), [All About Parquet Part 07: Metadata in Parquet](/blog/2024-10-all-about-parquet-part-07/), and [What is Apache Parquet?](/blog/2026-04-apache-parquet/).
 
-## Summary of Technical Value
+## Summary
 
-Bloom Filters are a profound mathematical optimization for massive-scale analytics. By providing a highly compressed, probabilistic method to definitively prove that specific data does *not* exist within a massive file block, they completely eliminate the immense Disk I/O overhead of scanning random, high-cardinality data. They are a critical architectural requirement for delivering instant, pinpoint analytics over petabytes of unstructured lakehouse data.
+Bloom filters let engines prove a value is absent from a row group without reading its data. In Iceberg tables they complement partitioning and min/max statistics for high-cardinality equality filters, and they are opt-in per column.
 
 
 ## Learn More

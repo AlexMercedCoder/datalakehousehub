@@ -1,40 +1,61 @@
 ---
-title: "What is an Iceberg Manifest List?"
-meta_title: "What is an Iceberg Manifest List? | Expert Architecture Guide"
-description: "A comprehensive guide to the Iceberg Manifest List. Learn how this top-tier metadata file orchestrates entire Data Lakehouse snapshots for sub-second planning."
+title: "Iceberg Manifest List: What It Stores and How Engines Use It"
+meta_title: "Iceberg Manifest List: Fields, Pruning and Time Travel"
+description: "An Iceberg manifest list is the Avro file that lists every manifest in one snapshot. See its fields, how engines prune with it, and how v4 may replace it."
 canonical: "https://iceberglakehouse.com/iceberg/iceberg-manifest-list/"
 ---
 
-# What is an Iceberg Manifest List?
+An Iceberg manifest list is a metadata file that lists the manifest files making up one snapshot of an [Apache Iceberg](/knowledgebase/apache-iceberg/) table. Each [snapshot](/knowledgebase/iceberg-snapshot/) in the table metadata points to exactly one manifest list, and each [manifest file](/knowledgebase/iceberg-manifest-file/) in that list tracks a set of data or delete files.
 
-The Iceberg Manifest List is a highly advanced, mission-critical architectural component that sits directly at the top of the [Apache Iceberg](/apache-iceberg) metadata hierarchy (just below the Snapshot pointer). While a Manifest File is responsible for tracking individual Data Files (Parquet files), the Manifest List is the supreme orchestrator that explicitly tracks the *Manifest Files themselves*. 
+The hierarchy, top to bottom:
 
-Every single time a new "Snapshot" of an Iceberg table is created (representing a specific state of the table at a specific point in time), a single, brand-new Manifest List is generated. This file acts as the absolute, definitive index for that specific Snapshot. When a query engine (like Trino or Dremio) attempts to query a massive petabyte-scale Iceberg table, it never touches the data files first. It reads the Snapshot, opens the single Manifest List, and uses the dense mathematical intelligence inside to instantly discard 99% of the underlying architecture.
+1. **Table metadata file** (`metadata.json`): schema, partition specs, snapshots, and the current snapshot ID.
+2. **Manifest list** (one per snapshot, Avro): one entry per manifest, with summary statistics.
+3. **Manifest files** (Avro): one entry per data or delete file, with column statistics.
+4. **Data and delete files** (usually Parquet).
 
-## The Architecture of Metadata Pruning
+A new manifest list is written for every commit attempt, because every commit changes the set of manifests.
 
-If a massive enterprise table has 500,000 Parquet data files, those files might be tracked by 1,000 different Manifest Files.
-If an analyst queries the table, forcing the query engine to open and read all 1,000 Manifest Files simply to check their Min/Max statistics would cause unacceptable latency. The Manifest List was explicitly invented to solve this exact bottleneck through a process called "Metadata Pruning."
+## What a Manifest List Entry Contains
 
-The Manifest List (also stored as a binary Avro file) does not simply list the file paths of the 1,000 Manifest Files. It stores heavily aggregated, table-level metrics *about* those Manifest Files.
+Each entry is a `manifest_file` struct. The fields that matter most for planning:
 
-### 1. Partition Summaries
-The absolute most critical data stored in the Manifest List is the Partition Bounds. 
-The Manifest List explicitly declares: *"Manifest File A only contains data for the Year 2024. Manifest File B only contains data for the Year 2025."*
-If the analyst's SQL query includes the clause `WHERE year = 2026`, the query engine reads the single Manifest List. It instantly realizes that neither Manifest A nor Manifest B could possibly contain 2026 data. It explicitly discards the Manifest Files without ever opening them. This is Metadata Pruning. The engine bypassed reading thousands of metadata files, saving massive amounts of compute time before it even began searching for the underlying Parquet files.
+| Field | Purpose |
+|---|---|
+| `manifest_path`, `manifest_length` | Where the manifest is and how big it is |
+| `partition_spec_id` | Which partition spec the manifest was written with |
+| `content` | Whether the manifest tracks data files or delete files (v2+) |
+| `sequence_number`, `min_sequence_number` | Ordering used to apply deletes correctly (v2+) |
+| `added_snapshot_id` | The snapshot that added this manifest |
+| `added_files_count`, `existing_files_count`, `deleted_files_count` | File counts by status |
+| `added_rows_count`, `existing_rows_count`, `deleted_rows_count` | Row counts by status |
+| `partitions` | One `field_summary` per partition field: `contains_null`, `contains_nan`, `lower_bound`, `upper_bound` |
+| `first_row_id` | Starting row ID for row lineage (v3) |
 
-### 2. Manifest Status and File Counts
-The Manifest List tracks the exact number of `ADDED`, `EXISTING`, and `DELETED` data files contained within each underlying Manifest. This allows the query optimizer to make highly intelligent execution plans. If a Manifest File contains only deleted records (due to a massive compaction or GDPR deletion event), the engine can recognize its status and process it appropriately without unnecessary computational friction.
+## How Engines Prune With It
 
-## The Foundation of Time Travel
+Planning starts at the manifest list. If a table is partitioned by `days(event_ts)` and a query filters on one week, the engine compares that range to each manifest's partition `lower_bound` and `upper_bound` and skips manifests that cannot match, without opening them. Only the surviving manifests are read, where per-file column statistics prune further.
 
-Because every single Snapshot has exactly one immutable Manifest List, it provides the absolute foundation for Iceberg's Time Travel capabilities.
+This works best when manifests are clustered by partition. If each manifest spans every partition, the summaries overlap and nothing gets skipped. Spark's `rewrite_manifests` procedure regroups manifests so the summaries become selective again; see [Avoiding Metadata Bloat with Snapshot Expiration and Rewriting Manifests](/blog/iceberg-metadata-bloat-cleanup/).
 
-If an analyst wants to query the exact state of the table from last Tuesday, the query engine simply looks up Tuesday's Snapshot ID. It opens the specific Manifest List tied to that Tuesday Snapshot. Because the Manifest List from Tuesday only points to the specific Manifest Files (and subsequently, the Parquet files) that existed on that exact day, the query engine completely ignores any data written on Wednesday or Thursday. The architecture flawlessly reconstructs the historical reality of the database without requiring heavy physical backups or complex transactional logs.
+## Time Travel and Snapshot Expiration
 
-## Summary of Technical Value
+Because each snapshot has its own manifest list, [time travel](/knowledgebase/time-travel/) is a lookup: pick the snapshot for a timestamp or ID, open its manifest list, and plan from there. Manifest lists from expired snapshots are deleted by snapshot expiration, along with any manifests and data files no longer referenced.
 
-The Iceberg Manifest List is the ultimate accelerant for [Data Lakehouse](/data-lakehouse) query planning. By acting as the definitive index for a specific Snapshot and storing highly aggregated partition boundaries for the underlying Manifest Files, the Manifest List allows massive distributed query engines to execute ruthless Metadata Pruning. It completely shields the compute engine from opening irrelevant metadata files, drastically reducing query planning latency and ensuring that petabyte-scale Data Lakehouses can be queried interactively in sub-seconds.
+You can inspect manifest lists without touching Avro by querying metadata tables:
+
+```sql
+SELECT path, added_data_files_count, existing_data_files_count, partition_summaries
+FROM catalog.db.events.manifests;
+```
+
+## The Manifest List in Iceberg v4
+
+Today every commit rewrites the manifest list, so commit cost grows with the number of manifests, which hurts high-frequency streaming writes. Iceberg v4 design work proposes a root manifest that would replace the manifest list and let small commits write a single metadata file. As of October 2026 these are proposals under discussion, not a released spec. For background, read [Understanding the Apache Iceberg Manifest List](/blog/2024-8-understanding-apache-iceberg-manifest-list/) and [Iceberg v4's Adaptive Metadata Tree](/blog/iceberg-v4-adaptive-metadata-tree/).
+
+## Summary
+
+The manifest list is the per-snapshot index of manifests. Its partition summaries and file counts let engines such as Spark, Trino, Flink, and Dremio skip whole manifests during planning, and its one-per-snapshot design is what makes time travel cheap in a [data lakehouse](/knowledgebase/data-lakehouse/).
 
 ## Learn More
 To learn more about the Data Lakehouse, read [The Lakehouse Built for Everyone](https://books.alexmerced.com/books/the-lakehouse-built-for-everyone/) by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

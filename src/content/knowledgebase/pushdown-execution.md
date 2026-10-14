@@ -1,46 +1,42 @@
 ---
-title: "What is Pushdown Execution?"
-meta_title: "What is Pushdown Execution? | Expert Data Lakehouse Architecture Guide"
-description: "A comprehensive guide to Pushdown Execution. Learn how federated query engines push complex math into source databases to optimize network traffic."
+title: "Pushdown Execution: How Trino, Dremio, and Spark Push Work to Sources and Iceberg Files"
+meta_title: "Pushdown Execution in Trino, Dremio, Iceberg | Glossary"
+description: "Pushdown execution sends filters, projections, and aggregations to the data source instead of moving rows. See how it works for federated sources and Iceberg."
 ---
 
-# What is Pushdown Execution?
+Pushdown execution is a query optimization in which an engine sends part of a query (filters, column selection, aggregations, sometimes joins) to the system that holds the data, so less data travels back to the engine. Federated engines such as Trino, Dremio, and Apache Spark rely on it, and so does any engine reading [Apache Iceberg](/knowledgebase/apache-iceberg/) tables. The principle: move the computation to the data, not the data to the computation.
 
-Pushdown Execution is a highly sophisticated optimization strategy utilized by modern federated query engines (like Trino, Dremio, and Apache Spark) and data virtualization platforms. It operates on a simple but profound principle: "Move the computation to the data, do not move the data to the computation."
+When an engine queries an external database such as PostgreSQL or Elasticsearch, pulling every row over the network and filtering afterwards is slow and expensive. With pushdown, the engine analyzes the SQL, works out which operations the source can perform, and sends those operations to the source in its own dialect.
 
-When a massive centralized query engine connects to an external, underlying database (like PostgreSQL, Snowflake, or Elasticsearch), pulling raw data across the network to process it centrally is the absolute slowest, most expensive operation possible. Pushdown Execution forces the federated engine to analyze the user's SQL query, identify specific filtering or mathematical operations, and push those exact operations down into the underlying database, forcing the underlying database to do the heavy lifting using its own local CPUs.
-
-## Predicate Pushdown vs Computational Pushdown
-
-There are two distinct levels of Pushdown Execution, each providing massive performance gains.
+## Predicate Pushdown vs Aggregation Pushdown
 
 ### 1. Predicate (Filter) Pushdown
-Predicate Pushdown specifically involves pushing `WHERE` clauses down to the source system. 
-If an analyst uses Trino to query a massive PostgreSQL table for `SELECT * FROM global_sales WHERE country = 'Japan'`, a poorly optimized engine would extract all 500 million global sales records from PostgreSQL over the network, place them into Trino's memory, and then filter out the Japanese records.
+[Predicate pushdown](/knowledgebase/predicate-pushdown/) sends `WHERE` conditions to the source. An analyst runs `SELECT * FROM global_sales WHERE country = 'Japan'` in Trino against a 500-million-row PostgreSQL table. Without pushdown, Trino would read all 500 million rows and filter them itself. With pushdown, the PostgreSQL connector adds `WHERE country = 'Japan'` to the query it sends, PostgreSQL filters using its own indexes, and only the matching rows cross the network. Projection pushdown works the same way for columns: only the selected columns are fetched.
 
-With Predicate Pushdown, Trino natively understands the PostgreSQL dialect. It intercepts the query and sends the exact `WHERE country = 'Japan'` SQL command directly to PostgreSQL. PostgreSQL filters the data locally on its own hard drives, and sends only the 2 million Japanese records back across the network to Trino.
+### 2. Aggregation (Compute) Pushdown
+[Compute pushdown](/knowledgebase/compute-pushdown/) sends `GROUP BY`, `SUM`, `COUNT`, and similar operations to the source. For `SELECT country, SUM(revenue) FROM global_sales GROUP BY country`, a connector that supports aggregate pushdown lets PostgreSQL compute the totals and return roughly one row per country instead of millions of detail rows. Trino's PostgreSQL connector, for example, supports aggregate pushdown, and many connectors also push down `LIMIT`, `ORDER BY ... LIMIT`, and some joins.
 
-### 2. Computational (Aggregation) Pushdown
-While filtering is critical, Computational Pushdown is significantly more advanced. It involves pushing complex math and aggregations (`SUM`, `AVG`, `GROUP BY`) down to the source database.
+## Dialect Translation and Connector Limits
 
-If the analyst queries `SELECT country, SUM(revenue) FROM global_sales GROUP BY country`, Trino does not pull the 500 million rows across the network to execute the addition. Trino pushes the entire `GROUP BY` and `SUM` logic directly into PostgreSQL. PostgreSQL executes the heavy mathematical aggregation locally, and sends back exactly 195 tiny rows (one total sum for each country). This reduces network traffic from 500 gigabytes down to a few kilobytes, making the query virtually instantaneous.
+Pushdown only happens when the connector knows how to express an operation in the source's SQL and is confident the result will match. Collation, null ordering, numeric precision, or functions with different semantics can all stop pushdown. When that happens, the engine pushes what it safely can (often the filters) and runs the rest itself. Checking `EXPLAIN` output to see what reached the source is the fastest way to diagnose a slow federated query.
 
-## Complex Dialect Translation
+## Pushdown on Iceberg Tables vs Federated Sources
 
-The primary engineering challenge of Pushdown Execution is SQL dialect translation. 
+Files cannot run SQL, so pushdown on a lakehouse means using metadata to avoid reading data.
 
-Different underlying databases have wildly different capabilities and proprietary SQL syntax. A federated query engine must possess highly intelligent Connectors. 
-* If a user writes a query utilizing an advanced Window Function, the Trino Connector must evaluate the underlying database.
-* If the underlying database is Snowflake (which perfectly supports Window Functions), Trino translates the function into Snowflake's specific dialect and pushes it down.
-* If the underlying database is an older, rigid version of MySQL (which might lack specific Window Function support), Trino recognizes the limitation. It pushes down the basic filtering, extracts the raw data, and executes the complex Window Function using Trino's own distributed CPUs.
+| Operation | Federated database source | Iceberg table |
+|---|---|---|
+| Filters | Sent to the source as SQL | Used to prune partitions, skip files with manifest min/max stats, and skip Parquet row groups and pages |
+| Projection | Source returns only selected columns | Engine reads only those column chunks from Parquet |
+| Aggregations | Source computes them, if the connector supports it | Some engines answer `MIN`, `MAX`, and `COUNT` from manifest statistics (Spark does this by default); other aggregations run in the engine |
+| Joins | Some connectors push joins between tables in the same source | Run in the engine; bucketing can avoid shuffles |
+| Who does the work | Source database CPUs | Query engine CPUs, with metadata reducing what is read |
 
-## Pushdown in the Open Lakehouse
+[Data federation](/knowledgebase/data-federation/) depends on the left column; lakehouse performance depends on the right one, along with good partitioning, sorting, and file sizes. Dremio combines both: it pushes work into federated sources through its connectors and reads Iceberg tables with metadata pruning, and its Reflections can serve repeated queries without hitting the source at all. For guidance on when to federate and when to move data into Iceberg, read [Federation and the Lakehouse: Two Roads to Unified Data Access](/blog/federation-and-lakehouse/).
 
-Pushdown Execution is also critical when querying raw files in the [Data Lakehouse](/data-lakehouse). When an engine queries [Apache Iceberg](/apache-iceberg) tables, it executes Predicate Pushdown directly into the Iceberg Metadata Manifests (to skip files) and into the Parquet footers (to skip Row Groups). Because Parquet files cannot "compute" math, Computational Pushdown does not apply to files; the query engine itself must execute the aggregations.
+## Summary
 
-## Summary of Technical Value
-
-Pushdown Execution is the exact mechanism that makes global Data Federation and Data Virtualization physically possible. By intelligently translating SQL logic and forcing underlying source databases to execute heavy filtering and mathematical aggregations locally, query engines minimize network transfer by orders of magnitude. It ensures that massive, multi-system queries execute with the absolute highest possible computational efficiency.
+Pushdown execution is what keeps federated queries practical: the engine translates filters and aggregations into each source's SQL and lets the source do that work. On Iceberg tables, the same idea shows up as metadata-driven pruning that avoids reading files at all.
 
 
 ## Learn More

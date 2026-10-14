@@ -1,62 +1,66 @@
 ---
-title: "What is Project Nessie?"
-meta_title: "What is Project Nessie? | Expert Data Lakehouse Architecture Guide"
-description: "A comprehensive guide to Project Nessie. Learn about Git-like version control for data lakes, branch isolation, and multi-table transactions."
+title: "Project Nessie: Git-Like Branches for Iceberg and How It Compares to Polaris"
+meta_title: "Project Nessie Iceberg Catalog vs Apache Polaris | Glossary"
+description: "Project Nessie is an open source Iceberg catalog with Git-like branches, tags, and multi-table commits. See how it works and how it compares to Apache Polaris."
 canonical: "https://iceberglakehouse.com/iceberg/project-nessie/"
 ---
 
-# What is Project Nessie?
+Project Nessie is an open source transactional catalog for [Apache Iceberg](/knowledgebase/apache-iceberg/) tables that adds Git-like version control to a [data lakehouse](/knowledgebase/data-lakehouse/). It tracks the state of many tables as a series of commits, so teams can create branches and tags, isolate changes, and publish updates to several tables at once.
 
-Project Nessie is an open-source catalog architecture designed to bring Git-like version control directly to the [data lakehouse](/data-lakehouse). It allows organizations to manage their massive analytical datasets identically to how software engineering teams manage application source code. 
+Without catalog-level branching, testing a pipeline change safely often means copying production data into a separate environment, running the test, and then overwriting production tables. Nessie avoids the copy: a branch points at the same data and metadata files as `main` until something is written to it.
 
-Before Nessie, data engineers struggling to update a massive data lake safely had to rely on complex, fragile staging environments. If an engineer wanted to test a massive ETL logic change, they had to physically copy terabytes of production data into an isolated bucket, run their test, verify the results, and then painstakingly overwrite the production tables. Nessie fundamentally resolves this by abstracting the catalog state into an immutable commit graph, enabling seamless branching, zero-copy staging, and instant atomic rollbacks across thousands of open table format datasets.
+## How Nessie Works
 
-## The Git-Like Architecture
+Nessie does not store data files or Iceberg manifests. For each table on each branch, it stores a pointer to the table's current metadata file, and it records every change as a commit.
 
-To understand how Nessie provides this immense capability, one must understand how it manages table metadata. Nessie does not store the physical data files, nor does it store the Iceberg manifest lists directly. Instead, Nessie manages a strict, centralized pointer graph that references those metadata states.
+### Commits
+Each change made through Nessie, such as an engine like Apache Spark, Apache Flink, Trino, or Dremio committing new data to an Iceberg table, becomes a commit identified by a hash. The commit history is append-only, like Git's.
 
-### Commits and the Reference Graph
-Just like Git, every operation executed against the data lakehouse through Nessie is recorded as a discrete commit. When an engine like Apache Spark or Dremio writes new data to an Iceberg table, Nessie generates a new cryptographic hash representing the exact state of the catalog at that instant. This commit graph is entirely immutable.
+### Branches and Isolation
+An engineer can create a branch from `main` as a metadata operation; no data is copied. A Spark job can then write to the branch while analysts querying `main` keep seeing the previous state, with no partial results from the in-progress job.
 
-### Branching and Isolation
-Because Nessie understands the exact state of the catalog at any commit, it introduces the concept of Branching. An engineer can create a branch off the `main` production environment instantly. This operation is a zero-copy metadata clone; no physical data is moved or duplicated. 
+### Multi-Table Commits and Merging
+Iceberg on its own commits one table at a time. If a pipeline updates `Customers`, `Orders`, and `Inventory`, a failure halfway through can leave them out of sync. With Nessie, the pipeline writes all three on a branch, then merges the branch into `main`. The merge publishes the changes to all three tables in one atomic commit. If `main` has conflicting changes to the same tables, the merge fails and production is left unchanged.
 
-The engineer can then use Apache Spark to run a massive data transformation explicitly against that branch. The changes are completely isolated. Any business analyst querying the `main` branch will continue to see the pristine, original data entirely uninterrupted. The analyst is not blocked by locks, and they do not see partial, dirty data from the ongoing pipeline run.
+## The Write-Audit-Publish Pattern
 
-### Multi-Table Transactions and Merging
-In a traditional data lake, atomic transactions are strictly limited to a single table. If an ETL pipeline needs to update the `Customers` table, the `Orders` table, and the `Inventory` table simultaneously, there is a severe risk of a partial failure leaving the tables completely out of sync.
+Branching makes the [Write-Audit-Publish](/knowledgebase/write-audit-publish/) (WAP) pattern straightforward:
 
-Nessie eliminates this limitation through atomic branch merging. An engineer creates an ETL branch, applies updates to all three tables over the course of hours, and then executes a single `MERGE` command into the `main` branch. Nessie evaluates the commit graph and exposes the updates to all three tables simultaneously in a single, perfectly atomic transaction. If a conflict occurs during the merge, Nessie rejects the operation completely, protecting the production state.
+1. **Write:** An orchestrator such as Apache Airflow creates a branch (for example `etl_nightly_batch`) and runs the ingestion job against it.
+2. **Audit:** Data quality checks from tools such as dbt tests or Soda run against the branch, checking for nulls, out-of-range values, and duplicate keys.
+3. **Publish:** If the checks pass, the orchestrator merges the branch into `main`. If they fail, the branch is dropped and production is untouched.
 
-## The Write-Audit-Publish Pattern (WAP)
+Iceberg also supports branches and tags at the level of a single table, which can be used for WAP without Nessie. Nessie's difference is that its branches cover the whole catalog. For a step-by-step guide, read [Write-Audit-Publish with Apache Iceberg Branches](/blog/write-audit-publish-iceberg-branches/).
 
-The ability to branch and merge enables organizations to implement the gold standard of data engineering: the Write-Audit-Publish (WAP) pattern.
+## Querying Branches in Dremio
 
-Historically, organizations wrote new data directly into production tables. If the data was corrupted, the dashboard broke, and the team scrambled to run massive deletion scripts to remove the bad records.
+Dremio can connect to Nessie as a source and supports branch-aware SQL:
 
-Using Nessie, the architecture fundamentally changes:
-1. **Write:** An automated orchestrator (like Apache Airflow) creates a new branch (e.g., `etl_nightly_batch`) and executes the Spark pipeline to ingest the data into that branch.
-2. **Audit:** A data quality tool (like dbt or Soda) connects specifically to the `etl_nightly_batch` branch and runs thousands of strict analytical assertions (checking for nulls, anomalous values, and uniqueness).
-3. **Publish:** Only if every single quality test passes does the orchestrator merge the branch into `main`. If a test fails, the branch is discarded, and production remains completely pristine.
-
-## Implementation in the Dremio Open Catalog
-
-Project Nessie serves as the foundational open-source architecture underpinning advanced managed catalogs, heavily utilized within the Dremio ecosystem. The Dremio Open Catalog (and formerly Dremio Arctic) integrates Nessie natively, allowing users to execute Git-like SQL commands directly within their query engine interface.
-
-An analyst can use standard SQL to switch contexts effortlessly:
 ```sql
--- Querying the live production data
+-- Query production
 SELECT * FROM sales_data AT BRANCH main;
 
--- Querying the isolated experimental branch
+-- Query an experimental branch
 SELECT * FROM sales_data AT BRANCH q3_revenue_experiment;
 ```
-This deep integration ensures that non-technical users can interact with complex version-control paradigms entirely through standard SQL semantics.
+
+Dremio's earlier managed catalog, Arctic, was built on Nessie. Dremio's current Open Catalog is built on [Apache Polaris](/knowledgebase/apache-polaris/), and Dremio contributed Nessie's ideas and capabilities to the Polaris effort. Nessie remains available as its own open source project and can also be reached through the Iceberg REST interface.
+
+## Nessie vs Other Iceberg Catalogs
+
+| | Project Nessie | Apache Polaris | AWS Glue Data Catalog |
+|---|---|---|---|
+| Governance | Open source project (Apache 2.0) | Apache Software Foundation project | AWS managed service |
+| Iceberg REST API | Yes | Yes | Yes |
+| Catalog-wide branches and tags | Yes | No; uses Iceberg table-level branches | No; uses Iceberg table-level branches |
+| Multi-table atomic commits | Yes, through branch merges | Through the REST multi-table commit endpoint where supported | Check current AWS docs |
+| Access control | Basic authorization rules | Role-based access control and credential vending | AWS IAM and Lake Formation |
+
+For help choosing a catalog, read [Choosing the Right Iceberg Control Plane: Polaris vs. Unity Catalog vs. Cloud REST](/blog/2026-05-choosing-iceberg-control-plane/), and to try Nessie locally, see [Hands-on with Apache Iceberg on Your Laptop](/blog/2024-9-hands-on-iceberg-dremio-minio-nessie/).
 
 ## Summary of Technical Value
 
-Project Nessie revolutionized data lakehouse governance by establishing a centralized, Git-like version control system for analytical data. By enabling zero-copy branching, atomic multi-table transactions, and the strict implementation of the Write-Audit-Publish pattern, Nessie empowers organizations to manage petabyte-scale data lakes with the exact same rigor, safety, and operational agility previously reserved exclusively for software engineering.
-
+Project Nessie brings commits, branches, tags, and multi-table merges to Iceberg catalogs. It makes zero-copy experimentation and Write-Audit-Publish across many tables practical. Teams that mostly need governance, access control, and broad engine support often choose Apache Polaris instead, while teams that need catalog-wide branching still have a clear reason to run Nessie.
 
 ## Learn More
 To learn more about the Data Lakehouse, read [The Lakehouse Built for Everyone](https://books.alexmerced.com/books/the-lakehouse-built-for-everyone/) by Alex Merced. You can find this and other books by Alex Merced at [books.alexmerced.com](https://books.alexmerced.com).

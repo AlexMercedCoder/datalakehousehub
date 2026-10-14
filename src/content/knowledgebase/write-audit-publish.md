@@ -1,50 +1,57 @@
 ---
-title: "What is Write-Audit-Publish (WAP)?"
-meta_title: "What is Write-Audit-Publish (WAP)? | Expert Data Lakehouse Architecture"
-description: "A comprehensive guide to the Write-Audit-Publish (WAP) pattern. Learn how data teams use isolated branches and quality tests to prevent data corruption."
+title: "Write-Audit-Publish (WAP): Staging, Testing, and Publishing Data with Iceberg Branches"
+meta_title: "Write-Audit-Publish (WAP) with Iceberg Branches | Glossary"
+description: "Write-Audit-Publish (WAP) is a pattern that stages new data, tests it, and only then exposes it. Here is how Iceberg branches and Nessie make WAP cheap."
 ---
 
-# What is the Write-Audit-Publish (WAP) Pattern?
+## What is the Write-Audit-Publish (WAP) Pattern?
 
-The Write-Audit-Publish (WAP) pattern is a strict architectural methodology used in advanced data engineering to guarantee absolute data quality before new data is exposed to business consumers. It borrows heavily from the software engineering concept of CI/CD (Continuous Integration/Continuous Deployment), ensuring that corrupted data is proactively quarantined and destroyed before it ever reaches a production dashboard.
+Write-Audit-Publish (WAP) is a data engineering pattern that keeps new data out of production until it passes quality checks. It borrows from software CI/CD: changes land somewhere isolated, get tested, and are promoted only when the tests pass.
 
-Historically, data engineering pipelines operated on a highly dangerous "Write-and-Pray" model. A massive ETL job would run at 2:00 AM, extracting data from a third-party API and writing it directly into the live production `Sales_Fact` table. If the API had silently changed its data format (e.g., sending revenue in cents instead of dollars), the pipeline would successfully write mathematically corrupted data directly into production. The CEO would open their dashboard at 8:00 AM, see wildly inaccurate revenue numbers, and lose all trust in the data team. 
+The pattern exists because of a common failure mode. A nightly ETL job pulls from a third-party API and writes straight into the production `sales_fact` table. If the API silently switches from dollars to cents, the job still succeeds, and the bad numbers show up on the morning dashboard. Readers lose trust long before anyone finds the root cause.
 
-The WAP pattern solves this by introducing an isolated staging environment directly into the production deployment flow.
+WAP fixes this by inserting a staging step and a quality gate between the pipeline and the tables people query.
 
 ## The Three Phases of WAP
 
-The pattern dictates that data must sequentially pass through three distinct phases, enforced strictly by the pipeline orchestrator (like Apache Airflow or Dagster).
+An orchestrator such as Apache Airflow or Dagster usually runs the three phases in order.
 
-### 1. Write (The Isolated Staging Phase)
-When the ingestion pipeline runs, it does NOT write data to the production table. Instead, it writes the data to a completely isolated, invisible environment. 
+### 1. Write (Isolated Staging)
+The pipeline does not write to the production table. It writes to an isolated location that readers of production cannot see.
 
-In a traditional database, this might involve writing to a temporary table (`staging_sales_fact`). In a modern [Data Lakehouse](/data-lakehouse) utilizing Project Nessie (or the Dremio Open Catalog), this is achieved exponentially faster through zero-copy Branching. The orchestrator creates an isolated Git-like branch off the main catalog, and the pipeline executes its massive multi-terabyte write operations directly onto that invisible branch. The production `main` branch remains entirely untouched and perfectly stable for business users.
+In a traditional warehouse this is a separate staging table (`staging_sales_fact`). In a [data lakehouse](/knowledgebase/data-lakehouse/) built on [Apache Iceberg](/knowledgebase/apache-iceberg/), it can be a branch. Iceberg supports table-level branches, and [Project Nessie](/knowledgebase/project-nessie/) adds Git-like branches across a whole catalog. The pipeline writes to the branch while `main` stays unchanged for business users.
 
 ### 2. Audit (The Quality Gate)
-Once the massive write is complete, the data sits quietly in isolation. The orchestrator triggers the Audit phase.
+With the write finished, the orchestrator runs data quality checks against the staged data, using a framework such as [Great Expectations](/knowledgebase/great-expectations/), [Soda](/knowledgebase/soda/), or [dbt](/knowledgebase/dbt/) tests. Typical checks:
+* `max(revenue) < 10000000` to catch outliers or unit changes.
+* `count(*) where customer_id is null = 0` to catch missing keys.
+* `row_count > historical_average * 0.8` to catch partial API payloads.
 
-It deploys rigorous, automated data quality frameworks (like Great Expectations or SodaCL) explicitly against the isolated staging environment. These frameworks run thousands of programmatic assertions:
-* `assert max(revenue) < 10000000` (Checking for massive outliers).
-* `assert null_count(customer_id) == 0` (Checking for critical missing data).
-* `assert row_count > historical_average * 0.8` (Checking for missing API payloads).
+If a critical check fails, the orchestrator stops the pipeline and alerts the team. Because the data only exists on the branch or staging table, production is unaffected, and the branch can be dropped or fixed.
 
-If the data fails even a single critical assertion, the orchestrator intentionally crashes the pipeline. The orchestrator alerts the data engineering team immediately. Because the data is isolated on a branch, the corrupted data simply evaporates. The production environment remains perfectly safe.
+### 3. Publish (Atomic Promotion)
+Only when the checks pass does the orchestrator publish. In a staging-table setup that means an `INSERT` or swap into the production table. With Iceberg table branches, `main` is fast-forwarded to the audited branch's snapshot. With Nessie, the branch is merged into `main`, which can publish changes to several tables in one commit. Readers see the new data all at once, and only data that passed the checks you wrote.
 
-### 3. Publish (The Atomic Merge)
-Only if every single mathematical assertion passes with 100% success does the orchestrator proceed to the Publish phase. 
+## WAP Options on the Lakehouse Compared
 
-In a legacy environment, the orchestrator executes a massive SQL `INSERT` statement to move the data from the staging table into the production table. In a modern Nessie-backed Data Lakehouse, the orchestrator simply issues a single `MERGE` command. The isolated branch is instantly and atomically merged into the `main` branch. The new data appears to the business users instantaneously, carrying an absolute, mathematical guarantee of perfect data quality.
+| Approach | Isolation scope | How you write | How you publish | Notes |
+|---|---|---|---|---|
+| Staging table | One table | Write to a copy of the table | `INSERT`/swap into production | Works anywhere; doubles the write and storage for that batch |
+| Iceberg table branch | One table | Set `write.wap.enabled=true` and `spark.wap.branch` in Spark | `fast_forward` procedure moves `main` to the branch head | No data copy; branch is a metadata pointer |
+| Iceberg WAP ID (staged snapshot) | One table | Set `spark.wap.id`; snapshot is staged, not current | `cherrypick_snapshot` | Older mechanism, still supported |
+| Nessie catalog branch | Many tables | Create a branch, point the engine at it | Merge branch into `main` | Multi-table publish in one commit |
+
+The choice usually comes down to scope. If a pipeline only touches one table, an Iceberg table branch is enough. If a job updates a fact table and several dimensions that must change together, a catalog-level branch avoids a window where some tables are updated and others are not.
 
 ## Implementing WAP at Scale
 
-While the logic of WAP is simple, implementing it historically required immense storage duplication (copying terabytes of data into staging tables). 
+Staging tables used to mean copying large amounts of data. Iceberg changes that because a table is defined by metadata that points to data files. Writing to a branch creates new data files once plus a small amount of metadata. Publishing moves a pointer; the Parquet files are not rewritten or copied. Failed branches leave behind files that snapshot expiration and orphan file cleanup remove later.
 
-The modern Open Data Lakehouse entirely removes this friction. Because table formats like [Apache Iceberg](/apache-iceberg) manage data through metadata manifests rather than physical directories, writing data to an isolated branch only requires generating a few kilobytes of text files. The physical Parquet data files are written to S3 exactly once. When the branch is published, the Iceberg catalog simply points the production manifest at the new Parquet files. This zero-copy architecture allows organizations to implement the highly rigorous WAP pattern across petabyte-scale workloads without incurring any additional cloud storage or computational transfer costs.
+For a step-by-step walkthrough with Spark SQL, see [Write-Audit-Publish with Apache Iceberg Branches](/blog/write-audit-publish-iceberg-branches/). For choosing the testing layer, see [Data Quality Tooling Compared](/blog/data-quality-tooling-compared/), and for merging many branches in busy pipelines, see [High-Throughput Branch Merging](/blog/multi-branch-iceberg-merge-automation/).
 
-## Summary of Technical Value
+## Summary
 
-The Write-Audit-Publish (WAP) pattern is the ultimate architectural defense against data corruption. By physically isolating incoming data, running exhaustive programmatic quality assertions, and demanding perfect compliance before exposing the data to the business, WAP transitions data engineering from a reactive debugging culture into a highly robust, proactive software discipline. It is the absolute standard for ensuring enterprise trust in the data lakehouse.
+WAP keeps unverified data away from consumers by staging writes, testing them, and publishing only what passes. On an Iceberg lakehouse, branches make the staging step nearly free in storage terms, which turns WAP from an expensive special case into a reasonable default for important tables.
 
 
 ## Learn More

@@ -1,39 +1,44 @@
 ---
-title: "What is Continuous Streaming?"
-meta_title: "What is Continuous Streaming? | Expert Data Lakehouse Architecture Guide"
-description: "A comprehensive guide to Continuous Streaming. Learn about unbounded data, Apache Flink, event-time watermarking, and sub-millisecond processing."
+title: "Continuous Streaming vs Micro-Batching, and What Each Means for Iceberg"
+meta_title: "Continuous Streaming vs Micro-Batch for Iceberg | Glossary"
+description: "Continuous streaming processes each event as it arrives instead of in micro-batches. See how Flink and Spark compare and what latency Iceberg tables add."
 ---
 
-# What is Continuous Streaming?
+Continuous streaming is a processing model in which an engine handles each event as it arrives, using long-running operators, instead of collecting events into small batches first. Apache Flink is the best-known continuous engine. Spark Structured Streaming defaults to micro-batching, though Spark 4.1 added a real-time mode with long-running tasks for stateless queries.
 
-Continuous Streaming (often referred to as true, event-at-a-time processing) is an advanced architectural paradigm designed to process unbounded data instantly as it is generated. While micro-batching architectures (like Spark Streaming) collect data over specific time intervals before processing it, continuous streaming engines (like Apache Flink) process every single event the absolute millisecond it arrives.
-
-This architecture is strictly reserved for the most mission-critical, highly latency-sensitive use cases in the enterprise. If an organization is building a credit card fraud detection system, a delay of even 500 milliseconds might allow a fraudulent transaction to successfully process. If an algorithmic trading firm is analyzing stock ticks, waiting two seconds for a micro-batch to trigger destroys the financial opportunity. Continuous streaming provides the absolute minimum possible latency, ensuring systems react to the physical reality of the business instantaneously.
+Low per-event latency matters for fraud scoring, alerting, and operational monitoring, where a decision has to be made within milliseconds to a few seconds of the event.
 
 ## Unbounded Data and Stateful Processing
 
-To process continuous streams, an engine must be designed to handle data that technically never ends (unbounded data). 
+A batch query computes `SUM(sales)` by reading a finite table. A stream never ends, so the engine keeps running state, such as a running total per key, and updates it as each event arrives. That state can grow large, so engines keep it in memory or in an embedded store like RocksDB.
 
-In a traditional batch query, the engine calculates the `SUM(sales)` by scanning the entire table, reaching the end of the data, and returning the final number. In a continuous stream, there is no end. The engine must maintain a highly dynamic, constantly updating internal State. If a continuous streaming engine is tracking the total revenue for the day, it stores the current total securely in memory. Every time a new transaction event arrives, the engine instantly adds it to the internal state and immediately publishes the new total to the downstream dashboard.
+### Checkpoints
+Flink makes state fault tolerant with checkpoints, using asynchronous barrier snapshotting, a variant of the Chandy-Lamport algorithm. Sources insert numbered barriers into the stream. When an operator has received the barrier on its inputs, it snapshots its state to durable storage such as S3, while processing continues. After a failure, Flink restores the last completed checkpoint and replays the sources from the recorded offsets.
 
-### Distributed Snapshots (Chandy-Lamport)
-Maintaining state across a massive cluster of servers is incredibly risky; if a server crashes, the current mathematical state is lost. Apache Flink solves this using a profound mathematical algorithm known as Distributed State Checkpointing (based on the Chandy-Lamport algorithm). 
-
-Flink periodically injects tiny "barriers" directly into the live data stream. As these barriers flow through the worker nodes, the nodes temporarily pause processing and take a perfect, asynchronous snapshot of their internal mathematical state, saving it to highly durable storage (like Amazon S3). If the node crashes, Flink spins up a new node, instantly restores the exact state from the snapshot, and resumes processing without ever dropping or duplicating an event.
+This gives exactly-once effects on Flink-managed state. End-to-end exactly-once also needs replayable sources (such as Kafka) and transactional or idempotent sinks.
 
 ## Event Time vs Processing Time
 
-The most complex challenge in continuous streaming is dealing with the unpredictable reality of network latency. 
+Events arrive late and out of order. A phone that loses signal at 12:00 may deliver its click at 12:05. Processing time would place the click at 12:05; event time uses the timestamp the device recorded.
 
-Imagine a mobile application sending user click events to a server. A user clicks a button at 12:00 PM. However, their phone briefly loses cell service. The phone finally regains signal and transmits the data to the server at 12:05 PM.
+Engines that use event time track a watermark, an estimate of how far event time has progressed. When the watermark passes the end of a window, the engine emits the window's result. Events that arrive after that can be dropped, sent to a side output, or used to update the result, depending on configuration.
 
-If the streaming engine analyzes data based on **Processing Time** (the time the server actually saw the data), the event is incorrectly logged as happening at 12:05 PM, completely destroying the chronological integrity of the analytics.
+## Continuous vs Micro-Batch, and the Iceberg Commit
 
-Advanced continuous streaming engines utilize strict **Event Time** processing. The engine reads the specific timestamp generated by the user's mobile phone (12:00 PM). The engine holds an internal "Watermark," waiting specifically for out-of-order, delayed events to arrive. Once the watermark passes, the engine securely closes the 12:00 PM analytical window, guaranteeing that the mathematical aggregations accurately reflect reality, not network delays.
+| | Continuous (Flink, Spark real-time mode) | Micro-batch (Spark Structured Streaming default) |
+|---|---|---|
+| Unit of work | One event at a time through long-running operators | Small batches on a trigger interval |
+| Typical latency | Milliseconds | Seconds, set by the trigger |
+| Fault tolerance | Checkpoints of operator state | Offsets and state per batch |
+| Iceberg visibility | At each checkpoint commit | At each batch commit |
 
-## Summary of Technical Value
+For lakehouse tables the processing model is only half the story. An [Apache Iceberg](/knowledgebase/apache-iceberg/) table becomes visible to readers only when a commit creates a new snapshot. Flink's Iceberg sink commits on each checkpoint, so a Flink job with a one-minute checkpoint interval delivers data to Iceberg readers roughly once a minute, no matter how fast the operators run. Committing every few seconds creates many small files and snapshots, which then need compaction.
 
-Continuous Streaming represents the absolute pinnacle of real-time data processing. By completely eliminating batch windows and processing data the exact millisecond it arrives, continuous engines like Apache Flink enable organizations to deploy highly complex, stateful applications—such as instant fraud detection and live operational monitoring—with absolute precision. It manages the intense complexities of unbounded data and out-of-order networks, ensuring instantaneous reaction times for critical business logic.
+That is why many architectures split the path: [Apache Kafka](/knowledgebase/apache-kafka/) or [Apache Fluss](/knowledgebase/apache-fluss/) serve sub-second reads, and Iceberg holds the durable, queryable history on a minute-level cadence. For details, read [Real-Time Lakehouse Patterns with Apache Flink and Iceberg](/blog/2026-05-real-time-lakehouse-flink/), [The State of Streaming to Apache Iceberg in July 2026](/blog/streaming-to-iceberg-july-2026/), and [Batch vs. Streaming: Choose the Right Processing Model](/blog/2026-02-de-best-practices-06-batch-vs-streaming/).
+
+## Summary
+
+Continuous streaming engines like [Apache Flink](/knowledgebase/apache-flink/) process events one at a time with checkpointed state and event-time windows. When the output is an Iceberg table, end-to-end freshness is set by the commit interval, so pick it to match what readers need and plan for compaction.
 
 
 ## Learn More

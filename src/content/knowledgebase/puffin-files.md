@@ -1,46 +1,51 @@
 ---
-title: "What is Puffin Files?"
-meta_title: "What is Puffin Files? | Expert Data Lakehouse & AI Glossary"
-description: "A specialized file format within Apache Iceberg used to store detailed statistics and indexes to accelerate query planning."
+title: "What Are Puffin Files? Apache Iceberg's Format for Statistics and Deletion Vectors"
+meta_title: "Puffin Files in Iceberg: NDV Sketches and Deletion Vectors"
+description: "Puffin is the Apache Iceberg file format for data too large for manifests. It stores Theta sketches for distinct counts and, in format v3, deletion vectors."
 ---
 
-## What is Puffin Files?
+Puffin is a file format defined by [Apache Iceberg](/knowledgebase/apache-iceberg/) for storing blobs of information that do not fit in manifest files. A Puffin file is a simple container: a magic number (`PFA1`), a sequence of opaque blobs, and a JSON footer that describes each blob's type, the table columns it covers, the snapshot it was computed from, and its byte offset and length. The spec currently defines two blob types: Apache DataSketches Theta sketches for distinct-value estimates, and deletion vectors for row-level deletes.
 
-A specialized file format within [Apache Iceberg](/apache-iceberg) used to store detailed statistics and indexes to accelerate query planning. 
+## Why Iceberg Needed Puffin
 
-In the rapidly evolving landscape of data engineering and artificial intelligence, **Puffin Files** has emerged as a critical foundational component. As organizations transition from legacy, monolithic architectures to decoupled, scalable environments, understanding the role of Puffin Files is essential for building future-proof infrastructure. This capability serves as a critical enabler in modern data ecosystems, explicitly guiding architecture toward absolute efficiency and scale. When correctly implemented, Puffin Files dynamically drives analytical workloads and structurally limits administrative technical debt.
+[Iceberg manifests](/knowledgebase/iceberg-manifest-file/) store small, per-file statistics: row counts, null counts, and min and max values for each column. Query planners read them on every query to skip files. Two useful kinds of data do not fit that model:
 
-## Core Architecture and Mechanics
+- **Table-level distinct counts (NDV).** A cost-based optimizer wants to know how many distinct `customer_id` values a table holds. Per-file NDVs cannot be summed, and a mergeable sketch is kilobytes, too big to put inline in every manifest entry.
+- **Row-level delete bitmaps.** A set of deleted row positions for one data file is variable in size, and storing it in a manifest would force manifest rewrites on every delete.
 
-To understand the practical application of Puffin Files, it is crucial to systematically examine its fundamental operational behaviors and structural design:
+Puffin gives both a home outside the manifests, with random access: a reader fetches the footer and then only the blob it needs.
 
-* **Utilizes open table formats to provide complete ACID transactional compliance directly on top of massive, raw cloud object storage.** This principle ensures that systems can scale horizontally without facing artificial limitations or bottlenecks.
-* **Maintains an explicit hierarchical tree of metadata manifests to track exact file states and enable precise time-travel querying.** By adopting this mechanic, engineers can bypass traditional processing constraints and deliver substantially faster time-to-insight.
-* **Decouples the physical storage layout from the logical table structure using techniques like hidden partitioning.** This allows the overarching architecture to remain highly resilient while serving concurrent workloads natively.
+## Blob Type 1: Theta Sketches for Distinct Values
 
-Operating through these principles enables seamless horizontal expansion across varying cloud environments. It integrates effortlessly with adjacent technologies like Apache Iceberg, dbt, and advanced vector search algorithms.
+The `apache-datasketches-theta-v1` blob stores a compact Theta sketch per column. Theta sketches estimate distinct counts from a small sample of hashed values, and sketches from different files or partitions can be merged without losing accuracy. Each blob usually carries an `ndv` property with the precomputed estimate, so an engine can read the number from the footer alone.
 
-## Why Puffin Files Matters in the Modern Data Stack
+These statistics files are listed in the table metadata's `statistics` section and tied to a snapshot ID. Trino writes them with `ANALYZE`, and Spark can write them with Iceberg's `compute_table_stats` procedure. Optimizers use the NDV values for join ordering, join distribution choices such as the [broadcast hash join](/knowledgebase/broadcast-hash-join/), and cardinality estimates.
 
-The open lakehouse structure eliminates vendor lock-in and drastically reduces storage costs by allowing any compatible distributed engine to query the exact same massive datasets without requiring duplication.
+## Blob Type 2: Deletion Vectors (Iceberg v3)
 
-For modern enterprises managing decentralized teams, the implementation of Puffin Files eliminates significant architectural friction. Teams are explicitly empowered to operate autonomously against reliable technical foundations without dynamically disrupting other isolated workflows. It shifts manual engineering overhead into an autonomous, software-driven paradigm, keeping Total Cost of Ownership (TCO) extremely low.
+In Iceberg format version 3, `deletion-vector-v1` blobs replace position delete files for [row-level deletes](/knowledgebase/row-level-deletes/). Each vector is a Roaring bitmap of deleted row positions for exactly one data file. Manifests point to the vector by Puffin file path, offset, and size, so a reader loads one small bitmap and tests positions in constant time instead of decoding a Parquet delete file.
 
-### Key Benefits
-- **Unprecedented Scalability:** Automatically adapts to massive fluctuations in data volume and query concurrency.
-- **Vendor Neutrality:** Strongly aligns with open-source frameworks, preventing aggressive vendor lock-in.
-- **Enhanced Observability:** Exposes deep, structural metadata allowing engineers to monitor and trace pipelines comprehensively.
+## Puffin vs Manifests vs Position Delete Files
+
+| | Manifest file | Position delete file (v2) | Puffin file |
+|---|---|---|---|
+| Format | Avro | Parquet, ORC, or Avro | Puffin container (blobs plus JSON footer) |
+| Holds | Per-file stats and file list | Data file path and deleted row positions | Theta sketches, deletion vectors |
+| Scope | One entry per data or delete file | Can cover many data files | One blob per column set or per data file |
+| Read pattern | Every query plan | Every read of affected data files | Footer plus one range read per needed blob |
+
+Puffin is separate from Iceberg's partition statistics files, which store per-partition counts and sizes as rows in an ordinary data format such as Parquet. For the byte-level layout, read [Inside the Puffin File Format](/blog/inside-the-puffin-file-format/). For how deletion vectors change [merge-on-read](/knowledgebase/merge-on-read/) performance, see [How Iceberg V3 Deletion Vectors Fixed Merge-on-Read for Streaming Tables](/blog/iceberg-v3-deletion-vectors-merge-on-read/), and for the other statistics file type, [Partition Statistics Files in Apache Iceberg](/blog/iceberg-partition-statistics-files/).
 
 ## Frequently Asked Questions
 
-### What makes a Lakehouse different from a Data Lake?
-A standard data lake is just a collection of files. A lakehouse adds a metadata layer that provides warehouse-like features (transactions, schema enforcement) directly to those files. This distinction is particularly important when evaluating total architecture costs and performance benchmarks.
+### Do I need to create Puffin files myself?
+No. Engines write them. Deletion vectors appear automatically when a v3 table uses merge-on-read deletes, and NDV statistics appear when you run a statistics job such as Trino's `ANALYZE`.
 
-### Why use an Open Table Format?
-Open formats like Apache Iceberg ensure that your data is not trapped inside a proprietary database ecosystem; it remains universally accessible. The open ecosystem continues to evolve rapidly, ensuring backward compatibility while introducing powerful new primitives.
+### Do all engines read Puffin statistics?
+Support varies. Trino uses NDV sketches in its cost-based optimizer, and v3 deletion vector support depends on the engine and Iceberg library version. Check your engine's Iceberg documentation.
 
-### How does Puffin Files impact data governance and security?
-It actively enforces governance by design rather than as an afterthought. Native logging, role-based access controls (RBAC), and structured access pathways provide immediate visibility into security boundaries and regulatory compliance.
+### What happens if statistics are stale?
+Each blob records the snapshot it was computed from. Engines can still use older statistics as estimates, but after large changes you should recompute them so the optimizer works from current numbers.
 
 ---
 

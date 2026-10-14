@@ -1,49 +1,60 @@
 ---
-title: "What is Great Expectations?"
-meta_title: "What is Great Expectations? | Expert Data Lakehouse Architecture Guide"
-description: "A comprehensive guide to Great Expectations. Learn about data quality testing, automated profiling, and strict assertions for data pipelines."
+title: "Great Expectations (GX): Data Quality Testing and How It Compares to Soda and dbt Tests"
+meta_title: "Great Expectations vs Soda and dbt Tests for Lakehouses"
+description: "Great Expectations (GX Core) is an open-source Python framework for data quality tests. See how it compares to Soda and dbt tests on an Iceberg lakehouse."
 ---
 
-# What is Great Expectations?
+## What is Great Expectations?
 
-Great Expectations is a highly popular, open-source Python framework designed specifically to enforce strict data quality, test pipelines, and automatically document data structures. It functions as the premier unit-testing framework for data, answering a simple but critical engineering question: "Does the data I just ingested actually look exactly the way I expect it to look?"
+Great Expectations, now branded GX, is an open-source Python framework for testing data quality. The open-source library is called GX Core, and the company behind it also sells a hosted product, GX Cloud. It answers a simple question for each batch of data: does this data look the way I expect it to?
 
-In traditional software engineering, developers write unit tests to ensure their code behaves predictably. However, in data engineering, pipelines frequently fail not because the SQL code was wrong, but because the underlying data silently changed. If an upstream operational database accidentally starts injecting `NULL` values into a critical `customer_id` column, the SQL transformation pipeline will run successfully, but the downstream business dashboards will display fundamentally incorrect, corrupted numbers. Great Expectations completely eliminates this silent corruption by enforcing strict, programmatic assertions directly against the data payloads.
+Pipelines often fail without any code being wrong. If an upstream system starts sending `NULL` in `customer_id`, the SQL transformation still runs, and dashboards quietly show wrong numbers. GX catches that by running declared assertions against the data itself.
 
-## The Architecture of Assertions
+## Core Concepts
 
-Great Expectations structures data quality checks around the core concept of "Expectations." An Expectation is a highly declarative, verifiable assertion about data.
+**Expectations** are verifiable assertions about data. In GX Core 1.x they are Python classes:
 
-A data engineer defines Expectations using simple, highly readable Python syntax. For instance:
-* `expect_column_values_to_not_be_null('customer_id')`
-* `expect_column_values_to_be_between('user_age', min_value=18, max_value=120)`
-* `expect_column_to_exist('transaction_amount')`
+```python
+import great_expectations as gx
 
-These Expectations are grouped into complete "Expectation Suites." When a pipeline extracts a massive batch of data from a REST API or an S3 bucket, Great Expectations intercepts the data exactly at that staging point. It executes the entire Expectation Suite against the massive dataset natively in memory (via Pandas or PySpark) or pushes the evaluation down directly into a database via highly optimized SQL (via SQLAlchemy).
+not_null = gx.expectations.ExpectColumnValuesToNotBeNull(column="customer_id")
+age_range = gx.expectations.ExpectColumnValuesToBeBetween(
+    column="user_age", min_value=18, max_value=120
+)
+```
 
-## Automated Data Profiling
+Code written for releases before 1.0 often uses the older `expect_column_values_to_not_be_null(...)` method style, which 1.0 replaced.
 
-Writing thousands of manual Expectations for a database containing hundreds of tables is incredibly tedious and nearly impossible to maintain. 
+The other building blocks:
+* **Expectation Suites** group Expectations that are applied together.
+* **Data Sources, Data Assets, and Batch Definitions** describe where data lives and how to slice it into batches (pandas, Spark DataFrames, SQL databases, and files in object storage).
+* **Validation Definitions** pair a batch with a suite.
+* **Checkpoints** run one or more validations in production and trigger **Actions** such as Slack, email, or Microsoft Teams alerts.
+* **Data Docs** are generated HTML pages showing suites and validation results, so analysts can see what is tested and what failed.
 
-Great Expectations solves this onboarding bottleneck via Automated Data Profiling. An engineer can point the framework directly at an existing, verified database table. Great Expectations will scan the entire table, analyze the statistical distribution of the columns, and automatically generate an expansive Expectation Suite based strictly on its observations. If it observes that a specific string column only contains the words "Active" or "Inactive", it will automatically write an explicit constraint locking that column to those specific categorical values.
+For SQL sources, GX translates Expectations into queries that run in the database, so the data does not need to be pulled into Python.
 
-## Integration in the Lakehouse and WAP
+A note on profiling: older releases (0.x) included Profilers and Data Assistants that generated suites by scanning a table. Those APIs were removed in GX Core 1.0, so current suites are written by hand or generated with your own tooling.
 
-Great Expectations is a critical foundational component of modern [Data Lakehouse](/data-lakehouse) governance, specifically within the Write-Audit-Publish (WAP) architectural pattern.
+## GX in the Lakehouse and WAP
 
-When data pipelines run, they write data into a hidden branch or an isolated staging table. An orchestrator (like Apache Airflow or Dagster) immediately triggers a Great Expectations Checkpoint. The framework validates the isolated data against the entire Expectation Suite. 
+GX fits the audit step of [Write-Audit-Publish](/knowledgebase/write-audit-publish/). A pipeline writes new data to an [Apache Iceberg](/knowledgebase/apache-iceberg/) branch or staging table, an orchestrator such as [Apache Airflow](/knowledgebase/apache-airflow/) or [Dagster](/knowledgebase/dagster/) runs a Checkpoint against that data (through Spark, or through SQL against an engine that can read the branch), and the branch is published only if validation passes. A failed Checkpoint stops the task and leaves production tables untouched.
 
-If a single record violates the `expect_column_values_to_not_be_null` rule, Great Expectations fails the task completely. It halts the pipeline and generates an instant alert to the engineering team. The corrupted data is explicitly prevented from ever merging into the production environment. 
+## Great Expectations vs Soda vs dbt Tests
 
-## Automated Data Documentation
+| | Great Expectations (GX Core) | Soda Core | dbt data tests |
+|---|---|---|---|
+| How checks are written | Python classes (also JSON) | YAML (data contracts in v4) | YAML plus SQL |
+| Runs where | pandas, Spark, or pushed to SQL databases | Pushed to the data source as SQL, plus Spark DataFrames | As SQL in the warehouse or lakehouse engine dbt targets |
+| Best fit | Python-heavy pipelines, Spark jobs, rich assertion library | Teams that want declarative contracts close to the data | Teams already modeling with [dbt](/knowledgebase/dbt/) |
+| Reporting | Data Docs HTML, Actions | CLI results, Soda Cloud (commercial) | dbt run results, docs site |
+| Hosted option | GX Cloud | Soda Cloud | dbt platform |
 
-A major secondary benefit of the Great Expectations architecture is Data Docs. 
+Many lakehouse teams combine them: dbt tests for model-level rules, plus GX or [Soda](/knowledgebase/soda/) for ingestion checks and cross-source validation. A longer comparison, including anomaly detection tools, is in [Data Quality Tooling Compared](/blog/data-quality-tooling-compared/). See also [Data Quality Is a Pipeline Problem, Not a Dashboard Problem](/blog/2026-02-de-best-practices-03-data-quality-first/) and [Write-Audit-Publish with Apache Iceberg Branches](/blog/write-audit-publish-iceberg-branches/).
 
-Because Expectations are highly structured and declarative, the framework can automatically parse the Expectation Suites and generate highly readable, static HTML websites. These Data Docs display exactly what assertions are running, exactly what the column distributions should look like, and exactly which specific checks failed during the last pipeline execution. This guarantees that the business logic and the data documentation remain perfectly synchronized, drastically improving communication between highly technical data engineers and less technical data analysts.
+## Summary
 
-## Summary of Technical Value
-
-Great Expectations brought rigorous software engineering unit-testing principles directly to data pipelines. By providing an expansive library of declarative assertions, automated profiling capabilities, and native integration into modern orchestrators, it enables organizations to detect and quarantine corrupted data instantly. It is an indispensable tool for ensuring absolute trust and reliability in the modern enterprise data stack.
+Great Expectations brings unit-testing habits to data: declare what good data looks like, run those checks on every batch, and stop bad data before it reaches consumers. On an Iceberg lakehouse, pairing it with branch-based WAP gives you a quality gate that costs little extra storage.
 
 
 ## Learn More

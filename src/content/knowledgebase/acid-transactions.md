@@ -1,44 +1,45 @@
 ---
-title: "What are ACID Transactions?"
-meta_title: "What are ACID Transactions? | Expert Data Lakehouse Architecture Guide"
-description: "A comprehensive guide to ACID Transactions. Learn about Atomicity, Consistency, Isolation, and Durability, and how Iceberg brings them to the data lake."
+title: "ACID Transactions in the Data Lakehouse: How Iceberg, Delta Lake, and Hudi Commit"
+meta_title: "ACID Transactions on Iceberg, Delta and Hudi | Glossary"
+description: "ACID transactions guarantee atomicity, consistency, isolation, and durability. See how Iceberg, Delta Lake, and Hudi provide them on object storage."
 ---
 
-# What are ACID Transactions?
+ACID stands for Atomicity, Consistency, Isolation, and Durability, the four properties that make database transactions reliable even when jobs crash, machines fail, or many users write at once.
 
-ACID is a fundamental acronym in computer science that defines the four absolute strict properties—Atomicity, Consistency, Isolation, and Durability—required to guarantee that database transactions are processed reliably, even in the event of catastrophic power failures, network crashes, or massive concurrent usage.
+For decades these guarantees belonged to operational databases such as PostgreSQL and Oracle and to data warehouses such as Teradata. Early Hadoop data lakes and raw object storage gave them up in exchange for cheap, scalable storage. Updating or deleting data meant rewriting directories by hand, and a failed job could leave readers looking at half-written results.
 
-For decades, strict ACID compliance was the exclusive domain of highly rigid operational databases (like Oracle and PostgreSQL) and expensive monolithic Data Warehouses (like Teradata). The original Hadoop Data Lakes and raw cloud object storage (Amazon S3) completely sacrificed ACID guarantees in exchange for infinite scalability and ultra-low storage costs. This compromise meant that executing a simple `UPDATE` or `DELETE` statement on a raw data lake often resulted in catastrophic data corruption. 
+Open table formats ([Apache Iceberg](/knowledgebase/apache-iceberg/), [Delta Lake](/knowledgebase/delta-lake/), and [Apache Hudi](/knowledgebase/apache-hudi/)) added a metadata layer and an atomic commit step on top of object storage. That is the core of the [data lakehouse](/knowledgebase/data-lakehouse/).
 
-The invention of the modern Open [Data Lakehouse](/data-lakehouse) (powered by [Apache Iceberg](/apache-iceberg), Apache Hudi, and Delta Lake) fundamentally solved this crisis by engineering strict, mathematically verifiable ACID guarantees directly on top of raw cloud object storage.
+## The Four Properties
 
-## The Four Pillars of ACID
+### 1. Atomicity (All or Nothing)
+A transaction either fully happens or does not happen at all.
 
-To understand how modern architectures protect data integrity, one must examine exactly how the four pillars operate during a massive pipeline execution.
-
-### 1. Atomicity (The "All or Nothing" Rule)
-Atomicity guarantees that a transaction is treated as a single, indivisible unit. It entirely prevents partial updates. 
-Imagine a massive ETL pipeline merging 500,000 new sales records into an Apache Iceberg table. Halfway through the job, the Spark cluster crashes violently due to an out-of-memory error. In a non-ACID raw data lake, 250,000 files are now sitting blindly in the cloud bucket, completely destroying the analytical accuracy of the dashboard. 
-
-In an ACID-compliant Iceberg table, Atomicity engages. Because the metadata manifest was not officially swapped in the final catalog commit, the engine completely ignores the 250,000 stranded files. The transaction is fully rolled back, guaranteeing the table remains exactly as it was before the crash occurred.
+Say a Spark job merging 500,000 sales records into an Iceberg table crashes halfway through. Some new data files are already in the bucket. In a plain data lake, readers that list the directory would see them. In an Iceberg table, readers only see files referenced by the current snapshot, and the new snapshot was never committed. The table looks exactly as it did before the job started. The stranded files are invisible orphans that a maintenance job such as `remove_orphan_files` cleans up later.
 
 ### 2. Consistency
-Consistency ensures that a transaction can only bring the database from one valid state to another, strictly adhering to all defined rules, constraints, and schemas. 
-If an operational pipeline attempts to insert a string ("Unknown") into a specific column that the Open Table Format strictly defines as an Integer, the Consistency rule rejects the entire transaction. The database refuses to accept structurally corrupted data, ensuring that downstream analytical engines will never crash due to unexpected data types.
+A transaction moves the table from one valid state to another. In a lakehouse this mainly means schema enforcement: a writer cannot put the string `"Unknown"` into a column the table defines as an integer. Unlike relational databases, table formats generally do not enforce foreign keys or unique primary keys, so those rules belong in pipeline tests or tools such as [data contracts](/knowledgebase/data-contracts/).
 
 ### 3. Isolation
-Isolation guarantees that concurrent transactions execute completely independently of one another without catastrophic interference. 
-In a massive enterprise lakehouse, an Apache Flink streaming job might be continuously inserting millions of records into a table, while a data engineer simultaneously executes a massive `DELETE` script to remove corrupted historical data, and the CEO simultaneously loads a Tableau dashboard querying that exact same table. 
-
-Isolation ensures the CEO's dashboard does not freeze, crash, or return partially updated numbers. Through a mechanism called Snapshot Isolation, the CEO's query reads a perfect, frozen snapshot of the table from the exact millisecond the query began, completely unbothered by the chaotic inserts and deletes happening simultaneously in the background.
+Concurrent transactions do not see each other's partial work. A Flink job can append to a table while an engineer runs a `DELETE` and a dashboard queries the same table. Under [snapshot isolation](/knowledgebase/snapshot-isolation/), the dashboard reads the snapshot that was current when its query started and never sees half-applied changes. Concurrent writers use [optimistic concurrency control](/knowledgebase/optimistic-concurrency-control/): each prepares its changes, and at commit time the format checks for conflicts and retries or fails the loser.
 
 ### 4. Durability
-Durability guarantees that once a transaction is successfully committed, it remains permanently recorded, even if the entire data center loses power a microsecond later. 
-In the Open Data Lakehouse, Durability is inherently guaranteed by the underlying cloud object storage layer. When an Iceberg commit is finalized, the physical Apache Parquet files and the metadata manifests are already written securely to Amazon S3 (which provides 99.999999999% durability). The data is permanently safe.
+Once committed, a change survives failures. In a lakehouse, data files and metadata are written to object storage before the commit is acknowledged, so durability comes from the storage layer. Amazon S3, for example, is designed for 99.999999999% (eleven nines) object durability.
 
-## Summary of Technical Value
+## How Each Table Format Commits
 
-ACID Transactions are the absolute bedrock of data engineering reliability. By successfully engineering Atomicity, Consistency, Isolation, and Durability directly into Open Table Formats, the industry completely eliminated the horrific data corruption issues that plagued the original big data era. It allows modern organizations to execute incredibly complex, highly concurrent updates on massive data lakehouses with the exact same unshakeable confidence traditionally reserved for operational banking databases.
+| | Apache Iceberg | Delta Lake | Apache Hudi |
+|---|---|---|---|
+| Source of truth | Catalog pointer to the current `metadata.json` | Ordered JSON commits in `_delta_log` | Timeline of instants in `.hoodie` |
+| Atomic step | Catalog swaps the metadata pointer (compare-and-swap) | Writing the next numbered log entry only if it does not exist | Completing an instant on the timeline |
+| Concurrency | Optimistic, with conflict checks and retries | Optimistic, with conflict detection | Optimistic with a lock provider, plus non-blocking options in newer releases |
+| Isolation for readers | Snapshot isolation; serializable checks available for writes | Snapshot reads; serializable and write-serializable write levels | Snapshot isolation |
+
+Because Iceberg's atomic step lives in the catalog, the catalog you choose ([Apache Polaris](/knowledgebase/apache-polaris/), [Project Nessie](/knowledgebase/project-nessie/), [AWS Glue](/knowledgebase/aws-glue/), or another REST catalog) is part of your transaction guarantee. For the step-by-step commit path, read [Writing to an Apache Iceberg Table: How Commits and ACID Actually Work](/blog/2026-04-29-apache-iceberg-masterclass-06-writing-to-iceberg/) and [ACID Guarantees and Apache Iceberg](/blog/2024-8-acid-guarantees-and-apache-iceberg/).
+
+## Summary
+
+ACID transactions are what let a lakehouse take updates, deletes, and concurrent writers without corrupting what readers see. Open table formats provide them through immutable data files, snapshots, and a single atomic commit step, which brings warehouse-style reliability to data stored in open formats on object storage.
 
 
 ## Learn More

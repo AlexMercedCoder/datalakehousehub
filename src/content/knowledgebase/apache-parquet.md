@@ -1,52 +1,59 @@
 ---
-title: "What is Apache Parquet?"
-meta_title: "What is Apache Parquet? | Expert Data Lakehouse Architecture Guide"
-description: "A comprehensive guide to Apache Parquet. Learn about columnar storage, dictionary encoding, predicate pushdown, and optimized data lake file formats."
+title: "Apache Parquet: How the File Format Works Under Iceberg Tables"
+meta_title: "Apache Parquet vs Iceberg: File vs Table Format | Glossary"
+description: "Apache Parquet is an open source columnar file format for analytics. See how its row groups, encodings, and statistics work and how it relates to Iceberg."
 ---
 
-# What is Apache Parquet?
+Apache Parquet is an open source columnar file format built for analytical queries. It was started in 2013 by engineers at Twitter and Cloudera and became a top-level Apache Software Foundation project in 2015. Today it is the default data file format for [Apache Iceberg](/knowledgebase/apache-iceberg/) tables and the only data file format for Delta Lake.
 
-Apache Parquet is a highly optimized, open-source columnar storage file format designed explicitly for massive analytical workloads. Co-created by Twitter and Cloudera, Parquet quickly became the absolute standard for storing data in the cloud data lake. 
+Row-based formats such as CSV and JSON are easy to write one record at a time but slow for analytics. To average one `revenue` column in a 100-column CSV file, an engine has to read every column of every row. Parquet changes the physical layout so the engine can read only what the query needs.
 
-Before Parquet, organizations often stored their massive datasets in row-based formats like CSV, JSON, or Apache Avro. Row-based formats are excellent for transactional operations (writing a single complete record instantly), but they are catastrophic for analytics. If an analyst queries a massive JSON file containing a hundred columns just to calculate the average of a single `revenue` column, the query engine is physically forced to read the entire file, loading 99 irrelevant columns into memory just to find the one it needs. This creates massive I/O bottlenecks and exorbitant cloud computing costs.
+## Columnar Layout
 
-Parquet solves this by completely reorganizing how data is physically written to disk.
+Parquet stores values of the same column together. When a query asks for `SUM(purchase_amount)`, the engine reads only the `purchase_amount` column chunks and skips the rest. This is called column projection, and it cuts both I/O and object storage request costs.
 
-## The Columnar Storage Architecture
+A Parquet file is organized in three levels:
 
-Parquet fundamentally alters the physical layout of data to maximize read efficiency. It organizes data by column rather than by row. 
+- **Row groups:** horizontal slices of the file, often sized around 128 MB or larger.
+- **Column chunks:** the data for one column inside one row group.
+- **Pages:** the smallest unit of encoding and compression inside a column chunk.
 
-When a dataset is written to Parquet, the engine takes the first column (e.g., `customer_id`), extracts all the values for that column across the entire dataset, and writes them contiguously to the file. It then does the same for the second column (e.g., `purchase_amount`). 
+The file footer holds the schema and metadata for every row group and column chunk.
 
-When an analyst runs a SQL query requesting the `SUM(purchase_amount)`, the query engine reads only the specific physical blocks on the disk containing the `purchase_amount` column. The engine entirely ignores the other 99 columns. This Column Projection drastically reduces the total amount of data scanned, directly accelerating query performance and reducing cloud storage retrieval fees.
+## Encoding and Compression
 
-## Advanced Compression and Encoding
+Because each column holds values of one type, Parquet can encode them efficiently before compression.
 
-Because Parquet stores identical data types contiguously, it unlocks immense compression capabilities that row-based formats simply cannot achieve.
+- **Dictionary encoding:** repeated values such as country names are stored once in a dictionary and replaced by small integer codes.
+- **RLE and bit-packing hybrid:** runs of repeated values and small integers are packed tightly. Sorting data before writing makes runs longer and files smaller.
+- **Delta and byte-stream-split encodings:** help with sorted integers, timestamps, and floating point data.
 
-### Dictionary Encoding
-If a massive global dataset contains a `country` column, a row-based format writes the string "United States" or "Germany" millions of times. Parquet utilizes Dictionary Encoding. It analyzes the column, identifies the distinct values, and assigns them a tiny integer (e.g., 1 = "United States", 2 = "Germany"). It then replaces the massive strings with these tiny integers. This significantly reduces the physical file size.
+A codec such as Snappy, ZSTD, GZIP, or LZ4 is applied on top. ZSTD is a common choice for lakehouse tables when you want smaller files at modest CPU cost.
 
-### Run-Length Encoding (RLE)
-When Parquet encounters a column with highly repetitive, sorted data (such as a `status` column containing thousands of contiguous "Active" values), it uses Run-Length Encoding. Instead of writing "Active" 10,000 times, Parquet simply writes "Active x 10,000" internally.
+## Statistics and Predicate Pushdown
 
-By combining these encodings with robust compression algorithms (like Snappy, GZIP, or ZSTD), Parquet reduces petabyte-scale datasets to a fraction of their original size, saving organizations massive amounts of capital on Amazon S3 or Google Cloud Storage bills.
+The footer stores minimum and maximum values, and null counts, for each column chunk. Optional page indexes add the same statistics per page, and optional Bloom filters help with equality lookups on high-cardinality columns. When a query filters on `event_date = '2026-05-14'`, the engine checks these statistics and skips row groups or pages that cannot contain a match. Engines such as Trino, Spark, DuckDB, and Dremio all use this to avoid reading data.
 
-## Metadata and Predicate Pushdown
+## Parquet vs Iceberg: File Format vs Table Format
 
-The true power of Parquet lies in its deeply embedded metadata. A Parquet file is broken down into Row Groups. At the end of the file, Parquet stores a highly detailed footer containing statistics for every single column within every Row Group.
+Parquet and Iceberg are often mentioned together but solve different problems.
 
-This metadata tracks the precise minimum and maximum values for every chunk of data. This enables Predicate Pushdown (also known as Filter Pushdown). 
+| | Apache Parquet | Apache Iceberg |
+|---|---|---|
+| What it is | A file format | A table format: metadata that defines a table as a set of files |
+| Unit it describes | One file | A whole table across many files and snapshots |
+| Statistics | Per row group and page, inside each file | Per file in manifests, so engines can skip whole files before opening them |
+| Transactions | None; a file is written once | ACID commits through a catalog |
+| Schema evolution | Limited to a single file's schema | Add, drop, rename, and reorder columns by field ID |
+| Partitioning, time travel | No | Hidden partitioning, snapshots, time travel |
 
-If an analyst executes a query filtering for `event_date = '2026-05-14'`, the query engine does not blindly read the Parquet files. It reads the tiny metadata footer first. It looks at the minimum and maximum dates for the first Row Group. If the Row Group contains dates strictly between January and March, the engine mathematically knows the target date cannot exist within that block. The engine completely skips reading the actual data. This capability allows engines like Trino and Dremio to execute sub-second queries against multi-terabyte datasets by surgically reading only the specific blocks containing relevant records.
+In practice, an Iceberg table is a catalog pointer to metadata, which lists manifests, which list Parquet data files. Iceberg prunes at the file level and Parquet prunes inside each file. Iceberg also supports ORC and Avro data files, but Parquet is the default and the most widely supported choice across engines. Delta Lake and Apache Hudi also store their data in Parquet.
 
-## Parquet in the Data Lakehouse
+To go deeper, see [What is Apache Parquet? Columns, Encoding, and Performance](/blog/2026-04-apache-parquet/), [Parquet Page Indexes and the Last Mile of Pruning in Apache Iceberg](/blog/parquet-page-index-pruning-iceberg/), and [The State of Apache Parquet in 2026](/blog/state-of-apache-parquet-2026/).
 
-Apache Parquet is the foundational storage primitive for the entire modern Open [Data Lakehouse](/data-lakehouse). Advanced open table formats like [Apache Iceberg](/apache-iceberg), Apache Hudi, and Delta Lake do not replace Parquet; they rely on it. These formats provide the transactional metadata layer (the ACID guarantees and Time Travel), but they universally rely on Parquet files to provide the actual physical storage and optimized columnar execution. 
+## Summary
 
-## Summary of Technical Value
-
-Apache Parquet revolutionized big data storage by proving that the physical layout of data dictates analytical performance. By implementing strict columnar organization, aggressive mathematical compression, and intelligent statistical metadata, Parquet allows modern query engines to scan massive datasets with incredible I/O efficiency. It remains the undisputed standard for storing analytical data in the cloud.
+Apache Parquet stores data by column, encodes and compresses each column efficiently, and keeps statistics that let engines skip data. Table formats like Iceberg build on it by adding transactions, snapshots, and table-level metadata, which is why Parquet sits at the bottom of nearly every open lakehouse.
 
 
 ## Learn More

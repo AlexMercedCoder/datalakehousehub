@@ -1,42 +1,53 @@
 ---
-title: "What is Model Inference?"
-meta_title: "What is Model Inference? | Expert Data Lakehouse Architecture Guide"
-description: "A comprehensive guide to Model Inference. Learn the difference between batch processing and real-time inference in machine learning deployments."
+title: "Model Inference: Batch vs Real-Time Scoring on a Lakehouse"
+meta_title: "Model Inference: Batch vs Real-Time in Lakehouses | Glossary"
+description: "Model inference is running a trained model on new data to get predictions. See how batch, streaming, and real-time inference differ and where Iceberg fits."
 ---
 
-# What is Model Inference?
+Model inference is the step where a trained machine learning model is applied to new data to produce predictions, scores, classifications, or generated text. Training learns the model's parameters from historical data; inference uses those fixed parameters on inputs the model has not seen.
 
-Model Inference is the exact, operational moment in the machine learning lifecycle where a fully trained AI algorithm is deployed into production and actively uses its internal mathematics to make predictions on brand new, entirely unseen data. 
+Training is usually an occasional, expensive job. Inference runs continuously and often dominates cost over a model's life, because every scored row, API request, or LLM token is an inference.
 
-In the Data Science workflow, there is a strict separation between Training and Inference. Training is the massive, computationally exhausting process where an algorithm analyzes ten million historical records over the course of several days to learn the underlying mathematical patterns. Inference is the lightning-fast process where that finished, compiled model receives a single new record and outputs a prediction in milliseconds. If Training is the process of a student spending four years studying in a university, Inference is the student instantly answering a single question on the final exam.
+## Three Ways to Run Inference
 
-## The Architecture of Inference
+### Real-Time (Online) Inference
+The model runs behind an API, usually a container on Kubernetes or a managed endpoint, and answers one request at a time. A card payment service sends transaction details and gets a fraud probability back in tens of milliseconds. Real-time models typically read precomputed inputs from a [feature store](/knowledgebase/feature-store/) online store, because there is no time to run analytical queries per request.
 
-Deploying a model for inference requires drastically different architectural infrastructure than training a model. Data engineering teams generally deploy inference workloads using two distinct architectural patterns, depending entirely on the specific latency requirements of the business.
+### Batch Inference
+A scheduled job scores many rows at once. A churn model scores every active customer overnight, and the marketing system reads the results in the morning. This is cheaper per prediction and needs no always-on service.
 
-### 1. Real-Time (Online) Inference
-Real-Time Inference is utilized when the business requires an instantaneous, high-speed prediction to drive a live user experience.
+### Streaming Inference
+A stream processor such as Flink or Spark Structured Streaming scores events as they arrive and writes results to a topic or table. It sits between the other two: seconds of latency, without a request-response API.
 
-For example, when a user swipes a credit card, the transaction must be approved or declined immediately. The data engineering team deploys the trained ML model inside a highly scalable, containerized microservice (like a Docker container running on Kubernetes). The model is exposed via a standard REST or gRPC API. 
+| | Real-time | Streaming | Batch |
+|---|---|---|---|
+| Latency | Milliseconds | Seconds | Minutes to hours |
+| Input | One request | Event stream | Whole table or partition |
+| Output | API response | Topic or table | Table |
+| Infrastructure | Always-on serving endpoint | Streaming job | Scheduled Spark or SQL job |
+| Typical use | Fraud checks, recommendations, chat | Alerting, live scoring | Churn, forecasting, document tagging |
 
-When the user swipes the card, the banking application sends a tiny JSON payload containing the transaction details directly to the API endpoint. The model loads the data, executes the mathematical prediction, and returns the `Fraud_Probability` score in 15 milliseconds. To achieve this extreme speed, real-time inference architectures rely heavily on ultra-low-latency Feature Stores (like Redis) to instantly grab user history without executing massive database queries.
+## Batch Inference on an Iceberg Lakehouse
 
-### 2. Batch (Offline) Inference
-Batch Inference is utilized when the business needs to generate millions of predictions, but does not require those predictions instantly.
+Batch inference is where the lakehouse does most of the work. A common pattern:
 
-For example, a marketing team wants to send targeted promotional emails at 8:00 AM predicting which users are highly likely to churn. It would be incredibly inefficient to hit a live API endpoint 5 million separate times. 
+1. Read the Gold feature table, an [Apache Iceberg](/knowledgebase/apache-iceberg/) table, with Spark.
+2. Load the registered model as a Spark UDF (for example with MLflow's `mlflow.pyfunc.spark_udf`) and apply it to every row in parallel.
+3. Write predictions to a scores table partitioned by run date, with the model version and the input table's snapshot ID as columns.
 
-Instead, the data engineering team utilizes the massive compute power of the [Data Lakehouse](/data-lakehouse) (often via Apache Spark). A massive nightly batch job spins up, loads the entire 5-million row `Active_Customers` table into memory, and feeds it completely through the trained ML model in parallel. The model generates all 5 million churn predictions simultaneously and writes them directly into a Gold-tier [Apache Iceberg](/apache-iceberg) table. The marketing software simply reads that pre-calculated table in the morning.
+Recording the snapshot ID matters: Iceberg time travel lets you rerun the same model on exactly the same input later to explain or audit a prediction. BI tools and agents then query the scores table like any other table.
 
-## Hardware Optimization for Inference
+LLM inference increasingly runs the same way. Several platforms expose model calls as SQL functions, such as Databricks `ai_query` and Snowflake Cortex AI functions, so classifying or summarizing a text column becomes a batch query over a table. For small, high-volume tasks, a compact classification model is often far cheaper than an LLM call per row.
 
-While training massive Deep Learning models or Large Language Models (LLMs) requires incredibly expensive, massive clusters of GPUs, running inference on those models requires highly specialized optimization to keep cloud costs manageable.
+## Making Inference Cheaper
 
-Engineers use specialized compilers (like Nvidia TensorRT or ONNX) to mathematically "quantize" the model. Quantization drastically reduces the precision of the underlying floating-point numbers (e.g., converting massive 32-bit floats down to highly compressed 8-bit integers). This barely impacts the accuracy of the prediction, but drastically shrinks the physical size of the model, allowing it to execute inference at lightning speed using significantly cheaper hardware.
+Inference cost is driven by model size and hardware. Quantization stores weights at lower precision (for example 8-bit or 4-bit instead of 16- or 32-bit), shrinking memory use and speeding up execution, usually with a small accuracy loss that should be measured. Runtimes such as ONNX Runtime and NVIDIA TensorRT optimize models for specific hardware, and LLM servers such as vLLM batch many requests together to keep GPUs busy.
 
-## Summary of Technical Value
+For lakehouse-specific examples, see [Fast Classification Models, LLMs, and the Apache Iceberg Lakehouse](/blog/jev-classification-models-iceberg-lakehouse/) and [Bringing MLflow and Data Pipelines Closer Together](/blog/2026-05-mlflow-data-pipelines/).
 
-Model Inference is the critical execution phase where artificial intelligence actually delivers its promised business value. By strategically deploying models via highly scalable Real-Time APIs for instant user experiences, or leveraging massive Batch pipelines for high-throughput operational analytics, data teams ensure their advanced machine learning algorithms actively drive enterprise decision-making at production scale.
+## Summary
+
+Model inference applies a trained model to new data, in real time, in streams, or in batches. On a lakehouse, batch and streaming inference read from and write to Iceberg tables, which makes predictions queryable, versioned, and reproducible alongside the data that produced them.
 
 
 ## Learn More

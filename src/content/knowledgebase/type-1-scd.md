@@ -1,46 +1,59 @@
 ---
-title: "What is Type 1 SCD?"
-meta_title: "What is Type 1 SCD? | Expert Data Lakehouse & AI Glossary"
-description: "A Slowly Changing Dimension methodology where old data is simply overwritten with new data, losing historical tracking entirely."
+title: "Type 1 SCD: Overwriting Dimension Changes with Iceberg MERGE INTO"
+meta_title: "Type 1 SCD: Overwrite Updates with Iceberg MERGE INTO"
+description: "A Type 1 SCD overwrites a dimension attribute in place and keeps no history. See how to implement it on Iceberg and why old snapshots still hold the old values."
 ---
 
 ## What is Type 1 SCD?
 
-A Slowly Changing Dimension methodology where old data is simply overwritten with new data, losing historical tracking entirely. 
+A Type 1 Slowly Changing Dimension (SCD) handles a change to a dimension attribute by overwriting the old value with the new one. The table keeps only the current state; no history of the previous value is stored in the dimension. It is the simplest of the [slowly changing dimension](/knowledgebase/slowly-changing-dimensions/) patterns.
 
-In the rapidly evolving landscape of data engineering and artificial intelligence, **Type 1 SCD** has emerged as a critical foundational component. As organizations transition from legacy, monolithic architectures to decoupled, scalable environments, understanding the role of Type 1 SCD is essential for building future-proof infrastructure. This capability serves as a critical enabler in modern data ecosystems, explicitly guiding architecture toward absolute efficiency and scale. When correctly implemented, Type 1 SCD dynamically drives analytical workloads and structurally limits administrative technical debt.
+Use Type 1 when the old value has no analytical meaning: a corrected typo in a customer name, a fixed email address, a standardized country code. If reports need to show what the value was at the time of a past transaction (a customer's region at the time of a sale, an employee's title at the time of a review), use [Type 2](/knowledgebase/type-2-scd/) instead.
 
-## Core Architecture and Mechanics
+## Type 1 vs Type 2 vs Type 3
 
-To understand the practical application of Type 1 SCD, it is crucial to systematically examine its fundamental operational behaviors and structural design:
+| | Type 1 | Type 2 | Type 3 |
+|---|---|---|---|
+| On change | Overwrite the value | Close the old row, insert a new row | Move old value to a "previous" column |
+| History kept | None in the dimension | Full | One prior value |
+| Table growth | None | One row per change | None |
+| Keys | Natural or surrogate key | Surrogate key required | Natural or surrogate key |
+| Typical use | Corrections, non-analytical attributes | Attributes that change how facts are grouped over time | Before-and-after comparisons |
 
-* **Organizes data logically into distinct tiers of refinement, from raw ingestion to pristine business presentation.** This principle ensures that systems can scale horizontally without facing artificial limitations or bottlenecks.
-* **Applies structural methodologies (like Star Schemas or Data Vaults) to ensure tables are optimized for specific types of BI querying.** By adopting this mechanic, engineers can bypass traditional processing constraints and deliver substantially faster time-to-insight.
-* **Manages historical modifications gracefully using established paradigms like Slowly Changing Dimensions (SCD).** This allows the overarching architecture to remain highly resilient while serving concurrent workloads natively.
+Many dimensions mix types: Type 1 for `email` and `phone`, Type 2 for `region` and `customer_tier`.
 
-Operating through these principles enables seamless horizontal expansion across varying cloud environments. It integrates effortlessly with adjacent technologies like [Apache Iceberg](/apache-iceberg), dbt, and advanced vector search algorithms.
+## Implementing Type 1 on Apache Iceberg
 
-## Why Type 1 SCD Matters in the Modern Data Stack
+On an [Apache Iceberg](/knowledgebase/apache-iceberg/) table, Type 1 is a single `MERGE INTO`, supported by engines such as Spark, Dremio, and Trino:
 
-Establishing strict architectural patterns prevents the data lake from devolving into a 'data swamp', guaranteeing that users know exactly where to find reliable, validated information.
+```sql
+MERGE INTO gold.dim_customer t
+USING silver.customer_changes s
+  ON t.customer_id = s.customer_id
+WHEN MATCHED THEN UPDATE SET
+  email = s.email,
+  phone = s.phone
+WHEN NOT MATCHED THEN INSERT (customer_id, email, phone)
+  VALUES (s.customer_id, s.email, s.phone);
+```
 
-For modern enterprises managing decentralized teams, the implementation of Type 1 SCD eliminates significant architectural friction. Teams are explicitly empowered to operate autonomously against reliable technical foundations without dynamically disrupting other isolated workflows. It shifts manual engineering overhead into an autonomous, software-driven paradigm, keeping Total Cost of Ownership (TCO) extremely low.
+Two lakehouse details matter:
 
-### Key Benefits
-- **Unprecedented Scalability:** Automatically adapts to massive fluctuations in data volume and query concurrency.
-- **Vendor Neutrality:** Strongly aligns with open-source frameworks, preventing aggressive vendor lock-in.
-- **Enhanced Observability:** Exposes deep, structural metadata allowing engineers to monitor and trace pipelines comprehensively.
+* **Old values survive in snapshots.** Each merge creates a new [Iceberg snapshot](/knowledgebase/iceberg-snapshot/). The overwritten values are still readable through [time travel](/knowledgebase/time-travel/) until those snapshots are expired and their files cleaned up. That is handy for debugging, but it is not a history strategy, because expiration removes it. It also matters for privacy: if a Type 1 update is meant to erase a value, expire the old snapshots too.
+* **Write mode affects cost.** Frequent small Type 1 updates on a large dimension are cheaper with [merge-on-read](/knowledgebase/merge-on-read/) (delete files or deletion vectors, compacted later) than with [copy-on-write](/knowledgebase/copy-on-write/), which rewrites every touched data file on each merge.
+
+For worked examples of all three types, read [Slowly Changing Dimensions: Types 1-3 with Examples](/blog/2026-02-data-modeling-06-slowly-changing-dimensions/).
 
 ## Frequently Asked Questions
 
-### What is the Medallion Architecture?
-It is a logical layout dividing the lakehouse into Bronze (raw), Silver (cleansed), and Gold (business-ready) tables. This distinction is particularly important when evaluating total architecture costs and performance benchmarks.
+### Does Type 1 lose data?
+It loses the previous value from the current table. On Iceberg the old value remains in older snapshots until they expire, so it is not gone immediately.
 
-### What are Slowly Changing Dimensions?
-SCDs are structural techniques used to retain historical states of a record (like tracking an employee's previous job titles) rather than simply overwriting old data. The open ecosystem continues to evolve rapidly, ensuring backward compatibility while introducing powerful new primitives.
+### Can dbt do Type 1?
+Yes. An incremental model with a `unique_key` and the merge strategy produces Type 1 behavior. dbt snapshots produce Type 2.
 
-### How does Type 1 SCD impact data governance and security?
-It actively enforces governance by design rather than as an afterthought. Native logging, role-based access controls (RBAC), and structured access pathways provide immediate visibility into security boundaries and regulatory compliance.
+### Is Type 1 the same as an upsert?
+In practice, yes. A Type 1 load is an [upsert](/knowledgebase/upserts-update-and-insert/): update matched rows, insert new ones.
 
 ---
 

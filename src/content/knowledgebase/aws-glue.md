@@ -1,44 +1,50 @@
 ---
-title: "What is AWS Glue?"
-meta_title: "What is AWS Glue? | Expert Data Lakehouse Architecture Guide"
-description: "A comprehensive guide to AWS Glue. Learn about the serverless Data Catalog, dynamic ETL generation, and serverless Spark execution."
+title: "AWS Glue for Iceberg Lakehouses: Data Catalog, ETL, and Engines"
+meta_title: "AWS Glue Data Catalog for Iceberg Lakehouses | Glossary"
+description: "AWS Glue is Amazon's serverless data integration service with a shared Data Catalog. See how Glue serves Iceberg tables to Spark, Athena, Dremio, and Trino."
 ---
 
-# What is AWS Glue?
+AWS Glue is a serverless data integration service from Amazon Web Services. It combines a metadata catalog (the Glue Data Catalog), crawlers that infer schemas, and managed Apache Spark and Python jobs for ETL.
 
-AWS Glue is a fully managed, serverless data integration and cataloging service provided by Amazon Web Services. It was designed to drastically simplify the complex process of discovering, preparing, and combining data for analytics, machine learning, and application development.
-
-Before modern managed services, data engineering teams had to manually provision massive Apache Hadoop clusters, explicitly define complex Hive Metastore schemas, and manage fragile Apache Spark infrastructure just to execute basic ETL (Extract, Transform, Load) pipelines. AWS Glue abstracts away this entire infrastructure burden, allowing data engineers to focus exclusively on business logic while AWS handles scaling, patching, and resource allocation completely in the background.
+Before managed services like Glue, teams running ETL on AWS typically provisioned Hadoop or Spark clusters, ran a Hive Metastore, and patched and scaled that infrastructure themselves. Glue removes most of that work: AWS provisions compute for each job run and maintains the catalog service.
 
 ## The AWS Glue Data Catalog
 
-The most universally utilized component of AWS Glue is the Glue Data Catalog. It serves as the persistent, centralized metadata repository for the entire AWS ecosystem.
+The Data Catalog is the most widely used part of Glue. It is the central metadata store for analytics services on AWS.
 
 ### Hive Metastore Compatibility
-The Glue Data Catalog acts as a highly available, serverless drop-in replacement for the legacy Apache Hive Metastore. It stores table definitions, schemas, and partition locations. Because it is natively integrated into the AWS fabric, an engineer can use AWS Athena to execute a serverless SQL query, or use Amazon EMR (Elastic MapReduce) to run a massive Spark job, and both engines will automatically query the Glue Catalog to locate the data in Amazon S3.
+The Data Catalog stores databases, table definitions, schemas, and partition locations, and it can stand in for an Apache [Hive Metastore](/knowledgebase/hive-metastore/). Amazon Athena uses it by default, and Amazon EMR can be configured to use it, so a table defined once is visible to both and points at data in [Amazon S3](/knowledgebase/amazon-s3/).
 
-### Automated Data Crawlers
-Maintaining a catalog manually across petabytes of changing data is impossible. AWS Glue solves this with Crawlers. A data engineer configures a Crawler to scan an S3 bucket periodically. The Crawler automatically infers the schema (e.g., recognizing that a file is Parquet and contains a `user_id` integer column), determines the partitioning structure, and populates the Data Catalog automatically. If an upstream application suddenly adds a new column to a JSON log file, the Crawler detects the change and updates the Catalog schema seamlessly.
+### Crawlers
+Crawlers scan locations such as S3 prefixes on a schedule, infer the format and schema (for example, recognizing Parquet files with a `user_id` integer column), detect partitions, and create or update catalog tables. How a crawler handles schema changes, such as a new column in JSON logs, depends on its configured schema change policy, so teams should set that policy deliberately rather than assume updates happen automatically.
 
-## Serverless ETL and Spark Execution
+## Serverless ETL
 
-While the Catalog manages the metadata, the AWS Glue Jobs infrastructure manages the actual physical data transformations.
+### Managed Spark Jobs
+Glue jobs run PySpark or Scala Spark code (or plain Python shell scripts) on compute that AWS provisions per run. You pay per DPU-hour, billed per second with a one-minute minimum on Glue 2.0 and later, instead of keeping an EMR cluster running between jobs. Short jobs still pay the minimum, and very long or constantly running workloads can cost less on EMR or other engines, so compare both for steady pipelines.
 
-### Serverless Apache Spark
-AWS Glue utilizes Apache Spark heavily under the hood. When an engineer defines an ETL job in Glue, AWS dynamically provisions an ephemeral, highly optimized Spark cluster, executes the PySpark or Scala code, and immediately spins the cluster down when the job completes. The organization pays strictly for the exact seconds the job was executing, entirely eliminating the massive costs associated with maintaining an idle, 24/7 EMR cluster.
+### Glue Studio
+Glue Studio is a visual editor for building jobs: read from Amazon RDS or S3, join, drop sensitive columns, and write to an [Apache Iceberg](/knowledgebase/apache-iceberg/) table. It generates a PySpark script that engineers can edit and deploy through their CI/CD process.
 
-### Glue Studio and Code Generation
-To democratize data engineering, AWS provides Glue Studio, a visual drag-and-drop interface. Analysts can visually define an ETL pipeline—extracting data from Amazon RDS, joining it with log files in S3, dropping sensitive PII columns, and writing the result to an [Apache Iceberg](/apache-iceberg) table. AWS Glue automatically generates the highly optimized PySpark code behind the visual interface. Experienced engineers can then intercept this auto-generated code, inject complex custom transformations, and deploy it via standard CI/CD pipelines.
+## AWS Glue in an Iceberg Lakehouse
 
-## Modern Lakehouse Integrations
+Glue jobs support Apache Iceberg, Apache Hudi, and Delta Lake through the `--datalake-formats` job parameter, so a job can read raw data, deduplicate it, and run `MERGE INTO` against Iceberg tables. The Data Catalog then serves as the [Iceberg catalog](/knowledgebase/iceberg-catalog/) that records each table's current metadata file.
 
-As the industry shifted toward transactional data lakes, AWS Glue adapted rapidly. It natively supports Open Table Formats like Apache Iceberg, Apache Hudi, and Delta Lake. 
+The catalog is also reachable outside AWS's own engines. Glue exposes an Iceberg REST endpoint (`https://glue.<region>.amazonaws.com/iceberg`) that implements the [Iceberg REST catalog specification](/knowledgebase/rest-catalog-specification/), with SigV4 authentication and permissions from IAM or AWS Lake Formation. It serves tables in general-purpose S3 buckets and in Amazon S3 Tables.
 
-Engineers can configure Glue ETL jobs to read raw data, apply complex deduplication logic, and execute atomic `UPSERT` operations directly against Iceberg tables. The Glue Data Catalog tracks the Iceberg metadata seamlessly, allowing downstream business intelligence tools to query the transactional lakehouse architecture instantly.
+| Engine | How it connects to Glue |
+|---|---|
+| Spark (Glue, EMR, or self-managed) | Glue catalog implementation or the Iceberg REST endpoint |
+| Amazon Athena | Native, uses the Data Catalog by default |
+| Dremio | Glue Data Catalog source for reading and managing Iceberg tables |
+| Trino | Iceberg connector with `iceberg.catalog.type=glue` or REST |
+| PyIceberg | Glue catalog type or REST with SigV4 |
 
-## Summary of Technical Value
+Glue is a strong choice when most of your stack runs on AWS. If you need one catalog across several clouds, or want catalog features such as branching, compare it with [Apache Polaris](/knowledgebase/apache-polaris/), [Project Nessie](/knowledgebase/project-nessie/), and [Unity Catalog](/knowledgebase/unity-catalog/). For step-by-step setup with Dremio, see [Connect AWS Glue Data Catalog to Dremio Cloud](/blog/2026-03-connect-aws-glue-dremio/), and for how Glue compares with other vendor catalogs see [An Exploration of the Commercial Iceberg Catalog Ecosystem](/blog/2025-10-exploring-commerical-apache-iceberg-catalogs/).
 
-AWS Glue fundamentally accelerated the adoption of the cloud data lake by eliminating the severe operational overhead of cluster management. By providing a ubiquitous, serverless Data Catalog combined with highly elastic, on-demand Apache Spark ETL execution, it empowers organizations of any size to build robust, automated data pipelines quickly and extremely cost-effectively.
+## Summary
+
+AWS Glue lowered the operational cost of running a data lake on AWS by pairing a managed, Hive-compatible catalog with serverless Spark jobs. In an Iceberg lakehouse, its main role is the catalog: Glue jobs, Athena, EMR, and outside engines such as Dremio, Trino, and PyIceberg can all read and write the same Iceberg tables through it.
 
 
 ## Learn More
