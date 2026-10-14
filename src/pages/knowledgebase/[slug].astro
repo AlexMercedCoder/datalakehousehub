@@ -3,6 +3,7 @@ import Base from "@/layouts/Base.astro";
 import KnowledgebaseSingle from "@/layouts/KnowledgebaseSingle.astro";
 import { getSinglePage } from "@/lib/contentParser.astro";
 import { buildRelatedTerms } from "@/lib/utils/kbRelated";
+import { kbMetaTitle } from "@/lib/utils/kbTitle";
 
 export async function getStaticPaths() {
   const pages = await getSinglePage("knowledgebase");
@@ -22,7 +23,8 @@ export async function getStaticPaths() {
 }
 
 const { page, relatedTerms } = Astro.props;
-const { title, meta_title, description, image, canonical } = page.data;
+const { title, meta_title: rawMetaTitle, description, image, canonical } = page.data;
+const meta_title = kbMetaTitle(title, rawMetaTitle);
 
 const breadcrumbSchema = {
   "@context": "https://schema.org",
