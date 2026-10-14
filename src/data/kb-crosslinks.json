@@ -1,0 +1,162 @@
+{
+  "data-warehouse": [
+    {
+      "site": "dataengnr.com",
+      "url": "https://dataengnr.com/terms/data-warehouse/",
+      "note": "traces warehouse architecture from its origins through cloud warehouses and compares warehouse, lake, and lakehouse",
+      "label": "Data Warehouse"
+    }
+  ],
+  "data-lakehouse": [
+    {
+      "site": "dataengnr.com",
+      "url": "https://dataengnr.com/terms/data-lakehouse/",
+      "note": "walks through the core components, the open standards involved, and agentic workloads on a lakehouse",
+      "label": "Data Lakehouse"
+    }
+  ],
+  "apache-iceberg": [
+    {
+      "site": "dataengnr.com",
+      "url": "https://dataengnr.com/terms/apache-iceberg/",
+      "note": "goes deeper on the Hive bottleneck that led to Iceberg, its metadata architecture, and concurrency and time travel",
+      "label": "Apache Iceberg"
+    }
+  ],
+  "data-lake": [
+    {
+      "site": "dataengnr.com",
+      "url": "https://dataengnr.com/terms/data-lake/",
+      "note": "covers storage paradigms, the data swamp problem, and the path from a lake to a lakehouse",
+      "label": "Data Lake"
+    }
+  ],
+  "agentic-analytics": [
+    {
+      "site": "dataengnr.com",
+      "url": "https://dataengnr.com/terms/agentic-analytics/",
+      "note": "covers the RAG pattern, LLM orchestration, and the security and governance questions agents raise",
+      "label": "Agentic Analytics"
+    }
+  ],
+  "data-modeling": [
+    {
+      "site": "dataengnr.com",
+      "url": "https://dataengnr.com/terms/data-modeling/",
+      "note": "covers conceptual, logical, and physical models, star schemas, slowly changing dimensions, and Data Vault",
+      "label": "Data Modeling"
+    }
+  ],
+  "medallion-architecture": [
+    {
+      "site": "dataengnr.com",
+      "url": "https://dataengnr.com/terms/medallion-architecture/",
+      "note": "walks through the bronze and silver layers in more depth, with the pipeline problems the pattern solves",
+      "label": "Medallion Architecture"
+    }
+  ],
+  "data-mesh": [
+    {
+      "site": "dataengnr.com",
+      "url": "https://dataengnr.com/terms/data-mesh/",
+      "note": "goes deeper on domain ownership, self-serve infrastructure, and federated computational governance",
+      "label": "Data Mesh"
+    }
+  ],
+  "elt": [
+    {
+      "site": "dataengnr.com",
+      "url": "https://dataengnr.com/terms/elt/",
+      "note": "covers the ELT workflow, dbt as the transformation layer, and ELT on Iceberg tables",
+      "label": "Extract, Load, Transform (ELT)"
+    }
+  ],
+  "lambda-architecture": [
+    {
+      "site": "dataengnr.com",
+      "url": "https://dataengnr.com/terms/lambda-architecture/",
+      "note": "breaks down the batch, speed, and serving layers and why teams moved toward Kappa",
+      "label": "Lambda Architecture"
+    }
+  ],
+  "kappa-architecture": [
+    {
+      "site": "dataengnr.com",
+      "url": "https://dataengnr.com/terms/kappa-architecture/",
+      "note": "covers the single-pipeline principle, Kafka as the foundation, and the real limits of Kappa",
+      "label": "Kappa Architecture"
+    }
+  ],
+  "etl": [
+    {
+      "site": "dataengnr.com",
+      "url": "https://dataengnr.com/terms/etl/",
+      "note": "covers the three ETL phases, their structural limits, and how ELT inverted the pattern",
+      "label": "Extract, Transform, Load (ETL)"
+    }
+  ],
+  "data-fabric": [
+    {
+      "site": "dataengnr.com",
+      "url": "https://dataengnr.com/terms/data-fabric/",
+      "note": "covers knowledge graphs, active metadata, federated query, and automated policy enforcement",
+      "label": "Data Fabric"
+    }
+  ],
+  "change-data-capture": [
+    {
+      "site": "dataengnr.com",
+      "url": "https://dataengnr.com/terms/change-data-capture/",
+      "note": "explains transaction log mining, CDC event structure, and applying changes to Iceberg with MERGE INTO",
+      "label": "Change Data Capture (CDC)"
+    }
+  ],
+  "apache-parquet": [
+    {
+      "site": "dataengnr.com",
+      "url": "https://dataengnr.com/terms/apache-parquet/",
+      "note": "explains the Parquet file structure, how Iceberg uses it, and file size and compaction practices",
+      "label": "Apache Parquet"
+    }
+  ],
+  "dimensional-modeling": [
+    {
+      "site": "dataengnr.com",
+      "url": "https://dataengnr.com/terms/dimensional-modeling/",
+      "note": "goes deeper on star and snowflake schemas and dimensional models on Iceberg tables",
+      "label": "Dimensional Modeling (Star Schema & Snowflake Schema)"
+    }
+  ],
+  "data-vault-modeling": [
+    {
+      "site": "dataengnr.com",
+      "url": "https://dataengnr.com/terms/data-vault-modeling/",
+      "note": "explains hubs, links, and satellites, the business vault, and Data Vault on Iceberg",
+      "label": "Data Vault Modeling"
+    }
+  ],
+  "hidden-partitioning": [
+    {
+      "site": "dataengnr.com",
+      "url": "https://dataengnr.com/terms/hidden-partitioning/",
+      "note": "covers how partition transforms work, partition evolution, and multi-column and bucket partitioning",
+      "label": "Hidden Partitioning"
+    }
+  ],
+  "apache-polaris": [
+    {
+      "site": "dataengnr.com",
+      "url": "https://dataengnr.com/terms/apache-polaris/",
+      "note": "covers the REST catalog specification, credential vending, and multi-catalog federation",
+      "label": "Apache Polaris"
+    }
+  ],
+  "arrow-flight": [
+    {
+      "site": "dataengnr.com",
+      "url": "https://dataengnr.com/terms/arrow-flight/",
+      "note": "explains the Flight protocol, why it beats JDBC for bulk transfer, and Arrow Flight SQL",
+      "label": "Arrow Flight"
+    }
+  ]
+}

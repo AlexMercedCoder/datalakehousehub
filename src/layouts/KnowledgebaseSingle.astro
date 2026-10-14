@@ -2,6 +2,7 @@
 import { withSlash } from "@/lib/utils/withSlash";
 import { render } from "astro:content";
 import { markdownify } from "@/lib/utils/textConverter";
+import crosslinks from "@/data/kb-crosslinks.json";
 
 export interface Props {
   data: any;
@@ -11,6 +12,10 @@ export interface Props {
 const { data, relatedTerms = [] } = Astro.props;
 const { title, description } = data.data;
 const { Content } = await render(data);
+// Deeper treatments of the same term elsewhere in the network, added only
+// where the other page goes further than this one (see kb-crosslinks.json).
+const alsoOn: { site: string; url: string; label: string; note: string }[] =
+  (crosslinks as Record<string, any[]>)[data.id] || [];
 ---
 
 <section class="section pt-10">
@@ -51,6 +56,20 @@ const { Content } = await render(data);
     <article class="content prose prose-lg dark:prose-invert max-w-none prose-headings:font-bold prose-headings:tracking-tight prose-a:text-primary hover:prose-a:text-primary/80 mb-14">
       <Content />
     </article>
+
+    {
+      alsoOn.length > 0 && (
+        <aside class="mt-10 rounded-xl border border-border p-5 text-base dark:border-darkmode-border">
+          {alsoOn.map((x) => (
+            <p class="m-0">
+              <strong>Also on {x.site}:</strong>{" "}
+              <a href={x.url} class="text-primary hover:underline dark:text-darkmode-primary">{x.label}</a>,
+              a longer engineer-focused guide that {x.note}.
+            </p>
+          ))}
+        </aside>
+      )
+    }
 
     <!-- Related Terms -->
     {
