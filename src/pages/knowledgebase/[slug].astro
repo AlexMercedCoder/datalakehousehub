@@ -2,37 +2,15 @@
 import Base from "@/layouts/Base.astro";
 import KnowledgebaseSingle from "@/layouts/KnowledgebaseSingle.astro";
 import { getSinglePage } from "@/lib/contentParser.astro";
+import { buildRelatedTerms } from "@/lib/utils/kbRelated";
 
 export async function getStaticPaths() {
   const pages = await getSinglePage("knowledgebase");
 
-  return pages.map((page: any, index: number) => {
-    const currentWords = new Set(
-      page.data.title
-        .toLowerCase()
-        .split(/[^a-z0-9]+/)
-        .filter((w: string) => w.length > 3)
-    );
+  const relatedMap = buildRelatedTerms(pages as any[]);
 
-    const scored = pages
-      .filter((p: any) => p.id !== page.id)
-      .map((p: any) => {
-        const words = p.data.title
-          .toLowerCase()
-          .split(/[^a-z0-9]+/)
-          .filter((w: string) => w.length > 3);
-        const overlap = words.filter((w: string) => currentWords.has(w)).length;
-        return { page: p, score: overlap };
-      });
-
-    scored.sort((a, b) => b.score - a.score);
-    let related = scored.slice(0, 3).map(s => s.page);
-    if (scored[0]?.score === 0) {
-      const neighbor1 = pages[(index + 1) % pages.length];
-      const neighbor2 = pages[(index + 2) % pages.length];
-      const neighbor3 = pages[(index + 3) % pages.length];
-      related = [neighbor1, neighbor2, neighbor3];
-    }
+  return pages.map((page: any) => {
+    const related = relatedMap.get(page.id) || [];
 
     return {
       params: {
