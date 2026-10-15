@@ -1,29 +1,30 @@
 ---
-title: "Terms and Conditions"
-description: "this is meta description"
+title: "Terms of Use"
+meta_title: "Terms of Use | The Data Lakehouse Hub"
+description: "Terms for using datalakehousehub.com: free educational content by Alex Merced, offered as is, with opinions that are his own and links to independent sites."
 draft: false
 ---
 
-#### Responsibility of Contributors
+_Last updated: October 15, 2026_
 
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Purus, donec nunc eros, ullamcorper id feugiat quisque aliquam sagittis. Sem turpis sed viverra massa gravida pharetra. Non dui dolor potenti eu dignissim fusce. Ultrices amet, in curabitur a arcu a lectus morbi id. Iaculis erat sagittis in tortor cursus. Molestie urna eu tortor, erat scelerisque eget. Nunc hendrerit sed interdum lacus. Lorem quis viverra sed
+By using datalakehousehub.com you agree to these terms.
 
-pretium, aliquam sit. Praesent elementum magna amet, tincidunt eros, nibh in leo. Malesuada purus, lacus, at aliquam suspendisse tempus. Quis tempus amet, velit nascetur sollicitudin. At sollicitudin eget amet in. Eu velit nascetur sollicitudin erhdfvssfvrgss eget viverra nec elementum. Lacus, facilisis tristique lectus in.
+#### Educational content, offered as is
 
-#### Gathering of Personal Information
+Articles, glossary entries, videos, and examples on this site are free educational material about data lakehouse architecture, Apache Iceberg, and related technologies. They are provided as is, without warranty of any kind. Test commands, configurations, and code in a safe environment before using them with production data.
 
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Purus, donec nunc eros, ullamcorper id feugiat quisque aliquam sagittis. Sem turpis sed viverra massa gravida pharetra. Non dui dolor potenti eu dignissim fusce. Ultrices amet, in curabitur a arcu a lectus morbi id. Iaculis erat sagittis in tortor cursus. Molestie urna eu tortor, erat scelerisque eget. Nunc hendrerit sed interdum lacus. Lorem quis viverra sed
+#### Opinions
 
-#### Protection of Personal- Information
+The views, thoughts, and opinions on this site belong solely to Alex Merced and do not represent the views of any organization or employer.
 
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Purus, donec nunc eros, ullamcorper id feugiat quisque aliquam sagittis. Sem turpis sed viverra massa gravida pharetra. Non dui dolor potenti eu dignissim fusce. Ultrices amet, in curabitur a arcu a lectus morbi id. Iaculis erat sagittis in tortor cursus.
+#### Trademarks
 
-Molestie urna eu tortor, erat scelerisque eget. Nunc hendrerit sed interdum lacus. Lorem quis viverra sed
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Purus, donec nunc eros, ullamcorper id feugiat
+Apache, Apache Iceberg, Apache Polaris, Apache Arrow, Apache Parquet, and other Apache project names are trademarks of the Apache Software Foundation. Other product names belong to their owners. This site is independent and is not affiliated with or endorsed by the Apache Software Foundation.
 
-#### Privacy Policy Changes
+#### Links to other sites
 
-1. Sll the Themefisher items are designed to be with the latest , We check all
-2. comments that threaten or harm the reputation of any person or organization
-3. personal information including, but limited to, email addresses, telephone numbers
-4. Any Update come in The technology Customer will get automatic Notification.
+The site links to independent websites and event pages. Their content and terms are their own.
+
+#### Contact
+
+Questions about these terms can go to Alex Merced through [alexmerced.com/contact](https://alexmerced.com/contact).

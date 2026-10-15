@@ -1,6 +1,6 @@
 ---
 title: "Apache Iceberg Architecture: Snapshots, Manifests, and Catalogs"
-meta_title: "Apache Iceberg Architecture | Snapshots & Manifests Explained"
+meta_title: "Apache Iceberg Architecture | Snapshots and Manifests"
 description: "A highly technical, deep dive into the Apache Iceberg metadata tree, explaining the exact commit flow and snapshot isolation mechanics."
 canonical: "https://iceberglakehouse.com/apache-iceberg-architecture/"
 ---

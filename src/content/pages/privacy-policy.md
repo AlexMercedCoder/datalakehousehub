@@ -1,29 +1,36 @@
 ---
-title: "Privacy"
-description: "this is meta description"
+title: "Privacy Policy"
+meta_title: "Privacy Policy | The Data Lakehouse Hub"
+description: "How datalakehousehub.com handles data: Google Analytics 4 for aggregate traffic, consent-gated in the EU, UK and Switzerland, with no accounts or ad tracking."
 draft: false
 ---
 
-#### Responsibility of Contributors
+_Last updated: October 15, 2026_
 
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Purus, donec nunc eros, ullamcorper id feugiat quisque aliquam sagittis. Sem turpis sed viverra massa gravida pharetra. Non dui dolor potenti eu dignissim fusce. Ultrices amet, in curabitur a arcu a lectus morbi id. Iaculis erat sagittis in tortor cursus. Molestie urna eu tortor, erat scelerisque eget. Nunc hendrerit sed interdum lacus. Lorem quis viverra sed
+datalakehousehub.com is a personal, non-commercial reference site run by Alex Merced. It has no user accounts and no newsletter form, and it does not sell or share personal information.
 
-pretium, aliquam sit. Praesent elementum magna amet, tincidunt eros, nibh in leo. Malesuada purus, lacus, at aliquam suspendisse tempus. Quis tempus amet, velit nascetur sollicitudin. At sollicitudin eget amet in. Eu velit nascetur sollicitudin erhdfvssfvrgss eget viverra nec elementum. Lacus, facilisis tristique lectus in.
+#### Analytics
 
-#### Gathering of Personal Information
+The site uses Google Analytics 4 to count page views, see which articles are read, and see which outbound links are clicked. Advertising features (ad storage, ad user data, and ad personalization) are turned off for every visitor.
 
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Purus, donec nunc eros, ullamcorper id feugiat quisque aliquam sagittis. Sem turpis sed viverra massa gravida pharetra. Non dui dolor potenti eu dignissim fusce. Ultrices amet, in curabitur a arcu a lectus morbi id. Iaculis erat sagittis in tortor cursus. Molestie urna eu tortor, erat scelerisque eget. Nunc hendrerit sed interdum lacus. Lorem quis viverra sed
+- Visitors from the European Economic Area, the United Kingdom, and Switzerland see a consent choice. Analytics cookies are not set unless you accept.
+- Analytics runs only on datalakehousehub.com itself, not on mirror or alias domains.
+- You can withdraw consent by clearing this site's local storage and cookies in your browser, or block analytics with any standard content blocker.
 
-#### Protection of Personal- Information
+Google processes this data under the [Google Privacy Policy](https://policies.google.com/privacy).
 
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Purus, donec nunc eros, ullamcorper id feugiat quisque aliquam sagittis. Sem turpis sed viverra massa gravida pharetra. Non dui dolor potenti eu dignissim fusce. Ultrices amet, in curabitur a arcu a lectus morbi id. Iaculis erat sagittis in tortor cursus.
+#### Comments
 
-Molestie urna eu tortor, erat scelerisque eget. Nunc hendrerit sed interdum lacus. Lorem quis viverra sed
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Purus, donec nunc eros, ullamcorper id feugiat
+Comments on articles use [Giscus](https://giscus.app), which stores them as GitHub Discussions in a public repository. To comment you sign in with GitHub, and your comment and GitHub username are public under [GitHub's privacy statement](https://docs.github.com/en/site-policy/privacy-policies/github-general-privacy-statement). Reading articles does not require signing in.
 
-#### Privacy Policy Changes
+#### Hosting
 
-1. Sll the Themefisher items are designed to be with the latest , We check all
-2. comments that threaten or harm the reputation of any person or organization
-3. personal information including, but limited to, email addresses, telephone numbers
-4. Any Update come in The technology Customer will get automatic Notification.
+The site is a static website hosted on Netlify. Like any web host, Netlify receives standard request data (such as IP address and browser type) to deliver pages and protect the service.
+
+#### External links and embeds
+
+Articles link to other sites (for example Luma event pages, YouTube, GitHub, and vendor documentation). Those sites have their own privacy practices, which apply once you follow a link.
+
+#### Contact
+
+For privacy questions or requests, contact Alex Merced through [alexmerced.com/contact](https://alexmerced.com/contact).
