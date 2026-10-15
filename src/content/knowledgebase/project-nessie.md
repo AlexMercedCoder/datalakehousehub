@@ -44,7 +44,7 @@ SELECT * FROM sales_data AT BRANCH main;
 SELECT * FROM sales_data AT BRANCH q3_revenue_experiment;
 ```
 
-Dremio's earlier managed catalog, Arctic, was built on Nessie. Dremio's current Open Catalog is built on [Apache Polaris](/knowledgebase/apache-polaris/), and Dremio contributed Nessie's ideas and capabilities to the Polaris effort. Nessie remains available as its own open source project and can also be reached through the Iceberg REST interface.
+Dremio's earlier managed catalog, Arctic, was built on Nessie. Dremio's current catalog, Dremio Catalog, is built on [Apache Polaris](/knowledgebase/apache-polaris/), and Dremio contributed Nessie's ideas and capabilities to the Polaris effort. Nessie remains available as its own open source project and can also be reached through the Iceberg REST interface.
 
 ## Nessie vs Other Iceberg Catalogs
 

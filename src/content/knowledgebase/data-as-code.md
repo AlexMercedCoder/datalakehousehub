@@ -22,7 +22,7 @@ Iceberg data files are immutable, and each table's state is defined by a metadat
 
 The main open-source example is **[Project Nessie](/knowledgebase/project-nessie/)**, a transactional catalog with Git-like semantics across all the tables it manages. It supports branches, tags, commits, merges, and multi-table transactions, and it can serve Iceberg clients through the Iceberg REST catalog API. Other tools apply related ideas at different layers. lakeFS versions data at the object storage level across any file format. Iceberg itself supports branches and tags on individual tables, which is useful for single-table workflows but does not coordinate changes across tables.
 
-Dremio built its earlier Arctic catalog service on Nessie. Dremio's current catalog is based on [Apache Polaris](/knowledgebase/apache-polaris/), and Dremio continues to support Nessie as a catalog source.
+Dremio built its earlier Arctic catalog service on Nessie. Dremio's current catalog, Dremio Catalog, is built on [Apache Polaris](/knowledgebase/apache-polaris/), and Dremio continues to support Nessie as a catalog source.
 
 ### 1. Branching
 An engineer reworking the pipeline that builds a `gold_sales` table creates a branch instead of testing against production. With Nessie's Spark SQL extensions:

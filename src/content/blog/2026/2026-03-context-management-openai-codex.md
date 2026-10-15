@@ -1,8 +1,8 @@
 ---
-title: "Context Management Strategies for OpenAI Codex: A Complete Guide Across Browser, CLI, and App"
+title: "Codex Context Window: Limits, Compaction, and AGENTS.md"
 date: 2026-03-07T09:10:00Z
 pubDatetime: 2026-03-07T09:10:00Z
-description: "Context management strategies for OpenAI Codex across browser, CLI, and app : AGENTS.md, sandboxed tasks, and prompt patterns."
+description: "Codex context window: GPT-6 Astra, GPT-6.1 Sol, and GPT-6 Luna list 1.05M tokens in the API. Check your Codex limit with /status and free space with /compact."
 author: "Alex Merced"
 category: "AI Tools"
 bannerImage: "https://i.imgur.com/cpoMZQ8.png"
@@ -15,23 +15,38 @@ slug: 2026-03-context-management-openai-codex
 draft: false
 image: "/images/blog.png"
 canonical: "https://iceberglakehouse.com/posts/2026-03-context-openai-codex/"
+faqs:
+  - question: "What is the Codex context window?"
+    answer: "Codex sets its context window per model. In the OpenAI API documentation, GPT-6 Astra, GPT-6.1 Sol, and GPT-6 Luna each list a 1,050,000-token context window and 128,000 max output tokens. The budget available in a Codex session can differ by client and plan, so run /status in the Codex CLI to see the active model and current token usage."
+  - question: "How do I check how much context Codex is using?"
+    answer: "In the Codex CLI, /status displays the session configuration, the active model, and current token usage. The /statusline command can also show context stats and token counters in the footer."
+  - question: "What happens when a Codex session runs out of context?"
+    answer: "Codex compacts the conversation: it replaces earlier turns with a concise summary so the session can continue. You can trigger this yourself with /compact after a long exchange. The model_auto_compact_token_limit setting in config.toml changes when automatic compaction fires; unset, it uses the model default."
+  - question: "Can I change the Codex context window size?"
+    answer: "Yes. config.toml accepts model_context_window, which defaults to auto for the selected model. Leave it on auto unless you have a specific reason to override it."
+  - question: "Where should durable Codex instructions live?"
+    answer: "In AGENTS.md files and skills checked into the repository. Codex reads the applicable AGENTS.md chain when a run starts, and skills load their full instructions only when selected, so neither fills the window with unused text."
 ---
 
-OpenAI Codex is not a chatbot. It is an autonomous software engineering agent that runs tasks in isolated cloud sandboxes, operates across a browser interface, a command-line tool, and a dedicated macOS app, and can work on multiple tasks in parallel. Because of this architecture, context management in Codex works fundamentally differently from ChatGPT or traditional coding assistants. Instead of conversational context windows, you manage context through persistent configuration files, skill definitions, and project-level instructions that shape how the agent approaches your codebase.
+Codex context management is the practice of giving the coding agent the right repository files, instructions, tools, and task details for the work at hand. The most durable context belongs in version-controlled `AGENTS.md` files and reusable skills; task-specific context belongs in the prompt. Codex is available through the ChatGPT desktop experience, CLI, IDE extension, and cloud workflows, but the exact capabilities depend on the client and environment you use.
 
 > **Cross-posted.** This article's canonical home is [Alex Merced's Lakehouse Blog](https://iceberglakehouse.com/posts/2026-03-context-openai-codex/).
 
-This guide covers every context management mechanism Codex provides, explains when to use each one, and walks through practical strategies for getting the agent to produce reliable, project-aligned results across all three interfaces.
+This guide was reviewed on October 13, 2026 against the [Codex models page](https://learn.chatgpt.com/docs/models), the [OpenAI API model pages](https://developers.openai.com/api/docs/models/gpt-6.1-sol), the [Codex slash commands](https://learn.chatgpt.com/docs/cli/slash-commands), the [sample configuration](https://learn.chatgpt.com/docs/config-file/config-sample), the [official AGENTS.md documentation](https://learn.chatgpt.com/docs/agent-configuration/agents-md), [skills documentation](https://learn.chatgpt.com/docs/build-skills), and [configuration reference](https://learn.chatgpt.com/docs/config-file/config-reference). Product behavior changes, so use those pages as the authority for current settings.
 
 ## Understanding How Codex Handles Context
 
-Codex operates with a large context window (approximately 192, 000 tokens), which means it can reason about substantial portions of a codebase in a single task. But context in Codex is not just conversation history. The agent assembles its context dynamically from multiple sources:
+**The short answer:** the models Codex currently offers (GPT-6 Astra, GPT-6.1 Sol, and GPT-6 Luna) each list a 1,050,000-token context window and 128,000 max output tokens in the OpenAI API documentation. Codex picks the window for the selected model automatically (`model_context_window` defaults to `auto`), and the budget you get in a session can be lower than the API figure depending on client and plan. Run `/status` in the CLI to see the active model and current token usage rather than trusting any number in an article, this one included.
 
-1. **Your repository:** Codex clones your repo into a sandboxed environment for each task
-2. **AGENTS.md files:** Persistent instructions that live in your repository
-3. **Skills:** Reusable bundles of instructions, templates, and scripts
-4. **Task prompt:** Your natural language description of what to do
-5. **Previous interactions:** In the desktop app, persistent project memory carries context across sessions
+When a session fills up, Codex compacts it: earlier turns are replaced with a summary so work can continue. `/compact` does this on demand, and `model_auto_compact_token_limit` in `config.toml` changes when it happens automatically. A large window is not a target, though. Focused context is easier for the model to reason over than a repository dump, and compaction always loses some detail.
+
+Depending on the client and task, Codex can assemble working context from:
+
+1. **The working directory or repository:** files that Codex can inspect in the selected local, worktree, or cloud environment
+2. **AGENTS.md guidance:** the eligible global, project, and directory instructions discovered at the start of the run
+3. **Skills:** reusable instructions with optional scripts, references, assets, and declared dependencies
+4. **The task prompt and conversation:** the requested outcome, constraints, decisions, and follow-up guidance
+5. **Tools and integrations:** external data made available through built-in tools, plugins, apps, or MCP connections
 
 The key insight is that most of Codex's context comes from your repository itself, not from conversational back-and-forth. This makes context management a matter of preparing your repo and configuration files rather than crafting perfect prompts.
 
@@ -39,7 +54,7 @@ The key insight is that most of Codex's context comes from your repository itsel
 
 ### Minimal Context (Quick Tasks)
 
-For simple, self-contained tasks like "add input validation to this function" or "write unit tests for utils.py, " the task prompt and the codebase itself provide sufficient context. Codex will explore the relevant files, understand the patterns, and produce targeted changes. You do not need to provide extensive background.
+For simple, self-contained tasks like "add input validation to this function" or "write unit tests for utils.py," the task prompt and the codebase itself provide sufficient context. Codex will explore the relevant files, understand the patterns, and produce targeted changes. You do not need to provide extensive background.
 
 ### Moderate Context (Targeted Changes)
 
@@ -47,15 +62,15 @@ For tasks that require understanding project conventions, architectural decision
 
 ### Comprehensive Context (Large Features or Ongoing Work)
 
-For multi-step features, large refactors, or ongoing development work, invest in Skills and detailed AGENTS.md files. These provide the agent with your coding standards, architectural patterns, testing requirements, and deployment constraints. The desktop app's persistent project memory also helps here by retaining context across sessions.
+For multi-step features, large refactors, or ongoing development work, invest in skills and layered `AGENTS.md` files. Keep decisions that must survive across sessions in the repository rather than relying on undocumented memory behavior.
 
 ## AGENTS.md: The Foundation of Codex Context
 
-AGENTS.md is the most important context management tool for Codex. It is a Markdown file that lives in your repository and provides persistent instructions to the agent. Codex reads AGENTS.md at the beginning of every task.
+`AGENTS.md` is a Markdown instruction file for stable project guidance. Codex reads the applicable instruction chain once when a run begins; in the CLI TUI, that usually means once per launched session.
 
 ### How It Works
 
-Place an `AGENTS.md` file at the root of your repository. Codex loads it automatically before starting any task. Think of it as a briefing document that tells the agent everything it needs to know about your project.
+At global scope, Codex checks its home directory for `AGENTS.override.md` and then `AGENTS.md`, using the first non-empty match. At project scope it walks from the project root toward the current working directory, checking each directory for an override, a regular `AGENTS.md`, or configured fallback filename. This makes directory-level guidance useful in monorepos while keeping shared rules at the root.
 
 ### What to Include
 
@@ -63,23 +78,27 @@ Place an `AGENTS.md` file at the root of your repository. Codex loads it automat
 # AGENTS.md
 
 ## Project Overview
+
 This is a Next.js 15 application with a Python FastAPI backend.
 The frontend uses TypeScript, Tailwind CSS, and Zustand for state management.
 The backend uses SQLAlchemy with PostgreSQL.
 
 ## Coding Standards
+
 - Use functional components with hooks (no class components)
 - All API endpoints must include input validation using Pydantic
 - Write tests for every new function using pytest (backend) and Vitest (frontend)
 - Use conventional commit messages: feat:, fix:, refactor:, docs:, test:
 
 ## Architecture
+
 - Frontend routes are in src/app/ (App Router)
 - API routes are in backend/api/routes/
 - Database models are in backend/models/
 - Shared types are in shared/types/
 
 ## Constraints
+
 - Do not modify the database schema without explicit approval
 - Do not add new dependencies without noting them in the PR description
 - All environment variables must be documented in .env.example
@@ -93,7 +112,7 @@ For monorepos or large projects, you can place AGENTS.md files at different leve
 - **Service directories:** Service-specific conventions (e.g., `backend/AGENTS.md`, `frontend/AGENTS.md`)
 - **Global:** `~/.codex/AGENTS.md` for personal preferences that apply across all projects
 
-More specific files supplement (not replace) more general ones. The agent combines all applicable AGENTS.md files when executing a task.
+The discovered files are ordered from broad to specific, with guidance closer to the working directory taking precedence when instructions conflict. An `AGENTS.override.md` replaces the regular file in the same directory.
 
 ### Best Practices
 
@@ -104,7 +123,7 @@ More specific files supplement (not replace) more general ones. The agent combin
 
 ## Skills: Reusable Workflow Bundles
 
-Skills are a step beyond AGENTS.md. They are reusable bundles that package instructions, code templates, API configurations, and scripts into a single invocable unit. Skills let you codify complex workflows so the agent can execute them reliably.
+Skills package reusable instructions in a directory containing a required `SKILL.md` file and optional scripts, references, assets, and UI/dependency metadata. Codex initially sees the skill's name and description, then reads the full instructions when the skill is selected. This progressive disclosure avoids loading every workflow into every prompt.
 
 ### When to Use Skills
 
@@ -114,17 +133,16 @@ Skills are a step beyond AGENTS.md. They are reusable bundles that package instr
 
 ### Creating a Skill
 
-Skills are defined as structured folders with a manifest file:
+For a repository-scoped skill, create it under `.agents/skills/<skill-name>/SKILL.md`. The YAML frontmatter must come first:
 
 ```markdown
-# SKILL.md
-
---
+---
 name: create-api-endpoint
 description: Creates a new REST API endpoint with validation, tests, and documentation
---
+---
 
 ## Steps
+
 1. Create the route file in backend/api/routes/
 2. Define the Pydantic request/response models in backend/api/schemas/
 3. Implement the business logic in backend/services/
@@ -133,51 +151,48 @@ description: Creates a new REST API endpoint with validation, tests, and documen
 6. Update the API changelog
 
 ## Templates
+
 Use the existing endpoint at backend/api/routes/users.py as the reference pattern.
 
 ## Validation
+
 - Run pytest after creating the endpoint
 - Verify the OpenAPI spec is valid
 - Check that all response codes are documented
 ```
 
-Skills can be invoked explicitly by name or triggered automatically when the agent detects a task that matches the skill's description.
+Skills can be invoked explicitly or selected when the task matches the skill description. Because implicit matching depends on that description, make its scope and trigger conditions concrete.
 
-## The Three Interfaces: Context Differences
+## Codex Clients and Environments
 
-### Browser (ChatGPT Sidebar)
+### ChatGPT Desktop and Web
 
-The browser interface runs Codex from within the ChatGPT web application. Context management here is straightforward:
+ChatGPT can organize Codex work into projects and tasks and can run work in local, worktree, or cloud environments when those options are available. Treat the selected project, checkout, and current task as the immediate context boundary.
 
-- **Repository:** Select which repo the agent works on
-- **Task prompt:** Describe what you want done
-- **AGENTS.md:** Loaded automatically from the repo
-- **Results:** The agent produces a diff or pull request for review
+- **Project or directory:** Determines which files and repository state are available
+- **Task prompt:** Defines the outcome and constraints for this run
+- **Repository instructions and skills:** Supply durable, version-controlled guidance
+- **Tools and plugins:** Add access to browsers, services, and specialized workflows
 
-This interface is best for individual tasks that you want to review before merging. Context is session-scoped; each task gets a fresh sandbox.
+Git worktrees are useful when separate tasks need isolated repository state. A local task can instead operate directly in the saved checkout when that is the intended workflow.
 
 ### CLI (Command Line)
 
-The Codex CLI (`codex`) runs in your terminal and operates on your local codebase. It offers more control over context:
+The Codex CLI (`codex`) runs in your terminal and operates from the current working directory. It offers direct control over the local environment and project configuration:
 
-- **Approval modes:** Choose between Chat (interactive), Agent (approval for writes), and Full Access (autonomous)
+- **Sandbox and approval settings:** Control filesystem, command, and network boundaries
 - **MCP servers:** The CLI supports MCP server integration for connecting external tools
 - **File references:** Point the agent at specific files or directories
 - **Image inputs:** Pass screenshots or design mockups alongside prompts
 - **Interactive mode:** Have a conversation with the agent about your codebase
 
-The CLI is the most flexible interface for context management because you can combine AGENTS.md, MCP servers, and direct file references in a single session.
+User configuration lives in `~/.codex/config.toml`. Trusted projects can add scoped overrides in `.codex/config.toml`, although security-sensitive and machine-local settings remain user- or administrator-controlled.
 
-### Desktop App (macOS)
+### IDE Extension and Cloud Workflows
 
-The desktop app is the most powerful interface for sustained work:
+The IDE extension keeps the active editor and selected code close to the task. Cloud workflows run against a configured remote environment and repository state. In both cases, durable conventions should remain in version-controlled project instructions so the same rules travel between clients.
 
-- **Persistent project memory:** The app retains project history and context across sessions, so you do not have to re-establish context every time
-- **Multi-agent orchestration:** Run multiple agents on different tasks simultaneously, each in its own Git worktree
-- **Visual task management:** See all running and completed tasks in a unified interface
-- **Skills management:** Create, organize, and invoke Skills from the app
-
-The desktop app is best for ongoing development work where you are regularly delegating tasks to Codex throughout your day.
+Client features, supported operating systems, and available models change over time. Check the [official Codex documentation](https://learn.chatgpt.com/docs) instead of using this article as a compatibility matrix.
 
 ## MCP Server Support
 
@@ -205,14 +220,11 @@ For tasks that are purely code-level (refactoring, writing tests, fixing type er
 
 ### Configuration
 
-MCP servers are configured through the CLI:
+MCP configuration and commands evolve. Use the current Codex MCP documentation and verify the server's own launch command rather than copying an untested placeholder. Conceptually, a connection identifies the server process or URL, its credentials, and which tools Codex may call.
 
 ```bash
-# Add a Playwright MCP server for browser testing
-codex mcp add playwright
-
-# Add a custom database MCP server
-codex mcp add my-db-server -command "node /path/to/db-mcp.js"
+# Inspect the commands supported by the installed CLI version
+codex mcp --help
 ```
 
 ## External Documents: When to Use PDFs vs. Markdown
@@ -220,6 +232,7 @@ codex mcp add my-db-server -command "node /path/to/db-mcp.js"
 Codex primarily operates on code, but there are situations where providing external documents improves results.
 
 ### Use Markdown When:
+
 - Writing AGENTS.md or Skills (required format)
 - Providing architectural decision records (ADRs)
 - Sharing coding standards or style guides
@@ -228,6 +241,7 @@ Codex primarily operates on code, but there are situations where providing exter
 Markdown is the native format for Codex context. It parses cleanly, supports code blocks, and is version-controllable in Git.
 
 ### Use PDFs When:
+
 - Referencing published specifications (RFC documents, protocol specs)
 - Sharing design documents with diagrams that do not translate well to Markdown
 - Providing compliance or regulatory requirements that exist in PDF form
@@ -245,7 +259,7 @@ Codex supports Automations, which are scheduled tasks that run in the background
 - **Documentation updates:** Automatically update API documentation after code changes
 - **Test maintenance:** Periodically scan for broken or flaky tests
 
-Automations use the same AGENTS.md and Skills context as manual tasks, ensuring consistency between scheduled and ad-hoc work.
+An automation replays its saved prompt on a schedule. The files, skills, and tools available to that run depend on its destination and configured execution environment, so make the prompt self-contained and keep required project guidance in the repository.
 
 ## Advanced Patterns
 
@@ -260,7 +274,7 @@ Combine multiple context sources for complex tasks:
 5. **Task prompt:** The specific thing you want done now
 6. **MCP servers:** Live external data for verification
 
-Each layer adds specificity without overriding the layers above it.
+Each layer adds specificity. When instructions conflict, higher-priority system or administrator policy wins, and more specific project guidance can override broader project guidance.
 
 ### The Multi-Agent Pattern
 
@@ -282,7 +296,7 @@ Review the agent's analysis, then use it as context for the actual implementatio
 
 ## Common Mistakes
 
-1. **Skipping AGENTS.md:** Without AGENTS.md, the agent has no guidance on project conventions and will produce code that technically works but does not match your style.
+1. **Skipping durable project guidance:** Without an applicable `AGENTS.md`, Codex must infer conventions from the repository and task, which increases the chance of inconsistent choices.
 
 2. **Overly broad tasks:** "Improve the application" is too vague. "Add rate limiting to the /api/users endpoint using express-rate-limit with a 100-request-per-minute window" gives the agent clear parameters.
 
@@ -291,6 +305,28 @@ Review the agent's analysis, then use it as context for the actual implementatio
 4. **Not using Skills for repeatable work:** If you find yourself writing the same type of task prompt repeatedly, extract it into a Skill.
 
 5. **Using MCP when you do not need it:** Adding MCP servers increases complexity and potential failure points. Only connect external tools when the task genuinely requires external data.
+
+## Codex Context Window FAQ
+
+### What is the Codex context window?
+
+Codex sets its context window per model. In the OpenAI API documentation, GPT-6 Astra, GPT-6.1 Sol, and GPT-6 Luna each list a 1,050,000-token context window and 128,000 max output tokens. The budget available in a Codex session can differ by client and plan, so run `/status` in the Codex CLI to see the active model and current token usage.
+
+### How do I check how much context Codex is using?
+
+In the Codex CLI, `/status` displays the session configuration, the active model, and current token usage. The `/statusline` command can also show context stats and token counters in the footer.
+
+### What happens when a Codex session runs out of context?
+
+Codex compacts the conversation: it replaces earlier turns with a concise summary so the session can continue. You can trigger this yourself with `/compact` after a long exchange. The `model_auto_compact_token_limit` setting in `config.toml` changes when automatic compaction fires; unset, it uses the model default.
+
+### Can I change the Codex context window size?
+
+Yes. `config.toml` accepts `model_context_window`, which defaults to auto for the selected model. Leave it on auto unless you have a specific reason to override it.
+
+### Where should durable Codex instructions live?
+
+In AGENTS.md files and skills checked into the repository. Codex reads the applicable AGENTS.md chain when a run starts, and skills load their full instructions only when selected, so neither fills the window with unused text.
 
 ## Go Deeper
 
@@ -303,11 +339,3 @@ To learn more about working effectively with AI coding tools, context engineerin
 And for a fictional take on where AI is heading:
 
 - [The Emperors of A.I. Valley: A Novel of Power, Code, and the War for the Future](https://www.amazon.com/Emperors-I-Valley-Novel-Future/dp/B0GQHKF4ZT/) is a novel about the power struggles and ethical dilemmas behind the companies building the most powerful AI systems in the world.
-
-## Go further
-
-- [Codex CLI](https://openagenticplatform.com/knowledge-base/codex-cli): a neutral profile of the Codex CLI on Open Agentic Platform, covering its sandbox, approvals, and model options.
-- [Harnesses and brokers](https://openagenticplatform.com/knowledge-base/harnesses-and-brokers): the layer these tools belong to, and what to check before you commit to one.
-- [Agent Skills](https://openagenticplatform.com/knowledge-base/agent-skills): the open format for packaging reusable instructions that many coding agents load on demand.
-- [Model Context Protocol](https://openagenticplatform.com/knowledge-base/model-context-protocol): why one MCP server works across every harness that supports the protocol.
-- [Being Productive with OpenAI Codex](https://books.alexmerced.com/books/being-productive-with-openai-codex/) by Alex Merced, a practical guide to working with OpenAI Codex ([Buy on Amazon](https://www.amazon.com/dp/B0H766477L)).

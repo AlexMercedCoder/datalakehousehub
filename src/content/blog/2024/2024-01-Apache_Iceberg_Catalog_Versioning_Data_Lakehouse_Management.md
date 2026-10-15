@@ -18,6 +18,8 @@ Managing vast amounts of data efficiently and effectively is crucial for any org
 
 > **Cross-posted.** This article's canonical home is [Alex Merced's Lakehouse Blog](https://iceberglakehouse.com/posts/2024-1-apache-iceberg-git-life-catalog-versioning/).
 
+> **Update (October 2026):** Dremio Arctic has since become Dremio Catalog, which is built on Apache Polaris. Project Nessie continues as its own open source project.
+
 > [Blog: Try Dremio and Nessie on your laptop](https://www.dremio.com/blog/intro-to-dremio-nessie-and-apache-iceberg-on-your-laptop/?utm_source=alexmerced&utm_medium=external_blog&utm_campaign=legacy_post)
 
 Imagine managing your data with the same flexibility and ease as code versioning in Git. That's the revolutionary idea behind Project Nessie. It brings Git-like semantics to data, enabling data teams to handle versioning at the catalog level with unprecedented ease. This approach to data versioning not only enhances data reliability and reproducibility but also opens up new possibilities for data experimentation and rollback, without the risk of data corruption or loss.
