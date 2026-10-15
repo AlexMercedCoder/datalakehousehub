@@ -111,7 +111,7 @@ const [featuredRead, ...secondaryReads] = mustReads;
 
 <Base
   title="The Data Lakehouse Hub"
-  meta_title="Data Lakehouse Hub | News, Community, Apache Iceberg & Lakehouse Architecture"
+  meta_title="Data Lakehouse Hub | Apache Iceberg News and Community"
   description="News, newsletters, and community for the data lakehouse ecosystem. Weekly roundups, deep dives into Apache Iceberg, and expert guides from practitioners."
   canonical="https://datalakehousehub.com/"
 >
@@ -250,13 +250,19 @@ const [featuredRead, ...secondaryReads] = mustReads;
             <div class="lg:col-6">
               <div class="relative mx-auto max-w-[620px]">
                 <div class="absolute -inset-4 rounded-[28px] bg-gradient-to-tr from-primary/25 via-transparent to-accent/25 blur-2xl dark:from-darkmode-primary/25 dark:to-darkmode-accent/20" />
-                <Image
-                  class="surface relative w-full rounded-2xl p-2 shadow-[0_28px_70px_-30px_rgba(16,28,40,.55)]"
-                  src={banner?.image}
-                  width={850}
-                  height={442}
+                {/* WebP copies of the 700 KB PNG, generated once with sharp
+                    (public/images/hero-v2-{640,1200}.webp). */}
+                <img
+                  class="surface relative h-auto w-full rounded-2xl p-2 shadow-[0_28px_70px_-30px_rgba(16,28,40,.55)]"
+                  src="/images/hero-v2-1200.webp"
+                  srcset="/images/hero-v2-640.webp 640w, /images/hero-v2-1200.webp 1200w"
+                  sizes="(min-width: 1024px) 620px, 100vw"
+                  width={1200}
+                  height={800}
                   alt="The Data Lakehouse Hub"
                   loading="eager"
+                  fetchpriority="high"
+                  decoding="async"
                 />
               </div>
             </div>
@@ -570,12 +576,17 @@ const [featuredRead, ...secondaryReads] = mustReads;
               class="absolute -inset-3 rounded-3xl bg-gradient-to-br from-primary/15 to-transparent blur-xl dark:from-darkmode-primary/15"
             >
             </div>
-            <Image
-              src={workflow!.image}
+            {/* WebP copies of workflow-v2.png.png (860 KB). */}
+            <img
+              src="/images/workflow-v2-1200.webp"
+              srcset="/images/workflow-v2-640.webp 640w, /images/workflow-v2-1200.webp 1200w"
+              sizes="(min-width: 1024px) 1200px, 100vw"
               alt="How the modern open data stack fits together"
-              width={1920}
-              height={414}
-              class="surface relative w-full rounded-2xl p-3"
+              width={1200}
+              height={800}
+              loading="lazy"
+              decoding="async"
+              class="surface relative h-auto w-full rounded-2xl p-3"
             />
           </div>
         </div>
