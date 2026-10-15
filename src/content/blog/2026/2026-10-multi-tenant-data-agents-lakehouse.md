@@ -11,10 +11,7 @@ tags:
 slug: "multi-tenant-data-agents-lakehouse"
 draft: false
 image: "/images/blog.png"
-canonical: https://iceberglakehouse.com/posts/multi-tenant-data-agents-lakehouse/
 ---
-
-> **Cross-posted.** This article's canonical home is [Alex Merced's Lakehouse Blog](https://iceberglakehouse.com/posts/multi-tenant-data-agents-lakehouse/).
 
 A software company adds an AI analyst to its product. Every customer gets a chat box that answers questions about their own usage, billing, and performance data. The demo uses one customer's data and looks great. Then the team starts planning the rollout to 800 customers, and the questions get uncomfortable. Where does each customer's data live? How does the agent know which customer is asking? What stops a cleverly worded prompt from pulling another customer's numbers? What happens to the few-shot examples, the cached results, and the conversation memory that the agent builds up over time?
 
