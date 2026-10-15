@@ -19,7 +19,6 @@ const { post } = Astro.props;
 const { Content, headings } = await render(post);
 const { title, description, date, category } = post.data;
 const readTime = readingTime(post.body);
-const generatedImage = `/open-graph/${post.id}.png`;
 ---
 
 <section class="section pt-12">
@@ -92,10 +91,14 @@ const generatedImage = `/open-graph/${post.id}.png`;
 
           <div class="mb-12">
             <img
-              src={generatedImage}
+              src={`/open-graph/w/1200/${post.id}.webp`}
+              srcset={`/open-graph/w/640/${post.id}.webp 640w, /open-graph/w/1200/${post.id}.webp 1200w`}
+              sizes="(min-width: 1024px) 896px, 100vw"
               alt={title}
-              height={500}
-              width={1000}
+              height={630}
+              width={1200}
+              fetchpriority="high"
+              decoding="async"
               class="w-full rounded-2xl border border-border shadow-[0_28px_60px_-30px_rgba(16,28,40,.55)] dark:border-darkmode-border"
             />
           </div>

@@ -35,10 +35,12 @@ if (post.data.relatedPosts && post.data.relatedPosts.length > 0) {
                     class="block hover:text-primary transition duration-300"
                 >
                     <img
-                    src={`/open-graph/${post.id}.png`}
+                    src={`/open-graph/w/640/${post.id}.webp`}
                     alt={post.data.title}
-                    width={445}
-                    height={230}
+                    width={640}
+                    height={336}
+                    loading="lazy"
+                    decoding="async"
                     class="w-full rounded-lg bg-gray-200 dark:bg-gray-800"
                     />
                 </a>
