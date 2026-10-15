@@ -6,7 +6,7 @@ import { getCollection } from "astro:content";
 const SITE = "https://datalakehousehub.com";
 
 export const GET: APIRoute = async () => {
-  const posts = (await getCollection("blog", ({ data }) => !data.draft))
+  const posts = (await getCollection("blog", ({ id, data }) => !data.draft && id !== "index"))
     .filter((p) => !p.data.canonical || p.data.canonical.startsWith(`${SITE}/`))
     .sort((a, b) => (b.data.date?.valueOf() ?? 0) - (a.data.date?.valueOf() ?? 0));
 
