@@ -2,7 +2,7 @@
 title: "Data Vault Modeling: Hubs, Links, and Satellites"
 date: 2026-02-18T10:20:00Z
 pubDatetime: 2026-02-18T10:20:00Z
-description: "A deep dive into Data Vault modeling : Hubs, Links, and Satellites explained with examples, and how to present Data Vault output for analytics consumption."
+description: "Data Vault modeling explained: Hubs hold business keys, Links hold relationships, and Satellites hold history, plus how to expose Data Vault data for analytics."
 author: "Alex Merced"
 category: "Data Modeling"
 bannerImage: "https://i.imgur.com/cpoMZQ8.png"

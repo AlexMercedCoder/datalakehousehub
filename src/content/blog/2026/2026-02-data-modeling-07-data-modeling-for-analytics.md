@@ -1,8 +1,8 @@
 ---
-title: "Data Modeling for Analytics: Optimize for Queries, Not Transactions"
+title: "Data Modeling for Analytics: Optimize for Queries"
 date: 2026-02-18T10:00:00Z
 pubDatetime: 2026-02-18T10:00:00Z
-description: "How to optimize data models for analytical queries instead of transactional workloads : denormalization strategies, wide tables, and pre-aggregation patterns."
+description: "Why analytics needs a different data model than your application: denormalization, wide tables, and pre-aggregation patterns that make analytical queries fast."
 author: "Alex Merced"
 category: "Data Modeling"
 bannerImage: "https://i.imgur.com/cpoMZQ8.png"

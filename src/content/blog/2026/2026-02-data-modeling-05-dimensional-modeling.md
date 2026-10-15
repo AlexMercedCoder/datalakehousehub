@@ -1,8 +1,8 @@
 ---
-title: "Dimensional Modeling: Facts, Dimensions, and Grains"
+title: "Dimensional Modeling Explained: Facts, Dimensions, Grain"
 date: 2026-02-18T09:40:00Z
 pubDatetime: 2026-02-18T09:40:00Z
-description: "Master dimensional modeling with facts, dimensions, and grains : the foundation of analytical data warehousing and lakehouse design."
+description: "Dimensional modeling organizes analytics data into fact tables and dimension tables. Learn how to declare the grain, design both table types, and conform them."
 author: "Alex Merced"
 category: "Data Modeling"
 bannerImage: "https://i.imgur.com/cpoMZQ8.png"
@@ -14,6 +14,15 @@ slug: 2026-02-data-modeling-05-dimensional-modeling
 draft: false
 image: "/images/blog.png"
 canonical: "https://iceberglakehouse.com/posts/2026-02-dm-dimensional-modeling/"
+faqs:
+  - question: "What is dimensional modeling?"
+    answer: "Dimensional modeling is the approach popularized by Ralph Kimball for organizing analytics data into fact tables, which record measurable events, and dimension tables, which describe the who, what, where, when, and how of those events. It optimizes for query speed and readability."
+  - question: "What is the grain of a fact table?"
+    answer: "The grain states exactly what one row in a fact table represents, such as one order line item or one account balance per month. Declare it first, because mixing grains in one table makes every aggregation wrong."
+  - question: "What are the three types of fact tables?"
+    answer: "Transaction fact tables store one row per event, periodic snapshot fact tables capture state at regular intervals such as monthly balances, and accumulating snapshot fact tables track a process with a date column for each milestone."
+  - question: "What is a conformed dimension?"
+    answer: "A conformed dimension, such as Date, Customer, or Product, is shared by multiple fact tables. It lets you compare sales, support, and other processes with the same definitions and filters."
 ---
 
 ![Dimensional model showing a central fact table connected to surrounding dimension tables](/images/blog/data-modeling/dimensional-modeling.png)
@@ -44,20 +53,20 @@ Every analysis query joins a fact table to one or more dimension tables. "Revenu
 
 ## Declaring the Grain
 
-![Grain declaration as the foundation : one row per transaction per line item](/images/blog/data-modeling/grain-declaration.png)
+![Grain declaration as the foundation: one row per transaction per line item](/images/blog/data-modeling/grain-declaration.png)
 
 The grain is the most important decision in dimensional modeling. It declares what one row in your fact table represents.
 
-- "One row per order line item" : each product within an order gets its own row
-- "One row per daily customer session" : each customer's daily activity is aggregated into one row
-- "One row per monthly account balance" : snapshot taken once per month
+- "One row per order line item": each product within an order gets its own row
+- "One row per daily customer session": each customer's daily activity is aggregated into one row
+- "One row per monthly account balance": snapshot taken once per month
 
 **Getting the grain right matters because:**
 - Too coarse: You lose detail. If your grain is "one row per order" you can't analyze individual line items.
 - Too fine: You create an enormous table that's expensive to query. If your grain is "one row per page view" in a high-traffic application, the table grows by billions of rows per month.
 - Inconsistent: If some rows represent individual items and others represent aggregated totals, every calculation produces wrong results.
 
-Declare the grain first. Then identify which dimensions apply at that grain, and which numeric measures belong in the fact table. This order is not optional : skip it, and the model breaks down.
+Declare the grain first. Then identify which dimensions apply at that grain, and which numeric measures belong in the fact table. This order is not optional: skip it, and the model breaks down.
 
 ## Designing Fact Tables
 
@@ -79,17 +88,17 @@ Best practices for fact tables:
 
 Well-designed dimensions follow predictable patterns:
 
-**Denormalize.** Include all descriptive attributes in one table. Product name, category, subcategory, brand, manufacturer, department : all in dim_products. This eliminates joins and makes queries readable.
+**Denormalize.** Include all descriptive attributes in one table. Product name, category, subcategory, brand, manufacturer, department: all in dim_products. This eliminates joins and makes queries readable.
 
 **Use surrogate keys.** Assign an integer key (product_key) that acts as the primary key. Keep the natural business key (product_sku) as a regular attribute. Surrogate keys insulate your model from source system key changes.
 
-**Add audit columns.** Include effective_date, expiry_date, and is_current flag for tracking changes over time (Slowly Changing Dimensions : covered in a separate article).
+**Add audit columns.** Include effective_date, expiry_date, and is_current flag for tracking changes over time (Slowly Changing Dimensions: covered in a separate article).
 
 **Include "junk" dimensions.** Low-cardinality flags and indicators (is_promotional, is_online, payment_type) can be combined into a single "junk dimension" instead of cluttering the fact table.
 
 ## Conformed Dimensions
 
-A conformed dimension is shared across multiple fact tables. The best example is the Date dimension : every fact table references dates, and they should all use the same date dimension to ensure consistent filtering and grouping.
+A conformed dimension is shared across multiple fact tables. The best example is the Date dimension: every fact table references dates, and they should all use the same date dimension to ensure consistent filtering and grouping.
 
 Other conformed dimensions: Customer, Product, Employee, Geography. When Sales and Support both reference the same dim_customers table, you can analyze customer behavior across both domains without reconciling different customer definitions.
 
@@ -97,10 +106,28 @@ Conformed dimensions are the connective tissue of a dimensional model. Without t
 
 Platforms like [Dremio](https://www.dremio.com/blog/agentic-analytics-semantic-layer/?utm_source=ev_buffer&utm_medium=influencer&utm_campaign=next-gen-dremio&utm_term=blog-021826-02-18-2026&utm_content=alexmerced) support dimensional modeling through virtual datasets. Fact and dimension views live in the Silver layer of a Medallion Architecture. Conformed dimensions are defined once and referenced by multiple fact views. Wikis document what each dimension attribute means, and AI agents use that documentation to generate accurate queries.
 
+## Frequently Asked Questions
+
+### What is dimensional modeling?
+
+Dimensional modeling is the approach popularized by Ralph Kimball for organizing analytics data into fact tables, which record measurable events, and dimension tables, which describe the who, what, where, when, and how of those events. It optimizes for query speed and readability.
+
+### What is the grain of a fact table?
+
+The grain states exactly what one row in a fact table represents, such as one order line item or one account balance per month. Declare it first, because mixing grains in one table makes every aggregation wrong.
+
+### What are the three types of fact tables?
+
+Transaction fact tables store one row per event, periodic snapshot fact tables capture state at regular intervals such as monthly balances, and accumulating snapshot fact tables track a process with a date column for each milestone.
+
+### What is a conformed dimension?
+
+A conformed dimension, such as Date, Customer, or Product, is shared by multiple fact tables. It lets you compare sales, support, and other processes with the same definitions and filters.
+
 ## What to Do Next
 
 ![Conformed dimensions shared across multiple fact tables in a unified model](/images/blog/data-modeling/conformed-dimensions.png)
 
-Start your dimensional model with one business process : the one your team queries most. Declare the grain. Identify the dimensions. Build the fact table. Then expand: pick the next business process, reuse the conformed dimensions, and add new ones as needed.
+Start your dimensional model with one business process: the one your team queries most. Declare the grain. Identify the dimensions. Build the fact table. Then expand: pick the next business process, reuse the conformed dimensions, and add new ones as needed.
 
 [Try Dremio Cloud free for 30 days](https://www.dremio.com/get-started?utm_source=ev_buffer&utm_medium=influencer&utm_campaign=next-gen-dremio&utm_term=blog-021826-02-18-2026&utm_content=alexmerced)

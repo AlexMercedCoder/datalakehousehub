@@ -2,7 +2,7 @@
 title: "Slowly Changing Dimensions: Types 1-3 with Examples"
 date: 2026-02-18T09:50:00Z
 pubDatetime: 2026-02-18T09:50:00Z
-description: "Learn Slowly Changing Dimension types 1-3 with concrete examples and a decision guide for choosing the right SCD type for your use case."
+description: "Slowly Changing Dimensions Types 1, 2, and 3 explained with examples: overwrite, add a history row, or add a column, plus how to choose the right SCD type."
 author: "Alex Merced"
 category: "Data Modeling"
 bannerImage: "https://i.imgur.com/cpoMZQ8.png"

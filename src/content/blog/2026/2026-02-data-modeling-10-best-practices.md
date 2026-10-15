@@ -2,7 +2,7 @@
 title: "Data Modeling Best Practices: 7 Mistakes to Avoid"
 date: 2026-02-18T10:30:00Z
 pubDatetime: 2026-02-18T10:30:00Z
-description: "Seven common data modeling mistakes and how to avoid them : from naming conventions to governance integration."
+description: "Seven data modeling mistakes and fixes: undefined grain, cryptic names, skipped conceptual models, over-normalizing, thin docs, and ignored governance."
 author: "Alex Merced"
 category: "Data Modeling"
 bannerImage: "https://i.imgur.com/cpoMZQ8.png"
