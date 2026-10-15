@@ -310,7 +310,7 @@ When a task depends on code outside the files you have open, pin those files or 
 
 ### The Flow-Aware Development Pattern
 
-Leverage Windsurf's flow tracking by working naturally:
+Put Windsurf's flow tracking to work by working naturally:
 
 1. Make edits in the editor (Windsurf tracks your changes)
 2. Run tests in the terminal (Windsurf observes the results)
@@ -350,7 +350,7 @@ At the end of each working session, review what Windsurf has stored as Memories.
 
 4. **Over-specifying context in prompts.** If your Rules and Memories are well-configured, you do not need to re-explain your conventions in every prompt.
 
-5. **Not leveraging flow awareness.** Windsurf tracks your actions. Instead of explaining what you just did, ask questions that build on your recent work.
+5. **Ignoring flow awareness.** Windsurf tracks your actions. Instead of explaining what you just did, ask questions that build on your recent work.
 
 6. **Loading too many MCP tools.** Every enabled tool costs context, and Cascade caps out at 100. Turn off servers you are not using for the current task.
 

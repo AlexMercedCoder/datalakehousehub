@@ -1,7 +1,7 @@
 ---
 slug: "2026-03-context-management-opencode"
-title: "OpenCode Context Management: Rules, Agents, Models, and MCP"
-description: "Configure OpenCode project instructions, agent modes, model providers, context compaction, and MCP tools without relying on stale syntax."
+title: "OpenCode Context Management: AGENTS.md, Agents, and MCP"
+description: "OpenCode reads AGENTS.md (CLAUDE.md as fallback), config from opencode.json, MCP servers under the mcp key, and compacts long sessions with /compact or auto."
 date: 2026-03-15T10:00:00Z
 pubDatetime: 2026-03-15T10:00:00Z
 draft: false
@@ -16,11 +16,24 @@ tags:
   - "context management"
   - "coding agents"
   - "MCP"
+faqs:
+  - question: "Does OpenCode use AGENTS.md or CLAUDE.md?"
+    answer: "OpenCode reads AGENTS.md: a project-root file for the repo and ~/.config/opencode/AGENTS.md for personal rules. It falls back to CLAUDE.md (project) and ~/.claude/CLAUDE.md only when the AGENTS.md equivalent is missing, and OPENCODE_DISABLE_CLAUDE_CODE=1 turns that fallback off. Run /init to generate or improve AGENTS.md."
+  - question: "Where is the OpenCode config file?"
+    answer: "Global settings live in ~/.config/opencode/opencode.json and project settings in opencode.json (or opencode.jsonc) at the project root. Configs merge, and later sources override earlier ones only for conflicting keys, so a project can override your defaults."
+  - question: "How do I add an MCP server to OpenCode?"
+    answer: "Add it under the mcp key in opencode.json. Local servers use type local with a command array and optional environment; remote servers use type remote with a url and optional headers or OAuth. opencode mcp list shows servers and auth status, and opencode mcp auth starts OAuth."
+  - question: "How does OpenCode handle a full context window?"
+    answer: "With compaction.auto (on by default), OpenCode compacts the session when context is full. You can run /compact (alias /summarize) yourself, enable compaction.prune to drop old tool outputs, and set compaction.reserved to keep a token buffer."
+  - question: "What is the difference between OpenCode's Build and Plan agents?"
+    answer: "Build is the default primary agent with all tools enabled. Plan is restricted for analysis: file edits and bash commands are set to ask by default. Press Tab to switch between them, and @-mention subagents such as general or explore for side tasks."
 ---
 
 OpenCode builds context from the conversation, files it inspects or that you attach, project instructions, enabled tools, and the selected model's limits. Good context management is therefore less about loading the entire repository and more about giving the agent durable rules plus a narrow, verifiable task.
 
-This guide was reviewed on September 11, 2026. OpenCode changes quickly, so use the linked official documentation to confirm configuration details before copying an example into production.
+**The short answer:** OpenCode loads durable instructions from `AGENTS.md` (project root, plus `~/.config/opencode/AGENTS.md` for personal rules), falling back to `CLAUDE.md` only when no `AGENTS.md` exists. Settings live in `opencode.json` or `opencode.jsonc`, merged from `~/.config/opencode/` and the project root. MCP servers go under the `mcp` key. You add files to a prompt with `@`, switch between the Build and Plan agents with Tab, and recover space with `/compact` or the default auto-compaction.
+
+This guide was reviewed on October 15, 2026 against OpenCode's docs for [rules](https://opencode.ai/docs/rules/), [config](https://opencode.ai/docs/config/), [agents](https://opencode.ai/docs/agents/), the [TUI](https://opencode.ai/docs/tui/), and [MCP servers](https://opencode.ai/docs/mcp-servers/). OpenCode changes quickly, so confirm configuration details there before copying an example into production.
 
 ## The context layers
 
@@ -45,7 +58,7 @@ OpenCode supports project configuration in `opencode.json` or `opencode.jsonc`. 
 }
 ```
 
-The model identifier and provider availability above are examples, not a recommendation. Select an identifier that your configured provider currently exposes. OpenCode merges configuration from supported locations, so a project can override user defaults.
+Models use a `provider/model` format. The identifier above is an example, not a recommendation; select one your configured provider currently exposes. OpenCode merges configuration rather than replacing it: global settings in `~/.config/opencode/opencode.json` load first, a file named by `OPENCODE_CONFIG` loads next, and the project's `opencode.json` overrides both, but only for keys that conflict. A `small_model` setting picks a cheaper model for lightweight jobs such as title generation.
 
 Use the official [configuration guide](https://opencode.ai/docs/config/) and schema as the source of truth. Older articles often show a singular `provider` object or obsolete model names; both can produce confusing failures on a current installation.
 
@@ -59,13 +72,24 @@ Project instructions should answer questions the agent would otherwise rediscove
 - What counts as complete verification?
 - Which risky operations require explicit approval?
 
-OpenCode can use an `AGENTS.md` file and can reference additional instruction files through configuration. Keep the top-level file short and route detailed guidance to nearby documents. See the current [rules documentation](https://opencode.ai/docs/rules/) for discovery and precedence behavior.
+OpenCode reads a project-root `AGENTS.md`, which applies to that directory and its subdirectories, plus a personal `~/.config/opencode/AGENTS.md` for every session. If a project has no `AGENTS.md`, OpenCode falls back to `CLAUDE.md`, and to `~/.claude/CLAUDE.md` globally; set `OPENCODE_DISABLE_CLAUDE_CODE=1` to turn that off. Run `/init` to generate or improve the file, then commit it.
+
+OpenCode does not follow `@file` references inside `AGENTS.md`. To pull in more files, list them in the `instructions` field, which accepts paths, globs, and remote URLs and combines them with `AGENTS.md`:
+
+```jsonc
+{
+  "$schema": "https://opencode.ai/config.json",
+  "instructions": ["CONTRIBUTING.md", "docs/guidelines.md", ".cursor/rules/*.md"]
+}
+```
+
+Keep the top-level file short and route detailed guidance to nearby documents. See the current [rules documentation](https://opencode.ai/docs/rules/) for discovery and precedence behavior.
 
 Avoid pasting an entire style guide into every prompt. Durable rules are easier to review in version control and leave more context for the actual task.
 
 ## Plan and build agents
 
-OpenCode includes primary agents for different modes of work. Plan mode is designed for analysis with restricted modification capabilities; build mode is designed to make changes. Additional agents can be configured for focused jobs.
+OpenCode includes two primary agents. **Build** is the default and has all tools enabled. **Plan** is meant for analysis: file edits and bash commands are set to `ask` by default. Press Tab to cycle between primary agents. Two built-in subagents handle side tasks: **General** for multi-step research (it can change files) and **Explore**, a fast read-only agent for searching a codebase. Mention one with `@`, for example `@explore find where we validate user input`, so its search output stays out of your main session. Custom agents go in the `agent` key of `opencode.json` or as Markdown files in `.opencode/agents/` (project) or `~/.config/opencode/agents/` (global).
 
 A useful workflow is:
 
@@ -80,13 +104,23 @@ The distinction is a control boundary, not extra context capacity. Agent definit
 
 Start with the smallest useful set: the failing test, the implementation it covers, and the nearest instructions. Let repository search reveal imports and callers. This is usually more reliable than preloading a large directory whose irrelevant content competes for attention.
 
+In the TUI, type `@` followed by part of a file name to fuzzy-search and attach that file's contents. Start a message with `!` to run a shell command and add its output to the conversation, which is a clean way to hand the agent an exact error.
+
 For a bug, include the observed error and exact reproduction command. For a feature, include acceptance criteria and the public interface. For a review, ask for findings only so the agent does not silently turn diagnosis into implementation.
 
 ## Context compaction and session boundaries
 
-Long sessions eventually accumulate superseded plans, noisy command output, and repeated file contents. OpenCode can compact session history, but a summary cannot preserve every detail.
+Long sessions eventually accumulate superseded plans, noisy command output, and repeated file contents. OpenCode compacts the session automatically when context is full (`compaction.auto`, on by default). Run `/compact` (alias `/summarize`, keybind `ctrl+x c`) to do it yourself, turn on `compaction.prune` to drop old tool outputs, and set `compaction.reserved` to keep a token buffer so compaction itself does not overflow the window:
 
-Before compaction, capture durable decisions in the repository or a short handoff note. Start a new session when the objective changes materially. A clean session with precise instructions is often better than carrying unrelated history forward.
+```jsonc
+{
+  "compaction": { "auto": true, "prune": true }
+}
+```
+
+A summary cannot preserve every detail.
+
+Before compaction, capture durable decisions in the repository or a short handoff note. Start a new session with `/new` when the objective changes materially, and use `/sessions` to return to an earlier one. A clean session with precise instructions is often better than carrying unrelated history forward.
 
 ## Model and provider selection
 
@@ -100,7 +134,31 @@ For sensitive repositories, a local provider can reduce external transmission, b
 
 MCP servers let OpenCode call external systems. Every enabled server can add tool descriptions to the agent's working context and expands what the agent can do.
 
-Enable only the servers required for the task. Prefer read-only or narrowly scoped credentials, and separate production access from development. Test a server independently before asking an agent to depend on it. The current configuration formats are in OpenCode's [MCP server documentation](https://opencode.ai/docs/mcp-servers/).
+Define servers under the `mcp` key in `opencode.json`:
+
+```jsonc
+{
+  "$schema": "https://opencode.ai/config.json",
+  "mcp": {
+    "my-local-mcp-server": {
+      "type": "local",
+      "command": ["npx", "-y", "my-mcp-command"],
+      "enabled": true,
+      "environment": { "MY_ENV_VAR": "my_env_var_value" }
+    },
+    "my-remote-mcp": {
+      "type": "remote",
+      "url": "https://my-mcp-server.com",
+      "enabled": true,
+      "headers": { "Authorization": "Bearer MY_API_KEY" }
+    }
+  }
+}
+```
+
+`opencode mcp list` shows each server and its auth status, `opencode mcp auth <name>` runs OAuth, and `opencode mcp debug <name>` checks a connection. OpenCode's docs warn that some servers, such as the GitHub MCP server, can add enough tool definitions to exceed the context limit.
+
+Enable only the servers required for the task (set `"enabled": false` on the rest). Prefer read-only or narrowly scoped credentials, and separate production access from development. Test a server independently before asking an agent to depend on it. The current configuration formats are in OpenCode's [MCP server documentation](https://opencode.ai/docs/mcp-servers/).
 
 ## Troubleshooting checklist
 
@@ -128,6 +186,28 @@ A maintainable OpenCode-enabled repository has:
 - automated checks that independently validate agent output.
 
 The strongest context strategy is not maximum input. It is a small set of authoritative instructions, a well-bounded task, and verification that does not depend on the model's confidence.
+
+## Frequently Asked Questions
+
+### Does OpenCode use AGENTS.md or CLAUDE.md?
+
+OpenCode reads AGENTS.md: a project-root file for the repo and ~/.config/opencode/AGENTS.md for personal rules. It falls back to CLAUDE.md (project) and ~/.claude/CLAUDE.md only when the AGENTS.md equivalent is missing, and OPENCODE_DISABLE_CLAUDE_CODE=1 turns that fallback off. Run /init to generate or improve AGENTS.md.
+
+### Where is the OpenCode config file?
+
+Global settings live in ~/.config/opencode/opencode.json and project settings in opencode.json (or opencode.jsonc) at the project root. Configs merge, and later sources override earlier ones only for conflicting keys, so a project can override your defaults.
+
+### How do I add an MCP server to OpenCode?
+
+Add it under the mcp key in opencode.json. Local servers use type local with a command array and optional environment; remote servers use type remote with a url and optional headers or OAuth. opencode mcp list shows servers and auth status, and opencode mcp auth starts OAuth.
+
+### How does OpenCode handle a full context window?
+
+With compaction.auto (on by default), OpenCode compacts the session when context is full. You can run /compact (alias /summarize) yourself, enable compaction.prune to drop old tool outputs, and set compaction.reserved to keep a token buffer.
+
+### What is the difference between OpenCode's Build and Plan agents?
+
+Build is the default primary agent with all tools enabled. Plan is restricted for analysis: file edits and bash commands are set to ask by default. Press Tab to switch between them, and @-mention subagents such as general or explore for side tasks.
 
 ## Go further
 
