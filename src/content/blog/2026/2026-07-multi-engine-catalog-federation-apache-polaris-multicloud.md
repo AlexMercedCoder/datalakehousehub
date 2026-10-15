@@ -11,7 +11,7 @@ slug: "multi-engine-catalog-federation-apache-polaris-multicloud"
 draft: false
 image: "/images/blog.png"
 canonical: "https://iceberglakehouse.com/posts/multi-engine-catalog-federation-apache-polaris-multicloud/"
-description: "Open table formats changed the data lakehouse conversation, but they did not finish it. A table can be stored in an open format and still be hard."
+description: "How Apache Polaris federates Iceberg catalogs across AWS, Azure, and Google Cloud, covering identity mapping, scoped credentials, namespaces, and pitfalls."
 ---
 
 # Multi-Engine Catalog Federation with Apache Polaris: Syncing Google Cloud, AWS, and Azure Metadata

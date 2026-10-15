@@ -1,7 +1,7 @@
 ---
 title: Introduction to Data Engineering Concepts | Data Warehousing Fundamentals
 date: 2025-05-02T09:00:00Z
-description: "Introduction to the terms in data engineering"
+description: "What a data warehouse is and how it differs from an operational database: architecture, columnar storage, partitioning and clustering, and load patterns."
 author: "Alex Merced"
 category: "Data Engineering"
 bannerImage: "https://i.imgur.com/cpoMZQ8.png"

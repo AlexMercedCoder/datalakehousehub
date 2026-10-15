@@ -2,7 +2,7 @@
 title: "How to Use Dremio with Amazon Kiro: Connect, Query, and Build Data Apps"
 date: 2026-03-05T10:20:00Z
 pubDatetime: 2026-03-05T10:20:00Z
-description: "How to connect Dremio with Amazon Kiro : query lakehouse data, build apps, and use MCP for AI-powered analytics."
+description: "Connect Amazon Kiro to Dremio through the Dremio Cloud MCP server with OAuth, then use Kiro specs, steering files, and Powers to give it Dremio SQL context."
 author: "Alex Merced"
 category: "Dremio"
 bannerImage: "https://i.imgur.com/cpoMZQ8.png"

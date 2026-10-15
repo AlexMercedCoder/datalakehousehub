@@ -13,7 +13,7 @@ slug: "operational-vs-analytical-systems"
 draft: false
 image: "/images/blog.png"
 canonical: "https://iceberglakehouse.com/posts/operational-vs-analytical-systems/"
-description: "By Alex Merced, Head of Developer Relations at Dremio"
+description: "Why OLTP and OLAP systems split, the storage physics that keep them apart, how HTAP has fared, and a 2026 framework for composing both on an open substrate."
 ---
 
 # Operational vs. Analytical Systems: Why the Oldest Divide in Data Exists, What Physics Enforces It, and the Honest Truth About Hybrid Systems

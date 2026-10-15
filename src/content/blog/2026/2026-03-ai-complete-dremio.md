@@ -2,7 +2,7 @@
 title: "Generate Summaries and Insights with Dremio's AI_COMPLETE Function"
 date: 2026-03-01T09:10:00Z
 pubDatetime: 2026-03-01T09:10:00Z
-description: "Generate summaries, insights, and text completions with Dremio's AI_COMPLETE function : run LLM inference directly in SQL queries."
+description: "Use Dremio's AI_COMPLETE to generate text in SQL. This hands-on guide builds views that write executive product summaries and marketing copy from your tables."
 author: "Alex Merced"
 category: "Dremio"
 bannerImage: "https://i.imgur.com/cpoMZQ8.png"

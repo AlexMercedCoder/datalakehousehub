@@ -11,7 +11,7 @@ slug: "closed-loop-decision-agents-passive-bi-active-workflows"
 draft: false
 image: "/images/blog.png"
 canonical: "https://iceberglakehouse.com/posts/closed-loop-decision-agents-passive-bi-active-workflows/"
-description: "Dashboards are excellent at showing people what happened. They are less good at deciding what should happen next."
+description: "How to build decision agents that observe signals, validate evidence, and act within approved limits, using metric contracts, risk tiers, and human approval."
 ---
 
 # Building Closed-Loop Decision Agents: Moving from Passive BI Dashboards to Active Goal-Directed Workflows

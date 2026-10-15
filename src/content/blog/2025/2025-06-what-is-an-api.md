@@ -1,7 +1,7 @@
 ---
 title: What is an API? And Why Data Architecture Depends on Them
 date: 2025-06-23T09:00:00Z
-description: "Hive, Glue, Iceberg Rest and so many more!"
+description: "What an API is, how SOAP, REST, RPC, and GraphQL differ, and why data architecture runs on APIs like S3, JDBC, ADBC, Hive Metastore, Glue, and Iceberg REST."
 author: "Alex Merced"
 category: "Data Engineering"
 bannerImage: "https://i.imgur.com/cpoMZQ8.png"

@@ -2,7 +2,7 @@
 title: "Connect Databricks Unity Catalog to Dremio Cloud: Query Delta Lake Tables with Federation and AI"
 date: 2026-03-01T12:20:00Z
 pubDatetime: 2026-03-01T12:20:00Z
-description: "Connect Databricks Unity Catalog to Dremio Cloud : query Delta Lake tables with federation and AI."
+description: "Connect Databricks Unity Catalog to Dremio Cloud to query Delta Lake tables through UniForm, federate them with other sources, and add AI analytics."
 author: "Alex Merced"
 category: "Dremio"
 bannerImage: "https://i.imgur.com/cpoMZQ8.png"

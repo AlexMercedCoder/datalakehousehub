@@ -2,7 +2,7 @@
 title: "OpenLineage as the Spine of Data Observability"
 date: 2026-05-24T11:10:00Z
 pubDatetime: 2026-05-24T11:10:00Z
-description: "OpenLineage provides a standard API for collecting pipeline lineage across Airflow, Spark, Flink, and dbt."
+description: "How OpenLineage collects lineage from Airflow, Spark, Flink, and dbt, and how to use it for blast radius analysis, SLA tracking, and Marquez or DataHub."
 author: "Alex Merced"
 category: "Data Engineering"
 tags:

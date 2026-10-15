@@ -3,7 +3,7 @@ title: Partitioning Practices in Apache Hive and Apache Iceberg
 date: 2024-02-12T05:00:00Z
 draft: false
 image: "/images/blog.png"
-description: "Deep Dive in Data Lake Table Partitioning"
+description: "How Hive-style partitioning works and where it breaks down, and how Iceberg's hidden partitioning, partition transforms, and partition evolution fix it."
 author: "Alex Merced"
 category: "Data Lakehouse"
 bannerImage: "https://i.imgur.com/cpoMZQ8.png"

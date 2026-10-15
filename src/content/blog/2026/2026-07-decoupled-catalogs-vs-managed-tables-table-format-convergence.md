@@ -11,7 +11,7 @@ slug: "decoupled-catalogs-vs-managed-tables-table-format-convergence"
 draft: false
 image: "/images/blog.png"
 canonical: "https://iceberglakehouse.com/posts/decoupled-catalogs-vs-managed-tables-table-format-convergence/"
-description: "Open table formats have changed buyer expectations. A few years ago, the question was whether an organization should put more analytical data into object."
+description: "A decision matrix for choosing between managed tables and decoupled catalogs for Iceberg, covering credentials, optimization, engine choice, and hybrid setups."
 ---
 
 # Decoupled Catalogs vs. Managed Tables: Architectural Freedom in the Age of Table Format Convergence

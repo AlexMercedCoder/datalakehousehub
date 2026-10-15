@@ -2,7 +2,7 @@
 title: "Row vs. Column: How Storage Layout Shapes Everything"
 date: 2026-04-29T09:02:00Z
 pubDatetime: 2026-04-29T09:02:00Z
-description: "Row stores keep records together for fast transactions. Column stores keep field values together for fast analytics."
+description: "Row stores suit transactions, column stores suit analytics. See the I/O math, why columnar compression wins, late materialization, and when to pick each."
 author: "Alex Merced"
 category: "Data Engineering"
 tags:

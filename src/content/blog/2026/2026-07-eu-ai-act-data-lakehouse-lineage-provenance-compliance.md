@@ -11,7 +11,7 @@ slug: "eu-ai-act-data-lakehouse-lineage-provenance-compliance"
 draft: false
 image: "/images/blog.png"
 canonical: "https://iceberglakehouse.com/posts/eu-ai-act-data-lakehouse-lineage-provenance-compliance/"
-description: "The EU AI Act changes the conversation around AI architecture because it makes trust operational."
+description: "How lakehouse lineage, provenance, audit logs, and agent identity help you prepare for the EU AI Act, with a readiness checklist. Technical, not legal, advice."
 ---
 
 # Preparing Your Data Lakehouse for the EU AI Act: Auditable Lineage and Data Provenance

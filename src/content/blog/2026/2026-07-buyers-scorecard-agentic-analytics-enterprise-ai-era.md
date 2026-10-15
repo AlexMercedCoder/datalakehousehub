@@ -11,7 +11,7 @@ slug: "buyers-scorecard-agentic-analytics-enterprise-ai-era"
 draft: false
 image: "/images/blog.png"
 canonical: "https://iceberglakehouse.com/posts/buyers-scorecard-agentic-analytics-enterprise-ai-era/"
-description: "Agentic analytics demos are easy to enjoy and hard to evaluate. A user asks a question, an assistant answers, a chart appears, and the room leans forward."
+description: "An eight-category scorecard for judging agentic analytics tools: semantic grounding, governance, validation, action controls, cost, and pilot questions."
 ---
 
 # The Buyer's Scorecard for Agentic Analytics: Evaluating Tooling in the Enterprise AI Era

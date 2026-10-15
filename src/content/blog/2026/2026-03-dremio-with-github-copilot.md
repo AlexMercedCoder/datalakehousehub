@@ -2,7 +2,7 @@
 title: "How to Use Dremio with GitHub Copilot: Connect, Query, and Build Data Apps"
 date: 2026-03-05T09:30:00Z
 pubDatetime: 2026-03-05T09:30:00Z
-description: "How to connect Dremio with GitHub Copilot : query lakehouse data, build apps, and use MCP for AI-powered analytics."
+description: "Connect GitHub Copilot agent mode to the Dremio Cloud MCP server, set enterprise policies, and add a copilot-instructions.md file with Dremio SQL rules."
 author: "Alex Merced"
 category: "Dremio"
 bannerImage: "https://i.imgur.com/cpoMZQ8.png"

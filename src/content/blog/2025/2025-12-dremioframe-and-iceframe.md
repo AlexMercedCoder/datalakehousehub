@@ -1,7 +1,7 @@
 ---
 title: dremioframe & iceberg - Pythonic interfaces for Dremio and Apache Iceberg
 date: 2025-12-05T09:00:00Z
-description: "Discover DremioFrame and IceFrame, two new Python libraries that simplify working with Dremio and Apache Iceberg."
+description: "Meet DremioFrame and IceFrame, two Python libraries for Dremio and Apache Iceberg, with side-by-side examples for connecting, querying, and creating tables."
 author: "Alex Merced"
 category: "Data Engineering"
 bannerImage: "https://i.imgur.com/cpoMZQ8.png"

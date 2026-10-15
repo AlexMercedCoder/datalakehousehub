@@ -2,7 +2,7 @@
 title: "How a Self-Documenting Semantic Layer Reduces Data Team Toil"
 date: 2026-02-18T13:40:00Z
 pubDatetime: 2026-02-18T13:40:00Z
-description: "How a self-documenting semantic layer reduces data team toil : automated documentation, AI-generated descriptions, and metadata propagation."
+description: "How a self-documenting semantic layer cuts data team toil with AI-generated descriptions, suggested labels, and metadata that propagates through views."
 author: "Alex Merced"
 category: "Semantic Layer"
 bannerImage: "https://i.imgur.com/cpoMZQ8.png"

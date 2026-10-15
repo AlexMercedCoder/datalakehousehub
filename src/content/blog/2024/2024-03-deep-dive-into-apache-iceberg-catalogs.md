@@ -3,7 +3,7 @@ title: A deep dive into the concept and world of Apache Iceberg Catalogs
 date: 2024-03-01T05:00:00Z
 draft: false
 image: "/images/blog.png"
-description: "Understanding how catalogs work and which one to choose"
+description: "How Apache Iceberg catalogs work, service versus file-system catalogs, and a tour of Nessie, Hive, REST, Glue, Snowflake, and LakeFS to help you pick one."
 author: "Alex Merced"
 category: "Data Lakehouse"
 bannerImage: "https://i.imgur.com/cpoMZQ8.png"

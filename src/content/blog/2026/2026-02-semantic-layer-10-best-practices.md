@@ -2,7 +2,7 @@
 title: "Semantic Layer Best Practices: 7 Mistakes to Avoid"
 date: 2026-02-18T13:50:00Z
 pubDatetime: 2026-02-18T13:50:00Z
-description: "Seven semantic layer mistakes to avoid : from inconsistent naming to skipping access policies. A practical checklist for building a reliable semantic layer."
+description: "Seven early design mistakes that sink semantic layers, from defining metrics in several places to securing data only in the BI tool, and how to avoid each one."
 author: "Alex Merced"
 category: "Semantic Layer"
 bannerImage: "https://i.imgur.com/cpoMZQ8.png"

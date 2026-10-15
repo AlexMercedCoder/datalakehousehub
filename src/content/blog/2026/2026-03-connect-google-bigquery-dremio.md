@@ -2,7 +2,7 @@
 title: "Connect Google BigQuery to Dremio Cloud: Cross-Cloud Analytics Without Data Movement"
 date: 2026-03-01T11:00:00Z
 pubDatetime: 2026-03-01T11:00:00Z
-description: "Connect Google BigQuery to Dremio Cloud : cross-cloud analytics without data movement."
+description: "Connect Google BigQuery to Dremio Cloud to control query costs with reflections, run cross-cloud analytics, and govern data in one place. Setup steps included."
 author: "Alex Merced"
 category: "Dremio"
 bannerImage: "https://i.imgur.com/cpoMZQ8.png"

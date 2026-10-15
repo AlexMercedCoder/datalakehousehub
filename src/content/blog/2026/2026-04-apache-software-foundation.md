@@ -2,7 +2,7 @@
 title: "Apache Software Foundation: History, Purpose, and Process"
 date: 2026-04-13T09:00:00Z
 pubDatetime: 2026-04-13T09:00:00Z
-description: "If you build a modern data lakehouse, you inevitably stack Apache Iceberg, Apache Parquet, and Apache Arrow. These projects dictate how you store, ..."
+description: "How the Apache Software Foundation works: its history, the Apache Way, the Incubator, how it differs from the Linux Foundation, and why lakehouses depend on it."
 author: "Alex Merced"
 category: "Data Lakehouse"
 bannerImage: "https://i.imgur.com/cpoMZQ8.png"

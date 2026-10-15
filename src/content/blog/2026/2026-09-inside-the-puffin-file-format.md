@@ -1,7 +1,7 @@
 ---
 title: "Inside the Puffin File Format"
 date: 2026-09-02T09:00:00Z
-description: "The Puffin file format inside out, byte by byte, covering Theta sketches for distinct values and deletion vectors."
+description: "A byte-by-byte guide to the Iceberg Puffin file format, its Theta sketch and deletion vector blobs, how metadata points to them, and how to operate them safely."
 author: "Alex Merced"
 category: "Apache Iceberg"
 tags:

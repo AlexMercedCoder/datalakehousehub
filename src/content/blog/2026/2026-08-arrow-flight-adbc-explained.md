@@ -14,7 +14,7 @@ slug: "arrow-flight-adbc-explained"
 draft: false
 image: "/images/blog.png"
 canonical: "https://iceberglakehouse.com/posts/arrow-flight-adbc-explained/"
-description: "A data scientist runs a query against a warehouse. The engine finishes the scan in three seconds."
+description: "How Arrow Flight, Flight SQL, and ADBC move query results as columnar data instead of rows, removing the driver bottleneck between databases and applications."
 ---
 
 A data scientist runs a query against a warehouse. The engine finishes the scan in three seconds. Then the notebook sits there for four minutes while the result set trickles into a DataFrame. The query was fast. The download was not.

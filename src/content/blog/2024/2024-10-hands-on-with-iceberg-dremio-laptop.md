@@ -1,7 +1,7 @@
 ---
 title: Hands-on with Apache Iceberg & Dremio on Your Laptop within 10 Minutes
 date: 2024-10-31T09:00:00Z
-description: "How to get hands-on with Apache Iceberg"
+description: "Run Dremio, Nessie, and MinIO with Docker Compose in about 10 minutes, create Iceberg tables, run transactions, and inspect the files and metadata."
 author: "Alex Merced"
 category: "Data Lakehouse"
 bannerImage: "https://i.imgur.com/cpoMZQ8.png"

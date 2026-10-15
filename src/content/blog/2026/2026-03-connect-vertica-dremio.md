@@ -2,7 +2,7 @@
 title: "Connect Vertica to Dremio Cloud: Federation for Analytics-Optimized Data"
 date: 2026-03-01T11:30:00Z
 pubDatetime: 2026-03-01T11:30:00Z
-description: "Connect Vertica to Dremio Cloud : federation for analytics-optimized data with AI and governance."
+description: "Connect Vertica to Dremio Cloud to cut license costs, federate with cloud sources, and modernize without a big-bang migration. Step-by-step setup included."
 author: "Alex Merced"
 category: "Dremio"
 bannerImage: "https://i.imgur.com/cpoMZQ8.png"

@@ -2,7 +2,7 @@
 title: "Extract Structured Data from Text with Dremio's AI_GENERATE Function"
 date: 2026-03-01T09:20:00Z
 pubDatetime: 2026-03-01T09:20:00Z
-description: "Extract structured data from unstructured text with Dremio's AI_GENERATE function : parse addresses, entities, and metadata using SQL."
+description: "Extract structured fields from emails and contract notes with Dremio's AI_GENERATE and ROW type output, using a hands-on bronze, silver, and gold view build."
 author: "Alex Merced"
 category: "Dremio"
 bannerImage: "https://i.imgur.com/cpoMZQ8.png"

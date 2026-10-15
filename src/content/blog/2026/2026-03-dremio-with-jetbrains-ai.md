@@ -2,7 +2,7 @@
 title: "How to Use Dremio with JetBrains AI Assistant: Connect, Query, and Build Data Apps"
 date: 2026-03-05T10:10:00Z
 pubDatetime: 2026-03-05T10:10:00Z
-description: "How to connect Dremio with JetBrains AI Assistant : query lakehouse data, build apps, and use MCP for AI-powered analytics."
+description: "Connect JetBrains AI Assistant to the Dremio Cloud MCP server with OAuth, then add project rules and custom prompts that teach it Dremio SQL conventions."
 author: "Alex Merced"
 category: "Dremio"
 bannerImage: "https://i.imgur.com/cpoMZQ8.png"

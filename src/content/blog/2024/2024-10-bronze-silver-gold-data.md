@@ -1,7 +1,7 @@
 ---
 title: What is Three-Tier Data (Bronze, Silver, Gold) and How Dremio Simplifies It
 date: 2024-10-09T09:00:00Z
-description: "Process Data from Raw to Clean Aggregated Data"
+description: "What the bronze, silver, and gold data tiers are, the copy and sync costs of moving data between them, and how Dremio views and Reflections cut that work."
 author: "Alex Merced"
 category: "Data Lakehouse"
 bannerImage: "https://i.imgur.com/cpoMZQ8.png"

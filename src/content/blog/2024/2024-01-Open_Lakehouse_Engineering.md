@@ -3,7 +3,7 @@ title: Open Lakehouse Engineering/Apache Iceberg Lakehouse Engineering - A Direc
 date: 2024-01-19T05:00:00Z
 draft: false
 image: "/images/blog.png"
-description: "Resources for learning how to Engineer an Open Data Lakehouse"
+description: "A curated list of getting-started guides, hands-on tutorials, and conceptual articles for building an open lakehouse with Apache Iceberg, Nessie, and Arrow."
 author: "Alex Merced"
 category: "Data Lakehouse"
 bannerImage: "https://i.imgur.com/cpoMZQ8.png"

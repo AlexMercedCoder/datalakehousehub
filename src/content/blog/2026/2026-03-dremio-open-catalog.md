@@ -2,7 +2,7 @@
 title: "Dremio's Built-in Open Catalog: Your Zero-Configuration Apache Iceberg Lakehouse"
 date: 2026-03-01T12:40:00Z
 pubDatetime: 2026-03-01T12:40:00Z
-description: "Dremio's built-in Open Catalog : your zero-configuration Apache Iceberg lakehouse with AI and governance."
+description: "Dremio Cloud's built-in Open Catalog gives you a managed Iceberg lakehouse with no setup. Create tables, use branching, time travel, and autonomous reflections."
 author: "Alex Merced"
 category: "Dremio"
 bannerImage: "https://i.imgur.com/cpoMZQ8.png"

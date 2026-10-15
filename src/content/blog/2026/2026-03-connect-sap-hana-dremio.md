@@ -2,7 +2,7 @@
 title: "Connect SAP HANA to Dremio Cloud: Unlock Analytics Beyond the SAP Ecosystem"
 date: 2026-03-01T10:20:00Z
 pubDatetime: 2026-03-01T10:20:00Z
-description: "Connect SAP HANA to Dremio Cloud : unlock analytics beyond the SAP ecosystem with federated queries and AI."
+description: "Connect SAP HANA to Dremio Cloud to analyze SAP data alongside other platforms, ease HANA memory pressure, and add AI analytics. Includes step-by-step setup."
 author: "Alex Merced"
 category: "Dremio"
 bannerImage: "https://i.imgur.com/cpoMZQ8.png"

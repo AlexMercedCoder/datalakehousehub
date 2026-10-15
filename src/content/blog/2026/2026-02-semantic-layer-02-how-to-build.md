@@ -2,7 +2,7 @@
 title: "How to Build a Semantic Layer: A Step-by-Step Guide"
 date: 2026-02-18T12:30:00Z
 pubDatetime: 2026-02-18T12:30:00Z
-description: "A step-by-step guide to building a semantic layer : from identifying core metrics to implementing views, documentation, and access policies."
+description: "A step-by-step plan for building a semantic layer: start with metrics, map sources, use bronze, silver, and gold views, document, and enforce access policies."
 author: "Alex Merced"
 category: "Semantic Layer"
 bannerImage: "https://i.imgur.com/cpoMZQ8.png"

@@ -2,7 +2,7 @@
 title: "How to Use Dremio with Claude Code: Connect, Query, and Build Data Apps"
 date: 2026-03-05T09:10:00Z
 pubDatetime: 2026-03-05T09:10:00Z
-description: "How to connect Dremio with Claude Code : query lakehouse data, build apps, and use MCP for AI-powered analytics."
+description: "Connect Claude Code to Dremio with the Dremio Cloud MCP server or the official plugin, then write a CLAUDE.md with Dremio SQL rules to query and build apps."
 author: "Alex Merced"
 category: "Dremio"
 bannerImage: "https://i.imgur.com/cpoMZQ8.png"

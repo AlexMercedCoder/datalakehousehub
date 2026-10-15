@@ -11,7 +11,7 @@ slug: "file-compression-deep-dive"
 draft: false
 image: "/images/blog.png"
 canonical: "https://iceberglakehouse.com/posts/file-compression-deep-dive/"
-description: "By Alex Merced, Head of Developer Relations at Dremio"
+description: "How compression codecs work, why Zstandard became the default, how encodings differ from codecs in Parquet, and which codec to pick for each lakehouse workload."
 ---
 
 # A Deep Dive Into File Compression: How Data Gets Smaller, Why Codecs Differ, and What to Actually Use in the Lakehouse

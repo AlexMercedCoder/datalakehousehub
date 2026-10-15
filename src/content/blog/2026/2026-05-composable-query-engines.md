@@ -2,7 +2,7 @@
 title: "Building Composable Query Engines with Rust Runtimes"
 date: 2026-05-24T10:15:00Z
 pubDatetime: 2026-05-24T10:15:00Z
-description: "Apache DataFusion, Velox, and Substrait form the foundation of modern composable query engine stacks."
+description: "How Apache DataFusion, Velox, and Substrait form a composable query engine stack, how DataFusion and Velox compare, and a framework for choosing an engine."
 author: "Alex Merced"
 category: "Data Engineering"
 tags:

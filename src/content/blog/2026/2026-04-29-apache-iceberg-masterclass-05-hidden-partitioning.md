@@ -2,7 +2,7 @@
 title: "Hidden Partitioning: How Iceberg Eliminates Accidental Full Table Scans"
 date: 2026-04-29T09:05:00Z
 pubDatetime: 2026-04-29T09:05:00Z
-description: "Iceberg's hidden partitioning separates physical layout from user queries using transform functions."
+description: "How Iceberg's hidden partitioning uses six transform functions to prune files without partition columns in queries, and how to choose and combine transforms."
 author: "Alex Merced"
 category: "Data Lakehouse"
 tags:

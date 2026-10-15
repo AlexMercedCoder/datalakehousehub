@@ -11,7 +11,7 @@ slug: "personal-vs-shared-context"
 draft: false
 image: "/images/blog.png"
 canonical: "https://iceberglakehouse.com/posts/personal-vs-shared-context/"
-description: "By Alex Merced, Head of Developer Relations at Dremio"
+description: "How personal context for one user and governed shared context for an organization feed AI agents, with optimization techniques, failure cases, and frameworks."
 ---
 
 # Personal Context vs. Shared Context: A Deep Dive Into How Humans and Organizations Should Feed Their AI Agents

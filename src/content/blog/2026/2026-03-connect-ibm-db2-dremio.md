@@ -2,7 +2,7 @@
 title: "Connect IBM Db2 to Dremio Cloud: Modernize Mainframe Analytics with Federation and AI"
 date: 2026-03-01T10:10:00Z
 pubDatetime: 2026-03-01T10:10:00Z
-description: "Connect IBM Db2 to Dremio Cloud : modernize mainframe analytics with federation, AI functions, and governed access."
+description: "Connect IBM Db2 to Dremio Cloud to query mainframe data without IBM middleware, federate it with cloud sources, and modernize step by step. Setup included."
 author: "Alex Merced"
 category: "Dremio"
 bannerImage: "https://i.imgur.com/cpoMZQ8.png"

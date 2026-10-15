@@ -12,7 +12,7 @@ slug: "file-formats-renaissance"
 draft: false
 image: "/images/blog.png"
 canonical: "https://iceberglakehouse.com/posts/file-formats-renaissance/"
-description: "By Alex Merced, Head of Developer Relations at Dremio"
+description: "How Parquet, Lance, Vortex, Nimble, and BtrBlocks differ in encodings and point-lookup speed, and which columnar file format fits which workload in 2026."
 ---
 
 # The File Format Renaissance: Parquet, Lance, Vortex, Nimble, BtrBlocks, and the New Physics of Columnar Storage

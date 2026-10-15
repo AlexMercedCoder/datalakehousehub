@@ -1,7 +1,7 @@
 ---
 title: Getting Started with Data Analytics Using PyArrow in Python
 date: 2024-10-15T09:00:00Z
-description: "Learning to work with PyArrow to run analytics"
+description: "A practical PyArrow guide: core objects like Tables and RecordBatches, reading and writing Parquet, running computations, and using Arrow Flight."
 author: "Alex Merced"
 category: "Data Lakehouse"
 bannerImage: "https://i.imgur.com/cpoMZQ8.png"

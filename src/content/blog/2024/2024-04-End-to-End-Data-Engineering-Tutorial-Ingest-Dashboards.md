@@ -3,7 +3,7 @@ title: End-to-End Basic Data Engineering Tutorial (Spark, Dremio, Superset)
 date: 2024-04-01T05:00:00Z
 draft: false
 image: "/images/blog.png"
-description: "Ingesting Data and Building BI Dashboards"
+description: "A beginner tutorial: move Postgres data into an Iceberg data lake with Spark, curate and serve it through Dremio, then build a BI dashboard in Superset."
 author: "Alex Merced"
 category: "Data Lakehouse"
 bannerImage: "https://i.imgur.com/cpoMZQ8.png"

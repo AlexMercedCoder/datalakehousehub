@@ -2,7 +2,7 @@
 title: "Connect Oracle Database to Dremio Cloud: Enterprise Analytics Without Data Movement"
 date: 2026-03-01T09:50:00Z
 pubDatetime: 2026-03-01T09:50:00Z
-description: "Connect Oracle Database to Dremio Cloud for enterprise analytics without data movement : federate, govern, and accelerate Oracle queries."
+description: "Connect Oracle Database to Dremio Cloud step by step, including user impersonation, then query and federate Oracle data with predicate pushdown and no copies."
 author: "Alex Merced"
 category: "Dremio"
 bannerImage: "https://i.imgur.com/cpoMZQ8.png"

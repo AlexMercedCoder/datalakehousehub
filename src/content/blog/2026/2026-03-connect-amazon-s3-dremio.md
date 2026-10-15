@@ -2,7 +2,7 @@
 title: "Connect Amazon S3 to Dremio Cloud: Query Your Data Lake with SQL, Federation, and AI"
 date: 2026-03-01T10:30:00Z
 pubDatetime: 2026-03-01T10:30:00Z
-description: "Connect Amazon S3 to Dremio Cloud : query your data lake with SQL, federation, and AI functions."
+description: "Connect Amazon S3 to Dremio Cloud to query Parquet, CSV, and JSON with SQL, manage Iceberg tables, and federate your lake with databases. Setup steps included."
 author: "Alex Merced"
 category: "Dremio"
 bannerImage: "https://i.imgur.com/cpoMZQ8.png"

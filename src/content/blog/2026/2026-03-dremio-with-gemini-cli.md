@@ -2,7 +2,7 @@
 title: "How to Use Dremio with Gemini CLI: Connect, Query, and Build Data Apps"
 date: 2026-03-05T10:00:00Z
 pubDatetime: 2026-03-05T10:00:00Z
-description: "How to connect Dremio with Gemini CLI : query lakehouse data, build apps, and use MCP for AI-powered analytics."
+description: "Connect Gemini CLI to Dremio through the Dremio Cloud MCP server with OAuth, then write a GEMINI.md with Dremio SQL conventions so it writes correct queries."
 author: "Alex Merced"
 category: "Dremio"
 bannerImage: "https://i.imgur.com/cpoMZQ8.png"

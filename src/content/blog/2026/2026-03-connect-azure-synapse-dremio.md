@@ -2,7 +2,7 @@
 title: "Connect Azure Synapse Analytics to Dremio Cloud: Multi-Cloud Data Warehouse Federation"
 date: 2026-03-01T11:20:00Z
 pubDatetime: 2026-03-01T11:20:00Z
-description: "Connect Azure Synapse Analytics to Dremio Cloud for multi-cloud data warehouse federation."
+description: "Connect Azure Synapse Analytics to Dremio Cloud for multi-cloud federation, lower costs through reflections, and shared governance. Step-by-step setup included."
 author: "Alex Merced"
 category: "Dremio"
 bannerImage: "https://i.imgur.com/cpoMZQ8.png"

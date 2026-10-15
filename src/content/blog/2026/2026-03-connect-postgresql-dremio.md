@@ -2,7 +2,7 @@
 title: "Connect PostgreSQL to Dremio Cloud: Query, Federate, and Accelerate Your Data"
 date: 2026-03-01T09:30:00Z
 pubDatetime: 2026-03-01T09:30:00Z
-description: "Connect PostgreSQL to Dremio Cloud for federated analytics : query, join, and accelerate your PostgreSQL data without ETL."
+description: "Step-by-step setup for connecting PostgreSQL to Dremio Cloud, then querying it with SQL, joining it with other sources, and speeding it up with reflections."
 author: "Alex Merced"
 category: "Dremio"
 bannerImage: "https://i.imgur.com/cpoMZQ8.png"

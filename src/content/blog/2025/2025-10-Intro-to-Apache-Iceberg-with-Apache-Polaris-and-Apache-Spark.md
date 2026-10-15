@@ -25,7 +25,7 @@ canonical: "https://iceberglakehouse.com/posts/2025-10-intro-to-apache-iceberg-w
 > **Cross-posted.** This article's canonical home is [Alex Merced's Lakehouse Blog](https://iceberglakehouse.com/posts/2025-10-intro-to-apache-iceberg-with-apache-polaris-and-apache-spark/).
 
 **Lakehouse Community:**
-- [Join the Data Lakehouse Community](https://www.datalakehousehub.com)
+- [Join the Data Lakehouse Community](https://datalakehousehub.com/)
 - [Data Lakehouse Blog Roll](https://lakehouseblogs.com)
 - [OSS Community Listings](https://osscommunity.com)
 - [Dremio Lakehouse Developer Hub](https://developer.dremio.com)

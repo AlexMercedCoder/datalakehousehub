@@ -3,7 +3,7 @@ title: What is the Data Lakehouse and the Role of Apache Iceberg, Nessie and Dre
 date: 2024-02-21T05:00:00Z
 draft: false
 image: "/images/blog.png"
-description: "Understanding the Value of the Data Lakehouse"
+description: "What a data lakehouse is, why table formats matter, and the role of each piece: Apache Iceberg for tables, Nessie for versioned catalogs, Dremio for queries."
 author: "Alex Merced"
 category: "Data Lakehouse"
 bannerImage: "https://i.imgur.com/cpoMZQ8.png"

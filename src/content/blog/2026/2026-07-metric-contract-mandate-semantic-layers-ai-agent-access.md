@@ -11,7 +11,7 @@ slug: "metric-contract-mandate-semantic-layers-ai-agent-access"
 draft: false
 image: "/images/blog.png"
 canonical: "https://iceberglakehouse.com/posts/metric-contract-mandate-semantic-layers-ai-agent-access/"
-description: "AI agents are very good at moving quickly. That is the opportunity and the risk. If an agent can inspect metadata, generate queries, compare results."
+description: "What a metric contract contains (definition, grain, owner, freshness, tests, access) and why a semantic layer needs one before AI agents are allowed to query."
 ---
 
 # The Metric Contract Mandate: Standardizing Semantic Layers Before AI Agent Access

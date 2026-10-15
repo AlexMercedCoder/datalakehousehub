@@ -2,7 +2,7 @@
 title: Smarter Data Layout  – Sorting and Clustering Iceberg Tables
 date: 2025-08-05T09:00:00Z
 author: Alex Merced
-description: "Improve query performance in Apache Iceberg by organizing your data layout with sorting and Z-order clustering."
+description: "How sorting and Z-order clustering lay out data in Apache Iceberg tables to improve file pruning and query speed, when to use each, and the rewrite costs."
 slug: iceberg-clustering-sorting-zorder
 tags:
   - Apache Iceberg

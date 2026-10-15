@@ -2,7 +2,7 @@
 title: "Schema Evolution Without Breaking Consumers"
 date: 2026-02-18T11:20:00Z
 pubDatetime: 2026-02-18T11:20:00Z
-description: "How to evolve schemas safely without breaking downstream consumers : additive changes, contract enforcement, and Apache Iceberg's built-in evolution."
+description: "Treat your schema like an API. Learn which changes are safe or breaking, the additive-only pattern, schema versioning, and contract checks between pipelines."
 author: "Alex Merced"
 category: "Data Engineering"
 bannerImage: "https://i.imgur.com/cpoMZQ8.png"

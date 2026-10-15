@@ -2,7 +2,7 @@
 title: "Connect MongoDB to Dremio Cloud: SQL Analytics on Document Data"
 date: 2026-03-01T11:40:00Z
 pubDatetime: 2026-03-01T11:40:00Z
-description: "Connect MongoDB to Dremio Cloud : SQL analytics on document data with federation and AI."
+description: "Connect MongoDB to Dremio Cloud and query document data with SQL: flatten nested arrays, join with relational sources, add reflections, and use AI analytics."
 author: "Alex Merced"
 category: "Dremio"
 bannerImage: "https://i.imgur.com/cpoMZQ8.png"

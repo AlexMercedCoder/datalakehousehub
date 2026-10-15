@@ -2,7 +2,7 @@
 title: "Connect Amazon Redshift to Dremio Cloud: Extend Your Warehouse with Federation and AI Analytics"
 date: 2026-03-01T10:50:00Z
 pubDatetime: 2026-03-01T10:50:00Z
-description: "Connect Amazon Redshift to Dremio Cloud : extend your warehouse with federation and AI analytics."
+description: "Connect Amazon Redshift to Dremio Cloud to extend the warehouse without Spectrum, trim cluster costs, and federate across warehouses. Includes setup steps."
 author: "Alex Merced"
 category: "Dremio"
 bannerImage: "https://i.imgur.com/cpoMZQ8.png"

@@ -2,7 +2,7 @@
 title: "Classify Your Data with SQL: A Hands-On Guide to Dremio's AI_CLASSIFY Function"
 date: 2026-03-01T09:00:00Z
 pubDatetime: 2026-03-01T09:00:00Z
-description: "A hands-on guide to Dremio's AI_CLASSIFY function : classify data with SQL using LLMs, build a medallion architecture, and persist results as Iceberg tables."
+description: "Classify data in SQL with Dremio's AI_CLASSIFY. Build bronze, silver, and gold views that tag review sentiment and route support tickets without leaving SQL."
 author: "Alex Merced"
 category: "Dremio"
 bannerImage: "https://i.imgur.com/cpoMZQ8.png"

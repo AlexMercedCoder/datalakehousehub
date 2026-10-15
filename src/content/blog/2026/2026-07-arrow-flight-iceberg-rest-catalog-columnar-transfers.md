@@ -11,7 +11,7 @@ slug: "arrow-flight-iceberg-rest-catalog-columnar-transfers"
 draft: false
 image: "/images/blog.png"
 canonical: "https://iceberglakehouse.com/posts/arrow-flight-iceberg-rest-catalog-columnar-transfers/"
-description: "Modern lakehouse architecture is easier to reason about when you separate two questions. The first question is how a system discovers and governs a table."
+description: "How Iceberg REST catalogs run the control plane and Arrow Flight runs the data plane, plus the security, performance, and lock-in tradeoffs of pairing them."
 ---
 
 # High-Performance Columnar Transfers: Combining Apache Arrow Flight and Iceberg REST Catalogs

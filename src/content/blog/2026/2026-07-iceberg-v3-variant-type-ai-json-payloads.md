@@ -12,7 +12,7 @@ slug: "iceberg-v3-variant-type-ai-json-payloads"
 draft: false
 image: "/images/blog.png"
 canonical: "https://iceberglakehouse.com/posts/iceberg-v3-variant-type-ai-json-payloads/"
-description: "AI applications are messy data producers. They create prompts, completions, tool calls, retrieval traces, ranking signals, evaluation scores, safety."
+description: "How Iceberg v3 variant-style typing stores evolving AI payloads like prompts and tool calls, and when to promote JSON fields into governed, typed columns."
 ---
 
 # Mapping the Variant Type in Iceberg v3: Standardizing Semi-Structured AI JSON Payloads

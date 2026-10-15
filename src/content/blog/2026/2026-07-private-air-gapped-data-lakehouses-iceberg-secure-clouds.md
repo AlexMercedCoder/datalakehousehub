@@ -12,7 +12,7 @@ slug: "private-air-gapped-data-lakehouses-iceberg-secure-clouds"
 draft: false
 image: "/images/blog.png"
 canonical: "https://iceberglakehouse.com/posts/private-air-gapped-data-lakehouses-iceberg-secure-clouds/"
-description: "Some of the most important lakehouse work happens in environments that will never look like a simple public-cloud reference architecture."
+description: "How to run Iceberg lakehouses in air-gapped and on-prem clouds: storage, catalogs, engine placement, agent access, supply chain upgrades, audit, and recovery."
 ---
 
 # Designing Private, Air-Gapped Data Lakehouses: Scaling Iceberg in Highly Secure, On-Premises Clouds

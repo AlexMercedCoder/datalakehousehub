@@ -11,7 +11,7 @@ slug: "block-vs-object-storage-deep-dive"
 draft: false
 image: "/images/blog.png"
 canonical: "https://iceberglakehouse.com/posts/block-vs-object-storage-deep-dive/"
-description: "By Alex Merced, Head of Developer Relations at Dremio"
+description: "Why analytics moved to slower object storage and got faster: how Parquet, Iceberg, and modern engines hide S3 latency, plus a guide to placing each workload."
 ---
 
 # Block vs. Object Storage: A Deep Dive Into the Foundation of Modern Data, and How the Lakehouse Made the Slow Option Fast

@@ -11,7 +11,7 @@ slug: "lakehouse-encryption-deep-dive"
 draft: false
 image: "/images/blog.png"
 canonical: "https://iceberglakehouse.com/posts/lakehouse-encryption-deep-dive/"
-description: "By Alex Merced, Head of Developer Relations at Dremio"
+description: "Encryption terms, Parquet modular encryption, and Iceberg 1.11 table encryption explained, plus the problems of sharing encrypted tables across engines."
 ---
 
 # File Encryption for the Lakehouse: The Terminology, the Machinery, and the Hard Problem of Interoperable Encrypted Tables

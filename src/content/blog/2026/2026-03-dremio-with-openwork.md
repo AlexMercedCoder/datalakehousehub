@@ -2,7 +2,7 @@
 title: "How to Use Dremio with OpenWork: Connect, Query, and Build Data Apps"
 date: 2026-03-05T11:00:00Z
 pubDatetime: 2026-03-05T11:00:00Z
-description: "How to connect Dremio with OpenWork : query lakehouse data, build apps, and use MCP for AI-powered analytics."
+description: "Connect OpenWork, the open-source desktop agent built on OpenCode, to Dremio through the MCP server, and give it Dremio SQL context with an AGENTS.md file."
 author: "Alex Merced"
 category: "Dremio"
 bannerImage: "https://i.imgur.com/cpoMZQ8.png"

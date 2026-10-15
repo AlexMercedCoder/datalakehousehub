@@ -2,7 +2,7 @@
 title: "Connect AWS Glue Data Catalog to Dremio Cloud: Query and Manage Your AWS Iceberg Tables"
 date: 2026-03-01T12:00:00Z
 pubDatetime: 2026-03-01T12:00:00Z
-description: "Connect AWS Glue Data Catalog to Dremio Cloud : query and manage your AWS Iceberg tables."
+description: "Connect AWS Glue Data Catalog to Dremio Cloud for read and write on Iceberg tables, automated maintenance, and federation, without Athena per-TB pricing."
 author: "Alex Merced"
 category: "Dremio"
 bannerImage: "https://i.imgur.com/cpoMZQ8.png"

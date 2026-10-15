@@ -11,7 +11,7 @@ slug: "fine-grained-security-machine-speed-ai-agents"
 draft: false
 image: "/images/blog.png"
 canonical: "https://iceberglakehouse.com/posts/fine-grained-security-machine-speed-ai-agents/"
-description: "AI agents change the security model for analytics. A human user may run a handful of queries, pause, interpret the answer, and ask a follow-up."
+description: "How to secure high-frequency AI agents with dynamic access control: row, column, and tool policies, short-lived credentials, token exchange, and audit trails."
 ---
 
 # Enforcing Fine-Grained Security at Machine Speed: Dynamic Access Control for High-Frequency AI Agents

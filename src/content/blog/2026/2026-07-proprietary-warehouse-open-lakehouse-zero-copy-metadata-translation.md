@@ -11,7 +11,7 @@ slug: "proprietary-warehouse-open-lakehouse-zero-copy-metadata-translation"
 draft: false
 image: "/images/blog.png"
 canonical: "https://iceberglakehouse.com/posts/proprietary-warehouse-open-lakehouse-zero-copy-metadata-translation/"
-description: "Every warehouse migration sounds simpler before the first inventory. Then the team discovers old dashboards, hidden dependencies, undocumented stored."
+description: "A staged playbook for moving proprietary warehouses to Iceberg: what zero-copy really means, federation during transition, validation, and a 90-day runbook."
 ---
 
 # Migrating Proprietary Warehouses to Open Lakehouses: The 2026 Playbook for Zero-Copy Metadata Translation

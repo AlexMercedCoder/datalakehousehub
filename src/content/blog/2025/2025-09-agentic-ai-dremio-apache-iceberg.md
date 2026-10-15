@@ -1,7 +1,7 @@
 ---
 title: Unlocking the Power of Agentic AI with Apache Iceberg and Dremio
 date: 2025-09-05T09:00:00Z
-description: "Unlocking the Power of Agentic AI with Apache Iceberg and Dremio"
+description: "The three bottlenecks that stall agentic AI (data access, query speed, and semantic meaning) and how Apache Iceberg and Dremio address each one."
 author: "Alex Merced"
 category: "Data Engineering"
 bannerImage: "https://i.imgur.com/cpoMZQ8.png"

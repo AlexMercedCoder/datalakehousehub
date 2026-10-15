@@ -3,7 +3,7 @@ title: Apache Iceberg Reliability
 date: 2024-07-26T05:00:00Z
 draft: false
 image: "/images/blog.png"
-description: "Why Apache Iceberg Works"
+description: "How Apache Iceberg avoids the consistency problems of Hive tables on S3 with a persistent metadata tree, atomic commits, and serializable isolation."
 author: "Alex Merced"
 category: "Data Lakehouse"
 bannerImage: "https://i.imgur.com/cpoMZQ8.png"

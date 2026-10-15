@@ -2,7 +2,7 @@
 title: "Kafka Connect to Iceberg: How the Commit Actually Works"
 date: 2026-09-10T12:00:00Z
 canonical: "https://iceberglakehouse.com/posts/kafka-connect-iceberg-commits/"
-description: "Exactly-once semantics in the Iceberg sink connector: the coordinator, the control topic, offsets stored inside Iceberg snapshots, and where duplicates still get in."
+description: "How the Iceberg sink connector delivers exactly-once from Kafka: the coordinator, control topic, offsets stored in snapshots, and where duplicates still get in."
 author: "Alex Merced"
 category: "Streaming"
 tags:

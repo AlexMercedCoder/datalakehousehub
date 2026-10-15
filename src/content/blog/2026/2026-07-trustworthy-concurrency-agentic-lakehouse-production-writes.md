@@ -11,7 +11,7 @@ slug: "trustworthy-concurrency-agentic-lakehouse-production-writes"
 draft: false
 image: "/images/blog.png"
 canonical: "https://iceberglakehouse.com/posts/trustworthy-concurrency-agentic-lakehouse-production-writes/"
-description: "Agentic lakehouses change the concurrency conversation. Traditional data pipelines already deal with overlapping jobs, retries, compaction, merges."
+description: "How Iceberg optimistic concurrency behaves under many agent writers, and the retry discipline, isolation contracts, write leases, and queues that keep it sane."
 ---
 
 # Trustworthy Concurrency in the Agentic Lakehouse: Reconciling Academic Proofs with High-Frequency Production Writes

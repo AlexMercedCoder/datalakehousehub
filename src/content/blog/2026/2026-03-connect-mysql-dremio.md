@@ -2,7 +2,7 @@
 title: "Connect MySQL to Dremio Cloud: Federated Analytics Without ETL"
 date: 2026-03-01T09:40:00Z
 pubDatetime: 2026-03-01T09:40:00Z
-description: "Connect MySQL to Dremio Cloud for federated analytics without ETL : query, join, and govern your MySQL data alongside any source."
+description: "Connect MySQL to Dremio Cloud step by step, then run analytics, federate it with other sources, and build views for the AI agent without ETL pipelines."
 author: "Alex Merced"
 category: "Dremio"
 bannerImage: "https://i.imgur.com/cpoMZQ8.png"

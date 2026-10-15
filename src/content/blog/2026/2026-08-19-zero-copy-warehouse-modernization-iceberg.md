@@ -1,7 +1,7 @@
 ---
 title: "Zero-Copy Warehouse Modernization: Moving to Apache Iceberg Without Downtime"
 date: 2026-08-19T09:00:00Z
-description: "A practical guide to modernizing a data warehouse to Apache Iceberg without downtime, using federation first, then redirecting new data, then."
+description: "A four-phase plan for moving a warehouse to Apache Iceberg without downtime: federate first, redirect new data, materialize selectively, and cut over gradually."
 author: "Alex Merced"
 category: "Apache Iceberg"
 image: "/images/blog.png"

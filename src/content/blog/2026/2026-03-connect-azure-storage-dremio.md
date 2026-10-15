@@ -2,7 +2,7 @@
 title: "Connect Azure Storage to Dremio Cloud: Query Your Microsoft Data Lake with SQL and AI"
 date: 2026-03-01T10:40:00Z
 pubDatetime: 2026-03-01T10:40:00Z
-description: "Connect Azure Storage to Dremio Cloud : query your Microsoft data lake with SQL and AI analytics."
+description: "Connect Azure Blob Storage and ADLS Gen2 to Dremio Cloud to query your lake with SQL, manage Iceberg tables, and federate beyond Azure. Setup steps included."
 author: "Alex Merced"
 category: "Dremio"
 bannerImage: "https://i.imgur.com/cpoMZQ8.png"

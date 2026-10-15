@@ -2,7 +2,7 @@
 title: "Connect Apache Druid to Dremio Cloud: Add SQL Joins, AI, and Governance to Your Real-Time Analytics"
 date: 2026-03-01T11:50:00Z
 pubDatetime: 2026-03-01T11:50:00Z
-description: "Connect Apache Druid to Dremio Cloud : add SQL joins, AI, and governance to your real-time analytics."
+description: "Connect Apache Druid to Dremio Cloud to join real-time event data with business context in SQL, run historical analysis, and govern it. Setup steps included."
 author: "Alex Merced"
 category: "Dremio"
 bannerImage: "https://i.imgur.com/cpoMZQ8.png"

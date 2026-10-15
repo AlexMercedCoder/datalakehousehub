@@ -2,7 +2,7 @@
 title: "Connect Any Iceberg REST Catalog to Dremio Cloud: Universal Lakehouse Access"
 date: 2026-03-01T12:30:00Z
 pubDatetime: 2026-03-01T12:30:00Z
-description: "Connect any Iceberg REST Catalog to Dremio Cloud for universal lakehouse access."
+description: "Connect any Apache Iceberg REST catalog to Dremio Cloud for read and write access, multi-catalog federation, automated maintenance, and credential vending."
 author: "Alex Merced"
 category: "Dremio"
 bannerImage: "https://i.imgur.com/cpoMZQ8.png"

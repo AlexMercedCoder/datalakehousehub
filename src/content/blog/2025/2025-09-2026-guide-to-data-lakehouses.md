@@ -28,7 +28,7 @@ faqs:
 
 *Year-end 2025 reflections, looking ahead to 2026*
 
-- [Join the Data Lakehouse Community](https://www.datalakehousehub.com)
+- [Join the Data Lakehouse Community](https://datalakehousehub.com/)
 - [Data Lakehouse Blog Listings](https://lakehouseblogs.com)
 
 Over the past few years, data platforms have crossed a tipping point. Rigid, centralized warehouses proved great at trustworthy BI but struggled with diverse data and elastic scale. Open data lakes delivered low-cost storage and freedom of choice, yet lacked the transactional rigor and performance guarantees analytics teams rely on. In 2025, the data **lakehouse** matured from an idea into an operating model: open table formats, transactional metadata, and multi-engine access over a single, governed body of data.

@@ -11,7 +11,7 @@ slug: "federation-and-lakehouse"
 draft: false
 image: "/images/blog.png"
 canonical: "https://iceberglakehouse.com/posts/federation-and-lakehouse/"
-description: "By Alex Merced, Head of Developer Relations at Dremio"
+description: "When to federate queries across sources and when to consolidate into an Iceberg lakehouse, with pushdown mechanics, cost math, and a federate-first pattern."
 ---
 
 # Federation and the Lakehouse: Two Roads to Unified Data Access, and How to Know Which One to Take

@@ -1,7 +1,7 @@
 ---
 title: Introduction to Data Engineering Concepts | Data Modeling Basics
 date: 2025-05-02T09:00:00Z
-description: "Introduction to the terms in data engineering"
+description: "Data modeling basics: OLTP versus OLAP systems, normalization and denormalization, star and snowflake schemas, and how to design models that can grow."
 author: "Alex Merced"
 category: "Data Engineering"
 bannerImage: "https://i.imgur.com/cpoMZQ8.png"

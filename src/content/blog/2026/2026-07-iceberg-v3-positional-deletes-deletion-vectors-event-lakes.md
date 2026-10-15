@@ -11,7 +11,7 @@ slug: "iceberg-v3-positional-deletes-deletion-vectors-event-lakes"
 draft: false
 image: "/images/blog.png"
 canonical: "https://iceberglakehouse.com/posts/iceberg-v3-positional-deletes-deletion-vectors-event-lakes/"
-description: "Event data has a way of humbling neat architecture diagrams. It arrives late. It arrives twice. It arrives with incorrect attributes."
+description: "How positional deletes and deletion vectors support merge-on-read in Iceberg for late, duplicate, and corrected event data, plus compaction and engine checks."
 ---
 
 # Implementing Positional Deletes in Iceberg v3: Streamlining Merge-on-Read for Fast-Inbound Event Lakes

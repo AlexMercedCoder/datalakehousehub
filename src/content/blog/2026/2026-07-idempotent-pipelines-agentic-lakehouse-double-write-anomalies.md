@@ -11,7 +11,7 @@ slug: "idempotent-pipelines-agentic-lakehouse-double-write-anomalies"
 draft: false
 image: "/images/blog.png"
 canonical: "https://iceberglakehouse.com/posts/idempotent-pipelines-agentic-lakehouse-double-write-anomalies/"
-description: "Agents retry. Networks fail. Jobs time out after doing some work. APIs return ambiguous responses. Schedulers run the same workflow twice."
+description: "How to stop agent retries and reruns from writing duplicates in an Iceberg lakehouse, using operation IDs, intent logs, deterministic writes, and validation."
 ---
 
 # Designing Idempotent Pipelines in the Agentic Lakehouse: Eliminating Double-Write Anomalies

@@ -2,7 +2,7 @@
 title: "How to Use Dremio with Windsurf: Connect, Query, and Build Data Apps"
 date: 2026-03-05T09:40:00Z
 pubDatetime: 2026-03-05T09:40:00Z
-description: "How to connect Dremio with Windsurf : query lakehouse data, build apps, and use MCP for AI-powered analytics."
+description: "Connect Windsurf's Cascade agent to the Dremio Cloud MCP server, then add Windsurf rules and community Dremio skills and docs so it writes correct Dremio SQL."
 author: "Alex Merced"
 category: "Dremio"
 bannerImage: "https://i.imgur.com/cpoMZQ8.png"

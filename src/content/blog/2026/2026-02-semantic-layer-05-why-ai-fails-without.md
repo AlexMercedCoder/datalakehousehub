@@ -2,7 +2,7 @@
 title: "Why Your AI Initiatives Fail Without a Semantic Layer"
 date: 2026-02-18T13:00:00Z
 pubDatetime: 2026-02-18T13:00:00Z
-description: "Why AI initiatives fail without a semantic layer : how LLMs hallucinate SQL without business context and how semantic grounding fixes it."
+description: "Five ways AI agents give wrong answers without a semantic layer (metric hallucination, join confusion, column misreads, security bypass) and how to fix them."
 author: "Alex Merced"
 category: "Semantic Layer"
 bannerImage: "https://i.imgur.com/cpoMZQ8.png"

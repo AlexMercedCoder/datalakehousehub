@@ -11,7 +11,7 @@ slug: "who-what-why-semantic-layers"
 draft: false
 image: "/images/blog.png"
 canonical: "https://iceberglakehouse.com/posts/who-what-why-semantic-layers/"
-description: "By Alex Merced, Head of Developer Relations at Dremio"
+description: "What a semantic layer is, how it rewrites queries, who built the category, today's major tools, and how teams roll one out so AI agents and BI share one metric."
 ---
 
 # The Who, What, and Why of Semantic Layers: The Layer That Decides Whether Your Numbers Can Be Trusted

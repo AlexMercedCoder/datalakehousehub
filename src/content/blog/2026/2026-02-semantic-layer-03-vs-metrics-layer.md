@@ -2,7 +2,7 @@
 title: "Semantic Layer vs. Metrics Layer: What's the Difference?"
 date: 2026-02-18T12:40:00Z
 pubDatetime: 2026-02-18T12:40:00Z
-description: "Semantic layer vs. metrics layer : how they overlap, where they differ, and when you need one, the other, or both."
+description: "A metrics layer defines calculations; a semantic layer adds business context, joins, and governance. See how they relate and why the distinction matters."
 author: "Alex Merced"
 category: "Semantic Layer"
 bannerImage: "https://i.imgur.com/cpoMZQ8.png"

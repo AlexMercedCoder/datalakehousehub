@@ -25,7 +25,7 @@ canonical: "https://iceberglakehouse.com/posts/2025-10-exploring-commerical-apac
 > **Cross-posted.** This article's canonical home is [Alex Merced's Lakehouse Blog](https://iceberglakehouse.com/posts/2025-10-exploring-commerical-apache-iceberg-catalogs/).
 
 **Lakehouse Community:**
-- [Join the Data Lakehouse Community](https://www.datalakehousehub.com)
+- [Join the Data Lakehouse Community](https://datalakehousehub.com/)
 - [Data Lakehouse Blog Roll](https://lakehouseblogs.com)
 - [OSS Community Listings](https://osscommunity.com)
 - [Dremio Lakehouse Developer Hub](https://developer.dremio.com)
