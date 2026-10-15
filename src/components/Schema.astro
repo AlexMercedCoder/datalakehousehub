@@ -1,7 +1,7 @@
 ---
 import config from "@/config/config.json";
 
-const { title, description, author, pubDate, image } = Astro.props;
+const { title, description, author, pubDate, image, faqs } = Astro.props;
 
 const siteUrl = config.site.base_url;
 const pathname = Astro.url.pathname;
@@ -101,6 +101,20 @@ if (isArticle && !isIndexPage && pathSegments.length > 0 && title) {
       }
     },
     "datePublished": pubDate || "2026-01-01T00:00:00Z"
+  });
+}
+
+// FAQPage for posts that carry a frontmatter FAQ (Base passes faqs only when
+// the page is its own canonical, so syndicated copies do not emit it).
+if (Array.isArray(faqs) && faqs.length > 0) {
+  schemas.push({
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": faqs.map((faq) => ({
+      "@type": "Question",
+      "name": faq.question,
+      "acceptedAnswer": { "@type": "Answer", "text": faq.answer }
+    }))
   });
 }
 

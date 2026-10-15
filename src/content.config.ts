@@ -88,6 +88,12 @@ const postsCollection = defineCollection({
     relatedPosts: z.array(z.string()).optional(),
     canonical: z.string().optional(),
     draft: z.boolean().optional(),
+    // Short FAQ for the questions the post answers; emitted as FAQPage JSON-LD
+    // (Schema.astro) when the post is its own canonical.
+    faqs: z.array(z.object({
+      question: z.string(),
+      answer: z.string(),
+    })).optional(),
   }),
 });
 

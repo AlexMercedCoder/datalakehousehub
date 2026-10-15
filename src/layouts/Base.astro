@@ -41,10 +41,11 @@ export interface Props {
   pubDate?: Date;
   type?: string;
   slug?: string;
+  faqs?: { question: string; answer: string }[];
 }
 
 // distructure frontmatters
-const { title, meta_title, description, image, noindex, canonical, author, pubDate, type, slug } =
+const { title, meta_title, description, image, noindex, canonical, author, pubDate, type, slug, faqs } =
   Astro.props;
 
 // Netlify serves every path in lowercase and 301s mixed-case requests, so the
@@ -218,6 +219,7 @@ const selfUrl = `${config.site.base_url}${Astro.url.pathname.toLowerCase()}`;
       image={image}
       author={author}
       pubDate={pubDate}
+      faqs={canonical && !canonical.startsWith(config.site.base_url) ? undefined : faqs}
     />
   </head>
 
