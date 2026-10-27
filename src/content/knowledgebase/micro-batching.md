@@ -33,7 +33,7 @@ Every write to an [Apache Iceberg](/knowledgebase/apache-iceberg/) table creates
 
 Shorter intervals give fresher data but more small files and snapshots. Longer intervals give larger files but staler data. Either way, plan for [compaction](/knowledgebase/data-compaction/) and snapshot expiration. For upserts, each batch typically runs one `MERGE INTO`, which on merge-on-read tables also creates delete files that compaction must clean up.
 
-For more depth, read [The State of Streaming to Apache Iceberg in July 2026](/blog/streaming-to-iceberg-july-2026/), [Optimizing Compaction for Streaming Workloads in Apache Iceberg](/blog/iceberg-streaming-compaction/), and [Serverless Iceberg Ingestion with PyIceberg and DuckDB](/blog/serverless-iceberg-microbatch-pyiceberg-duckdb/). See also the [micro-batches](/knowledgebase/micro-batches/) and [continuous streaming](/knowledgebase/continuous-streaming/) glossary entries.
+For more depth, read [The State of Streaming to Apache Iceberg in July 2026](/blog/streaming-to-iceberg-july-2026/), [Optimizing Compaction for Streaming Workloads in Apache Iceberg](/blog/iceberg-streaming-compaction/), and [Serverless Iceberg Ingestion with PyIceberg and DuckDB](/blog/serverless-iceberg-ingestion-pyiceberg-duckdb/). See also the [micro-batches](/knowledgebase/micro-batches/) and [continuous streaming](/knowledgebase/continuous-streaming/) glossary entries.
 
 ## Summary of Technical Value
 

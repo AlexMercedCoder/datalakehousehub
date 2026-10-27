@@ -46,7 +46,14 @@ for (const file of walk(BLOG)) {
 }
 
 // Posts deleted in favor of a newer version; old file name -> current slug.
-const REPLACED = { '2026-05-agentic-coding-tools': 'agentic-coding-tools' };
+const REPLACED = {
+  '2026-05-agentic-coding-tools': 'agentic-coding-tools',
+  // Consolidated into the Aug 19 primaries (Oct 2026 maintenance pass).
+  '2026-08-25-serverless-iceberg-microbatch-pyiceberg-duckdb': 'serverless-iceberg-ingestion-pyiceberg-duckdb',
+  '2026-08-serverless-iceberg-microbatch-pyiceberg-duckdb': 'serverless-iceberg-ingestion-pyiceberg-duckdb',
+  '2026-08-25-zero-copy-legacy-db-to-iceberg': 'zero-copy-warehouse-modernization-iceberg',
+  '2026-08-zero-copy-legacy-db-to-iceberg': 'zero-copy-warehouse-modernization-iceberg',
+};
 for (const [old, slug] of Object.entries(REPLACED)) {
   for (const prefix of ['/blog/', '/posts/', '/blog/2026/']) rules.set(`${prefix}${old}`, `/blog/${slug}/`);
 }

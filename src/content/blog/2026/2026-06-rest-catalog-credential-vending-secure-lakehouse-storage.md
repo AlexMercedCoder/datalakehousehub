@@ -133,7 +133,7 @@ Most catalogs support both mechanisms. The engine can request either mode, and t
 
 ## Security Boundaries and Common Mistakes
 
-Credential vending is secure only if the implementation respects the scope boundary. Common mistakes:
+Credential vending is secure only if the implementation respects the scope boundary. Common mistakes: This page covers the catalog mechanism. The agent-side identity architecture that carries a delegated token to this point is covered in [Securing Agent Identities in the Lakehouse](https://datalakehousehub.com/blog/securing-agent-identities-lakehouse-token-exchange/).
 
 **Mistake 1: Overly broad storage credential configuration.** If the Polaris admin configures a storage credential with access to the entire bucket, the vended token scope is limited by the session policy, but the underlying credential is not. If the session policy generation has a bug, the engine could receive bucket-wide access. Always configure storage credentials with the narrowest possible path, and test the scope boundary with a policy simulation.
 
